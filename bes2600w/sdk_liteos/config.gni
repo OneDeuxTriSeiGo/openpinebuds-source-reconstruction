@@ -37,12 +37,13 @@ board_toolchain_prefix = "arm-none-eabi-"
 # Compiler type, "gcc" or "clang".
 board_toolchain_type = "gcc"
 
-# Product name
+# config.json parse
 if (product_path != "") {
     product_conf = read_file("${product_path}/config.json", "json")
     product_name = product_conf.product_name
-    trust_en = product_conf.trust_enable
-    mini_os_enable = product_conf.mini_enable
+    bin_list = product_conf.bin_list
+    fs_list = product_conf.fs_list
+    bsp_bin_list = product_conf.bsp_bin_list
 }
 
 # Board related common compile flags.
@@ -61,14 +62,8 @@ board_cflags = [
     "-DDEBUG=1",
     "-DCMSIS_OS_VER=2",
     "-DOS_HWI_MAX_NUM=96",
-    "-D__FPU_PRESENT=1",
-    ""
+    "-D__FPU_PRESENT=1"
     ]
-if (trust_en == "true"){
-    board_cflags += [
-        "-DARM_CMNS"
-    ]
-}
 
 board_cxx_flags = board_cflags
 board_ld_flags = [
@@ -78,8 +73,43 @@ board_ld_flags = [
     "-fdata-sections",
     "-mthumb",
     "-mthumb-interwork",
-    "-L${ohos_root_path}out/bes2600w/"+product_name+"/libs",
+    "-L${ohos_root_path}out/${board_name}/${product_name}/libs",
 ]
+
+# fs functions support
+wrap_fs_api = "false"
+foreach (fs,fs_list) {
+    if (fs.enable == "true") {
+        wrap_fs_api = "true"
+    }
+}
+
+if (wrap_fs_api == "true") {
+    board_ld_flags += [
+        "-Wl,--wrap=mount",
+        "-Wl,--wrap=umount",
+        "-Wl,--wrap=umount2",
+        "-Wl,--wrap=open",
+        "-Wl,--wrap=close",
+        "-Wl,--wrap=read",
+        "-Wl,--wrap=write",
+        "-Wl,--wrap=lseek",
+        "-Wl,--wrap=unlink",
+        "-Wl,--wrap=fstat",
+        "-Wl,--wrap=stat",
+        "-Wl,--wrap=fsync",
+        "-Wl,--wrap=mkdir",
+        "-Wl,--wrap=opendir",
+        "-Wl,--wrap=readdir",
+        "-Wl,--wrap=closedir",
+        "-Wl,--wrap=rmdir",
+        "-Wl,--wrap=rename",
+        "-Wl,--wrap=statfs",
+        "-Wl,--wrap=ftruncate",
+        "-Wl,--wrap=fclose",
+        "-Wl,--wrap=fflush",
+    ]
+}
 
 # Board related headfiles search path.
 board_include_dirs = [
@@ -88,14 +118,14 @@ board_include_dirs = [
     "${ohos_root_path}kernel/liteos_m/utils/",
     "${ohos_root_path}kernel/liteos_m/kernel/include",
     "${ohos_root_path}kernel/liteos_m/kernel/arch/arm/cortex-m33/gcc/",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/platform/hal/",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/utils/kfifo",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/platform/hal/best2003",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/rtos/liteos/liteos_m/",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/rtos/liteos/liteos_m/utils",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/rtos/liteos/liteos_m/kernel/include",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/platform/cmsis/inc",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/services/fs/fat/ChaN/",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal/",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/utils/kfifo",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal/best2003",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/rtos/liteos/liteos_m/",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/rtos/liteos/liteos_m/utils",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/rtos/liteos/liteos_m/kernel/include",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/platform/cmsis/inc",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/services/fs/fat/ChaN/",
     "${ohos_root_path}drivers/framework/include/utils/",
     "${ohos_root_path}drivers/framework/include/core/",
     "${ohos_root_path}drivers/framework/include/config",
@@ -112,7 +142,6 @@ board_include_dirs = [
     "${ohos_root_path}drivers/adapter/lite/khdf/osal/include",
     "${ohos_root_path}drivers/framework/support/platform/include",
     "${ohos_root_path}drivers/framework/include/platform/",
-    "${ohos_root_path}device/bestechnic/bes2600w/sdk_liteos/bsp/services/wifi_app/littlefs",
     "${ohos_root_path}kernel/liteos_m/kernel/arch/include/",
     "${ohos_root_path}third_party/musl/porting/liteos_m/kernel/include/",
     "${ohos_root_path}third_party/bounds_checking_function/include/",
@@ -120,7 +149,7 @@ board_include_dirs = [
 board_include_dirs += []
 
 # Board adapter dir for OHOS components.
-board_adapter_dir = "${ohos_root_path}device/bestechnic/bes2600w/bes2600_adapter"
+board_adapter_dir = "${ohos_root_path}device/bestechnic/${board_name}/sys_adapter"
 
 # Sysroot path.
 board_configed_sysroot = ""

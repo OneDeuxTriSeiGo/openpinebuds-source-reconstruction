@@ -23,9 +23,7 @@ extern "C" {
 
 enum HAL_MCU2CP_ID_T {
     HAL_MCU2CP_ID_0,
-#if !defined(NUTTX_BUILD)
     HAL_MCU2CP_ID_1,
-#endif
     HAL_MCU2CP_ID_QTY
 };
 

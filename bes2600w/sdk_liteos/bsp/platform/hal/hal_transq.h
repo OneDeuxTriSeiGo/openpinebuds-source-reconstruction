@@ -109,6 +109,8 @@ void hal_transq_local_irq_handler(int irq_num, void *irq_data);
 #endif
 #endif // CHIP_HAS_TRANSQ
 
+void hal_transq_local_irq_handler_body(enum HAL_TRANSQ_ID_T id);
+
 #ifdef __cplusplus
 }
 #endif

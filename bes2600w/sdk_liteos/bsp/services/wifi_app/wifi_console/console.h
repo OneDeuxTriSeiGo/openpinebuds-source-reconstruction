@@ -18,7 +18,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include "cmsis_os.h"
 
 #define CONSOLE_DUMP_STACK_EN
 
@@ -47,24 +46,6 @@ typedef struct cmd_tbl_s {
 
 extern cmd_tbl_t cmd_list[CMD_LIST_COUNT];
 extern unsigned int cmd_cntr;
-
-typedef struct console_sema {
-	osSemaphoreId	 sema_id;
-	osSemaphoreDef_t def;
-#if defined(CMSIS_OS_RTX) && (osCMSIS < 0x20000U)
-	uint32_t		 data[2];
-#endif
-#ifdef osCMSIS_RHINO
-	ksem_t	sem;
-#endif
-
-} console_sema_t;
-
-typedef struct bwifi_console {
-	uint8_t 	   cmd_cnt;
-	osThreadId	   thread_id;
-	console_sema_t console_sema;
-} bwifi_console_t;
 
 #define console_strtoul     simple_strtoul
 #define console_cmd_usage   show_cmd_usage

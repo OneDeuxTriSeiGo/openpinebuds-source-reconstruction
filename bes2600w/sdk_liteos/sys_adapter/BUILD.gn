@@ -33,6 +33,14 @@ static_library("sys_adapter") {
         "//kernel/liteos_m/kernel/arch/include/",
     ]
     include_dirs += [
-        "//device/bestechnic/bes2600w/driver/sys_adapter/include/",
+        "//device/bestechnic/"+board_name+"/driver/sys_adapter/include/",
+        "//base/hiviewdfx/hiview_lite",
+        "//utils/native/lite/include",
+        "//base/hiviewdfx/hilog_lite/frameworks/mini",
+        "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
+    ]
+
+    cflags = [
+        "-DLOG_FMT_MAX_LEN=128"
     ]
 }

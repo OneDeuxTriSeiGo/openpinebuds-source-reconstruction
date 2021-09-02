@@ -1,0 +1,65 @@
+# Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/lite/config/subsystem/lite_subsystem.gni")
+import("//build/lite/config/component/lite_component.gni")
+
+static_library("hdf_adapter") {
+
+    sources = []
+
+    sources += [
+        "src/uart.c",
+        "src/gpio.c",
+        "src/i2c.c",
+        "src/spi.c",
+        "src/pwm.c",
+        "src/littlefs.c",
+        "src/flash.c",
+        "src/flash_conf.c",
+    ]
+
+    deps = [
+        "//device/bestechnic/"+board_name+":build_sdk_into_lib",
+        "//third_party/bounds_checking_function:libsec_static"
+    ]
+
+    include_dirs = [
+        #api
+        "//device/bestechnic/"+board_name+"/sdk_liteos/hdf_adapter/include",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/sys_adapter/include",
+        #BES SDK
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal/best2003",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/utils/kfifo",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/drivers/ana/",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/utils/crc32/",
+        #HDF drivers
+        "//drivers/liteos/include/host",
+        "//drivers/adapter/uhdf/posix/include/",
+        "//drivers/adapter/khdf/liteos/osal/include",
+        "//drivers/framework/include/core",
+        "//drivers/framework/ability/sbuf/include",
+        "//drivers/framework/utils/include",
+        "//drivers/framework/support/platform/include",
+        "//drivers/framework/include/utils",
+        "//drivers/framework/include/platform",
+        "//drivers/framework/include/config",
+        "//drivers/framework/include/osal",
+        "//kernel/liteos_m/kernel/arch/include",
+        #third party
+        "//third_party/littlefs/include",
+    ]
+}
