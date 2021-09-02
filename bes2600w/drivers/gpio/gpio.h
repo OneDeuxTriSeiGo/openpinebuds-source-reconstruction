@@ -20,14 +20,13 @@
 #include "hal_gpio.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /*
  * Pin configuration
  */
-enum GPIO_CONFIG{
+enum GPIO_CONFIG {
     ANALOG_MODE,               /* Used as a function pin, input and output analog */
     IRQ_MODE,                  /* Used to trigger interrupt */
     INPUT_PULL_UP,             /* Input with an internal pull-up resistor - use with devices
@@ -50,8 +49,8 @@ struct GpioResource {
     uint32_t realPin;
     uint32_t config;
     uint32_t pinNum;
-    uint32_t type;          /**< Type of the input event EV_KEY */
-    uint32_t code;          /**< Specific code item of the input event KEY_POWER*/
+    uint32_t type; /**< Type of the input event EV_KEY */
+    uint32_t code; /**< Specific code item of the input event KEY_POWER*/
     unsigned long physBase;
 };
 
@@ -61,12 +60,12 @@ enum GpioDeviceState {
 };
 
 struct GpioDevice {
-    uint8_t             port;   /* gpio port */
+    uint8_t port; /* gpio port */
     struct GpioResource resource;
-    enum GPIO_CONFIG  config; /* gpio config */
+    enum GPIO_CONFIG config; /* gpio config */
 };
 
-typedef int32_t(* oem_gpio_irq_handler_t) (uint16_t gpio, void *data);
+typedef int32_t (*oem_gpio_irq_handler_t)(uint16_t gpio, void *data);
 int InitGpioDevice(struct GpioDevice *device);
 void AddUartDevice(struct GpioCntlr *host);
 void RemoveUartDevice(struct GpioCntlr *host);

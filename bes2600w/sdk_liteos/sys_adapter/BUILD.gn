@@ -11,36 +11,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/lite/config/subsystem/lite_subsystem.gni")
 import("//build/lite/config/component/lite_component.gni")
+import("//build/lite/config/subsystem/lite_subsystem.gni")
 
 static_library("sys_adapter") {
+  sources = [
+    "src/platform.c",
+    "src/hm_sys.c",
+  ]
 
-    sources = [ "src/hm_sys.c" ]
+  deps = [ "//device/bestechnic/" + board_name + ":build_sdk_into_lib" ]
 
-    deps = [
-        "//device/bestechnic/"+board_name+":build_sdk_into_lib",
-    ]
+  include_dirs = [
+    "include",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/bsp/apps/factory/",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/bsp/platform/hal",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/bsp/platform/drivers/ana",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/bsp/platform/cmsis/inc",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/bsp/services/wifi_app/wifi_console/",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis/",
+    "//kernel/liteos_m/kernel/arch/include/",
+  ]
 
-    include_dirs = [
-        "include",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/apps/factory/",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/drivers/ana",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/cmsis/inc",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/services/wifi_app/wifi_console/",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis/",
-        "//kernel/liteos_m/kernel/arch/include/",
-    ]
-    include_dirs += [
-        "//device/bestechnic/"+board_name+"/driver/sys_adapter/include/",
-        "//base/hiviewdfx/hiview_lite",
-        "//utils/native/lite/include",
-        "//base/hiviewdfx/hilog_lite/frameworks/mini",
-        "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
-    ]
+  include_dirs += [
+    "//base/hiviewdfx/hiview_lite",
+    "//utils/native/lite/include",
+    "//base/hiviewdfx/hilog_lite/frameworks/mini",
+    "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
+    "//drivers/framework/core/common/include/manager",
+  ]
 
-    cflags = [
-        "-DLOG_FMT_MAX_LEN=128"
-    ]
+  cflags = [ "-DLOG_FMT_MAX_LEN=128" ]
 }

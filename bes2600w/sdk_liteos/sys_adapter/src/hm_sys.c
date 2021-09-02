@@ -23,9 +23,10 @@
 #include "los_memory.h"
 #include "los_task.h"
 #include "console.h"
-#include <stdint.h>
 #include "hiview_util.h"
 #include "hiview_output_log.h"
+#include "hiview_log.h"
+#include "devmgr_service_start.h"
 
 void OsShowInfo(void)
 {
@@ -54,22 +55,18 @@ static int doShowOsInfo(cmd_tbl_t *cmd, int argc, char *argv[])
     return 0;
 }
 
-void AddCustomATCmd()
+void RegisterCustomATCmd()
 {
     cmd_tbl_t cmd_list[] = {
-        {
-            "AT+SHOWOSINFO", 1, doShowOsInfo,
-            "AT+SHOWOSINFO  - show memory and cpu usage\n"
-        }
+        {"AT+SHOWOSINFO", 1, doShowOsInfo, "AT+SHOWOSINFO - show memory and cpu usage\n"},
     };
     for (int i = 0; i < sizeof(cmd_list) / sizeof(cmd_tbl_t); i++) {
-       console_cmd_add(&cmd_list[i]);
+        console_cmd_add(&cmd_list[i]);
     }
 }
 
 void HAL_NVIC_SystemReset(void)
 {
-
 }
 
 boolean HilogProc_Impl(const HiLogContent *hilogContent, uint32 len)
@@ -86,4 +83,30 @@ int init_trace_system(void)
     int ret = 1;
     HiviewRegisterHilogProc(HilogProc_Impl);
     return ret;
+}
+
+int HiLogWriteInternal(const char *buffer, size_t bufLen)
+{
+    if (!buffer)
+        return -1;
+    // because it's called as HiLogWriteInternal(buf, strlen(buf) + 1)
+    if (bufLen < 2)
+        return 0;
+    if (buffer[bufLen - 2] != '\n') {
+        *((char *)buffer + bufLen - 1) = '\n';
+    } else {
+        bufLen--;
+    }
+    int ret = hal_trace_output((const unsigned char *)buffer, bufLen);
+#ifdef LOG_FLUSH
+    hal_trace_flush_buffer();
+#endif
+    return ret;
+}
+
+int OhosSystemAdapterHooks(void)
+{
+    init_trace_system();
+    DeviceManagerStart();
+    return 0;
 }

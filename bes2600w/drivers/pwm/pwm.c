@@ -46,8 +46,8 @@ static int32_t PwmDevClose(struct PwmDev *pwm);
 
 struct PwmMethod g_pwmmethod = {
     .setConfig = PwmDevSetConfig,
-    .open      = PwmDevOpen,
-    .close     = PwmDevClose,
+    .open = PwmDevOpen,
+    .close = PwmDevClose,
 };
 
 static int InitPwmDevice(struct PwmDev *host)
@@ -84,7 +84,7 @@ static int InitPwmDevice(struct PwmDev *host)
 }
 
 static uint32_t GetPwmDeviceResource(
-    struct PwmDevice *device,const struct DeviceResourceNode *resourceNode)
+    struct PwmDevice *device, const struct DeviceResourceNode *resourceNode)
 {
     uint32_t tempPin = 0;
 
@@ -172,7 +172,7 @@ static int32_t PwmDriverBind(struct HdfDeviceObject *device)
 
     device->service = &devService.service;
     devService.device = device;
-    printf("Enter %s\r\n",__func__);
+    printf("Enter %s\r\n", __func__);
 
     return HDF_SUCCESS;
 }
@@ -245,7 +245,7 @@ static int32_t PwmDevSetConfig(struct PwmDev *pwm, struct PwmConfig *config)
     enum HAL_PWM_ID_T pwmId;
 
     if (pwm == NULL || config == NULL || (config->period > UNTIL_NAN0SECONDS)) {
-        printf("%s\r\n",__FUNCTION__);
+        printf("%s\r\n", __FUNCTION__);
         return HDF_FAILURE;
     }
 
@@ -283,13 +283,13 @@ static int32_t PwmDevClose(struct PwmDev *pwm)
     enum HAL_PWM_ID_T pwmId = 0;
 
     if (pwm == NULL) {
-        printf("%s\r\n",__FUNCTION__);
+        printf("%s\r\n", __FUNCTION__);
         return HDF_FAILURE;
     }
 
     prvPwm = (struct PwmDevice *)PwmGetPriv(pwm);
     if (prvPwm == NULL) {
-        printf("%s\r\n",__FUNCTION__);
+        printf("%s\r\n", __FUNCTION__);
         return HDF_FAILURE;
     }
 
