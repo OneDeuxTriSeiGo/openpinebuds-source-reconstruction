@@ -2309,7 +2309,7 @@ typedef struct
   #include CMSIS_VECTAB_VIRTUAL_HEADER_FILE
 #else
 #ifdef KERNEL_NUTTX
-#include "nuttx/irq.h"
+typedef int (*xcpt_t)(int irq, void *context, void *arg);
 uint32_t get_cpu_id(void);
 __STATIC_FORCEINLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority);
 __STATIC_FORCEINLINE void __NVIC_SetVector(IRQn_Type IRQn, uint32_t vector);

@@ -56,9 +56,10 @@ extern "C" {
     _TR_MODULE_DEF(AI_BIXBY),               \
     _TR_MODULE_DEF(AOB_SM),                 \
     _TR_MODULE_DEF(SPEECH),                 \
-    _TR_MODULE_DEF(WIFI),                 \
-    _TR_MODULE_DEF(NET),                 \
+    _TR_MODULE_DEF(WIFI),                   \
+    _TR_MODULE_DEF(NET),                    \
     _TR_MODULE_DEF(VOICE_COMPRESS),         \
+    _TR_MODULE_DEF(BT_ADAPTOR),             \
 
 
 enum TR_MODULE_T {

@@ -1632,7 +1632,7 @@ typedef struct
   #include CMSIS_VECTAB_VIRTUAL_HEADER_FILE
 #else
 #ifdef KERNEL_NUTTX
-#include "nuttx/irq.h"
+typedef int (*xcpt_t)(int irq, void *context, void *arg);
 void nuttx_irq_attach(IRQn_Type IRQn, xcpt_t isr, uint32_t arg);
 int up_irq_handler(int irq, FAR void *context, FAR void *arg);
 bool nuttx_irq_check(IRQn_Type IRQn, bool isEnable);

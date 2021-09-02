@@ -47,6 +47,8 @@ struct ibrt_mode_t
     uint32_t mode;
     btif_device_record_t record;
     bool    tws_connect_success;
+    uint8_t tws_name_len;
+    uint8_t tws_name[251];
 };
 struct factory_tester_status_t
 {
@@ -84,6 +86,8 @@ int nv_record_env_get(struct nvrecord_env_t **nvrecord_env);
 int nv_record_env_set(struct nvrecord_env_t *nvrecord_env);
 
 void nv_record_update_ibrt_info(uint32_t newMode,bt_bdaddr_t *ibrtPeerAddr);
+
+void nv_record_clean_tws_name(void);
 
 void nv_record_update_factory_tester_status(uint32_t status);
 
