@@ -33,40 +33,35 @@ static void spi0_dma_irq(int error);
 static void spi1_dma_irq(int error);
 
 static struct SPI_CTX_OBJ_T spi_ctx[2] =
-{
     {
-        .spi_pin_CS0 = 0,
-        .spi_fun_DI0 = HAL_IOMUX_FUNC_SPI_DI0,
-        .spi_fun_CLK = HAL_IOMUX_FUNC_SPI_CLK,
-        .spi_fun_CS0 = HAL_IOMUX_FUNC_SPI_CS0,
-        .spi_fun_DIO = HAL_IOMUX_FUNC_SPI_DIO,
-        .spi_dma_semaphore = NULL,
-        .spi_mutex_id = 0,
-        .spi_open = hal_spi_open,
-        .spi_dma_send = hal_spi_dma_send,
-        .spi_dma_recv = hal_spi_dma_recv,
-        .spi_send = hal_spi_send,
-        .spi_recv = hal_spi_recv,
-        .spi_dma_irq = spi0_dma_irq,
-        .spi_close = hal_spi_close
-    },
-    {
-        .spi_pin_CS0 = 0,
-        .spi_fun_DI0 = HAL_IOMUX_FUNC_SPILCD_DI0,
-        .spi_fun_CLK = HAL_IOMUX_FUNC_SPILCD_CLK,
-        .spi_fun_CS0 = HAL_IOMUX_FUNC_SPILCD_CS0,
-        .spi_fun_DIO = HAL_IOMUX_FUNC_SPILCD_DIO,
-        .spi_dma_semaphore = NULL,
-        .spi_mutex_id = 0,
-        .spi_open = hal_spilcd_open,
-        .spi_dma_send = hal_spilcd_dma_send,
-        .spi_dma_recv = hal_spilcd_dma_recv,
-        .spi_send = hal_spilcd_send,
-        .spi_recv = hal_spilcd_recv,
-        .spi_dma_irq = spi1_dma_irq,
-        .spi_close = hal_spilcd_close
-    }
-};
+        {.spi_pin_CS0 = 0,
+         .spi_fun_DI0 = HAL_IOMUX_FUNC_SPI_DI0,
+         .spi_fun_CLK = HAL_IOMUX_FUNC_SPI_CLK,
+         .spi_fun_CS0 = HAL_IOMUX_FUNC_SPI_CS0,
+         .spi_fun_DIO = HAL_IOMUX_FUNC_SPI_DIO,
+         .spi_dma_semaphore = NULL,
+         .spi_mutex_id = 0,
+         .spi_open = hal_spi_open,
+         .spi_dma_send = hal_spi_dma_send,
+         .spi_dma_recv = hal_spi_dma_recv,
+         .spi_send = hal_spi_send,
+         .spi_recv = hal_spi_recv,
+         .spi_dma_irq = spi0_dma_irq,
+         .spi_close = hal_spi_close},
+        {.spi_pin_CS0 = 0,
+         .spi_fun_DI0 = HAL_IOMUX_FUNC_SPILCD_DI0,
+         .spi_fun_CLK = HAL_IOMUX_FUNC_SPILCD_CLK,
+         .spi_fun_CS0 = HAL_IOMUX_FUNC_SPILCD_CS0,
+         .spi_fun_DIO = HAL_IOMUX_FUNC_SPILCD_DIO,
+         .spi_dma_semaphore = NULL,
+         .spi_mutex_id = 0,
+         .spi_open = hal_spilcd_open,
+         .spi_dma_send = hal_spilcd_dma_send,
+         .spi_dma_recv = hal_spilcd_dma_recv,
+         .spi_send = hal_spilcd_send,
+         .spi_recv = hal_spilcd_recv,
+         .spi_dma_irq = spi1_dma_irq,
+         .spi_close = hal_spilcd_close}};
 
 static struct HAL_IOMUX_PIN_FUNCTION_MAP pinmux_spi[] = {
     {0, 0, HAL_IOMUX_PIN_VOLTAGE_VIO, HAL_IOMUX_PIN_NOPULL},
@@ -77,16 +72,14 @@ static struct HAL_IOMUX_PIN_FUNCTION_MAP pinmux_spi[] = {
 
 void spi0_dma_irq(int error)
 {
-    if (osOK != osSemaphoreRelease(spi_ctx[0].spi_dma_semaphore))
-    {
+    if (osOK != osSemaphoreRelease(spi_ctx[0].spi_dma_semaphore)) {
         printf("spi1dmairq osSemaphoreRelease failed!\r\n");
     }
 }
 
 void spi1_dma_irq(int error)
 {
-    if (osOK != osSemaphoreRelease(spi_ctx[1].spi_dma_semaphore))
-    {
+    if (osOK != osSemaphoreRelease(spi_ctx[1].spi_dma_semaphore)) {
         printf("spi0dmairq osSemaphoreRelease failed!\r\n");
     }
 }
@@ -97,7 +90,7 @@ static void spi_iomux_init(struct SpiDevice *spiDevice)
 
     if (spiDevice == NULL) {
         printf("%s: invalid parameter", __func__);
-        return ;
+        return;
     }
 
     struct SpiResource *resource = &spiDevice->resource;
@@ -118,16 +111,16 @@ static void spi_iomux_init(struct SpiDevice *spiDevice)
     pinmux_spi[0].function = spi_ctx[spi_port].spi_fun_DI0;
     pinmux_spi[1].function = spi_ctx[spi_port].spi_fun_CLK;
 
-    if(resource->spi_cs_soft){
+    if (resource->spi_cs_soft) {
         spi_ctx[spi_port].spi_fun_CS0 = HAL_IOMUX_FUNC_AS_GPIO;
     }
 
     pinmux_spi[2].function = spi_ctx[spi_port].spi_fun_CS0;
     pinmux_spi[3].function = spi_ctx[spi_port].spi_fun_DIO;
 
-    if (spi_cfg->rate > 26000000){
-        hal_iomux_set_io_drv(pinmux_spi[1].pin,3);
-        hal_iomux_set_io_drv(pinmux_spi[3].pin,3);
+    if (spi_cfg->rate > 26000000) {
+        hal_iomux_set_io_drv(pinmux_spi[1].pin, 3);
+        hal_iomux_set_io_drv(pinmux_spi[3].pin, 3);
     }
 
     hal_iomux_init(pinmux_spi, ARRAY_SIZE(pinmux_spi));
@@ -155,8 +148,7 @@ int32_t HalSpiSend(struct SpiDevice *spidevice, const uint8_t *data, uint16_t si
 
     osStatus status = osErrorOS;
 
-    if (NULL == spidevice || NULL == data || 0 == size)
-    {
+    if (NULL == spidevice || NULL == data || 0 == size) {
         printf("spi input para err\r\n");
         return -3;
     }
@@ -165,30 +157,24 @@ int32_t HalSpiSend(struct SpiDevice *spidevice, const uint8_t *data, uint16_t si
     struct SpiResource *resource = &spidevice->resource;
 
     status = osMutexWait(spi_ctx[spi_id].spi_mutex_id, osWaitForever);
-    if (osOK != status)
-    {
+    if (osOK != status) {
         printf("%s spi_mutex wait error = 0x%X!\r\n", __func__, status);
         return -2;
     }
 
     hal_cache_sync_all(HAL_CACHE_ID_D_CACHE);
 
-    if (resource->transmode == SPI_TRANSFER_DMA)
-    {
+    if (resource->transmode == SPI_TRANSFER_DMA) {
         ret = spi_ctx[spi_id].spi_dma_send(data, len, spi_ctx[spi_id].spi_dma_irq);
-        if (osSemaphoreWait(spi_ctx[spi_id].spi_dma_semaphore, timeout) <= 0)
-        {
+        if (osSemaphoreWait(spi_ctx[spi_id].spi_dma_semaphore, timeout) <= 0) {
             printf("spi dma tail send timeout\r\n");
             goto OUT;
         }
-    }
-    else
-    {
+    } else {
         ret = spi_ctx[spi_id].spi_send(data, len);
     }
 
-    if (ret)
-    {
+    if (ret) {
         printf("spi dma tail send fail %ld, size %ld\r\n", ret, len);
         goto OUT;
     }
@@ -220,8 +206,7 @@ int32_t HalSpiRecv(struct SpiDevice *spidevice, uint8_t *data, uint16_t size, ui
     osStatus status = osOK;
     uint8_t *cmd;
 
-    if (NULL == spidevice || NULL == data || 0 == size)
-    {
+    if (NULL == spidevice || NULL == data || 0 == size) {
         printf("spi input para err\r\n");
         return -3;
     }
@@ -230,8 +215,7 @@ int32_t HalSpiRecv(struct SpiDevice *spidevice, uint8_t *data, uint16_t size, ui
     struct SpiResource *resource = &spidevice->resource;
 
     cmd = (uint8_t *)malloc(len);
-    if (cmd == NULL)
-    {
+    if (cmd == NULL) {
         printf("%s malloc size %ld error\r\n", __FUNCTION__, len);
         return -1;
     }
@@ -239,8 +223,7 @@ int32_t HalSpiRecv(struct SpiDevice *spidevice, uint8_t *data, uint16_t size, ui
     memset(cmd, 0, len);
 
     status = osMutexWait(spi_ctx[spi_id].spi_mutex_id, osWaitForever);
-    if (osOK != status)
-    {
+    if (osOK != status) {
         printf("%s spi_mutex wait error = 0x%X!\r\n", __func__, status);
         free(cmd);
         return -2;
@@ -248,29 +231,23 @@ int32_t HalSpiRecv(struct SpiDevice *spidevice, uint8_t *data, uint16_t size, ui
 
     hal_cache_sync_all(HAL_CACHE_ID_D_CACHE); //PSRAM must sync cache to memory when used dma
 
-    do
-    {
-        remainder = len <= SPI_DMA_MAX ? len  : SPI_DMA_MAX;
+    do {
+        remainder = len <= SPI_DMA_MAX ? len : SPI_DMA_MAX;
 
-        if (resource->transmode == SPI_TRANSFER_DMA)
-        {
+        if (resource->transmode == SPI_TRANSFER_DMA) {
             ret = spi_ctx[spi_id].spi_dma_recv(cmd, data, remainder, spi_ctx[spi_id].spi_dma_irq);
-            if (osSemaphoreWait(spi_ctx[spi_id].spi_dma_semaphore, timeout) <= 0)
-            {
+            if (osSemaphoreWait(spi_ctx[spi_id].spi_dma_semaphore, timeout) <= 0) {
                 printf("SPI Read timeout!\r\n");
                 goto OUT;
             }
-        }
-        else
-        {
+        } else {
             ret = spi_ctx[spi_id].spi_recv(cmd, data, remainder);
         }
 
         len -= remainder;
         data += remainder;
 
-        if (ret)
-        {
+        if (ret) {
             printf("spi tail fail %ld, size %ld\r\n", ret, len);
             goto OUT;
         }
@@ -300,24 +277,23 @@ static int32_t InitSpiDevice(struct SpiDevice *spiDevice)
 
     spi_iomux_init(spiDevice);
 
-    switch (resource->mode)
-    {
+    switch (resource->mode) {
     case SPI_WORK_MODE_0:
         spi_cfg->clk_delay_half = false;
         spi_cfg->clk_polarity = false;
-    break;
+        break;
     case SPI_WORK_MODE_1:
         spi_cfg->clk_delay_half = true;
         spi_cfg->clk_polarity = false;
-    break;
+        break;
     case SPI_WORK_MODE_2:
         spi_cfg->clk_delay_half = false;
         spi_cfg->clk_polarity = true;
-    break;
+        break;
     case SPI_WORK_MODE_3:
         spi_cfg->clk_delay_half = true;
         spi_cfg->clk_polarity = true;
-    break;
+        break;
     default:
         spi_cfg->clk_delay_half = true;
         spi_cfg->clk_polarity = true;
@@ -325,13 +301,10 @@ static int32_t InitSpiDevice(struct SpiDevice *spiDevice)
 
     spi_cfg->slave = 0;
 
-    if (resource->transmode == SPI_TRANSFER_DMA)
-    {
+    if (resource->transmode == SPI_TRANSFER_DMA) {
         spi_cfg->dma_rx = true;
         spi_cfg->dma_tx = true;
-    }
-    else
-    {
+    } else {
         spi_cfg->dma_rx = false;
         spi_cfg->dma_tx = false;
     }
@@ -342,58 +315,44 @@ static int32_t InitSpiDevice(struct SpiDevice *spiDevice)
     spi_cfg->rx_frame_bits = 0;
 
     ret = spi_ctx[spi_port].spi_open(spi_cfg);
-    if (ret != 0)
-    {
+    if (ret != 0) {
         printf("spi %ld open error\r\n", spi_port);
         return HDF_FAILURE;
-    }
-    else
-    {
+    } else {
         /*if cs use as gpio ,pull up at first*/
         if (spi_ctx[spi_port].spi_fun_CS0 == HAL_IOMUX_FUNC_AS_GPIO) {
             hal_gpio_pin_set_dir(spi_ctx[spi_port].spi_pin_CS0, HAL_GPIO_DIR_OUT, 1);
         }
     }
 
-    if (!spi_ctx[spi_port].spi_dma_semaphore)
-    {
-        if (spi_port == 0)
-        {
+    if (!spi_ctx[spi_port].spi_dma_semaphore) {
+        if (spi_port == 0) {
             spi_ctx[spi_port].spi_dma_semaphore = osSemaphoreCreate(osSemaphore(spi0_dma_semaphore), 0);
-        }
-        else
-        {
+        } else {
             spi_ctx[spi_port].spi_dma_semaphore = osSemaphoreCreate(osSemaphore(spi1_dma_semaphore), 0);
         }
     }
 
-    if (!spi_ctx[spi_port].spi_dma_semaphore)
-    {
+    if (!spi_ctx[spi_port].spi_dma_semaphore) {
         printf("spi0_dma_semaphore create failed!\r\n");
         return HDF_FAILURE;
     }
 
-    if (!spi_ctx[spi_port].spi_mutex_id)
-    {
-        if (spi_port == 0)
-        {
+    if (!spi_ctx[spi_port].spi_mutex_id) {
+        if (spi_port == 0) {
             spi_ctx[spi_port].spi_mutex_id = osMutexCreate((osMutex(spi0_mutex)));
-        }
-        else
-        {
+        } else {
             spi_ctx[spi_port].spi_mutex_id = osMutexCreate((osMutex(spi1_mutex)));
         }
     }
 
-    if (!spi_ctx[spi_port].spi_mutex_id)
-    {
+    if (!spi_ctx[spi_port].spi_mutex_id) {
         printf("spi0_mutex create failed!\r\n");
         return -1;
     }
 
     return HDF_SUCCESS;
 }
-
 
 /*get spi config from hcs file*/
 static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct DeviceResourceNode *resourceNode)
@@ -449,7 +408,7 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
         return HDF_FAILURE;
     }
 
-    rel_pin = (resource->spi_clk_pin/10)*8+(resource->spi_clk_pin%10);
+    rel_pin = (resource->spi_clk_pin / 10) * 8 + (resource->spi_clk_pin % 10);
     resource->spi_clk_pin = rel_pin;
 
     if (dri->GetUint32(resourceNode, "spi_mosi_pin", &resource->spi_mosi_pin, 0) != HDF_SUCCESS) {
@@ -458,7 +417,7 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
     }
 
     rel_pin = 0;
-    rel_pin = (resource->spi_mosi_pin/10)*8+(resource->spi_mosi_pin%10);
+    rel_pin = (resource->spi_mosi_pin / 10) * 8 + (resource->spi_mosi_pin % 10);
     resource->spi_mosi_pin = rel_pin;
     if (dri->GetUint32(resourceNode, "spi_miso_pin", &resource->spi_miso_pin, 0) != HDF_SUCCESS) {
         printf("spi config read spi_miso_pin fail");
@@ -466,7 +425,7 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
     }
 
     rel_pin = 0;
-    rel_pin = (resource->spi_miso_pin/10)*8+(resource->spi_miso_pin%10);
+    rel_pin = (resource->spi_miso_pin / 10) * 8 + (resource->spi_miso_pin % 10);
     resource->spi_miso_pin = rel_pin;
 
     if (dri->GetUint32(resourceNode, "spi_cs_pin", &resource->spi_cs_pin, 0) != HDF_SUCCESS) {
@@ -475,13 +434,13 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
     }
 
     rel_pin = 0;
-    rel_pin = (resource->spi_cs_pin/10)*8+(resource->spi_cs_pin%10);
+    rel_pin = (resource->spi_cs_pin / 10) * 8 + (resource->spi_cs_pin % 10);
     resource->spi_cs_pin = rel_pin;
 
     return HDF_SUCCESS;
 }
 
-int32_t AttachSpiDevice(struct SpiCntlr *spicntlr,struct HdfDeviceObject *device)
+int32_t AttachSpiDevice(struct SpiCntlr *spicntlr, struct HdfDeviceObject *device)
 {
     int32_t ret;
     struct SpiDevice *spiDevice = NULL;
@@ -524,7 +483,6 @@ struct HdfDriverEntry g_SpiDriverEntry = {
 
 HDF_INIT(g_SpiDriverEntry);
 
-
 /*SPI Method*/
 static int32_t SpiDevGetCfg(struct SpiCntlr *spicntlr, struct SpiCfg *spicfg);
 static int32_t SpiDevSetCfg(struct SpiCntlr *spicntlr, struct SpiCfg *spicfg);
@@ -538,7 +496,7 @@ struct SpiCntlrMethod g_SpiCntlrMethod = {
 
 static int32_t SpiDriverBind(struct HdfDeviceObject *device)
 {
-    if (device== NULL) {
+    if (device == NULL) {
         printf("Sample device object is null!");
         return -1;
     }
@@ -563,13 +521,13 @@ static int32_t SpiDriverInit(struct HdfDeviceObject *device)
         return HDF_FAILURE;
     }
 
-    ret = AttachSpiDevice(spicntlr, device);//SpiCntlr add SpiDevice to priv
+    ret = AttachSpiDevice(spicntlr, device); //SpiCntlr add SpiDevice to priv
     if (ret != HDF_SUCCESS) {
         printf("%s: attach error", __func__);
         return HDF_FAILURE;
     }
 
-    spicntlr->method = &g_SpiCntlrMethod;//register callback
+    spicntlr->method = &g_SpiCntlrMethod; //register callback
 
     return ret;
 }
@@ -581,15 +539,13 @@ static void SpiDriverRelease(struct HdfDeviceObject *device)
 
     printf("Enter %s", __func__);
 
-    if (device == NULL)
-    {
+    if (device == NULL) {
         printf("%s: device is NULL", __func__);
-        return ;
+        return;
     }
 
     spicntlr = SpiCntlrFromDevice(device);
-    if (spicntlr == NULL)
-    {
+    if (spicntlr == NULL) {
         printf("%s: spicntlr is NULL", __func__);
         return;
     }
@@ -597,16 +553,14 @@ static void SpiDriverRelease(struct HdfDeviceObject *device)
     spiDevice = (struct SpiDevice *)spicntlr->priv;
     free(spiDevice);
 
-    return ;
+    return;
 }
-
 
 static int32_t SpiDevGetCfg(struct SpiCntlr *spicntlr, struct SpiCfg *spicfg)
 {
     struct SpiDevice *spiDevice = NULL;
 
-    if (spicntlr == NULL)
-    {
+    if (spicntlr == NULL) {
         printf("%s: spicntlr is NULL", __func__);
         return HDF_FAILURE;
     }
@@ -623,8 +577,7 @@ static int32_t SpiDevGetCfg(struct SpiCntlr *spicntlr, struct SpiCfg *spicfg)
 static int32_t SpiDevSetCfg(struct SpiCntlr *spicntlr, struct SpiCfg *spicfg)
 {
     struct SpiDevice *spiDevice = NULL;
-    if (spicntlr == NULL)
-    {
+    if (spicntlr == NULL) {
         printf("%s: spicntlr is NULL", __func__);
         return HDF_FAILURE;
     }
@@ -637,7 +590,7 @@ static int32_t SpiDevSetCfg(struct SpiCntlr *spicntlr, struct SpiCfg *spicfg)
     spiDevice->resource.speed = spicfg->maxSpeedHz;
     spiDevice->resource.mode = spicfg->mode;
     spiDevice->resource.transmode = spicfg->transferMode;
-    spiDevice->resource.data_size  = spicfg->bitsPerWord;
+    spiDevice->resource.data_size = spicfg->bitsPerWord;
     spi_cfg->rate = spicfg->maxSpeedHz;
 
     return InitSpiDevice(spiDevice);
@@ -647,8 +600,7 @@ static int32_t SpiDevTransfer(struct SpiCntlr *spicntlr, struct SpiMsg *spimsg, 
 {
     struct SpiDevice *spiDevice = NULL;
 
-    if (spicntlr == NULL)
-    {
+    if (spicntlr == NULL) {
         printf("%s: spicntlr is NULL", __func__);
         return HDF_FAILURE;
     }
@@ -657,26 +609,22 @@ static int32_t SpiDevTransfer(struct SpiCntlr *spicntlr, struct SpiMsg *spimsg, 
     spiDevice = (struct SpiDevice *)spicntlr->priv;
     uint32_t spi_id = spiDevice->spi_id;
 
-    for (size_t i = 0; i < count; i++)
-    {
+    for (size_t i = 0; i < count; i++) {
         msg = &spimsg[i];
         /*pull down cs at first*/
-        if(spiDevice->resource.spi_cs_soft)
-        {
+        if (spiDevice->resource.spi_cs_soft) {
             hal_gpio_pin_set_dir(spi_ctx[spi_id].spi_pin_CS0, HAL_GPIO_DIR_OUT, 0);
         }
-        if (msg->wbuf != NULL)
-        {
+        if (msg->wbuf != NULL) {
             //printf("spi send msg data %d\r\n",*msg->wbuf);
             HalSpiSend(spiDevice, msg->wbuf, msg->len, 1000);
         }
-        if(msg->rbuf != NULL){
+        if (msg->rbuf != NULL) {
             HalSpiRecv(spiDevice, msg->rbuf, msg->len, 1000);
-            printf("spi recev data %d %d\r\n",msg->rbuf[3],msg->rbuf[4]);
+            printf("spi recev data %d %d\r\n", msg->rbuf[3], msg->rbuf[4]);
         }
         /*pull pull up cs at the end*/
-        if (msg->csChange)
-        {
+        if (msg->csChange) {
             hal_gpio_pin_set_dir(spi_ctx[spi_id].spi_pin_CS0, HAL_GPIO_DIR_OUT, 1);
         }
         osDelay(msg->delayUs);
@@ -684,63 +632,3 @@ static int32_t SpiDevTransfer(struct SpiCntlr *spicntlr, struct SpiMsg *spimsg, 
 
     return HDF_SUCCESS;
 }
-
-
-#define SPI_TEST
-#ifdef SPI_TEST
-
-static __SRAMBSS uint8_t g_id[5];
-static struct SpiCntlr spicntlr;
-static struct SpiDevice spiDevice;
-
-static void spi_w25q_sample(void)
-{
-    uint8_t w25x_read_id = 0x90;
-
-    /* 配置spi对应总线参数 */
-    spiDevice.spi_id = 1;
-    spicntlr.priv = &spiDevice;
-
-    spiDevice.resource.mode = SPI_WORK_MODE_3;
-    spiDevice.resource.speed = 2 * 1000 *1000;
-    spiDevice.resource.transmode = SPI_TRANSFER_NORMAL;
-    spiDevice.resource.spi_clk_pin = HAL_IOMUX_PIN_P3_7;
-    spiDevice.resource.spi_cs_pin = HAL_IOMUX_PIN_P3_6;
-    spiDevice.resource.spi_miso_pin = HAL_IOMUX_PIN_P3_4;
-    spiDevice.resource.spi_mosi_pin = HAL_IOMUX_PIN_P3_5;
-    spiDevice.resource.spi_cs_soft = 0;
-    spiDevice.resource.data_size = 8;
-    spiDevice.resource.Csnum = 0;
-    InitSpiDevice(&spiDevice);
-
-    struct SpiMsg msg;
-
-    for (size_t i = 0; i < 20; i++)
-    {
-        msg.wbuf   = &w25x_read_id;
-        msg.rbuf   = NULL;
-        msg.len     = 1;
-        msg.csChange = 1;
-        msg.delayUs = 0;
-        printf("spi will send data %d\r\n",*msg.wbuf);
-        SpiDevTransfer(&spicntlr, &msg, 1);
-
-        msg.wbuf   = NULL;
-        msg.rbuf   = g_id;
-        msg.len     = 5;
-        msg.csChange = 1;
-        SpiDevTransfer(&spicntlr, &msg, 1);
-
-        printf("use rt_spi_transfer_message() read w25q ID is:%x%x\r\n", g_id[3], g_id[4]);
-        osDelay(1000);
-    }
-}
-
-void littos_spi_test(void)
-{
-    printf("%s\r\n",__FUNCTION__);
-    spi_w25q_sample();
-}
-
-#endif
-

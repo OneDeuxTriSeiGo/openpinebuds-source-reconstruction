@@ -1,0 +1,13 @@
+import("//build/lite/config/component/lite_component.gni")
+import("../hdf.gni")
+
+static_library("gpio") {
+    sources = [
+        "gpio.c",
+    ]
+
+    include_dirs = hdf_include_dirs
+    include_dirs += [
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal",
+    ]
+}

@@ -23,12 +23,10 @@
 #include "cmsis_os2.h"
 #include "cmsis_os.h"
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-struct I2cResource
-{
+struct I2cResource {
     uint32_t port;
     uint32_t mode;
     uint32_t scl_pin;
@@ -41,8 +39,7 @@ struct I2cResource
     uint32_t address_width;
 };
 
-struct I2cDevice
-{
+struct I2cDevice {
     uint16_t dev_addr;      /**< slave device addr */
     uint32_t address_width; /**< Addressing mode: 7 bit or 10 bit */
     osMutexId mutex;

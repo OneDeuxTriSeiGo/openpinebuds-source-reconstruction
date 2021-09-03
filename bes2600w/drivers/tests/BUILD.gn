@@ -1,0 +1,33 @@
+import("//build/lite/config/component/lite_component.gni")
+import("../hdf.gni")
+
+static_library("driver_test") {
+  sources = []
+
+  if (drivers_gpio_enable) {
+    sources += [ "gpio_test.c" ]
+  }
+
+  if (drivers_i2c_enable) {
+    sources += [ "i2c_test.c" ]
+  }
+
+  if (drivers_spi_enable) {
+    sources += [ "spi_test.c" ]
+  }
+
+  if (drivers_touch_enable) {
+    sources += [ "touch_test.c" ]
+  }
+
+  include_dirs = hdf_include_dirs
+  include_dirs += [
+    "../gpio",
+    "../i2c",
+    "../spi",
+    "../touch/include",
+    "//device/bestechnic/" + board_name + "/sdk_liteos/sys_adapter/include",
+    "//kernel/liteos_m/kal/cmsis",
+    "//third_party/musl/porting/liteos_m/kernel/include",
+  ]
+}

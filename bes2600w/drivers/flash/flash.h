@@ -21,34 +21,34 @@ extern "C" {
 
 #include <stdint.h>
 
-#define PAR_OPT_READ_POS  ( 0 )
-#define PAR_OPT_WRITE_POS ( 1 )
+#define PAR_OPT_READ_POS (0)
+#define PAR_OPT_WRITE_POS (1)
 
-#define PAR_OPT_READ_MASK  ( 0x1u << PAR_OPT_READ_POS )
-#define PAR_OPT_WRITE_MASK ( 0x1u << PAR_OPT_WRITE_POS )
+#define PAR_OPT_READ_MASK (0x1u << PAR_OPT_READ_POS)
+#define PAR_OPT_WRITE_MASK (0x1u << PAR_OPT_WRITE_POS)
 
-#define PAR_OPT_READ_DIS  ( 0x0u << PAR_OPT_READ_POS )
-#define PAR_OPT_READ_EN   ( 0x1u << PAR_OPT_READ_POS )
-#define PAR_OPT_WRITE_DIS ( 0x0u << PAR_OPT_WRITE_POS )
-#define PAR_OPT_WRITE_EN  ( 0x1u << PAR_OPT_WRITE_POS )
+#define PAR_OPT_READ_DIS (0x0u << PAR_OPT_READ_POS)
+#define PAR_OPT_READ_EN (0x1u << PAR_OPT_READ_POS)
+#define PAR_OPT_WRITE_DIS (0x0u << PAR_OPT_WRITE_POS)
+#define PAR_OPT_WRITE_EN (0x1u << PAR_OPT_WRITE_POS)
 
 typedef enum {
-    HAL_PARTITION_ERROR       = -1,
-    HAL_PARTITION_BOOTLOADER  = 2,
-    HAL_PARTITION_BOOT2A      = 3,
-    HAL_PARTITION_BOOT2B      = 4,
-    HAL_PARTITION_TRUSTZONEA  = 5,
-    HAL_PARTITION_TRUSTZONEB  = 6,
-    HAL_PARTITION_TZ_INFO     = 7,
-    HAL_PARTITION_CM33_MAIN   = 8,
+    HAL_PARTITION_ERROR = -1,
+    HAL_PARTITION_BOOTLOADER = 2,
+    HAL_PARTITION_BOOT2A = 3,
+    HAL_PARTITION_BOOT2B = 4,
+    HAL_PARTITION_TRUSTZONEA = 5,
+    HAL_PARTITION_TRUSTZONEB = 6,
+    HAL_PARTITION_TZ_INFO = 7,
+    HAL_PARTITION_CM33_MAIN = 8,
     HAL_PARTITION_SYSTEM_MINI = 9,
-    HAL_PARTITION_RESOURCE    = 10,
-    HAL_PARTITION_LOG         = 11,
-    HAL_PARTITION_DATA        = 12,
-    HAL_PARTITION_MISC        = 13,
-    HAL_PARTITION_USERDATA    = 14,
-    HAL_PARTITION_ENV         = 15,
-    HAL_PARTITION_ENV_REDUND  = 16,
+    HAL_PARTITION_RESOURCE = 10,
+    HAL_PARTITION_LOG = 11,
+    HAL_PARTITION_DATA = 12,
+    HAL_PARTITION_MISC = 13,
+    HAL_PARTITION_USERDATA = 14,
+    HAL_PARTITION_ENV = 15,
+    HAL_PARTITION_ENV_REDUND = 16,
     HAL_PARTITION_MAX,
 } hal_partition_t;
 
@@ -61,27 +61,27 @@ typedef enum {
 } hal_flash_t;
 
 typedef struct {
-    hal_flash_t  partition_owner;
-    const char  *partition_description;
-    uint32_t     partition_start_addr;
-    uint32_t     partition_length;
-    uint32_t     partition_options;
+    hal_flash_t partition_owner;
+    const char *partition_description;
+    uint32_t partition_start_addr;
+    uint32_t partition_length;
+    uint32_t partition_options;
 } hal_logic_partition_t;
 
-#define BOOT_INFO_A_ADDR            0xFD0000
-#define BOOT_INFO_A_B_SIZE          0x6000
-#define BOOT_INFO_B_ADDR            (BOOT_INFO_A_ADDR + BOOT_INFO_A_B_SIZE)
-#define SECURE_CHECK_MAX_TIME       3
-#define EXCEPTION_REBOOT_COUNT_MAX  3
-#define CMU_BOOTMODE_WATCHDOG_BIT   (1 << 0)
-#define OTA_BOOT_INFO_HEAD_LEN      (4 + 4)
-#define OTA_BOOT_INFO_BODY_LEN      20
-#define RD_DATA_LEN_MAX             200
-#define RD_SIGN_LEN_MAX             384
-#define MISC_HEADER_MAGIC           0x6564636A
+#define BOOT_INFO_A_ADDR 0xFD0000
+#define BOOT_INFO_A_B_SIZE 0x6000
+#define BOOT_INFO_B_ADDR (BOOT_INFO_A_ADDR + BOOT_INFO_A_B_SIZE)
+#define SECURE_CHECK_MAX_TIME 3
+#define EXCEPTION_REBOOT_COUNT_MAX 3
+#define CMU_BOOTMODE_WATCHDOG_BIT (1 << 0)
+#define OTA_BOOT_INFO_HEAD_LEN (4 + 4)
+#define OTA_BOOT_INFO_BODY_LEN 20
+#define RD_DATA_LEN_MAX 200
+#define RD_SIGN_LEN_MAX 384
+#define MISC_HEADER_MAGIC 0x6564636A
 
 typedef struct {
-    int rdDataLen;      /* 研发模式明文长度 */
+    int rdDataLen;                /* 研发模式明文长度 */
     char rdData[RD_DATA_LEN_MAX]; /* 研发模式明文 */
     char rdSign[RD_SIGN_LEN_MAX]; /* 研发模式签名 */
 } RdModeInfo;
@@ -99,24 +99,24 @@ typedef struct {
 } MiscDataInfo;
 
 typedef enum {
-	BOOT_AREA_A = 0,
-	BOOT_AREA_B = 1,
+    BOOT_AREA_A = 0,
+    BOOT_AREA_B = 1,
 } BootAreaVal;
 
 typedef enum {
-	UPG_MODE_NORMAL = 0, /* normal模式 */
-	UPG_MODE_OTA = 1, /* OTA升级模式 */
+    UPG_MODE_NORMAL = 0, /* normal模式 */
+    UPG_MODE_OTA = 1,    /* OTA升级模式 */
 } UpgModeVal;
 
 typedef enum {
-	NORMAL_OTA = 0,  /* 非静默升级 */
-	QUIET_FIRST_STAGE = 1, /* 静默升级第一阶段 */
-	QUIET_SECOND_STAGE = 2, /* 静默升级第二阶段 */
+    NORMAL_OTA = 0,         /* 非静默升级 */
+    QUIET_FIRST_STAGE = 1,  /* 静默升级第一阶段 */
+    QUIET_SECOND_STAGE = 2, /* 静默升级第二阶段 */
 } OtaUpgTypeVal;
 
 typedef enum {
-	NORMAL_REBOOT = 0,  /* 非定时重启 */
-	TIMER_REBOOT = 1,  /* 定时重启 */
+    NORMAL_REBOOT = 0, /* 非定时重启 */
+    TIMER_REBOOT = 1,  /* 定时重启 */
 } RebootTypeVal;
 
 typedef enum {
@@ -132,28 +132,28 @@ typedef enum {
 } MiscDataType;
 
 typedef enum {
-	BOOTINFO_ORIGIN,
-	BOOTINFO_BACKUP,
-	BOOTINFO_INVALID
-}bootinfo_block;
+    BOOTINFO_ORIGIN,
+    BOOTINFO_BACKUP,
+    BOOTINFO_INVALID
+} bootinfo_block;
 
 typedef enum {
-	BOOTINFO_ZONE_0,
-	BOOTINFO_ZONE_1,
-	BOOTINFO_ZONE_2,
-	BOOTINFO_ZONE_3,
-	BOOTINFO_ZONE_4,
-	BOOTINFO_ZONE_5,
-	BOOTINFO_ZONE_MAX
-}bootinfo_zone;
+    BOOTINFO_ZONE_0,
+    BOOTINFO_ZONE_1,
+    BOOTINFO_ZONE_2,
+    BOOTINFO_ZONE_3,
+    BOOTINFO_ZONE_4,
+    BOOTINFO_ZONE_5,
+    BOOTINFO_ZONE_MAX
+} bootinfo_zone;
 
 typedef enum {
-	SECURE_CHECK_BOOT2A,
-	SECURE_CHECK_BOOT2B,
-	SECURE_CHECK_CM33_MAIN,
-	SECURE_CHECK_CM33_MINI,
-	SECURE_CHECK_MAX
-}secure_check_zone;
+    SECURE_CHECK_BOOT2A,
+    SECURE_CHECK_BOOT2B,
+    SECURE_CHECK_CM33_MAIN,
+    SECURE_CHECK_CM33_MINI,
+    SECURE_CHECK_MAX
+} secure_check_zone;
 
 typedef enum {
     LINK_BOOT2A,
@@ -161,18 +161,18 @@ typedef enum {
     LINK_CM33_MAIN,
     LINK_CM33_MINI,
     LINK_MAX
-}link_entry;
+} link_entry;
 
 typedef enum {
     /** No error, everything OK.   */
-      ERR_OK         = 0,
+    ERR_OK = 0,
     /** parameter error.           */
-      ERR_PARAMETER  = -1,
+    ERR_PARAMETER = -1,
     /** function return error.     */
-      ERR_RETURN     = -2,
+    ERR_RETURN = -2,
     /** software exception error.  */
-      ERR_SWEXCEPTION  = -3,
-}err_enum;
+    ERR_SWEXCEPTION = -3,
+} err_enum;
 
 /**
  * Get the information of the specified flash area
@@ -299,7 +299,7 @@ int32_t GetFlashBadBlock(hal_partition_t *partition, uint32_t *offset, uint32_t 
 
 int32_t GetFlashType(int32_t *factoryID, int32_t *deviceID);
 
-int32_t GetFlashStatisticInfo(hal_partition_t  partition,  uint32_t  blockNum , uint32_t op , uint32_t *blockTimes);
+int32_t GetFlashStatisticInfo(hal_partition_t partition, uint32_t blockNum, uint32_t op, uint32_t *blockTimes);
 
 int32_t GetFlashRewriteCycle(hal_partition_t partition, uint32_t blockNum, uint32_t op, uint32_t *times);
 
@@ -310,4 +310,3 @@ int32_t GetFlashBadBlockNum(hal_partition_t partition, uint32_t *blockNum);
 #endif
 
 #endif /* HAL_FLASH_H */
-

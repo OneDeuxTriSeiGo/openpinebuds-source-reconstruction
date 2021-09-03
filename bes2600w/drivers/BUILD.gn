@@ -13,53 +13,44 @@
 
 import("//build/lite/config/subsystem/lite_subsystem.gni")
 import("//build/lite/config/component/lite_component.gni")
+import("hdf.gni")
 
-static_library("hdf_adapter") {
+group("drivers") {
+    deps = []
 
-    sources = []
+    if (drivers_flash_enable == true) {
+        deps += [ "flash:flash" ]
+    }
 
-    sources += [
-        "src/uart.c",
-        "src/gpio.c",
-        "src/i2c.c",
-        "src/spi.c",
-        "src/pwm.c",
-        "src/littlefs.c",
-        "src/flash.c",
-        "src/flash_conf.c",
-    ]
+    if (drivers_gpio_enable == true) {
+        deps += [ "gpio:gpio" ]
+    }
 
-    deps = [
-        "//device/bestechnic/"+board_name+":build_sdk_into_lib",
-        "//third_party/bounds_checking_function:libsec_static"
-    ]
+    if (drivers_i2c_enable == true) {
+        deps += [ "i2c:i2c" ]
+    }
 
-    include_dirs = [
-        #api
-        "//device/bestechnic/"+board_name+"/sdk_liteos/hdf_adapter/include",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/sys_adapter/include",
-        #BES SDK
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal/best2003",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/utils/kfifo",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/drivers/ana/",
-        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/utils/crc32/",
-        #HDF drivers
-        "//drivers/liteos/include/host",
-        "//drivers/adapter/uhdf/posix/include/",
-        "//drivers/adapter/khdf/liteos/osal/include",
-        "//drivers/framework/include/core",
-        "//drivers/framework/ability/sbuf/include",
-        "//drivers/framework/utils/include",
-        "//drivers/framework/support/platform/include",
-        "//drivers/framework/include/utils",
-        "//drivers/framework/include/platform",
-        "//drivers/framework/include/config",
-        "//drivers/framework/include/osal",
-        "//kernel/liteos_m/kernel/arch/include",
-        #third party
-        "//third_party/littlefs/include",
-    ]
+    if (drivers_spi_enable == true) {
+        deps += [ "spi:spi" ]
+    }
+
+    if (drivers_uart_enable == true) {
+        deps += [ "uart:uart" ]
+    }
+
+    if (drivers_pwm_enable == true) {
+        deps += [ "pwm:pwm" ]
+    }
+
+    if (drivers_touch_enable == true) {
+        deps += [ "touch:touch" ]
+    }
+
+    if (drivers_wifi_enable == true) {
+        deps += [ "wifi:wifi" ]
+    }
+
+    if (drivers_test_enable == true) {
+        deps += [ "tests:driver_test" ]
+    }
 }

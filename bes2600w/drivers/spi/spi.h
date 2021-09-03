@@ -23,26 +23,22 @@
 #include "cmsis_os2.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-enum SPI_WORK_MODE
-{
-    SPI_WORK_MODE_0,                  // CPOL = 0; CPHA = 0
-    SPI_WORK_MODE_2,                  // CPOL = 1; CPHA = 0
-    SPI_WORK_MODE_1,                  // CPOL = 0; CPHA = 1
-    SPI_WORK_MODE_3,                  // CPOL = 1; CPHA = 1
+enum SPI_WORK_MODE {
+    SPI_WORK_MODE_0, // CPOL = 0; CPHA = 0
+    SPI_WORK_MODE_2, // CPOL = 1; CPHA = 0
+    SPI_WORK_MODE_1, // CPOL = 0; CPHA = 1
+    SPI_WORK_MODE_3, // CPOL = 1; CPHA = 1
 };
 
-enum SPI_TRANSFER_MODE
-{
+enum SPI_TRANSFER_MODE {
     SPI_TRANSFER_DMA,
     SPI_TRANSFER_NORMAL,
 };
 
-struct SpiResource
-{
+struct SpiResource {
     uint32_t num;
     uint32_t speed;
     enum SPI_TRANSFER_MODE transmode;
@@ -56,8 +52,7 @@ struct SpiResource
     uint32_t spi_cs_pin;
 };
 
-struct SPI_CTX_OBJ_T
-{
+struct SPI_CTX_OBJ_T {
     enum HAL_IOMUX_PIN_T spi_pin_CS0;
     enum HAL_IOMUX_FUNCTION_T spi_fun_DI0;
     enum HAL_IOMUX_FUNCTION_T spi_fun_CLK;
@@ -74,16 +69,11 @@ struct SPI_CTX_OBJ_T
     int (*spi_close)(uint32_t cs);
 };
 
-struct SpiDevice
-{
+struct SpiDevice {
     uint32_t spi_id;
     struct SpiResource resource;
     struct HAL_SPI_CFG_T spidevcfg;
 };
-
-void littos_spi_test(void);
-
-
 
 #ifdef __cplusplus
 }

@@ -21,19 +21,18 @@
 #include "kfifo.h"
 #include "cmsis_os.h"
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 #define UART_DEV_SERVICE_NAME_PREFIX "HDF_PLATFORM_UART%d"
 #define MAX_DEV_NAME_SIZE 32
 
 struct UartResource {
-    uint32_t num;        /* UART port num */
-    uint32_t baudrate;   /* Default baudrate */
-    uint32_t wlen;       /* Default word length */
-    uint32_t parity;     /* Default parity */
-    uint32_t stopBit;    /* Default stop bits */
+    uint32_t num;      /* UART port num */
+    uint32_t baudrate; /* Default baudrate */
+    uint32_t wlen;     /* Default word length */
+    uint32_t parity;   /* Default parity */
+    uint32_t stopBit;  /* Default stop bits */
     bool txDMA;
     bool rxDMA;
 };
@@ -43,8 +42,7 @@ enum UartDeviceState {
     UART_DEVICE_INITIALIZED = 0x1u,
 };
 
-struct UART_CTX_OBJ
-{
+struct UART_CTX_OBJ {
     uint8_t *buffer;
     bool txDMA;
     bool rxDMA;

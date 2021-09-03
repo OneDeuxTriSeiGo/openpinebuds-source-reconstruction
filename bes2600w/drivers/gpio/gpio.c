@@ -24,9 +24,9 @@
 #define HDF_LOG_TAG gpio_driver
 
 struct oem_gpio_irq_handler {
-    uint8_t      port;
-    GpioIrqFunc  func;
-    void         *arg;
+    uint8_t port;
+    GpioIrqFunc func;
+    void *arg;
 };
 
 enum HAL_GPIO_PIN_T g_gpioPinReflectionMap[HAL_GPIO_PIN_LED_NUM] = {0};
@@ -58,12 +58,10 @@ static void OemGpioIrqHdl(enum HAL_GPIO_PIN_T pin)
         return;
     }
 
-    printf("%s %d, pin:%d", __func__, __LINE__, pin);
-
     hdlPointer = &g_oemGpioIrqHandler[pin];
     if (g_gpioPinReflectionMap[hdlPointer->port] == pin) {
         if (hdlPointer->func) {
-            hdlPointer->func(hdlPointer->port,hdlPointer->arg);
+            hdlPointer->func(hdlPointer->port, hdlPointer->arg);
         } else {
             printf("%s %d, error hdlPointer->func == NULL", __func__, __LINE__);
         }
@@ -111,17 +109,17 @@ static int32_t GpioDevEnableIrq(struct GpioCntlr *cntlr, uint16_t gpio);
 static int32_t GpioDevDisableIrq(struct GpioCntlr *cntlr, uint16_t gpio);
 /* GpioMethod definitions */
 struct GpioMethod g_GpioCntlrMethod = {
-    .request    =  NULL,
-    .release    =  NULL,
-    .write      =  GpioDevWrite,
-    .read       =  GpioDevRead,
-    .setDir     =  GpioDevSetDir,
-    .getDir     =  GpioDevGetDir,
-    .toIrq      =  NULL,
-    .setIrq     =  GpioDevSetIrq,
-    .unsetIrq   =  GpioDevUnSetIrq,
-    .enableIrq  =  GpioDevEnableIrq,
-    .disableIrq =  GpioDevDisableIrq,
+    .request = NULL,
+    .release = NULL,
+    .write = GpioDevWrite,
+    .read = GpioDevRead,
+    .setDir = GpioDevSetDir,
+    .getDir = GpioDevGetDir,
+    .toIrq = NULL,
+    .setIrq = GpioDevSetIrq,
+    .unsetIrq = GpioDevUnSetIrq,
+    .enableIrq = GpioDevEnableIrq,
+    .disableIrq = GpioDevDisableIrq,
 };
 
 int InitGpioDevice(struct GpioDevice *device)
@@ -132,8 +130,7 @@ int InitGpioDevice(struct GpioDevice *device)
     gpio_cfg.function = HAL_IOMUX_FUNC_AS_GPIO;
     gpio_cfg.volt = HAL_IOMUX_PIN_VOLTAGE_VIO;
 
-    if ((device->config == OUTPUT_PUSH_PULL) || (device->config == OUTPUT_OPEN_DRAIN_PULL_UP)
-        || (device->config == INPUT_PULL_UP) || (device->config == IRQ_MODE)) {
+    if ((device->config == OUTPUT_PUSH_PULL) || (device->config == OUTPUT_OPEN_DRAIN_PULL_UP) || (device->config == INPUT_PULL_UP) || (device->config == IRQ_MODE)) {
         gpio_cfg.pull_sel = HAL_IOMUX_PIN_PULLUP_ENABLE;
     } else if ((device->config == INPUT_PULL_DOWN)) {
         gpio_cfg.pull_sel = HAL_IOMUX_PIN_PULLDOWN_ENABLE;
@@ -145,7 +142,6 @@ int InitGpioDevice(struct GpioDevice *device)
 
     return HDF_SUCCESS;
 }
-
 
 static uint32_t GetGpioDeviceResource(
     struct GpioDevice *device, const struct DeviceResourceNode *resourceNode)
@@ -237,8 +233,6 @@ static int32_t GpioDriverInit(struct HdfDeviceObject *device)
         return HDF_ERR_INVALID_OBJECT;
     }
 
-    printf("Enter %s:", __func__);
-
     gpioCntlr = GpioCntlrFromDevice(device);
     if (gpioCntlr == NULL) {
         printf("GpioCntlrFromDevice fail\r\n");
@@ -284,8 +278,6 @@ static void GpioDriverRelease(struct HdfDeviceObject *device)
         printf("%s: device is NULL", __func__);
         return;
     }
-
-    printf("Enter %s:", __func__);
 
     gpioCntlr = GpioCntlrFromDevice(device);
     if (gpioCntlr == NULL) {
@@ -376,11 +368,11 @@ static int32_t GpioDevSetIrq(struct GpioCntlr *cntlr, uint16_t gpio, uint16_t mo
         return -1;
     }
 
-    g_oemGpioIrqHandler[pin].port  = gpio;
-    g_oemGpioIrqHandler[pin].func  = func;
-    g_oemGpioIrqHandler[pin].arg   = arg;
+    g_oemGpioIrqHandler[pin].port = gpio;
+    g_oemGpioIrqHandler[pin].func = func;
+    g_oemGpioIrqHandler[pin].arg = arg;
 
-    gpio_irq_cfg[pin].irq_polarity =  mode;
+    gpio_irq_cfg[pin].irq_polarity = mode;
 
     return HDF_SUCCESS;
 }
@@ -394,8 +386,8 @@ static int32_t GpioDevUnSetIrq(struct GpioCntlr *cntlr, uint16_t gpio)
         return -1;
     }
 
-    g_oemGpioIrqHandler[pin].func  = NULL;
-    g_oemGpioIrqHandler[pin].arg   = NULL;
+    g_oemGpioIrqHandler[pin].func = NULL;
+    g_oemGpioIrqHandler[pin].arg = NULL;
 
     return HDF_SUCCESS;
 }

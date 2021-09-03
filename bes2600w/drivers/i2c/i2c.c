@@ -67,7 +67,7 @@ int32_t InitI2cDevice(struct I2cDevice *device)
         return HDF_FAILURE;
     }
 
-    struct HAL_I2C_CONFIG_T *i2cConfig= &device->i2c_cfg;
+    struct HAL_I2C_CONFIG_T *i2cConfig = &device->i2c_cfg;
     if (i2cConfig == NULL) {
         printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
         return HDF_FAILURE;
@@ -134,7 +134,7 @@ static int32_t HostRestI2cDevice(struct I2cDevice *device)
         printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
         return HDF_FAILURE;
     }
-    struct HAL_I2C_CONFIG_T *i2cConfig= &device->i2c_cfg;
+    struct HAL_I2C_CONFIG_T *i2cConfig = &device->i2c_cfg;
     if (i2cConfig == NULL) {
         printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
         return HDF_FAILURE;
@@ -160,9 +160,8 @@ static int32_t HostRestI2cDevice(struct I2cDevice *device)
     return ret;
 }
 
-static uint32_t GetI2cDeviceResource(
-    struct I2cDevice *device,
-    const struct DeviceResourceNode *resourceNode)
+static uint32_t GetI2cDeviceResource(struct I2cDevice *device,
+                                     const struct DeviceResourceNode *resourceNode)
 {
     uint32_t temp_pin = 0;
     if (device == NULL || resourceNode == NULL) {
@@ -174,7 +173,7 @@ static uint32_t GetI2cDeviceResource(
         printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
         return HDF_FAILURE;
     }
-    struct HAL_I2C_CONFIG_T *i2cConfig= &device->i2c_cfg;
+    struct HAL_I2C_CONFIG_T *i2cConfig = &device->i2c_cfg;
     if (i2cConfig == NULL) {
         printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
         return HDF_FAILURE;
@@ -272,7 +271,6 @@ static int32_t i2cDriverInit(struct HdfDeviceObject *device)
         return HDF_ERR_INVALID_OBJECT;
     }
 
-    printf("Enter %s:\r\n", __func__);
     host = (struct I2cCntlr *)malloc(sizeof(struct I2cCntlr));
     if (host == NULL) {
         printf("%s: host is NULL\r\n", __func__);
@@ -286,6 +284,7 @@ static int32_t i2cDriverInit(struct HdfDeviceObject *device)
         return HDF_FAILURE;
     }
     host->ops = &g_i2cHostMethod;
+    device->priv = (void *)host;
     ret = I2cCntlrAdd(host);
     if (ret != HDF_SUCCESS) {
         i2cDriverRelease(device);
@@ -308,25 +307,12 @@ static void i2cDriverRelease(struct HdfDeviceObject *device)
     struct I2cCntlr *i2cCntrl = NULL;
     struct I2cDevice *i2cDevice = NULL;
     uint16_t port = 0;
-    printf("Enter %s\r\n", __func__);
 
     if (device == NULL) {
         printf("%s: device is NULL\r\n", __func__);
         return;
     }
-    struct DeviceResourceNode *resourceNode = (struct DeviceResourceNode *)device->property;
-    struct DeviceResourceIface *dri = NULL;
-    dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
-    if (dri == NULL || dri->GetUint16 == NULL) {
-        printf("DeviceResourceIface is invalid\r\n");
-        return ;
-    }
-
-    if (dri->GetUint16(resourceNode, "port", &port, 0) != HDF_SUCCESS) {
-        printf("i2c config port fail\r\n");
-        return ;
-    }
-    i2cCntrl = I2cCntlrGet(port);
+    i2cCntrl = device->priv;
     if (i2cCntrl == NULL) {
         printf("%s: i2cCntrl is NULL\r\n", __func__);
         return;
@@ -376,7 +362,7 @@ static int32_t i2c_transfer(struct I2cDevice *device, struct I2cMsg *msgs, int16
         }
         if (msg->flags == I2C_FLAG_READ) {
             ret = hal_i2c_task_recv(i2cPort, msg->addr, msg->buf, 0, msg->buf, msg->len, 0, NULL);
-            if (ret){
+            if (ret) {
                 printf("%s:%d,i2c recev fail, dev_addr = 0x%x, ret = %d\r\n", __func__, __LINE__, msg->addr, ret);
                 osMutexRelease(device->mutex);
                 return i;
@@ -411,15 +397,11 @@ static int32_t i2cHostTransfer(struct I2cCntlr *cntlr, struct I2cMsg *msgs, int1
         return HDF_FAILURE;
     }
 
-    device = (struct I2cDevice*)cntlr->priv;
+    device = (struct I2cDevice *)cntlr->priv;
     if (device == NULL) {
         printf("%s: I2cDevice is NULL\r\n", __func__);
         return HDF_FAILURE;
     }
 
-    if (i2c_transfer(device, msgs, count) == count) {
-        return HDF_SUCCESS;
-    } else {
-        return HDF_FAILURE;
-    }
+    return i2c_transfer(device, msgs, count);
 }

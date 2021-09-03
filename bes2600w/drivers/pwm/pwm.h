@@ -21,8 +21,7 @@
 #include "pwm_core.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 struct PwmResource {

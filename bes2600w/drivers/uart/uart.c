@@ -22,8 +22,8 @@
 #include "hal_cache.h"
 #define HDF_LOG_TAG uart_dev
 
-#define UART_FIFO_MAX_BUFFER   2048
-#define UART_DMA_RING_BUFFER_SIZE  256 // mast be 2^n
+#define UART_FIFO_MAX_BUFFER 2048
+#define UART_DMA_RING_BUFFER_SIZE 256 // mast be 2^n
 
 static __SRAMBSS unsigned char _hal_uart_buf[UART_DMA_RING_BUFFER_SIZE];
 static __SRAMBSS unsigned char _hal_uart1_buf[UART_DMA_RING_BUFFER_SIZE];
@@ -31,8 +31,9 @@ static __SRAMBSS unsigned char _hal_uart2_buf[UART_DMA_RING_BUFFER_SIZE];
 static __SRAMBSS unsigned char _hal_uart3_buf[UART_DMA_RING_BUFFER_SIZE];
 
 static struct UART_CTX_OBJ uart_ctx[4] = {0};
-static unsigned char *uart_kfifo_buffer[4]={NULL,NULL,NULL,NULL};
-struct HAL_UART_CFG_T low_uart_cfg = { // used for tgdb cli console
+static unsigned char *uart_kfifo_buffer[4] = {NULL, NULL, NULL, NULL};
+struct HAL_UART_CFG_T low_uart_cfg = {
+    // used for tgdb cli console
     .parity = HAL_UART_PARITY_NONE,
     .stop = HAL_UART_STOP_BITS_1,
     .data = HAL_UART_DATA_BITS_8,
@@ -51,11 +52,9 @@ static void hal_set_uart_iomux(enum HAL_UART_ID_T uart_id)
         hal_iomux_set_uart0();
     } else if (uart_id == 1) {
         hal_iomux_set_uart1();
-    } else if (uart_id == 2)
-    {
+    } else if (uart_id == 2) {
         hal_iomux_set_uart2();
-    }else
-    {
+    } else {
         hal_iomux_set_uart3();
     }
 }
@@ -211,17 +210,17 @@ static int32_t hal_uart_send(uint32_t uart_id, const void *data, uint32_t size, 
         return ret;
     }
 
-    hal_uart_dma_send(uart_id,data,size,&dma_desc_tx,&desc_cnt);
+    hal_uart_dma_send(uart_id, data, size, &dma_desc_tx, &desc_cnt);
     osSemaphoreWait(&uart_ctx[uart_id].tx_sem, timeout);
 
     return HDF_SUCCESS;
 }
 
-static int32_t hal_uart_recv(uint8_t  uart_id, void *data, uint32_t expect_size,
-                        uint32_t *recv_size, uint32_t timeout)
+static int32_t hal_uart_recv(uint8_t uart_id, void *data, uint32_t expect_size,
+                             uint32_t *recv_size, uint32_t timeout)
 {
-    int32_t  ret = HDF_FAILURE;
-    uint32_t begin_time =0;
+    int32_t ret = HDF_FAILURE;
+    uint32_t begin_time = 0;
     uint32_t now_time = 0;
     uint32_t fifo_pop_len = 0;
     uint32_t recved_len = 0;
@@ -239,13 +238,12 @@ static int32_t hal_uart_recv(uint8_t  uart_id, void *data, uint32_t expect_size,
 
     begin_time = TICKS_TO_MS(hal_sys_timer_get());
 
-    do
-    {
+    do {
         fifo_pop_len = kfifo_get(&uart_ctx[uart_id].fifo, (uint8_t *)data + recved_len, expect_len);
         recved_len += fifo_pop_len;
         expect_len -= fifo_pop_len;
 
-        printf("uart have %ld len data\r\n",fifo_pop_len);
+        printf("uart have %ld len data\r\n", fifo_pop_len);
 
         if (recved_len >= expect_size) {
             break;
@@ -262,7 +260,7 @@ static int32_t hal_uart_recv(uint8_t  uart_id, void *data, uint32_t expect_size,
         /*time out break*/
         now_time = TICKS_TO_MS(hal_sys_timer_get());
 
-        if((uint32_t)(now_time - begin_time) >= timeout){
+        if ((uint32_t)(now_time - begin_time) >= timeout) {
             break;
         }
     } while (1);
@@ -297,26 +295,23 @@ static void hal_uart_handler_init(struct UartDevice *device)
         uart_ctx[uart_id].buffer = _hal_uart2_buf;
     }
 
-    if(!uart_kfifo_buffer[uart_id])
-    {
-        uart_kfifo_buffer[uart_id] = (char *) malloc(UART_FIFO_MAX_BUFFER);
-        if(!uart_kfifo_buffer[uart_id])
-        {
+    if (!uart_kfifo_buffer[uart_id]) {
+        uart_kfifo_buffer[uart_id] = (char *)malloc(UART_FIFO_MAX_BUFFER);
+        if (!uart_kfifo_buffer[uart_id]) {
             printf("kfifo malloc failed!");
             return;
         }
         kfifo_init(&uart_ctx[uart_id].fifo, uart_kfifo_buffer[uart_id], UART_FIFO_MAX_BUFFER);
     }
 
-    osSemaphoreCreate(uart_ctx[uart_id].rx_sem,0);
-    osSemaphoreCreate(uart_ctx[uart_id].tx_sem,0);
+    osSemaphoreCreate(uart_ctx[uart_id].rx_sem, 0);
+    osSemaphoreCreate(uart_ctx[uart_id].tx_sem, 0);
 
-    if (uart_ctx[uart_id].rxDMA)
-    {
+    if (uart_ctx[uart_id].rxDMA) {
         printf("uart %ld start dma rx\r\n", uart_id);
         hal_uart_irq_set_dma_handler(uart_id, uart_ctx[uart_id].uart_dma_rx_handler, uart_ctx[uart_id].uart_dma_tx_handler);
         hal_uart_rx_start(uart_id);
-    }else{
+    } else {
         hal_uart_start_rx(uart_id);
     }
 }
@@ -327,7 +322,7 @@ static void uart_start(struct UartDevice *device)
     struct HAL_UART_CFG_T *uart_cfg;
     uart_cfg = &device->config;
     hal_uart_open(uart_id, uart_cfg);
-    printf("%s %ld\r\n",__FUNCTION__, uart_id);
+    printf("%s %ld\r\n", __FUNCTION__, uart_id);
     hal_uart_handler_init(device);
 }
 
@@ -347,7 +342,6 @@ struct HdfDriverEntry g_UartDriverEntry = {
 
 /* Initialize HdfDriverEntry */
 HDF_INIT(g_UartDriverEntry);
-
 
 /* UartHostMethod method definitions */
 static int32_t UartHostDevInit(struct UartHost *host);
@@ -403,9 +397,8 @@ static int InitUartDevice(struct UartHost *host)
     uart_ctx[uartDevice->uart_id].txDMA = resource->txDMA;
     uart_ctx[uartDevice->uart_id].rxDMA = resource->rxDMA;
 
-    if (!uartDevice->init_flag)
-    {
-        printf("uart %ld device init\r\n",uartDevice->uart_id);
+    if (!uartDevice->init_flag) {
+        printf("uart %ld device init\r\n", uartDevice->uart_id);
         hal_set_uart_iomux(uartDevice->uart_id);
         uart_start(uartDevice);
         uartDevice->init_flag = true;
@@ -413,7 +406,6 @@ static int InitUartDevice(struct UartHost *host)
 
     return HDF_SUCCESS;
 }
-
 
 static uint32_t GetUartDeviceResource(
     struct UartDevice *device, const struct DeviceResourceNode *resourceNode)
@@ -614,15 +606,13 @@ static int32_t UartHostDevWrite(struct UartHost *host, uint8_t *data, uint32_t s
     }
 
     port_id = device->uart_id;
-    if (uart_ctx[port_id].txDMA)
-    {
+    if (uart_ctx[port_id].txDMA) {
         hal_uart_send(port_id, data, size, 1000);
-    }else{
+    } else {
         for (uint32_t idx = 0; idx < size; idx++) {
-            if(!uart_ctx[port_id].isblock){
+            if (!uart_ctx[port_id].isblock) {
                 hal_uart_blocked_putc(port_id, data[idx]);
-            }else
-            {
+            } else {
                 hal_uart_putc(port_id, data[idx]);
             }
         }
@@ -651,18 +641,17 @@ static int32_t UartHostDevRead(struct UartHost *host, uint8_t *data, uint32_t si
     }
 
     uint32_t uart_id = uartDevice->uart_id;
-    if (uart_ctx[uart_id].rxDMA)
-    {
+    if (uart_ctx[uart_id].rxDMA) {
         ret = hal_uart_recv(uart_id, data, size, &recv_size, 1000);
-        if(ret!=HDF_SUCCESS){
-            printf("uart %ld recev error\r\n",uart_id);
+        if (ret != HDF_SUCCESS) {
+            printf("uart %ld recev error\r\n", uart_id);
             return HDF_FAILURE;
         }
         ret = recv_size;
-    }else{
-        if(!uart_ctx[uart_id].isblock){
+    } else {
+        if (!uart_ctx[uart_id].isblock) {
             data[0] = hal_uart_blocked_getc(uart_id);
-        }else{
+        } else {
             data[0] = hal_uart_getc(uart_id);
         }
         ret = 1;
@@ -689,7 +678,7 @@ static int32_t UartHostDevSetBaud(struct UartHost *host, uint32_t baudRate)
     uart_cfg = &uartDevice->config;
     uart_cfg->baud = baudRate;
 
-    hal_uart_reopen(uart_id,uart_cfg);
+    hal_uart_reopen(uart_id, uart_cfg);
 
     return HDF_SUCCESS;
 }
@@ -728,8 +717,7 @@ static int32_t UartHostDevSetAttribute(struct UartHost *host, struct UartAttribu
     uint32_t uart_id = uartDevice->uart_id;
     uart_cfg = &uartDevice->config;
 
-    switch (attribute->dataBits)
-    {
+    switch (attribute->dataBits) {
     case UART_ATTR_DATABIT_8:
         uart_cfg->data = HAL_UART_DATA_BITS_8;
         break;
@@ -749,8 +737,7 @@ static int32_t UartHostDevSetAttribute(struct UartHost *host, struct UartAttribu
 
     uart_cfg->parity = attribute->parity;
 
-    switch (attribute->stopBits)
-    {
+    switch (attribute->stopBits) {
     case UART_ATTR_STOPBIT_1:
     case UART_ATTR_STOPBIT_2:
         uart_cfg->stop = attribute->stopBits;
@@ -760,17 +747,17 @@ static int32_t UartHostDevSetAttribute(struct UartHost *host, struct UartAttribu
         break;
     }
 
-    if (attribute->rts && attribute->cts){
+    if (attribute->rts && attribute->cts) {
         uart_cfg->flow = HAL_UART_FLOW_CONTROL_RTSCTS;
-    }else if (attribute->rts && !attribute->cts){
+    } else if (attribute->rts && !attribute->cts) {
         uart_cfg->flow = HAL_UART_FLOW_CONTROL_RTS;
-    }else if (!attribute->rts && attribute->cts){
+    } else if (!attribute->rts && attribute->cts) {
         uart_cfg->flow = HAL_UART_FLOW_CONTROL_CTS;
-    }else{
+    } else {
         uart_cfg->flow = HAL_UART_FLOW_CONTROL_NONE;
     }
 
-    hal_uart_reopen(uart_id,uart_cfg);
+    hal_uart_reopen(uart_id, uart_cfg);
 
     return HDF_SUCCESS;
 }
@@ -790,8 +777,7 @@ static int32_t UartHostDevGetAttribute(struct UartHost *host, struct UartAttribu
     uartDevice = (struct UartDevice *)host->priv;
     uart_cfg = &uartDevice->config;
 
-    switch (uart_cfg->data)
-    {
+    switch (uart_cfg->data) {
     case HAL_UART_DATA_BITS_8:
         attribute->dataBits = UART_ATTR_DATABIT_8;
         break;
@@ -812,8 +798,7 @@ static int32_t UartHostDevGetAttribute(struct UartHost *host, struct UartAttribu
     attribute->parity = uart_cfg->parity;
     attribute->stopBits = uart_cfg->stop;
 
-    switch (uart_cfg->flow)
-    {
+    switch (uart_cfg->flow) {
     case HAL_UART_FLOW_CONTROL_NONE:
         attribute->rts = 0;
         attribute->cts = 0;
@@ -852,24 +837,21 @@ static int32_t UartHostDevSetTransMode(struct UartHost *host, enum UartTransMode
     uartDevice = (struct UartDevice *)host->priv;
     uint32_t uart_id = uartDevice->uart_id;
 
-    if ((UART_MODE_RD_BLOCK & mode) == 0)
-    {
+    if ((UART_MODE_RD_BLOCK & mode) == 0) {
         uart_ctx[uart_id].isblock = UART_MODE_RD_BLOCK;
-    }else{
+    } else {
         uart_ctx[uart_id].isblock = UART_MODE_RD_NONBLOCK;
     }
 
-    if ((UART_MODE_DMA_RX_EN & mode) == 0)
-    {
+    if ((UART_MODE_DMA_RX_EN & mode) == 0) {
         uart_ctx[uart_id].rxDMA = UART_MODE_DMA_RX_EN;
-    }else{
+    } else {
         uart_ctx[uart_id].rxDMA = UART_MODE_DMA_RX_DIS;
     }
 
-    if ((UART_MODE_DMA_TX_EN & mode) == 0)
-    {
+    if ((UART_MODE_DMA_TX_EN & mode) == 0) {
         uart_ctx[uart_id].txDMA = UART_MODE_DMA_TX_EN;
-    }else{
+    } else {
         uart_ctx[uart_id].txDMA = UART_MODE_DMA_TX_DIS;
     }
 
@@ -881,25 +863,25 @@ static int32_t UartHostDevSetTransMode(struct UartHost *host, enum UartTransMode
 
 void littos_uart_test(void)
 {
-    printf("%s\r\n",__FUNCTION__);
+    printf("%s\r\n", __FUNCTION__);
 
     int32_t ret;
     uint32_t send_len;
     int32_t recev_len;
     uint8_t buffer[100];
-    struct UartHost *test_uart=NULL;
+    struct UartHost *test_uart = NULL;
 
     test_uart = (struct UartHost *)malloc(sizeof(struct UartHost));
     if (test_uart == NULL) {
         printf("%s: malloc test_uart error", __func__);
-        return ;
+        return;
     }
 
     struct UartDevice *uartdev = NULL;
     uartdev = (struct UartDevice *)malloc(sizeof(struct UartDevice));
     if (uartdev == NULL) {
         printf("%s: malloc uartdev error", __func__);
-        return ;
+        return;
     }
 
     uartdev->init_flag = false;
@@ -913,23 +895,20 @@ void littos_uart_test(void)
     test_uart->priv = uartdev;
 
     ret = UartHostDevInit(test_uart);
-    if (ret!=HDF_SUCCESS)
-    {
+    if (ret != HDF_SUCCESS) {
         printf("UartHostDevInit error!\r\n");
         free(uartdev);
         free(test_uart);
         return;
     }
 
-    UartHostDevWrite(test_uart,(unsigned char *)"uart test write\r\n",20);
-    while (1)
-    {
-        if(uart_rx_flag){
-            memset(buffer,0,100);
-            while ((recev_len = UartHostDevRead(test_uart,buffer,100)) > 0)
-            {
-                buffer[recev_len+1]= '\0';
-                UartHostDevWrite(test_uart,buffer,recev_len+1);
+    UartHostDevWrite(test_uart, (unsigned char *)"uart test write\r\n", 20);
+    while (1) {
+        if (uart_rx_flag) {
+            memset(buffer, 0, 100);
+            while ((recev_len = UartHostDevRead(test_uart, buffer, 100)) > 0) {
+                buffer[recev_len + 1] = '\0';
+                UartHostDevWrite(test_uart, buffer, recev_len + 1);
             }
             recev_len = 0;
         }
