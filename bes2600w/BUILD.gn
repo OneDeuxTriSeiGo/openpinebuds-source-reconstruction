@@ -107,6 +107,11 @@ build_ext_component("build_sdk_into_lib") {
   command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type}"
 }
 
+build_ext_component("create_yaml_dir") {
+  exec_path = rebase_path("burn_tools")
+  command = "mkdir -p ${temp_yaml}"
+}
+
 # config bin from vendor/bestechnic/<product_name>/config.json
 foreach(bin_file, bin_list) {
   build_enable = bin_file.enable
@@ -236,6 +241,7 @@ foreach(bin_file, bin_list) {
       addr = bin_file.startaddr
       size = bin_file.bin_size
       command = "python tools/gen_yaml_signle.py ${src_yaml} ${addr} ${burn_name} ${size} ${temp_yaml}"
+      deps = [ ":create_yaml_dir" ]
     }
   }
 }
@@ -253,7 +259,7 @@ foreach(fs_bin, fs_list) {
     fs_src = fs_bin.fs_src
     build_ext_component(gen_fs_name) {
       exec_path = rebase_path("resources")
-      command = "./genfs.sh 4096 ${fs_size} ${fs_src} ${fs_name}"
+      command = "./genfs.sh ${block_size} ${fs_size} ${fs_src} ${fs_name}"
     }
 
     # sig fs bin to hash_sig bin
