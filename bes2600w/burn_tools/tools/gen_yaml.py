@@ -43,7 +43,6 @@ while True:
         break
 
     if line.startswith("- "):
-        print(line)
         label_addr = src_yaml_fd.readline()
         label_file_name = src_yaml_fd.readline()
         name_arry = label_file_name.split(": ")
@@ -54,19 +53,28 @@ while True:
                 temp_line = temp_yaml_fd.readline()
                 if not temp_line:
                     break
-                print(line)
+                print(temp_line)
                 dest_yaml_fd.write(temp_line)
             temp_yaml_fd.close()
+            while True:
+                src_line = src_yaml_fd.readline()
+                if src_line.strip().split(": ")[0] == "SWITCH" or not src_line:
+                    break
         else:
+            print(line)
             dest_yaml_fd.write(line)
+            print(label_addr)
             dest_yaml_fd.write(label_addr)
+            print(label_file_name)
             dest_yaml_fd.write(label_file_name)
             while True:
                 src_line = src_yaml_fd.readline()
+                print (src_line)
                 dest_yaml_fd.write(src_line)
                 if src_line.strip().split(": ")[0] == "SWITCH" or not src_line:
                     break
     else:
+        print (line)
         dest_yaml_fd.write(line)
 
 dest_yaml_fd.close()
