@@ -257,6 +257,7 @@ foreach(fs_bin, fs_list) {
     gen_fs_name = "genfs_${fs_name}"
     fs_size = fs_bin.fs_size
     fs_src = fs_bin.fs_src
+    block_size = fs_bin.block_size
     build_ext_component(gen_fs_name) {
       exec_path = rebase_path("resources")
       command = "./genfs.sh ${block_size} ${fs_size} ${fs_src} ${fs_name}"
