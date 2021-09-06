@@ -37,10 +37,6 @@ static struct HAL_GPIO_IRQ_CFG_T hal_gpio_get_irq_config(enum HAL_GPIO_PIN_T pin
 {
     struct HAL_GPIO_IRQ_CFG_T irq_cfg;
 
-#if defined(PMU_HAS_LED_PIN) && defined(PMU_HAS_LED_IRQ)
-    enum HAL_GPIO_PIN_T max_pin = HAL_GPIO_PIN_NUM;
-    max_pin = HAL_GPIO_PIN_LED_NUM;
-#endif
     irq_cfg.irq_enable = gpio_irq_cfg[pin].irq_enable;
     irq_cfg.irq_debounce = gpio_irq_cfg[pin].irq_debounce;
     irq_cfg.irq_type = gpio_irq_cfg[pin].irq_type;
@@ -147,11 +143,7 @@ static uint32_t GetGpioDeviceResource(
     struct GpioDevice *device, const struct DeviceResourceNode *resourceNode)
 {
     struct GpioResource *resource = &device->resource;
-    struct DeviceResourceIface *dri = NULL;
-    uint32_t rel_pin;
-    int32_t ret;
-
-    dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
+    struct DeviceResourceIface *dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
 
     if (dri == NULL || dri->GetUint32 == NULL) {
         printf("DeviceResourceIface is invalid");
@@ -179,14 +171,13 @@ static uint32_t GetGpioDeviceResource(
             return HDF_FAILURE;
         }
 
-        rel_pin = resource->realPin / DECIMALNUM * OCTALNUM + resource->realPin % DECIMALNUM;
+        uint32_t rel_pin = resource->realPin / DECIMALNUM * OCTALNUM + resource->realPin % DECIMALNUM;
         g_gpioPinReflectionMap[resource->pin] = rel_pin;
         device->config = resource->config;
         resource->pin = rel_pin;
         device->port = rel_pin;
 
-        ret = InitGpioDevice(device);
-
+        int32_t ret = InitGpioDevice(device);
         if (ret != HDF_SUCCESS) {
             printf("InitGpioDevice FAIL\r\n");
             return HDF_FAILURE;

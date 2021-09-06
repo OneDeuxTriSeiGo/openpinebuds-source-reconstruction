@@ -44,17 +44,18 @@ static void gpio_input_test(void)
     }
 }
 
-static void gpio_irq_handler(uint16_t gpio, void *data)
+static int32_t gpio_irq_handler(uint16_t gpio, void *data)
 {
     if (gpio != gpio05 || !data) {
         LOG_E("unexpected irq from gpio %d", gpio);
-        return;
+        return -1;
     }
     uint16_t val = 0;
     GpioRead(gpio, &val);
     LOG_I("arg %d, gpio %d, val %d", *(int *)data, gpio, val);
     LOG_I("disable irq");
     GpioDisableIrq(gpio);
+    return 0;
 }
 
 static void gpio_irq_test(void)
@@ -62,7 +63,7 @@ static void gpio_irq_test(void)
     static int val = 1234;
     LOG_I("set gpio %d input", gpio05);
     GpioSetDir(gpio05, GPIO_DIR_IN);
-    GpioSetIrq(gpio05, GPIO_IRQ_TRIGGER_RISING, gpio_irq_handler, &val);
+    GpioSetIrq(gpio05, GPIO_IRQ_TRIGGER_RISING, (GpioIrqFunc)gpio_irq_handler, &val);
     GpioEnableIrq(gpio05);
 }
 

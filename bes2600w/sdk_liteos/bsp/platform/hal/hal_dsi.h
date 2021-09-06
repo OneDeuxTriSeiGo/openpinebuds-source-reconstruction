@@ -95,6 +95,8 @@ struct HAL_DSI_CFG_T {
     int cfg_ckey_v2;
 };
 
+typedef void (*HAL_DSI_XFER_COMPLETE_CALLBACK_T)(uint32_t);
+
 void hal_dsi_init(uint16_t h_res);
 
 void hal_dsi_start(void);
@@ -113,6 +115,9 @@ void hal_dsi_read_cmd(uint8_t cmd,uint8_t* read_buf,uint8_t len);
 void hal_dsi_send_cmd_data(uint8_t cmd, uint32_t len, uint8_t p0, uint8_t p1, uint8_t p2, uint8_t p3);
 void hal_dsi_send_long_array(uint32_t len,uint32_t *data);
 void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count, unsigned char *para_list);
+
+void hal_lcdc_update_addr(const void *layer0, const void *layer1, const void *layer2);
+void hal_lcdc_set_callback(HAL_DSI_XFER_COMPLETE_CALLBACK_T callback);
 
 #ifdef __cplusplus
 }

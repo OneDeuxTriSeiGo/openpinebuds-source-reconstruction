@@ -1,0 +1,25 @@
+declare_args() {
+    drivers_gpio_enable = true
+    drivers_i2c_enable = true
+    drivers_spi_enable = false
+    drivers_uart_enable = false
+    drivers_pwm_enable = false
+    drivers_flash_enable = true
+    drivers_mipi_dsi_enable = true
+    drivers_lcd_enable = true
+    drivers_display_enable = true
+    drivers_touch_enable = true
+    drivers_wifi_enable = false
+    drivers_test_enable = true
+}
+
+hdf_include_dirs = [
+    "//drivers/adapter/khdf/liteos_m/osal/include/",
+    "//drivers/framework/include/core",
+    "//drivers/framework/include/utils",
+    "//drivers/framework/core/host/include",
+    "//drivers/framework/core/shared/include",
+    "//drivers/framework/utils/include",
+    "//kernel/liteos_m/kernel/arch/include",
+    "//base/hiviewdfx/hilog_lite/interfaces/native/kits",
+]

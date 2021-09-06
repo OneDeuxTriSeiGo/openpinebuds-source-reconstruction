@@ -146,6 +146,8 @@ foreach(bin_file, bin_list) {
       deps = [
         ":${copy_lib_name}",
         "//base/startup/bootstrap_lite/services/source:bootstrap",
+        "//device/bestechnic/bes2600w/drivers:drivers",
+        "//device/bestechnic/bes2600w/sdk_liteos/fs_adapter:fs_adapter",
         "//device/bestechnic/bes2600w/sdk_liteos/sys_adapter:sys_adapter",
         "//drivers/adapter/khdf/liteos_m:hdf_lite",
         "//kernel/liteos_m:kernel",

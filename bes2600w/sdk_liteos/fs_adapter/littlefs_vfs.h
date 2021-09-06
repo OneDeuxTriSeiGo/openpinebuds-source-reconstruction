@@ -18,18 +18,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "lfs.h"
-#include "lfs_util.h"
 
-int32_t littlefs_block_read(const struct lfs_config *c, lfs_block_t block,
-                             lfs_off_t off, void *dst, lfs_size_t size);
-
-int32_t littlefs_block_write(const struct lfs_config *c, lfs_block_t block,
-                              lfs_off_t off, const void *dst, lfs_size_t size);
-
-int32_t littlefs_block_erase(const struct lfs_config *c, lfs_block_t block);
-
-int32_t littlefs_block_sync(const struct lfs_config *c);
+void fs_mount();
+void fs_umount();
 
 #ifdef __cplusplus
 }

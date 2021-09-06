@@ -1,1 +1,3 @@
-welcome to bestechnic file system
+Welcome to bestechnic file system!
+Please put files into data/your_mount_point folder, and access them by "/your_mount_point/xx" in your applications;
+NOTICE: max mount points = LOSCFG_LFS_MAX_MOUNT_SIZE.
