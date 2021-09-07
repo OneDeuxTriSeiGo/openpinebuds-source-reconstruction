@@ -1061,7 +1061,6 @@ static int ota_partition_read_erase_write(const hal_partition_t partition, uint3
     }
 
     memcpy((dst_buf + dst_offset), src_buf, src_len);
-    src_buf += src_len;
 
     ret = ota_partition_common_erase_write(partition, start_addr, dst_buf_len, dst_buf, dst_buf_len);
     return ret;
@@ -1069,9 +1068,8 @@ static int ota_partition_read_erase_write(const hal_partition_t partition, uint3
 
 static int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr)
 {
-    int ret = 0;
-    uint32_t num = 0;
-    uint32_t flash_offset = 0;
+    int ret;
+    uint32_t num;
     hal_logic_partition_t partition_info;
     uint8_t ota_partition[6] = {HAL_PARTITION_BOOT2A, HAL_PARTITION_BOOT2B, HAL_PARTITION_TRUSTZONEA,
                                 HAL_PARTITION_TRUSTZONEB, HAL_PARTITION_CM33_MAIN, HAL_PARTITION_SYSTEM_MINI};
@@ -1085,7 +1083,7 @@ static int ota_partition_check_magic(const hal_partition_t partition, const uint
 
     for (num = 0; num < sizeof(ota_partition); num++) {
         if ((partition == ota_partition[num]) && (addr == 0)) {
-            flash_offset = partition_info.partition_start_addr;
+            uint32_t flash_offset = partition_info.partition_start_addr;
             magic_buf[0] = 0x1c;
             magic_buf[1] = 0xec;
             magic_buf[2] = 0x57;

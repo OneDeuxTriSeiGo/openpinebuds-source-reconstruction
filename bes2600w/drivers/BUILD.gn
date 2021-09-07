@@ -13,44 +13,56 @@
 
 import("//build/lite/config/subsystem/lite_subsystem.gni")
 import("//build/lite/config/component/lite_component.gni")
-import("hdf.gni")
+import("drivers.gni")
 
 group("drivers") {
     deps = []
 
-    if (drivers_flash_enable == true) {
+    if (drivers_flash_enable) {
         deps += [ "flash:flash" ]
     }
 
-    if (drivers_gpio_enable == true) {
+    if (drivers_gpio_enable) {
         deps += [ "gpio:gpio" ]
     }
 
-    if (drivers_i2c_enable == true) {
+    if (drivers_i2c_enable) {
         deps += [ "i2c:i2c" ]
     }
 
-    if (drivers_spi_enable == true) {
+    if (drivers_spi_enable) {
         deps += [ "spi:spi" ]
     }
 
-    if (drivers_uart_enable == true) {
+    if (drivers_uart_enable) {
         deps += [ "uart:uart" ]
     }
 
-    if (drivers_pwm_enable == true) {
+    if (drivers_pwm_enable) {
         deps += [ "pwm:pwm" ]
     }
 
-    if (drivers_touch_enable == true) {
+    if (drivers_mipi_dsi_enable) {
+        deps += [ "mipi_dsi:mipi_dsi" ]
+    }
+
+    if (drivers_lcd_enable) {
+        deps += [ "lcd:lcd" ]
+    }
+
+    if (drivers_display_enable) {
+        deps += [ "display:display" ]
+    }
+
+    if (drivers_touch_enable) {
         deps += [ "touch:touch" ]
     }
 
-    if (drivers_wifi_enable == true) {
+    if (drivers_wifi_enable) {
         deps += [ "wifi:wifi" ]
     }
 
-    if (drivers_test_enable == true) {
+    if (drivers_test_enable) {
         deps += [ "tests:driver_test" ]
     }
 }

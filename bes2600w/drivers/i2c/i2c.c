@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 #include <stdlib.h>
+#include <securec.h>
 #include "i2c.h"
 #include "i2c_core.h"
 #include "i2c_if.h"
@@ -82,7 +83,7 @@ int32_t InitI2cDevice(struct I2cDevice *device)
     uint32_t i2cPort = device->port;
 
     if (i2cPort > HAL_I2C_ID_NUM) {
-        printf("i2c port %d not support\r\n", i2cPort);
+        printf("i2c port %u not support\r\n", i2cPort);
         return HDF_FAILURE;
     }
 
@@ -112,9 +113,9 @@ int32_t InitI2cDevice(struct I2cDevice *device)
 
     ret = hal_i2c_open(i2cPort, i2cConfig);
     if (ret) {
-        printf("open %ld i2c fail,ret %ld\r\n", i2cPort, ret);
+        printf("open %u i2c fail,ret %d\r\n", i2cPort, ret);
     } else {
-        printf("open %ld i2c succ.\r\n", i2cPort);
+        printf("open %u i2c succ.\r\n", i2cPort);
     }
 
     osMutexRelease(device->mutex);
@@ -142,7 +143,7 @@ static int32_t HostRestI2cDevice(struct I2cDevice *device)
     device->port = resource->port;
     uint32_t i2cPort = device->port;
     if (i2cPort > HAL_I2C_ID_NUM) {
-        printf("i2c port %d not support\r\n", i2cPort);
+        printf("i2c port %u not support\r\n", i2cPort);
         return HDF_FAILURE;
     }
 
@@ -153,9 +154,9 @@ static int32_t HostRestI2cDevice(struct I2cDevice *device)
     hal_i2c_close(i2cPort);
     ret = hal_i2c_open(i2cPort, i2cConfig);
     if (ret) {
-        printf("open %ld i2c fail, ret %ld\r\n", i2cPort, ret);
+        printf("open %u i2c fail, ret %d\r\n", i2cPort, ret);
     } else {
-        printf("open %ld i2c succ.\r\n", i2cPort);
+        printf("open %u i2c succ.\r\n", i2cPort);
     }
     return ret;
 }
@@ -178,8 +179,7 @@ static uint32_t GetI2cDeviceResource(struct I2cDevice *device,
         printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
         return HDF_FAILURE;
     }
-    struct DeviceResourceIface *dri = NULL;
-    dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
+    struct DeviceResourceIface *dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
     if (dri == NULL || dri->GetUint32 == NULL) {
         printf("DeviceResourceIface is invalid\r\n");
         return HDF_FAILURE;
@@ -277,14 +277,14 @@ static int32_t i2cDriverInit(struct HdfDeviceObject *device)
         return HDF_FAILURE;
     }
     (void)memset_s(host, sizeof(struct I2cCntlr), 0, sizeof(struct I2cCntlr));
+    host->ops = &g_i2cHostMethod;
+    device->priv = (void *)host;
     ret = AttachI2cDevice(host, device);
     if (ret != HDF_SUCCESS) {
         printf("%s: attach error\r\n", __func__);
         i2cDriverRelease(device);
         return HDF_FAILURE;
     }
-    host->ops = &g_i2cHostMethod;
-    device->priv = (void *)host;
     ret = I2cCntlrAdd(host);
     if (ret != HDF_SUCCESS) {
         i2cDriverRelease(device);
@@ -306,7 +306,6 @@ static void i2cDriverRelease(struct HdfDeviceObject *device)
 {
     struct I2cCntlr *i2cCntrl = NULL;
     struct I2cDevice *i2cDevice = NULL;
-    uint16_t port = 0;
 
     if (device == NULL) {
         printf("%s: device is NULL\r\n", __func__);
@@ -317,20 +316,16 @@ static void i2cDriverRelease(struct HdfDeviceObject *device)
         printf("%s: i2cCntrl is NULL\r\n", __func__);
         return;
     }
-
-    i2cDevice = (struct I2cDevice *)i2cCntrl->priv;
-    if (i2cDevice == NULL) {
-        printf("%s %d: invalid parameter\r\n", __func__, __LINE__);
-        return HDF_FAILURE;
-    }
-
     i2cCntrl->ops = NULL;
-    if (i2cDevice->mutex != NULL) {
-        osMutexDelete(i2cDevice->mutex);
-    }
-    free(i2cDevice);
+    i2cDevice = (struct I2cDevice *)i2cCntrl->priv;
     free(i2cCntrl);
-    return;
+
+    if (i2cDevice != NULL) {
+        if (i2cDevice->mutex != NULL) {
+            osMutexDelete(i2cDevice->mutex);
+        }
+        free(i2cDevice);
+    }
 }
 
 static int32_t i2c_transfer(struct I2cDevice *device, struct I2cMsg *msgs, int16_t count)
@@ -338,15 +333,15 @@ static int32_t i2c_transfer(struct I2cDevice *device, struct I2cMsg *msgs, int16
     int ret;
     struct I2cMsg *msg = NULL;
     struct I2cMsg *msg2 = NULL;
-    int32_t i2cPort;
+    uint32_t i2cPort;
     if (device == NULL || msgs == NULL) {
         printf("%s: device or  msgs is NULL\r\n", __func__);
         return HDF_FAILURE;
     }
 
-    i2cPort = (int32_t)device->port;
+    i2cPort = (uint32_t)device->port;
     if (i2cPort > HAL_I2C_ID_NUM) {
-        printf("i2c port %d not support\r\n", i2cPort);
+        printf("i2c port %u not support\r\n", i2cPort);
         return HDF_FAILURE;
     }
     if (osOK != osMutexWait(device->mutex, osWaitForever)) {

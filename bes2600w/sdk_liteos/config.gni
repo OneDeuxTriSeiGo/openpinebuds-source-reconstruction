@@ -106,8 +106,20 @@ if (wrap_fs_api == "true") {
         "-Wl,--wrap=rename",
         "-Wl,--wrap=statfs",
         "-Wl,--wrap=ftruncate",
+
+        "-Wl,--wrap=fopen",
         "-Wl,--wrap=fclose",
         "-Wl,--wrap=fflush",
+        "-Wl,--wrap=fread",
+        "-Wl,--wrap=fwrite",
+        "-Wl,--wrap=fseek",
+        "-Wl,--wrap=ftell",
+        "-Wl,--wrap=fgets",
+        "-Wl,--wrap=fputs",
+        "-Wl,--wrap=feof",
+        "-Wl,--wrap=fileno",
+        "-Wl,--wrap=clearerr",
+        "-Wl,--wrap=strdup",
     ]
 }
 

@@ -23,6 +23,7 @@ void gpio_test(void);
 void i2c_test(void);
 void spi_test(void);
 void touch_test(void);
+void display_test(void);
 
 #ifdef __cplusplus
 }

@@ -25,5 +25,6 @@ static_library("fs_adapter") {
     include_dirs = [
         "//device/bestechnic/"+board_name+"/drivers/flash/",
         "//third_party/littlefs",
+        "//third_party/musl/porting/liteos_m/kernel/include",
     ]
 }

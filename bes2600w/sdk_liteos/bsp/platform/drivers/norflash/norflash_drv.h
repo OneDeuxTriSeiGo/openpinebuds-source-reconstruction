@@ -189,7 +189,7 @@ int norflash_set_block_protection(enum HAL_FLASH_ID_T id, uint32_t bp);
 
 int norflash_security_register_get_lock_status(enum HAL_FLASH_ID_T id, uint32_t id_map, uint32_t *p_locked);
 
-int norflash_security_register_lock(enum HAL_FLASH_ID_T id, uint32_t index);
+int norflash_security_register_lock(enum HAL_FLASH_ID_T id, uint32_t id_map);
 
 enum HAL_NORFLASH_RET_T norflash_security_register_erase(enum HAL_FLASH_ID_T id, uint32_t start_address);
 
