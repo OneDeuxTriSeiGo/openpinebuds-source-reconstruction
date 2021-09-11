@@ -1,4 +1,3 @@
-#!/usr/bin/env sh
 # Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +11,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-build_product=$1
+import("//build/lite/config/component/lite_component.gni")
+import("../drivers.gni")
 
-cd ../../../
-WIFIIOT_SDK_EXE_NAME="wifiiot_sdk_bes2600w"
-WIFIIOT_SDK_PATH="out/bes2600w/${build_product}/bin/"
+static_library("flash") {
+    sources = [
+        "flash.c",
+        "flash_conf.c",
+    ]
 
-if [ -f "$WIFIIOT_SDK_PATH$WIFIIOT_SDK_EXE_NAME.elf" ]; then
-    arm-none-eabi-objcopy -O binary "$WIFIIOT_SDK_PATH$WIFIIOT_SDK_EXE_NAME.elf" "$WIFIIOT_SDK_PATH$WIFIIOT_SDK_EXE_NAME.bin"
-    echo "build wifiiot_sdk.bin success!"
-else
-    echo "build wifiiot_sdk.bin failed!"
-fi
+    include_dirs = hdf_include_dirs
+    include_dirs += [
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/hal",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/platform/drivers/ana",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/utils/crc32",
+        "//device/bestechnic/"+board_name+"/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis",
+    ]
+}

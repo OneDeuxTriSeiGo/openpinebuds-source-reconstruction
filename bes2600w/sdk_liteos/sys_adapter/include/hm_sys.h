@@ -22,7 +22,9 @@
 extern "C" {
 #endif
 
-void AddCustomATCmd();
+void RegisterCustomATCmd(void);
+
+int OhosSystemAdapterHooks(void);
 
 #ifdef __cplusplus
 }

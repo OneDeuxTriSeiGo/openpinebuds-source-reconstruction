@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-build_product=$1
-build_trustzone=$2
-build_mini_sys=$3
-build_type=`echo $4 | tr '[a-z]' '[A-Z]'`
+bin_name=$1
+bin_path="./release_bin"
+bin_sig_path="./auto_build_tool/hash_sig"
 
-HMOS_OUT_PATH="../../../out/bes2600w/${build_product}/libs/"
-SDK_LIB_PATH="sdk_liteos/bsp/out/best2600w_liteos/libbest2600w_liteos.a"
-if [ -f "$SDK_LIB_PATH" ]; then
-    cp -rf $SDK_LIB_PATH $HMOS_OUT_PATH
-    echo "cp libbest2600w_liteos.a to libs success!"
-else
-    echo "cp libbest2600w_liteos.a to libs failed!"
-fi
+# gen hash of fs
+./tools/gen_hash_of_bin ${bin_path}/${bin_name}.bin
+mv ${bin_path}/${bin_name}_hash.bin ${bin_sig_path}/
+
+# todo implment sigature
