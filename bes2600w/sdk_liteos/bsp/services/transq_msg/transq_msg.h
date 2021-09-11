@@ -70,8 +70,7 @@ struct TRANSQ_MSG_AF_BUF {
     unsigned int len;
 };
 
-
-struct TRANSQ_MSG{
+union TRANSQ_MSG {
     struct TRANSQ_MSG_TRACE trace;
     struct TRANSQ_MSG_AF_CONFIG_T stream_cfg;
     struct TRANSQ_MSG_AF_BUF stream_buf;
@@ -81,7 +80,7 @@ typedef struct {
     TRANSQ_MSG_TYPE_T type;
     enum HAL_TRANSQ_PRI_T pri;
     unsigned int id;
-    struct TRANSQ_MSG msg;
+    union TRANSQ_MSG msg;
     void *user_data;
     unsigned int user_data_len;
     unsigned char sync;

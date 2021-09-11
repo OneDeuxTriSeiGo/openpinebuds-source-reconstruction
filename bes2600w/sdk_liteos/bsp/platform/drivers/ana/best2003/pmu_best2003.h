@@ -53,9 +53,11 @@ enum PMU_EFUSE_PAGE_T {
 
     PMU_EFUSE_PAGE_DCCALIB_R    = 12,
     PMU_EFUSE_PAGE_TEMP_CALI    = 13,
-    PMU_EFUSE_PAGE_RESERVED_14  = 14,
-    PMU_EFUSE_PAGE_RESERVED_15  = 15,
+    PMU_EFUSE_PAGE_GPADC_CALI   = 14,
+    PMU_EFUSE_PAGE_WIFI_5G_CALI = 15,
 };
+
+#define PMU_EFUSE_PAGE_GPADC_CALI PMU_EFUSE_PAGE_GPADC_CALI
 
 enum PMU_PLL_DIV_TYPE_T {
     PMU_PLL_DIV_DIG,
@@ -146,6 +148,8 @@ void pmu_codec_hppa_enable(int enable);
 
 void pmu_codec_mic_bias_enable(uint32_t map);
 
+void pmu_codec_mic_bias_lowpower_mode(uint32_t map);
+
 void pmu_pll_div_reset_set(enum HAL_CMU_PLL_T pll);
 
 void pmu_pll_div_reset_clear(enum HAL_CMU_PLL_T pll);
@@ -187,6 +191,10 @@ int pmu_get_code_ver(unsigned short *val);
 int pmu_set_boot_flash_cfg(void);
 
 int pmu_get_boot_flash_cfg(union BOOT_FLASH_CFG_T *val);
+
+int pmu_get_efuse_wifi_cali(uint8_t *pa_pad_cap_m, uint8_t *pa_driver_a);
+
+int pmu_set_efuse_wifi_cali(uint8_t pa_pad_cap_m, uint8_t pa_driver_a);
 
 #ifdef __cplusplus
 }
