@@ -146,6 +146,8 @@ void hal_usbhost_port_reset(uint32_t ms);
 
 int hal_usbhost_get_chan(uint8_t *chan);
 
+const struct HAL_USBHOST_CHAN_TYPE_T *hal_usbhost_get_chan_type(uint8_t chan);
+
 int hal_usbhost_free_chan(uint8_t chan);
 
 int hal_usbhost_init_chan(uint8_t chan, const struct HAL_USBHOST_CHAN_TYPE_T *type);

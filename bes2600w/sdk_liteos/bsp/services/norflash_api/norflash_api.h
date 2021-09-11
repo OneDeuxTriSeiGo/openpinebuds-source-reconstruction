@@ -258,6 +258,9 @@ enum NORFLASH_API_RET_T norflash_api_remap_done(
                          uint32_t start_addr,
                          uint32_t len);
 
+#ifdef FLASH_API_GUARD_THREAD
+void norflash_suspend_guard_wake(void);
+#endif
 #ifdef __cplusplus
 }
 #endif

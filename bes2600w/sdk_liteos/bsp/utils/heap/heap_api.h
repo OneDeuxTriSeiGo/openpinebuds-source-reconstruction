@@ -90,7 +90,7 @@ void med_memory_info(size_t *total,
                     size_t *used,
                     size_t *max_used);
 
-#ifdef BLE_AUDIO_ENABLED
+#if BLE_AUDIO_ENABLED
 void le_audio_syspool_init(void);
 int le_audio_syspool_get_buff(uint8_t **buff, uint32_t size);
 #endif
