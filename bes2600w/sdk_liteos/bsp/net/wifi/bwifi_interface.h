@@ -468,6 +468,14 @@ void bwifi_set_connecting_status(void);
  */
 int bwifi_set_ps_mode(int ps);
 
+/*
+ * swtich channel dynamically
+ * @mode: 0 softap mode, 1 sta mode
+ * @channel: channel number
+ * @snd_offset: secondary channel offset to center freq, 0 - no snd ch, 1 - upper 10M -1 - lower 10M
+ * Returns: 0 on success or negtive on failure
+ */
+int bwifi_switch_channel(uint8_t mode, uint8_t channel, int8_t snd_offset);
 #ifdef __AP_MODE__
 /*
  * Start softap with previous configuration

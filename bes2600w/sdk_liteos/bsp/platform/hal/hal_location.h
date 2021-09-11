@@ -160,7 +160,7 @@ extern "C" {
 
 #endif // !__GNUC__ || ROM_BUILD || PROGRAMMER
 
-#if defined(__GNUC__) && defined(__ARM_ARCH_ISA_ARM)
+#if defined(__GNUC__) && defined(__ARM_ARCH_ISA_ARM) && !defined(NUTTX_BUILD)
 #define SYNC_FLAGS_LOC                  HAL_SEC_LOC(.sync_flags)
 #define SYNC_FLAGS_DEF(n)               HAL_SEC_DEF(.sync_flags, n)
 #else

@@ -16,9 +16,7 @@
 #define _TARGET_CONFIG_H
 
 #include "cmsis.h"
-#include "hal_timer.h"
 #include "los_compiler.h"
-#include "los_interrupt.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -41,6 +39,8 @@ extern "C" {
 #define OS_SYS_CLOCK            (1000UL)
 #else
 #if (CHIP_BEST2003)
+extern uint32_t hal_cmu_get_fast_timer_freq(void);
+#define CONFIG_FAST_SYSTICK_HZ  hal_cmu_get_fast_timer_freq()
 #define OS_SYS_CLOCK            CONFIG_FAST_SYSTICK_HZ
 #else
 #define OS_SYS_CLOCK            CONFIG_SYSTICK_HZ
@@ -313,7 +313,7 @@ extern "C" {
                                        Memory module configuration
 ============================================================================= */
 #define LOSCFG_SYS_EXTERNAL_HEAP                            1
-extern UINT32 __os_heap_start__[];
+extern UINT8 __os_heap_start__[];
 
 /**
  * @ingroup los_config

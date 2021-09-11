@@ -24,7 +24,11 @@ extern "C" {
 #include "hal_trace_mod.h"
 
 #ifndef AUDIO_DEBUG
+#if defined(CONFIG_BES_AUDIO_DUMP)
+#define AUDIO_DEBUG
+#else
 // #define AUDIO_DEBUG
+#endif
 #endif
 
 // #define INTERSYS_RAW_DATA_ONLY
@@ -87,6 +91,7 @@ extern "C" {
 #undef ASSERT
 #if !defined(CONFIG_ARCH_CHIP_DEBUG_H)
 #include "syslog.h"
+void _assert(FAR const char *filename, int linenum) noreturn_function;
 #endif
 #endif
 #if (defined(DEBUG) || defined(REL_TRACE_ENABLE)) && !defined(NO_REL_TRACE)
@@ -182,6 +187,7 @@ extern "C" {
 #endif
 
 #define TRACE_DUMMY(attr, str, ...)         TR_DUMMY(attr, str, ##__VA_ARGS__)
+
 #if (defined(DEBUG) || defined(REL_TRACE_ENABLE)) && defined(ASSERT_SHOW_FILE_FUNC)
 #define ASSERT(cond, str, ...)      { if (!(cond)) { hal_trace_assert_dump(__FILE__, __FUNCTION__, __LINE__, str, ##__VA_ARGS__); } }
 #define ASSERT_DUMP_ARGS            const char *file, const char *func, unsigned int line, const char *fmt, ...
@@ -202,6 +208,11 @@ extern "C" {
 #define ASSERT(cond, str, ...)      { if (!(cond)) { hal_trace_dummy(str, ##__VA_ARGS__); hal_trace_assert_dump(NULL); } }
 #define ASSERT_DUMP_ARGS            const char *fmt
 #define ASSERT_FMT_ARG_IDX          0
+#endif
+
+#if defined(NUTTX_BUILD) && !defined(CONFIG_ARCH_CHIP_DEBUG_H)
+#undef ASSERT
+#define ASSERT(cond, str, ...)      { if (!(cond)) { _assert(str,1); } }
 #endif
 
 #if (defined(DEBUG) || defined(REL_TRACE_ENABLE))

@@ -43,7 +43,8 @@ extern uint8_t *wagt_sync_ptr;
 #define WIFI_DATAOUT_NUM       (32)
 #define WIFI_DATAOUT_SIZE      (SKB_TX_DATA_SIZE)
 #define SEND2PEER_TRY_CNT      (100)
-
+#define WIFI_HEARTBEAT_TIMEOUT (8000) // 8s
+#define WIFI_HEARTBEAT_PERIOD  (2000) // 2s
 /* elements of ipc_xxx should be the same as CP_IPC_MSG_HDR's */
 typedef struct ipc_data {
     uint16_t ipc_id;
@@ -86,6 +87,7 @@ typedef enum {
     NET_IPC_MSG_DEL_ALLCFG,
     NET_IPC_MSG_DEL_CFG,
     NET_IPC_MSG_PS,
+    NET_IPC_MSG_SW_CH,
     NET_IPC_MSG_STAT_EN,
     NET_IPC_MSG_STAT_GET,
     NET_IPC_MSG_STAT_CLR,
@@ -101,6 +103,7 @@ typedef enum {
     NET_IPC_MSG_EVENT_NOTIFY,
     NET_IPC_MSG_SET_FIX_RATE,
     /* debug: not printf the ipc id */
+    NET_IPC_MSG_HEARTBEAT,
     NET_IPC_MSG_SNIFF_STT,
     NET_IPC_MSG_SNIFF_STP,
     NET_IPC_MSG_SNIFF_FLT,
@@ -156,7 +159,8 @@ int wifi_agent_send2peer(int msg, int data_len, void *data, int sync);
 int wifi_agent_init(void);
 void wifi_agent_pre_reset(void);
 void wifi_agent_reset(void);
-
+void wifi_heartbeat_timer_restart(int time);
+void wifi_heartbeat_timer_stop(void);
 #ifdef __cplusplus
 }
 #endif
