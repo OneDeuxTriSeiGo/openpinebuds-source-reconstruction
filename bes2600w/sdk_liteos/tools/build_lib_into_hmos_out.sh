@@ -35,7 +35,7 @@ if [ "x$build_bin_type" == "xrelease" ];then
     rel="-r"
 fi
 
-source ./config.sh
+source ./tools/config.sh
 cd bsp
 
 #pre-handle options of target

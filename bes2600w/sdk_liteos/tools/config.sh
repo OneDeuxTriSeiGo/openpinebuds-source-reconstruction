@@ -14,32 +14,22 @@
 
 # == area config a7 liteos bin begin == #
 OPT_BEST2600W_LITEOS_A7=" \
-HISTEN_PROCESS_EN=0       \
 "
 # == area config a7 liteos bin end   == #
 
 # == area config liteos main bin begin == #
 OPT_BEST2600W_LITEOS_MAIN=" \
-RF_TX_CONTROL_IO=12         \
-PA_ENABLE_IO=21             \
-UART1_IOMUX_INDEX=03        \
-PSRAM_XCCELA_MODE=0         \
-BT_RAMRUN=0                 \
-ARM_CMNS=0                  \
-ALSA_AUDIO_PROCESS_RENDER_EN=0 \
 "
 # == area config liteos main bin end   == #
 
 # == area config liteos cp bin begin == #
 OPT_BEST2600W_LITEOS_CP=" \
-PSRAM_XCCELA_MODE=0       \
 "
 # == area config liteos cp bin end   == #
 
 
 # == area config liteos main mini bin begin == #
 OPT_BEST2600W_LITEOS_MAIN_MINI_SE=" \
-PSRAM_XCCELA_MODE=0               \
 "
 # == area config liteos main mini bin end   == #
 

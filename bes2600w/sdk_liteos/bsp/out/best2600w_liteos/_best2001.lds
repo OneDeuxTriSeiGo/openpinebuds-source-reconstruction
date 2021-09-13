@@ -1147,6 +1147,9 @@ SECTIONS
  {
   KEEP(*(.reboot_custom_param*))
   . = ALIGN(4);
+  __custom_reboot_dump_start__ = .;
+  . += 0x4000;
+  __custom_reboot_dump_end__ = .;
   __reboot_custom_param_end__ = .;
  } > RAM
  .heap (.) (NOLOAD) :
@@ -1159,7 +1162,12 @@ SECTIONS
   . = ALIGN(8);
   __HeapLimit = .;
  } > RAM
-    /* ramv will be occupied by nts heap of cp if CP_BOOT defined */
+    /* ramv will be occupied by nts heap of cp if WIFI_ON_CP defined */
+ .cp_vram_bss (ORIGIN(RAMV)) (NOLOAD) : AT (ADDR(.cp_vram_bss))
+ {
+  . = ALIGN(4);
+  *(.vram_bss*)
+ } > RAMV
  /* .stack_dummy section doesn't contains any symbols. It is only
 	 * used for linker to calculate size of stack sections, and assign
 	 * values to stack symbols later */
