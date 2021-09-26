@@ -161,7 +161,7 @@ board_include_dirs = [
 board_include_dirs += []
 
 # Board adapter dir for OHOS components.
-board_adapter_dir = "${ohos_root_path}device/bestechnic/${board_name}/sys_adapter"
+board_adapter_dir = "${ohos_root_path}device/bestechnic/${board_name}"
 
 # Sysroot path.
 board_configed_sysroot = ""
