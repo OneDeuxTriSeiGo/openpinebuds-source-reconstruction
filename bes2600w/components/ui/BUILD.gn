@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/lite/config/component/lite_component.gni")
-import("//vendor/bestechnic/${product_name}/config.gni")
+import("../components.gni")
 
 config("ui_adapter_config") {
   include_dirs = [ "." ]
@@ -31,7 +31,7 @@ static_library("ui_adapter") {
     "//device/bestechnic/${board_name}/components/drivers:drivers_adapter",
     "//foundation/graphic/ui:ui",
   ]
-  if (ace_enable) {
+  if (bes_ace_enable) {
     defines = [ "ENABLE_ACE" ]
     public_deps += [ "//foundation/ace/ace_engine_lite/frameworks:ace_lite" ]
   }

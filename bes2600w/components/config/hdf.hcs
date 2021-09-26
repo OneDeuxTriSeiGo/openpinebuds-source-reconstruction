@@ -1,0 +1,72 @@
+#include "device_info.hcs"
+root {
+    platform {
+        gpio_config {
+            match_attr = "gpio_config";
+            pin = [0, 1];
+            // EVB_V3: TSP_RST - GPIO12, TSP_INT-GPIO27 
+            realPin = [12, 27];
+            config = [5, 2];
+            pinNum = 2;
+        }
+        i2c_config {
+            i2c0 {
+                match_attr = "i2c0_config";
+                port = 0;
+                speed = 200000;
+                // TSP_SCL/SDA - I2C0 = GPIO04/GPIO05
+                scl_pin = 4;
+                sda_pin = 5;
+                use_dma = 0;
+                use_sync = 1;
+                as_master = 1;
+                address_width = 8;
+                mode = 0;
+            }
+        }
+        mipi_dsi_config {
+            mipi_dsi0 {
+                match_attr = "mipi_dsi0_config";
+                // EVB_V3/V2: DSI_RST - GPIO03, DSI_TE - GPIO21
+                // EVB_V2: DSI_VDD - GPIO14, DSI_VSS - GPIO15
+                rst_pin = 3;
+                te_pin = 21;
+                vdd_pin = 14;
+                vss_pin = 15;
+            }
+        }
+    }
+    input {
+        touch_config {
+            touch_ztw523 {
+                match_attr = "touch_ztw523_config";
+                gpio_rst = 0;
+                gpio_int = 1;
+                i2c_id = 0;
+                i2c_addr = 0x20;
+            }
+        }
+    }
+    misc {
+        fs_config {
+            littlefs_config {
+                match_attr = "littlefs_config";
+                mount_points = ["/data"];
+                partitions = [10];
+                block_size = [32768];
+                block_count = [128];
+            }
+        }
+        storage_config {
+            flash_config {
+                match_attr = "flash_config";
+                partitions = [10];
+                owner = [0];
+                description = ["littlefs"];
+                start_addr = [0xB60000];
+                length = [0x400000];
+                options = [3];
+            }
+        }
+    }
+}

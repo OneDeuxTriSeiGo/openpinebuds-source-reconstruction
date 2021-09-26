@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/lite/config/component/lite_component.gni")
-import("//vendor/bestechnic/${product_name}/config.gni")
+import("../components.gni")
 
 config("fs_adapter_config") {
   include_dirs = [
