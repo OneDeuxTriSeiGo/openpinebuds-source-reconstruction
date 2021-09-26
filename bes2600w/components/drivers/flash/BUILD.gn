@@ -20,7 +20,7 @@ static_library("flash") {
     "flash_conf.c",
   ]
 
-  if (ARM_CMNS) {
+  if (bes_trustzone_enable) {
     defines = [ "ARM_CMNS=1" ]
   }
   deps = [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
