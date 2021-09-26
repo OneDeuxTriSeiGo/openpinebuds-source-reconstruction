@@ -84,7 +84,7 @@ group("bes2600w") {
 }
 
 # global config
-src_yaml = "./tools/wifi_Download_cfg.yaml"
+src_yaml = "${product_path}/tools/wifi_Download_cfg.yaml"
 dest_yaml = "./write_flash_gui/wifi_Download_cfg.yaml"
 temp_yaml = "../../../../out/${board_name}/${product_name}/yaml/"
 
@@ -146,7 +146,7 @@ foreach(bin_file, bin_list) {
       deps = [
         ":${copy_lib_name}",
         "//base/startup/bootstrap_lite/services/source:bootstrap",
-        "//device/bestechnic/bes2600w/sdk_liteos/sys_adapter:sys_adapter",
+        "//device/bestechnic/bes2600w/components/utils:sys_adapter",
         "//drivers/adapter/khdf/liteos_m:hdf_lite",
         "//kernel/liteos_m:kernel",
         "//vendor/bestechnic/${product_name}:${product_name}",
@@ -259,7 +259,7 @@ foreach(fs_bin, fs_list) {
     fs_src = fs_bin.fs_src
     block_size = fs_bin.block_size
     build_ext_component(gen_fs_name) {
-      exec_path = rebase_path("resources")
+      exec_path = rebase_path("${product_path}/fs")
       command = "./genfs.sh ${block_size} ${fs_size} ${fs_src} ${fs_name}"
     }
 

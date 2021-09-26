@@ -1,0 +1,43 @@
+# Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/lite/config/component/lite_component.gni")
+import("//vendor/bestechnic/${product_name}/config.gni")
+
+config("fs_adapter_config") {
+  include_dirs = [
+    ".",
+    "//device/bestechnic/${board_name}/components/drivers/flash",
+    "//third_party/littlefs",
+    "//third_party/musl/porting/liteos_m/kernel/include",
+  ]
+}
+
+static_library("fs_adapter") {
+  sources = [
+    "fs_init.c",
+    "hal_file.c",
+    "littlefs.c",
+  ]
+
+  public_configs = [ ":fs_adapter_config" ]
+  deps = [
+    "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static",
+    "//device/bestechnic/${board_name}/components/drivers:drivers_adapter",
+  ]
+
+  include_dirs = [
+    "//utils/native/lite/hals/file",
+    "kernel/liteos_m/kernel/include",
+  ]
+}
