@@ -44,6 +44,7 @@ if (product_path != "") {
     bin_list = product_conf.bin_list
     fs_list = product_conf.fs_list
     bsp_bin_list = product_conf.bsp_bin_list
+    pack_burn = product_conf.pack_burn
 }
 
 # Board related common compile flags.
