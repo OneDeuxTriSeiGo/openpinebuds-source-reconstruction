@@ -106,6 +106,7 @@ void hal_iomux_set_pwm5(void);
 void hal_iomux_set_pwm6(void);
 void hal_iomux_set_pwm7(void);
 void hal_iomux_set_ir(void);
+void hal_iomux_set_sdio_voltage(enum HAL_IOMUX_PIN_VOLTAGE_DOMAINS_T volt);
 void hal_iomux_set_sdio(void);
 void hal_iomux_set_sdmmc(void);
 void hal_iomux_set_clock_out(void);

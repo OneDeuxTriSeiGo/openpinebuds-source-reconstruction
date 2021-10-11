@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("wifiservice") {
-  sources = [
-    "wifi_device.c",
-    "wifi_hotspot.c",
-  ]
-  include_dirs = [
-    "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
-    "//foundation/distributedschedule/interfaces/kits/samgr_lite/samgr",
-    "//foundation/communication/wifi_lite/interfaces/wifiservice",
-    "//device/bestechnic/${board_name}/sdk_liteos/bsp/net/wifi/",
-    "//device/bestechnic/${board_name}/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis/",
-  ]
-}
+gui_path_src=$1
+gui_path_dest=$2
+
+cp -rf ${gui_path_src}/auto_build_tool ${gui_path_dest}
+cp -rf ${gui_path_src}/release_bin ${gui_path_dest}
+cp -rf ${gui_path_src}/write_flash_gui ${gui_path_dest}

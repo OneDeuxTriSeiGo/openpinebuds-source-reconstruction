@@ -26,7 +26,6 @@ config("fs_adapter_config") {
 static_library("fs_adapter") {
   sources = [
     "fs_init.c",
-    "hal_file.c",
     "littlefs.c",
   ]
 
@@ -37,7 +36,6 @@ static_library("fs_adapter") {
   ]
 
   include_dirs = [
-    "//utils/native/lite/hals/file",
     "kernel/liteos_m/kernel/include",
   ]
 }

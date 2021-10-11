@@ -196,6 +196,8 @@ int pmu_get_efuse_wifi_cali(uint8_t *pa_pad_cap_m, uint8_t *pa_driver_a);
 
 int pmu_set_efuse_wifi_cali(uint8_t pa_pad_cap_m, uint8_t pa_driver_a);
 
+void pmu_wf_tx_config(uint8_t band);
+
 #ifdef __cplusplus
 }
 #endif

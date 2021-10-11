@@ -58,7 +58,7 @@
 #define SDMMCIP_REG_DATA                0x200
 
 /* Interrupt Mask register */
-#define SDMMCIP_REG_INTMSK_ALL          0xffffffff
+#define SDMMCIP_REG_INTMSK_ALL          0xFFFFFFFF
 #define SDMMCIP_REG_INTMSK_CD           (1 << 0)
 #define SDMMCIP_REG_INTMSK_RE           (1 << 1)
 #define SDMMCIP_REG_INTMSK_CDONE        (1 << 2)
@@ -83,9 +83,35 @@
 #define SDMMCIP_REG_INTMSK_SDIO_FUNC6   (1 << 21)
 #define SDMMCIP_REG_INTMSK_SDIO_FUNC7   (1 << 22)
 
+/* Raw Interrupt Status Register */
+#define SDMMCIP_REG_RINTSTS_ALL         0xFFFFFFFF
+#define SDMMCIP_REG_RINTSTS_CD          (1 << 0)
+#define SDMMCIP_REG_RINTSTS_RE          (1 << 1)
+#define SDMMCIP_REG_RINTSTS_CDONE       (1 << 2)
+#define SDMMCIP_REG_RINTSTS_DTO         (1 << 3)
+#define SDMMCIP_REG_RINTSTS_TXDR        (1 << 4)
+#define SDMMCIP_REG_RINTSTS_RXDR        (1 << 5)
+#define SDMMCIP_REG_RINTSTS_RCRC        (1 << 6)
+#define SDMMCIP_REG_RINTSTS_DCRC        (1 << 7)
+#define SDMMCIP_REG_RINTSTS_RTO         (1 << 8)
+#define SDMMCIP_REG_RINTSTS_DRTO        (1 << 9)
+#define SDMMCIP_REG_RINTSTS_HTO         (1 << 10)
+#define SDMMCIP_REG_RINTSTS_FRUN        (1 << 11)
+#define SDMMCIP_REG_RINTSTS_HLE         (1 << 12)
+#define SDMMCIP_REG_RINTSTS_SBE         (1 << 13)
+#define SDMMCIP_REG_RINTSTS_ACD         (1 << 14)
+#define SDMMCIP_REG_RINTSTS_EBE         (1 << 15)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC1  (1 << 16)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC2  (1 << 17)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC3  (1 << 18)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC4  (1 << 19)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC5  (1 << 20)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC6  (1 << 21)
+#define SDMMCIP_REG_RINTSTS_SDIO_FUNC7  (1 << 22)
+
 /* Raw interrupt Regsiter */
 #define SDMMCIP_REG_DATA_ERR (SDMMCIP_REG_INTMSK_EBE  | SDMMCIP_REG_INTMSK_SBE | SDMMCIP_REG_INTMSK_HLE | \
-                              SDMMCIP_REG_INTMSK_FRUN | SDMMCIP_REG_INTMSK_EBE | SDMMCIP_REG_INTMSK_DCRC)
+                              SDMMCIP_REG_INTMSK_FRUN | SDMMCIP_REG_INTMSK_DCRC)
 #define SDMMCIP_REG_DATA_TOUT           (SDMMCIP_REG_INTMSK_HTO | SDMMCIP_REG_INTMSK_DRTO)
 
 /* CTRL register */
@@ -109,6 +135,7 @@
 #define SDMMCIP_REG_CMD_ABORT_STOP      (1 << 14)
 #define SDMMCIP_REG_CMD_PRV_DAT_WAIT    (1 << 13)
 #define SDMMCIP_REG_CMD_UPD_CLK         (1 << 21)
+#define SDMMCIP_REG_CMD_VOLT_SWITCH     (1 << 28)
 #define SDMMCIP_REG_CMD_USE_HOLD_REG    (1 << 29)
 #define SDMMCIP_REG_CMD_START           (1 << 31)
 
@@ -147,6 +174,7 @@
 
 /* UHS register */
 #define SDMMCIP_REG_DDR_MODE            (1 << 16)
+#define SDMMCIP_REG_1V8_MODE            (1 << 0)
 
 /* quirks */
 #define SDMMCIP_REG_QUIRK_DISABLE_SMU   (1 << 0)

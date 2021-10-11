@@ -22,7 +22,7 @@ fi
 build_trustzone=$1
 build_mini_sys=$2
 build_bin_type=$3
-build_boot_zero=$4
+product_path=$4
 
 if [ "x$build_trustzone" == "x" ];then
     build_trustzone="false"
@@ -36,9 +36,13 @@ if [ "x$build_bin_type" == "xrelease" ];then
     rel="-r"
 fi
 
-source ./tools/config.sh
-cd bsp
+if [ -f ${product_path}/config.sh ]; then
+    source ${product_path}/config.sh
+else
+    source ./tools/config.sh
+fi
 
+cd bsp
 #pre-handle options of target
 SPACE=" "
 function pre_handle_opt()
@@ -75,30 +79,26 @@ function pre_handle_opt()
     printf "[GEN][$2] ${temp_cmd} \n"
 }
 
-if [ "x$build_boot_zero" == "xtrue" ];then
-    pre_handle_opt OTA_CODE_OFFSET=0 OPT_BEST2600W_LITEOS_MAIN
+if [ "x${build_trustzone}" == "xtrue" ]; then
+    pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MINI
+    OPT_BEST2600W_LITEOS_MINI="${temp_cmd}"
+    pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MAIN
     OPT_BEST2600W_LITEOS_MAIN="${temp_cmd}"
+    pre_handle_opt TZ_MAIN_OFFSET=0x30000 OPT_BEST2600W_LITEOS_BOOT2A
+    OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
+    pre_handle_opt TZ_MINI_OFFSET=0x56000 OPT_BEST2600W_LITEOS_BOOT2A
+    OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
 else
-    if [ "x${build_trustzone}" == "xtrue" ]; then
-        pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MINI
-        OPT_BEST2600W_LITEOS_MINI="${temp_cmd}"
-        pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MAIN
-        OPT_BEST2600W_LITEOS_MAIN="${temp_cmd}"
-        pre_handle_opt TZ_MAIN_OFFSET=0x30000 OPT_BEST2600W_LITEOS_BOOT2A
-        OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
-        pre_handle_opt TZ_MINI_OFFSET=0x56000 OPT_BEST2600W_LITEOS_BOOT2A
-        OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
-    else
-        pre_handle_opt ARM_CMNS=0 OPT_BEST2600W_LITEOS_MINI
-        OPT_BEST2600W_LITEOS_MINI="${temp_cmd}"
-        pre_handle_opt ARM_CMNS=0 OPT_BEST2600W_LITEOS_MAIN
-        OPT_BEST2600W_LITEOS_MAIN="${temp_cmd}"
-        pre_handle_opt TZ_MAIN_OFFSET=0x80000 OPT_BEST2600W_LITEOS_BOOT2A
-        OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
-        pre_handle_opt TZ_MINI_OFFSET=0xB00000 OPT_BEST2600W_LITEOS_BOOT2A
-        OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
-    fi
+    pre_handle_opt ARM_CMNS=0 OPT_BEST2600W_LITEOS_MINI
+    OPT_BEST2600W_LITEOS_MINI="${temp_cmd}"
+    pre_handle_opt ARM_CMNS=0 OPT_BEST2600W_LITEOS_MAIN
+    OPT_BEST2600W_LITEOS_MAIN="${temp_cmd}"
+    pre_handle_opt TZ_MAIN_OFFSET=0x80000 OPT_BEST2600W_LITEOS_BOOT2A
+    OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
+    pre_handle_opt TZ_MINI_OFFSET=0xB00000 OPT_BEST2600W_LITEOS_BOOT2A
+    OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
 fi
+
 
 tools/build_best2600w_ohos_into_lib.sh \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \

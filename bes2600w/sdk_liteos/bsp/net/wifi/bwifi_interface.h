@@ -37,6 +37,7 @@ extern "C" {
 #endif
 #define BWIFI_MAX_COUNTRY_CODE_SIZE     2
 #define BWIFI_CONFIG_VAL_LEN            100
+#define WIFI_SCAN_DUMP
 
 struct wifi_init_paras {
     char     band;
