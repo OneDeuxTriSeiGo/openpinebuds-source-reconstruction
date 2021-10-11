@@ -21,6 +21,10 @@ extern "C" {
 
 #include "plat_types.h"
 
+#define SDIO_DEVICE_ADMA_MAX_TX_KB      64
+#define SDIO_DEVICE_ADMA_DESC_NUM       (SDIO_DEVICE_ADMA_MAX_TX_KB + 2)  //Each link has a maximum of 1k and a maximum of 65 links,add an nop link
+#define SDIO_DEVICE_ADMA_TXRX_LEN       (SDIO_DEVICE_ADMA_MAX_TX_KB * 1024)
+
 enum HAL_SDIO_DEVICE_STATUS {
     HAL_SDIO_DEVICE_NOT_RDY = 0,
     HAL_SDIO_DEVICE_RDY,
@@ -38,13 +42,12 @@ struct HAL_SDIO_DEVICE_CB_T {
     void (*hal_sdio_device_int_from_host)(void);
 };
 
-void hal_sdio_device_open(void);
+//Public use
+void hal_sdio_device_open(struct HAL_SDIO_DEVICE_CB_T *callback);
+void hal_sdio_device_reopen(struct HAL_SDIO_DEVICE_CB_T *callback);
 void hal_sdio_device_close(void);
 enum HAL_SDIO_DEVICE_STATUS hal_sdio_device_send(const uint8_t *buf, uint32_t buf_len);
 void hal_sdio_device_recv(uint8_t *buf, uint32_t buf_len, uint8_t buf_cnt);
-
-void hal_sdio_device_register_callback(struct HAL_SDIO_DEVICE_CB_T *callback);
-void hal_sdio_device_download_ready(void);//rom download dedicated
 
 //Under normal circumstances, do not call the following two functions
 void hal_sdio_device_change_tplmanid_manf(uint16_t new_manf_id);

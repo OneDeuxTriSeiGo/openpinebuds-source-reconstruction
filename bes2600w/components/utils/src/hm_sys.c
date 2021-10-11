@@ -131,3 +131,13 @@ void OhosFree(void *ptr)
 {
     free(ptr);
 }
+
+/**
+ * @brief adapter for js_ability.cpp
+ * #ifdef OHOS_ACELITE_PRODUCT_WATCH 
+ */
+void RestoreSystemWrapper(const char *crashMessage)
+{
+    printf("%s\n", crashMessage);
+    hal_trace_flush_buffer();
+}

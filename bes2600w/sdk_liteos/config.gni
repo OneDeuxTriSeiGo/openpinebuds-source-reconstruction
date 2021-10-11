@@ -41,6 +41,7 @@ board_toolchain_type = "gcc"
 if (product_path != "") {
     product_conf = read_file("${product_path}/config.json", "json")
     product_name = product_conf.product_name
+    flash_partition_dir = product_conf.flash_partition_dir
     bin_list = product_conf.bin_list
     fs_list = product_conf.fs_list
     bsp_bin_list = product_conf.bsp_bin_list
