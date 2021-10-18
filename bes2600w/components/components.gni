@@ -38,6 +38,7 @@ declare_args() {
   bes_ui_enable = false
   bes_ace_enable = false
   bes_ability_enable = false
+  bes_watchdog_enable = false
 
   ##################################################
   # test configurations
