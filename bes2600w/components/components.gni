@@ -20,7 +20,7 @@ declare_args() {
   ##################################################
   # components configurations
   ##################################################
-  bes_communication_wifi_lite_enable = false
+  bes_communication_wifi_lite_enable = true
 
   bes_drivers_gpio_enable = false
   bes_drivers_i2c_enable = false
@@ -38,6 +38,7 @@ declare_args() {
   bes_ui_enable = false
   bes_ace_enable = false
   bes_ability_enable = false
+  bes_watchdog_enable = false
 
   ##################################################
   # test configurations

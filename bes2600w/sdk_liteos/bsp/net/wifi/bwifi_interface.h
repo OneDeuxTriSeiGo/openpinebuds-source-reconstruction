@@ -572,6 +572,17 @@ u32  bwifi_get_fix_rate(void);
  */
 int bwifi_do_wifi_reset(void);
 
+/*
+ * set epta parameters of wifi/bt coex
+ * wifi_dur: wifi duration of active window
+ * bt_dur: bt duration of active window
+ * mode: epta mode
+        0 - periodic mode in which the wifi/bt active time is specified by wifi_dur/bt_dur, only support 100ms period
+        1 - arbitrate mode by hw itself
+        2 - wifi active only mode
+*/
+void bwifi_set_epta_param(int wifi_dur, int bt_dur, int mode);
+
 #ifdef __cplusplus
 }
 #endif
