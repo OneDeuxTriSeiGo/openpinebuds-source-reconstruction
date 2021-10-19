@@ -126,6 +126,7 @@ if (wrap_fs_api == "true") {
 
 # Board related headfiles search path.
 board_include_dirs = [
+    "${ohos_root_path}third_party/mbedtls/include/",
     "${ohos_root_path}device/bestechnic/${board_name}/components/watchdog/",
     "${ohos_root_path}device/bestechnic/${board_name}/components/net/lwip-2.1/porting/include/",
     "${ohos_root_path}third_party/lwip/src/include/",

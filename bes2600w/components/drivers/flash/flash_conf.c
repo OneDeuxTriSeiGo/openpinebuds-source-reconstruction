@@ -18,7 +18,7 @@
 #include "device_resource_if.h"
 
 /* Logic partition on flash devices */
-hal_logic_partition_t g_halPartitions[] = {
+static hal_logic_partition_t g_halPartitions[] = {
     [HAL_PARTITION_BOOTLOADER] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "boot1",
