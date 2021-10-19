@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-gui_path_src=$1
-gui_path_dest=$2
+import("//build/lite/config/component/lite_component.gni")
 
-mkidr -p ${gui_path_dest}/auto_build_tool/hash_sig
-mkdir -p ${gui_path_dest}/release_bin
-cp -rf ${gui_path_src}/write_flash_gui ${gui_path_dest}
+static_library("hal_update_static") {
+  sources = [ "hal_hota_board.c" ]
+  include_dirs = [
+    "//base/update/ota_lite/hals",
+    "//base/update/ota_lite/interfaces/kits",
+    "//device/bestechnic/${board_name}/components/drivers/flash",
+    "//drivers/adapter/khdf/liteos_m/osal/include/",
+  ]
+  deps = [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
+
+  defines = ["LOSCFG_BASE_CORE_HILOG=1"]
+}
