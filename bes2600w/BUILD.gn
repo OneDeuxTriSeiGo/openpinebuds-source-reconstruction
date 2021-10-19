@@ -77,13 +77,11 @@ group("bes2600w") {
 }
 
 # global config
-out_product_path = "${ohos_root_path}out/${board_name}/${product_name}/"
+out_product_path = "${ohos_root_path}out/${board_name}/${product_name}"
 
-if (pack_burn == "true") {
-  build_ext_component("init_burn_tools") {
-    exec_path = rebase_path("burn_tools")
-    command = "./tools/init_burn_tools.sh ./ ${out_product_path}"
-  }
+build_ext_component("init_burn_tools") {
+  exec_path = rebase_path("burn_tools")
+  command = "./tools/init_burn_tools.sh ./ ${out_product_path}"
 }
 
 # build sdk into lib
@@ -102,7 +100,7 @@ build_ext_component("build_sdk_into_lib") {
       build_mini = bsp_bin.enable
     }
   }
-  print("product_path:", product_path)
+  print ("product_path:",product_path)
   command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path}"
 }
 
@@ -161,11 +159,11 @@ foreach(bin_file, bin_list) {
       ]
 
       # force link invisible function ,which ar to lib
-      ldflags += [ "-Wl,--whole-archive" ]
+      ldflags += [ "-Wl,--whole-archive",]
       foreach(force_link_lib, bin_file.force_link_libs) {
-        ldflags += [ "-l${force_link_lib}" ]
+        ldflags += [ "-l${force_link_lib}", ]
       }
-      ldflags += [ "-Wl,--no-whole-archive" ]
+      ldflags += [ "-Wl,--no-whole-archive",]
 
       libs = [
         "m",
@@ -187,196 +185,196 @@ foreach(bin_file, bin_list) {
       deps = [ ":${exe_bin}" ]
     }
 
-    if (pack_burn == "true") {
-      burn_name = bin_file.burn_name
+    burn_name = bin_file.burn_name
+    # copy out/<board_name>/<product_name>/bin/ to release bin
+    copy_burn_bin_name = "copy_${exe_bin}_to_relase_bin"
+    build_ext_component(copy_burn_bin_name) {
+      exec_path = rebase_path("${out_product_path}")
+      copy_dest = "./release_bin"
+      bin_name_ota = burn_name
+      command = "cp -rf ${out_bin_path}/${exe_bin}.bin ${copy_dest}/${bin_name_ota}.bin"
+      deps = [ ":${gen_bin_name}" ]
+      deps += [":init_burn_tools" ]
+    }
 
-      # copy out/<board_name>/<product_name>/bin/ to release bin
-      copy_burn_bin_name = "copy_${exe_bin}_to_relase_bin"
-      build_ext_component(copy_burn_bin_name) {
-        exec_path = rebase_path("${out_product_path}")
-        copy_dest = "./release_bin"
-        bin_name_ota = burn_name
-        command = "cp -rf ${out_bin_path}/${exe_bin}.bin ${copy_dest}/${bin_name_ota}.bin"
-        deps = [ ":${gen_bin_name}" ]
-        deps += [ ":init_burn_tools" ]
+    # sig exe bin to hash_sig bin
+    bin_sig = bin_file.signature
+    if (bin_sig == "true") {
+      gen_bin_name_sig = "gen_bin_${burn_name}_sig"
+      build_ext_component(gen_bin_name_sig) {
+        exec_path = rebase_path("burn_tools")
+        command = "./tools/sig_bin.sh ${burn_name}"
+        deps = [ ":${copy_burn_bin_name}" ]
       }
+    }
 
-      # sig exe bin to hash_sig bin
-      bin_sig = bin_file.signature
+    # if use copy signature bin
+    copy_bin_name = "copy_${exe_bin}_to_gui"
+    build_ext_component(copy_bin_name) {
+      exec_path = rebase_path("${out_product_path}")
+      print(" copy signature bin exec_path",exec_path)
+      deps = []
       if (bin_sig == "true") {
-        gen_bin_name_sig = "gen_bin_${burn_name}_sig"
-        build_ext_component(gen_bin_name_sig) {
-          exec_path = rebase_path("burn_tools")
-          command = "./tools/sig_bin.sh ${burn_name}"
-          deps = [ ":${copy_burn_bin_name}" ]
-        }
+        copy_src = "./auto_build_tool/hash_sig"
+        bin_name_ota = "${burn_name}_sig"
+        deps += [ ":${gen_bin_name_sig}" ]
+      } else {
+        copy_src = "./release_bin"
+        bin_name_ota = burn_name
+        deps += [ ":${copy_burn_bin_name}" ]
       }
-
-      # if use copy signature bin
-      copy_bin_name = "copy_${exe_bin}_to_gui"
-      build_ext_component(copy_bin_name) {
-        exec_path = rebase_path("${out_product_path}")
-        print(" copy signature bin exec_path", exec_path)
-        deps = []
-        if (bin_sig == "true") {
-          copy_src = "./auto_build_tool/hash_sig"
-          bin_name_ota = "${burn_name}_sig"
-          deps += [ ":${gen_bin_name_sig}" ]
-        } else {
-          copy_src = "./release_bin"
-          bin_name_ota = burn_name
-          deps += [ ":${copy_burn_bin_name}" ]
-        }
-        copy_dst = "./write_flash_gui/ota_bin"
-        command = "cp -rf ${copy_src}/${bin_name_ota}.bin ${copy_dst}/${burn_name}.bin"
-      }
+      copy_dst = "./write_flash_gui/ota_bin"
+      command = "cp -rf ${copy_src}/${bin_name_ota}.bin ${copy_dst}/${burn_name}.bin"
     }
   }
 }
 
-if (pack_burn == "true") {
-  # generate file system bin from resources/ and sig or not sig before copy to write_flash_gui
+# generate file system bin from resources/ and sig or not sig before copy to write_flash_gui
+foreach(fs_bin, fs_list) {
+  fs_enable = fs_bin.enable
+
+  if (fs_enable == "true") {
+    fs_name = fs_bin.fs_name
+
+    # generate fs bin to release bin
+    gen_fs_name = "genfs_${fs_name}"
+    fs_size = fs_bin.fs_size
+    fs_src = product_path + "/" + flash_partition_dir + "/" + fs_bin.fs_src
+    block_size = fs_bin.block_size
+    build_ext_component(gen_fs_name) {
+      exec_path = rebase_path("burn_tools")
+      command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name}"
+      deps = [":init_burn_tools" ]
+    }
+
+    # sig fs bin to hash_sig bin
+    fs_sig = fs_bin.signature
+    if (fs_sig == "true") {
+      gen_fs_name_sig = "genfs_${fs_name}_sig"
+      build_ext_component(gen_fs_name_sig) {
+        exec_path = rebase_path("burn_tools")
+        command = "./tools/sig_fs.sh ${fs_name}"
+        deps = [ ":${gen_fs_name}" ]
+      }
+    }
+
+    # if use copy signature bin
+    copy_fs_name = "copy_${fs_name}_to_gui"
+    build_ext_component(copy_fs_name) {
+      exec_path = rebase_path("${out_product_path}")
+      deps = []
+      if (fs_sig == "true") {
+        copy_src = "auto_build_tool/hash_sig"
+        fs_name_ota = "${fs_name}_sig"
+        deps += [ ":${gen_fs_name_sig}" ]
+      } else {
+        copy_src = "release_bin"
+        fs_name_ota = fs_name
+        deps += [ ":${gen_fs_name}" ]
+      }
+      command = "cp -rf ${copy_src}/${fs_name_ota}.bin ./write_flash_gui/ota_bin/${fs_name}.bin"
+    }
+  }
+}
+
+# generate bsp bin from bsp and sig or not sig before copy to write_flash_gui
+foreach(bsp_bin, bsp_bin_list) {
+  bsp_bin_enable = bsp_bin.enable
+
+  if (bsp_bin_enable == "true") {
+    bsp_bin_name = bsp_bin.bsp_bin_name
+    burn_name = bsp_bin.burn_name
+    # copy ./sdk_liteos/bsp/out/<bsp_bin_name>/<bsp_bin_name>.bin to release bin
+    copy_burn_bin_name = "copy_${bsp_bin_name}_to_relase_bin"
+    build_ext_component(copy_burn_bin_name) {
+      exec_path = rebase_path(".")
+      bsp_out_bin_path = "sdk_liteos/bsp/out/${bsp_bin_name}"
+      copy_dest = "${out_product_path}/release_bin"
+      bin_name_ota = burn_name
+      command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"
+      deps = [ ":build_sdk_into_lib" ]
+      deps += [":init_burn_tools" ]
+    }
+
+    # sig exe bin to hash_sig bin
+    bsp_bin_sig = bsp_bin.signature
+    if (bsp_bin_sig == "true") {
+      gen_bsp_bin_name_sig = "gen_bsp_bin_${burn_name}_sig"
+      build_ext_component(gen_bsp_bin_name_sig) {
+        exec_path = rebase_path("burn_tools")
+        command = "./sig_bin.sh ${burn_name}"
+        deps = [ ":${copy_burn_bin_name}" ]
+      }
+    }
+
+    # if use copy bsp signature bin
+    copy_bsp_bin_name = "copy_${bsp_bin_name}_to_gui"
+    build_ext_component(copy_bsp_bin_name) {
+      exec_path = rebase_path("${out_product_path}")
+      deps = []
+      if (bsp_bin_sig == "true") {
+        copy_src = "./auto_build_tool/hash_sig"
+        bsp_bin_name_ota = "${burn_name}_sig"
+        deps += [ ":${gen_bsp_bin_name_sig}" ]
+      } else {
+        copy_src = "release_bin"
+        bsp_bin_name_ota = burn_name
+        deps += [ ":${copy_burn_bin_name}" ]
+      }
+      command = "cp -rf ./${copy_src}/${bsp_bin_name_ota}.bin ./write_flash_gui/ota_bin/${bsp_bin_name_ota}.bin"
+    }
+  }
+}
+
+# pack write flash gui to write_flash_gui-<time>.tar.gz
+update_product_yaml = "update_${product_name}_yaml"
+build_ext_component(update_product_yaml) {
+  exec_path = rebase_path("${ohos_root_path}")
+  command = "cp -rf ${product_path}/${flash_partition_dir}/wifi_Download_cfg.yaml ${out_product_path}/write_flash_gui/"
+  deps = [":init_burn_tools" ]
+}
+
+# pack write flash gui to write_flash_gui-<time>.tar.gz
+build_ext_component("pack_flash_gui") {
+  exec_path = rebase_path("burn_tools")
+  command = "./tools/pack_burn_tools.sh ${out_product_path} ${pack_burn}"
+  deps = [":${update_product_yaml}"]
+
+  # bin configed from vendor/bestechnic/<product_name>/config.json
+  foreach(bin_file, bin_list) {
+    build_enable = bin_file.enable
+    if (build_enable == "true") {
+      exe_bin = "${bin_file.elf_name}_${board_name}"
+      copy_bin_name = "copy_${exe_bin}_to_gui"
+      deps += [
+        ":${copy_bin_name}",
+      ]
+    }
+  }
+
+  # fs bin configed from vendor/bestechnic/<product_name>/config.json
   foreach(fs_bin, fs_list) {
     fs_enable = fs_bin.enable
-
     if (fs_enable == "true") {
       fs_name = fs_bin.fs_name
-
-      # generate fs bin to release bin
-      gen_fs_name = "genfs_${fs_name}"
-      fs_size = fs_bin.fs_size
-      fs_src = product_path + "/" + flash_partition_dir + "/" + fs_bin.fs_src
-      block_size = fs_bin.block_size
-      build_ext_component(gen_fs_name) {
-        exec_path = rebase_path("burn_tools")
-        command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name}"
-        deps = [ ":init_burn_tools" ]
-      }
-
-      # sig fs bin to hash_sig bin
-      fs_sig = fs_bin.signature
-      if (fs_sig == "true") {
-        gen_fs_name_sig = "genfs_${fs_name}_sig"
-        build_ext_component(gen_fs_name_sig) {
-          exec_path = rebase_path("burn_tools")
-          command = "./tools/sig_fs.sh ${fs_name}"
-          deps = [ ":${gen_fs_name}" ]
-        }
-      }
-
-      # if use copy signature bin
       copy_fs_name = "copy_${fs_name}_to_gui"
-      build_ext_component(copy_fs_name) {
-        exec_path = rebase_path("${out_product_path}")
-        deps = []
-        if (fs_sig == "true") {
-          copy_src = "./auto_build_tool/hash_sig"
-          fs_name_ota = "${fs_name}_sig"
-          deps += [ ":${gen_fs_name_sig}" ]
-        } else {
-          copy_src = "./release_bin"
-          fs_name_ota = fs_name
-          deps += [ ":${gen_fs_name}" ]
-        }
-        command = "cp -rf ./${copy_src}/${fs_name_ota}.bin ./write_flash_gui/ota_bin/${fs_name}.bin"
+      if (fs_enable == "true") {
+        deps += [
+          ":${copy_fs_name}",
+        ]
       }
     }
   }
 
-  # generate bsp bin from bsp and sig or not sig before copy to write_flash_gui
+  # bsp bin configed from vendor/bestechnic/<product_name>/config.json
   foreach(bsp_bin, bsp_bin_list) {
     bsp_bin_enable = bsp_bin.enable
-
     if (bsp_bin_enable == "true") {
       bsp_bin_name = bsp_bin.bsp_bin_name
-      burn_name = bsp_bin.burn_name
-
-      # copy ./sdk_liteos/bsp/out/<bsp_bin_name>/<bsp_bin_name>.bin to release bin
-      copy_burn_bin_name = "copy_${bsp_bin_name}_to_relase_bin"
-      build_ext_component(copy_burn_bin_name) {
-        exec_path = rebase_path(".")
-        bsp_out_bin_path = "./sdk_liteos/bsp/out/${bsp_bin_name}"
-        copy_dest = "${out_product_path}/release_bin"
-        bin_name_ota = burn_name
-        command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"
-        deps = [ ":build_sdk_into_lib" ]
-        deps += [ ":init_burn_tools" ]
-      }
-
-      # sig exe bin to hash_sig bin
-      bsp_bin_sig = bsp_bin.signature
-      if (bsp_bin_sig == "true") {
-        gen_bsp_bin_name_sig = "gen_bsp_bin_${burn_name}_sig"
-        build_ext_component(gen_bsp_bin_name_sig) {
-          exec_path = rebase_path("burn_tools")
-          command = "./sig_bin.sh ${burn_name}"
-          deps = [ ":${copy_burn_bin_name}" ]
-        }
-      }
-
-      # if use copy bsp signature bin
       copy_bsp_bin_name = "copy_${bsp_bin_name}_to_gui"
-      build_ext_component(copy_bsp_bin_name) {
-        exec_path = rebase_path("${out_product_path}")
-        deps = []
-        if (bsp_bin_sig == "true") {
-          copy_src = "./auto_build_tool/hash_sig"
-          bsp_bin_name_ota = "${burn_name}_sig"
-          deps += [ ":${gen_bsp_bin_name_sig}" ]
-        } else {
-          copy_src = "./release_bin"
-          bsp_bin_name_ota = burn_name
-          deps += [ ":${copy_burn_bin_name}" ]
-        }
-        command = "cp -rf ./${copy_src}/${bsp_bin_name_ota}.bin ./write_flash_gui/ota_bin/${bsp_bin_name_ota}.bin"
-      }
-    }
-  }
-
-  # pack write flash gui to write_flash_gui-<time>.tar.gz
-  update_product_yaml = "update_${product_name}_yaml"
-  build_ext_component(update_product_yaml) {
-    exec_path = rebase_path("${ohos_root_path}")
-    command = "cp -rf ${product_path}/${flash_partition_dir}/wifi_Download_cfg.yaml ${out_product_path}/write_flash_gui/"
-    deps = [ ":init_burn_tools" ]
-  }
-
-  # pack write flash gui to write_flash_gui-<time>.tar.gz
-  build_ext_component("pack_flash_gui") {
-    exec_path = rebase_path("burn_tools")
-    command = "./tools/pack_burn_tools.sh ${out_product_path}"
-    deps = [ ":${update_product_yaml}" ]
-
-    # bin configed from vendor/bestechnic/<product_name>/config.json
-    foreach(bin_file, bin_list) {
-      build_enable = bin_file.enable
-      if (build_enable == "true") {
-        exe_bin = "${bin_file.elf_name}_${board_name}"
-        copy_bin_name = "copy_${exe_bin}_to_gui"
-        deps += [ ":${copy_bin_name}" ]
-      }
-    }
-
-    # fs bin configed from vendor/bestechnic/<product_name>/config.json
-    foreach(fs_bin, fs_list) {
-      fs_enable = fs_bin.enable
-      if (fs_enable == "true") {
-        fs_name = fs_bin.fs_name
-        copy_fs_name = "copy_${fs_name}_to_gui"
-        if (fs_enable == "true") {
-          deps += [ ":${copy_fs_name}" ]
-        }
-      }
-    }
-
-    # bsp bin configed from vendor/bestechnic/<product_name>/config.json
-    foreach(bsp_bin, bsp_bin_list) {
-      bsp_bin_enable = bsp_bin.enable
-      if (bsp_bin_enable == "true") {
-        bsp_bin_name = bsp_bin.bsp_bin_name
-        copy_bsp_bin_name = "copy_${bsp_bin_name}_to_gui"
-        deps += [ ":${copy_bsp_bin_name}" ]
-      }
+      deps += [
+        ":${copy_bsp_bin_name}",
+      ]
     }
   }
 }

@@ -15,6 +15,6 @@
 gui_path_src=$1
 gui_path_dest=$2
 
-cp -rf ${gui_path_src}/auto_build_tool ${gui_path_dest}
-cp -rf ${gui_path_src}/release_bin ${gui_path_dest}
+mkidr -p ${gui_path_dest}/auto_build_tool/hash_sig
+mkdir -p ${gui_path_dest}/release_bin
 cp -rf ${gui_path_src}/write_flash_gui ${gui_path_dest}
