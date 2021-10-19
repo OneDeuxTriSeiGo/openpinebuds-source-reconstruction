@@ -102,7 +102,7 @@ build_ext_component("build_sdk_into_lib") {
       build_mini = bsp_bin.enable
     }
   }
-  print ("product_path:",product_path)
+  print("product_path:", product_path)
   command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path}"
 }
 
@@ -161,11 +161,11 @@ foreach(bin_file, bin_list) {
       ]
 
       # force link invisible function ,which ar to lib
-      ldflags += [ "-Wl,--whole-archive",]
+      ldflags += [ "-Wl,--whole-archive" ]
       foreach(force_link_lib, bin_file.force_link_libs) {
-        ldflags += [ "-l${force_link_lib}", ]
+        ldflags += [ "-l${force_link_lib}" ]
       }
-      ldflags += [ "-Wl,--no-whole-archive",]
+      ldflags += [ "-Wl,--no-whole-archive" ]
 
       libs = [
         "m",
@@ -189,6 +189,7 @@ foreach(bin_file, bin_list) {
 
     if (pack_burn == "true") {
       burn_name = bin_file.burn_name
+
       # copy out/<board_name>/<product_name>/bin/ to release bin
       copy_burn_bin_name = "copy_${exe_bin}_to_relase_bin"
       build_ext_component(copy_burn_bin_name) {
@@ -197,7 +198,7 @@ foreach(bin_file, bin_list) {
         bin_name_ota = burn_name
         command = "cp -rf ${out_bin_path}/${exe_bin}.bin ${copy_dest}/${bin_name_ota}.bin"
         deps = [ ":${gen_bin_name}" ]
-        deps += [":init_burn_tools" ]
+        deps += [ ":init_burn_tools" ]
       }
 
       # sig exe bin to hash_sig bin
@@ -215,7 +216,7 @@ foreach(bin_file, bin_list) {
       copy_bin_name = "copy_${exe_bin}_to_gui"
       build_ext_component(copy_bin_name) {
         exec_path = rebase_path("${out_product_path}")
-        print(" copy signature bin exec_path",exec_path)
+        print(" copy signature bin exec_path", exec_path)
         deps = []
         if (bin_sig == "true") {
           copy_src = "./auto_build_tool/hash_sig"
@@ -249,7 +250,7 @@ if (pack_burn == "true") {
       build_ext_component(gen_fs_name) {
         exec_path = rebase_path("burn_tools")
         command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name}"
-        deps = [":init_burn_tools" ]
+        deps = [ ":init_burn_tools" ]
       }
 
       # sig fs bin to hash_sig bin
@@ -289,6 +290,7 @@ if (pack_burn == "true") {
     if (bsp_bin_enable == "true") {
       bsp_bin_name = bsp_bin.bsp_bin_name
       burn_name = bsp_bin.burn_name
+
       # copy ./sdk_liteos/bsp/out/<bsp_bin_name>/<bsp_bin_name>.bin to release bin
       copy_burn_bin_name = "copy_${bsp_bin_name}_to_relase_bin"
       build_ext_component(copy_burn_bin_name) {
@@ -298,7 +300,7 @@ if (pack_burn == "true") {
         bin_name_ota = burn_name
         command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"
         deps = [ ":build_sdk_into_lib" ]
-        deps += [":init_burn_tools" ]
+        deps += [ ":init_burn_tools" ]
       }
 
       # sig exe bin to hash_sig bin
@@ -336,14 +338,14 @@ if (pack_burn == "true") {
   build_ext_component(update_product_yaml) {
     exec_path = rebase_path("${ohos_root_path}")
     command = "cp -rf ${product_path}/${flash_partition_dir}/wifi_Download_cfg.yaml ${out_product_path}/write_flash_gui/"
-    deps = [":init_burn_tools" ]
+    deps = [ ":init_burn_tools" ]
   }
 
   # pack write flash gui to write_flash_gui-<time>.tar.gz
   build_ext_component("pack_flash_gui") {
     exec_path = rebase_path("burn_tools")
     command = "./tools/pack_burn_tools.sh ${out_product_path}"
-    deps = [":${update_product_yaml}"]
+    deps = [ ":${update_product_yaml}" ]
 
     # bin configed from vendor/bestechnic/<product_name>/config.json
     foreach(bin_file, bin_list) {
@@ -351,9 +353,7 @@ if (pack_burn == "true") {
       if (build_enable == "true") {
         exe_bin = "${bin_file.elf_name}_${board_name}"
         copy_bin_name = "copy_${exe_bin}_to_gui"
-        deps += [
-          ":${copy_bin_name}",
-        ]
+        deps += [ ":${copy_bin_name}" ]
       }
     }
 
@@ -364,9 +364,7 @@ if (pack_burn == "true") {
         fs_name = fs_bin.fs_name
         copy_fs_name = "copy_${fs_name}_to_gui"
         if (fs_enable == "true") {
-          deps += [
-            ":${copy_fs_name}",
-          ]
+          deps += [ ":${copy_fs_name}" ]
         }
       }
     }
@@ -377,9 +375,7 @@ if (pack_burn == "true") {
       if (bsp_bin_enable == "true") {
         bsp_bin_name = bsp_bin.bsp_bin_name
         copy_bsp_bin_name = "copy_${bsp_bin_name}_to_gui"
-        deps += [
-          ":${copy_bsp_bin_name}",
-        ]
+        deps += [ ":${copy_bsp_bin_name}" ]
       }
     }
   }
