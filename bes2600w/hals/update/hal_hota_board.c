@@ -153,12 +153,12 @@ static uint32_t HotaGetResource(const struct DeviceResourceNode *resourceNode)
 {
     struct DeviceResourceIface *resource = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
     if (resource == NULL) {
-        // HDF_LOGE("Invalid DeviceResourceIface");
+        HDF_LOGE("Invalid DeviceResourceIface");
         return HDF_FAILURE;
     }
     int32_t num = resource->GetElemNum(resourceNode, "partitions");
     if (num < 0 || num > HAL_PARTITION_MAX) {
-        // HDF_LOGE("%s: invalid partitions num %d", __func__, num);
+        HDF_LOGE("%s: invalid partitions num %d", __func__, num);
         return HDF_FAILURE;
     }
     for (int32_t i = 0; i < num; i++) {
@@ -168,21 +168,18 @@ static uint32_t HotaGetResource(const struct DeviceResourceNode *resourceNode)
             return HDF_FAILURE;
         }
         if (partition >= HAL_PARTITION_MAX) {
-            // HDF_LOGE("%s: invalid partition %u", __func__, partition);
+            HDF_LOGE("%s: invalid partition %u", __func__, partition);
             return HDF_FAILURE;
         }
 
         g_componentTable[partition].id = partition;
 
         if (resource->GetStringArrayElem(resourceNode, "description", i, &g_componentTable[partition].componentName, NULL) != HDF_SUCCESS) {
-            // HDF_LOGE("%s: failed to get mount_points", __func__);
+            HDF_LOGE("%s: failed to get mount_points", __func__);
             return HDF_FAILURE;
         }
 
         g_componentTable[partition].imgPath = "/"; 
-
-        // HDF_LOGD("%s: partition[%u] description=%s", __func__,
-        //     g_componentTable[partition].id,g_componentTable[partition].componentName,);
     }
 
     g_componentTableInit = 1;
