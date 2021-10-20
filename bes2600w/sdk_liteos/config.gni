@@ -64,6 +64,7 @@ board_cflags = [
     "-DDEBUG=1",
     "-DCMSIS_OS_VER=2",
     "-DOS_HWI_MAX_NUM=96",
+    "-DCONFIG_DISPLAY_A064"
 ]
 
 board_cxx_flags = board_cflags
@@ -135,6 +136,7 @@ board_include_dirs = [
     "${ohos_root_path}kernel/liteos_m/utils/",
     "${ohos_root_path}kernel/liteos_m/kernel/include",
     "${ohos_root_path}kernel/liteos_m/kernel/arch/arm/cortex-m33/gcc/",
+    "${ohos_root_path}device/bestechnic/${board_name}/components/drivers/flash",
     "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal/",
     "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/utils/kfifo",
     "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal/best2003",

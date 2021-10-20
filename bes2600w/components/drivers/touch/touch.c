@@ -43,12 +43,14 @@ int32_t RegisterTouchDevice(struct touch_device *device)
     }
     g_touchManager.device[deviceNum] = device;
     g_touchManager.deviceNum++;
+    HDF_LOGD("%s: new touch device %s", __func__, device->name);
     return HDF_SUCCESS;
 }
 
 static void touch_task(void *arg)
 {
     struct touch_device *dev = (struct touch_device *)arg;
+    struct touch_msg last_msg = {0};
     dev->irq_enable(true); // enable irq first
     while (1) {
         if (osSemaphoreAcquire(dev->sem, osWaitForever) != 0) {
@@ -57,9 +59,11 @@ static void touch_task(void *arg)
         dev->irq_enable(false); // avoid too much irq
         struct touch_msg msg;
         if (dev->read(dev, &msg) == 0) {
-            if (msg.event != TOUCH_EVENT_NONE) {
+            if (msg.event != TOUCH_EVENT_NONE && memcmp(&msg, &last_msg, sizeof(struct touch_msg)) != 0) {
                 if (osMessageQueuePut(dev->mq, &msg, 0, 0) != 0) {
                     HDF_LOGW("osMessageQueuePut touch_msg failed");
+                } else {
+                    last_msg = msg; // filter repeated msg
                 }
             }
         }

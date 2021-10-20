@@ -11,28 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/lite/config/component/lite_component.gni")
-import("../drivers.gni")
-
-static_library("display") {
-  sources = [
-    "hal/disp_hal.c",
-    "hal/lcd_abs_if.c",
-    "hdi/display_gfx.c",
-    "hdi/display_gralloc.c",
-    "hdi/display_layer.c",
-  ]
+group("display") {
   deps = [
-    "../lcd:lcd",
-    "../mipi_dsi:mipi_dsi",
-  ]
-  include_dirs = hdf_include_dirs
-  include_dirs += [
-    "hal",
-    "../mipi_dsi",
-    "//drivers/peripheral/display/hal",
-    "//drivers/peripheral/display/interfaces/include",
-    "//drivers/peripheral/base",
-    "//third_party/musl/porting/liteos_m/kernel/include",
+    "hal:hal_display",
+    "hdi:hdi_display",
   ]
 }

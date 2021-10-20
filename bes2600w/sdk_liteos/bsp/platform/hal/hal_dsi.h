@@ -95,7 +95,16 @@ struct HAL_DSI_CFG_T {
     int cfg_ckey_v2;
 };
 
+enum DSI_MODE_T {
+/** Video mode */
+    DSI_MODE_VIDEO,
+/** Command mode */
+    DSI_MODE_CMD,
+};
+
 typedef void (*HAL_DSI_XFER_COMPLETE_CALLBACK_T)(uint32_t);
+
+void hal_dsi_set_mode(enum DSI_MODE_T mode);
 
 void hal_dsi_init(uint16_t h_res);
 
