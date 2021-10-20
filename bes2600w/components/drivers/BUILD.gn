@@ -55,10 +55,6 @@ group("drivers_adapter") {
     deps += [ "mipi_dsi:mipi_dsi" ]
   }
 
-  if (bes_drivers_lcd_enable) {
-    deps += [ "lcd:lcd" ]
-  }
-
   if (bes_drivers_display_enable) {
     deps += [ "display:display" ]
   }

@@ -47,6 +47,6 @@ declare_args() {
   bes_wifi_test = false
   bes_fs_test = false
   bes_ui_test = false
-  bes_ability_test = true
+  bes_ability_test = false
   bes_histreamer_test = false
 }

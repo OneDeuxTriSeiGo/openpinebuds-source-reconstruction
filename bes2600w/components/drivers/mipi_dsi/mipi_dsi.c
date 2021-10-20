@@ -14,12 +14,9 @@
  */
 #include "mipi_dsi.h"
 #include "cmsis_os2.h"
-#include "device_resource_if.h"
+#include "plat_addr_map.h"
 #include "hal_cache.h"
-#include "hal_cmu.h"
 #include "hal_dsi.h"
-#include "hal_gpio.h"
-#include "hal_iomux.h"
 #include "hdf_log.h"
 #include "mipi_dsi_core.h"
 
@@ -29,60 +26,25 @@
 
 #define WIDTH 454
 #define HEIGHT 454
-#define BUFSIZE_MAX 0xCA000
-
-enum BufferIndexType {
-    BUFFER0,
-    BUFFER1,
-};
+#define BUFSIZE_MAX (1024 * 1024)
 
 struct MipiDsiDevice {
-    struct HAL_IOMUX_PIN_FUNCTION_MAP dsi_rst;
-#ifdef EVB_V2
-    struct HAL_IOMUX_PIN_FUNCTION_MAP dsi_vdd;
-    struct HAL_IOMUX_PIN_FUNCTION_MAP dsi_vss;
-#endif
-    struct HAL_IOMUX_PIN_FUNCTION_MAP dsi_te;
     uint32_t buffers[2];
     uint32_t buf_size;
-    volatile enum BufferIndexType buf_idx;
+    volatile uint8_t buf_idx;
+    bool te_enable;
     osSemaphoreId_t sem;
     struct HAL_DSI_CFG_T cfg;
 };
 
 static struct MipiDsiDevice priv = {
-    .dsi_rst = {
-        HAL_GPIO_PIN_P0_3,
-        HAL_IOMUX_FUNC_AS_GPIO,
-        HAL_IOMUX_PIN_VOLTAGE_VIO,
-        HAL_IOMUX_PIN_NOPULL,
-    },
-#ifdef EVB_V2
-    .dsi_vdd = {
-        HAL_GPIO_PIN_P1_4,
-        HAL_IOMUX_FUNC_AS_GPIO,
-        HAL_IOMUX_PIN_VOLTAGE_VIO,
-        HAL_IOMUX_PIN_NOPULL,
-    },
-    .dsi_vss = {
-        HAL_GPIO_PIN_P1_5,
-        HAL_IOMUX_FUNC_AS_GPIO,
-        HAL_IOMUX_PIN_VOLTAGE_VIO,
-        HAL_IOMUX_PIN_NOPULL,
-    },
-#endif
-    .dsi_te = {
-        HAL_IOMUX_PIN_P2_1,
-        HAL_IOMUX_FUNC_DISPLAY_TE,
-        HAL_IOMUX_PIN_VOLTAGE_VIO,
-        HAL_IOMUX_PIN_NOPULL,
-    },
     .buffers = {
-        PSRAMUHS_BASE + PSRAMUHS_SIZE - BUFSIZE_MAX * 2,
         PSRAMUHS_BASE + PSRAMUHS_SIZE - BUFSIZE_MAX,
+        PSRAMUHS_BASE + PSRAMUHS_SIZE - BUFSIZE_MAX * 2,
     },
     .buf_size = BUFSIZE_MAX,
-    .buf_idx = BUFFER0,
+    .buf_idx = 0,
+    .te_enable = true,
     .cfg = {
         .active_width = WIDTH + 1,
         .active_height = HEIGHT + 1,
@@ -150,87 +112,38 @@ static struct MipiDsiDevice priv = {
     },
 };
 
-#define REAL_PIN(n) (n / 10 * 8 + n % 10)
-static uint32_t MipiDsiDevGetResource(struct MipiDsiDevice *priv, const struct DeviceResourceNode *resourceNode)
-{
-    struct DeviceResourceIface *res = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
-    if (res == NULL || res->GetUint32 == NULL) {
-        HDF_LOGE("DeviceResourceIface is invalid");
-        return HDF_FAILURE;
-    }
-    uint32_t temp = 0;
-    if (res->GetUint32(resourceNode, "rst_pin", &temp, 0) != HDF_SUCCESS) {
-        HDF_LOGE("failed to get dsi rst_pin");
-        return HDF_FAILURE;
-    }
-    priv->dsi_rst.pin = REAL_PIN(temp);
-#ifdef EVB_V2
-    if (res->GetUint32(resourceNode, "vdd_pin", &temp, 0) != HDF_SUCCESS) {
-        HDF_LOGE("failed to get dsi vdd_pin");
-        return HDF_FAILURE;
-    }
-    priv->dsi_vdd.pin = REAL_PIN(temp);
-
-    if (res->GetUint32(resourceNode, "vss_pin", &temp, 0) != HDF_SUCCESS) {
-        HDF_LOGE("failed to get dsi vss_pin");
-        return HDF_FAILURE;
-    }
-    priv->dsi_vss.pin = REAL_PIN(temp);
-#endif
-    if (res->GetUint32(resourceNode, "te_pin", &temp, 0) != HDF_SUCCESS) {
-        HDF_LOGE("failed to get dsi te_pin");
-        return HDF_FAILURE;
-    }
-    priv->dsi_te.pin = REAL_PIN(temp);
-    HDF_LOGD("%s: rst_pin=%d, te_pin=%d", __func__, priv->dsi_rst.pin, priv->dsi_te.pin);
-    return HDF_SUCCESS;
-}
-
-static void MipiDsiMuxCfg(void)
-{
-    hal_iomux_init(&priv.dsi_rst, 1);
-#ifdef EVB_V2
-    hal_iomux_init(&priv.dsi_vdd, 1);
-    hal_iomux_init(&priv.dsi_vss, 1);
-#endif
-    hal_iomux_init(&priv.dsi_te, 1);
-    hal_gpio_pin_set_dir(priv.dsi_rst.pin, HAL_GPIO_DIR_OUT, 0);
-#ifdef EVB_V2
-    hal_gpio_pin_set_dir(priv.dsi_vdd.pin, HAL_GPIO_DIR_OUT, 0);
-    hal_gpio_pin_set_dir(priv.dsi_vss.pin, HAL_GPIO_DIR_OUT, 0);
-    hal_gpio_pin_set(priv.dsi_vdd.pin);
-    osDelay(20);
-    hal_gpio_pin_set(priv.dsi_vss.pin);
-#endif
-    osDelay(20);
-    hal_gpio_pin_set(priv.dsi_rst.pin);
-    osDelay(20);
-}
-
 static int32_t MipiDsiDevInit()
 {
-    if (priv.sem) {
-        return HDF_SUCCESS;
-    }
-    MipiDsiMuxCfg();
     for (int i = 0; i < HDF_ARRAY_SIZE(priv.buffers); i++) {
         memset((void *)priv.buffers[i], 0, BUFSIZE_MAX);
         hal_cache_sync(HAL_CACHE_ID_D_CACHE, (uint32_t)priv.buffers[i], BUFSIZE_MAX);
         HDF_LOGD("buffer[%d] 0x%x", i, priv.buffers[i]);
     }
-
-    priv.sem = osSemaphoreNew(1, 1, NULL); // init sem avaliable
-    if (priv.sem == NULL) {
-        HDF_LOGE("%s: osSemaphoreNew failed", __func__);
-        return HDF_FAILURE;
+    if (priv.te_enable) {
+        priv.sem = osSemaphoreNew(1, 1, NULL); // init sem avaliable
+        if (priv.sem == NULL) {
+            HDF_LOGE("%s: osSemaphoreNew failed", __func__);
+            return HDF_FAILURE;
+        }
     }
     return HDF_SUCCESS;
 }
 
 static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
 {
-    priv.cfg.active_width = cntlr->cfg.timing.xPixels + 1;
-    priv.cfg.active_height = cntlr->cfg.timing.ylines + 1;
+    priv.cfg.active_width = cntlr->cfg.timing.xPixels;
+    priv.cfg.active_height = cntlr->cfg.timing.ylines;
+    // FIXME
+    if (cntlr->cfg.mode == DSI_CMD_MODE) {
+        priv.cfg.active_width += 1;
+        priv.cfg.active_height += 1;
+        hal_dsi_set_mode(DSI_MODE_CMD);
+    } else if (cntlr->cfg.mode == DSI_VIDEO_MODE) {
+        if (cntlr->cfg.burstMode == VIDEO_BURST_MODE) {
+            priv.te_enable = false;
+        }
+        hal_dsi_set_mode(DSI_MODE_VIDEO);
+    }
     priv.cfg.h_back_porch = cntlr->cfg.timing.hbpPixels;
     priv.cfg.v_front_porch = cntlr->cfg.timing.vfpLines;
     priv.cfg.v_back_porch = cntlr->cfg.timing.vbpLines;
@@ -256,7 +169,7 @@ static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
     priv.cfg.zm_tvg_width = cntlr->cfg.timing.xPixels;
     priv.cfg.zm_tvg_height = cntlr->cfg.timing.ylines;
 
-    HDF_LOGD("%s: width %d, height %d", __func__, cntlr->cfg.timing.xPixels, cntlr->cfg.timing.ylines);
+    HDF_LOGD("%s: width %d, height %d", __func__, priv.cfg.active_width, priv.cfg.active_height);
     /* Init the hardware and clear the display */
     hal_dsi_init(cntlr->cfg.timing.xPixels);
     osDelay(100);
@@ -272,11 +185,7 @@ static int32_t MipiDsiDevSetCmd(struct MipiDsiCntlr *cntlr, struct DsiCmdDesc *c
     if (cmd->dataType == 0x05) {
         hal_dsi_send_cmd(cmd->payload[0]);
     } else {
-        uint8_t data[5] = {0};
-        for (uint16_t i = 0; (i < cmd->dataLen) && (i < sizeof(data)); i++) {
-            data[i] = cmd->payload[i];
-        }
-        hal_dsi_send_cmd_data(data[0], cmd->dataLen - 1, data[1], data[2], data[3], data[4]);
+        hal_dsi_send_cmd_list(cmd->payload[0], cmd->dataLen - 1, &cmd->payload[1]);
     }
     return HDF_SUCCESS;
 }
@@ -291,7 +200,11 @@ static void MipiDsiDevToHs(struct MipiDsiCntlr *cntlr)
     (void)cntlr;
     hal_lcdc_init(&priv.cfg, NULL, (uint8_t *)priv.buffers[priv.buf_idx], NULL);
     hal_dsi_start();
-    hal_lcdc_set_callback(MipiDsiDevCallback);
+    if (priv.te_enable) {
+        hal_lcdc_set_callback(MipiDsiDevCallback);
+    } else {
+        hal_lcdc_start();
+    }
 }
 
 void *MipiDsiDevMmap(uint32_t size)
@@ -310,23 +223,36 @@ void MipiDsiDevFlush(void)
 {
     // psram need to sync cache
     hal_cache_sync(HAL_CACHE_ID_D_CACHE, (uint32_t)priv.buffers[priv.buf_idx], priv.buf_size);
-    // wait for last transmission done
-    if (osSemaphoreAcquire(priv.sem, 100) != 0) {
-        HDF_LOGW("last transmission timeout");
-        hal_lcdc_start(); // force to restart
-        return;
+    if (priv.te_enable) {
+        // wait for last transmission done
+        if (osSemaphoreAcquire(priv.sem, 100) != 0) {
+            HDF_LOGW("last transmission timeout");
+            hal_lcdc_start(); // force to restart
+            return;
+        }
+        // swap buffer
+        hal_lcdc_update_addr(NULL, (const void *)priv.buffers[priv.buf_idx], NULL);
+        priv.buf_idx = 1 - priv.buf_idx;
+        // start transmission
+        hal_lcdc_start();
+    } else {
+        static uint32_t last_time = 0;
+        uint32_t now = osKernelGetTickCount();
+        uint32_t diff = now - last_time;
+        if (diff < 16) {
+            HDF_LOGD("wait to finish last transmission");
+            osDelay(16 - diff);
+        }
+        last_time = osKernelGetTickCount();
+        // swap buffer
+        hal_lcdc_update_addr(NULL, (const void *)priv.buffers[priv.buf_idx], NULL);
+        priv.buf_idx = 1 - priv.buf_idx;
     }
-    // swap buffer
-    hal_lcdc_update_addr(NULL, (const void *)priv.buffers[priv.buf_idx], NULL);
-    priv.buf_idx = 1 - priv.buf_idx;
-    // start transmission
-    hal_lcdc_start();
 }
 
 static int32_t MipiDsiDriverBind(struct HdfDeviceObject *device)
 {
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
         return HDF_ERR_INVALID_PARAM;
     }
     return HDF_SUCCESS;
@@ -335,15 +261,7 @@ static int32_t MipiDsiDriverBind(struct HdfDeviceObject *device)
 static int32_t MipiDsiDriverInit(struct HdfDeviceObject *device)
 {
     if (device == NULL) {
-        HDF_LOGE("%s: device is NULL", __func__);
         return HDF_ERR_INVALID_OBJECT;
-    }
-
-    if (device->property) {
-        if (MipiDsiDevGetResource(&priv, device->property) != HDF_SUCCESS) {
-            HDF_LOGE("%s: MipiDsiDevGetResource failed", __func__);
-            return HDF_FAILURE;
-        }
     }
 
     int ret = MipiDsiDevInit();

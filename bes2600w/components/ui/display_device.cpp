@@ -25,7 +25,9 @@ DisplayDevice *DisplayDevice::GetInstance()
     if (!instance.isRegister_) {
         FbdevInit();
         instance.isRegister_ = true;
+#ifdef CONFIG_DISPLAY_RM69330
         instance.SetScreenShape(CIRCLE);
+#endif
     }
     return &instance;
 }
