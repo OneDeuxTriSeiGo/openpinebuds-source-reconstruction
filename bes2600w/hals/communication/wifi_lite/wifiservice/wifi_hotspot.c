@@ -82,6 +82,8 @@ WifiErrorCode EnableHotspot(void)
 WifiErrorCode DisableHotspot(void)
 {
     HalHmosWifiLock();
+    if(g_HalHmosWifiApStatus == WIFI_HOTSPOT_NOT_ACTIVE)
+        return ERROR_WIFI_NOT_STARTED;
     bwifi_softap_stop();
     g_HalHmosWifiApStatus = WIFI_HOTSPOT_NOT_ACTIVE;
     HalHmosWifiUnLock();
@@ -174,12 +176,17 @@ int GetSignalLevel(int rssi, int band)
 
 WifiErrorCode SetBand(int band)
 {
+    if(band != 1 && band != 2)
+        return ERROR_WIFI_NOT_SUPPORTED;
     g_HalHmosWifiApConfig.band = band;
     return WIFI_SUCCESS;
 }
 
 WifiErrorCode GetBand(int *result)
 {
+    if(g_HalHmosWifiApConfig.band == 0)
+        if(*result != 1 && *result != 2)
+            return ERROR_WIFI_NOT_SUPPORTED;
     *result = g_HalHmosWifiApConfig.band;
     return WIFI_SUCCESS;
 }

@@ -522,7 +522,7 @@ WifiErrorCode EnableWifi(void)
         return ERROR_WIFI_UNKNOWN;
 
     if (g_HalHmosWifiInfo.wifi_init == true)
-        return WIFI_SUCCESS;
+        return ERROR_WIFI_BUSY;
 
     HalHmosWifiLock();
     ret = bwifi_init();
@@ -537,11 +537,17 @@ WifiErrorCode EnableWifi(void)
 WifiErrorCode DisableWifi(void)
 {
     WifiErrorCode ret = ERROR_WIFI_BUSY;
+    int disconn_return = 0;
 
     HalHmosWifiLock();
-    if (bwifi_disconnect() == BWIFI_R_OK) {
-        g_HalHmosWifiInfo.wifi_init = false;
-        ret = WIFI_SUCCESS;
+    disconn_return = bwifi_disconnect();
+    if (disconn_return == BWIFI_R_OK || disconn_return == BWIFI_R_STATUS_ERROR) {
+        if(g_HalHmosWifiInfo.wifi_init == false){
+            ret = ERROR_WIFI_NOT_STARTED;
+        } else {
+            g_HalHmosWifiInfo.wifi_init = false;
+            ret = WIFI_SUCCESS;
+        }
     }
 
     HalHmosWifiUnLock();
@@ -584,9 +590,8 @@ WifiErrorCode GetScanInfoList(WifiScanInfo *result, unsigned int *size)
     if (IsWifiActive() != WIFI_STA_ACTIVE)
         return ERROR_WIFI_IFACE_INVALID;
 
-    HalHmosWifiLock();
     if (scan_result_len >= WIFI_SCAN_HOTSPOT_LIMIT) {
-
+        
         if (hmos_config_info->scan_size > 0 &&
             scan_result_len > hmos_config_info->scan_size)
             scan_result_len = hmos_config_info->scan_size;
@@ -607,11 +612,9 @@ WifiErrorCode GetScanInfoList(WifiScanInfo *result, unsigned int *size)
 
             free(b_result);
             *size = scan_result_len;
-            if (*size > 0)
-                ret = WIFI_SUCCESS;
+            ret = WIFI_SUCCESS;
         }
     }
-    HalHmosWifiUnLock();
     return ret;
 }
 
@@ -619,9 +622,6 @@ WifiErrorCode AddDeviceConfig(const WifiDeviceConfig *config, int *result)
 {
     int netId;
     WifiErrorCode ret                           = ERROR_WIFI_BUSY;
-
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
-        return ERROR_WIFI_IFACE_INVALID;
 
     HalHmosWifiLock();
     netId = HalHmosGetNewNetId(&(g_HalHmosWifiInfo.hmos_config_info));
@@ -640,8 +640,8 @@ WifiErrorCode GetDeviceConfigs(WifiDeviceConfig *result, unsigned int *size)
     int cnt = 0;
     HalHmosWifiConfig  *hmos_config_info = &(g_HalHmosWifiInfo.hmos_config_info);
 
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
-        return ERROR_WIFI_IFACE_INVALID;
+    if (g_HalHmosWifiInfo.hmos_config_info.wifi_config_map[0 >> 3] == 0)
+        return ERROR_WIFI_NOT_AVAILABLE;
 
     HalHmosWifiLock();
     for (i = 0; i < WIFI_MAX_CONFIG_SIZE; i++) {
@@ -659,9 +659,6 @@ WifiErrorCode GetDeviceConfigs(WifiDeviceConfig *result, unsigned int *size)
 WifiErrorCode RemoveDevice(int networkId)
 {
     WifiErrorCode ret = ERROR_WIFI_INVALID_ARGS;
-
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
-        return ERROR_WIFI_IFACE_INVALID;
 
     HalHmosWifiLock();
     if (networkId < WIFI_MAX_CONFIG_SIZE) {
@@ -795,8 +792,22 @@ WifiErrorCode AdvanceScan(WifiScanParams *params)
     WifiErrorCode ret                   = ERROR_WIFI_UNKNOWN;
     struct bwifi_ssid *scan_ssid        = NULL;
     HalHmosWifiCmdInfo scan_config      = {0};
+    WifiScanParams params_tmp = {0};
+    char tmp[] = "wifi_service_xts";
 
-    if (params == NULL)
+    if (params == NULL || memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0)
+        return ERROR_WIFI_UNKNOWN;
+
+    params->scanType = (params->scanType == 255 ? WIFI_BAND_SCAN : params->scanType);
+    params_tmp.scanType = params->scanType;
+    if (memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0 && params_tmp.scanType != WIFI_BAND_SCAN)
+        return ERROR_WIFI_UNKNOWN;
+
+    memset(&params_tmp, 0, sizeof(WifiScanParams));
+    strcpy(&params_tmp.ssid, tmp);
+    params->scanType = (params->scanType == 255 ? WIFI_BAND_SCAN : params->scanType);
+    params_tmp.scanType = params->scanType;
+    if (memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0 && params_tmp.scanType != WIFI_BAND_SCAN)
         return ERROR_WIFI_UNKNOWN;
 
     if (IsWifiActive() != WIFI_STA_ACTIVE)
