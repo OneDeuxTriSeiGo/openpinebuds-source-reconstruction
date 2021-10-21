@@ -64,7 +64,8 @@ board_cflags = [
     "-DDEBUG=1",
     "-DCMSIS_OS_VER=2",
     "-DOS_HWI_MAX_NUM=96",
-    "-DCONFIG_DISPLAY_A064"
+    "-DCONFIG_DISPLAY_A064",
+    "-DLFS_MAX_OPEN_DIRS=32"
 ]
 
 board_cxx_flags = board_cflags

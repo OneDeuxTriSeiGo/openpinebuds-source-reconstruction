@@ -18,15 +18,22 @@
 #include <unistd.h>
 #include "utils_file.h"
 #include "hal_file.h"
+#include "lfs_api.h"
+#include "hal_trace.h"
 
+#define PATH_NAME_LEN 64
+#define INVALID_KEY 92
 static int check_path_valid(const char *path)
 {
-    if (strlen(path) > 128)
+    if (strlen(path) > PATH_NAME_LEN)
+    {
+        TRACE(0,"path name is too long ,must less than %d",PATH_NAME_LEN);
         return -1;
+    }
 
     for (int i = 0; i < strlen(path); i++)
     {
-        if ( 92 == (int)path[i] ) /* '\' */
+        if ( INVALID_KEY == (int)path[i] ) /* '\' */
             return -1;
     }
     return 0;
@@ -39,7 +46,8 @@ int HalFileOpen(const char *path, int oflag, int mode)
     if ( check_path_valid(path) < 0)
         return -1;
 
-    return open(path, oflag);
+    int ret = open(path, oflag);
+    return ret;
 }
 
 int HalFileClose(int fd)
@@ -49,11 +57,17 @@ int HalFileClose(int fd)
 
 int HalFileRead(int fd, char *buf, unsigned int len)
 {
+    if (fd > LITTLE_FS_MAX_OPEN_FILES)
+        return -1;
+
     return read(fd, buf, len);
 }
 
 int HalFileWrite(int fd, const char *buf, unsigned int len)
 {
+    if (fd > LITTLE_FS_MAX_OPEN_FILES)
+        return -1;
+
     return write(fd, buf, len);
 }
 
@@ -76,5 +90,12 @@ int HalFileStat(const char *path, unsigned int *fileSize)
 
 int HalFileSeek(int fd, int offset, unsigned int whence)
 {
+    if (fd > LITTLE_FS_MAX_OPEN_FILES)
+        return -1;
+
+    int len = lseek(fd, 0, SEEK_END_FS);
+    if (offset > len)
+        return -1;
+
     return (int)lseek(fd, (off_t)offset, whence);
 }
