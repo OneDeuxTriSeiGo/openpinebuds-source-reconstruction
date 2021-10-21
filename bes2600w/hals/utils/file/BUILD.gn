@@ -17,5 +17,8 @@ static_library("hal_file_static") {
   sources = [ "src/hal_file.c" ]
   include_dirs = [
     "//utils/native/lite/hals/file",
+    "//kernel/liteos_m/components/fs/littlefs/",
+    "//kernel/liteos_m/components/fs/",
+    "//third_party/littlefs",
   ]
 }
