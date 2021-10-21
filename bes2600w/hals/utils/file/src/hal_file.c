@@ -19,9 +19,26 @@
 #include "utils_file.h"
 #include "hal_file.h"
 
+static int check_path_valid(const char *path)
+{
+    if (strlen(path) > 128)
+        return -1;
+
+    for (int i = 0; i < strlen(path); i++)
+    {
+        if ( 92 == (int)path[i] ) /* '\' */
+            return -1;
+    }
+    return 0;
+}
+
 int HalFileOpen(const char *path, int oflag, int mode)
 {
     (void)mode;
+
+    if ( check_path_valid(path) < 0)
+        return -1;
+
     return open(path, oflag);
 }
 
