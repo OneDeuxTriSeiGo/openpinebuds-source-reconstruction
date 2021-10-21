@@ -397,6 +397,8 @@ extern "C" {
 #define BT_INTESYS_MEM_OFFSET                   0x00004000
 
 /* For module features */
+#define I2S_TX_MULTI_CHAN
+#define I2S_RX_MULTI_CHAN
 #define SEC_ENG_HAS_HASH
 
 /* For boot struct version */

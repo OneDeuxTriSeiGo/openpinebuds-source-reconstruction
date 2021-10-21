@@ -131,18 +131,20 @@ static int32_t MipiDsiDevInit()
 
 static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
 {
+    enum DSI_MODE_T dsi_mode = DSI_MODE_CMD;
+    uint32_t dsi_clk = cntlr->cfg.phyDataRate;
+    uint32_t pixel_clk = cntlr->cfg.pixelClk / 1000;
     priv.cfg.active_width = cntlr->cfg.timing.xPixels;
     priv.cfg.active_height = cntlr->cfg.timing.ylines;
     // FIXME
     if (cntlr->cfg.mode == DSI_CMD_MODE) {
         priv.cfg.active_width += 1;
         priv.cfg.active_height += 1;
-        hal_dsi_set_mode(DSI_MODE_CMD);
     } else if (cntlr->cfg.mode == DSI_VIDEO_MODE) {
         if (cntlr->cfg.burstMode == VIDEO_BURST_MODE) {
             priv.te_enable = false;
         }
-        hal_dsi_set_mode(DSI_MODE_VIDEO);
+        dsi_mode = DSI_MODE_VIDEO;
     }
     priv.cfg.h_back_porch = cntlr->cfg.timing.hbpPixels;
     priv.cfg.v_front_porch = cntlr->cfg.timing.vfpLines;
@@ -169,9 +171,10 @@ static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
     priv.cfg.zm_tvg_width = cntlr->cfg.timing.xPixels;
     priv.cfg.zm_tvg_height = cntlr->cfg.timing.ylines;
 
-    HDF_LOGD("%s: width %d, height %d", __func__, priv.cfg.active_width, priv.cfg.active_height);
+    HDF_LOGD("%s: width %u, height %u, dsi_clk %u, pixel_clk %u", __func__,
+             priv.cfg.active_width, priv.cfg.active_height, dsi_clk, pixel_clk);
     /* Init the hardware and clear the display */
-    hal_dsi_init(cntlr->cfg.timing.xPixels);
+    hal_dsi_init_v2(cntlr->cfg.timing.xPixels, dsi_mode, dsi_clk, pixel_clk);
     osDelay(100);
     return HDF_SUCCESS;
 }

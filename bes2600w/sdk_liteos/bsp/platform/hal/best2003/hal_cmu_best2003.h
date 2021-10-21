@@ -418,6 +418,8 @@ uint32_t hal_cmu_get_osc_switch_overhead(void);
 
 void hal_cmu_dsi_clock_enable(void);
 
+void hal_cmu_dsi_clock_enable_v2(uint8_t pixel_div);
+
 void hal_cmu_dsi_clock_disable(void);
 
 void hal_cmu_csi_clock_enable(void);

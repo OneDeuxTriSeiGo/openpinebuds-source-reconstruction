@@ -366,17 +366,15 @@ static int32_t TouchDriverInit(struct HdfDeviceObject *object)
 static int32_t TouchDriverBind(struct HdfDeviceObject *device)
 {
     (void)device;
-    HDF_LOGD("%s", __func__);
     return HDF_SUCCESS;
 }
 
 static void TouchDriverRelease(struct HdfDeviceObject *device)
 {
     (void)device;
-    HDF_LOGD("%s", __func__);
 }
 
-static struct HdfDriverEntry g_touchDriverEntry = {
+static struct HdfDriverEntry g_ZTW523TouchDriverEntry = {
     .moduleVersion = 1,
     .moduleName = "HDF_TOUCH_ZTW523",
     .Bind = TouchDriverBind,
@@ -384,4 +382,4 @@ static struct HdfDriverEntry g_touchDriverEntry = {
     .Release = TouchDriverRelease,
 };
 
-HDF_INIT(g_touchDriverEntry);
+HDF_INIT(g_ZTW523TouchDriverEntry);
