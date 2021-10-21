@@ -67,6 +67,7 @@ static void touch_task(void *arg)
                 }
             }
         }
+        osDelay(3); // avoid too much irq
         dev->irq_enable(true); // enable irq after data process
     }
 }

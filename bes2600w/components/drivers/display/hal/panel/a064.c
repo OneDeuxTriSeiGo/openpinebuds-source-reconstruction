@@ -240,10 +240,10 @@ static int32_t PanelOn(struct PanelData *panel)
             return HDF_FAILURE;
         }
     }
-    hal_gpio_pin_set_dir(priv.pin_led.pin, HAL_GPIO_DIR_OUT, 1);
-    osDelay(20);
     /* set mipi to hs mode */
     MipiDsiSetHsMode(priv.mipiHandle);
+    hal_gpio_pin_set_dir(priv.pin_led.pin, HAL_GPIO_DIR_OUT, 1);
+    osDelay(20);
     return HDF_SUCCESS;
 }
 

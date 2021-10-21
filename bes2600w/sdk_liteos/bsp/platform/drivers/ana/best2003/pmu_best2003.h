@@ -150,6 +150,8 @@ void pmu_codec_mic_bias_enable(uint32_t map);
 
 void pmu_codec_mic_bias_lowpower_mode(uint32_t map);
 
+void pmu_set_dsi_clk(uint32_t dsi_clk);
+
 void pmu_pll_div_reset_set(enum HAL_CMU_PLL_T pll);
 
 void pmu_pll_div_reset_clear(enum HAL_CMU_PLL_T pll);

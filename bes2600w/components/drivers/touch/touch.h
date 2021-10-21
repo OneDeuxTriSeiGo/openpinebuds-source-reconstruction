@@ -15,6 +15,11 @@
 #ifndef __TOUCH_H__
 #define __TOUCH_H__
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 #include "cmsis_os2.h"
 #include "touch_if.h"
 

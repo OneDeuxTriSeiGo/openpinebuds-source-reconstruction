@@ -104,9 +104,10 @@ enum DSI_MODE_T {
 
 typedef void (*HAL_DSI_XFER_COMPLETE_CALLBACK_T)(uint32_t);
 
-void hal_dsi_set_mode(enum DSI_MODE_T mode);
-
 void hal_dsi_init(uint16_t h_res);
+
+/* dsi_clk(MHz), pixel_clk(MHz) */
+void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint32_t dsi_clk, uint32_t pixel_clk);
 
 void hal_dsi_start(void);
 

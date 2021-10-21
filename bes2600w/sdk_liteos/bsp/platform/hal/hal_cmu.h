@@ -356,6 +356,10 @@ void hal_cmu_i2s_clock_disable(enum HAL_I2S_ID_T id);
 
 int hal_cmu_i2s_set_div(enum HAL_I2S_ID_T id, uint32_t div);
 
+void hal_cmu_i2s_resample_enable(enum HAL_I2S_ID_T id);
+
+void hal_cmu_i2s_resample_disable(enum HAL_I2S_ID_T id);
+
 int hal_cmu_i2s_mclk_enable(enum HAL_CMU_I2S_MCLK_ID_T id);
 
 void hal_cmu_i2s_mclk_disable(void);

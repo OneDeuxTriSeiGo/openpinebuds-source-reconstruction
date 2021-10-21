@@ -17,9 +17,9 @@
 
 #include "plat_types.h"
 
-#define I2SIP_FIFO_DEPTH 8
-#define I2SIP_CHAN_REG_SIZE 0x40
-#define I2SIP_CHAN_REG(c, r) (c * I2SIP_CHAN_REG_SIZE + r)
+#define I2SIP_FIFO_DEPTH                    8
+#define I2SIP_CHAN_REG_SIZE                 0x40
+#define I2SIP_CHAN_REG(c, r)                ((c) * I2SIP_CHAN_REG_SIZE + (r))
 
 /* i2sip register */
 /* enable register */
@@ -126,7 +126,6 @@
 #define I2SIP_CFG_WLEN_VAL_20BIT  3
 #define I2SIP_CFG_WLEN_VAL_24BIT  4
 #define I2SIP_CFG_WLEN_VAL_32BIT  5
-
 
 /* int status register */
 #define I2SIP_INT_STATUS_REG_OFFSET(c) I2SIP_CHAN_REG(c, 0x38)
