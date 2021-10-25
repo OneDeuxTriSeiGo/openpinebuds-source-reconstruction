@@ -93,7 +93,7 @@ int HalFileSeek(int fd, int offset, unsigned int whence)
     if (fd > LITTLE_FS_MAX_OPEN_FILES)
         return -1;
 
-    int len = lseek(fd, 0, SEEK_END_FS);
+    int len = (int)lseek(fd, (off_t)0, SEEK_END_FS);
     if (offset > len)
         return -1;
 

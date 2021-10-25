@@ -27,9 +27,10 @@ public:
     bool Read(DeviceData& data) override;
 
 private:
+    bool IsValidTouchMsg(struct touch_msg *msg);
     bool init = false;
     DevHandle handle = nullptr;
-    struct touch_msg msg;
+    struct touch_msg msg = {0};
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_TOUCH_INPUT_H
