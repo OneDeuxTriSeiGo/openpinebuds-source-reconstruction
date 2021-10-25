@@ -16,10 +16,8 @@
 #include "hdf_platform.h"
 #include "hdf_log.h"
 
-#define TOUCH_MAX 1
-#define TOUCH_MSG_MAX 4
 struct TouchManager {
-    struct touch_device *device[TOUCH_MAX];
+    struct touch_device *device[TOUCH_DEV_MAX];
     uint32_t deviceNum;
 };
 static struct TouchManager g_touchManager;
@@ -33,8 +31,8 @@ int32_t RegisterTouchDevice(struct touch_device *device)
         return HDF_ERR_INVALID_PARAM;
     }
     deviceNum = g_touchManager.deviceNum;
-    if (deviceNum >= TOUCH_MAX) {
-        HDF_LOGE("%s: deviceNum > TOUCH_MAX", __func__);
+    if (deviceNum >= TOUCH_DEV_MAX) {
+        HDF_LOGE("%s: deviceNum > TOUCH_DEV_MAX", __func__);
         return HDF_FAILURE;
     }
     if (device->init == NULL || device->read == NULL || device->irq_enable == NULL) {
@@ -60,14 +58,13 @@ static void touch_task(void *arg)
         struct touch_msg msg;
         if (dev->read(dev, &msg) == 0) {
             if (msg.event != TOUCH_EVENT_NONE && memcmp(&msg, &last_msg, sizeof(struct touch_msg)) != 0) {
-                if (osMessageQueuePut(dev->mq, &msg, 0, 0) != 0) {
-                    HDF_LOGW("osMessageQueuePut touch_msg failed");
+                if (osMessageQueuePut(dev->mq, &msg, 0, 50) != 0) {
+                    HDF_LOGW("failed to enqueue touch_msg");
                 } else {
                     last_msg = msg; // filter repeated msg
                 }
             }
         }
-        osDelay(3); // avoid too much irq
         dev->irq_enable(true); // enable irq after data process
     }
 }

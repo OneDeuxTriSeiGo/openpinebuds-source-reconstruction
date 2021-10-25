@@ -226,10 +226,27 @@ static void PanelPowerControl(bool on)
     }
 }
 
+static int32_t PanelReadId()
+{
+    uint8_t read_id[3] = {0};
+    uint8_t payload[] = {0x04};
+    struct DsiCmdDesc cmd = {0x06, 0, sizeof(payload), &payload};
+    int32_t ret = MipiDsiRx(priv.mipiHandle, &cmd, 3, read_id);
+    if (ret != HDF_SUCCESS) {
+        HDF_LOGE("%s: MipiDsiRx failed", __func__);
+        return HDF_FAILURE;
+    }
+    HDF_LOGI("%s: read id %02X-%02X-%02X", __func__, read_id[0], read_id[1], read_id[2]);
+    return HDF_SUCCESS;
+}
+
 static int32_t PanelOn(struct PanelData *panel)
 {
     (void)panel;
     PanelPowerControl(true);
+    if (PanelReadId() != HDF_SUCCESS) {
+        return HDF_FAILURE;
+    }
     /* send mipi power on code */
     int32_t count = sizeof(g_OnCmd) / sizeof(g_OnCmd[0]);
     int32_t i;

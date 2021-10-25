@@ -106,8 +106,20 @@ typedef void (*HAL_DSI_XFER_COMPLETE_CALLBACK_T)(uint32_t);
 
 void hal_dsi_init(uint16_t h_res);
 
-/* dsi_clk(MHz), pixel_clk(MHz) */
-void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint32_t dsi_clk, uint32_t pixel_clk);
+/**
+ * @param
+ *      h_res       horizontal resolution
+ *      mode        @see enum DSI_MODE_T
+ *      dsi_bitclk  Mbps
+ *      dsi_pclk    KHz
+ * @note
+ * Total-pixel = H-total * V-total * fps
+ * Bitclk =  Total-pixel * bpp(bit) / lane-number
+ * Byteclk = Bitclk / 8
+ * dsi_clk = Byteclk * lane-number = Total-pixel * bpp(bit) / 8
+ * dsi_pclk = dsi_clk / bpp(byte) = H-total * V-total * fps
+ */
+void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint32_t dsi_bitclk, uint32_t dsi_pclk);
 
 void hal_dsi_start(void);
 
@@ -121,7 +133,7 @@ void hal_lcdc_gamma_disable(void);
 void hal_lcdc_start(void);
 
 void hal_dsi_send_cmd(uint8_t cmd);
-void hal_dsi_read_cmd(uint8_t cmd,uint8_t* read_buf,uint8_t len);
+int hal_dsi_read_cmd(uint8_t cmd, uint8_t *read_buf, uint8_t len);
 void hal_dsi_send_cmd_data(uint8_t cmd, uint32_t len, uint8_t p0, uint8_t p1, uint8_t p2, uint8_t p3);
 void hal_dsi_send_long_array(uint32_t len,uint32_t *data);
 void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count, unsigned char *para_list);

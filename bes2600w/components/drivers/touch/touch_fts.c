@@ -304,7 +304,8 @@ static int fts_read_touchdata(struct fts_ts_data *data)
     data->point_num = buf[FTS_TOUCH_POINT_NUM] & 0x0F;
 
     if (data->ic_info.is_incell) {
-        if ((data->point_num == 0x0F) && (buf[1] == 0xFF) && (buf[2] == 0xFF) && (buf[3] == 0xFF) && (buf[4] == 0xFF) && (buf[5] == 0xFF) && (buf[6] == 0xFF)) {
+        if ((data->point_num == 0x0F) && (buf[1] == 0xFF) && (buf[2] == 0xFF) && (buf[3] == 0xFF) &&
+            (buf[4] == 0xFF) && (buf[5] == 0xFF) && (buf[6] == 0xFF)) {
             HDF_LOGI("touch buff is 0xff, need recovery state");
             return -EIO;
         }
@@ -468,7 +469,6 @@ static int tpd_get_point(struct touch_device *dev, struct touch_msg *msg)
     msg->x = events[0].x;
     msg->y = events[0].y;
     msg->event = EVENT_DOWN(events[0].flag) ? TOUCH_EVENT_DOWN : TOUCH_EVENT_UP;
-    HDF_LOGD("Event %s at {%d, %d} ", (msg->event == TOUCH_EVENT_DOWN) ? "DOWN" : "UP", msg->x, msg->y);
     return 0;
 }
 

@@ -25,41 +25,41 @@ config("drivers_config") {
 
 group("drivers_adapter") {
   public_configs = [ ":drivers_config" ]
-  deps = []
+  public_deps = []
 
   if (bes_drivers_flash_enable) {
-    deps += [ "flash:flash" ]
+    public_deps += [ "flash:flash" ]
   }
 
   if (bes_drivers_gpio_enable) {
-    deps += [ "gpio:gpio" ]
+    public_deps += [ "gpio:gpio" ]
   }
 
   if (bes_drivers_i2c_enable) {
-    deps += [ "i2c:i2c" ]
+    public_deps += [ "i2c:i2c" ]
   }
 
   if (bes_drivers_spi_enable) {
-    deps += [ "spi:spi" ]
+    public_deps += [ "spi:spi" ]
   }
 
   if (bes_drivers_uart_enable) {
-    deps += [ "uart:uart" ]
+    public_deps += [ "uart:uart" ]
   }
 
   if (bes_drivers_pwm_enable) {
-    deps += [ "pwm:pwm" ]
+    public_deps += [ "pwm:pwm" ]
   }
 
   if (bes_drivers_mipi_dsi_enable) {
-    deps += [ "mipi_dsi:mipi_dsi" ]
+    public_deps += [ "mipi_dsi:mipi_dsi" ]
   }
 
   if (bes_drivers_display_enable) {
-    deps += [ "display:display" ]
+    public_deps += [ "display:display" ]
   }
 
   if (bes_drivers_touch_enable) {
-    deps += [ "touch:touch" ]
+    public_deps += [ "touch:touch" ]
   }
 }

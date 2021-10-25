@@ -51,15 +51,6 @@ root {
                     deviceMatchAttr = "i2c1_config";
                 }
             }
-            device_watchdog :: device {
-               watchdog0 :: deviceNode {
-                  policy = 2;
-                  priority = 100;
-                  moduleName = "HDF_PLATFORM_WATCHDOG";
-                  serviceName = "HDF_PLATFORM_WATCHDOG_0";
-                  deviceMatchAttr = "watchdog0_config";
-               }
-            }
             device_mipi_dsi :: device {
                 mipi_dsi0 :: deviceNode {
                     policy = 2;

@@ -4,7 +4,8 @@ root {
         gpio_config {
             match_attr = "gpio_config";
             pin = [0, 1];
-            // EVB_V3: TSP_RST - GPIO05, TSP_INT-GPIO27 
+            // touch_ztw523: TSP_RST - GPIO12, TSP_INT-GPIO27
+            // touch_fts: TSP_RST - GPIO05, TSP_INT-GPIO27
             realPin = [5, 27];
             config = [5, 2];
             pinNum = 2;
@@ -35,12 +36,6 @@ root {
                 as_master = 1;
                 address_width = 8;
                 mode = 0;
-            }
-        }
-        watchdog_config {
-           watchdog0 {
-               match_attr = "watchdog0_config";
-               watchdog_id = 0;
             }
         }
     }

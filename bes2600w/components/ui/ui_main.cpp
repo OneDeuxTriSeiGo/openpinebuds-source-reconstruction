@@ -117,6 +117,8 @@ static void UiMainTask(void *arg)
         uint32_t time = HALTick::GetInstance().GetElapseTime(temp);
         if (time < DEFAULT_TASK_PERIOD) {
             osDelay(DEFAULT_TASK_PERIOD - time);
+        } else {
+            osDelay(1);
         }
 #ifdef ENABLE_FPS
         cnt++;
@@ -134,7 +136,7 @@ void UiMain(void)
 {
     osThreadAttr_t attr = {0};
     attr.stack_size = 1024 * 32; // more than 20KB
-    attr.priority = osPriorityAboveNormal;
+    attr.priority = osPriorityNormal;
     attr.name = "UiMain";
     if (osThreadNew((osThreadFunc_t)UiMainTask, NULL, &attr) == NULL) {
         GRAPHIC_LOGE("Failed to create UiMainTask");

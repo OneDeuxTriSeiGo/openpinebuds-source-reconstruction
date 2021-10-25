@@ -16,6 +16,7 @@
 #define __PMU_BEST2003_H__
 
 #include "hal_cmu.h"
+#include "hal_gpio.h"
 
 #ifdef __cplusplus
 extern "C" {

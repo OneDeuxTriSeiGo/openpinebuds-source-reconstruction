@@ -14,6 +14,7 @@
  */
 #include "touch_input.h"
 #include "gfx_utils/graphic_log.h"
+#include "graphic_config.h"
 
 namespace OHOS
 {
@@ -31,18 +32,52 @@ TouchInput *TouchInput::GetInstance()
     return &instance;
 }
 
+bool TouchInput::IsValidTouchMsg(struct touch_msg *msg)
+{
+    if (msg->x >= HORIZONTAL_RESOLUTION || msg->y >= VERTICAL_RESOLUTION)
+        return false;
+
+    if (msg->event != TOUCH_EVENT_UP && msg->event != TOUCH_EVENT_DOWN && msg->event != TOUCH_EVENT_MOVE)
+        return false;
+
+    return true;
+}
+
 bool TouchInput::Read(DeviceData &data)
 {
-    struct touch_msg tmp = {0};
-    // It shouldn't block here, so timeout = 0.
-    if (TouchRead(this->handle, &tmp, 0) == 0) {
-        this->msg = tmp;
-        // GRAPHIC_LOGI("x %d, y %d, event %d", this->msg.x, this->msg.y, this->msg.event);
+    // merge msg with the same event
+    struct touch_msg tmp[TOUCH_MSG_MAX] = {0};
+    int i = 0;
+    while (i < TOUCH_MSG_MAX && TouchRead(this->handle, &tmp[i], 0) == 0) {
+        if (!IsValidTouchMsg(&tmp[i]))
+            break;
+
+        if (tmp[i].event == TOUCH_EVENT_MOVE) {
+            tmp[i].event = TOUCH_EVENT_DOWN;
+        }
+        i++;
+        if (IsValidTouchMsg(&this->msg)) {
+            if (tmp[i - 1].event != this->msg.event) {
+                break;
+            }
+        } else {
+            if (i > 1 && tmp[i - 1].event != tmp[0].event)
+                break;
+        }
     }
-    // may use last msg
-    data.point.x = this->msg.x;
-    data.point.y = this->msg.y;
-    data.state = (this->msg.event == TOUCH_EVENT_DOWN || this->msg.event == TOUCH_EVENT_MOVE) ? STATE_PRESS : STATE_RELEASE;
+    if (i <= 1) {
+        data.point.x = this->msg.x;
+        data.point.y = this->msg.y;
+        data.state = (this->msg.event == TOUCH_EVENT_DOWN) ? STATE_PRESS : STATE_RELEASE;
+    } else if (i <= TOUCH_MSG_MAX) {
+        data.point.x = tmp[i - 2].x;
+        data.point.y = tmp[i - 2].y;
+        data.state = (tmp[i - 2].event == TOUCH_EVENT_DOWN) ? STATE_PRESS : STATE_RELEASE;
+    }
+    // GRAPHIC_LOGD("Touch {%d, %d} %d", data.point.x, data.point.y, data.state);
+    if (i >= 1 && i <= TOUCH_MSG_MAX && IsValidTouchMsg(&tmp[i - 1]))
+        this->msg = tmp[i - 1];
+
     return false;
 }
 } // namespace OHOS

@@ -28,6 +28,9 @@ extern "C" {
 #define TOUCH_EVENT_EXIST (0x04)
 #define TOUCH_EVENT_NONE (0x80)
 
+#define TOUCH_DEV_MAX 1
+#define TOUCH_MSG_MAX 8
+
 struct touch_msg {
     uint16_t x;
     uint16_t y;
