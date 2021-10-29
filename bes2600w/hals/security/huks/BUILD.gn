@@ -17,5 +17,6 @@ static_library("huks_adapter") {
   ]
   include_dirs = [
     "//base/security/huks/interfaces/innerkits/huks_lite/",
+    "//third_party/mbedtls/include/mbedtls",
   ]
 }

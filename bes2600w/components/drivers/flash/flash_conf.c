@@ -16,6 +16,8 @@
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
 #include "device_resource_if.h"
+#include "hal_hota_board.h"
+#include "hal_update_board.h"
 
 /* Logic partition on flash devices */
 hal_logic_partition_t g_halPartitions[] = {
@@ -182,7 +184,7 @@ static int32_t FlashDriverInit(struct HdfDeviceObject *object)
         return HDF_FAILURE;
     }
     if (object->property) {
-        if (FlashGetResource(object->property) != HDF_SUCCESS) {
+        if (FlashGetResource(object->property) != HDF_SUCCESS || HotaGetResource(object->property) != HDF_SUCCESS) {
             HDF_LOGE("%s: FlashGetResource failed", __func__);
             return HDF_FAILURE;
         }

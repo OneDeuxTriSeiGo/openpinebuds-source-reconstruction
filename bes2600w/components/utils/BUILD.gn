@@ -36,6 +36,7 @@ static_library("sys_adapter") {
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/services/wifi_app/wifi_console/",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis/",
     "//kernel/liteos_m/kernel/arch/include/",
+    "//device/bestechnic/${board_name}/sdk_liteos/bsp/net/mbedtls/include/"
   ]
 
   include_dirs += [

@@ -18,6 +18,7 @@
 #include "hdf_device_desc.h"
 #include "device_resource_if.h"
 #include "hal_hota_board.h"
+#include "hal_update_board.h"
 #define PUBKEY_LENGTH 270
 
 
@@ -149,7 +150,7 @@ int HotaHalCheckVersionValid(const char *currentVersion, const char *pkgVersion,
     return (strncmp(currentVersion, pkgVersion, pkgVersionLength) == 0) ? 1 : 0;
 }
 
-static uint32_t HotaGetResource(const struct DeviceResourceNode *resourceNode)
+uint32_t HotaGetResource(const struct DeviceResourceNode *resourceNode)
 {
     struct DeviceResourceIface *resource = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
     if (resource == NULL) {
@@ -185,38 +186,3 @@ static uint32_t HotaGetResource(const struct DeviceResourceNode *resourceNode)
     g_componentTableInit = 1;
     return HDF_SUCCESS;
 }
-
-static int32_t HotaDriverInit(struct HdfDeviceObject *object)
-{
-    if (object == NULL) {
-        return HDF_FAILURE;
-    }
-    if (object->property) {
-        if (HotaGetResource(object->property) != HDF_SUCCESS) {
-            // HDF_LOGE("%s: FlashGetResource failed", __func__);
-            return HDF_FAILURE;
-        }
-    }
-    return HDF_SUCCESS;
-}
-
-static int32_t HotaDriverBind(struct HdfDeviceObject *device)
-{
-    (void)device;
-    return HDF_SUCCESS;
-}
-
-static void HotaDriverRelease(struct HdfDeviceObject *device)
-{
-    (void)device;
-}
-
-static struct HdfDriverEntry g_halhotaEntry = {
-    .moduleVersion = 1,
-    .moduleName = "HDF_STORAGE_FLASH",
-    .Bind = HotaDriverBind,
-    .Init = HotaDriverInit,
-    .Release = HotaDriverRelease,
-};
-
-HDF_INIT(g_halhotaEntry);

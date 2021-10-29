@@ -17,6 +17,8 @@
 #include "cmsis_os.h"
 #include "hal_timer.h"
 #include "hal_trace.h"
+#include "hal_trng.h"
+#include "stdlib.h"
 
 #define BUFSIZE 256
 
@@ -93,4 +95,22 @@ void DelayUs(uint32_t us)
     uint32_t now = hal_fast_sys_timer_get();
     while (hal_fast_sys_timer_get() - now < US_TO_FAST_TICKS(us));
     int_unlock(flags);
+}
+
+int mbedtls_hardware_poll( void *data,
+                           unsigned char *output, size_t len, size_t *olen )
+{
+    int ret;
+    TRACE(0,"%s %d start",__func__,__LINE__);
+
+    // ret = hal_get_trngdata(output, len);
+    // if (ret) {
+        uint32_t i;
+        for (i = 0; i < len; i++) {
+            output[i] = rand() & 0xFF;
+        }
+    // }
+    *olen = len;
+    TRACE(0,"%s %d done",__func__,__LINE__);
+    return 0;
 }
