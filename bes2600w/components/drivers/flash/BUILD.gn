@@ -24,12 +24,15 @@ static_library("flash") {
     defines = [ "ARM_CMNS=1" ]
   }
   deps = [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
-
+  deps += [ "//device/bestechnic/${board_name}/hals/update:hal_update_static" ]
   include_dirs = hdf_include_dirs
   include_dirs += [
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/platform/drivers/ana",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/utils/crc32",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis",
+    "//base/update/ota_lite/hals",
+    "//base/update/ota_lite/interfaces/kits",
+    "//device/bestechnic/${board_name}/hals/update/",
   ]
 }

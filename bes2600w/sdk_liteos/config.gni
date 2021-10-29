@@ -65,7 +65,8 @@ board_cflags = [
     "-DCMSIS_OS_VER=2",
     "-DOS_HWI_MAX_NUM=96",
     "-DCONFIG_DISPLAY_A064",
-    "-DLFS_MAX_OPEN_DIRS=32"
+    "-DLFS_MAX_OPEN_DIRS=32",
+    "-DMBEDTLS_CMSIS_FILE=\"rtos/liteos/liteos_m/kal/cmsis/cmsis_os.h\""
 ]
 
 board_cxx_flags = board_cflags
@@ -128,6 +129,8 @@ if (wrap_fs_api == "true") {
 
 # Board related headfiles search path.
 board_include_dirs = [
+    "${ohos_root_path}device/bestechnic/${board_name}/hals/security/huks/",
+    "${ohos_root_path}device/bestechnic/${board_name}/sdk_liteos/bsp/include/",
     "${ohos_root_path}third_party/mbedtls/include/",
     "${ohos_root_path}device/bestechnic/${board_name}/components/watchdog/",
     "${ohos_root_path}device/bestechnic/${board_name}/components/net/lwip-2.1/porting/include/",

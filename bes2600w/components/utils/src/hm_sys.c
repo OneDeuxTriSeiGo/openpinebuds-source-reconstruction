@@ -28,6 +28,7 @@
 #include "hiview_log.h"
 #include "devmgr_service_start.h"
 #include "ohos_mem_pool.h"
+#include "threading_alt.h"
 
 void OsShowInfo(void)
 {

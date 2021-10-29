@@ -164,8 +164,9 @@ typedef long long                   s64;
 #endif
 
 // For functions not returning
+#ifndef NORETURN
 #define NORETURN                        __attribute__((noreturn))
-
+#endif
 // For ASM functions in C
 #ifdef __arm__
 #define NAKED                           __attribute__((naked))
