@@ -117,8 +117,6 @@ static void UiMainTask(void *arg)
         uint32_t time = HALTick::GetInstance().GetElapseTime(temp);
         if (time < DEFAULT_TASK_PERIOD) {
             osDelay(DEFAULT_TASK_PERIOD - time);
-        } else {
-            osDelay(1);
         }
 #ifdef ENABLE_FPS
         cnt++;

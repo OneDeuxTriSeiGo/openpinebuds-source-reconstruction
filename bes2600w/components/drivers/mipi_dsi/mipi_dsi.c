@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 #include "mipi_dsi.h"
+#include "cmsis.h"
 #include "cmsis_os2.h"
 #include "plat_addr_map.h"
 #include "hal_cache.h"
@@ -26,13 +27,21 @@
 
 #define WIDTH 454
 #define HEIGHT 454
-#define BUFSIZE_MAX (1024 * 1024)
+#define BUFSIZE_MAX 0xE2000
+
+enum BUF_STATE {
+    IDLE,
+    READY,
+    BUSY,
+};
 
 struct MipiDsiDevice {
     uint32_t buffers[2];
     uint32_t buf_size;
     volatile uint8_t buf_idx;
-    osSemaphoreId_t sem;
+    volatile uint8_t free_chan;
+    volatile enum BUF_STATE buf_state;
+    enum DsiMode mode;
     struct HAL_DSI_CFG_T cfg;
 };
 
@@ -43,6 +52,9 @@ static struct MipiDsiDevice priv = {
     },
     .buf_size = BUFSIZE_MAX,
     .buf_idx = 0,
+    .free_chan = 0,
+    .buf_state = IDLE,
+    .mode = DSI_CMD_MODE,
     .cfg = {
         .active_width = WIDTH + 1,
         .active_height = HEIGHT + 1,
@@ -99,10 +111,6 @@ static int32_t MipiDsiDevInit()
         hal_cache_sync(HAL_CACHE_ID_D_CACHE, (uint32_t)priv.buffers[i], BUFSIZE_MAX);
         HDF_LOGD("buffer[%d] 0x%x", i, priv.buffers[i]);
     }
-    priv.sem = osSemaphoreNew(1, 1, NULL); // init sem avaliable
-    if (priv.sem == NULL) {
-        return HDF_FAILURE;
-    }
     return HDF_SUCCESS;
 }
 
@@ -120,6 +128,7 @@ static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
     } else if (cntlr->cfg.mode == DSI_VIDEO_MODE) {
         dsi_mode = DSI_MODE_VIDEO;
     }
+    priv.mode = cntlr->cfg.mode;
     priv.cfg.h_back_porch = cntlr->cfg.timing.hbpPixels;
     priv.cfg.v_front_porch = cntlr->cfg.timing.vfpLines;
     priv.cfg.v_back_porch = cntlr->cfg.timing.vbpLines;
@@ -164,15 +173,29 @@ int32_t MipiDsiDevGetCmd(struct MipiDsiCntlr *cntlr, struct DsiCmdDesc *cmd, uin
     return hal_dsi_read_cmd(cmd->payload[0], out, readLen);
 }
 
-static void MipiDsiDevCallback(uint32_t addr)
+static void MipiDsiDevCallback(uint8_t layerId, uint8_t channel, uint32_t addr)
 {
-    osSemaphoreRelease(priv.sem);
+    // HDF_LOGD("free chan %d, addr 0x%x, status %d", channel, addr, priv.buf_state);
+    priv.free_chan = channel;
+    switch (priv.buf_state) {
+    case READY:
+        // free channel = next channel, points to current buffer
+        hal_lcdc_update_addr(1, channel, priv.buffers[priv.buf_idx]);
+        priv.buf_idx = 1 - priv.buf_idx;
+        priv.buf_state = (priv.mode == DSI_VIDEO_MODE) ? BUSY : IDLE;
+        break;
+    case BUSY:
+        priv.buf_state = IDLE;
+        break;
+    default:
+        break;
+    }
 }
 
 static void MipiDsiDevToHs(struct MipiDsiCntlr *cntlr)
 {
     (void)cntlr;
-    hal_lcdc_init(&priv.cfg, NULL, (uint8_t *)priv.buffers[priv.buf_idx], NULL);
+    hal_lcdc_init(&priv.cfg, NULL, (const uint8_t *)priv.buffers[priv.buf_idx], NULL);
     hal_dsi_start();
     hal_lcdc_set_callback(MipiDsiDevCallback);
 }
@@ -184,27 +207,38 @@ void *MipiDsiDevMmap(uint32_t size)
         return NULL;
     }
     priv.buf_size = size;
-    // psram need to sync cache
-    hal_cache_sync(HAL_CACHE_ID_D_CACHE, (uint32_t)priv.buffers[priv.buf_idx], size);
+    // ensure the buffers are exchanged
+    uint32_t cnt = 0;
+    while (priv.buf_state == READY) {
+        if (cnt++ > 100) {
+            HDF_LOGW("READY -> BUSY error, chan %d, cur_buf %d", priv.free_chan, priv.buf_idx);
+            break;
+        }
+        osDelay(1);
+    }
     return (void *)(priv.buffers[priv.buf_idx]);
 }
 
 void MipiDsiDevFlush(void)
 {
-    // psram need to sync cache
+    uint32_t cnt = 0;
     hal_cache_sync(HAL_CACHE_ID_D_CACHE, (uint32_t)priv.buffers[priv.buf_idx], priv.buf_size);
-    // wait for last transmission done
-    if (osSemaphoreAcquire(priv.sem, 100) != 0) {
-        HDF_LOGW("last transmission timeout");
-        hal_lcdc_start(); // force to restart
-        return;
+    while (priv.buf_state != IDLE) {
+        if (cnt++ > 100) {
+            HDF_LOGW("!IDLE, stat %d, cur_buf %d", priv.buf_state, priv.buf_idx);
+            break;
+        }
+        osDelay(1);
     }
-    // swap buffer
-    hal_lcdc_update_addr(NULL, (const void *)priv.buffers[priv.buf_idx], NULL);
-    priv.buf_idx = 1 - priv.buf_idx;
-    // start transmission
-    hal_lcdc_start();
-    // HDF_LOGD("flush buf %d at %u", 1 - priv.buf_idx, osKernelGetTickCount());
+    uint32_t irqflags = int_lock();
+    if (priv.mode == DSI_VIDEO_MODE) {
+        hal_lcdc_update_addr(1, priv.free_chan, priv.buffers[priv.buf_idx]);
+    } else {
+        hal_lcdc_update_addr(1, priv.buf_idx, priv.buffers[priv.buf_idx]);
+        hal_lcdc_start(); // trigger transmission, used in DSI_CMD_MODE
+    }
+    priv.buf_state = READY;
+    int_unlock(irqflags);
 }
 
 static int32_t MipiDsiDriverBind(struct HdfDeviceObject *device)
@@ -255,10 +289,6 @@ static void MipiDsiDriverRelease(struct HdfDeviceObject *device)
     if (mipiDsiCntlr) {
         MipiDsiUnregisterCntlr(mipiDsiCntlr);
         mipiDsiCntlr = NULL;
-    }
-    if (priv.sem) {
-        osSemaphoreDelete(priv.sem);
-        priv.sem = NULL;
     }
 }
 
