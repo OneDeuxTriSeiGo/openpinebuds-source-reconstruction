@@ -66,11 +66,27 @@ int HotaHalDeInit(void)
 
 int HotaHalRead(int partition, unsigned int offset, unsigned int bufLen, unsigned char *buffer)
 {
+    if ((buffer == NULL) || (bufLen == 0)) {
+        return HDF_FAILURE;
+    }
+
+    if (ota_flash_read(partition, offset, buffer, bufLen) != HDF_SUCCESS) {
+        return HDF_FAILURE;
+    }
+
     return HDF_SUCCESS;
 }
 
 int HotaHalWrite(int partition, unsigned char *buffer, unsigned int offset, unsigned int buffLen)
 {
+    if ((buffer == NULL) || (buffLen == 0)) {
+        return HDF_FAILURE;
+    }
+
+    if (ota_flash_write(partition, offset, buffer, buffLen) != HDF_SUCCESS) {
+        return HDF_FAILURE;
+    }
+
     return HDF_SUCCESS;
 }
 

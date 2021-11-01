@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __THREADING_ALT_H__
 #define __THREADING_ALT_H__
 #ifdef __cplusplus

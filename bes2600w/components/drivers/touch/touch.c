@@ -58,7 +58,7 @@ static void touch_task(void *arg)
         struct touch_msg msg;
         if (dev->read(dev, &msg) == 0) {
             if (msg.event != TOUCH_EVENT_NONE && memcmp(&msg, &last_msg, sizeof(struct touch_msg)) != 0) {
-                if (osMessageQueuePut(dev->mq, &msg, 0, 50) != 0) {
+                if (osMessageQueuePut(dev->mq, &msg, 0, osWaitForever) != 0) {
                     HDF_LOGW("failed to enqueue touch_msg");
                 } else {
                     last_msg = msg; // filter repeated msg

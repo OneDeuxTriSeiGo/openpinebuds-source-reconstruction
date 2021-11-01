@@ -21,7 +21,7 @@
 #include "bwifi_sta.h"
 #include "bwifi_event.h"
 #if LWIP_ETHERNETIF
-#include "lwip/inet.h"
+#include "lwip/netif.h"
 #endif
 
 #ifdef __cplusplus
@@ -48,12 +48,10 @@ struct wifi_init_paras {
     void     *fac_wifi;
 };
 
-#if LWIP_ETHERNETIF
 typedef enum {
     WIFI_IF_STATION,
     WIFI_IF_SOFTAP,
 } BWIFI_INTF_TYPE_T;
-#endif
 
 typedef enum {
     BWIFI_STATUS_IDLE            = 0,
@@ -198,13 +196,11 @@ typedef struct bwifi_station_linkinfo_t {
     int tx_rate;
 } bwifi_station_linkinfo;
 
-#if LWIP_ETHERNETIF
 struct ip_info {
-    ip_addr_t ip;               /**< IP address */
-    ip_addr_t netmask;          /**< netmask */
-    ip_addr_t gw;               /**< gateway */
+    uint32_t ip;               /**< IP address */
+    uint32_t netmask;          /**< netmask */
+    uint32_t gw;               /**< gateway */
 };
-#endif
 
 enum wifi_config_item {
     WIFI_CONFIG_ITEM_WAPI_CERT_PRIVATE_KEY = 0, /**< WAPI own private key */
@@ -365,7 +361,6 @@ int  bwifi_get_current_rate(void);
  */
 void bwifi_get_station_linkinfo(bwifi_station_linkinfo *info);
 
-#if LWIP_ETHERNETIF
 #if LWIP_SUPPORT
 /*
  * Enable or disable using the static IP for subsequent connection.
@@ -383,6 +378,8 @@ int bwifi_set_static_ip(struct ip_info *ip);
 int bwifi_get_current_ip(struct ip_info *ip);
 
 #else
+
+#if LWIP_ETHERNETIF
 /*
  * Get netif struct of wifi station or softap
  *
@@ -391,6 +388,8 @@ int bwifi_get_current_ip(struct ip_info *ip);
  * return the netif struct to user's LWIP stack for further management.
  */
 struct netif *bwifi_get_netif(BWIFI_INTF_TYPE_T type);
+#endif
+
 /*
  * Set netif ip addr to wifi mac layer for ARP filter feature
  *
@@ -399,19 +398,6 @@ struct netif *bwifi_get_netif(BWIFI_INTF_TYPE_T type);
  * we need user to tell us the assigned local ip addr.
  */
 int bwifi_set_ip_addr(BWIFI_INTF_TYPE_T type, struct ip_info *ip);
-
-#endif
-
-#else
-/*
- * Set netif ip addr to wifi mac layer for ARP filter feature
- *
- * This function should only be called when SDK inside LWIP is turned off
- * and DHCP procedure is also taken over by user's LWIP stack,
- * we need user to tell us the assigned local ip addr.
- */
-int bwifi_set_ifa_addr(uint8_t dev_no, uint32_t *addr);
-
 #endif
 
 void airkiss_notify(uint8 token);

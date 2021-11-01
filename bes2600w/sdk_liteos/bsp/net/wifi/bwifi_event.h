@@ -14,9 +14,6 @@
  */
 #ifndef BWIFI_EVENT_H
 #define BWIFI_EVENT_H
-#if LWIP_SUPPORT
-#include "lwip/ip_addr.h"
-#endif
 #ifdef  __cplusplus
 extern "C"
 {
@@ -81,11 +78,9 @@ typedef struct {
 } BWIFI_EVENT_STAMODE_AUTHMODE_CHANGE_T;
 
 typedef struct {
-#if LWIP_SUPPORT
-    ip_addr_t ip;                   /**< IP address that station got from connected AP */
-    ip_addr_t mask;                 /**< netmask that station got from connected AP */
-    ip_addr_t gw;                   /**< gateway that station got from connected AP */
-#endif
+    u32 ip;                   /**< IP address that station got from connected AP */
+    u32 mask;                 /**< netmask that station got from connected AP */
+    u32 gw;                   /**< gateway that station got from connected AP */
 } BWIFI_EVENT_STAMODE_GOT_IP_T;
 
 typedef struct {

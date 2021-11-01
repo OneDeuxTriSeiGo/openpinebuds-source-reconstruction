@@ -87,8 +87,8 @@ root {
                 match_attr = "littlefs_config";
                 mount_points = ["/data"];
                 partitions = [10];
-                block_size = [32768];
-                block_count = [128];
+                block_size = [4096];
+                block_count = [1024];
             }
         }
         storage_config {
