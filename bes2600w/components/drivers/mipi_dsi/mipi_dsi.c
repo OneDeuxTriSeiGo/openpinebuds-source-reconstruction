@@ -28,6 +28,12 @@
 #define WIDTH 454
 #define HEIGHT 454
 #define BUFSIZE_MAX 0xE2000
+#define BUF_NUM 3
+#if (BUF_NUM < 2)
+#error "BUF_NUM must not be smaller than 2"
+#elif (BUF_NUM > 3)
+#error "BUF_NUM must not be bigger than 3"
+#endif
 
 enum BUF_STATE {
     IDLE,
@@ -36,7 +42,7 @@ enum BUF_STATE {
 };
 
 struct MipiDsiDevice {
-    uint32_t buffers[2];
+    uint32_t buffers[BUF_NUM];
     uint32_t buf_size;
     volatile uint8_t buf_idx;
     volatile uint8_t free_chan;
@@ -49,6 +55,9 @@ static struct MipiDsiDevice priv = {
     .buffers = {
         PSRAMUHS_BASE + PSRAMUHS_SIZE - BUFSIZE_MAX,
         PSRAMUHS_BASE + PSRAMUHS_SIZE - BUFSIZE_MAX * 2,
+#if (BUF_NUM == 3)
+        PSRAMUHS_BASE + PSRAMUHS_SIZE - BUFSIZE_MAX * 3,
+#endif
     },
     .buf_size = BUFSIZE_MAX,
     .buf_idx = 0,
@@ -175,13 +184,17 @@ int32_t MipiDsiDevGetCmd(struct MipiDsiCntlr *cntlr, struct DsiCmdDesc *cmd, uin
 
 static void MipiDsiDevCallback(uint8_t layerId, uint8_t channel, uint32_t addr)
 {
-    // HDF_LOGD("free chan %d, addr 0x%x, status %d", channel, addr, priv.buf_state);
+    uint8_t ready_buf_idx;
     priv.free_chan = channel;
     switch (priv.buf_state) {
     case READY:
-        // free channel = next channel, points to current buffer
-        hal_lcdc_update_addr(1, channel, priv.buffers[priv.buf_idx]);
-        priv.buf_idx = 1 - priv.buf_idx;
+        // free channel = next channel
+        if (priv.buf_idx >= 1) {
+            ready_buf_idx = priv.buf_idx - 1;
+        } else {
+            ready_buf_idx = BUF_NUM - 1;
+        }
+        hal_lcdc_update_addr(1, channel, priv.buffers[ready_buf_idx]);
         priv.buf_state = (priv.mode == DSI_VIDEO_MODE) ? BUSY : IDLE;
         break;
     case BUSY:
@@ -207,6 +220,7 @@ void *MipiDsiDevMmap(uint32_t size)
         return NULL;
     }
     priv.buf_size = size;
+#if (BUF_NUM < 3)
     // ensure the buffers are exchanged
     uint32_t cnt = 0;
     while (priv.buf_state == READY) {
@@ -216,6 +230,7 @@ void *MipiDsiDevMmap(uint32_t size)
         }
         osDelay(1);
     }
+#endif
     return (void *)(priv.buffers[priv.buf_idx]);
 }
 
@@ -238,6 +253,7 @@ void MipiDsiDevFlush(void)
         hal_lcdc_start(); // trigger transmission, used in DSI_CMD_MODE
     }
     priv.buf_state = READY;
+    priv.buf_idx = (priv.buf_idx + 1) % BUF_NUM;
     int_unlock(irqflags);
 }
 
