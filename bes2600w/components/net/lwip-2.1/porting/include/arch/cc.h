@@ -44,23 +44,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "securec.h"
-
-#ifdef htons
-#define LWIP_DONT_PROVIDE_BYTEORDER_FUNCTIONS
-#endif
-
-#define SOCKLEN_T_DEFINED
-#define SA_FAMILY_T_DEFINED
-#define IN_PORT_T_DEFINED
-
-#define LWIP_TIMEVAL_PRIVATE    0
-#define LWIP_ERRNO_STDINCLUDE
-#define LWIP_SOCKET_STDINCLUDE
-
-#define LWIP_DNS_API_DEFINE_ERRORS    0
-#define LWIP_DNS_API_DEFINE_FLAGS     0
-#define LWIP_DNS_API_DECLARE_STRUCTS  0
-#define LWIP_DNS_API_DECLARE_H_ERRNO  0
+#include "hal_trace.h"
 
 #ifndef __SIZEOF_POINTER__
 #define __SIZEOF_POINTER__ 4   // 32 bit system
@@ -97,13 +81,14 @@
 #define LWIP_LOGGER(msg)
 #endif
 
-extern void LwipLogPrintf(const char *fmt, ...);
-#define LWIP_PLATFORM_DIAG(vars) LwipLogPrintf vars
+#define LWIP_PLATFORM_DIAG(vars) printf vars
 #define LWIP_PLATFORM_ASSERT(x) do { \
         LWIP_PLATFORM_DIAG(("Assertion \"%s\" failed at line %d in %s\n", x, __LINE__, __FILE__)); \
     } while (0)
 
 #define init_waitqueue_head(...)
 #define poll_check_waiters(...)
+#define IOCTL_CMD_CASE_HANDLER()
+#define DF_NADDR(addr)
 
 #endif /* _LWIP_PORTING_CC_H_ */

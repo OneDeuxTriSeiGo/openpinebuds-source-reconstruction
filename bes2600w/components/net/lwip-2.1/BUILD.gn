@@ -30,21 +30,25 @@ import("//third_party/lwip/lwip.gni")
 import("lwip_porting.gni")
 
 config("lwip_depends") {
-  defines = [ "_BSD_SOURCE = 1" ]
+  defines = [
+    "_BSD_SOURCE = 1",
+    "CHECKSUM_BY_HARDWARE=1",
+  ]
 }
 
 static_library("lwip") {
   include_dirs = [
     "//kernel/liteos_m/kal/posix/include",
     "//kernel/liteos_m/kernel/arch/include",
+    "//device/bestechnic/bes2600w/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis/",
+    "//third_party/lwip/src/include/compat/posix",
+    "//third_party/lwip/src/include/compat/stdc",
   ]
 
   include_dirs += LWIP_PORTING_INCLUDE_DIRS
   include_dirs += LWIP_INCLUDE_DIRS
 
   sources = LWIP_PORTING_FILES + LWIPNOAPPSFILES
-
-  sources -= [ "$LWIPDIR/api/sockets.c" ]
 
   configs += [ ":lwip_depends" ]
 
