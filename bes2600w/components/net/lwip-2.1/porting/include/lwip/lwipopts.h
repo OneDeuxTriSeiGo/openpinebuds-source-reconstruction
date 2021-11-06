@@ -231,5 +231,8 @@
 
 // use PBUF_RAM instead of PBUF_POOL in udp_input
 #define USE_PBUF_RAM_UDP_INPUT          1
+#define LWIP_NETIF_STATUS_CALLBACK      1
+#define LWIP_CHECKSUM_ON_COPY           0
+#define CHECKSUM_GEN_UDP                0
 
 #endif /* _LWIP_PORTING_LWIPOPTS_H_ */

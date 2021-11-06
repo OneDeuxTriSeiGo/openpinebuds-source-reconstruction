@@ -31,6 +31,8 @@ import("lwip_porting.gni")
 
 config("lwip_depends") {
   defines = [ "_BSD_SOURCE = 1" ]
+  defines += [ "LITEOS_LWIP = 1" ]
+  defines += [ "CHECKSUM_BY_HARDWARE=1" ]
 }
 
 static_library("lwip") {

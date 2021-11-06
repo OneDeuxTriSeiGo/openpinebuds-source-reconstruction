@@ -37,4 +37,4 @@ void TcpIpPortingInit()
 {
     tcpip_init(NULL, NULL);
 }
-SYSEX_SERVICE_INIT(TcpIpPortingInit);
+//SYSEX_SERVICE_INIT(TcpIpPortingInit);
