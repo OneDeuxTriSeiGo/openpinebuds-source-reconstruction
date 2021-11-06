@@ -29,10 +29,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __LITEOS_M_LWIPOPTS_H__
-#define __LITEOS_M_LWIPOPTS_H__
+#ifndef _LWIP_PORTING_NETDB_H_
+#define _LWIP_PORTING_NETDB_H_
 
-// Just redirect
-#include "lwip/lwipopts.h"
+#include <netdb.h>
+#include_next <lwip/netdb.h>
 
-#endif // __LITEOS_M_LWIPOPTS_H__
+#endif /* _LWIP_PORTING_NETDB_H_ */
