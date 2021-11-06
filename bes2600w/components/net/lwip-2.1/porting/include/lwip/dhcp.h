@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2013-2019 Huawei Technologies Co., Ltd. All rights reserved.
- * Copyright (c) 2020-2021 Huawei Device Co., Ltd. All rights reserved.
+ * Copyright (c) 2021-2021 Huawei Device Co., Ltd. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,10 +28,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __LITEOS_M_LWIPOPTS_H__
-#define __LITEOS_M_LWIPOPTS_H__
+#ifndef _LWIP_PORTING_DHCP_H_
+#define _LWIP_PORTING_DHCP_H_
 
-// Just redirect
-#include "lwip/lwipopts.h"
+#include_next <lwip/dhcp.h>
 
-#endif // __LITEOS_M_LWIPOPTS_H__
+err_t dhcp_is_bound(struct netif *netif);
+
+#endif /* _LWIP_PORTING_DHCP_H_ */

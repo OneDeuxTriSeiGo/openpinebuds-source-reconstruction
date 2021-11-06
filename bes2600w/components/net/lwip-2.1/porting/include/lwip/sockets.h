@@ -29,10 +29,54 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __LITEOS_M_LWIPOPTS_H__
-#define __LITEOS_M_LWIPOPTS_H__
+#ifndef _LWIP_PORTING_SOCKETS_H_
+#define _LWIP_PORTING_SOCKETS_H_
 
-// Just redirect
-#include "lwip/lwipopts.h"
+#include <sys/socket.h>
+#include <poll.h>
+#include <netinet/tcp.h>
+#include <netinet/in.h>
+#include <sys/ioctl.h>
+#include <sys/select.h>
+#include <limits.h>
+#include <fcntl.h>
+#include_next <lwip/sockets.h>
 
-#endif // __LITEOS_M_LWIPOPTS_H__
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if FD_SETSIZE < (LWIP_SOCKET_OFFSET + MEMP_NUM_NETCONN)
+#error "external FD_SETSIZE too small for number of sockets"
+#else
+#define LWIP_SELECT_MAXNFDS FD_SETSIZE
+#endif
+
+#if IOV_MAX > 0xFFFF
+#error "IOV_MAX larger than supported by LwIP"
+#endif
+
+#if LWIP_UDP && LWIP_UDPLITE
+#define UDPLITE_SEND_CSCOV 0x01 /* sender checksum coverage */
+#define UDPLITE_RECV_CSCOV 0x02 /* minimal receiver checksum coverage */
+#endif
+
+// For BSD 4.4 socket sa_len compatibility
+#define DF_NADDR(addr)
+#define SA_LEN(addr, _)  (IP_IS_V4_VAL(addr) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6))
+#define sa_len sa_data[0] * 0 + SA_LEN(naddr, _)
+#define sin_len sin_zero[0]
+#define sin6_len sin6_addr.s6_addr[0]
+
+// for sockets.c, TCP_KEEPALIVE is not supported currently
+#define TCP_KEEPALIVE   0xFF
+#define SIN_ZERO_LEN    8
+
+int closesocket(int sockfd);
+int ioctlsocket(int s, long cmd, void *argp);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _LWIP_PORTING_SOCKETS_H_ */
