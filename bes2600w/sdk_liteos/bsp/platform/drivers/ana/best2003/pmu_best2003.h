@@ -44,7 +44,7 @@ enum PMU_EFUSE_PAGE_T {
 
     PMU_EFUSE_PAGE_BATTER_HV    = 4,
     PMU_EFUSE_PAGE_RESERVED_5   = 5,
-    PMU_ROM_EFUSE_PAGE_CODE_VER = 6,
+    PMU_EFUSE_PAGE_CODE_VER     = 6,
     PMU_EFUSE_PAGE_WIFIBT_CALI  = 7,
 
     PMU_EFUSE_PAGE_DCDC_CALI    = 8,
@@ -74,6 +74,11 @@ enum PMU_IRQ_TYPE_T {
     PMU_IRQ_TYPE_WDT,
 
     PMU_IRQ_TYPE_QTY
+};
+
+enum FLASH_SIZE_TYPE_T {
+    FLASH_16M,
+    FLASH_32M,
 };
 
 #define MAX_VMIC_CH_NUM                 2
@@ -181,7 +186,7 @@ void bbpl_temprt_comp_init_2003(void);
 
 void bbpl_compensate_by_temprt_2003(void);
 
-int pmu_set_security_value(void);
+int pmu_set_security_value(enum FLASH_SIZE_TYPE_T flash_size);
 
 int pmu_set_sec_boot_struct(void);
 

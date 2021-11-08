@@ -119,6 +119,7 @@ typedef enum {
      */
     WIFI_USER_EVT_MAC_RESET_START,
     WIFI_USER_EVT_MAC_RESET_DONE,
+    WIFI_USER_EVT_COEX_MODE_CHANGE,
     WIFI_USER_EVT_MAX
 } WIFI_USER_EVT_ID;
 
@@ -220,6 +221,8 @@ typedef void (*user_evt_handler_t)(WIFI_USER_EVT_ID evt_id, void *arg);
 
 void bwifi_reg_user_evt_handler(WIFI_USER_EVT_ID evt_id, user_evt_handler_t cb);
 void bwifi_unreg_user_evt_handler(WIFI_USER_EVT_ID evt_id);
+void bwifi_reg_eth_input_handler(eth_input_handler cb);
+void bwifi_unreg_eth_input_handler();
 
 /*
  * wifi record interface

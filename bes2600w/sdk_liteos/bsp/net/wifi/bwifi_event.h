@@ -143,6 +143,10 @@ typedef struct {
 //    u8 mac[6];		/**< MAC address of the station which send probe request */
 //} BWIFI_EVENT_SAPMODE_PROBEREQRECVED_T;
 
+typedef struct {
+    u8 mode;                           /**< wifi/bt coex mode, 0: tdd, 1: fdd */
+} BWIFI_EVENT_COEX_MODE_T;
+
 typedef union {
     BWIFI_EVENT_STAMODE_SCANDONE_T            scan_done;          /**< station scan (APs) done */
     BWIFI_EVENT_STAMODE_CONNECTING_T          connecting;         /**< station is connecting to AP */
@@ -154,6 +158,7 @@ typedef union {
     BWIFI_EVENT_SAPMODE_STA_CONNECTED_T       sta_connected;      /**< a station connected to soft-AP */
     BWIFI_EVENT_SAPMODE_STA_DISCONNECTED_T    sta_disconnected;   /**< a station disconnected to soft-AP */
     //BWIFI_EVENT_SAPMODE_PROBEREQRECVED_T      ap_probereqrecved;  /**< soft-AP received probe request packet */
+    BWIFI_EVENT_COEX_MODE_T            coex_mode;          /**< wifi/bt coex mode */
     BWIFI_EVENT_LMAC_FATAL_ERROR_T            fatal_err;          /**< LMAC fatal error */
 } BWIFI_EVENT_INFO_U;
 
@@ -170,8 +175,11 @@ typedef enum {
     EVENT_SAPMODE_STA_CONNECTED               = 9,  /**< a station connected to soft-AP */
     EVENT_SAPMODE_STA_DISCONNECTED            = 10, /**< a station disconnected to soft-AP */
     //EVENT_SAPMODE_PROBEREQRECVED            = 11, /**< soft-AP received probe request packet */
-    EVENT_LMAC_FATAL_ERROR                    = 11, /**< lower mac got a fatal error */
-    EVENT_UMAC_CRASH                          = 12, /**< upper mac (cp) got crashed */
+    EVENT_COEX_MODE_CHANGE                          = 12, /**< switch wifi/bt coex mode between fdd and tdd */
+
+    EVENT_LMAC_FATAL_ERROR                    = 20, /**< lower mac got a fatal error */
+    EVENT_UMAC_CRASH                          = 21, /**< upper mac (cp) got crashed */
+
     EVENT_MAX
 } BWIFI_SYSTEM_EVENT;
 
@@ -179,6 +187,18 @@ typedef struct bwifi_event {
     BWIFI_SYSTEM_EVENT event_id;      /**< even ID */
     BWIFI_EVENT_INFO_U event_info;    /**< event information */
 } BWIFI_SYSTEM_EVENT_T;
+
+/**
+  * The Wi-Fi tcpip input handler.
+  *
+  * The example: if tcpip is lwip, set ethernetif_input func.
+  *
+  * @param u16 devnum , 0 is station, 1 is softap.
+  * @param void *buf, rx pkt data buf.
+  * @param int size, the length of param buf.
+  * @return null
+  */
+typedef void (*eth_input_handler)(u16 devnum, void *buf, int size);
 
 /**
   * The Wi-Fi event handler.

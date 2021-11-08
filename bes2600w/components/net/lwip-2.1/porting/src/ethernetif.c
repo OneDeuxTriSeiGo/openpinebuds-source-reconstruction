@@ -42,7 +42,7 @@
  * search-and-replace for the word "ethernetif" to replace it with
  * something that better describes your network interface.
  */
-
+#include "hal_trace.h"
 #include "lwip/opt.h"
 #if 1 /* don't build, this is only a skeleton, see previous comment */
 

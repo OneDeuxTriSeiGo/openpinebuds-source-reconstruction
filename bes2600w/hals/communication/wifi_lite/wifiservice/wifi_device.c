@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include "hal_trace.h"
 #include <stdlib.h>
 #include <string.h>
 #include "wifi_event.h"
@@ -132,7 +132,7 @@ static void HalHmosApEventEnabled(WIFI_USER_EVT_ID evt_id, void *arg);
 static void HalHmosApEventDisabled(WIFI_USER_EVT_ID evt_id, void *arg);
 static void HalHmosApEventStaJoin(WIFI_USER_EVT_ID evt_id, void *arg);
 static void HalHmosApEventStaLeave(WIFI_USER_EVT_ID evt_id, void *arg);
-
+extern void ethernetif_input(u16_t devnum, void *p_buf, int size);
 void HalHmosWifiLock(void)
 {
     if (g_HalHmosWifiInfo.hal_hmos_mutex_id == NULL) {
@@ -581,6 +581,7 @@ WifiErrorCode EnableWifi(void)
         return ERROR_WIFI_BUSY;
 
     HalHmosWifiLock();
+    bwifi_reg_eth_input_handler(ethernetif_input);
     ret = bwifi_init();
     if (ret == WIFI_SUCCESS) {
         extern struct netif if_wifi;
