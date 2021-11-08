@@ -393,6 +393,7 @@ void bt_drv_reg_op_get_pkt_ts_rssi(uint16_t connhdl, CLKN_SER_NUM_T* buf);
 void bt_drv_reg_op_rssi_adjust_mode_setting_for_test_mode(void);
 bool bt_drv_reg_op_check_link_exist(uint16_t con_hdl);
 void bt_drv_reg_op_setting_wesco(uint8_t wesco);
+void btdrv_reg_op_config_coex_mode(uint8_t mode);
 
 #ifdef __cplusplus
 }
