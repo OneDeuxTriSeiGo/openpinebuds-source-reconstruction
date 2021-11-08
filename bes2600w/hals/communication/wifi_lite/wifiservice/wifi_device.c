@@ -588,17 +588,9 @@ WifiErrorCode EnableWifi(void)
 
         tcpip_init(NULL, NULL);
 
-        _mac_addr[0] = 0x00;
-        _mac_addr[1] = 0x80;
-        _mac_addr[2] = 0xDE;
-        _mac_addr[3] = 0x5E;
-        _mac_addr[4] = 0xDA;
-        _mac_addr[5] = 0x7B;
+        extern int bwifi_get_own_mac(u8 *addr);
+        bwifi_get_own_mac(_mac_addr);
         lwip_netif_mac_addr_init(p_netif, _mac_addr, ETH_ALEN);
-
-        // extern u8 *bwifi_get_mac_addr(void);
-        // u8 *wifi_mac_addr = bwifi_get_mac_addr();
-        // lwip_netif_mac_addr_init(p_netif, wifi_mac_addr, ETH_ALEN);
 
         extern err_t ethernetif_init(struct netif *netif);
         if (netif_add(p_netif, IP4_ADDR_ANY4, IP4_ADDR_ANY4, IP4_ADDR_ANY4, NULL, ethernetif_init, tcpip_input) == 0) {
