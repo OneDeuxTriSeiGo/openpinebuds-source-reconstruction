@@ -16,49 +16,39 @@
 #                                    +-----------------+
 # topographic map descripe how to generate write_flash_gui.tar.gz, according to depends rules.
 #
-#                                                                          +-----------------------------+
-#                                                                  +-----> |    copy_${exe_bin}_to_gui   |
-#                                                                  |       +-----------------------------+
-#                                                                  |       +-----------------------------+
-#                                                                  +-----> |   copy_${fs_name}_to_gui    |
-#                                                                  |       +-----------------------------+
-#                                                                  |       +-----------------------------+
-#                                                                  +-----> | copy_${bsp_bin_name}_to_gui |
-#                                                                  |       +-----------------------------+
-# +---------------+     +----------------+     +-------------+    /
-# | pack_flash_gui| --> | copy_flash_gui | --> | update_yaml | --+
-# +---------------+     +----------------+     +-------------+    \
-#                                                                  |       +-----------------------------+
-#                                                                  +-----> |     conf_yaml_${exe_bin}    |
-#                                                                  |       +-----------------------------+
-#                                                                  |       +-----------------------------+
-#                                                                  +-----> |    conf_yaml_${fs_name}     |
-#                                                                  |       +-----------------------------+
-#                                                                  |       +-----------------------------+
-#                                                                  +-----> |  conf_yaml_${bsp_bin_name}  |
-#                                                                          +-----------------------------+
-#
-# excutable bin topographic map:
-#                             +--------+                  +-------------------------------+     +--------------------+     +---------+
-#                             | no sig | ---------------> | copy_${exe_bin}_to_relase_bin | --> | gen_bin_${exe_bin} | --> | exe_bin |
-#                             +--------+                  +-------------------------------+     +--------------------+     +---------+
-# +------------------------+   /                                ^                                                               |
-# | copy_${exe_bin}_to_gui | -+                                /|\                                                             \|/
-# +------------------------+   \                                |                                                               V
-#                             +--------+     +--------------------------+                                         +------------------------+
-#                             |  sig   | --> | gen_bin_${burn_name}_sig |                                         | gen_bsp_lib_${exe_bin} |
-#                             +--------+     +--------------------------+                                         +------------------------+
-#                                                                                                                               |
-#                                                                                                                              \|/
-#                                                                                                                               V
-#                                                                                                                  +--------------------+
-#                                                                                                                  | build_sdk_into_lib |
-#                                                                                                                  +--------------------+
+#                               +-----------------------------+
+#                       +-----> |    copy_${exe_bin}_to_gui   |
+#                       |       +-----------------------------+
+#                       |       +-----------------------------+
+#                       +-----> |   copy_${fs_name}_to_gui    |
+# +---------------+     |       +-----------------------------+
+# | pack_flash_gui|---> +
+# +---------------+     |       +-----------------------------+
+#                       +-----> | copy_${bsp_bin_name}_to_gui |
+#                       |       +-----------------------------+
+#                       |       +-----------------------------+     +-----------------+
+#                       +-----> | update_${product_name}_yaml | --> | init_burn_tools |
+#                               +-----------------------------+     +-----------------+
+#                                                                                             +--------------------+     +---------+
+#                                                                                             | gen_bin_${exe_bin} | --> | exe_bin |
+# excutable bin topographic map:                                                              +--------------------+     +---------+
+#                             +--------+                  +-------------------------------+   /                                |
+#                             | no sig | ---------------> | copy_${exe_bin}_to_relase_bin | -+                                \|/
+#                             +--------+                  +-------------------------------+   \                                V
+# +------------------------+   /                                ^                              +-----------------+  +------------------------+
+# | copy_${exe_bin}_to_gui | -+                                /|\                             | init_burn_tools |  | gen_bsp_lib_${exe_bin} |
+# +------------------------+   \                                |                              +-----------------+  +------------------------+
+#                             +--------+     +--------------------------+                                                       |
+#                             |  sig   | --> | gen_bin_${burn_name}_sig |                                                      \|/
+#                             +--------+     +--------------------------+                                                       V
+#                                                                                                                    +--------------------+
+#                                                                                                                    | build_sdk_into_lib |
+#                                                                                                                    +--------------------+
 #
 # fs bin topographic map:
-#                             +--------+         +------------------+
-#                             | no sig | ------> | genfs_${fs_name} |
-#                             +--------+         +------------------+
+#                             +--------+         +------------------+   +-----------------+
+#                             | no sig | ------> | genfs_${fs_name} |-->| init_burn_tools |
+#                             +--------+         +------------------+   +-----------------+
 # +------------------------+   /                         ^
 # | copy_${fs_name}_to_gui | -+                         /|\
 # +------------------------+   \                         |
@@ -67,12 +57,15 @@
 #                             +--------+     +----------------------+
 #
 # bsp bin topographic map:
-#                                  +--------+         +------------------------------------+     +--------------------+
-#                                  | no sig | ------> | copy_${bsp_bin_name}_to_relase_bin | --> | build_sdk_into_lib |
-#                                  +--------+         +------------------------------------+     +--------------------+
-# +------------------------------+   /                         ^
-# | copy_${bsp_bin_name}_to_gui  | -+                         /|\
-# +------------------------------+   \                         |
+#                                                                                               +--------------------+
+#                                                                                               | build_sdk_into_lib |
+#                                                                                               +--------------------+
+#                                  +--------+         +------------------------------------+   /
+#                                  | no sig | ------> | copy_${bsp_bin_name}_to_relase_bin | -+
+#                                  +--------+         +------------------------------------+   \
+# +------------------------------+   /                         ^                                +-----------------+
+# | copy_${bsp_bin_name}_to_gui  | -+                         /|\                               | init_burn_tools |
+# +------------------------------+   \                         |                                +-----------------+
 #                                  +--------+     +------------------------------+
 #                                  |  sig   | --> | gen_bsp_bin_${burn_name}_sig |
 #                                  +--------+     +------------------------------+
@@ -84,9 +77,12 @@ group("bes2600w") {
 }
 
 # global config
-src_yaml = "./tools/wifi_Download_cfg.yaml"
-dest_yaml = "./write_flash_gui/wifi_Download_cfg.yaml"
-temp_yaml = "../../../../out/${board_name}/${product_name}/yaml/"
+out_product_path = "${ohos_root_path}out/${board_name}/${product_name}"
+
+build_ext_component("init_burn_tools") {
+  exec_path = rebase_path("burn_tools")
+  command = "./tools/init_burn_tools.sh ./ ${out_product_path}"
+}
 
 # build sdk into lib
 build_ext_component("build_sdk_into_lib") {
@@ -104,23 +100,18 @@ build_ext_component("build_sdk_into_lib") {
       build_mini = bsp_bin.enable
     }
   }
-  command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type}"
-}
-
-build_ext_component("create_yaml_dir") {
-  exec_path = rebase_path("burn_tools")
-  command = "mkdir -p ${temp_yaml}"
+  print ("product_path:",product_path)
+  command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path}"
 }
 
 # config bin from vendor/bestechnic/<product_name>/config.json
 foreach(bin_file, bin_list) {
   build_enable = bin_file.enable
-
   unstripped_folder = "unstripped/"
   if (ohos_build_type == "release") {
     unstripped_folder = ""
   }
-  out_bin_path = "${ohos_root_path}/out/${board_name}/${product_name}/${unstripped_folder}bin/"
+  out_bin_path = "${out_product_path}/${unstripped_folder}bin/"
 
   if (build_enable == "true") {
     exe_bin = "${bin_file.elf_name}_${board_name}"
@@ -132,7 +123,7 @@ foreach(bin_file, bin_list) {
     print("copy_lib_name:", copy_lib_name)
     build_ext_component(copy_lib_name) {
       exec_path = rebase_path(".")
-      out_lib_path = "${ohos_root_path}/out/${board_name}/${product_name}/libs/"
+      out_lib_path = "${out_product_path}/libs/"
       bsp_lib_path =
           "./sdk_liteos/bsp/out/${bsp_target_name}/lib${bsp_target_name}.a"
       command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
@@ -146,7 +137,7 @@ foreach(bin_file, bin_list) {
       deps = [
         ":${copy_lib_name}",
         "//base/startup/bootstrap_lite/services/source:bootstrap",
-        "//device/bestechnic/bes2600w/sdk_liteos/sys_adapter:sys_adapter",
+        "//device/bestechnic/bes2600w/components/utils:sys_adapter",
         "//drivers/adapter/khdf/liteos_m:hdf_lite",
         "//kernel/liteos_m:kernel",
         "//vendor/bestechnic/${product_name}:${product_name}",
@@ -195,15 +186,15 @@ foreach(bin_file, bin_list) {
     }
 
     burn_name = bin_file.burn_name
-
     # copy out/<board_name>/<product_name>/bin/ to release bin
     copy_burn_bin_name = "copy_${exe_bin}_to_relase_bin"
     build_ext_component(copy_burn_bin_name) {
-      exec_path = rebase_path("burn_tools")
+      exec_path = rebase_path("${out_product_path}")
       copy_dest = "./release_bin"
       bin_name_ota = burn_name
       command = "cp -rf ${out_bin_path}/${exe_bin}.bin ${copy_dest}/${bin_name_ota}.bin"
       deps = [ ":${gen_bin_name}" ]
+      deps += [":init_burn_tools" ]
     }
 
     # sig exe bin to hash_sig bin
@@ -220,7 +211,8 @@ foreach(bin_file, bin_list) {
     # if use copy signature bin
     copy_bin_name = "copy_${exe_bin}_to_gui"
     build_ext_component(copy_bin_name) {
-      exec_path = rebase_path("burn_tools")
+      exec_path = rebase_path("${out_product_path}")
+      print(" copy signature bin exec_path",exec_path)
       deps = []
       if (bin_sig == "true") {
         copy_src = "./auto_build_tool/hash_sig"
@@ -231,17 +223,8 @@ foreach(bin_file, bin_list) {
         bin_name_ota = burn_name
         deps += [ ":${copy_burn_bin_name}" ]
       }
-      command = "cp -rf ${copy_src}/${bin_name_ota}.bin ./write_flash_gui/ota_bin/${burn_name}.bin"
-    }
-
-    # config yaml
-    conf_bin_name = "conf_yaml_${exe_bin}"
-    build_ext_component(conf_bin_name) {
-      exec_path = rebase_path("burn_tools")
-      addr = bin_file.startaddr
-      size = bin_file.bin_size
-      command = "python tools/gen_yaml_signle.py ${src_yaml} ${addr} ${burn_name} ${size} ${temp_yaml}"
-      deps = [ ":create_yaml_dir" ]
+      copy_dst = "./write_flash_gui/ota_bin"
+      command = "cp -rf ${copy_src}/${bin_name_ota}.bin ${copy_dst}/${burn_name}.bin"
     }
   }
 }
@@ -256,11 +239,12 @@ foreach(fs_bin, fs_list) {
     # generate fs bin to release bin
     gen_fs_name = "genfs_${fs_name}"
     fs_size = fs_bin.fs_size
-    fs_src = fs_bin.fs_src
+    fs_src = product_path + "/" + flash_partition_dir + "/" + fs_bin.fs_src
     block_size = fs_bin.block_size
     build_ext_component(gen_fs_name) {
-      exec_path = rebase_path("resources")
-      command = "./genfs.sh ${block_size} ${fs_size} ${fs_src} ${fs_name}"
+      exec_path = rebase_path("burn_tools")
+      command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name}"
+      deps = [":init_burn_tools" ]
     }
 
     # sig fs bin to hash_sig bin
@@ -277,28 +261,18 @@ foreach(fs_bin, fs_list) {
     # if use copy signature bin
     copy_fs_name = "copy_${fs_name}_to_gui"
     build_ext_component(copy_fs_name) {
-      exec_path = rebase_path("burn_tools")
+      exec_path = rebase_path("${out_product_path}")
       deps = []
       if (fs_sig == "true") {
-        copy_src = "./auto_build_tool/hash_sig"
+        copy_src = "auto_build_tool/hash_sig"
         fs_name_ota = "${fs_name}_sig"
         deps += [ ":${gen_fs_name_sig}" ]
       } else {
-        copy_src = "./release_bin"
+        copy_src = "release_bin"
         fs_name_ota = fs_name
         deps += [ ":${gen_fs_name}" ]
       }
-      command = "cp -rf ./${copy_src}/${fs_name_ota}.bin ./write_flash_gui/ota_bin/${fs_name}.bin"
-    }
-
-    # config yaml
-    conf_fs_name = "conf_yaml_${fs_name}"
-    build_ext_component(conf_fs_name) {
-      exec_path = rebase_path("burn_tools")
-      addr = fs_bin.startaddr
-      size = fs_bin.fs_size
-      burn_name = fs_name
-      command = "python tools/gen_yaml_signle.py ${src_yaml} ${addr} ${burn_name} ${size} ${temp_yaml}"
+      command = "cp -rf ${copy_src}/${fs_name_ota}.bin ./write_flash_gui/ota_bin/${fs_name}.bin"
     }
   }
 }
@@ -314,11 +288,12 @@ foreach(bsp_bin, bsp_bin_list) {
     copy_burn_bin_name = "copy_${bsp_bin_name}_to_relase_bin"
     build_ext_component(copy_burn_bin_name) {
       exec_path = rebase_path(".")
-      bsp_out_bin_path = "./sdk_liteos/bsp/out/${bsp_bin_name}"
-      copy_dest = "./burn_tools/release_bin"
+      bsp_out_bin_path = "sdk_liteos/bsp/out/${bsp_bin_name}"
+      copy_dest = "${out_product_path}/release_bin"
       bin_name_ota = burn_name
       command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"
       deps = [ ":build_sdk_into_lib" ]
+      deps += [":init_burn_tools" ]
     }
 
     # sig exe bin to hash_sig bin
@@ -335,47 +310,43 @@ foreach(bsp_bin, bsp_bin_list) {
     # if use copy bsp signature bin
     copy_bsp_bin_name = "copy_${bsp_bin_name}_to_gui"
     build_ext_component(copy_bsp_bin_name) {
-      exec_path = rebase_path("burn_tools")
+      exec_path = rebase_path("${out_product_path}")
       deps = []
       if (bsp_bin_sig == "true") {
         copy_src = "./auto_build_tool/hash_sig"
         bsp_bin_name_ota = "${burn_name}_sig"
         deps += [ ":${gen_bsp_bin_name_sig}" ]
       } else {
-        copy_src = "./release_bin"
+        copy_src = "release_bin"
         bsp_bin_name_ota = burn_name
         deps += [ ":${copy_burn_bin_name}" ]
       }
       command = "cp -rf ./${copy_src}/${bsp_bin_name_ota}.bin ./write_flash_gui/ota_bin/${bsp_bin_name_ota}.bin"
     }
-
-    # config yaml
-    conf_bsp_bin_name = "conf_yaml_${bsp_bin_name}"
-    build_ext_component(conf_bsp_bin_name) {
-      exec_path = rebase_path("burn_tools")
-      addr = bsp_bin.startaddr
-      size = bsp_bin.bin_size
-      burn_name = bsp_bin.bsp_bin_name
-      command = "python tools/gen_yaml_signle.py ${src_yaml} ${addr} ${burn_name} ${size} ${temp_yaml}"
-    }
   }
 }
 
-# update yaml config
-build_ext_component("update_yaml") {
+# pack write flash gui to write_flash_gui-<time>.tar.gz
+update_product_yaml = "update_${product_name}_yaml"
+build_ext_component(update_product_yaml) {
+  exec_path = rebase_path("${ohos_root_path}")
+  command = "cp -rf ${product_path}/${flash_partition_dir}/wifi_Download_cfg.yaml ${out_product_path}/write_flash_gui/"
+  deps = [":init_burn_tools" ]
+}
+
+# pack write flash gui to write_flash_gui-<time>.tar.gz
+build_ext_component("pack_flash_gui") {
   exec_path = rebase_path("burn_tools")
-  command = "python tools/gen_yaml.py ${src_yaml} ${dest_yaml} ${temp_yaml}"
+  command = "./tools/pack_burn_tools.sh ${out_product_path} ${pack_burn}"
+  deps = [":${update_product_yaml}"]
 
   # bin configed from vendor/bestechnic/<product_name>/config.json
   foreach(bin_file, bin_list) {
     build_enable = bin_file.enable
-
     if (build_enable == "true") {
       exe_bin = "${bin_file.elf_name}_${board_name}"
       copy_bin_name = "copy_${exe_bin}_to_gui"
-      conf_bin_name = "conf_yaml_${exe_bin}"
-      deps = [
-        ":${conf_bin_name}",
+      deps += [
         ":${copy_bin_name}",
       ]
     }
@@ -384,14 +355,11 @@ build_ext_component("update_yaml") {
   # fs bin configed from vendor/bestechnic/<product_name>/config.json
   foreach(fs_bin, fs_list) {
     fs_enable = fs_bin.enable
-
     if (fs_enable == "true") {
       fs_name = fs_bin.fs_name
       copy_fs_name = "copy_${fs_name}_to_gui"
-      conf_fs_name = "conf_yaml_${fs_name}"
       if (fs_enable == "true") {
         deps += [
-          ":${conf_fs_name}",
           ":${copy_fs_name}",
         ]
       }
@@ -401,30 +369,12 @@ build_ext_component("update_yaml") {
   # bsp bin configed from vendor/bestechnic/<product_name>/config.json
   foreach(bsp_bin, bsp_bin_list) {
     bsp_bin_enable = bsp_bin.enable
-
     if (bsp_bin_enable == "true") {
       bsp_bin_name = bsp_bin.bsp_bin_name
       copy_bsp_bin_name = "copy_${bsp_bin_name}_to_gui"
-      conf_bsp_bin_name = "conf_yaml_${bsp_bin_name}"
       deps += [
-        ":${conf_bsp_bin_name}",
         ":${copy_bsp_bin_name}",
       ]
     }
   }
-}
-
-# copy to out/<chip model>/<product_name>/
-copy("copy_flash_gui") {
-  sources = [ "//device/bestechnic/${board_name}/burn_tools/write_flash_gui" ]
-  outputs = [ "$target_out_dir/../../../../{{source_file_part}}" ]
-
-  deps = [ ":update_yaml" ]
-}
-
-# pack write flash gui to write_flash_gui-<time>.tar.gz
-build_ext_component("pack_flash_gui") {
-  exec_path = rebase_path("burn_tools")
-  command = "./tools/pack_burn_tools.sh ${ohos_root_path}/out/${board_name}/${product_name}/"
-  deps = [ ":copy_flash_gui" ]
 }

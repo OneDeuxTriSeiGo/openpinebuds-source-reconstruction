@@ -14,9 +14,6 @@
  */
 #ifndef BWIFI_EVENT_H
 #define BWIFI_EVENT_H
-#if LWIP_SUPPORT
-#include "lwip/ip_addr.h"
-#endif
 #ifdef  __cplusplus
 extern "C"
 {
@@ -81,11 +78,9 @@ typedef struct {
 } BWIFI_EVENT_STAMODE_AUTHMODE_CHANGE_T;
 
 typedef struct {
-#if LWIP_SUPPORT
-    ip_addr_t ip;                   /**< IP address that station got from connected AP */
-    ip_addr_t mask;                 /**< netmask that station got from connected AP */
-    ip_addr_t gw;                   /**< gateway that station got from connected AP */
-#endif
+    u32 ip;                   /**< IP address that station got from connected AP */
+    u32 mask;                 /**< netmask that station got from connected AP */
+    u32 gw;                   /**< gateway that station got from connected AP */
 } BWIFI_EVENT_STAMODE_GOT_IP_T;
 
 typedef struct {
@@ -184,6 +179,18 @@ typedef struct bwifi_event {
     BWIFI_SYSTEM_EVENT event_id;      /**< even ID */
     BWIFI_EVENT_INFO_U event_info;    /**< event information */
 } BWIFI_SYSTEM_EVENT_T;
+
+/**
+  * The Wi-Fi tcpip input handler.
+  *
+  * The example: if tcpip is lwip, set ethernetif_input func.
+  *
+  * @param u16 devnum , 0 is station, 1 is softap.
+  * @param void *buf, rx pkt data buf.
+  * @param int size, the length of param buf.
+  * @return null
+  */
+typedef void (*eth_input_handler)(u16 devnum, void *buf, int size);
 
 /**
   * The Wi-Fi event handler.

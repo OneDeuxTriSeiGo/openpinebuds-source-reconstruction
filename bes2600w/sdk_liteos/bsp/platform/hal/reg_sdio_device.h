@@ -80,7 +80,7 @@ struct SDIO_DEVICE_T {
     __I  uint32_t ARGUMENT2;                //0xE0
     __I  uint32_t RESERVED3[7];             //0xE4~0xFF
     __IO uint32_t HOST_INT_CLR;             //0x100,default value is 0
-    __IO uint32_t SDIO_LOAD_RDY;            //0x104,default value is 0
+    __IO uint32_t RESERVED4;                //0x104,default value is 0
     __IO uint32_t RX_BUF_CFG;               //0x108,default value is 0
 };
 
@@ -540,10 +540,9 @@ struct SDIO_DEVICE_T {
 #define SDIO_FUNC1_SDIO_R_AHB_W_REG0_SHIFT                  (1)
 
 // reg_104
-#define SDIO_DEVICE_LOAD_RDY                                (1 << 0)
-#define SDIO_FUNC1_SDIO_R_AHB_W_REG1(n)                     (((n) & 0x7FFFFFFF) << 1)
-#define SDIO_FUNC1_SDIO_R_AHB_W_REG1_MASK                   (0x7FFFFFFF << 1)
-#define SDIO_FUNC1_SDIO_R_AHB_W_REG1_SHIFT                  (1)
+#define SDIO_FUNC1_SDIO_R_AHB_W_REG1(n)                     (((n) & 0xFFFFFFFF) << 0)
+#define SDIO_FUNC1_SDIO_R_AHB_W_REG1_MASK                   (0xFFFFFFFF << 0)
+#define SDIO_FUNC1_SDIO_R_AHB_W_REG1_SHIFT                  (0)
 
 // reg_108
 #define SDIO_RX_BUF_CNT(n)                                  (((n) & 0xFF) << 0)
