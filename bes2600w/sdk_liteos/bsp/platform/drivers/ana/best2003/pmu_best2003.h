@@ -16,6 +16,7 @@
 #define __PMU_BEST2003_H__
 
 #include "hal_cmu.h"
+#include "hal_gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +44,7 @@ enum PMU_EFUSE_PAGE_T {
 
     PMU_EFUSE_PAGE_BATTER_HV    = 4,
     PMU_EFUSE_PAGE_RESERVED_5   = 5,
-    PMU_ROM_EFUSE_PAGE_CODE_VER = 6,
+    PMU_EFUSE_PAGE_CODE_VER     = 6,
     PMU_EFUSE_PAGE_WIFIBT_CALI  = 7,
 
     PMU_EFUSE_PAGE_DCDC_CALI    = 8,
@@ -73,6 +74,11 @@ enum PMU_IRQ_TYPE_T {
     PMU_IRQ_TYPE_WDT,
 
     PMU_IRQ_TYPE_QTY
+};
+
+enum FLASH_SIZE_TYPE_T {
+    FLASH_16M,
+    FLASH_32M,
 };
 
 #define MAX_VMIC_CH_NUM                 2
@@ -150,6 +156,8 @@ void pmu_codec_mic_bias_enable(uint32_t map);
 
 void pmu_codec_mic_bias_lowpower_mode(uint32_t map);
 
+void pmu_set_dsi_clk(uint32_t dsi_clk);
+
 void pmu_pll_div_reset_set(enum HAL_CMU_PLL_T pll);
 
 void pmu_pll_div_reset_clear(enum HAL_CMU_PLL_T pll);
@@ -178,7 +186,7 @@ void bbpl_temprt_comp_init_2003(void);
 
 void bbpl_compensate_by_temprt_2003(void);
 
-int pmu_set_security_value(void);
+int pmu_set_security_value(enum FLASH_SIZE_TYPE_T flash_size);
 
 int pmu_set_sec_boot_struct(void);
 
@@ -195,6 +203,8 @@ int pmu_get_boot_flash_cfg(union BOOT_FLASH_CFG_T *val);
 int pmu_get_efuse_wifi_cali(uint8_t *pa_pad_cap_m, uint8_t *pa_driver_a);
 
 int pmu_set_efuse_wifi_cali(uint8_t pa_pad_cap_m, uint8_t pa_driver_a);
+
+void pmu_wf_tx_config(uint8_t band);
 
 #ifdef __cplusplus
 }

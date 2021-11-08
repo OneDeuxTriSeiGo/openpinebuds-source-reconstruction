@@ -49,9 +49,9 @@ void usbphy_sleep(void);
 
 void usbphy_wakeup(void);
 
-void usbphy_set_for_hs_mode(void);
+void usbphy_hs_host_mode_enable(void);
 
-void usbphy_clean_for_hs_mode(void);
+void usbphy_hs_host_disconn_clear(void);
 
 #ifdef __cplusplus
 }

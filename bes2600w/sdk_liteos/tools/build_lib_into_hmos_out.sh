@@ -22,6 +22,7 @@ fi
 build_trustzone=$1
 build_mini_sys=$2
 build_bin_type=$3
+product_path=$4
 
 if [ "x$build_trustzone" == "x" ];then
     build_trustzone="false"
@@ -35,9 +36,13 @@ if [ "x$build_bin_type" == "xrelease" ];then
     rel="-r"
 fi
 
-source ./tools/config.sh
-cd bsp
+if [ -f ${product_path}/config.sh ]; then
+    source ${product_path}/config.sh
+else
+    source ./tools/config.sh
+fi
 
+cd bsp
 #pre-handle options of target
 SPACE=" "
 function pre_handle_opt()
@@ -93,6 +98,7 @@ else
     pre_handle_opt TZ_MINI_OFFSET=0xB00000 OPT_BEST2600W_LITEOS_BOOT2A
     OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
 fi
+
 
 tools/build_best2600w_ohos_into_lib.sh \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
