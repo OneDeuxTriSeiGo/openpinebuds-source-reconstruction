@@ -77,6 +77,7 @@ board_ld_flags = [
     "-fdata-sections",
     "-mthumb",
     "-mthumb-interwork",
+    "--specs=rdimon.specs",
     "-L${ohos_root_path}out/${board_name}/${product_name}/libs",
 ]
 
@@ -88,44 +89,44 @@ foreach (fs,fs_list) {
     }
 }
 
-# if (wrap_fs_api == "true") {
-    # board_ld_flags += [
-    #     "-Wl,--wrap=mount",
-    #     "-Wl,--wrap=umount",
-    #     "-Wl,--wrap=umount2",
-    #     "-Wl,--wrap=open",
-    #     "-Wl,--wrap=close",
-    #     "-Wl,--wrap=read",
-    #     "-Wl,--wrap=write",
-    #     "-Wl,--wrap=lseek",
-    #     "-Wl,--wrap=unlink",
-    #     "-Wl,--wrap=fstat",
-    #     "-Wl,--wrap=stat",
-    #     "-Wl,--wrap=fsync",
-    #     "-Wl,--wrap=mkdir",
-    #     "-Wl,--wrap=opendir",
-    #     "-Wl,--wrap=readdir",
-    #     "-Wl,--wrap=closedir",
-    #     "-Wl,--wrap=rmdir",
-    #     "-Wl,--wrap=rename",
-    #     "-Wl,--wrap=statfs",
-    #     "-Wl,--wrap=ftruncate",
+if (wrap_fs_api == "true") {
+    board_ld_flags += [
+        "-Wl,--wrap=mount",
+        "-Wl,--wrap=umount",
+        "-Wl,--wrap=umount2",
+        "-Wl,--wrap=open",
+        "-Wl,--wrap=close",
+        "-Wl,--wrap=read",
+        "-Wl,--wrap=write",
+        "-Wl,--wrap=lseek",
+        "-Wl,--wrap=unlink",
+        "-Wl,--wrap=fstat",
+        "-Wl,--wrap=stat",
+        "-Wl,--wrap=fsync",
+        "-Wl,--wrap=mkdir",
+        "-Wl,--wrap=opendir",
+        "-Wl,--wrap=readdir",
+        "-Wl,--wrap=closedir",
+        "-Wl,--wrap=rmdir",
+        "-Wl,--wrap=rename",
+        "-Wl,--wrap=statfs",
+        "-Wl,--wrap=ftruncate",
 
-    #     "-Wl,--wrap=fopen",
-    #     "-Wl,--wrap=fclose",
-    #     "-Wl,--wrap=fflush",
-    #     "-Wl,--wrap=fread",
-    #     "-Wl,--wrap=fwrite",
-    #     "-Wl,--wrap=fseek",
-    #     "-Wl,--wrap=ftell",
-    #     "-Wl,--wrap=fgets",
-    #     "-Wl,--wrap=fputs",
-    #     "-Wl,--wrap=feof",
-    #     "-Wl,--wrap=fileno",
-    #     "-Wl,--wrap=clearerr",
-    #     "-Wl,--wrap=strdup",
-    # ]
-# }
+        "-Wl,--wrap=fopen",
+        "-Wl,--wrap=fclose",
+        "-Wl,--wrap=fflush",
+        "-Wl,--wrap=fread",
+        "-Wl,--wrap=fwrite",
+        "-Wl,--wrap=fseek",
+        "-Wl,--wrap=ftell",
+        "-Wl,--wrap=fgets",
+        "-Wl,--wrap=fputs",
+        "-Wl,--wrap=feof",
+        "-Wl,--wrap=fileno",
+        "-Wl,--wrap=clearerr",
+        "-Wl,--wrap=strdup",
+    ]
+}
 
 # Board related headfiles search path.
 board_include_dirs = [
