@@ -40,5 +40,6 @@ hdf_driver("ui_adapter") {
     "//third_party/freetype/include",
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/base",
+    "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
   ]
 }

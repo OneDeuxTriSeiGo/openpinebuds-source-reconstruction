@@ -125,7 +125,7 @@ foreach(bin_file, bin_list) {
       exec_path = rebase_path(".")
       out_lib_path = "${out_product_path}/libs/"
       bsp_lib_path =
-          "./sdk_liteos/bsp/out/${bsp_target_name}/lib${bsp_target_name}.a"
+          "./sdk_liteos/sdk/bsp/out/${bsp_target_name}/lib${bsp_target_name}.a"
       command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
       deps = [ ":build_sdk_into_lib" ]
     }
@@ -136,26 +136,52 @@ foreach(bin_file, bin_list) {
       output_extension = "elf"
       deps = [
         ":${copy_lib_name}",
-        "//base/startup/bootstrap_lite/services/source:bootstrap",
-        "//device/bestechnic/bes2600w/components/utils:sys_adapter",
-        "//drivers/adapter/khdf/liteos_m:hdf_lite",
-        "//kernel/liteos_m:kernel",
-        "//vendor/bestechnic/${product_name}:${product_name}",
       ]
-
-      bsp_path = rebase_path("sdk_liteos")
 
       ldflags = [
         "-Wl,--wrap=malloc",
         "-Wl,--wrap=calloc",
         "-Wl,--wrap=free",
         "-Wl,--wrap=realloc",
+                "-Wl,--wrap=mount",
+        "-Wl,--wrap=umount",
+        "-Wl,--wrap=umount2",
+        "-Wl,--wrap=open",
+        "-Wl,--wrap=close",
+        "-Wl,--wrap=read",
+        "-Wl,--wrap=write",
+        "-Wl,--wrap=lseek",
+        "-Wl,--wrap=unlink",
+        "-Wl,--wrap=fstat",
+        "-Wl,--wrap=stat",
+        "-Wl,--wrap=fsync",
+        "-Wl,--wrap=mkdir",
+        "-Wl,--wrap=opendir",
+        "-Wl,--wrap=readdir",
+        "-Wl,--wrap=closedir",
+        "-Wl,--wrap=rmdir",
+        "-Wl,--wrap=rename",
+        "-Wl,--wrap=statfs",
+        "-Wl,--wrap=ftruncate",
+
+        "-Wl,--wrap=fopen",
+        "-Wl,--wrap=fclose",
+        "-Wl,--wrap=fflush",
+        "-Wl,--wrap=fread",
+        "-Wl,--wrap=fwrite",
+        "-Wl,--wrap=fseek",
+        "-Wl,--wrap=ftell",
+        "-Wl,--wrap=fgets",
+        "-Wl,--wrap=fputs",
+        "-Wl,--wrap=feof",
+        "-Wl,--wrap=fileno",
+        "-Wl,--wrap=clearerr",
+        "-Wl,--wrap=strdup",
       ]
 
       ldflags += [
         "-Wl,--gc-sections",
         "-Wl,-Map=bin/$output_name.map",
-        "-T$bsp_path/bsp/out/${bsp_target_name}/_best2001.lds",
       ]
 
       # force link invisible function ,which ar to lib
@@ -284,11 +310,11 @@ foreach(bsp_bin, bsp_bin_list) {
   if (bsp_bin_enable == "true") {
     bsp_bin_name = bsp_bin.bsp_bin_name
     burn_name = bsp_bin.burn_name
-    # copy ./sdk_liteos/bsp/out/<bsp_bin_name>/<bsp_bin_name>.bin to release bin
+    # copy ./sdk_liteos/sdk/bsp/out/<bsp_bin_name>/<bsp_bin_name>.bin to release bin
     copy_burn_bin_name = "copy_${bsp_bin_name}_to_relase_bin"
     build_ext_component(copy_burn_bin_name) {
       exec_path = rebase_path(".")
-      bsp_out_bin_path = "sdk_liteos/bsp/out/${bsp_bin_name}"
+      bsp_out_bin_path = "sdk_liteos/sdk/bsp/out/${bsp_bin_name}"
       copy_dest = "${out_product_path}/release_bin"
       bin_name_ota = burn_name
       command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"

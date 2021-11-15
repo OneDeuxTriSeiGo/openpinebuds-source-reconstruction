@@ -31,7 +31,7 @@ import("//kernel/liteos_m/liteos.gni")
 
 module_group("sdk_liteos") {
   modules = [
-    "bsp",
+    "sdk",
     "components",
     "hals",
   ]
