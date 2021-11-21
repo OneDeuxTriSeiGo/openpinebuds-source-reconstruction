@@ -17,6 +17,5 @@ module_group(module_name) {
   modules = [
     "sdk",
     "components",
-    "hals",
   ]
 }
