@@ -26,5 +26,5 @@ hdf_driver("flash") {
 }
 
 config("public") {
-  include_dirs = [ "//device/bestechnic/bes2600w/liteos_m/sdk/bsp/include/rtos/liteos/liteos_m/kal/cmsis" ]
+  include_dirs = [ "." ]
 }
