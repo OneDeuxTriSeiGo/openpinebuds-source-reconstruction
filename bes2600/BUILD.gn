@@ -145,10 +145,12 @@ if (ohos_kernel_type == "liteos_m") {
           "-Wl,--wrap=free",
           "-Wl,--wrap=realloc",
         ]
+        bsp_path = rebase_path("liteos_m")
 
         ldflags += [
           "-Wl,--gc-sections",
           "-Wl,-Map=bin/$output_name.map",
+          "-T$bsp_path/sdk/bsp/out/${bsp_target_name}/_best2001.lds",
         ]
 
         # force link invisible function ,which ar to lib
@@ -235,9 +237,11 @@ if (ohos_kernel_type == "liteos_m") {
       fs_size = fs_bin.fs_size
       fs_src = product_path + "/" + flash_partition_dir + "/" + fs_bin.fs_src
       block_size = fs_bin.block_size
+      bsp_path = rebase_path("liteos_m") + "/sdk/bsp"
+      print("bsp_path:",bsp_path)
       build_ext_component(gen_fs_name) {
         exec_path = rebase_path("burn_tools")
-        command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name}"
+        command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name} ${bsp_path}"
         deps = [ ":init_burn_tools" ]
       }
 
@@ -332,7 +336,7 @@ if (ohos_kernel_type == "liteos_m") {
   # pack write flash gui to write_flash_gui-<time>.tar.gz
   build_ext_component("pack_flash_gui") {
     exec_path = rebase_path("burn_tools")
-    command = "./tools/pack_burn_tools.sh ${out_product_path} ${pack_burn}"
+    command = "./tools/pack_burn_tools.sh ${out_product_path} ${pack_burn} ${product_name}"
     deps = [ ":${update_product_yaml}" ]
 
     # bin configed from vendor/bestechnic/<product_name>/config.json

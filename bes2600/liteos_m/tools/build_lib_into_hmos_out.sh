@@ -13,11 +13,6 @@
 # limitations under the License.
 
 # check if build sdk into lib
-MAKEFILE="./bsp/Makefile"
-if [ ! -f $MAKEFILE ]; then
-    echo -e "${MAKEFILE} not exist!"
-    exit
-fi
 
 build_trustzone=$1
 build_mini_sys=$2
@@ -29,11 +24,13 @@ if [ "x$build_trustzone" == "x" ];then
 fi
 
 rel=" "
+rel_branch=" "
 build_type="BUILD_TYPE=DEBUG"
 if [ "x$build_bin_type" == "xrelease" ];then
     build_type=`echo $build_bin_type | tr '[a-z]' '[A-Z]'`
     build_type="BUILD_TYPE=$build_type"
     rel="-r"
+    rel_branch=" branch=soc "
 fi
 
 if [ -f ${product_path}/config.sh ]; then
@@ -42,7 +39,7 @@ else
     source ./tools/config.sh
 fi
 
-cd bsp
+cd sdk/bsp
 #pre-handle options of target
 SPACE=" "
 function pre_handle_opt()
@@ -102,13 +99,13 @@ fi
 
 tools/build_best2600w_ohos_into_lib.sh \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
--m="$OPT_BEST2600W_LITEOS_MAIN OPENHARMONY_SIG=1 $build_type" \
+-m="$OPT_BEST2600W_LITEOS_MAIN MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
 -c="$OPT_BEST2600W_LITEOS_CP $build_type" \
 -s="$OPT_BEST2600W_LITEOS_MAIN_MINI_SE $build_type" \
--l="$OPT_BEST2600W_LITEOS_MINI OPENHARMONY_SIG=1 $build_type" \
+-l="$OPT_BEST2600W_LITEOS_MINI MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
 -x="$OPT_BEST2600W_LITEOS_BOOT1 $build_type" \
 -y="$OPT_BEST2600W_LITEOS_BOOT2A $build_type" \
--d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys" \
+-d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys $rel_branch" \
 GEN_LIB=1 $rel
 
-cd ../
+cd ../../

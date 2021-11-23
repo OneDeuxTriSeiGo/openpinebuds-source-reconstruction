@@ -20,8 +20,8 @@ let fs_image_size=page_size*block_size
 fs_src_path=$3
 fs_dst_path=$4
 fs_name=$5
+mklittlefs_path="$6/tools"
 
-mklittlefs_path="../liteos_m/sdk/bsp/tools"
 fs_path="${fs_dst_path}/release_bin"
 
 ${mklittlefs_path}/mklittlefs -c ${fs_src_path} -d 5 -b ${block_size} -p ${page_size} -s ${fs_image_size} ${fs_path}/${fs_name}.bin

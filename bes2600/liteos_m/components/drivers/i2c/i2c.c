@@ -20,7 +20,6 @@
 #include "hdf_device_desc.h"
 #include "hdf_platform.h"
 #include "hal_iomux_best2003.h"
-#include "hal_trace.h"
 
 osMutexDef(i2c0_mutex);
 osMutexDef(i2c1_mutex);
