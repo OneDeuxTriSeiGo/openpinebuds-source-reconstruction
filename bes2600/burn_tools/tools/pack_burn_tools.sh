@@ -14,10 +14,11 @@
 
 gui_path=$1
 pack_burn=$2
+product_name=$3
 
 if [ "x${pack_burn}" == "xtrue" ]; then
 cd $gui_path
 time=$(date "+%Y-%m-%d-%H-%M-%S")
-tar -zcvf write_flash_gui-$time.tar.gz write_flash_gui/
+tar -zcvf write_flash_gui-$product_name-$time.tar.gz write_flash_gui/
 cd -
 fi

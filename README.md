@@ -202,7 +202,7 @@ hb build -f --patch
 1. windows10 安装uart 串口驱动 [CP2102usbqd](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)
 2. 把 out/bes2600w/`<product name>`/write_flash_gui-`<timestamp>`.tar.gz 拷贝到windows 环境解压
 3. 双击 write_flash_gui-`<timestamp>`/write_flash_gui/Wifi_download_main.exe
-4. 点击串口列表![](./bes2600w/burn_tools/write_flash_gui/images/fileset.png) 点击 list 按钮勾选弹出来的串口，然后点击ok
-5. 点击开始烧录![](./bes2600w/burn_tools/write_flash_gui/images/start.png) 等待烧录
+4. 点击串口列表![](./bes2600/burn_tools/write_flash_gui/images/fileset.png) 点击 list 按钮勾选弹出来的串口，然后点击ok
+5. 点击开始烧录![](./bes2600/burn_tools/write_flash_gui/images/start.png) 等待烧录
 6. 模组 单击 reset 或者 power 进行烧录
 7. 打开串口工具，reset 或者power 按键启动板子，查看log

@@ -19,7 +19,6 @@
 #include "gpio_if.h"
 #include "device_resource_if.h"
 #include "osal_irq.h"
-#include "hal_trace.h"
 
 #define HDF_LOG_TAG gpio_driver
 
@@ -255,8 +254,8 @@ static int32_t GpioDriverBind(struct HdfDeviceObject *device)
     }
 
     static struct GpioCntlr gpioCntlr;
-    gpioCntlr.device = device;
-    device->service = &(gpioCntlr.service);
+    gpioCntlr.device.hdfDev = device;
+    device->service = device->service;
 
     return HDF_SUCCESS;
 }

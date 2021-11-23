@@ -16,8 +16,6 @@
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
 #include "device_resource_if.h"
-//#include "hal_hota_board.h"
-//#include "hal_update_board.h"
 
 /* Logic partition on flash devices */
 hal_logic_partition_t g_halPartitions[] = {
