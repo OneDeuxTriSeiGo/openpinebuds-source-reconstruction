@@ -161,6 +161,7 @@ if (ohos_kernel_type == "liteos_m") {
         ldflags += [ "-Wl,--no-whole-archive" ]
 
         libs = [
+          "c",
           "m",
           "stdc++",
         ]
