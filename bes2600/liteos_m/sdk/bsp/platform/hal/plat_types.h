@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -63,6 +63,14 @@ extern "C" {
 #define __SRAM_EXT_CODE  __PSRAMCODE
 #define __SRAM_EXT_DATA  __PSRAMDATA
 #define __SRAM_EXT_BSS     __PSRAMBSS
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 typedef unsigned char               u8;
 typedef unsigned short              u16;
 typedef unsigned long               u32;

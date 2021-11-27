@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -109,14 +109,12 @@ typedef struct {
     u32 tsq_in_cmpl;
 } BWIFI_LMAC_STATUS_DUMP_T;
 
-#if 0
 typedef struct {
     u8 rst_flag;                         /**< reset flag to indicate status:
                                               0 - no reset; 1 - reset start; 2 - reset end.*/
     u16 error_cause;                     /**< error cause (bitmask) */
     BWIFI_LMAC_STATUS_DUMP_T dump_info;  /**< LMAC status dump on fatal error */
 } BWIFI_FATAL_ERROR_RESET_T;
-#endif
 
 typedef struct {
     u16 error_cause;                     /**< error cause (bitmask) */

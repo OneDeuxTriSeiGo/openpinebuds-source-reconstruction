@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -390,6 +390,15 @@ void os_vector_init(void)
     hal_cache_sync_all(HAL_CACHE_ID_D_CACHE);
 }
 
+void os_post_init_hook(void)
+{
+    *(volatile UINT32 *)OS_NVIC_CCR &= ~(UNALIGNFAULT); //allow unalign access
+#ifdef CP_BUILD
+    OS_TCB_FROM_TID(g_swtmrTaskID)->taskStatus &= ~OS_TASK_FLAG_SYSTEM_TASK;
+#endif
+    os_tick_init();
+}
+
 #if !defined(MODULE_KERNEL_STUB)
 __WEAK void OHOS_SystemInit(void)
 {
@@ -417,7 +426,7 @@ void board_main(const void * arg)
 	uint32_t pa_enable_io = 0;
     UINTPTR intSave;
     intSave = LOS_IntLock();
-    os_tick_init();
+    os_post_init_hook();
 #ifdef OS_EXC_HOOK
     LOS_RegExcHook(EXC_INTERRUPT, os_exc_hook);
     //LOS_BackTraceInit();
@@ -454,7 +463,7 @@ void board_main(const void * arg)
 {
     UINTPTR intSave;
     intSave = LOS_IntLock();
-    os_tick_init();
+    os_post_init_hook();
 #ifdef OS_EXC_HOOK
     LOS_RegExcHook(EXC_INTERRUPT, os_exc_hook);
     OsBackTraceHookSet(os_backtrace_hook);
@@ -472,7 +481,7 @@ void _start(void)
     os_vector_init();
     osKernelInitialize();
     osThreadCreate(&os_thread_def_main, 0);
-    os_tick_init();
+    os_post_init_hook();
     osKernelStart();
 }
 #else

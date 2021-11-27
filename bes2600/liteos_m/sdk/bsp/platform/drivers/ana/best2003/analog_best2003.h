@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,6 +30,10 @@ int analog_debug_config_vad_mic(bool enable);
 void analog_aud_vad_enable(enum AUD_VAD_TYPE_T type, bool en);
 
 void analog_aud_vad_adc_enable(bool en);
+
+void analog_aud_codec_set_dev(int speaker_dev);
+
+int analog_aud_codec_get_dev();
 
 void analog_aud_codec_set_pa(int speaker_pa);
 

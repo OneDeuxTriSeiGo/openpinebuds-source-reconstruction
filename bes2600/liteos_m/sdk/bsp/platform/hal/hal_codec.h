@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -296,6 +296,8 @@ int  hal_codec_dac_dc_auto_calib_enable(void);
 int  hal_codec_dac_dc_auto_calib_disable(void);
 void hal_codec_dac_dc_offset_enable(int32_t dc_l, int32_t dc_r);
 void hal_codec_set_dig_dac_gain_dr(enum AUD_CHANNEL_MAP_T map, int32_t gain);
+int hal_codec_trigger_en(HAL_CODEC_IRQ_CALLBACK cb);
+int hal_codec_timer_trigger_en(HAL_CODEC_IRQ_CALLBACK cb);
 
 #ifdef __cplusplus
 }
