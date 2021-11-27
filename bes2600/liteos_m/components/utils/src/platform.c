@@ -114,3 +114,11 @@ int mbedtls_hardware_poll( void *data,
     TRACE(0,"%s %d done",__func__,__LINE__);
     return 0;
 }
+
+// implementation for js_app_host.h: LP_TaskBegin
+void LP_TaskBegin() {
+}
+
+// implementation for js_app_host.h: LP_TaskEnd
+void LP_TaskEnd() {
+}
