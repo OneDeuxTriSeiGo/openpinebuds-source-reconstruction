@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,10 +29,15 @@ extern "C" {
 
 void hal_timer_setup(enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler);
 
+#ifdef BSP_NICKNAME_SUPPORT
+void hal_timer_start_nickname(uint32_t load);
+void hal_timer_stop_nickname(void);
+#define hal_timer_start hal_timer_start_nickname
+#define hal_timer_stop hal_timer_stop_nickname
+#else
 void hal_timer_start(uint32_t load);
-
 void hal_timer_stop(void);
-
+#endif
 void hal_timer_continue(void);
 
 int hal_timer_is_enabled(void);

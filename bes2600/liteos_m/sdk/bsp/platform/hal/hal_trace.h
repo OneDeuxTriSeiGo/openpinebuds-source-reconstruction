@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -340,7 +340,7 @@ TRACE_FUNC_DECLARE(int hal_raw_trace_output(const unsigned char *buf, unsigned i
 TRACE_FUNC_DECLARE(int hal_trace_output(const unsigned char *buf, unsigned int buf_len), return 0);
 
 TRC_FMT_CHK(2, 3)
-TRACE_FUNC_DECLARE(int hal_trace_printf(int attr, const char *fmt, ...), return 0);
+TRACE_FUNC_DECLARE(int hal_trace_printf(uint32_t attr, const char *fmt, ...), return 0);
 
 TRACE_FUNC_DECLARE(int hal_trace_dump(const char *fmt, unsigned int size,  unsigned int count, const void *buffer), return 0);
 
