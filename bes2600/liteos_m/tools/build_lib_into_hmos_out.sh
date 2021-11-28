@@ -127,6 +127,9 @@ fi
 
 
 cd sdk/bsp
+
+chmod a+x tools/build_best2600w_ohos_into_lib.sh
+
 tools/build_best2600w_ohos_into_lib.sh \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
 -m="$OPT_BEST2600W_LITEOS_MAIN $rel_filter $rel_flash_config $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
