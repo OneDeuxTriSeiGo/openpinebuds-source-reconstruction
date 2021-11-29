@@ -156,8 +156,8 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
 ## 安装arm-none-eabi-gcc `<a name="section12202192215415"></a>`
 
 1. 打开Linux编译服务器终端。
-2. 下载[arm-none-eabi-gcc 编译工具下载](https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-bi-9-2019-q4-major-x86_64-linux.tar.bz2)
-3. 解压 [gcc-arm-bi-9-2019-q4-major-x86_64-linux.tar.bz2](https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-bi-9-2019-q4-major-x86_64-linux.tar.bz2) 安装包至\~/toolchain/路径下。
+2. 下载[arm-none-eabi-gcc 编译工具下载](https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2)
+3. 解压 [gcc-arm-bi-9-2019-q4-major-x86_64-linux.tar.bz2](https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2) 安装包至\~/toolchain/路径下。
 
    ```shell
    mkdir -p ~/toolchain/
