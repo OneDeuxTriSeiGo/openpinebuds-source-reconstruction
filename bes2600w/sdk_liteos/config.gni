@@ -37,6 +37,8 @@ board_toolchain_prefix = "arm-none-eabi-"
 # Compiler type, "gcc" or "clang".
 board_toolchain_type = "gcc"
 
+flash_size = 32
+
 # config.json parse
 if (product_path != "") {
     product_conf = read_file("${product_path}/config.json", "json")
@@ -46,6 +48,7 @@ if (product_path != "") {
     fs_list = product_conf.fs_list
     bsp_bin_list = product_conf.bsp_bin_list
     pack_burn = product_conf.pack_burn
+    flash_size = product_conf.flash_size
 }
 
 # Board related common compile flags.
