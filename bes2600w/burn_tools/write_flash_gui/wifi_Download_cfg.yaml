@@ -1,3 +1,15 @@
+# Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 Common:
   BAUT_RATE: 1500000
   BIN_DIR: ota_bin
@@ -13,7 +25,7 @@ Common:
   PROGRESSBAR_SWITCH: false
   REBOOT: false
   REDIRECT_PIPE: true
-  SEC_BOOT_VER: 3
+  SEC_BOOT_VER: 4
   WAIT_PRESS_ENTER: true
 FILE_LIST:
 - BOOT1:
@@ -45,7 +57,7 @@ FILE_LIST:
     ADDR: 738721792
     FILE_NAME: rtos_main.bin
     MAGIC: true
-    SIZE: 8257536
+    SIZE: 11010048
     SWITCH: true
 - RTOSMINI:
     ADDR: 749731840
@@ -54,9 +66,9 @@ FILE_LIST:
     SIZE: 3735552
     SWITCH: true
 - LITTLEFS:
-    ADDR: 750125056
+    ADDR: 753467392
     FILE_NAME: littlefs.bin
-    SIZE: 4194304
+    SIZE: 851968
     SWITCH: true
 - FACTORY:
     ADDR: 754905088
