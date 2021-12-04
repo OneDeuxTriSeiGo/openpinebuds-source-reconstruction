@@ -127,8 +127,7 @@ if (ohos_kernel_type == "liteos_m") {
       build_ext_component(copy_lib_name) {
         exec_path = rebase_path(".")
         out_lib_path = "${out_product_path}/libs/"
-        bsp_lib_path =
-            "./liteos_m/sdk/bsp/out/${bsp_target_name}/libbsp${bsp_target_name}.a"
+        bsp_lib_path = "./liteos_m/sdk/bsp/out/${bsp_target_name}/libbsp${bsp_target_name}.a"
         command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
         deps = [ ":build_sdk_into_lib" ]
       }
@@ -140,13 +139,6 @@ if (ohos_kernel_type == "liteos_m") {
         deps = [ ":${copy_lib_name}" ]
 
         ldflags = [
-          "-Wl,--wrap=malloc",
-          "-Wl,--wrap=calloc",
-          "-Wl,--wrap=free",
-          "-Wl,--wrap=realloc",
-        ]
-
-        ldflags += [
           "-Wl,--gc-sections",
           "-Wl,-Map=bin/$output_name.map",
         ]
@@ -237,7 +229,7 @@ if (ohos_kernel_type == "liteos_m") {
       fs_src = product_path + "/" + flash_partition_dir + "/" + fs_bin.fs_src
       block_size = fs_bin.block_size
       bsp_path = rebase_path("liteos_m") + "/sdk/bsp"
-      print("bsp_path:",bsp_path)
+      print("bsp_path:", bsp_path)
       build_ext_component(gen_fs_name) {
         exec_path = rebase_path("burn_tools")
         command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name} ${bsp_path}"

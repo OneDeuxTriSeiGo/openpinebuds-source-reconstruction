@@ -422,8 +422,8 @@ extern int hmos_special_io_hardware(uint32_t rf_tx, uint32_t pa_enable);
 #ifndef __NO_APP__
 void board_main(const void * arg)
 {
-	uint32_t rf_tx_io = 0;
-	uint32_t pa_enable_io = 0;
+    uint32_t rf_tx_io = 0;
+    uint32_t pa_enable_io = 0;
     UINTPTR intSave;
     intSave = LOS_IntLock();
     os_post_init_hook();
@@ -434,13 +434,13 @@ void board_main(const void * arg)
     LOS_IntRestore(intSave);
     platform_init_step0(0);
 #ifdef RF_TX_CONTROL_IO
-	rf_tx_io = RF_TX_CONTROL_IO;
+    rf_tx_io = RF_TX_CONTROL_IO;
 #endif
 #ifdef PA_ENABLE_IO
-	pa_enable_io = PA_ENABLE_IO;
+    pa_enable_io = PA_ENABLE_IO;
 #endif
 #if defined(RF_TX_CONTROL_IO) || defined(PA_ENABLE_IO)
-	hmos_special_io_hardware(rf_tx_io, pa_enable_io);
+    hmos_special_io_hardware(rf_tx_io, pa_enable_io);
 #endif
     int ret = platform_init_step1(0);
 
@@ -532,66 +532,6 @@ __attribute__((naked)) void software_init_hook (void) {
   );
 }
 #endif
-#endif
-
-#ifdef OS_WRAP_MALLOC
-void *__wrap_malloc(size_t size)
-{
-    return LOS_MemAlloc(OS_SYS_MEM_ADDR, size);
-}
-
-void *__wrap__malloc_r(void *reent, size_t nbytes)
-{
-    return LOS_MemAlloc(OS_SYS_MEM_ADDR, nbytes);
-}
-
-void *__wrap__realloc_r(void *reent,
-                 void *aptr, size_t nbytes)
-{
-    ///TODO: Fix bug of LOS_MemRealloc
-    //return LOS_MemRealloc(OS_SYS_MEM_ADDR, rmem, newsize);
-    void * ptr = NULL;
-    if (nbytes) {
-        ptr = LOS_MemAlloc(OS_SYS_MEM_ADDR, nbytes);
-        if (ptr && aptr) {
-            memcpy(ptr, aptr, nbytes);
-            LOS_MemFree(OS_SYS_MEM_ADDR, aptr);
-        }
-    } else
-        LOS_MemFree(OS_SYS_MEM_ADDR, aptr);
-    return ptr;
-}
-
-void *__wrap_calloc(size_t count, size_t size)
-{
-    void * ptr = NULL;
-    ptr = LOS_MemAlloc(OS_SYS_MEM_ADDR, count * size);
-    if (ptr)
-        memset(ptr, 0, count * size);
-    return ptr;
-}
-
-void *__wrap_realloc(void * rmem, size_t newsize)
-{
-    ///TODO: Fix bug of LOS_MemRealloc
-    //return LOS_MemRealloc(OS_SYS_MEM_ADDR, rmem, newsize);
-    void * ptr = NULL;
-    if (newsize) {
-        ptr = LOS_MemAlloc(OS_SYS_MEM_ADDR, newsize);
-        if (ptr && rmem) {
-            memcpy(ptr, rmem, newsize);
-            LOS_MemFree(OS_SYS_MEM_ADDR, rmem);
-        }
-    } else
-        LOS_MemFree(OS_SYS_MEM_ADDR, rmem);
-    return ptr;
-}
-
-void __wrap_free(void *rmem)
-{
-    LOS_MemFree(OS_SYS_MEM_ADDR, rmem);
-    return;
-}
 #endif
 
 void os_heap_stat_print(void)
