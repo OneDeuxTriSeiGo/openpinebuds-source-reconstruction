@@ -21,6 +21,7 @@ kernel_module("sys_adapter") {
   sources = [
     "src/hm_sys.c",
     "src/platform.c",
+    "src/printf.c",
   ]
 
   include_dirs = [ "include" ]
