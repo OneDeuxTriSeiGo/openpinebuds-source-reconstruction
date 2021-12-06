@@ -18,10 +18,6 @@ kernel_module(module_name) {
     "wifi_device.c",
     "wifi_hotspot.c",
   ]
-  include_dirs = [
-    "//foundation/communication/wifi_lite/interfaces/wifiservice",
-    "//kernel/liteos_m/components/net/lwip-2.1/porting/include/lwip",
-    "//kernel/liteos_m/components/net/lwip-2.1/porting/include",
-  ]
+  deps = [ "//foundation/communication/wifi_lite:wifi" ]
   visibility += [ "../../.." ]
 }

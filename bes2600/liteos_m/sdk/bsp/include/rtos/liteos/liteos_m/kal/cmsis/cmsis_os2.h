@@ -208,7 +208,7 @@ typedef enum {
   /** Above normal + 5 */
   //osPriorityAboveNormal5  = 32+5,
   /** Above normal + 6 */
-  //osPriorityAboveNormal6  = 32+6,
+  osPriorityAboveNormal6  = 32+6,
   /** Above normal + 7 (unsupported) */
   //osPriorityAboveNormal7  = 32+7,
   /** High (unsupported) */
