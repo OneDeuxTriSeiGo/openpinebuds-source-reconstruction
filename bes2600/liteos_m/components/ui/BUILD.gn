@@ -11,6 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+declare_args() {
+  bes_ace_enable = true
+}
+
 import("//drivers/adapter/khdf/liteos_m/hdf.gni")
 
 config("public") {
@@ -25,21 +29,17 @@ hdf_driver("ui_adapter") {
     "ui_main.cpp",
   ]
 
-  bes_ace_enable = false
-
+  public_configs = [ ":public" ]
+  public_deps = [ "//foundation/graphic/ui:ui" ]
   if (bes_ace_enable) {
     defines = [ "ENABLE_ACE" ]
+    public_deps += [ "//foundation/ace/ace_engine_lite/frameworks:ace_lite" ]
   }
 
   include_dirs = [
-    "//foundation/graphic/ui/interfaces/innerkits",
-    "//foundation/graphic/utils/interfaces/kits",
-    "//foundation/graphic/utils/interfaces/innerkits",
-    "//foundation/graphic/ui/interfaces/kits",
-    "//foundation/graphic/ui/frameworks",
-    "//third_party/freetype/include",
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/base",
-    "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
+    "//foundation/graphic/ui/frameworks",
+    "//third_party/freetype/include",
   ]
 }

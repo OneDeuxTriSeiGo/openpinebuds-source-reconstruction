@@ -20,6 +20,7 @@
 #include "hal_cache.h"
 #include "cmsis_os.h"
 #include "hal_trace.h"
+#include "securec.h"
 
 #define SPI_DMA_MAX 4095
 
@@ -192,7 +193,7 @@ int32_t HalSpiSend(struct SpiDevice *spidevice, const uint8_t *data, uint16_t si
 
     if (ret)
     {
-        printf("spi tail send fail %ld, size %ld\r\n", ret, len);
+        printf("spi tail send fail %d, size %u\r\n", ret, len);
         goto OUT;
     }
 OUT:
@@ -235,7 +236,7 @@ int32_t HalSpiRecv(struct SpiDevice *spidevice, uint8_t *data, uint16_t size, ui
     cmd = (uint8_t *)malloc(len);
     if (cmd == NULL)
     {
-        printf("%s malloc size %ld error\r\n", __FUNCTION__, len);
+        printf("%s malloc size %u error\r\n", __FUNCTION__, len);
         return osErrorNoMemory;
     }
 
@@ -267,7 +268,7 @@ int32_t HalSpiRecv(struct SpiDevice *spidevice, uint8_t *data, uint16_t size, ui
     data += remainder;
 
     if (ret) {
-        printf("spi tail fail %ld, size %ld\r\n", ret, len);
+        printf("spi tail fail %d, size %u\r\n", ret, len);
         goto OUT;
     }
 OUT:
@@ -421,9 +422,8 @@ static int32_t InitSpiDevice(struct SpiDevice *spiDevice)
 static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct DeviceResourceNode *resourceNode)
 {
     struct SpiResource *resource = &spiDevice->resource;
-    struct DeviceResourceIface *dri = NULL;
     uint32_t rel_pin;
-    dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);   // open HDF
+    struct DeviceResourceIface *dri = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);   // open HDF
     if (dri == NULL || dri->GetUint32 == NULL) {
         printf("DeviceResourceIface is invalid\r\n");
         return HDF_FAILURE;
@@ -440,20 +440,23 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
         return HDF_FAILURE;
     }
 
-    if (dri->GetUint32(resourceNode, "transmode", &resource->transmode, 0) != HDF_SUCCESS) {
+    uint32_t temp;
+    if (dri->GetUint32(resourceNode, "transmode", &temp, 0) != HDF_SUCCESS) {
         printf("spi config read transmode fail\r\n");
         return HDF_FAILURE;
     }
+    resource->transmode = (enum SPI_TRANSFER_MODE)temp;
 
     if (dri->GetUint32(resourceNode, "spi_cs_soft", &resource->spi_cs_soft, 0) != HDF_SUCCESS) {
         printf("spi config read spi_cs_soft fail\r\n");
         return HDF_FAILURE;
     }
 
-    if (dri->GetUint32(resourceNode, "mode", &resource->mode, 0) != HDF_SUCCESS) {
+    if (dri->GetUint32(resourceNode, "mode", &temp, 0) != HDF_SUCCESS) {
         printf("spi config read mode fail\r\n");
         return HDF_FAILURE;
     }
+    resource->mode = (enum SPI_WORK_MODE)temp;
 
     if (dri->GetUint32(resourceNode, "data_size", &resource->data_size, 0) != HDF_SUCCESS) {
         printf("spi config read data_size fail\r\n");
@@ -479,7 +482,6 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
         return HDF_FAILURE;
     }
 
-    rel_pin = 0;
     rel_pin = (resource->spi_mosi_pin / 10) * 8 + (resource->spi_mosi_pin % 10);
     resource->spi_mosi_pin = rel_pin;
     if (dri->GetUint32(resourceNode, "spi_miso_pin", &resource->spi_miso_pin, 0) != HDF_SUCCESS) {
@@ -487,7 +489,6 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
         return HDF_FAILURE;
     }
 
-    rel_pin = 0;
     rel_pin = ((resource->spi_miso_pin / 10) * 8) + (resource->spi_miso_pin % 10);
     resource->spi_miso_pin = rel_pin;
 
@@ -496,7 +497,6 @@ static int32_t GetSpiDeviceResource(struct SpiDevice *spiDevice, const struct De
         return HDF_FAILURE;
     }
 
-    rel_pin = 0;
     rel_pin = ((resource->spi_cs_pin / 10) * 8) + (resource->spi_cs_pin % 10);
     resource->spi_cs_pin = rel_pin;
 
@@ -675,7 +675,7 @@ static int32_t SpiDevClose(struct SpiCntlr *spicntlr)
     }
     ret = spi_ctx[spi_port].spi_close(spi_cfg->cs);
     if (ret != 0) {
-        printf("spi %ld open error %d\r\n", spi_port, ret);
+        printf("spi %u open error %d\r\n", spi_port, ret);
         return HDF_FAILURE;
     }
     return HDF_SUCCESS;
