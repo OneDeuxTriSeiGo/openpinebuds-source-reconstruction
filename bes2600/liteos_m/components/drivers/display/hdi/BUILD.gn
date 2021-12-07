@@ -20,6 +20,7 @@ hdf_driver("hdi_display") {
     "display_layer.c",
   ]
   include_dirs = [
+    "../hal",
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/display/hal",
     "//drivers/peripheral/base",

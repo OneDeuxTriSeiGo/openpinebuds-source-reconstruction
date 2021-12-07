@@ -29,6 +29,12 @@
 #include "devmgr_service_start.h"
 #include "ohos_mem_pool.h"
 //#include "threading_alt.h"
+#include <dirent.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include "ohos_init.h"
 
 void OsShowInfo(void)
 {
@@ -57,15 +63,53 @@ static int doShowOsInfo(cmd_tbl_t *cmd, int argc, char *argv[])
     return 0;
 }
 
+static int doFsLs(cmd_tbl_t *cmd, int argc, char *argv[])
+{
+    if (argc < 2) {
+        printf("AT+LS=<path>\n");
+        return -1;
+    }
+    const char *path = argv[1];
+    DIR *dir;
+    struct dirent *dp;
+    if ((dir = opendir(path)) == NULL) {
+        printf("opendir %s failed, %s\n", path, strerror(errno));
+        return -1;
+    }
+    while ((dp = readdir(dir)) != NULL) {
+        if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) {
+            continue;
+        }
+        struct stat st_buf = {0};
+        char realpath[260];
+        snprintf(realpath, sizeof(realpath), "%s/%s", path, dp->d_name);
+        if (stat(realpath, &st_buf) != 0) {
+            printf("can not access %s\n", realpath);
+            closedir(dir);
+            return -1;
+        }
+        if ((st_buf.st_mode & S_IFMT) == S_IFDIR) {
+            printf("DIR %s\n", realpath);
+        } else {
+            printf("FILE %s, %ld bytes\n", realpath, st_buf.st_size);
+        }
+    }
+    closedir(dir);
+    printf("+ok\r\n");
+    return 0;
+}
+
 void RegisterCustomATCmd()
 {
     cmd_tbl_t cmd_list[] = {
         {"AT+SHOWOSINFO", 1, doShowOsInfo, "AT+SHOWOSINFO - show memory and cpu usage\n"},
+        {"AT+LS", 2, doFsLs, "AT+LS  - list file/dir in fs\n"},
     };
     for (int i = 0; i < sizeof(cmd_list) / sizeof(cmd_tbl_t); i++) {
         console_cmd_add(&cmd_list[i]);
     }
 }
+SYS_SERVICE_INIT(RegisterCustomATCmd);
 
 void HAL_NVIC_SystemReset(void)
 {

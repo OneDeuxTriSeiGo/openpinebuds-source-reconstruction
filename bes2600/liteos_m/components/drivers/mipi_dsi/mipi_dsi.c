@@ -21,6 +21,8 @@
 #include "hdf_log.h"
 #include "mipi_dsi_core.h"
 
+#define HDF_LOG_TAG mipi_dsi
+
 #ifndef PSRAMUHS_SIZE
 #define PSRAMUHS_SIZE 0x800000
 #endif
@@ -29,10 +31,8 @@
 #define HEIGHT 454
 #define BUFSIZE_MAX 0xE2000
 #define BUF_NUM 3
-#if (BUF_NUM < 2)
-#error "BUF_NUM must not be smaller than 2"
-#elif (BUF_NUM > 3)
-#error "BUF_NUM must not be bigger than 3"
+#if (BUF_NUM < 2 || BUF_NUM > 3)
+#error "BUF_NUM must be 2 or 3"
 #endif
 
 enum BUF_STATE {

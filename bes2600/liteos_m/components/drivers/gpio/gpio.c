@@ -32,18 +32,6 @@ enum HAL_GPIO_PIN_T g_gpioPinReflectionMap[HAL_GPIO_PIN_LED_NUM] = {0};
 static struct oem_gpio_irq_handler g_oemGpioIrqHandler[HAL_GPIO_PIN_LED_NUM] = {0};
 static struct HAL_GPIO_IRQ_CFG_T gpio_irq_cfg[HAL_GPIO_PIN_LED_NUM] = {0};
 
-static struct HAL_GPIO_IRQ_CFG_T hal_gpio_get_irq_config(enum HAL_GPIO_PIN_T pin)
-{
-    struct HAL_GPIO_IRQ_CFG_T irq_cfg;
-
-    irq_cfg.irq_enable = gpio_irq_cfg[pin].irq_enable;
-    irq_cfg.irq_debounce = gpio_irq_cfg[pin].irq_debounce;
-    irq_cfg.irq_type = gpio_irq_cfg[pin].irq_type;
-    irq_cfg.irq_polarity = gpio_irq_cfg[pin].irq_polarity;
-
-    return irq_cfg;
-}
-
 static void OemGpioIrqHdl(enum HAL_GPIO_PIN_T pin)
 {
     struct oem_gpio_irq_handler *hdlPointer = NULL;
@@ -255,8 +243,7 @@ static int32_t GpioDriverBind(struct HdfDeviceObject *device)
 
     static struct GpioCntlr gpioCntlr;
     gpioCntlr.device.hdfDev = device;
-    device->service = device->service;
-
+    device->service = (struct IDeviceIoService *)&(gpioCntlr.device);
     return HDF_SUCCESS;
 }
 

@@ -230,7 +230,7 @@ static int32_t PanelReadId()
 {
     uint8_t read_id[3] = {0};
     uint8_t payload[] = {0x04};
-    struct DsiCmdDesc cmd = {0x06, 0, sizeof(payload), &payload};
+    struct DsiCmdDesc cmd = {0x06, 0, sizeof(payload), payload};
     int32_t ret = MipiDsiRx(priv.mipiHandle, &cmd, 3, read_id);
     if (ret != HDF_SUCCESS) {
         HDF_LOGE("%s: MipiDsiRx failed", __func__);
