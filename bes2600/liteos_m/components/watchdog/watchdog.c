@@ -12,24 +12,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "hi_watchdog.h"
+#include "watchdog.h"
 
-void hi_watchdog_enable(void)
+void watchdog_enable(void)
 {
     return;
 }
 
-void hi_watchdog_feed(void)
+void watchdog_feed(void)
 {
     return;
 }
 
-void hi_watchdog_disable(void)
+void watchdog_disable(void)
 {
     return;
 }
 
-unsigned int hi_watchdog_set_timeout(unsigned int timeout_ms)
+unsigned int watchdog_set_timeout(unsigned int timeout_ms)
 {
     return -1;
+}
+
+void IoTWatchDogKick(void)
+{
+    watchdog_feed();
 }
