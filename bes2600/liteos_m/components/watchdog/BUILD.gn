@@ -14,5 +14,5 @@
 import("//drivers/adapter/khdf/liteos_m/hdf.gni")
 
 kernel_module("watchdog") {
-  sources = [ "hi_watchdog.c" ]
+  sources = [ "watchdog.c" ]
 }
