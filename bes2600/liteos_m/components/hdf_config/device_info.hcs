@@ -24,7 +24,7 @@ root {
                 gpio0 :: deviceNode {
                     policy = 2;
                     priority = 100;
-                    moduleName = "HDF_PLATFORM_GPIO";
+                    moduleName = "BES_GPIO_MODULE_HDF";
                     serviceName = "HDF_PLATFORM_GPIO";
                     deviceMatchAttr = "gpio_config";
                 }
@@ -39,14 +39,14 @@ root {
                 i2c0 :: deviceNode {
                     policy = 0;
                     priority = 100;
-                    moduleName = "HDF_PLATFORM_I2C";
+                    moduleName = "BES_I2C_MODULE_HDF";
                     serviceName = "";
                     deviceMatchAttr = "i2c0_config";
                 }
                 i2c1 :: deviceNode {
                     policy = 0;
                     priority = 100;
-                    moduleName = "HDF_PLATFORM_I2C";
+                    moduleName = "BES_I2C_MODULE_HDF";
                     serviceName = "";
                     deviceMatchAttr = "i2c1_config";
                 }
