@@ -23,5 +23,4 @@ kernel_module(module_name) {
   visibility += [ "../../.." ]
   include_dirs = [ "//kernel/liteos_m/components/net/lwip-2.1/porting/include" ]
   include_dirs += [ "//third_party/lwip/src/include" ]
-
 }

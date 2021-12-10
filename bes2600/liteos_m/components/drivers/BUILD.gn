@@ -17,13 +17,7 @@ module_group("drivers") {
   modules = [
     "display",
     "flash",
-    "gpio",
-    "i2c",
     "mipi_dsi",
-    "pwm",
-    "spi",
     "touch",
-    "uart",
-    "watchdog",
   ]
 }

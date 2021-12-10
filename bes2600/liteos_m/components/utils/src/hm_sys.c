@@ -186,3 +186,6 @@ void RestoreSystemWrapper(const char *crashMessage)
     printf("%s\n", crashMessage);
     hal_trace_flush_buffer();
 }
+
+
+void IoTWatchDogKick(void) {}
