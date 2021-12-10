@@ -3048,6 +3048,7 @@ SECTIONS
 		*(EXCLUDE_FILE(*hal_*.o *cmsis_nvic.o *system_ARMCM4.o *system_utils.o *system_cp.o *cp_accel.o *bpabi.o *div*.o *_dvmd_tls.o *best*.o ) .bss*)
 		*:*ffmpeg*.o(COMMON)
 		*(.psram_bss*)
+		*(.bss*)
 #ifdef __BT_RAMRUN__
 		. = ALIGN(4);
 		__mem_pool_start__ = .;
@@ -3538,7 +3539,6 @@ SECTIONS
 		. = ALIGN(4);
 		__bss_start__ = .;
 		_sbss = .;
-		*(.bss*)
 		*(COMMON)
 		. = ALIGN(4);
 		__bss_end__ = .;
