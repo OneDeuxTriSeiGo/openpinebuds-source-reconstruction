@@ -22,11 +22,24 @@
         <licensefile></licensefile>
         <policylist>
             <policy name="projectPolicy" desc="">
-                <policyitem type="copyright" name="bestechnic (Shanghai) Technologies CO., LIMITED." path=".*" desc="original bestechnic copyright"/>
+                <policyitem type="copyright" name="Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved." path=".*" desc="original bestechnic copyright"/>
+                <policyitem type="copyright" name="Copyright (c) 2013-2018 Arm Limited. All rights reserved." path=".*" desc="original bestechnic copyright"/>
+                <policyitem type="copyright" name="Copyright (c) 2020-2021 Huawei Device Co., Ltd. All rights reserved." path=".*" desc="bestechnic use Huawei copyright"/>
+                <policyitem type="copyright" name="Copyright (c) 2013-2019 Huawei Technologies Co., Ltd. All rights reserved." path=".*" desc="bestechnic use Huawei copyright"/>
                 <policyitem type="license" name="Apache" path=".*" desc="bestechnic use apache 2.0 license"/>
+                <policyitem type="license" name="BSD-3-Clause" path=".*" desc="bestechnic use BSD-3-Clause license"/>
+                <policyitem type="license" name="MIT" path=".*" desc="bestechnic use MIT license"/>
             </policy>
         </policylist>
         <filefilterlist>
+            <filefilter name="defaultFilter" desc="bestechnic flashing tools">
+                <filteritem type="filepath" name="bes2600/burn_tools" desc="bestechnic flashing tools"/>
+                <filteritem type="filepath" name="bes2600/liteos_m/sdk/bsp/tools/mklittlefs" desc="bestechnic use littlefs image making tools"/>
+            </filefilter>
+            <filefilter name="defaultFilter" desc="bestechnic using MIT files, but invalid copyright">
+                <filteritem type="filepath" name="bes2600/liteos_m/components/utils/src/printf.c" desc="bestechnic using MIT files, but invalid copyright"/>
+                <filteritem type="filepath" name="bes2600/liteos_m/components/utils/include/printf.h" desc="bestechnic using MIT files, but invalid copyright"/>
+            </filefilter>
             <filefilter name="defaultFilter" desc="ARM Limited appache2">
                 <filteritem type="filepath" name="bes2600/liteos_m/sdk/bsp/platform/cmsis/.*" desc="ARM limits license"/>
                 <filteritem type="filepath" name="bes2600/liteos_m/sdk/bsp/platform/hal/best2003/partition_best2003.h" desc="ARM limits license"/>
