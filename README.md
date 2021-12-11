@@ -156,12 +156,12 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
 ## 安装arm-none-eabi-gcc `<a name="section12202192215415"></a>`
 
 1. 打开Linux编译服务器终端。
-2. 下载[arm-none-eabi-gcc 编译工具下载](https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2)
-3. 解压 [gcc-arm-bi-9-2019-q4-major-x86_64-linux.tar.bz2](https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2) 安装包至\~/toolchain/路径下。
+2. 下载[arm-none-eabi-gcc 编译工具下载](https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2)
+3. 解压 [gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2](https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2) 安装包至\~/toolchain/路径下。
 
    ```shell
    mkdir -p ~/toolchain/
-   tar -zxvf gcc-arm-bi-9-2019-q4-major-x86_64-linux.tar.bz2 -C ~/toolchain/
+   tar -zxvf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C ~/toolchain/
    ```
 4. 设置环境变量。
 
@@ -172,7 +172,7 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
    将以下命令拷贝到.bashrc文件的最后一行，保存并退出。
 
    ```
-   export PATH=~/toolchain/gcc-arm-none-eabi-9-2019-q4-major/bin:$PATH
+   export PATH=~/toolchain/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH
    ```
 5. 生效环境变量。
 
