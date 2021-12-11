@@ -132,10 +132,10 @@ chmod a+x tools/build_best2600w_ohos_into_lib.sh
 
 tools/build_best2600w_ohos_into_lib.sh \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
--m="$OPT_BEST2600W_LITEOS_MAIN $rel_filter $rel_flash_config $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
+-m="$OPT_BEST2600W_LITEOS_MAIN NO_LIBC=1 $rel_filter $rel_flash_config $flash_config NO_LIBC=1 MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
 -c="$OPT_BEST2600W_LITEOS_CP $build_type $flash_config " \
 -s="$OPT_BEST2600W_LITEOS_MAIN_MINI_SE $build_type" \
--l="$OPT_BEST2600W_LITEOS_MINI $rel_flash_config $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
+-l="$OPT_BEST2600W_LITEOS_MINI NO_LIBC=1 $rel_flash_config $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
 -x="$OPT_BEST2600W_LITEOS_BOOT1 $build_type" \
 -y="$OPT_BEST2600W_LITEOS_BOOT2A $build_type" \
 -d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys $rel_branch BUILD_PIECE=$BUILD_PIECE" \
