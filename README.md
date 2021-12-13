@@ -105,12 +105,12 @@ device/soc/
 1. 获取源码
 2. 安装的库和工具
 3. 安装python3
-4. 安装arm-none-eabi-gcc
-5. 安装hb
+4. 安装hb
+5. 安装arm-none-eabi-gcc
 6. 编译流程
-7. 烧录
+7. 烧录打印
 
-## 获取代码流程
+## 获取源码
 
 ```shell
 mkdir openharmony_bestechnic
@@ -126,7 +126,7 @@ repo forall -c 'git lfs pull'
 
 ## 安装的库和工具
 
-> - 通常系统默认安装samba、vim等常用软件
+> - 通常系统默认安装samba、vim等常用软件。
 
 > - 使用如下apt-get命令安装下面的库和工具：
 
@@ -134,7 +134,7 @@ repo forall -c 'git lfs pull'
 sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg-config flex bison perl bc openssl libssl-dev libelf-dev libc6-dev-amd64 binutils binutils-dev libdwarf-dev u-boot-tools mtd-utils gcc-arm-linux-gnueabi
 ```
 
-## 安装Python3`<a name="section1238412211211"></a>`
+## 安装Python3
 
 1. 打开Linux编译服务器终端。
 2. 输入如下命令，查看python版本号：
@@ -174,8 +174,8 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
      python get-pip.py
      ```
 
-## 安装hb`<a name="section15794154618411"></a>`
-### 安装方法`<a name="section11518484814"></a>`
+## 安装hb
+### 安装方法
 
 1. 运行如下命令安装hb
 
@@ -217,7 +217,7 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
      -h, --help            show this help message and exit
    ```
 
-## 安装arm-none-eabi-gcc `<a name="section12202192215415"></a>`
+## 安装arm-none-eabi-gcc
 
 1. 打开Linux编译服务器终端。
 2. 下载[arm-none-eabi-gcc 编译工具下载](https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2)
@@ -264,14 +264,17 @@ hb build -f
 
 ## 烧录打印
 
-1. windows10 安装uart 串口驱动 [CP2102usbqd](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)
-2. 把 out/bes2600w/`<product name>`/write_flash_gui-`<timestamp>`.tar.gz 拷贝到windows 环境解压
-3. 双击 write_flash_gui-`<timestamp>`/write_flash_gui/Wifi_download_main.exe
-4. 点击串口列表![](./bes2600/burn_tools/write_flash_gui/images/fileset.png) 点击 list 按钮勾选弹出来的串口，然后点击ok
-5. 点击开始烧录![](./bes2600/burn_tools/write_flash_gui/images/start.png) 等待烧录
-6. 模组 单击 reset 或者 power 进行烧录
-7. 打开串口工具，reset 或者power 按键启动板子，查看log
+1. windows10 安装uart 串口驱动 [CP2102usbqd](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)。
+2. 把 out/bes2600w/`<product name>`/write_flash_gui-`<timestamp>`.tar.gz 拷贝到windows 环境解压。
+3. 双击 write_flash_gui-`<timestamp>`/write_flash_gui/Wifi_download_main.exe。
+4. 点击串口列表![](./bes2600/burn_tools/write_flash_gui/images/fileset.png) 点击 list 按钮勾选弹出来的串口，然后点击ok。
+5. 点击开始烧录![](./bes2600/burn_tools/write_flash_gui/images/start.png) 等待烧录。
+6. 模组 单击 reset按钮（详见板子的按钮）进行烧录,烧录成功图形界面会显示success,反之显示fail。
+7. 打开串口工具，reset 或者power 按键（详见板子的按钮) 启动板子，查看log。
+```
+
+```
 
 # 相关仓
 
-* [device/bestechnic](https://gitee.com/openharmony-sig/device_bestechnic)
+* [device/soc/bestechnic](https://gitee.com/openharmony-sig/device_bestechnic)
