@@ -2,16 +2,108 @@
 
 #### 介绍
 
-以下内容步骤参考[quickstart-lite-env-setup-linux](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/quick-start/quickstart-lite-env-setup-linux.md)
+##### 目录
 
-仓库包含编译构建脚本和打包镜像工具
+```
+device/soc/
+├── bes2600                               # 芯片SOC名称
+│   ├── burn_tools                        # 烧录工具包目录
+│   │   ├── auto_build_tool               # 生成hash和signature文件目录
+│   │   ├── release                       # 未生成hash和signature文件目录
+│   │   ├── tools                         # 处理烧录bin和烧录包的工具目录
+│   │   └── write_flash_gui               # 基础烧录包的目录
+│   └── liteos_m                          # 基于liteos_m的bsp适配目录
+│       ├── components                    # 组件服务层代码目录
+│       │   ├── drivers                   # 驱动适配目录
+│       │   ├── fs                        # 文件系统适配目录
+│       │   ├── hdf_config                # hcs配置文件目录
+│       │   ├── net                       # 升级ui界面代码目录
+│       │   ├── ui                        # net的适配代码目录
+│       │   └── utils                     # 组件系统适配目录
+│       └── sdk                           # sdk模块的目录
+│           ├── bsp                       # bes2600w编译bsp目录
+│           └── tools                     # 编译bsp使用的脚本和宏配置目录
+├── hals                                  # hals适配目录 
+│   └── communication                     # 连接类接口适配目录
+│       └── wifi_lite                     # 轻量级wifi适配目录
+├── Kconfig.liteos_m.defconfig.bes2600w   # bes2600w kconfig 默认宏配置
+├── Kconfig.liteos_m.series               # bes2600系列soc配置宏
+└── Kconfig.liteos_m.soc                  # soc kconfig配置宏
+```
 
-系统要求：Ubuntu16.04 和 Ubuntu18.04 64位系统版本。
+整个编译框架如下：
+
+```
+#                                    +-----------------+
+#                                    | topographic map |
+#                                    +-----------------+
+# topographic map descripe how to generate write_flash_gui.tar.gz, according to depends rules.
+#
+#                               +-----------------------------+
+#                       +-----> |    copy_${exe_bin}_to_gui   |
+#                       |       +-----------------------------+
+#                       |       +-----------------------------+
+#                       +-----> |   copy_${fs_name}_to_gui    |
+# +---------------+     |       +-----------------------------+
+# | pack_flash_gui|---> +
+# +---------------+     |       +-----------------------------+
+#                       +-----> | copy_${bsp_bin_name}_to_gui |
+#                       |       +-----------------------------+
+#                       |       +-----------------------------+     +-----------------+
+#                       +-----> | update_${product_name}_yaml | --> | init_burn_tools |
+#                               +-----------------------------+     +-----------------+
+#                                                                                             +--------------------+     +---------+
+#                                                                                             | gen_bin_${exe_bin} | --> | exe_bin |
+# excutable bin topographic map:                                                              +--------------------+     +---------+
+#                             +--------+                  +-------------------------------+   /                                |
+#                             | no sig | ---------------> | copy_${exe_bin}_to_relase_bin | -+                                \|/
+#                             +--------+                  +-------------------------------+   \                                V
+# +------------------------+   /                                ^                              +-----------------+  +------------------------+
+# | copy_${exe_bin}_to_gui | -+                                /|\                             | init_burn_tools |  | gen_bsp_lib_${exe_bin} |
+# +------------------------+   \                                |                              +-----------------+  +------------------------+
+#                             +--------+     +--------------------------+                                                       |
+#                             |  sig   | --> | gen_bin_${burn_name}_sig |                                                      \|/
+#                             +--------+     +--------------------------+                                                       V
+#                                                                                                                    +--------------------+
+#                                                                                                                    | build_sdk_into_lib |
+#                                                                                                                    +--------------------+
+#
+# fs bin topographic map:
+#                             +--------+         +------------------+   +-----------------+
+#                             | no sig | ------> | genfs_${fs_name} |-->| init_burn_tools |
+#                             +--------+         +------------------+   +-----------------+
+# +------------------------+   /                         ^
+# | copy_${fs_name}_to_gui | -+                         /|\
+# +------------------------+   \                         |
+#                             +--------+     +----------------------+
+#                             |  sig   | --> | genfs_${fs_name}_sig |
+#                             +--------+     +----------------------+
+#
+# bsp bin topographic map:
+#                                                                                               +--------------------+
+#                                                                                               | build_sdk_into_lib |
+#                                                                                               +--------------------+
+#                                  +--------+         +------------------------------------+   /
+#                                  | no sig | ------> | copy_${bsp_bin_name}_to_relase_bin | -+
+#                                  +--------+         +------------------------------------+   \
+# +------------------------------+   /                         ^                                +-----------------+
+# | copy_${bsp_bin_name}_to_gui  | -+                         /|\                               | init_burn_tools |
+# +------------------------------+   \                         |                                +-----------------+
+#                                  +--------+     +------------------------------+
+#                                  |  sig   | --> | gen_bsp_bin_${burn_name}_sig |
+#                                  +--------+     +------------------------------+
+```
+
+以下内容步骤参考[quickstart-lite-env-setup-linux](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/quick-start/quickstart-lite-env-setup-linux.md)。
+
+仓库包含编译构建脚本和打包镜像工具。
+
+系统要求： Ubuntu18.04 64位系统版本。
 
 编译环境搭建包含如下几步：
 
 1. 获取源码
-2. 安装必要的库和工具
+2. 安装的库和工具
 3. 安装python3
 4. 安装arm-none-eabi-gcc
 5. 安装hb
@@ -25,18 +117,18 @@ mkdir openharmony_bestechnic
 
 cd openharmony_bestechnic
 
-repo init -u https://gitee.com/openharmony-sig/manifest.git -m devboard_bestechnic.xml --no-repo-verify
+repo init -u https://gitee.com/openharmony-sig/manifest  -b master -m devboard_fnlink_soc_bestechnic.xml --no-repo-verify
 
 repo sync -c
 
 repo forall -c 'git lfs pull'
 ```
 
-## 安装必要的库和工具
+## 安装的库和工具
 
-> - 通常系统默认安装samba、vim等常用软件，需要做适当适配以支持Linux服务器与Windows工作台之间的文件共享。
+> - 通常系统默认安装samba、vim等常用软件
 
-> - 使用如下apt-get命令安装编译所需的必要的库和工具：
+> - 使用如下apt-get命令安装下面的库和工具：
 
 ```
 sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg-config flex bison perl bc openssl libssl-dev libelf-dev libc6-dev-amd64 binutils binutils-dev libdwarf-dev u-boot-tools mtd-utils gcc-arm-linux-gnueabi
@@ -50,40 +142,17 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
    ```
    python3 --version
    ```
-
-   如果低于python3.7版本，不建议直接升级，请按照如下步骤重新安装。以python3.8为例，按照以下步骤安装python。
-
    1. 运行如下命令，查看Ubuntu版本：
 
    ```
    cat /etc/issue
    ```
 
-   1. 根据Ubuntu不同版本，安装python。
-      - 如果Ubuntu 版本为18+，运行如下命令。
-
-        ```
-        sudo apt-get install python3.8
-        ```
-      - 如果Ubuntu版本为16。
-
-        a. 安装依赖包
-
-        ```
-        sudo apt update && sudo apt install software-properties-common
-        ```
-
-        b. 添加deadsnakes PPA 源，然后按回车键确认安装。
-
-        ```
-        sudo add-apt-repository ppa:deadsnakes/ppa
-        ```
-
-        c. 安装python3.8
-
-        ```
-        sudo apt upgrade && sudo apt install python3.8
-        ```
+   2. ubuntu 18安装python。
+   ```
+   sudo apt-get install python3.8
+   ```
+      
 3. 设置python和python3软链接为python3.8。
 
    ```
@@ -106,17 +175,12 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
      ```
 
 ## 安装hb`<a name="section15794154618411"></a>`
-
-### 前提条件`<a name="section1083283711515"></a>`
-
-请先安装Python 3.7.4及以上版本，请见[安装Python3](#section1238412211211)。
-
 ### 安装方法`<a name="section11518484814"></a>`
 
 1. 运行如下命令安装hb
 
    ```
-   python3 -m pip install --user ohos-build
+   pip3 install build/lite
    ```
 2. 设置环境变量
 
@@ -191,10 +255,11 @@ hb set -p
 bestechnic
  > display_demo
    iotlink_demo
+   xts_demo
 
 选择display_demo
 
-hb build -f --patch
+hb build -f
 ```
 
 ## 烧录打印
@@ -206,3 +271,7 @@ hb build -f --patch
 5. 点击开始烧录![](./bes2600/burn_tools/write_flash_gui/images/start.png) 等待烧录
 6. 模组 单击 reset 或者 power 进行烧录
 7. 打开串口工具，reset 或者power 按键启动板子，查看log
+
+# 相关仓
+
+* [device/bestechnic](https://gitee.com/openharmony-sig/device_bestechnic)
