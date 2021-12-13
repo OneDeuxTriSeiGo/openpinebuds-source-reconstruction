@@ -7,25 +7,25 @@
 ```
 device/soc/
 ├── bes2600                               # 芯片SOC名称
-│   ├── burn_tools                       # 烧录工具包目录
-│   │   ├── auto_build_tool             # 生成hash和signature文件目录
-│   │   ├── release                     # 未生成hash和signature文件目录
-│   │   ├── tools                       # 处理烧录bin和烧录包的工具目录
-│   │   └── write_flash_gui             # 基础烧录包的目录
-│   └── liteos_m                         # 基于liteos_m的bsp适配目录
-│       ├── components                   # 组件服务层代码目录
-│       │   ├── drivers                 # 驱动适配目录
-│       │   ├── fs                      # 文件系统适配目录
-│       │   ├── hdf_config              # hcs配置文件目录
-│       │   ├── net                     # 升级ui界面代码目录
-│       │   ├── ui                      # net的适配代码目录
-│       │   └── utils                   # 组件系统适配目录
-│       └── sdk                          # sdk模块的目录
-│           ├── bsp                      # bes2600w编译bsp目录
-│           └── tools                    # 编译bsp使用的脚本和宏配置目录
+│   ├── burn_tools                        # 烧录工具包目录
+│   │   ├── auto_build_tool               # 生成hash和signature文件目录
+│   │   ├── release                       # 未生成hash和signature文件目录
+│   │   ├── tools                         # 处理烧录bin和烧录包的工具目录
+│   │   └── write_flash_gui               # 基础烧录包的目录
+│   └── liteos_m                          # 基于liteos_m的bsp适配目录
+│       ├── components                    # 组件服务层代码目录
+│       │   ├── drivers                   # 驱动适配目录
+│       │   ├── fs                        # 文件系统适配目录
+│       │   ├── hdf_config                # hcs配置文件目录
+│       │   ├── net                       # 升级ui界面代码目录
+│       │   ├── ui                        # net的适配代码目录
+│       │   └── utils                     # 组件系统适配目录
+│       └── sdk                           # sdk模块的目录
+│           ├── bsp                       # bes2600w编译bsp目录
+│           └── tools                     # 编译bsp使用的脚本和宏配置目录
 ├── hals                                  # hals适配目录
-│   └── communication                    # 连接类接口适配目录
-│       └── wifi_lite                    # 轻量级wifi适配目录
+│   └── communication                     # 连接类接口适配目录
+│       └── wifi_lite                     # 轻量级wifi适配目录
 ├── Kconfig.liteos_m.defconfig.bes2600w   # bes2600w kconfig 默认宏配置
 ├── Kconfig.liteos_m.series               # bes2600系列soc配置宏
 └── Kconfig.liteos_m.soc                  # soc kconfig配置宏
