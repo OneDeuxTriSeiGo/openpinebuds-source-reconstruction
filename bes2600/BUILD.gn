@@ -159,6 +159,7 @@ if (ohos_kernel_type == "liteos_m") {
         libs += [ "bsp${bsp_target_name}" ]
 
         deps += [ "//build/lite:ohos" ]
+        deps += [ "//build/lite:product" ]
       }
 
       # link target lib into bin
