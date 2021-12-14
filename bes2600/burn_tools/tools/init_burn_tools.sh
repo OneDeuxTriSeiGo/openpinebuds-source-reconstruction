@@ -15,6 +15,8 @@
 gui_path_src=$1
 gui_path_dest=$2
 
+wget -P ${gui_path_dest} https://downloads.openharmony.cn/tools/bestechnic/burn_tools_v1.0.tar.gz
+tar -zxvf ${gui_path_dest}/burn_tools_v1.0.tar.gz -C ../
 mkidr -p ${gui_path_dest}/auto_build_tool/hash_sig
 mkdir -p ${gui_path_dest}/release_bin
 cp -rf ${gui_path_src}/write_flash_gui ${gui_path_dest}

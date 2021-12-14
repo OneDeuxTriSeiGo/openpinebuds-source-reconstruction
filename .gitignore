@@ -102,9 +102,9 @@ Build dir
 # *.bin
 *.yaml
 
-bes2600/burn_tools/release_bin/*.bin
-bes2600/burn_tools/write_flash_gui/ota_bin/*.bin
-bes2600/burn_tools/write_flash_gui/*.yaml
+bes2600/burn_tools/release_bin
+bes2600/burn_tools/write_flash_gui
+es2600/burn_tools/auto_build_tool
 bes2600/liteos_m/sdk/bsp/out/best2600w_liteos/bsp.mri
 bes2600/liteos_m/sdk/bsp/out/best2600w_liteos/*.bin
 bes2600/liteos_m/sdk/bsp/out/best2600w_liteos/*.bin
