@@ -104,7 +104,8 @@ Build dir
 
 bes2600/burn_tools/release_bin
 bes2600/burn_tools/write_flash_gui
-es2600/burn_tools/auto_build_tool
+bes2600/burn_tools/auto_build_tool
+bes2600/*.tar.gz
 bes2600/liteos_m/sdk/bsp/out/best2600w_liteos/bsp.mri
 bes2600/liteos_m/sdk/bsp/out/best2600w_liteos/*.bin
 bes2600/liteos_m/sdk/bsp/out/best2600w_liteos/*.bin
