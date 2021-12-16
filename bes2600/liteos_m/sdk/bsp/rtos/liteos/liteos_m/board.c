@@ -69,8 +69,11 @@ VOID HalConsoleOutput(LogModuleType type, INT32 level, const CHAR *fmt, ...)
         hal_trace_output(buffer,strlen((const char*)buffer));
 }
 
-#ifndef CP_BUILD
+#if !defined(CP_BUILD) && (LOSCFG_BACKTRACE_TYPE > 0)
 #define OS_EXC_HOOK
+#endif
+
+#ifdef OS_EXC_HOOK
 extern uint32_t __flashx_text_start__[];
 extern uint32_t __flashx_text_end__[];
 extern uint32_t __boot_sram_start__[];
@@ -378,7 +381,7 @@ void platform_tick_handler(void)
 
 void os_vector_init(void)
 {
-#ifndef CP_BUILD
+#ifdef OS_EXC_HOOK
     OS_VECTOR_SET(2, HalExcNMI);
     OS_VECTOR_SET(3, HalExcHardFault);
     OS_VECTOR_SET(4, HalExcMemFault);
@@ -408,6 +411,7 @@ __WEAK void OHOS_SystemInit(void)
 __WEAK int OhosSystemAdapterHooks(void)
 {
     printf("%s stub function!\r\n",__FUNCTION__);
+    return 0;
 }
 #endif
 #else
@@ -422,8 +426,10 @@ extern int platform_io_cfg(uint32_t fem_idx, uint32_t pa_en_idx);
 #ifndef __NO_APP__
 void board_main(const void * arg)
 {
+#if defined(RF_TX_CONTROL_IO) || defined(PA_ENABLE_IO)
     uint32_t rf_tx_io = 0;
     uint32_t pa_enable_io = -1;
+#endif
     UINTPTR intSave;
     intSave = LOS_IntLock();
     os_post_init_hook();
@@ -434,13 +440,13 @@ void board_main(const void * arg)
     LOS_IntRestore(intSave);
     platform_init_step0(0);
 #ifdef RF_TX_CONTROL_IO
-	rf_tx_io = RF_TX_CONTROL_IO;
+    rf_tx_io = RF_TX_CONTROL_IO;
 #endif
 #ifdef PA_ENABLE_IO
-	pa_enable_io = PA_ENABLE_IO;
+    pa_enable_io = PA_ENABLE_IO;
 #endif
 #if defined(RF_TX_CONTROL_IO) || defined(PA_ENABLE_IO)
-	platform_io_cfg(rf_tx_io, pa_enable_io);
+    platform_io_cfg(rf_tx_io, pa_enable_io);
 #endif
     int ret = platform_init_step1(0);
 
@@ -535,7 +541,7 @@ __attribute__((naked)) void software_init_hook (void) {
 #endif
 
 
-#ifdef LITEOS_WRAP_MALLOC
+#ifndef OHOS_WRAP_MALLOC
 void *__wrap_malloc(size_t size)
 {
     return LOS_MemAlloc(OS_SYS_MEM_ADDR, size);
