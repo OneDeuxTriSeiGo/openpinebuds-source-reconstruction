@@ -69,6 +69,7 @@ extern int add_cmd_to_list(const cmd_tbl_t *cmd);
 int do_help(cmd_tbl_t *cmd, int argc, char *argv[]);
 extern int cmd_get_data_size(const char *arg, int default_size);
 int get_at_cmd_echo();
+void console_task_start(void);
 #ifdef __cplusplus
 }
 #endif
