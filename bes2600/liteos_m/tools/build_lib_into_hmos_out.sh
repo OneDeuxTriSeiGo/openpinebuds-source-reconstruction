@@ -29,7 +29,9 @@ if [ ! -f $MAKEFILE ]; then
     BUILD_PIECE="true"
     rel_flash_config=" CP_BIN_NAME=cmcp_${flash_size}  "
 fi
-if [ x${flash_size} == "x32" ]; then
+
+
+if [ "x${flash_size}" == "x32" ]; then
     flash_config=" PSRAM_XCCELA_MODE=1 "
 fi
 

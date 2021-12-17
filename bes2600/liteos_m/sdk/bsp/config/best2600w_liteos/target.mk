@@ -74,6 +74,7 @@ filter-out-file += platform/hal/hal_trace.c
 filter-out-file += platform/hal/hal_trace_mod.c
 filter-out-file += platform/hal/hal_uart.c
 filter-out-file += platform/hal/hal_wdt.c
+filter-out-file += platform/hal/hal_psram_v2.c
 
 endif
 export BGA_TX_TEST ?= 1
@@ -329,6 +330,11 @@ export IGNORE_POWER_ON_KEY_DURING_BOOT_UP ?= 0
 export USER_SECURE_BOOT	?= 0
 # enable:1
 # disable:0
+
+export DEBUG_SPP_LOG ?= 0
+ifeq ($(DEBUG_SPP_LOG),1)
+KBUILD_CFLAGS += -DDEBUG_SPP_LOG
+endif
 
 WATCHER_DOG ?= 0
 

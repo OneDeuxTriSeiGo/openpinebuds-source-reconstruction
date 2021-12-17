@@ -534,13 +534,13 @@ static void hal_trace_cpipc_xfer_done(void *param)
 
 #ifdef CP_BOOT
 #define CP_TRACE_TAG "CP:"
-static HAL_TRACE_PRINTF_HOOK_T _hal_trace_printf_cp_hook = NULL;
-void hal_trace_register_cp_hook(HAL_TRACE_PRINTF_HOOK_T hook)
+static HAL_TRACE_OUTPUT_HOOK_T _hal_trace_printf_cp_hook = NULL;
+void hal_trace_register_cp_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
 {
     _hal_trace_printf_cp_hook = hook;
 }
 
-void hal_trace_unregister_cp_hook(HAL_TRACE_PRINTF_HOOK_T hook)
+void hal_trace_unregister_cp_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
 {
     if (_hal_trace_printf_cp_hook == hook) {
         _hal_trace_printf_cp_hook = NULL;
@@ -1701,13 +1701,13 @@ static inline int hal_trace_format_va(uint32_t attr, char *buf, unsigned int siz
     return len;
 }
 
-static HAL_TRACE_PRINTF_HOOK_T _hal_trace_printf_hook = NULL;
-void hal_trace_register_hook(HAL_TRACE_PRINTF_HOOK_T hook)
+static HAL_TRACE_OUTPUT_HOOK_T _hal_trace_printf_hook = NULL;
+void hal_trace_register_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
 {
     _hal_trace_printf_hook = hook;
 }
 
-void hal_trace_unregister_hook(HAL_TRACE_PRINTF_HOOK_T hook)
+void hal_trace_unregister_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
 {
     if (_hal_trace_printf_hook == hook) {
         _hal_trace_printf_hook = NULL;
@@ -1719,6 +1719,28 @@ int hal_trace_printf_hook(const char *tag, const char *fmt, uint32_t len)
     int ret = 0;
     if (_hal_trace_printf_hook) {
         ret = _hal_trace_printf_hook(tag, fmt, len);
+    }
+    return ret;
+}
+
+static HAL_TRACE_PRINTF_HOOK_T _hal_trace_printf_hook2 = NULL;
+void hal_trace_printf_register_hook(HAL_TRACE_PRINTF_HOOK_T hook)
+{
+    _hal_trace_printf_hook2 = hook;
+}
+
+void hal_trace_printf_unregister_hook(HAL_TRACE_PRINTF_HOOK_T hook)
+{
+    if (_hal_trace_printf_hook2 == hook) {
+        _hal_trace_printf_hook2 = NULL;
+    }
+}
+
+int hal_trace_printf_hook2(const char *tag, const char *fmt, va_list ap)
+{
+    int ret = 0;
+    if (_hal_trace_printf_hook2) {
+        ret = _hal_trace_printf_hook2(tag, fmt, ap);
     }
     return ret;
 }
@@ -1744,6 +1766,14 @@ static int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
     if (get_hal_trace_onoff()){
         return 0;
     }
+
+#ifndef __ARM_ARCH_ISA_ARM
+    if (!in_isr()) {
+        if (hal_trace_printf_hook2(NULL, fmt, ap)) {
+            return 1;
+        }
+    }
+#endif
 
     int len = 0;
     enum TR_LEVEL_T level;
@@ -3921,12 +3951,18 @@ void hal_trace_print_a7_flush(int onoff)
 
 void hal_trace_print_a7(const unsigned char *buf, unsigned int buf_len)
 {
+    va_list ap;
+
     if (get_hal_trace_onoff() == 1)
     {
         return;
     }
 
     if (hal_trace_printf_hook(NULL, (const char *)buf, buf_len)) {
+        return;
+    }
+
+    if (hal_trace_printf_hook2(NULL, NULL, ap)) {
         return;
     }
 
