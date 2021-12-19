@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-gui_path_src=$1
-gui_path_dest=$2
+fs_name=$1
+out_path=$1
+fs_path="${out_path}release_bin"
+fs_sig_path="${out_path}auto_build_tool/hash_sig"
 
-if [ ! -d "write_flash_gui/" ];then
-    wget -P ./../ https://downloads.openharmony.cn/tools/bestechnic/burn_tools_v1.0.tar.gz
-    tar -zxvf ./../burn_tools_v1.0.tar.gz -C ../
-fi
-mkidr -p ${gui_path_dest}/auto_build_tool/hash_sig
-mkdir -p ${gui_path_dest}/release_bin
-cp -rf ${gui_path_src}/write_flash_gui ${gui_path_dest}
+# gen hash of fs
+./gen_hash_of_littlefs ${fs_path}/${fs_name}.bin
+mv ${fs_path}/${fs_name}_hash.bin ${fs_sig_path}/
+
+# todo implment sigature

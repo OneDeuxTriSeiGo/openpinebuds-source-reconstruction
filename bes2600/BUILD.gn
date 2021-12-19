@@ -83,8 +83,8 @@ if (ohos_kernel_type == "liteos_m") {
   out_product_path = "${ohos_root_path}out/${board_name}/${product_name}"
 
   build_ext_component("init_burn_tools") {
-    exec_path = rebase_path("burn_tools")
-    command = "./tools/init_burn_tools.sh ./ ${out_product_path}"
+    exec_path = rebase_path("pack_tools")
+    command = "./init_burn_tools.sh ./../../ ${out_product_path} ${product_path}"
   }
 
   # build sdk into lib
@@ -190,8 +190,8 @@ if (ohos_kernel_type == "liteos_m") {
       if (bin_sig == "true") {
         gen_bin_name_sig = "gen_bin_${burn_name}_sig"
         build_ext_component(gen_bin_name_sig) {
-          exec_path = rebase_path("burn_tools")
-          command = "./tools/sig_bin.sh ${burn_name}"
+          exec_path = rebase_path("pack_tools")
+          command = "./sig_bin.sh ${burn_name} ${out_product_path}"
           deps = [ ":${copy_burn_bin_name}" ]
         }
       }
@@ -232,8 +232,8 @@ if (ohos_kernel_type == "liteos_m") {
       bsp_path = rebase_path("liteos_m") + "/sdk/bsp"
       print("bsp_path:", bsp_path)
       build_ext_component(gen_fs_name) {
-        exec_path = rebase_path("burn_tools")
-        command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name} ${bsp_path}"
+        exec_path = rebase_path("pack_tools")
+        command = "./genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name} ${bsp_path}"
         deps = [ ":init_burn_tools" ]
       }
 
@@ -242,8 +242,8 @@ if (ohos_kernel_type == "liteos_m") {
       if (fs_sig == "true") {
         gen_fs_name_sig = "genfs_${fs_name}_sig"
         build_ext_component(gen_fs_name_sig) {
-          exec_path = rebase_path("burn_tools")
-          command = "./tools/sig_fs.sh ${fs_name}"
+          exec_path = rebase_path("pack_tools")
+          command = "./sig_fs.sh ${fs_name} ${out_product_path}"
           deps = [ ":${gen_fs_name}" ]
         }
       }
@@ -292,8 +292,8 @@ if (ohos_kernel_type == "liteos_m") {
       if (bsp_bin_sig == "true") {
         gen_bsp_bin_name_sig = "gen_bsp_bin_${burn_name}_sig"
         build_ext_component(gen_bsp_bin_name_sig) {
-          exec_path = rebase_path("burn_tools")
-          command = "./sig_bin.sh ${burn_name}"
+          exec_path = rebase_path("pack_tools")
+          command = "./sig_bin.sh ${burn_name} ${out_product_path}"
           deps = [ ":${copy_burn_bin_name}" ]
         }
       }
@@ -327,8 +327,8 @@ if (ohos_kernel_type == "liteos_m") {
 
   # pack write flash gui to write_flash_gui-<time>.tar.gz
   build_ext_component("pack_flash_gui") {
-    exec_path = rebase_path("burn_tools")
-    command = "./tools/pack_burn_tools.sh ${out_product_path} ${pack_burn} ${product_name}"
+    exec_path = rebase_path("pack_tools")
+    command = "./pack_burn_tools.sh ${out_product_path} ${pack_burn} ${product_name}"
     deps = [ ":${update_product_yaml}" ]
 
     # bin configed from vendor/bestechnic/<product_name>/config.json

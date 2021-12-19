@@ -12,6 +12,9 @@
 # limitations under the License.
 
 import("//kernel/liteos_m/liteos.gni")
+
+module_switch = defined(LOSCFG_HALS_COMMUCATION_WIFI_LITE)
+
 module_name = get_path_info(rebase_path("."), "name")
 kernel_module(module_name) {
   sources = [
