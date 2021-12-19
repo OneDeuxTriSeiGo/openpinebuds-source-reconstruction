@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bin_name=$1
-bin_path="./release_bin"
-bin_sig_path="./auto_build_tool/hash_sig"
-
-# gen hash of fs
-./tools/gen_hash_of_bin ${bin_path}/${bin_name}.bin
-mv ${bin_path}/${bin_name}_hash.bin ${bin_sig_path}/
-
-# todo implment sigature
+gui_path_src=$1
+gui_path_dest=$2
+product_path=$3
+if [ ! -d "./../../write_flash_gui/" ];then
+    wget -P ${gui_path_src}/ https://downloads.openharmony.cn/tools/bestechnic/write_flash_gui_v1.0.tar.gz
+    cd ${gui_path_src}/
+    tar -zxvf write_flash_gui_v1.0.tar.gz
+    cd -
+fi
+mkdir -p ${gui_path_dest}/auto_build_tool/hash_sig
+mkdir -p ${gui_path_dest}/release_bin
+cp -rf ${gui_path_src}/write_flash_gui ${gui_path_dest}

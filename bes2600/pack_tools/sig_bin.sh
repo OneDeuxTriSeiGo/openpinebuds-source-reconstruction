@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-fs_name=$1
-fs_path="./release_bin"
-fs_sig_path="./auto_build_tool/hash_sig"
+bin_name=$1
+out_path=$2
+bin_path="${out_path}release_bin"
+bin_sig_path="${out_path}auto_build_tool/hash_sig"
 
 # gen hash of fs
-./tools/gen_hash_of_littlefs ${fs_path}/${fs_name}.bin
-mv ${fs_path}/${fs_name}_hash.bin ${fs_sig_path}/
+./gen_hash_of_bin ${bin_path}/${bin_name}.bin
+mv ${bin_path}/${bin_name}_hash.bin ${bin_sig_path}/
 
 # todo implment sigature
