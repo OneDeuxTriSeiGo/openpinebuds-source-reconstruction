@@ -37,7 +37,7 @@ board_toolchain_prefix = "arm-none-eabi-"
 # Compiler type, "gcc" or "clang".
 board_toolchain_type = "gcc"
 
-flash_size = 32
+flash_size = 16
 
 # config.json parse
 if (product_path != "") {
@@ -70,7 +70,8 @@ board_cflags = [
     "-DCONFIG_DISPLAY_A064",
     "-DLFS_MAX_OPEN_DIRS=32",
     "-DLOSCFG_BASE_CORE_HILOG=1",
-    "-DMBEDTLS_CMSIS_FILE=\"rtos/liteos/liteos_m/kal/cmsis/cmsis_os.h\""
+    "-DMBEDTLS_CMSIS_FILE=\"rtos/liteos/liteos_m/kal/cmsis/cmsis_os.h\"",
+    "-DIFNAMSIZ=1024"
 ]
 
 board_cxx_flags = board_cflags
