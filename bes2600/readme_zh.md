@@ -90,5 +90,5 @@ device/soc/
 
 # 相关仓
 
-* [device/soc/bestechnic](https://gitee.com/openharmony-sig/device_soc_bestechnic)
+* [device/soc/bestechnic](https://gitee.com/openharmony/device_soc_bestechnic)
 
