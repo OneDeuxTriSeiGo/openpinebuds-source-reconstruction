@@ -167,6 +167,7 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
 1. 运行如下命令安装hb
 
    ```
+   pip3 uninstall ohos-build # 如果安装了hb,先卸载
    pip3 install build/lite
    ```
 2. 设置环境变量
