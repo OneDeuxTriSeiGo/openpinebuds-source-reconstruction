@@ -15,7 +15,7 @@
 #ifndef TOUCH_IF_H
 #define TOUCH_IF_H
 
-#include "hdf_platform.h"
+#include "platform_if.h"
 
 #ifdef __cplusplus
 extern "C" {
