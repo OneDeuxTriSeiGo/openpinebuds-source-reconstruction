@@ -212,7 +212,7 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
 
    ```shell
    mkdir -p ~/toolchain/
-   tar -zxvf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C ~/toolchain/
+   tar -jxvf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C ~/toolchain/
    ```
 4. 设置环境变量。
 
