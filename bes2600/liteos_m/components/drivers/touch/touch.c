@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 #include "touch.h"
-#include "hdf_platform.h"
+#include "platform_if.h"
 #include "hdf_log.h"
 
 struct TouchManager {
