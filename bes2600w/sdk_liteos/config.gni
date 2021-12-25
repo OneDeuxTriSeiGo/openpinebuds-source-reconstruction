@@ -82,6 +82,7 @@ board_ld_flags = [
     "-fdata-sections",
     "-mthumb",
     "-mthumb-interwork",
+     "-Wl,--wrap=printf",
     "-L${ohos_root_path}out/${board_name}/${product_name}/libs",
 ]
 
