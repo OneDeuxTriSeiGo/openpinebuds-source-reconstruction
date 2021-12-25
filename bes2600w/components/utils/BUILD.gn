@@ -22,6 +22,7 @@ static_library("sys_adapter") {
   sources = [
     "src/hm_sys.c",
     "src/platform.c",
+    "src/printf.c",
   ]
 
   public_configs = [ ":sys_adapter_config" ]
