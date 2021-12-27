@@ -40,8 +40,6 @@ extern "C" {
 #define OS_SYS_CLOCK            (1000UL)
 #else
 #if defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
-extern uint32_t hal_cmu_get_fast_timer_freq(void);
-#define CONFIG_FAST_SYSTICK_HZ  hal_cmu_get_fast_timer_freq()
 #define OS_SYS_CLOCK            CONFIG_FAST_SYSTICK_HZ
 #else
 #define OS_SYS_CLOCK            CONFIG_SYSTICK_HZ

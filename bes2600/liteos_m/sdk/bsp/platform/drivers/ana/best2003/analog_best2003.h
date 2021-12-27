@@ -23,6 +23,18 @@ extern "C" {
 
 #define MAX_ANA_MIC_CH_NUM                  3
 
+enum ANA_AUD_PLL_USER_T {
+    ANA_AUD_PLL_USER_CODEC      = (1 << 0),
+    ANA_AUD_PLL_USER_I2S        = (1 << 1),
+    ANA_AUD_PLL_USER_SPDIF      = (1 << 2),
+    ANA_AUD_PLL_USER_PCM        = (1 << 3),
+    ANA_AUD_PLL_USER_IIR        = (1 << 4),
+    ANA_AUD_PLL_USER_RS         = (1 << 5),
+
+    ANA_AUD_PLL_USER_END        = (1 << 6),
+};
+#define ANA_AUD_PLL_USER_T                  ANA_AUD_PLL_USER_T
+
 uint32_t analog_aud_get_max_dre_gain(void);
 
 int analog_debug_config_vad_mic(bool enable);

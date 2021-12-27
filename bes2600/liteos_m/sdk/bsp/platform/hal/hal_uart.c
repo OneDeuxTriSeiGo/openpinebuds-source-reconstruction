@@ -1469,6 +1469,11 @@ int hal_uart_printf_init(void)
      return hal_uart_open(UART_PRINTF_ID, &uart_cfg);
 }
 
+int hal_uart_get_port(void)
+{
+    return UART_PRINTF_ID;
+}
+
 void hal_uart_printf_output(const uint8_t *buf, uint32_t len)
 {
     uint32_t i;
