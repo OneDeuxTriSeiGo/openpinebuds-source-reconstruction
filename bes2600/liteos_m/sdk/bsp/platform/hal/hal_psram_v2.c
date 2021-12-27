@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(CHIP_HAS_PSRAM) && (CHIP_PSRAM_CTRL_VER >= 2)
+#if defined(CHIP_HAS_PSRAM) && (CHIP_PSRAM_CTRL_VER == 2 || CHIP_PSRAM_CTRL_VER == 3)
 
 #include "plat_types.h"
 #include "plat_addr_map.h"
+#include "cmsis.h"
 #include "hal_location.h"
 #include "hal_psram.h"
 #include "hal_timer.h"
@@ -45,15 +46,15 @@
 #endif
 
 #ifdef PSRAM_DEBUG
-#define PSRAM_TRACE TRACE_IMM
+    #define PSRAM_TRACE TRACE_IMM
 #else
-#define PSRAM_TRACE(...)
+    #define PSRAM_TRACE(...)
 #endif
 
 #ifdef PSRAM_DEBUG
-#define PSRAM_TRACENOCRLF_NOTS REL_TRACE_NOCRLF_NOTS
+    #define PSRAM_TRACENOCRLF_NOTS REL_TRACE_NOCRLF_NOTS
 #else
-#define PSRAM_TRACENOCRLF_NOTS(...)
+    #define PSRAM_TRACENOCRLF_NOTS(...)
 #endif
 
 #define TX_FIFO_DEPTH                       8
@@ -155,19 +156,19 @@ enum MEMIF_CMD_T {
     MEMIF_NEW_CMD       = 0x7F,
 };
 
-static struct PSRAM_MC_T * const psram_mc = (struct PSRAM_MC_T *)PSRAM_CTRL_BASE;
-static struct PSRAM_PHY_T * const psram_phy = (struct PSRAM_PHY_T *)(PSRAM_CTRL_BASE + 0x8000);
+static struct PSRAM_MC_T *const psram_mc = (struct PSRAM_MC_T *)PSRAM_CTRL_BASE;
+static struct PSRAM_PHY_T *const psram_phy = (struct PSRAM_PHY_T *)(PSRAM_CTRL_BASE + 0x8000);
 
 #ifdef FPGA
-static const uint32_t psram_cfg_clk = 20*1000*1000;
-static const uint32_t psram_run_clk = 20*1000*1000;
+    static const uint32_t psram_cfg_clk = 20 * 1000 * 1000;
+    static const uint32_t psram_run_clk = 20 * 1000 * 1000;
 #else /*FPGA*/
-#if (PSRAM_SPEED != 0)
-static const uint32_t psram_cfg_clk = 48*1000*1000;
-static const uint32_t psram_run_clk = PSRAM_SPEED*1000*1000;
-#else
-#error "invalid PSRAM_SPEED"
-#endif
+    #if (PSRAM_SPEED != 0)
+        static const uint32_t psram_cfg_clk = 48 * 1000 * 1000;
+        static const uint32_t psram_run_clk = PSRAM_SPEED * 1000 * 1000;
+    #else
+        #error "invalid PSRAM_SPEED"
+    #endif
 #endif /*FPGA*/
 
 static void psram_chip_timing_config(uint32_t clk, bool psram_first);
@@ -657,7 +658,7 @@ static void hal_psram_phy_wait_lock()
         if ((val_58 & PSRAM_ULP_PHY_DLL_LOCK))
             break;
 #ifndef PROGRAMMER
-        if (count++>20) {
+        if (count++ > 20) {
             if (GET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_VTUNE) == 0x2) {
                 val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_VTUNE, 0x1);
                 psram_phy->REG_048 = val;
@@ -676,6 +677,7 @@ static void hal_psram_phy_wait_lock()
     }
 }
 
+POSSIBLY_UNUSED
 static void hal_psram_init_calib(void)
 {
     uint32_t val;
@@ -689,7 +691,8 @@ static void hal_psram_init_calib(void)
 
     delay /= 2;
     psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(delay) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay) |
-        PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay);
+                         PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay);
+    hal_sys_timer_delay_us(100);
 }
 
 static void hal_psram_mc_init(uint32_t clk)
@@ -706,7 +709,7 @@ static void hal_psram_mc_init(uint32_t clk)
     val |= (PSRAM_ULP_PHY_IDLE_DQ_OEN | PSRAM_ULP_PHY_IDLE_DQS_OEN);
 #else /* PSRAM_SQPI_MODE */
     val |= PSRAM_ULP_MC_OPI_MODE;
-    val = SET_BITFIELD(val ,PSRAM_ULP_MC_CHIP_CA_PATTERN, 0x1);
+    val = SET_BITFIELD(val, PSRAM_ULP_MC_CHIP_CA_PATTERN, 0x1);
 #endif /* PSRAM_SQPI_MODE */
 #else /* CHIP_PSRAM_CTRL_VER == 2 */
 #if defined(PSRAM_DUAL_8BIT)
@@ -771,11 +774,6 @@ static void hal_psram_mc_init(uint32_t clk)
 
     psram_mc->REG_400 = PSRAM_ULP_MC_INIT_COMPLETE;
     hal_sys_timer_delay_us(100);
-
-#ifndef FPGA
-    hal_psram_init_calib();
-    hal_sys_timer_delay_us(100);
-#endif
 }
 
 void hal_psram_sleep(void)
@@ -787,11 +785,22 @@ void hal_psram_sleep(void)
 #endif
         hal_psramip_mc_busy_wait();
 #if CHIP_PSRAM_CTRL_VER >= 3
+#ifdef PSRAM_XCCELA_MODE
+        int val = psram_mc->REG_028;
+        psram_mc->REG_028 = PSRAM_ULP_MC_WRITE_LATENCY(1);
+        __DSB();
+        hal_psramip_mc_busy_wait();
+#endif /* PSRAM_XCCELA_MODE */
         psram_write_reg(0x6, 0xF0);
+        hal_psramip_mc_busy_wait();
+#ifdef PSRAM_XCCELA_MODE
+        psram_mc->REG_028 = val;
+        hal_psramip_mc_busy_wait();
+#endif /* PSRAM_XCCELA_MODE */
 #else
         hal_psramip_set_cmd(MEMIF_PD);
-#endif
         hal_psramip_mc_busy_wait();
+#endif
     }
     hal_psram_phy_sleep();
 }
@@ -830,7 +839,7 @@ static void psram_chip_timing_config(uint32_t clk, bool update_psram_first)
     hal_sys_timer_delay_us(500);
     hal_psram_phy_dll_config(clk);
 
-#ifndef FPGA
+#if !defined(FPGA) && !defined(SIMU)
     hal_psram_init_calib();
 #endif
     hal_psram_mc_set_timing(clk, false);
@@ -848,6 +857,25 @@ void hal_psram_snoop_enable()
 void hal_psram_snoop_disable()
 {
     psram_mc->REG_044 |= PSRAM_ULP_MC_SNP_DISABLE;
+}
+
+void hal_psram_write_buffer_invalidate(void)
+{
+    uint32_t level;
+    uint32_t start = hal_sys_timer_get();
+
+    __DSB();
+    do {
+        level = GET_BITFIELD(psram_mc->REG_404, PSRAM_ULP_MC_WB_FILL_LEVEL);
+        if (level == 0) {
+            break;
+        }
+    } while (hal_sys_timer_get() - start < MS_TO_TICKS(1));
+
+    ASSERT(level == 0, "%s: Drain timeout: level=%u status=0x%08X", __func__, level, psram_mc->REG_404);
+
+    psram_mc->REG_044 |= PSRAM_ULP_MC_WB_INVALID;
+    __DSB();
 }
 
 static void hal_psram_phy_restore_range(uint32_t range)
@@ -874,10 +902,15 @@ static void psram_mc_reset(uint32_t range)
     hal_psram_phy_init(psram_cfg_clk);
     hal_sys_timer_delay_us(30);
     hal_psram_mc_init(psram_cfg_clk);
+#if !defined(FPGA) && !defined(SIMU)
+    hal_psram_init_calib();
+#endif
     psram_reset();
     psram_chip_timing_config(psram_run_clk, true);
     hal_psram_phy_restore_range(range);
+#if !defined(FPGA) && !defined(SIMU)
     hal_psram_init_calib();
+#endif
 
     hal_psram_snoop_disable();
 }
@@ -900,6 +933,28 @@ POSSIBLY_UNUSED static bool psramphy_check_tx_ceb_valid(uint32_t range)
     }
     return true;
 }
+POSSIBLY_UNUSED static bool psramphy_check_tx_clk_valid(uint32_t range)
+{
+    uint32_t time;
+    uint32_t val;
+
+    time = hal_fast_sys_timer_get();
+    psram_mc->REG_01C = PSRAM_ULP_MC_MGR_TX_FIFO_CLR | PSRAM_ULP_MC_MGR_RX_FIFO_CLR;
+    hal_psramip_xfer_addr_len(0xAA55AA55, 1);
+    hal_psramip_set_cmd(MEMIF_READ);
+    while (hal_psramip_rx_fifo_empty()) {
+        if (FAST_TICKS_TO_US(hal_fast_sys_timer_get() - time) > 5) {
+            val = hal_psram_phy_read_reg(&psram_phy->REG_004);
+            val |= PSRAM_ULP_PHY_PHY_LOOPBACK_EN;
+            psram_phy->REG_004 = val;
+            while (hal_psramip_mc_busy());
+            val &= ~PSRAM_ULP_PHY_PHY_LOOPBACK_EN;
+            psram_phy->REG_004 = val;
+            return false;
+        }
+    }
+    return true;
+}
 static bool psramphy_check_write_valid()
 {
     uint32_t i;
@@ -908,33 +963,33 @@ static bool psramphy_check_write_valid()
     volatile uint32_t *psram_base = (volatile uint32_t *)PSRAM_NC_BASE;
     volatile uint32_t *psram_base1 = (volatile uint32_t *)(PSRAM_NC_BASE + 0x100000);
 
-    for (i=0; i<0x100; ++i) {
-        *(psram_base+i) = 0xffffffff;
-        *(psram_base1+i) = 0xffffffff;
+    for (i = 0; i < 0x100; ++i) {
+        *(psram_base + i) = 0xffffffff;
+        *(psram_base1 + i) = 0xffffffff;
     }
-    for (i=0; i<0x100; ++i) {
+    for (i = 0; i < 0x100; ++i) {
         val = i & 0xFF;
         val = val | (val << 8) | (val << 16) | (val << 24);
         val0 = (val & 0x00FF00FF) | ((~val) & 0xFF00FF00);
         val1 = (val & 0xFF0000FF) | ((~val) & 0x00FFFF00);
-        *(psram_base+i) = val0;
-        *(psram_base1+i) = val1;
+        *(psram_base + i) = val0;
+        *(psram_base1 + i) = val1;
     }
 
     hal_psramip_wb_busy_wait();
     hal_psramip_mc_busy_wait();
-    for (i=0; i<0x100; ++i) {
+    for (i = 0; i < 0x100; ++i) {
         val = i & 0xFF;
         val = val | (val << 8) | (val << 16) | (val << 24);
         val0 = (val & 0x00FF00FF) | ((~val) & 0xFF00FF00);
         val1 = (val & 0xFF0000FF) | ((~val) & 0x00FFFF00);
-        val2 = *(psram_base+i);
-        val3 = *(psram_base1+i);
-        if (val2 != val0){
+        val2 = *(psram_base + i);
+        val3 = *(psram_base1 + i);
+        if (val2 != val0) {
             //PSRAM_TRACE(3, "%s, i:%d, 0x%x, 0x%x", __FUNCTION__, i, val2, val0);
             return false;
         }
-        if (val3 != val1){
+        if (val3 != val1) {
             //PSRAM_TRACE(3, "%s, i:%d, 0x%x, 0x%x", __FUNCTION__, i, val3, val1);
             return false;
         }
@@ -944,15 +999,26 @@ static bool psramphy_check_write_valid()
 
 static void hal_psram_calib_range(uint32_t range)
 {
+    #define BUFFER_SIZE  0x20
     uint32_t val;
     uint32_t delay;
     POSSIBLY_UNUSED uint8_t tx_dqs, rx_dqs, tx_ceb, tx_clk;
     uint8_t inc_delay, volume;
     POSSIBLY_UNUSED int8_t left_bound;
     POSSIBLY_UNUSED int8_t right_bound;
-    bool cali_valid[0x20][0x20];
-    uint8_t cali_value[0x20][0x20];
-    POSSIBLY_UNUSED bool valid_array[0x20];
+    bool cali_valid[BUFFER_SIZE][BUFFER_SIZE];
+    uint8_t cali_value[BUFFER_SIZE][BUFFER_SIZE];
+    POSSIBLY_UNUSED bool valid_array[BUFFER_SIZE];
+
+#ifdef PSRAM_WINDOW_TEST
+    static int8_t last_left_bound = 0;
+    static int8_t last_right_bound = 0;
+    uint8_t dqs_point = 0;
+    uint8_t dqs_len = 0;
+    static uint8_t last_dqs_point = 0;
+    static uint8_t last_dqs_len = 0;
+    POSSIBLY_UNUSED static uint8_t cali_data[BUFFER_SIZE][BUFFER_SIZE];
+#endif
 
     ASSERT(range <= (PSRAM_ULP_PHY_REG_DLL_RANGE_MASK >> PSRAM_ULP_PHY_REG_DLL_RANGE_SHIFT), "ERROR, bad ana phy range:%d", range);
 
@@ -972,18 +1038,21 @@ static void hal_psram_calib_range(uint32_t range)
 
     val = hal_psram_phy_read_reg(&psram_phy->REG_058);
     if ((val & PSRAM_ULP_PHY_DLL_ALL_ONE)) {
-        PSRAM_TRACE(2, "%s: all one, increase range=%d", __func__, range+1);
-        return hal_psram_calib_range(range+1);
+        PSRAM_TRACE(2, "%s: all one, increase range=%d", __func__, range + 1);
+        return hal_psram_calib_range(range + 1);
     }
 
     delay = GET_BITFIELD(val, PSRAM_ULP_PHY_DLL_DLY_IN);
-    PSRAM_TRACE(4, "%s, range:%d, T/4 = 0x%x(psram_phy->REG_058:0x%x)", __func__, range, delay/2, val);
-    if (delay > (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK>>PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) && range<3) {
-        PSRAM_TRACE(2, "%s: bad delay (T/2 > 0x1f). increase range=%d", __func__, range+1);
-        return hal_psram_calib_range(range+1);
+    PSRAM_TRACE(4, "%s, range:%d, T/4 = 0x%x(psram_phy->REG_058:0x%x)", __func__, range, delay / 2, val);
+#ifdef PSRAM_WINDOW_TEST
+    TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", T/4=0x%02x", delay / 2);
+#endif
+    if (delay > (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) && range < 3) {
+        PSRAM_TRACE(2, "%s: bad delay (T/2 > 0x1f). increase range=%d", __func__, range + 1);
+        return hal_psram_calib_range(range + 1);
     }
 
-    inc_delay = delay/8;
+    inc_delay = delay / 8;
     if (inc_delay == 0)
         inc_delay = 1;
 
@@ -995,7 +1064,7 @@ static void hal_psram_calib_range(uint32_t range)
     tx_clk = (delay * 11 + 8) / 16;// t/4 + t/8 - t/32
 #endif
 
-    volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK>>PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+    volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
     //PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 
 #if 0
@@ -1004,116 +1073,180 @@ static void hal_psram_calib_range(uint32_t range)
     left_bound = -1;
     right_bound = -1;
     memset(valid_array, 0, sizeof(valid_array));
-    for (tx_ceb=0; tx_ceb<=volume; tx_ceb++) {
+    for (tx_ceb = 0; tx_ceb <= volume; tx_ceb++) {
         bool valid;
 
-        psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb*inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay/2) |
-            PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay/2) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay/2);
+        psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb * inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay / 2) |
+                             PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay / 2) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay / 2);
 
         valid = psramphy_check_tx_ceb_valid(range);
-        PSRAM_TRACE(3, "%s, tx_ceb:0x%x, valid:%d", __FUNCTION__, (tx_ceb*inc_delay), valid);
+        PSRAM_TRACE(3, "%s, tx_ceb:0x%x, valid:%d", __FUNCTION__, (tx_ceb * inc_delay), valid);
         valid_array[tx_ceb] = valid;
         if (tx_ceb == 0) {
             if (valid) {
                 left_bound = tx_ceb;
-                PSRAM_TRACE(1, "left_bound:0x%x", left_bound*inc_delay);
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
             }
-        } else if (tx_ceb==volume) {
+        } else if (tx_ceb == volume) {
             if (valid) {
                 right_bound = tx_ceb;//find right bound
-                PSRAM_TRACE(1, "right_bound:0x%x", right_bound*inc_delay);
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
             } else {
-                if (valid_array[tx_ceb-1]) {
-                    right_bound = tx_ceb-1;//find right bound
-                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound*inc_delay);
+                if (valid_array[tx_ceb - 1]) {
+                    right_bound = tx_ceb - 1; //find right bound
+                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
                 }
             }
         } else {
-            if (valid && !valid_array[tx_ceb-1]) {
+            if (valid && !valid_array[tx_ceb - 1]) {
                 left_bound = tx_ceb;//find left bound
-                PSRAM_TRACE(1, "left_bound:0x%x", left_bound*inc_delay);
-            } else if (!valid && valid_array[tx_ceb-1]) {
-                right_bound = tx_ceb-1;//find right bound
-                PSRAM_TRACE(1, "right_bound:0x%x", right_bound*inc_delay);
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            } else if (!valid && valid_array[tx_ceb - 1]) {
+                right_bound = tx_ceb - 1; //find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
                 break;
             }
         }
     }
-    if (left_bound!=-1 && right_bound!=-1) {// && (right_bound-left_bound>1)) {
-        tx_ceb = (left_bound+right_bound)/2;
-        PSRAM_TRACE(3, "cali tx_ceb done, tx_ceb:0x%x(0x%x-0x%x)", tx_ceb*inc_delay, left_bound*inc_delay, right_bound*inc_delay);
+    if (left_bound != -1 && right_bound != -1) { // && (right_bound-left_bound>1)) {
+        tx_ceb = (left_bound + right_bound) / 2;
+        PSRAM_TRACE(3, "cali tx_ceb done, tx_ceb:0x%x(0x%x-0x%x)", tx_ceb * inc_delay, left_bound * inc_delay, right_bound * inc_delay);
     } else {
         ASSERT(false, "ERROR, tx_ceb need do more cali");
     }
     tx_ceb *= inc_delay;
 #endif
 #if 0
-        //calibrate tx_clk
-        PSRAM_TRACE(0, "cali tx_clk");
-        left_bound = -1;
-        right_bound = -1;
-        memset(valid_array, 0, sizeof(valid_array));
-        for (tx_clk=0; tx_clk<=volume; tx_clk++) {
-            bool valid;
+    //calibrate tx_clk
+    PSRAM_TRACE(0, "cali tx_clk");
+    left_bound = -1;
+    right_bound = -1;
+    memset(valid_array, 0, sizeof(valid_array));
+    for (tx_clk = 0; tx_clk <= volume; tx_clk++) {
+        bool valid;
 
-            psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk*inc_delay) |
-                PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay/2) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay/2);
-            valid = psramphy_check_tx_ceb_valid(range);
-            //PSRAM_TRACE(3, "%s, tx_clk:0x%x, valid:%d", __FUNCTION__, (tx_clk*inc_delay), valid);
-            valid_array[tx_clk] = valid;
-            if (tx_clk == 0) {
-                if (valid) {
-                    left_bound = tx_clk;
-                    PSRAM_TRACE(1, "left_bound:0x%x", left_bound*inc_delay);
-                }
-            } else if (tx_clk==volume) {
-                if (valid) {
-                    right_bound = tx_clk;//find right bound
-                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound*inc_delay);
-                } else {
-                    if (valid_array[tx_clk-1]) {
-                        right_bound = tx_clk-1;//find right bound
-                        PSRAM_TRACE(1, "right_bound:0x%x", right_bound*inc_delay);
-                    }
-                }
+        psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk * inc_delay) |
+                             PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay / 2) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay / 2);
+        valid = psramphy_check_tx_ceb_valid(range);
+        //PSRAM_TRACE(3, "%s, tx_clk:0x%x, valid:%d", __FUNCTION__, (tx_clk*inc_delay), valid);
+        valid_array[tx_clk] = valid;
+        if (tx_clk == 0) {
+            if (valid) {
+                left_bound = tx_clk;
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            }
+        } else if (tx_clk == volume) {
+            if (valid) {
+                right_bound = tx_clk;//find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
             } else {
-                if (valid && !valid_array[tx_clk-1]) {
-                    left_bound = tx_clk;//find left bound
-                    PSRAM_TRACE(1, "left_bound:0x%x", left_bound*inc_delay);
-                } else if (!valid && valid_array[tx_clk-1]) {
-                    right_bound = tx_clk-1;//find right bound
-                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound*inc_delay);
-                    break;
+                if (valid_array[tx_clk - 1]) {
+                    right_bound = tx_clk - 1; //find right bound
+                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
                 }
             }
-        }
-        if (left_bound!=-1 && right_bound!=-1) {// && (right_bound-left_bound>1)) {
-            tx_clk = (left_bound+right_bound)/2;
-            PSRAM_TRACE(3, "cali tx_clk done, tx_clk:0x%x(0x%x-0x%x)", tx_clk*inc_delay, left_bound*inc_delay, right_bound*inc_delay);
         } else {
-            ASSERT(false, "ERROR, tx_clk need do more cali");
+            if (valid && !valid_array[tx_clk - 1]) {
+                left_bound = tx_clk;//find left bound
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            } else if (!valid && valid_array[tx_clk - 1]) {
+                right_bound = tx_clk - 1; //find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+                break;
+            }
         }
-        tx_clk *= inc_delay;
+    }
+    if (left_bound != -1 && right_bound != -1) { // && (right_bound-left_bound>1)) {
+        tx_clk = (left_bound + right_bound) / 2;
+        PSRAM_TRACE(3, "cali tx_clk done, tx_clk:0x%x(0x%x-0x%x)", tx_clk * inc_delay, left_bound * inc_delay, right_bound * inc_delay);
+    } else {
+        ASSERT(false, "ERROR, tx_clk need do more cali");
+    }
+    tx_clk *= inc_delay;
+#endif
+
+#ifdef PSRAM_WINDOW_TEST    //new added,Use when testing window,2021-08-28
+    volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+    PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
+
+    //calibrate tx_clk
+    PSRAM_TRACE(0, "cali tx_clk");
+    left_bound = -1;
+    right_bound = -1;
+    memset(valid_array, 0, sizeof(valid_array));
+    for (tx_clk = 1; tx_clk <= volume; tx_clk++) {
+        bool valid;
+        tx_ceb = tx_clk - 1;
+        psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb * inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk * inc_delay) |
+                             PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay / 2) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay / 2);
+        valid = psramphy_check_tx_clk_valid(range);
+        //PSRAM_TRACE(3, "tx_clk:0x%x, valid:%d", (tx_clk*inc_delay), valid);
+        valid_array[tx_clk] = valid;
+        if (tx_clk == 1) {
+            if (valid) {
+                left_bound = tx_clk;
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            }
+        } else if (tx_clk == volume) {
+            if (valid) {
+                right_bound = tx_clk;//find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+            } else {
+                if (valid_array[tx_clk - 1]) {
+                    right_bound = tx_clk - 1; //find right bound
+                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+                }
+            }
+        } else {
+            if (valid && !valid_array[tx_clk - 1]) {
+                left_bound = tx_clk;//find left bound
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            } else if (!valid && valid_array[tx_clk - 1]) {
+                right_bound = tx_clk - 1; //find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+                break;
+            }
+        }
+    }
+    if (left_bound != -1 && right_bound != -1) {// && (right_bound-left_bound>1)) {
+        tx_clk = (left_bound + right_bound) / 2;
+        PSRAM_TRACE(3, "cali tx_clk done, tx_clk:0x%x(0x%x-0x%x)", tx_clk * inc_delay, left_bound * inc_delay, right_bound * inc_delay);
+
+#ifdef PSRAM_WINDOW_TEST
+        if ((last_left_bound != left_bound) || (last_right_bound != right_bound)) {
+            last_left_bound = left_bound;
+            last_right_bound = right_bound;
+            TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", tx_clk:0x%02x(0x%02x-0x%02x)", tx_clk * inc_delay, left_bound * inc_delay, right_bound * inc_delay);
+        } else {
+            TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", **********************");
+        }
+#endif
+    } else {
+        ASSERT(false, "ERROR, tx_clk need do more cali");
+    }
+    tx_ceb = (tx_clk - 1) * inc_delay;
+    tx_clk = tx_clk * inc_delay;
 #endif
 
     PSRAM_TRACE(2, "tx_ceb:0x%x, tx_clk:0x%x", tx_ceb, tx_clk);
 
-    volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK>>PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
+    volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
     PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 
     //calibrate tx_dqs and rx_dqs
     uint8_t all_valid = 1;
     memset(cali_valid, 0, sizeof(cali_valid));
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
 #ifdef PSRAM_XCCELA_MODE
-            psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_dqs*inc_delay) |
-                PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(0) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs*inc_delay);
+            psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_dqs * inc_delay) |
+                                 PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(0) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs * inc_delay);
 #else
             psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk) |
-                PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs*inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs*inc_delay);
+                                 PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs * inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs * inc_delay);
 #endif
             cali_valid[tx_dqs][rx_dqs] = psramphy_check_write_valid();
+            //PSRAM_TRACE(3, "tx_dqs:0x%x, rx_dqs:0x%x, valid:%d", tx_dqs*inc_delay, rx_dqs*inc_delay, cali_valid[tx_dqs][rx_dqs]);
             if (cali_valid[tx_dqs][rx_dqs] == false)
                 all_valid = 0;
         }
@@ -1127,19 +1260,19 @@ static void hal_psram_calib_range(uint32_t range)
     memset(cali_value, 0, sizeof(cali_value));
     PSRAM_TRACENOCRLF_NOTS(0, "\r\n\r\n ---------------------------------------------------------------------- \r\n");
     PSRAM_TRACENOCRLF_NOTS(0, "    rx_dqs");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        PSRAM_TRACENOCRLF_NOTS(1, " %2d ", tx_dqs*inc_delay);
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        PSRAM_TRACENOCRLF_NOTS(1, " %2d ", tx_dqs * inc_delay);
     }
     PSRAM_TRACENOCRLF_NOTS(0, "\r\n");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        PSRAM_TRACENOCRLF_NOTS(1, "tx_dqs:%2d ", tx_dqs*inc_delay);
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        PSRAM_TRACENOCRLF_NOTS(1, "tx_dqs:%2d ", tx_dqs * inc_delay);
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
             PSRAM_TRACENOCRLF_NOTS(1, "  %d ", cali_valid[tx_dqs][rx_dqs]);
             if (cali_valid[tx_dqs][rx_dqs]) {
                 uint8_t len_from_zero;
                 int8_t p;
                 p = tx_dqs;
-                while (p>=0) {
+                while (p >= 0) {
                     if (cali_valid[p][rx_dqs] == false)
                         break;
                     p--;
@@ -1148,7 +1281,7 @@ static void hal_psram_calib_range(uint32_t range)
                 cali_value[tx_dqs][rx_dqs] = len_from_zero;
 
                 p = tx_dqs;
-                while (p<=volume) {
+                while (p <= volume) {
                     if (cali_valid[p][rx_dqs] == false)
                         break;
                     p++;
@@ -1157,7 +1290,7 @@ static void hal_psram_calib_range(uint32_t range)
                 cali_value[tx_dqs][rx_dqs] = MIN(cali_value[tx_dqs][rx_dqs], len_from_zero);
 
                 p = rx_dqs;
-                while (p>=0) {
+                while (p >= 0) {
                     if (cali_valid[tx_dqs][p] == false)
                         break;
                     p--;
@@ -1166,7 +1299,7 @@ static void hal_psram_calib_range(uint32_t range)
                 cali_value[tx_dqs][rx_dqs] = MIN(cali_value[tx_dqs][rx_dqs], len_from_zero);
 
                 p = rx_dqs;
-                while (p<=volume) {
+                while (p <= volume) {
                     if (cali_valid[tx_dqs][p] == false)
                         break;
                     p++;
@@ -1179,16 +1312,207 @@ static void hal_psram_calib_range(uint32_t range)
     }
     PSRAM_TRACENOCRLF_NOTS(0, " -------------------------------------------------------------------------- \r\n");
 
+#ifdef PSRAM_WINDOW_TEST
+    //Processing window data
+    uint8_t cp_volume = volume + 1;
+    uint8_t enable_clear_circle = 0;
+    uint8_t enable_print_window = 0;
+    uint8_t rows;
+
+#if 1   //Window inner bag 0 test,2021-08-30
+    #define HW_READ_REG(_Reg)           (*((volatile uint32_t*)(_Reg)))
+    #define HW_WRITE_REG(_Reg,_Value)   (*((volatile uint32_t*)(_Reg)) = (uint32_t)(_Value))
+    if (HW_READ_REG(0x400000F4) == 0xCAFE) {
+        HW_WRITE_REG(0x400000F4, 0x9A55);
+        cali_valid[4][4] = 0;//Central point clear
+    }
+#endif
+
+    for (tx_dqs = 0; tx_dqs < cp_volume; tx_dqs++) {
+        for (rx_dqs = 0; rx_dqs < cp_volume; rx_dqs++) {
+            cali_data[tx_dqs][rx_dqs] = cali_valid[tx_dqs][rx_dqs] + '0';
+        }
+    }
+
+    if (cp_volume % 2) {
+        rows = cp_volume / 2;
+    } else {
+        rows = cp_volume / 2 - 1;
+    }
+    for (tx_dqs = 0; tx_dqs < rows; tx_dqs++) {
+        //Check the starting line
+        for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs; rx_dqs++) {
+            if (cali_data[tx_dqs][rx_dqs] == '0') {
+                break;
+            }
+        }
+
+        if (rx_dqs >= cp_volume - tx_dqs) {
+            //Check the end of the line
+            for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs; rx_dqs++) {
+                if (cali_data[volume - tx_dqs][rx_dqs] == '0') {
+                    break;
+                }
+            }
+            if (rx_dqs >= cp_volume - tx_dqs) {
+                //Check the starting column
+                for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs; rx_dqs++) {
+                    if (cali_data[rx_dqs][tx_dqs] == '0') {
+                        break;
+                    }
+                }
+                if (rx_dqs >= cp_volume - tx_dqs) {
+                    //Check the end of the column
+                    for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs; rx_dqs++) {
+                        if (cali_data[rx_dqs][volume - tx_dqs] == '0') {
+                            break;
+                        }
+                    }
+                    if (rx_dqs >= cp_volume - tx_dqs) {
+                        enable_clear_circle = 0;
+                    } else {
+                        enable_clear_circle = 1;
+                    }
+                } else {
+                    enable_clear_circle = 1;
+                }
+            } else {
+                enable_clear_circle = 1;
+            }
+        } else {
+            enable_clear_circle = 1;
+        }
+
+        //The current line has 0, directly clear the current circle
+        if (enable_clear_circle) {
+            enable_clear_circle = 0;
+
+            //clear the starting line
+            for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs; rx_dqs++) {
+                cali_data[tx_dqs][rx_dqs] = ' ';
+            }
+
+            //clear the end of the line
+            for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs; rx_dqs++) {
+                cali_data[volume - tx_dqs][rx_dqs] = ' ';
+            }
+
+            //clear the starting column
+            for (rx_dqs = tx_dqs + 1; rx_dqs < cp_volume - tx_dqs - 1; rx_dqs++) {
+                cali_data[rx_dqs][tx_dqs] = ' ';
+            }
+
+            //clear the end of the column
+            for (rx_dqs = tx_dqs + 1; rx_dqs < cp_volume - tx_dqs - 1; rx_dqs++) {
+                cali_data[rx_dqs][volume - tx_dqs] = ' ';
+            }
+        } else {
+            //Check if there is 0 in the middle of the ring
+            uint8_t i;
+
+            enable_print_window = 0;
+            for (i = tx_dqs; i < cp_volume - tx_dqs * 2 + tx_dqs; i++) {
+                //Check the remaining rows
+                for (rx_dqs = tx_dqs; rx_dqs < cp_volume - tx_dqs * 2 + tx_dqs; rx_dqs++) {
+                    if (cali_data[i][rx_dqs] == '0') {
+                        break;
+                    }
+                }
+                if (rx_dqs < cp_volume - tx_dqs * 2 + tx_dqs) {
+                    enable_print_window = 1;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+    //Only the middle window is left, print it out forcibly
+    if (tx_dqs >= rows) {
+        enable_print_window = 1;
+    }
+
+    dqs_point = tx_dqs;
+    dqs_len = cp_volume - tx_dqs * 2;
+
+    if (last_dqs_point != dqs_point) {
+        last_dqs_point = dqs_point;
+
+        TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", rx_dqs:(%02d,%02d)~(%02d,%02d)",
+                  dqs_point * inc_delay, dqs_point * inc_delay,
+                  (dqs_point + dqs_len - 1)*inc_delay, dqs_point * inc_delay);
+    } else {
+        TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", ++++++++++++++++++++++");
+    }
+
+    if (last_dqs_len != dqs_len) {
+        last_dqs_len = dqs_len;
+
+        if (enable_print_window) {
+            TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", tx_dqs:(%02d,%02d)~(%02d,%02d), abnormal",
+                      dqs_point * inc_delay, dqs_point * inc_delay,
+                      dqs_point * inc_delay, (dqs_point + dqs_len - 1)*inc_delay);
+        } else {
+            TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", tx_dqs:(%02d,%02d)~(%02d,%02d), normal",
+                      dqs_point * inc_delay, dqs_point * inc_delay,
+                      dqs_point * inc_delay, (dqs_point + dqs_len - 1)*inc_delay);
+        }
+    } else {
+        if (enable_print_window) {
+            TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", ----------------------, abnormal");
+        } else {
+            TRACE_IMM(TR_ATTR_NO_LF | TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", ----------------------, ######");
+        }
+    }
+    TRACE_IMM(TR_ATTR_NO_TS | TR_ATTR_NO_ID, ", vol:%02d, delay:%02d", volume, inc_delay);
+
+    if (enable_print_window) {
+        enable_print_window = 0;
+
+        //Print original window data
+        REL_TRACE_NOTS(0, " ");
+        REL_TRACE_NOCRLF_NOTS(0, "   rx_dqs ");
+        for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+            REL_TRACE_NOCRLF_NOTS(1, " %2d ", tx_dqs * inc_delay);
+        }
+        REL_TRACE_NOCRLF_NOTS(0, "\r\n");
+        for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+            REL_TRACE_NOCRLF_NOTS(1, "tx_dqs:%2d ", tx_dqs * inc_delay);
+            for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
+                REL_TRACE_NOCRLF_NOTS(1, "  %d ", cali_valid[tx_dqs][rx_dqs]);
+            }
+            REL_TRACE_NOCRLF_NOTS(0, "\r\n");
+        }
+        REL_TRACE_NOTS(0, " ");
+
+        //Print new window data
+        REL_TRACE_NOCRLF_NOTS(0, "   rx_dqs ");
+        for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+            REL_TRACE_NOCRLF_NOTS(1, " %2d ", tx_dqs * inc_delay);
+        }
+        REL_TRACE_NOCRLF_NOTS(0, "\r\n");
+        for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+            REL_TRACE_NOCRLF_NOTS(1, "tx_dqs:%2d ", tx_dqs * inc_delay);
+            for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
+                REL_TRACE_NOCRLF_NOTS(1, "  %c ", cali_data[tx_dqs][rx_dqs]);
+            }
+            REL_TRACE_NOCRLF_NOTS(0, "\r\n");
+        }
+        REL_TRACE_NOTS(0, " ");
+    }
+#endif
+
 #if 0
+    //Print cali_value window data
     PSRAM_TRACENOCRLF_NOTS(0, "\r\n\r\n ---------------------------------------------------------------------- \r\n");
     PSRAM_TRACENOCRLF_NOTS(0, "    rx_dqs");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        PSRAM_TRACENOCRLF_NOTS(1, " %2d ", tx_dqs*inc_delay);
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        PSRAM_TRACENOCRLF_NOTS(1, " %2d ", tx_dqs * inc_delay);
     }
     PSRAM_TRACENOCRLF_NOTS(0, "\r\n");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        PSRAM_TRACENOCRLF_NOTS(1, "tx_dqs:%2d ", tx_dqs*inc_delay);
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        PSRAM_TRACENOCRLF_NOTS(1, "tx_dqs:%2d ", tx_dqs * inc_delay);
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
             PSRAM_TRACENOCRLF_NOTS(1, "  %d ", cali_value[tx_dqs][rx_dqs]);
         }
         PSRAM_TRACENOCRLF_NOTS(0, "\r\n");
@@ -1198,24 +1522,77 @@ static void hal_psram_calib_range(uint32_t range)
 
     uint32_t position = 0;
     uint8_t max_value = 0;
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
             if (cali_value[tx_dqs][rx_dqs] > max_value) {
                 max_value = cali_value[tx_dqs][rx_dqs];
-                position = tx_dqs*(volume+1) + rx_dqs;
+                position = tx_dqs * (volume + 1) + rx_dqs;
             }
         }
     }
     PSRAM_TRACENOCRLF_NOTS(1, "position:%d\r\n", position);
-    tx_dqs = position/(volume+1)*inc_delay;
-    rx_dqs = (position%(volume+1))*inc_delay;
+    tx_dqs = position / (volume + 1) * inc_delay;
+    rx_dqs = (position % (volume + 1)) * inc_delay;
     PSRAM_TRACENOCRLF_NOTS(2, "most optimal position. tx_dqs:%d, rx_dqs:%d\r\n", tx_dqs, rx_dqs);
 #ifdef PSRAM_XCCELA_MODE
     psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_dqs) |
-        PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(0) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
+                         PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(0) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
 #else
     psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk) |
-        PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
+                         PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
+#endif
+
+#if 0
+    volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+    PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
+
+    //calibrate tx_clk
+    PSRAM_TRACE(0, "cali tx_clk");
+    left_bound = -1;
+    right_bound = -1;
+    memset(valid_array, 0, sizeof(valid_array));
+    for (tx_clk = 1; tx_clk <= volume; tx_clk++) {
+        bool valid;
+        //tx_ceb = tx_clk;
+        psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb * inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk * inc_delay) |
+                             PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay / 2) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay / 2);
+        valid = psramphy_check_write_valid(range);
+        PSRAM_TRACE(3, "tx_clk:0x%x, valid:%d", (tx_clk * inc_delay), valid);
+        valid_array[tx_clk] = valid;
+        if (tx_clk == 1) {
+            if (valid) {
+                left_bound = tx_clk;
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            }
+        } else if (tx_clk == volume) {
+            if (valid) {
+                right_bound = tx_clk;//find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+            } else {
+                if (valid_array[tx_clk - 1]) {
+                    right_bound = tx_clk - 1; //find right bound
+                    PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+                }
+            }
+        } else {
+            if (valid && !valid_array[tx_clk - 1]) {
+                left_bound = tx_clk;//find left bound
+                PSRAM_TRACE(1, "left_bound:0x%x", left_bound * inc_delay);
+            } else if (!valid && valid_array[tx_clk - 1]) {
+                right_bound = tx_clk - 1; //find right bound
+                PSRAM_TRACE(1, "right_bound:0x%x", right_bound * inc_delay);
+                break;
+            }
+        }
+    }
+    if (left_bound != -1 && right_bound != -1) {// && (right_bound-left_bound>1)) {
+        tx_clk = (left_bound + right_bound) / 2;
+        PSRAM_TRACE(3, "cali tx_clk done, tx_clk:0x%x(0x%x-0x%x)", tx_clk * inc_delay, left_bound * inc_delay, right_bound * inc_delay);
+    } else {
+        ASSERT(false, "ERROR, tx_clk need do more cali");
+    }
+    //tx_ceb = tx_clk * inc_delay;
+    tx_clk = tx_clk * inc_delay;
 #endif
 }
 void hal_psram_calib(uint32_t clk)
@@ -1233,6 +1610,9 @@ void hal_psram_calib(uint32_t clk)
     } else {
         range = 1;
     }
+#ifdef PSRAM_WINDOW_TEST
+    TRACE_IMM(TR_ATTR_NO_LF, "clk:%d, range:%d", clk, range);
+#endif
     hal_psram_calib_range(range);
 }
 
@@ -1253,7 +1633,9 @@ void hal_psram_init(void)
 #endif
     hal_psram_digphy_init();
     hal_psram_mc_init(psram_cfg_clk);
-    hal_sys_timer_delay_us(100);
+#if !defined(FPGA) && !defined(SIMU)
+    hal_psram_init_calib();
+#endif
 
 #ifdef PSRAM_RESET
     psram_reset();

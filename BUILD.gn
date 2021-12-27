@@ -16,8 +16,13 @@ if (ohos_kernel_type == "liteos_m") {
   module_name = get_path_info(rebase_path("."), "name")
   module_group(module_name) {
     modules = [
-      "bes2600",
       "hals",
     ]
+    if (defined(LOSCFG_SOC_SERIES_BES2600)) {
+      modules += [ "bes2600" ]
+    }
+    if (defined(LOSCFG_SOC_SERIES_BES2700)) {
+      modules += [ "bes2700" ]
+    }
   }
 }

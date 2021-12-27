@@ -48,31 +48,31 @@ struct HAL_MPC_SPY_T {
 #define MPC_SPY_REG_DETECT_WRITE1                           (1 << 5)
 
 // reg_08
-#define MPC_SPY_REG_STR_ADDR0(n)                            (((n) & 0x3) << 0)
-#define MPC_SPY_REG_STR_ADDR0_MASK                          (0x3 << 0)
+#define MPC_SPY_REG_STR_ADDR0(n)                            (((n) & 0xFFFFFFFF) << 0)
+#define MPC_SPY_REG_STR_ADDR0_MASK                          (0xFFFFFFFF << 0)
 #define MPC_SPY_REG_STR_ADDR0_SHIFT                         (0)
 
 // reg_0c
-#define MPC_SPY_REG_END_ADDR0(n)                            (((n) & 0x3) << 0)
-#define MPC_SPY_REG_END_ADDR0_MASK                          (0x3 << 0)
+#define MPC_SPY_REG_END_ADDR0(n)                            (((n) & 0xFFFFFFFF) << 0)
+#define MPC_SPY_REG_END_ADDR0_MASK                          (0xFFFFFFFF << 0)
 #define MPC_SPY_REG_END_ADDR0_SHIFT                         (0)
 
 // reg_10
-#define MPC_SPY_REG_STR_ADDR1(n)                            (((n) & 0x3) << 0)
-#define MPC_SPY_REG_STR_ADDR1_MASK                          (0x3 << 0)
+#define MPC_SPY_REG_STR_ADDR1(n)                            (((n) & 0xFFFFFFFF) << 0)
+#define MPC_SPY_REG_STR_ADDR1_MASK                          (0xFFFFFFFF << 0)
 #define MPC_SPY_REG_STR_ADDR1_SHIFT                         (0)
 
 // reg_14
-#define MPC_SPY_REG_END_ADDR1(n)                            (((n) & 0x3) << 0)
-#define MPC_SPY_REG_END_ADDR1_MASK                          (0x3 << 0)
+#define MPC_SPY_REG_END_ADDR1(n)                            (((n) & 0xFFFFFFFF) << 0)
+#define MPC_SPY_REG_END_ADDR1_MASK                          (0xFFFFFFFF << 0)
 #define MPC_SPY_REG_END_ADDR1_SHIFT                         (0)
 
 // reg_18
 #define MPC_SPY_HIT_INT0                                    (1 << 0)
 #define MPC_SPY_HIT_READ0                                   (1 << 1)
 #define MPC_SPY_HIT_WRITE0                                  (1 << 2)
-#define MPC_SPY_HIT_HMASTER0(n)                             (((n) & 0xF) << 3)
-#define MPC_SPY_HIT_HMASTER0_MASK                           (0xF << 3)
+#define MPC_SPY_HIT_HMASTER0(n)                             (((n) & 0x7FFF) << 3)
+#define MPC_SPY_HIT_HMASTER0_MASK                           (0x7FFF << 3)
 #define MPC_SPY_HIT_HMASTER0_SHIFT                          (3)
 
 // reg_1c
@@ -89,8 +89,8 @@ struct HAL_MPC_SPY_T {
 #define MPC_SPY_HIT_INT1                                    (1 << 0)
 #define MPC_SPY_HIT_READ1                                   (1 << 1)
 #define MPC_SPY_HIT_WRITE1                                  (1 << 2)
-#define MPC_SPY_HIT_HMASTER1(n)                             (((n) & 0xF) << 3)
-#define MPC_SPY_HIT_HMASTER1_MASK                           (0xF << 3)
+#define MPC_SPY_HIT_HMASTER1(n)                             (((n) & 0x7FFF) << 3)
+#define MPC_SPY_HIT_HMASTER1_MASK                           (0x7FFF << 3)
 #define MPC_SPY_HIT_HMASTER1_SHIFT                          (3)
 
 // reg_28

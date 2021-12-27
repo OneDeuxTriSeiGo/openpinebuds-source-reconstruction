@@ -206,58 +206,96 @@ void hal_dsi_unified_irq_handler()
 }
 
 /**
+ * @brief hal_dsi_read_cmd - read data by lp mode
  * packet format:
  * ShortPacket: DI DATA0 DATA1 ECC
  * LongPacket:  DI WC0   WC1   ECC DATA[0]-DATA[WC-1] CS0 CS1
  * e.g. read id: hal_dsi_read_cmd(0x04, buf, 3)
+ * @param cmd : cmd
+ * @param read_buf : read buffer
+ * @param len : read len
+ * @return int
  */
 int hal_dsi_read_cmd(uint8_t cmd, uint8_t *recv_buf, uint8_t len)
 {
-    dsi->REG_018 =(len << 8)| 0x37;
+    volatile uint32_t temp;
+    uint8_t fifo_len;
+    uint8_t buf[32];
+    uint8_t buf_len = 0;
+    uint32_t time;
+
+    dsi->REG_010 |= DSI_LP_RX_DONE_FLAG;
+
+    dsi->REG_018 = (len << 8) | 0x37;
     dsi->REG_014 =  (5 << 16) | (0xe1 << 8) | DLN_LPT;
-    hal_sys_timer_delay(US_TO_TICKS(1));
+    hal_sys_timer_delay_us(20);
     dsi->REG_018 = (cmd << 8)| 0x06;
-    dsi->REG_014 =  (5 << 16) | (0xe1 << 8) | DLN_LPT_BTA;
-    hal_sys_timer_delay(US_TO_TICKS(1));
-    // drop irq_stats
-    volatile uint32_t temp = dsi->REG_010;
-    // read DI
-    temp = dsi->REG_010;
-    if (len <= 2 || (temp & 0xff) == 0x21) { // short packet
-        // read data
+    dsi->REG_014 = (5 << 16) | (0xe1 << 8) | DLN_LPT_BTA;
+    hal_sys_timer_delay_us(10);
+
+    time = hal_sys_timer_get();
+    while (1) {
         temp = dsi->REG_010;
-        recv_buf[0] = temp & 0xff;
-        temp = dsi->REG_010;
-        if (len == 2) {
-            recv_buf[1] = temp & 0xff;
-        }
-        // read ECC
-        temp = dsi->REG_010;
-    } else { // long packet
-        // read wc
-        temp = dsi->REG_010;
-        uint16_t read_len = temp & 0xff;
-        temp = dsi->REG_010;
-        read_len |= (temp & 0xff) << 8;
-        if (read_len != len) {
-            TRACE(0,"read_len %d != %d len", read_len, len);
+        if (temp & DSI_LPRX_SIZE_MASK) {
+            buf[buf_len ++] = temp;
+        } else if (temp & (DSI_RX_ERR_FLAG | DSI_RX_TIMEOUT_FLAG)) {
+            dsi->REG_010 |= (DSI_RX_ERR_FLAG | DSI_RX_TIMEOUT_FLAG);
+            TRACE(0, "rx error:0x%x", temp);
             return -1;
+        } else if ((temp & DSI_LP_RX_DONE_FLAG) && (temp & DSI_LPRX_SIZE_MASK) == 0) {
+            //TRACE(0, "rx done:0x%x", temp);
+            break;
+        } else if (hal_sys_timer_get() - time > MS_TO_TICKS(1000)) {
+            TRACE(0, "rx timerout:0x%x", temp);
+            return -2;
         }
-        // read ECC
-        temp = dsi->REG_010;
-        // read data
-        for (uint16_t i = 0; i < read_len; i++) {
-            temp = dsi->REG_010;
-            recv_buf[i] = temp & 0xff;
-        }
-        // read CS
-        temp = dsi->REG_010;
-        temp = dsi->REG_010;
+        hal_sys_timer_delay_us(1);
     }
-    (void)temp;
+
+    fifo_len = GET_BITFIELD(temp, DSI_LPRX_SIZE);
+    if (fifo_len > 1) {
+        TRACE(0, "warning: fifo is not empty");
+        while (fifo_len > 1) {
+            temp = dsi->REG_010;
+            fifo_len --;
+        }
+    }
+
+    if (buf_len >= 2 && buf[1] == 0x02) {
+        TRACE(0, "Acknowledge error report");
+        return -1;
+    } else if (len == 1 && buf_len >= 3 && buf[1] == 0x21) { //short packet
+        recv_buf[0] = buf[2];
+        return 1;
+    } else if (len == 2 && buf_len >= 4 && buf[1] == 0x22) { //short packet
+        recv_buf[0] = buf[2];
+        recv_buf[1] = buf[3];
+        return 2;
+    } else if (buf_len >= 10 && buf[1] == 0x1c) { //long packet
+        uint16_t word_cnt = (buf[3] >> 8) | buf[2];
+        uint16_t i;
+        if (word_cnt < len) {
+            TRACE(0, "warning: word_cnt:%d < len:%d", word_cnt, len);
+            len = word_cnt;
+        }
+        for (i = 0; i < len; ++i)
+            recv_buf[i] = buf[5 + i];
+        return len;
+    } else {
+        TRACE(0, "error, buf_len:%d, len:%d", buf_len, len);
+        DUMP8("%02x ", buf, buf_len);
+        return -3;
+    }
+
     return 0;
 }
 
+
+/**
+ * @brief hal_dsi_send_cmd - send cmd by lp mode
+ *
+ * @param cmd
+ */
 void hal_dsi_send_cmd(uint8_t cmd)
 {
     dsi->REG_018 = (cmd << 8) | DSC_SHORT_WRITE;
@@ -267,7 +305,18 @@ void hal_dsi_send_cmd(uint8_t cmd)
 #endif
 }
 
-void hal_dsi_send_cmd_data(uint8_t cmd, uint32_t len, uint8_t p0, uint8_t p1, uint8_t p2, uint8_t p3)
+/**
+ * @brief hal_dsi_send_cmd_data - send cmd with data by lp mode
+ *
+ * @param cmd : cmd
+ * @param len : send param num
+ * @param p0 : param0
+ * @param p1 : param1
+ * @param p2 : param2
+ * @param p3 : param3
+ */
+void hal_dsi_send_cmd_data(uint8_t cmd, uint32_t len, uint8_t p0,
+                           uint8_t p1, uint8_t p2, uint8_t p3)
 {
     if (len == 1) {
         dsi->REG_018 = (p0 << 16) | (cmd << 8) | DSC_SHORT_WRITE_1PAR;
@@ -295,11 +344,17 @@ void hal_dsi_send_cmd_data(uint8_t cmd, uint32_t len, uint8_t p0, uint8_t p1, ui
         dsi->REG_014 = ((len+1+4+3) << 16) | (0xe1 << 8) | DLN_LPT;
     }
 #ifndef SIMU
-    hal_sys_timer_delay(MS_TO_TICKS(1));
+    hal_sys_timer_delay(US_TO_TICKS(len * 20 + 10));
 #endif
 }
 
-void hal_dsi_send_long_array(uint32_t len,uint32_t *data)
+/**
+ * @brief hal_dsi_send_long_array - send cmd with data with array
+ *
+ * @param len : array len
+ * @param data : array data
+ */
+void hal_dsi_send_long_array(uint32_t len, uint32_t *data)
 {
     int i;
     dsi->REG_018 = (len << 8) | DSC_LONG_WRITE;
@@ -314,11 +369,19 @@ void hal_dsi_send_long_array(uint32_t len,uint32_t *data)
         dsi->REG_028 = data[i];
     dsi->REG_014 = ((len+4+3) << 16) | (0xe1 << 8) | DLN_LPT;
 #ifndef SIMU
-    hal_sys_timer_delay(MS_TO_TICKS(1));
+    hal_sys_timer_delay(US_TO_TICKS(len * 20 + 10));
 #endif
 }
 
-void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count, unsigned char *para_list)
+/**
+ * @brief hal_dsi_send_cmd_list - send cmd with data list
+ *
+ * @param cmd
+ * @param para_count
+ * @param para_list
+ */
+void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count,
+                           unsigned char *para_list)
 {
     unsigned int item[16]={0};
     unsigned char dsi_cmd = (unsigned char)cmd;
@@ -359,16 +422,10 @@ void hal_dsi_init(uint16_t h_res)
         hal_iomux_set_dsi_te();
         hal_cmu_dsi_clock_enable();
     }
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_32K);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_PN);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_TV);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_PIX);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_DSI);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_32K);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_PN);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_TV);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_PIX);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_DSI);
+    hal_cmu_dsi_reset_set();
+    hal_sys_timer_delay_us(10);
+    hal_cmu_dsi_reset_clear();
+    hal_sys_timer_delay_us(10);
 
 #ifndef FPGA
     dsiphy_open(0);
@@ -492,6 +549,8 @@ void hal_lcdc_init(const struct HAL_DSI_CFG_T *cfg, const uint8_t *layer0,
     const uint8_t *layer1, const uint8_t *layer2)
 {
     hal_cmu_lcdc_clock_enable();
+
+    hal_cmu_lcdc_reset_clear();
 
     lcdc->REG_200 = BITFIELD_VAL(LCD_WDMA_IMG_PITCH, cfg->active_width*4);
     lcdc->REG_208 = LCD_WDMA_BASE_ADDR(0x20000000+0x80000000);
@@ -710,6 +769,38 @@ void hal_lcdc_frame_done_irq_disable(void)
 void hal_lcdc_frame_done_irq_enable(void)
 {
     lcdc->REG_188 = SET_BITFIELD(lcdc->REG_188, LCD_CFG_SMPNVSYNC, 1);
+}
+
+void hal_dsi_sleep()
+{
+    dsiphy_sleep();
+    hal_cmu_dsi_clock_disable();
+}
+
+void hal_dsi_wakeup()
+{
+    hal_cmu_dsi_clock_enable();
+    dsiphy_wakeup();
+}
+
+void hal_dsi_start_hs_clock()
+{
+    dsi->REG_014 = 1;
+}
+
+void hal_dsi_stop_hs_clock()
+{
+    dsi->REG_014 = 0;
+}
+
+void hal_lcdc_sleep()
+{
+    hal_cmu_lcdc_clock_disable();
+}
+
+void hal_lcdc_wakeup()
+{
+    hal_cmu_lcdc_clock_enable();
 }
 
 #endif

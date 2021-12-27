@@ -179,7 +179,8 @@ int32_t MipiDsiDevGetCmd(struct MipiDsiCntlr *cntlr, struct DsiCmdDesc *cmd, uin
     if (!cmd || !cmd->payload || !out || readLen < 1) {
         return HDF_ERR_INVALID_PARAM;
     }
-    return hal_dsi_read_cmd(cmd->payload[0], out, readLen);
+    int ret = hal_dsi_read_cmd(cmd->payload[0], out, readLen);
+    return (ret == readLen) ? HDF_SUCCESS : HDF_FAILURE;
 }
 
 static void MipiDsiDevCallback(uint8_t layerId, uint8_t channel, uint32_t addr)
@@ -208,13 +209,23 @@ static void MipiDsiDevCallback(uint8_t layerId, uint8_t channel, uint32_t addr)
 static void MipiDsiDevToHs(struct MipiDsiCntlr *cntlr)
 {
     (void)cntlr;
-    hal_lcdc_init(&priv.cfg, NULL, (const uint8_t *)priv.buffers[priv.buf_idx], NULL);
-    hal_dsi_start();
-    hal_lcdc_set_callback(MipiDsiDevCallback);
+    static bool init = false;
+    if (!init) {
+        hal_lcdc_init(&priv.cfg, NULL, (const uint8_t *)priv.buffers[priv.buf_idx], NULL);
+        hal_dsi_start();
+        hal_lcdc_set_callback(MipiDsiDevCallback);
+        init = true;
+    }
+}
+
+static void MipiDsiDevToLp(struct MipiDsiCntlr *cntlr)
+{
+    (void)cntlr;
 }
 
 void *MipiDsiDevMmap(uint32_t size)
 {
+    static uint8_t last_buf = 0;
     if (size > BUFSIZE_MAX) {
         HDF_LOGE("%s: invalid size 0x%x", __func__, size);
         return NULL;
@@ -231,6 +242,10 @@ void *MipiDsiDevMmap(uint32_t size)
         osDelay(1);
     }
 #endif
+    if (last_buf != priv.buf_idx) {
+        memset((void *)(priv.buffers[priv.buf_idx]), 0, priv.buf_size);
+        last_buf = priv.buf_idx;
+    }
     return (void *)(priv.buffers[priv.buf_idx]);
 }
 
@@ -281,6 +296,7 @@ static int32_t MipiDsiDriverInit(struct HdfDeviceObject *device)
         .setCmd = MipiDsiDevSetCmd,
         .getCmd = MipiDsiDevGetCmd,
         .toHs = MipiDsiDevToHs,
+        .toLp = MipiDsiDevToLp,
     };
     static struct MipiDsiService mipiDsiService = {
         .flush = MipiDsiDevFlush,

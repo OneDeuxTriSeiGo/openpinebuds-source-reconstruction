@@ -153,7 +153,7 @@ static inline void _out_char(char character, void* buffer, size_t idx, size_t ma
   (void)buffer; (void)idx; (void)maxlen;
   if (character) {
     // hal_uart_putc(0, character);
-    hal_trace_printf_without_crlf_ts("%c",character);
+    hal_trace_output((unsigned char *)&character, 1);
   }
 }
 
@@ -798,6 +798,7 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 
       case 's' : {
         const char* p = va_arg(va, char*);
+        if (!p) p = '(null)';
         unsigned int l = _strnlen_s(p, precision ? precision : (size_t)-1);
         // pre padding
         if (flags & FLAGS_PRECISION) {

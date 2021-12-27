@@ -29,6 +29,7 @@
 #include "hal_trace.h"
 #include "cmsis_nvic.h"
 #include "pmu.h"
+#include "analog.h"
 #include "system_cp.h"
 #include "hal_psram.h"
 #include "hal_psramuhs.h"
@@ -762,6 +763,7 @@ int hal_cmu_ddr_clock_enable()
     uint32_t lock;
     bool clk_en;
 
+    hal_cmu_pll_enable(HAL_CMU_PLL_DDR, HAL_CMU_PLL_USER_PSRAM);
 #if 1
     //pxclk use xclk, works in synchronous mode
     //a7 can change sys freq in this mode
@@ -788,25 +790,50 @@ int hal_cmu_ddr_clock_enable()
         aocmu_reg_update_wait();
     }
     aoncmu->DDR_CLK = (aoncmu->DDR_CLK & ~clr) | set;
-    if (clk_en) {
-        cmu->HCLK_ENABLE = SYS_HCLK_PSRAM1G;
-        cmu->OCLK_ENABLE = SYS_OCLK_PSRAM1G;
-    }
+
+    cmu->XCLK_ENABLE = SYS_XCLK_PSRAM1G | SYS_XCLK_PSRAM1GMX | SYS_XCLK_GPV_PSRAM1G;
+    cmu->HCLK_ENABLE = SYS_HCLK_PSRAM1G;
+    cmu->OCLK_ENABLE = SYS_OCLK_PSRAM1G;
+
     int_unlock(lock);
 
     return 0;
 }
 
+void hal_cmu_ddr_clock_disable()
+{
+    cmu->XCLK_DISABLE = SYS_XCLK_PSRAM1G | SYS_XCLK_PSRAM1GMX | SYS_XCLK_GPV_PSRAM1G;
+    cmu->OCLK_DISABLE = SYS_OCLK_PSRAM1G;
+    cmu->HCLK_DISABLE = SYS_HCLK_PSRAM1G;
+    hal_cmu_pll_disable(HAL_CMU_PLL_DDR, HAL_CMU_PLL_USER_PSRAM);
+}
+
+void hal_cmu_ddr_reset_set()
+{
+    cmu->XRESET_SET = SYS_XRST_PSRAM1G | SYS_XRST_PSRAM1GMX | SYS_XRST_GPV_PSRAM1G;
+    cmu->ORESET_SET = SYS_ORST_PSRAM1G;
+    cmu->HRESET_SET = SYS_HRST_PSRAM1G;
+}
+
+void hal_cmu_ddr_reset_clear()
+{
+    cmu->XRESET_CLR = SYS_XRST_PSRAM1G | SYS_XRST_PSRAM1GMX | SYS_XRST_GPV_PSRAM1G;
+    cmu->ORESET_CLR = SYS_ORST_PSRAM1G;
+    cmu->HRESET_CLR = SYS_HRST_PSRAM1G;
+}
+
 int hal_cmu_dsp_set_freq(enum HAL_CMU_FREQ_T freq);
 
-void hal_cmu_dsi_clock_enable()
+void hal_cmu_dsi_clock_enable(void)
 {
     hal_cmu_dsp_set_freq(HAL_CMU_FREQ_780M);
     cmu->DSP_DIV = SET_BITFIELD(cmu->DSP_DIV, CMU_CFG_DIV_APCLK, 0x0);
     hal_cmu_pll_enable(HAL_CMU_PLL_DSI, HAL_CMU_PLL_USER_DSI);
+    cmu->APCLK_ENABLE = SYS_APCLK_DISPLAY;
     aoncmu->MIPI_CLK = AON_CMU_EN_CLK_PIX_DSI | AON_CMU_POL_CLK_DSI_IN |
-        SET_BITFIELD(aoncmu->MIPI_CLK, AON_CMU_CFG_DIV_PIX_DSI, 0x8);
-    cmu->XCLK_ENABLE = SYS_XCLK_DSI;
+        SET_BITFIELD(aoncmu->MIPI_CLK, AON_CMU_CFG_DIV_PIX_DSI, 0xc);
+    cmu->QCLK_ENABLE = SYS_QCLK_DSI_DSI | SYS_QCLK_DSI_PIX;
+    hal_sys_timer_delay_us(10);
 }
 
 void hal_cmu_dsi_clock_enable_v2(uint8_t pixel_div)
@@ -814,39 +841,89 @@ void hal_cmu_dsi_clock_enable_v2(uint8_t pixel_div)
     hal_cmu_dsp_set_freq(HAL_CMU_FREQ_780M);
     cmu->DSP_DIV = SET_BITFIELD(cmu->DSP_DIV, CMU_CFG_DIV_APCLK, 0x0);
     hal_cmu_pll_enable(HAL_CMU_PLL_DSI, HAL_CMU_PLL_USER_DSI);
+    cmu->APCLK_ENABLE = SYS_APCLK_DISPLAY;
     aoncmu->MIPI_CLK = AON_CMU_EN_CLK_PIX_DSI | AON_CMU_POL_CLK_DSI_IN |
         SET_BITFIELD(aoncmu->MIPI_CLK, AON_CMU_CFG_DIV_PIX_DSI, pixel_div);
-    cmu->XCLK_ENABLE = SYS_XCLK_DSI;
+    cmu->QCLK_ENABLE = SYS_QCLK_DSI_DSI | SYS_QCLK_DSI_PIX;
+    hal_sys_timer_delay_us(10);
 }
 
-void hal_cmu_lcdc_clock_enable()
+void hal_cmu_dsi_clock_disable(void)
 {
-    cmu->XCLK_ENABLE = SYS_XCLK_DISPLAYX | SYS_XCLK_DISPLAYH;
+    aoncmu->MIPI_CLK &= ~(AON_CMU_EN_CLK_PIX_DSI | AON_CMU_POL_CLK_DSI_IN);
+    cmu->QCLK_DISABLE = SYS_QCLK_DSI_DSI | SYS_QCLK_DSI_PIX;
+    cmu->APCLK_DISABLE = SYS_APCLK_DISPLAY;
+    hal_cmu_pll_disable(HAL_CMU_PLL_DSI, HAL_CMU_PLL_USER_DSI);
 }
 
-void hal_cmu_csi_clock_enable()
+void hal_cmu_dsi_reset_set(void)
+{
+    cmu->QRESET_SET = SYS_QRST_DSI_DSI | SYS_QRST_DSI_PIX;
+    cmu->APRESET_SET = SYS_APRST_DISPLAY;
+}
+
+void hal_cmu_dsi_reset_clear(void)
+{
+    cmu->APRESET_CLR = SYS_APRST_DISPLAY;
+    cmu->QRESET_CLR = SYS_QRST_DSI_DSI | SYS_QRST_DSI_PIX;
+    hal_sys_timer_delay_us(10);
+}
+
+void hal_cmu_lcdc_clock_enable(void)
+{
+    cmu->XCLK_ENABLE = SYS_XCLK_DSI | SYS_XCLK_DISPLAYX | SYS_XCLK_DISPLAYH;
+    cmu->QCLK_ENABLE = SYS_QCLK_DSI_32K | SYS_QCLK_DSI_PN | SYS_QCLK_DSI_TV;
+}
+
+void hal_cmu_lcdc_clock_disable(void)
+{
+    cmu->QCLK_DISABLE = SYS_QCLK_DSI_32K | SYS_QCLK_DSI_PN | SYS_QCLK_DSI_TV;
+    cmu->XCLK_DISABLE = SYS_XCLK_DSI | SYS_XCLK_DISPLAYX | SYS_XCLK_DISPLAYH;
+}
+
+void hal_cmu_lcdc_reset_set(void)
+{
+    cmu->QRESET_SET = SYS_QRST_DSI_32K | SYS_QRST_DSI_PN | SYS_QRST_DSI_TV;
+    cmu->XRESET_SET = SYS_XRST_DSI | SYS_XRST_DISPLAYX | SYS_XRST_DISPLAYH;
+}
+
+void hal_cmu_lcdc_reset_clear(void)
+{
+    cmu->XRESET_CLR = SYS_XRST_DSI | SYS_XRST_DISPLAYX | SYS_XRST_DISPLAYH;
+    cmu->QRESET_CLR = SYS_QRST_DSI_32K | SYS_QRST_DSI_PN | SYS_QRST_DSI_TV;
+    hal_sys_timer_delay_us(10);
+}
+
+void hal_cmu_csi_clock_enable(void)
 {
     cmu->DSP_DIV = SET_BITFIELD(cmu->DSP_DIV, CMU_CFG_DIV_APCLK, 0x0);
     aoncmu->MIPI_CLK = AON_CMU_EN_CLK_PIX_CSI | AON_CMU_POL_CLK_CSI_IN |
         SET_BITFIELD(aoncmu->MIPI_CLK, AON_CMU_CFG_DIV_PIX_CSI, 0x7); //0xa:240M 1lane
+    cmu->APCLK_ENABLE = SYS_APCLK_CSI;
     cmu->XCLK_ENABLE = SYS_XCLK_CSI;
+    cmu->QCLK_ENABLE = SYS_QCLK_CSI_LANE | SYS_QCLK_CSI_PIX | SYS_QCLK_CSI_LANG;
 }
 
-void hal_cmu_dsi_clock_disable()
-{
-    hal_cmu_pll_disable(HAL_CMU_PLL_DSI, HAL_CMU_PLL_USER_DSI);
-    aoncmu->MIPI_CLK &= ~(AON_CMU_EN_CLK_PIX_DSI | AON_CMU_POL_CLK_DSI_IN);
-    cmu->XCLK_DISABLE = SYS_XCLK_DSI;
-}
-
-void hal_cmu_lcdc_clock_disable()
-{
-    cmu->XCLK_DISABLE = SYS_XCLK_DISPLAYX | SYS_XCLK_DISPLAYH;
-}
-
-void hal_cmu_csi_clock_disable()
+void hal_cmu_csi_clock_disable(void)
 {
     cmu->XCLK_DISABLE = SYS_XCLK_CSI;
+    cmu->QCLK_ENABLE = SYS_QCLK_CSI_LANE | SYS_QCLK_CSI_PIX | SYS_QCLK_CSI_LANG;
+    cmu->APCLK_DISABLE = SYS_APCLK_CSI;
+}
+
+void hal_cmu_csi_reset_set(void)
+{
+    cmu->XRESET_SET = SYS_XRST_CSI;
+    cmu->QRESET_SET = SYS_QRST_CSI_LANE | SYS_QRST_CSI_PIX | SYS_QRST_CSI_LANG;
+    cmu->APRESET_SET = SYS_APRST_CSI;
+}
+
+void hal_cmu_csi_reset_clear(void)
+{
+    cmu->APRESET_CLR = SYS_APRST_CSI;
+    cmu->XRESET_CLR = SYS_XRST_CSI;
+    cmu->QRESET_CLR = SYS_QRST_CSI_LANE | SYS_QRST_CSI_PIX | SYS_QRST_CSI_LANG;
+    hal_sys_timer_delay_us(10);
 }
 
 #ifdef LOW_SYS_FREQ
@@ -1460,14 +1537,11 @@ void hal_cmu_low_freq_mode_disable(enum HAL_CMU_FREQ_T old_freq, enum HAL_CMU_FR
 
 void hal_cmu_rom_enable_pll(void)
 {
-    hal_cmu_pll_enable(HAL_CMU_PLL_BB, HAL_CMU_PLL_USER_SYS);
     hal_cmu_sys_select_pll(HAL_CMU_PLL_BB);
+    hal_cmu_pll_enable(HAL_CMU_PLL_BB, HAL_CMU_PLL_USER_SYS);
 
 #if defined(PSRAM_ENABLE) && !defined(PSRAM_LOW_SPEED)
     hal_cmu_pll_enable(HAL_CMU_PLL_BB_PSRAM, HAL_CMU_PLL_USER_PSRAM);
-#endif
-#if defined(PSRAMUHS_ENABLE) && !defined(PSRAM_LOW_SPEED)
-    hal_cmu_pll_enable(HAL_CMU_PLL_DDR, HAL_CMU_PLL_USER_PSRAM);
 #endif
 }
 
@@ -1517,15 +1591,12 @@ void hal_cmu_programmer_enable_pll(void)
     hal_cmu_sram_init();
     hal_cmu_dma_req_init();
 
-    hal_cmu_pll_enable(HAL_CMU_PLL_BB, HAL_CMU_PLL_USER_SYS);
     hal_cmu_flash_select_pll(HAL_CMU_PLL_BB);
     hal_cmu_sys_select_pll(HAL_CMU_PLL_BB);
+    hal_cmu_pll_enable(HAL_CMU_PLL_BB, HAL_CMU_PLL_USER_SYS);
 
 #if defined(PSRAM_ENABLE) && !defined(PSRAM_LOW_SPEED)
     hal_cmu_pll_enable(HAL_CMU_PLL_BB_PSRAM, HAL_CMU_PLL_USER_PSRAM);
-#endif
-#if defined(PSRAMUHS_ENABLE) && !defined(PSRAM_LOW_SPEED)
-    hal_cmu_pll_enable(HAL_CMU_PLL_DDR, HAL_CMU_PLL_USER_PSRAM);
 #endif
 }
 
@@ -1571,9 +1642,6 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_init_pll_selection(void)
 #endif
 #if defined(PSRAM_ENABLE) && !defined(PSRAM_LOW_SPEED)
     hal_cmu_pll_enable(HAL_CMU_PLL_BB_PSRAM, HAL_CMU_PLL_USER_PSRAM);
-#endif
-#if defined(PSRAMUHS_ENABLE) && !defined(PSRAM_LOW_SPEED)
-    hal_cmu_pll_enable(HAL_CMU_PLL_DDR, HAL_CMU_PLL_USER_PSRAM);
 #endif
 
     hal_cmu_dsp_timer0_select_slow();
@@ -1658,6 +1726,8 @@ void hal_cmu_codec_iir_enable(uint32_t speed)
                 val |= AON_CMU_BYPASS_DIV_CODECIIR;
                 cfg_speed = HAL_CMU_AUD_PLL_CLOCK;
             }
+            analog_aud_freq_pll_config(CODEC_FREQ_48K_SERIES, CODEC_PLL_DIV);
+            analog_aud_pll_open(ANA_AUD_PLL_USER_IIR);
         }
 
        //pmu_iir_freq_config(cfg_speed);
@@ -1697,6 +1767,7 @@ void hal_cmu_codec_iir_disable(void)
     if (high_speed) {
         //pmu_iir_freq_config(0);
     }
+    analog_aud_pll_close(ANA_AUD_PLL_USER_IIR);
 }
 
 int hal_cmu_codec_iir_set_div(uint32_t div)
@@ -1756,6 +1827,8 @@ void hal_cmu_codec_rs_enable(uint32_t speed)
                 val |= AON_CMU_BYPASS_DIV_CODECRS1;
                 cfg_speed = HAL_CMU_AUD_PLL_CLOCK;
             }
+            analog_aud_freq_pll_config(CODEC_FREQ_48K_SERIES, CODEC_PLL_DIV);
+            analog_aud_pll_open(ANA_AUD_PLL_USER_RS);
         }
     }
 
@@ -1784,6 +1857,8 @@ void hal_cmu_codec_rs_disable(void)
     lock = int_lock();
     aoncmu->CODEC_IIR |= AON_CMU_SEL_CODECRS0_OSC | AON_CMU_SEL_CODECRS0_OSCX2 | AON_CMU_SEL_CODECRS1_OSC | AON_CMU_SEL_CODECRS1_OSCX2;
     int_unlock(lock);
+
+    analog_aud_pll_close(ANA_AUD_PLL_USER_RS);
 }
 
 int hal_cmu_codec_rs_set_div(uint32_t div)
@@ -2386,6 +2461,22 @@ int hal_cmu_ispi_set_freq(enum HAL_CMU_PERIPH_FREQ_T freq)
     return ret;
 }
 
+void hal_cmu_sec_eng_clock_enable(void)
+{
+    hal_cmu_clock_enable(HAL_CMU_MOD_H_SEC_ENG);
+    hal_cmu_clock_enable(HAL_CMU_MOD_P_SEC_ENG);
+    hal_cmu_reset_clear(HAL_CMU_MOD_H_SEC_ENG);
+    hal_cmu_reset_clear(HAL_CMU_MOD_P_SEC_ENG);
+}
+
+void hal_cmu_sec_eng_clock_disable(void)
+{
+    hal_cmu_reset_set(HAL_CMU_MOD_H_SEC_ENG);
+    hal_cmu_reset_set(HAL_CMU_MOD_P_SEC_ENG);
+    hal_cmu_clock_disable(HAL_CMU_MOD_H_SEC_ENG);
+    hal_cmu_clock_disable(HAL_CMU_MOD_P_SEC_ENG);
+}
+
 int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id)
 {
     uint32_t lock;
@@ -2407,7 +2498,7 @@ int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id)
     if (id <= HAL_CMU_CLOCK_OUT_AON_SYS) {
         sel = CMU_CLK_OUT_SEL_AON;
         cfg = id - HAL_CMU_CLOCK_OUT_AON_32K;
-    } else if (HAL_CMU_CLOCK_OUT_MCU_32K <= id && id <= HAL_CMU_CLOCK_OUT_MCU_SPI1) {
+    } else if (HAL_CMU_CLOCK_OUT_MCU_32K <= id && id <= HAL_CMU_CLOCK_OUT_MCU_I2S1) {
         sel = CMU_CLK_OUT_SEL_MCU;
         lock = int_lock();
         cmu->PERIPH_CLK = SET_BITFIELD(cmu->PERIPH_CLK, CMU_CFG_CLK_OUT, id - HAL_CMU_CLOCK_OUT_MCU_32K);
@@ -2415,9 +2506,9 @@ int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id)
     } else if (HAL_CMU_CLOCK_OUT_CODEC_ADC_ANA <= id && id <= HAL_CMU_CLOCK_OUT_CODEC_HCLK) {
         sel = CMU_CLK_OUT_SEL_CODEC;
         hal_codec_select_clock_out(id - HAL_CMU_CLOCK_OUT_CODEC_ADC_ANA);
-    } else if (HAL_CMU_CLOCK_OUT_BT_32K <= id && id <= HAL_CMU_CLOCK_OUT_BT_26M) {
+    } else if (HAL_CMU_CLOCK_OUT_BT_NONE <= id && id <= HAL_CMU_CLOCK_OUT_BT_DACD8) {
         sel = CMU_CLK_OUT_SEL_BT;
-        btcmu->CLK_OUT = SET_BITFIELD(btcmu->CLK_OUT, BT_CMU_CFG_CLK_OUT, id - HAL_CMU_CLOCK_OUT_BT_32K);
+        btcmu->CLK_OUT = SET_BITFIELD(btcmu->CLK_OUT, BT_CMU_CFG_CLK_OUT, id - HAL_CMU_CLOCK_OUT_BT_NONE);
     }
 
     if (sel < CMU_CLK_OUT_SEL_QTY) {
@@ -2478,12 +2569,12 @@ int hal_cmu_pwm_set_freq(enum HAL_PWM_ID_T id, uint32_t freq)
         clk_32k = 0;
         div = hal_cmu_get_crystal_freq() / freq;
         if (div < 2) {
-            return 1;
+            return -1;
         }
 
         div -= 2;
         if ((div & (AON_CMU_CFG_DIV_PWM0_MASK >> AON_CMU_CFG_DIV_PWM0_SHIFT)) != div) {
-            return 1;
+            return -2;
         }
     }
 
@@ -2725,13 +2816,13 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_module_init_state(void)
         SYS_PRST_UART1 | SYS_PRST_UART2 | SYS_PRST_UART3 |
         SYS_PRST_PCM | SYS_PRST_I2S0 | SYS_PRST_I2S1 | SYS_PRST_SPDIF0 | SYS_PRST_TQWF | SYS_PRST_TQA7;
     cmu->HRESET_SET = SYS_HRST_CORE1 | SYS_HRST_BCM | SYS_HRST_USBC | SYS_HRST_USBH | SYS_HRST_CODEC |
-        SYS_HRST_PSRAM1G | SYS_HRST_PSRAM200 | SYS_HRST_BT_DUMP | SYS_HRST_WF_DUMP | SYS_HRST_SDMMC |
+        SYS_HRST_AX2H_A7 | SYS_HRST_PSRAM1G | SYS_HRST_PSRAM200 | SYS_HRST_BT_DUMP | SYS_HRST_WF_DUMP | SYS_HRST_SDMMC |
         SYS_HRST_CHECKSUM | SYS_HRST_CRC | SYS_HRST_FLASH1;
     cmu->XRESET_SET = SYS_XRST_DMA | SYS_XRST_NIC | SYS_XRST_IMEMLO | SYS_XRST_IMEMHI | SYS_XRST_PSRAM1G | SYS_XRST_PER |
         SYS_XRST_PDBG | SYS_XRST_CORE0 | SYS_XRST_CORE1 | SYS_XRST_CORE2 | SYS_XRST_CORE3 | SYS_XRST_DBG | SYS_XRST_SCU |
         SYS_XRST_DISPLAYX | SYS_XRST_DISPLAYH | SYS_XRST_CSI | SYS_XRST_DSI | SYS_XRST_PSRAM1GMX | SYS_XRST_GPV_MAIN | SYS_XRST_GPV_PSRAM1G;
     cmu->APRESET_SET = SYS_APRST_BOOTREG | SYS_APRST_WDT| SYS_APRST_TIMER0 | SYS_APRST_TIMER1 | SYS_APRST_TQ | SYS_APRST_DAP |
-        SYS_APCLK_DISPLAY | SYS_APCLK_CSI;
+        SYS_APRST_DISPLAY | SYS_APRST_CSI;
     cmu->QRESET_SET = SYS_QRST_DSI_32K | SYS_QRST_DSI_PN | SYS_QRST_DSI_TV | SYS_QRST_DSI_PIX |
         SYS_QRST_DSI_DSI | SYS_QRST_CSI_LANE | SYS_QRST_CSI_PIX | SYS_QRST_CSI_LANG | SYS_QRST_IR;
 
@@ -2750,7 +2841,7 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_module_init_state(void)
         SYS_PCLK_UART1 | SYS_PCLK_UART2 | SYS_PCLK_UART3 |
         SYS_PCLK_PCM | SYS_PCLK_I2S0 | SYS_PCLK_I2S1 | SYS_PCLK_SPDIF0 | SYS_PCLK_TQWF | SYS_PCLK_TQA7;
     cmu->HCLK_DISABLE = SYS_HCLK_CORE1 | SYS_HCLK_BCM | SYS_HCLK_USBC | SYS_HCLK_USBH | SYS_HCLK_CODEC |
-        SYS_HCLK_PSRAM1G | SYS_HCLK_PSRAM200 | SYS_HCLK_BT_DUMP | SYS_HCLK_WF_DUMP | SYS_HCLK_SDMMC |
+        SYS_HCLK_AX2H_A7 | SYS_HCLK_PSRAM1G | SYS_HCLK_PSRAM200 | SYS_HCLK_BT_DUMP | SYS_HCLK_WF_DUMP | SYS_HCLK_SDMMC |
         SYS_HCLK_CHECKSUM | SYS_HCLK_CRC | SYS_HCLK_FLASH1;
     cmu->XCLK_DISABLE = SYS_XCLK_DMA | SYS_XCLK_NIC | SYS_XCLK_IMEMLO | SYS_XCLK_IMEMHI | SYS_XCLK_PSRAM1G | SYS_XCLK_PER |
         SYS_XCLK_PDBG | SYS_XCLK_CORE0 | SYS_XCLK_CORE1 | SYS_XCLK_CORE2 | SYS_XCLK_CORE3 | SYS_XCLK_DBG | SYS_XCLK_SCU |
@@ -3222,11 +3313,11 @@ void hal_cmu_dsp_clock_enable(void)
 #endif
     // DSP AXI clock divider defaults to 4 (div = reg_val + 2)
     cmu->DSP_DIV = SET_BITFIELD(cmu->DSP_DIV, CMU_CFG_DIV_XCLK, 2);
-    cmu->XCLK_ENABLE = SYS_XCLK_DMA | SYS_XCLK_NIC | SYS_XCLK_IMEMLO | SYS_XCLK_IMEMHI | SYS_XCLK_PSRAM1G | SYS_XCLK_PER |
+    cmu->XCLK_ENABLE = SYS_XCLK_DMA | SYS_XCLK_NIC | SYS_XCLK_IMEMLO | SYS_XCLK_IMEMHI | SYS_XCLK_PER |
         SYS_XCLK_PDBG | SYS_XCLK_CORE0 | SYS_XCLK_CORE1 | SYS_XCLK_CORE2 | SYS_XCLK_CORE3 | SYS_XCLK_DBG | SYS_XCLK_SCU |
-        SYS_XCLK_PSRAM1GMX | SYS_XCLK_GPV_MAIN | SYS_XCLK_GPV_PSRAM1G;;
-    cmu->APCLK_ENABLE = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP |
-        SYS_APCLK_DISPLAY | SYS_APCLK_CSI;
+        SYS_XCLK_GPV_MAIN;
+    cmu->APCLK_ENABLE = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP;
+    cmu->HCLK_ENABLE = SYS_HCLK_AX2H_A7;
 
     cmu->DSP_CFG0 |= CMU_CA7_DBGEN_MASK | CMU_CA7_SPIDEN_MASK | CMU_CA7_NIDEN_MASK | CMU_CA7_SPNIDEN_MASK;
 
@@ -3268,11 +3359,12 @@ void hal_cmu_dsp_clock_disable(void)
 #endif
     hal_cmu_pll_disable(dsp, HAL_CMU_PLL_USER_DSP);
 
-    cmu->XCLK_DISABLE = SYS_XCLK_DMA | SYS_XCLK_NIC | SYS_XCLK_IMEMLO | SYS_XCLK_IMEMHI | SYS_XCLK_PSRAM1G | SYS_XCLK_PER |
+    cmu->XCLK_DISABLE = SYS_XCLK_DMA | SYS_XCLK_NIC | SYS_XCLK_IMEMLO | SYS_XCLK_IMEMHI | SYS_XCLK_PER |
         SYS_XCLK_PDBG | SYS_XCLK_CORE0 | SYS_XCLK_CORE1 | SYS_XCLK_CORE2 | SYS_XCLK_CORE3 | SYS_XCLK_DBG | SYS_XCLK_SCU |
-        SYS_XCLK_PSRAM1GMX | SYS_XCLK_GPV_MAIN | SYS_XCLK_GPV_PSRAM1G;;
-    cmu->APCLK_DISABLE = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP |
-        SYS_APCLK_DISPLAY | SYS_APCLK_CSI;
+        SYS_XCLK_GPV_MAIN;
+    cmu->APCLK_DISABLE = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP;
+    cmu->OCLK_DISABLE = SYS_OCLK_WDT_AP | SYS_OCLK_TIMER0_AP | SYS_OCLK_TIMER1_AP;
+    cmu->HCLK_DISABLE = SYS_HCLK_AX2H_A7;
 
     hal_psc_a7_disable();
 }
@@ -3280,21 +3372,22 @@ void hal_cmu_dsp_clock_disable(void)
 void hal_cmu_dsp_reset_set(void)
 {
     aoncmu->SOFT_RSTN_SET = AON_CMU_SOFT_RSTN_A7_SET | AON_CMU_SOFT_RSTN_A7CPU_SET;
-    cmu->XRESET_SET = SYS_XRST_DMA | SYS_XRST_NIC | SYS_XRST_IMEMLO | SYS_XRST_IMEMHI | SYS_XRST_PSRAM1G | SYS_XRST_PER |
+    cmu->ORESET_SET = SYS_ORST_WDT_AP | SYS_ORST_TIMER0_AP | SYS_ORST_TIMER1_AP;
+    cmu->XRESET_SET = SYS_XRST_DMA | SYS_XRST_NIC | SYS_XRST_IMEMLO | SYS_XRST_IMEMHI | SYS_XRST_PER |
         SYS_XRST_PDBG | SYS_XRST_CORE0 | SYS_XRST_CORE1 | SYS_XRST_CORE2 | SYS_XRST_CORE3 | SYS_XRST_DBG | SYS_XRST_SCU |
-        SYS_XRST_DISPLAYX | SYS_XRST_DISPLAYH | SYS_XRST_CSI | SYS_XRST_DSI | SYS_XRST_PSRAM1GMX | SYS_XRST_GPV_MAIN | SYS_XRST_GPV_PSRAM1G;
-    cmu->APRESET_SET = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP |
-        SYS_APCLK_DISPLAY | SYS_APCLK_CSI;
+        SYS_XRST_GPV_MAIN;
+    cmu->APRESET_SET = SYS_APRST_BOOTREG | SYS_APRST_WDT | SYS_APRST_TIMER0 | SYS_APRST_TIMER1 | SYS_APRST_TQ | SYS_APRST_DAP;
+    cmu->HRESET_SET = SYS_HRST_AX2H_A7;
 }
 
 void hal_cmu_dsp_reset_clear(void)
 {
-    cmu->APRESET_CLR = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP |
-        SYS_APCLK_DISPLAY | SYS_APCLK_CSI;
-    cmu->XRESET_CLR = SYS_XRST_DMA | SYS_XRST_NIC | SYS_XRST_IMEMLO | SYS_XRST_IMEMHI | SYS_XRST_PSRAM1G | SYS_XRST_PER |
+    cmu->APRESET_CLR = SYS_APCLK_BOOTREG | SYS_APCLK_WDT| SYS_APCLK_TIMER0 | SYS_APCLK_TIMER1 | SYS_APCLK_TQ | SYS_APCLK_DAP;
+    cmu->XRESET_CLR = SYS_XRST_DMA | SYS_XRST_NIC | SYS_XRST_IMEMLO | SYS_XRST_IMEMHI | SYS_XRST_PER |
         SYS_XRST_PDBG | SYS_XRST_CORE0 | SYS_XRST_CORE1 | SYS_XRST_CORE2 | SYS_XRST_CORE3 | SYS_XRST_DBG | SYS_XRST_SCU |
-        SYS_XRST_DISPLAYX | SYS_XRST_DISPLAYH | SYS_XRST_CSI | SYS_XRST_DSI | SYS_XRST_PSRAM1GMX | SYS_XRST_GPV_MAIN | SYS_XRST_GPV_PSRAM1G;
-    cmu->ORESET_CLR = SYS_ORST_WDT_AP;
+        SYS_XRST_GPV_MAIN;
+    cmu->ORESET_CLR = SYS_ORST_WDT_AP | SYS_ORST_TIMER0_AP | SYS_ORST_TIMER1_AP;
+    cmu->HRESET_CLR = SYS_HRST_AX2H_A7;
     aoncmu->SOFT_RSTN_CLR = AON_CMU_SOFT_RSTN_A7_CLR;
     aocmu_reg_update_wait();
 }
@@ -3459,7 +3552,7 @@ void hal_cmu_flash1_enable()
 void hal_cmu_set_flash0_x8_mode(uint32_t en)
 {
     if (en)
-        cmu->MCU_TIMER |= ~CMU_FLS0_X8_SEL;
+        cmu->MCU_TIMER |= CMU_FLS0_X8_SEL;
     else
         cmu->MCU_TIMER &= ~CMU_FLS0_X8_SEL;
 }

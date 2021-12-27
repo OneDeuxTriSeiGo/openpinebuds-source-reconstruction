@@ -1664,7 +1664,13 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
             }
         } else {
 #ifdef RTOS
+#if defined(KERNEL_RHINO) || defined(KERNEL_RTX5)
+            const char *thread_name = osGetThreadName();
+            snprintf(ctx, sizeof(ctx), "%.9s", thread_name ? (char *)thread_name : "NULL");
+#else
             snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
+#endif
+
 #else
             ctx[0] = ' ';
             ctx[1] = ' ';
@@ -1679,6 +1685,12 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #else // !TRACE_TIME_STAMP
     return 0;
 #endif // !TRACE_TIME_STAMP
+}
+
+
+int hal_trace_exp_print_time(char *buf, unsigned int size)
+{
+    return hal_trace_print_time(0, 0, buf, size);
 }
 
 static inline int hal_trace_format_va(uint32_t attr, char *buf, unsigned int size, const char *fmt, va_list ap)
@@ -1745,7 +1757,7 @@ int hal_trace_printf_hook2(const char *tag, const char *fmt, va_list ap)
     return ret;
 }
 
-static int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
+int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
 {
 #ifdef USE_TRACE_ID
     struct PACKED LOG_CONTAINER_T {
