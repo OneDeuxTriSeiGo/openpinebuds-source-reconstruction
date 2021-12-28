@@ -244,5 +244,6 @@
 #define LWIP_NETIF_STATUS_CALLBACK      1
 #define LWIP_CHECKSUM_ON_COPY           0
 #define CHECKSUM_GEN_UDP                0
+#define LWIP_NETIF_EXT_STATUS_CALLBACK  1
 
 #endif /* _LWIP_PORTING_LWIPOPTS_H_ */
