@@ -87,26 +87,6 @@ if (ohos_kernel_type == "liteos_m") {
     command = "./init_burn_tools.sh ./../../ ${out_product_path} ${product_path}"
   }
 
-  # build sdk into lib
-  build_ext_component("build_sdk_into_lib") {
-    exec_path = rebase_path("liteos_m")
-
-    print("product_name:", product_name)
-    build_tz = "false"
-    build_mini = "false"
-
-    foreach(bsp_bin, bsp_bin_list) {
-      if (bsp_bin.bsp_bin_name == "best2600w_liteos_se") {
-        build_tz = bsp_bin.enable
-      }
-      if (bsp_bin.bsp_bin_name == "best2600w_liteos_mini") {
-        build_mini = bsp_bin.enable
-      }
-    }
-    print("product_path:", product_path)
-    command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path} ${flash_size}"
-  }
-
   # config bin from vendor/bestechnic/<product_name>/config.json
   foreach(bin_file, bin_list) {
     build_enable = bin_file.enable
@@ -129,7 +109,7 @@ if (ohos_kernel_type == "liteos_m") {
         out_lib_path = "${out_product_path}/libs/"
         bsp_lib_path = "./liteos_m/sdk/bsp/out/${bsp_target_name}/libbsp${bsp_target_name}.a"
         command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
-        deps = [ ":build_sdk_into_lib" ]
+        deps = [ "liteos_m/sdk:build_sdk_into_lib" ]
       }
 
       # generate execute bin
@@ -283,7 +263,7 @@ if (ohos_kernel_type == "liteos_m") {
         copy_dest = "${out_product_path}/release_bin"
         bin_name_ota = burn_name
         command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"
-        deps = [ ":build_sdk_into_lib" ]
+        deps = [ "liteos_m/sdk:build_sdk_into_lib" ]
         deps += [ ":init_burn_tools" ]
       }
 

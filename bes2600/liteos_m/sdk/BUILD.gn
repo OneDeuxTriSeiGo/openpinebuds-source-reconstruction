@@ -27,11 +27,34 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import("//build/lite/config/component/lite_component.gni")
+import("//build/lite/config/subsystem/lite_subsystem.gni")
 import("//kernel/liteos_m/liteos.gni")
+
+# build sdk into lib
+build_ext_component("build_sdk_into_lib") {
+  exec_path = rebase_path(".")
+
+  print("product_name:", product_name)
+  build_tz = "false"
+  build_mini = "false"
+
+  foreach(bsp_bin, bsp_bin_list) {
+    if (bsp_bin.bsp_bin_name == "best2600w_liteos_se") {
+      build_tz = bsp_bin.enable
+    }
+    if (bsp_bin.bsp_bin_name == "best2600w_liteos_mini") {
+      build_mini = bsp_bin.enable
+    }
+  }
+  print("product_path:", product_path)
+  command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path} ${flash_size}"
+}
 
 module_name = "bsp_config"
 
 kernel_module(module_name) {
+  deps = [ ":build_sdk_into_lib" ]
 }
 
 config("public") {
