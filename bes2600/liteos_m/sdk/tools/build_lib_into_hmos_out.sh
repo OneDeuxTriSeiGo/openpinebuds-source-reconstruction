@@ -23,7 +23,7 @@ flash_size=$5
 BUILD_PIECE="false"
 flash_config=""
 rel_flash_config=""
-MAKEFILE="./sdk/bsp/platform/main/Makefile"
+MAKEFILE="./bsp/platform/main/Makefile"
 if [ ! -f $MAKEFILE ]; then
     echo -e "${MAKEFILE} not exist!"
     BUILD_PIECE="true"
@@ -128,7 +128,7 @@ else
 fi
 
 
-cd sdk/bsp
+cd bsp
 
 chmod a+x tools/build_best2600w_ohos_into_lib.sh
 
