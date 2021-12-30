@@ -14,11 +14,13 @@
 
 # == area config a7 liteos bin begin == #
 OPT_BEST2600W_SOC_A7=" \
+A7_PROJECT=kws
 "
 # == area config a7 liteos bin end   == #
 
 # == area config soc main bin begin == #
 OPT_BEST2600W_SOC_MAIN=" \
+A7_PROJECT=kws
 "
 # == area config liteos main bin end   == #
 
