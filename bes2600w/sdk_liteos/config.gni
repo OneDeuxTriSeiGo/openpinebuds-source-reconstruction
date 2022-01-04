@@ -71,7 +71,12 @@ board_cflags = [
     "-DLFS_MAX_OPEN_DIRS=32",
     "-DLOSCFG_BASE_CORE_HILOG=1",
     "-DMBEDTLS_CMSIS_FILE=\"rtos/liteos/liteos_m/kal/cmsis/cmsis_os.h\"",
-    "-DIFNAMSIZ=1024"
+    "-DIFNAMSIZ=1024",
+    "-DMBEDTLS_TEST_NULL_ENTROPY",
+    "-DMBEDTLS_NO_DEFAULT_ENTROPY_SOURCES",
+    "-DMBEDTLS_THREADING_C",
+    "-DMBEDTLS_THREADING_ALT",
+    "-g",
 ]
 
 board_cxx_flags = board_cflags

@@ -23,6 +23,7 @@ static_library("sys_adapter") {
     "src/hm_sys.c",
     "src/platform.c",
     "src/printf.c",
+    "src/threading_alt.c",
   ]
 
   public_configs = [ ":sys_adapter_config" ]
@@ -30,6 +31,7 @@ static_library("sys_adapter") {
 
   include_dirs = [
     "include",
+    "//third_party/mbedtls/include/mbedtls",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/apps/factory/",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/platform/drivers/ana",
