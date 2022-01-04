@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2021-2021 Huawei Device Co., Ltd. All rights reserved.
+ * Copyright (c) 2013-2019 Huawei Technologies Co., Ltd. All rights reserved.
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -28,39 +29,43 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _LWIP_PORTING_DHCP_H_
-#define _LWIP_PORTING_DHCP_H_
+#ifndef LWIP_HDR_DHCPS_H
+#define LWIP_HDR_DHCPS_H
 
-#include <lwip/opt.h>
+#include "lwip/opt.h"
+#include "lwip/prot/dhcp.h"
+#if LWIP_DHCPS /* don't build if not configured for use in lwipopts.h */
 
-#if LWIP_DHCPS
-#define DHCP_OPTION_IDX_SERVER_ID   DHCP_OPTION_IDX_SERVER_ID, \
-                                    DHCP_OPTION_IDX_REQUESTED_IP
-#endif
-#include_next <lwip/dhcp.h>
-#if LWIP_DHCPS
-#undef DHCP_OPTION_IDX_SERVER_ID
-#endif
+#include "lwip/netif.h"
+#include "lwip/udp.h"
 
-#include <lwip/prot/dhcp.h>  // For DHCP_STATE_BOUND, DHCP_DISCOVER etc. by `mac/common/mac_data.c'
-
-#ifdef __cplusplus
+#if defined (__cplusplus) && __cplusplus
 extern "C" {
 #endif
 
-#if LWIP_DHCPS
-#define LWIP_HOOK_DHCP_PARSE_OPTION(netif, dhcp, state, msg, msg_type, option, len, pbuf, offset) \
-        LWIP_UNUSED_ARG(msg); \
-        break; \
-    case (DHCP_OPTION_REQUESTED_IP): \
-        LWIP_ERROR("len == 4", len == 4, return ERR_VAL); \
-        decode_idx = DHCP_OPTION_IDX_REQUESTED_IP;
+
+#ifndef LWIP_DHCPS_MAX_LEASE
+#define LWIP_DHCPS_MAX_LEASE 30
 #endif
 
-err_t dhcp_is_bound(struct netif *netif);
+#ifndef LWIP_DHCPS_LEASE_TIME
+#define LWIP_DHCPS_LEASE_TIME  ~0
+#endif
 
-#ifdef __cplusplus
+/* Offer time in seconds */
+#ifndef LWIP_DHCPS_OFFER_TIME
+#define LWIP_DHCPS_OFFER_TIME 300
+#endif
+
+#ifndef LWIP_DHCPS_DECLINE_TIME
+#define LWIP_DHCPS_DECLINE_TIME 500
+#endif
+
+err_t dhcps_start(struct netif *netif, const char *start_ip, u16_t ip_num);
+void dhcps_stop(struct netif *netif);
+
+#if defined (__cplusplus) && __cplusplus
 }
 #endif
-
-#endif /* _LWIP_PORTING_DHCP_H_ */
+#endif /* LWIP_DHCPS */
+#endif /* LWIP_HDR_DHCPS_H */

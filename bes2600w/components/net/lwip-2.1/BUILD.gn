@@ -46,7 +46,10 @@ static_library("lwip") {
 
   sources = LWIP_PORTING_FILES + LWIPNOAPPSFILES
 
-  sources -= [ "$LWIPDIR/api/sockets.c" ]
+  sources -= [
+    "$LWIPDIR/api/sockets.c",
+    "$LWIPDIR/core/ipv4/dhcp.c",
+  ]
 
   configs += [ ":lwip_depends" ]
 

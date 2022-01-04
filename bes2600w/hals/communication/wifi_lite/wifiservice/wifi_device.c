@@ -30,6 +30,7 @@
 #include "cmsis_os2.h"
 
 #define WIFI_MAX_CONFIG_BITMAP_SIZE    (((WIFI_MAX_CONFIG_SIZE) >> 3) + (WIFI_MAX_CONFIG_SIZE % 8? 1 : 0))
+#define HMOS_DEBUG
 #ifdef  HMOS_DEBUG
 #define hmos_printf(...)                printf(__VA_ARGS__)
 #else
@@ -132,7 +133,14 @@ static void HalHmosApEventEnabled(WIFI_USER_EVT_ID evt_id, void *arg);
 static void HalHmosApEventDisabled(WIFI_USER_EVT_ID evt_id, void *arg);
 static void HalHmosApEventStaJoin(WIFI_USER_EVT_ID evt_id, void *arg);
 static void HalHmosApEventStaLeave(WIFI_USER_EVT_ID evt_id, void *arg);
+static void HalHmosEventStaGotIp(WIFI_USER_EVT_ID evt_id, void *arg);
 extern void ethernetif_input(u16_t devnum, void *p_buf, int size);
+
+WifiLinkedInfo *HalHmosGetWifiInfo(void)
+{
+    return &g_HalHmosWifiInfo.info;
+}
+
 void HalHmosWifiLock(void)
 {
     if (g_HalHmosWifiInfo.hal_hmos_mutex_id == NULL) {
@@ -148,21 +156,10 @@ void HalHmosWifiUnLock(void)
         osMutexRelease(g_HalHmosWifiInfo.hal_hmos_mutex_id);
 }
 
-static void net_intf_status_change_cb(struct netif *netif)
-{
-    if (netif_is_up(netif) && !ip_addr_isany(&netif->ip_addr)) {
-        uint32_t ip = ((ip4_addr_t *)&netif->ip_addr)->addr;
-        uint32_t gw = ((ip4_addr_t *)&netif->gw)->addr;
-        uint32_t mask = ((ip4_addr_t *)&netif->netmask)->addr;
-        printf("net_intf_status_change_cb **ip = %s\n", inet_ntoa(ip));
-        printf("net_intf_status_change_cb **netmask = %s\n", inet_ntoa(mask));
-        printf("net_intf_status_change_cb **gw = %s\n", inet_ntoa(gw));
-    }
-}
-
 static void WifiConnectionChangedHandler(int state, WifiLinkedInfo *info)
 {
     struct netif *p_netif = &if_wifi;
+    printf("%s state:%d\n", __func__, state);
     if (p_netif == NULL)
         return;
     if (state == WIFI_STATE_NOT_AVALIABLE) {
@@ -184,6 +181,7 @@ static void WifiConnectionChangedHandler(int state, WifiLinkedInfo *info)
             printf("**netmask = %s\n", inet_ntoa(_current_ip.netmask));
             printf("**gw = %s\n", inet_ntoa(_current_ip.gw));
         } else {
+            printf("dhcp client start\n");
             dhcp_start(p_netif);
             osTimerStop(_dhcp_timer_id);
             osTimerStart(_dhcp_timer_id, 30 * 1000);
@@ -289,6 +287,7 @@ WifiErrorCode HalHmosWifiEventInit(void)
     bwifi_reg_user_evt_handler(WIFI_USER_EVT_AP_DISABLED, HalHmosApEventDisabled);
     bwifi_reg_user_evt_handler(WIFI_USER_EVT_AP_STA_CONNECTED, HalHmosApEventStaJoin);
     bwifi_reg_user_evt_handler(WIFI_USER_EVT_AP_STA_DISCONNECTED, HalHmosApEventStaLeave);
+    bwifi_reg_user_evt_handler(WIFI_USER_EVT_GOT_IP, HalHmosEventStaGotIp);
 
     g_HalHmosWifiInfo.hmos_event_thread_init = true;
     return WIFI_SUCCESS;
@@ -487,6 +486,36 @@ static void HalHmosApEventStaLeave(WIFI_USER_EVT_ID evt_id, void *arg)
     }
 }
 
+static void HalHmosEventStaGotIp(WIFI_USER_EVT_ID evt_id, void *arg)
+{
+    WifiLinkedInfo  *info = &(g_HalHmosWifiInfo.info);
+    hmos_printf("F:%s L:%d event:%d, arg=%d\n", __func__, __LINE__, evt_id, (*(uint8 *)arg));
+
+    if (evt_id == WIFI_USER_EVT_CONNECTED) {
+        int i = 0;
+        HalHmosEventInfo event;
+        event.event_id = HMOS_ON_WIFI_CONNECTION_CHANGED;
+
+        event.event_info.wifi_connection_changed.state = WIFI_STATE_AVALIABLE;
+        info->rssi = bwifi_get_current_rssi();
+        info->disconnectedReason = 0;
+        info->connState = WIFI_CONNECTED;
+        memcpy(info->bssid, arg, WIFI_MAC_LEN);
+        memcpy(&(event.event_info.wifi_connection_changed.info), info, sizeof(WifiLinkedInfo));
+
+        hmos_printf("connected status=%d bssid=0x%02x:0x%02x:0x%02x:0x%02x:0x%02x:0x%02x:\n\r",
+                    event.event_info.wifi_connection_changed.info.connState, info->bssid[0],
+                    info->bssid[1], info->bssid[2], info->bssid[3], info->bssid[4], info->bssid[5]);
+
+        for (i = 0; i < WIFI_MAX_EVENT_SIZE; i++) {
+            if (g_HalHmosEvent[i] != NULL)
+                HalHmosWifiEventCall(&event, g_HalHmosEvent[i]);
+        }
+
+    }
+}
+
+
 static WifiSecurityType HalHmosSecTypeConvert(BWIFI_SEC_TYPE_T security_type)
 {
     switch (security_type) {
@@ -573,48 +602,44 @@ static WifiErrorCode HalHmosGetNidDeviceConfigs(WifiDeviceConfig *result, int ni
 WifiErrorCode EnableWifi(void)
 {
     WifiErrorCode ret;
-
-    if (WIFI_SUCCESS != HalHmosWifiEventInit())
+    hmos_printf("%s %d start\n", __func__, __LINE__);
+    if (WIFI_SUCCESS != HalHmosWifiEventInit()) {
+        hmos_printf("%s %d HalHmosWifiEventInit failed!\n", __func__, __LINE__);
         return ERROR_WIFI_UNKNOWN;
+    }
 
-    if (g_HalHmosWifiInfo.wifi_init == true)
+    if (g_HalHmosWifiInfo.wifi_init == true) {
+        hmos_printf("%s %d is aready\n", __func__, __LINE__);
         return ERROR_WIFI_BUSY;
+    }
 
     HalHmosWifiLock();
     bwifi_reg_eth_input_handler(ethernetif_input);
     ret = bwifi_init();
     if (ret == WIFI_SUCCESS) {
-        extern struct netif if_wifi;
-        struct netif *p_netif = &if_wifi;
-
-        tcpip_init(NULL, NULL);
-
-        extern int bwifi_get_own_mac(u8 *addr);
-        bwifi_get_own_mac(_mac_addr);
-        lwip_netif_mac_addr_init(p_netif, _mac_addr, ETH_ALEN);
-
-        extern err_t ethernetif_init(struct netif *netif);
-        if (netif_add(p_netif, IP4_ADDR_ANY4, IP4_ADDR_ANY4, IP4_ADDR_ANY4, NULL, ethernetif_init, tcpip_input) == 0) {
-            printf("netif add wifi interface failed\n");
-            return -1;
-        }
-
-        g_HalHmosWifiInfo.wifi_init = true;
-
-        netif_set_default(p_netif);
-
-        netif_set_status_callback(p_netif, net_intf_status_change_cb);
-
-        g_staEventHandler.OnWifiConnectionChanged = WifiConnectionChangedHandler;
-        int error = RegisterWifiEvent(&g_staEventHandler);
-        if (error != WIFI_SUCCESS) {
-            printf("[sample] RegisterWifiEvent fail, error = %d\n", error);
-            return -1;
+        static int tcp_init_flag = 0;
+        if (tcp_init_flag == 0) 
+        {
+            tcp_init_flag = 1;
+            HalTcpIpInit();
+            extern struct netif if_wifi;
+            struct netif *p_netif = &if_wifi;
+            WifiDevNetifInit(p_netif);
+            g_HalHmosWifiInfo.wifi_init = true;
+            g_staEventHandler.OnWifiConnectionChanged = WifiConnectionChangedHandler;
+            int error = RegisterWifiEvent(&g_staEventHandler);
+            if (error != WIFI_SUCCESS) {
+                printf("[sample] RegisterWifiEvent fail, error = %d\n", error);
+                return -1;
+            }
+        } else {
+            g_HalHmosWifiInfo.wifi_init = true;
+            bwifi_flush_scan_result();
         }
     }
 
     HalHmosWifiUnLock();
-
+    hmos_printf("%s %d sucess\n", __func__, __LINE__);
     return ret;
 }
 
@@ -622,8 +647,10 @@ WifiErrorCode DisableWifi(void)
 {
     WifiErrorCode ret = ERROR_WIFI_BUSY;
     int disconn_return = 0;
-
+    hmos_printf("%s %d start\n", __func__, __LINE__);
     HalHmosWifiLock();
+    // WifiEvent *event = &g_staEventHandler;
+    // int error = UnRegisterWifiEvent(event);
     disconn_return = bwifi_disconnect();
     if (disconn_return == BWIFI_R_OK || disconn_return == BWIFI_R_STATUS_ERROR) {
         if(g_HalHmosWifiInfo.wifi_init == false){
@@ -635,7 +662,7 @@ WifiErrorCode DisableWifi(void)
     }
 
     HalHmosWifiUnLock();
-
+    hmos_printf("%s %d sucess\n", __func__, __LINE__);
     return ret;
 }
 
@@ -648,9 +675,10 @@ WifiErrorCode Scan(void)
 {
     WifiErrorCode ret = ERROR_WIFI_BUSY;
 
-
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
+    if (IsWifiActive() != WIFI_STA_ACTIVE) {
+        hmos_printf("%s %d state:%d not active!!\n", __func__, __LINE__, IsWifiActive());
         return ERROR_WIFI_IFACE_INVALID;
+    }
 
     if (g_HalHmosWifiInfo.scan_state == SCAN_REQUEST ||
         g_HalHmosWifiInfo.scan_state == SCAN_TRIGGER)
@@ -671,9 +699,10 @@ WifiErrorCode GetScanInfoList(WifiScanInfo *result, unsigned int *size)
     HalHmosWifiConfig  *hmos_config_info        = &(g_HalHmosWifiInfo.hmos_config_info);
     WifiErrorCode ret                           = ERROR_WIFI_BUSY;
 
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
+    if (IsWifiActive() != WIFI_STA_ACTIVE) {
+        hmos_printf("%s %d state:%d not active!!\n", __func__, __LINE__, IsWifiActive());
         return ERROR_WIFI_IFACE_INVALID;
-
+    }
     if (scan_result_len >= WIFI_SCAN_HOTSPOT_LIMIT) {
 
         if (hmos_config_info->scan_size > 0 &&
@@ -724,9 +753,10 @@ WifiErrorCode GetDeviceConfigs(WifiDeviceConfig *result, unsigned int *size)
     int cnt = 0;
     HalHmosWifiConfig  *hmos_config_info = &(g_HalHmosWifiInfo.hmos_config_info);
 
-    if (g_HalHmosWifiInfo.hmos_config_info.wifi_config_map[0 >> 3] == 0)
+    if (g_HalHmosWifiInfo.hmos_config_info.wifi_config_map[0 >> 3] == 0) {
+        hmos_printf("%s %d wifi_config_map:0x%x!!\n", __func__, __LINE__, g_HalHmosWifiInfo.hmos_config_info.wifi_config_map[0 >> 3]);
         return ERROR_WIFI_NOT_AVAILABLE;
-
+    }
     HalHmosWifiLock();
     for (i = 0; i < WIFI_MAX_CONFIG_SIZE; i++) {
         hmos_printf("%s i=%d cnt=%d\n\r", __func__, i, cnt);
@@ -761,9 +791,10 @@ WifiErrorCode ConnectTo(int networkId)
     WifiErrorCode   ret                     = ERROR_WIFI_UNKNOWN;
     WifiDeviceConfig result;
 
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
+    if (IsWifiActive() != WIFI_STA_ACTIVE) {
+        hmos_printf("%s %d state:%d not active!!\n", __func__, __LINE__, IsWifiActive());
         return ERROR_WIFI_IFACE_INVALID;
-
+    }
     HalHmosWifiLock();
     if (WIFI_SUCCESS == HalHmosGetNidDeviceConfigs(&result, networkId)) {
         hmos_printf("%s %d ssid=%s,psk=%s,wepid=%d ,hidder=0\n\r",
@@ -791,8 +822,10 @@ WifiErrorCode ConnectTo(int networkId)
 WifiErrorCode Disconnect(void)
 {
     WifiErrorCode ret;
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
+    if (IsWifiActive() != WIFI_STA_ACTIVE) {
+        hmos_printf("%s %d state:%d not active!!\n", __func__, __LINE__, IsWifiActive());
         return ERROR_WIFI_IFACE_INVALID;
+    }
     HalHmosWifiLock();
     ret = ( bwifi_disconnect() == BWIFI_R_OK ? WIFI_SUCCESS : ERROR_WIFI_UNKNOWN);
     if (ret == WIFI_SUCCESS)
@@ -804,8 +837,10 @@ WifiErrorCode Disconnect(void)
 WifiErrorCode GetLinkedInfo(WifiLinkedInfo *result)
 {
     WifiLinkedInfo *info    = &(g_HalHmosWifiInfo.info);
-    if (result == NULL)
+    if (result == NULL) {
+        hmos_printf("%s %d input paramter is NULL\n", __func__, __LINE__);
         return ERROR_WIFI_INVALID_ARGS;
+    }
     info->rssi = bwifi_get_current_rssi();
     memcpy(result, info, sizeof(WifiLinkedInfo));
     hmos_printf("%s ssid=%s rssi=%d stat=%d\n\r", __func__,
@@ -842,7 +877,7 @@ WifiErrorCode RegisterWifiEvent(WifiEvent *event)
     return ret;
 }
 
-WifiErrorCode UnRegisterWifiEvent(const WifiEvent *event)
+WifiErrorCode UnRegisterWifiEvent(WifiEvent *event)
 {
     if (event == NULL)
         return ERROR_WIFI_INVALID_ARGS;
@@ -879,28 +914,33 @@ WifiErrorCode AdvanceScan(WifiScanParams *params)
     WifiScanParams params_tmp = {0};
     char tmp[] = "wifi_service_xts";
 
-    if (params == NULL || memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0)
+    if (params == NULL || memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0) {
+        hmos_printf("%s %d input paramter is NULL or not right\n", __func__, __LINE__);
         return ERROR_WIFI_UNKNOWN;
-
+    }
     params->scanType = (params->scanType == 255 ? WIFI_BAND_SCAN : params->scanType);
     params_tmp.scanType = params->scanType;
-    if (memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0 && params_tmp.scanType != WIFI_BAND_SCAN)
+    if (memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0 && params_tmp.scanType != WIFI_BAND_SCAN) {
+        hmos_printf("%s %d scanType(%d) not right\n", __func__, __LINE__, params_tmp.scanType);
         return ERROR_WIFI_UNKNOWN;
-
+    }
     memset(&params_tmp, 0, sizeof(WifiScanParams));
     strcpy(&params_tmp.ssid, tmp);
     params->scanType = (params->scanType == 255 ? WIFI_BAND_SCAN : params->scanType);
     params_tmp.scanType = params->scanType;
-    if (memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0 && params_tmp.scanType != WIFI_BAND_SCAN)
+    if (memcmp(params, &params_tmp, sizeof(WifiScanParams)) == 0 && params_tmp.scanType != WIFI_BAND_SCAN) {
+        hmos_printf("%s %d scanType(%d) not right\n", __func__, __LINE__, params_tmp.scanType);
         return ERROR_WIFI_UNKNOWN;
-
-    if (IsWifiActive() != WIFI_STA_ACTIVE)
+    }
+    if (IsWifiActive() != WIFI_STA_ACTIVE) {
+        hmos_printf("%s %d state:%d not active!!\n", __func__, __LINE__, IsWifiActive());
         return ERROR_WIFI_IFACE_INVALID;
-
+    }
     if (g_HalHmosWifiInfo.scan_state == SCAN_REQUEST ||
-        g_HalHmosWifiInfo.scan_state == SCAN_TRIGGER)
+        g_HalHmosWifiInfo.scan_state == SCAN_TRIGGER) {
+        hmos_printf("%s %d scan_state:%d, busy!!\n", __func__, __LINE__, g_HalHmosWifiInfo.scan_state);
         return ERROR_WIFI_BUSY;
-
+    }
     HalHmosWifiLock();
     if (params != NULL) {
         if (params->scanType == WIFI_FREQ_SCAN) {

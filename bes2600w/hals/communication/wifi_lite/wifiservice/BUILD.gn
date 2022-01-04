@@ -15,6 +15,7 @@ static_library("wifiservice") {
   sources = [
     "wifi_device.c",
     "wifi_hotspot.c",
+    "wifi_net.c",
   ]
   include_dirs = [
     "//foundation/communication/interfaces/kits/wifi_lite/wifiservice",
@@ -22,5 +23,7 @@ static_library("wifiservice") {
     "//foundation/communication/wifi_lite/interfaces/wifiservice",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/net/wifi/",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis/",
+    # "//kernel/liteos_a/net/lwip-2.1/enhancement/include/",
+    # "kernel/liteos_m/components/net/lwip-2.1/porting/include",
   ]
 }
