@@ -22,12 +22,15 @@
 #include "bwifi_interface.h"
 #include "wifi_hotspot_config.h"
 #include "bwifi_event.h"
+// #include "bwifi_hal.h"
 
-enum ENUM_WIFI_BAND {
-    BAND_2G4,
-    BAND_5G,
-    DUAL_BAND
-};
+#define HAL_USE_DHCPS
+#ifdef HAL_USE_DHCPS
+#include "lwip/tcpip.h"
+#include "lwip/ip_addr.h"
+#include "lwip/netifapi.h"
+#include "lwip/dhcps.h"
+#endif
 
 #define RSSI_LEVEL_4_2_G (-65)
 #define RSSI_LEVEL_3_2_G (-75)
@@ -38,6 +41,7 @@ enum ENUM_WIFI_BAND {
 #define RSSI_LEVEL_2_5_G (-79)
 #define RSSI_LEVEL_1_5_G (-85)
 
+extern struct netif if_wifi_ap;
 
 static int g_HalHmosWifiApStatus                = WIFI_HOTSPOT_NOT_ACTIVE;
 static HotspotConfig g_HalHmosWifiApConfig      = {0};
@@ -59,8 +63,24 @@ static int HalBesSecTypeConvert(WifiSecurityType security_type)
     }
 }
 
+#ifdef HAL_USE_DHCPS
+static void SetAddr(struct netif *pst_lwip_netif)
+{
+    ip4_addr_t st_gw;
+    ip4_addr_t st_ipaddr;
+    ip4_addr_t st_netmask;
+
+    IP4_ADDR(&st_ipaddr, 192, 168, 51, 1);        // IP ADDR  为了和其他数字管家中的其他设备适配， 选择192.168.51网段
+    IP4_ADDR(&st_gw, 192, 168, 51, 1);            // GET WAY ADDR
+    IP4_ADDR(&st_netmask, 255, 255, 255, 0);    // NET MASK CODE
+
+    netifapi_netif_set_addr(pst_lwip_netif, &st_ipaddr, &st_netmask, &st_gw);
+}
+#endif
+
 WifiErrorCode EnableHotspot(void)
 {
+    struct netif *p_netif_ap = &if_wifi_ap;
     WifiErrorCode ret           = ERROR_WIFI_UNKNOWN;
     BWIFI_SEC_TYPE_T sectype    = HalBesSecTypeConvert(g_HalHmosWifiApConfig.securityType);
     HalHmosWifiLock();
@@ -74,14 +94,29 @@ WifiErrorCode EnableHotspot(void)
                 ret = WIFI_SUCCESS;
             }
         }
+#ifdef HAL_USE_DHCPS
+        HalTcpIpInit();
+        WifiHotspotNetifInit(p_netif_ap);
+        if (p_netif_ap) {
+            SetAddr(p_netif_ap);
+            printf("[%s] start dhcp server\n", __func__);
+            netifapi_dhcps_start(p_netif_ap, 0, 0);
+        } else {
+            printf("[%s] p_netif_ap is NULL!!!\n", __func__);
+        }
+#endif
     }
     HalHmosWifiUnLock();
+    netif_set_link_up(p_netif_ap);
+    netif_set_up(p_netif_ap);
     return ret;
 }
 
 WifiErrorCode DisableHotspot(void)
 {
     HalHmosWifiLock();
+    struct netif *p_netif_ap = &if_wifi_ap;
+    WifiHotspotNetifDeInit(p_netif_ap);
     if(g_HalHmosWifiApStatus == WIFI_HOTSPOT_NOT_ACTIVE)
         return ERROR_WIFI_NOT_STARTED;
     bwifi_softap_stop();
@@ -123,9 +158,10 @@ WifiErrorCode GetStationList(StationInfo *result, unsigned int *size)
     WifiErrorCode ret                   = ERROR_WIFI_INVALID_ARGS;
     struct bwifi_mac_addr *mac_list     = NULL;
 
-    if (result == NULL)
+    if (result == NULL) {
+        printf("[%s] result is NULL\n", __func__);
         return ret;
-
+    }
     mac_list = (struct bwifi_mac_addr *)malloc(count * sizeof(struct bwifi_mac_addr));
     if (mac_list != NULL) {
         HalHmosWifiLock();
@@ -136,9 +172,10 @@ WifiErrorCode GetStationList(StationInfo *result, unsigned int *size)
                 result++;
             }
             *size = count;
-        } else
+             printf("[%s] had sta connect size:%d\n", __func__, count);
+        } else {
             *size = 0;
-
+        }
         HalHmosWifiUnLock();
         free(mac_list);
     }

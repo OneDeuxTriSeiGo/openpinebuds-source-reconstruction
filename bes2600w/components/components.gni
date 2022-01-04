@@ -49,4 +49,5 @@ declare_args() {
   bes_ui_test = false
   bes_ability_test = false
   bes_histreamer_test = false
+  bes_bluetooth_test = false
 }
