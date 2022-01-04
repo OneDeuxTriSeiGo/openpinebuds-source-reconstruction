@@ -35,7 +35,7 @@ HKS_DLL_API_PUBLIC void hks_get_sdk_version(struct hks_blob *sdk_version)
  */
 HKS_DLL_API_PUBLIC int32_t hks_init(void)
 {
-    return 1;
+    return 0;
 }
 
 /*
@@ -57,7 +57,7 @@ HKS_DLL_API_PUBLIC void hks_destroy(void)
  */
 HKS_DLL_API_PUBLIC int32_t hks_refresh_key_info(void)
 {
-    return 1;
+    return 0;
 }
 
 /*
