@@ -30,7 +30,7 @@ typedef enum {
 int wifi_srv_send2peer(int msg, int data_len, void *data, int sync);
 int wifi_srv_init(void);
 
-extern struct wifi_init_paras wifi_paras;
+extern struct wifi_init_param wifi_param;
 
 #ifdef __cplusplus
 }

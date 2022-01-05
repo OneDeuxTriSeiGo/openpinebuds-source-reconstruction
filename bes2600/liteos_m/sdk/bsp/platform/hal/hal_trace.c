@@ -1687,12 +1687,6 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #endif // !TRACE_TIME_STAMP
 }
 
-
-int hal_trace_exp_print_time(char *buf, unsigned int size)
-{
-    return hal_trace_print_time(0, 0, buf, size);
-}
-
 static inline int hal_trace_format_va(uint32_t attr, char *buf, unsigned int size, const char *fmt, va_list ap)
 {
     int len;

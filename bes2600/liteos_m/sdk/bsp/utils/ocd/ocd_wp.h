@@ -15,7 +15,9 @@
 #ifndef __BES_WATCH_POINT__
 #define __BES_WATCH_POINT__
 
+#ifndef BIT
 #define BIT(x) (1 << (x))
+#endif
 
 /*armv8m*/
 #define DWT_CTRL       0xE0001000  /*DWT Control Register*/

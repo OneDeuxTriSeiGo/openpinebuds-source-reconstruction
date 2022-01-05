@@ -862,48 +862,48 @@ void hal_iomux_set_uart0(void)
 
 void hal_iomux_set_uart1(void)
 {
-    uint32_t mask_pd, mask_pu, mask_pu_c;
+    uint32_t mask_pd_c, mask_pu, mask_pu_c;
 
     // Set uart1 func
 #if (UART1_IOMUX_INDEX == 02)
     iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK | IOMUX_GPIO_P03_SEL_MASK)) |
         IOMUX_GPIO_P02_SEL(1) | IOMUX_GPIO_P03_SEL(1);
-    mask_pd = (1 << HAL_IOMUX_PIN_P0_2) | (1 << HAL_IOMUX_PIN_P0_3);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P0_2) | (1 << HAL_IOMUX_PIN_P0_3);
     mask_pu = (1 << HAL_IOMUX_PIN_P0_2);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P0_3);
 #elif (UART1_IOMUX_INDEX == 03) // 32: UART1 RX; 03 UART1 TX
     iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P32_SEL_MASK)) | IOMUX_GPIO_P32_SEL(1);
     iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P03_SEL_MASK)) | IOMUX_GPIO_P03_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P0_3) | (1 << HAL_IOMUX_PIN_P3_2);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P0_3) | (1 << HAL_IOMUX_PIN_P3_2);
     mask_pu = (1 << HAL_IOMUX_PIN_P3_2);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P0_3);
 #elif (UART1_IOMUX_INDEX == 10)
     iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P10_SEL_MASK | IOMUX_GPIO_P11_SEL_MASK)) |
         IOMUX_GPIO_P10_SEL(1) | IOMUX_GPIO_P11_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P1_0) | (1 << HAL_IOMUX_PIN_P1_1);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P1_0) | (1 << HAL_IOMUX_PIN_P1_1);
     mask_pu = (1 << HAL_IOMUX_PIN_P1_0);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P1_1);
 #elif (UART1_IOMUX_INDEX == 20)
     iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P20_SEL_MASK | IOMUX_GPIO_P21_SEL_MASK)) |
         IOMUX_GPIO_P20_SEL(1) | IOMUX_GPIO_P21_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P2_0) | (1 << HAL_IOMUX_PIN_P2_1);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P2_0) | (1 << HAL_IOMUX_PIN_P2_1);
     mask_pu = (1 << HAL_IOMUX_PIN_P2_0);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P2_1);
 #elif (UART1_IOMUX_INDEX == 30)
     iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P30_SEL_MASK | IOMUX_GPIO_P31_SEL_MASK)) |
         IOMUX_GPIO_P30_SEL(1) | IOMUX_GPIO_P31_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P3_0) | (1 << HAL_IOMUX_PIN_P3_1);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P3_0) | (1 << HAL_IOMUX_PIN_P3_1);
     mask_pu = (1 << HAL_IOMUX_PIN_P3_0);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P3_1);
 #elif (UART1_IOMUX_INDEX == 32)
     iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P32_SEL_MASK | IOMUX_GPIO_P33_SEL_MASK)) |
         IOMUX_GPIO_P32_SEL(1) | IOMUX_GPIO_P33_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P3_2) | (1 << HAL_IOMUX_PIN_P3_3);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P3_2) | (1 << HAL_IOMUX_PIN_P3_3);
     mask_pu = (1 << HAL_IOMUX_PIN_P3_2);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P3_3);
 #else
@@ -913,46 +913,46 @@ void hal_iomux_set_uart1(void)
     iomux->REG_02C |= mask_pu;
     iomux->REG_02C &= ~(mask_pu_c);
     // Clear pulldown
-    iomux->REG_030 &= ~mask_pd;
+    iomux->REG_030 &= ~mask_pd_c;
 }
 
 void hal_iomux_set_uart2(void)
 {
-    uint32_t mask_pd, mask_pu, mask_pu_c;
+    uint32_t mask_pd_c, mask_pu, mask_pu_c;
 
     // Set uart1 func
 #if (UART2_IOMUX_INDEX == 00)
     iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P00_SEL_MASK | IOMUX_GPIO_P01_SEL_MASK)) |
         IOMUX_GPIO_P00_SEL(1) | IOMUX_GPIO_P01_SEL(1);
-    mask_pd = (1 << HAL_IOMUX_PIN_P0_0) | (1 << HAL_IOMUX_PIN_P0_1);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P0_0) | (1 << HAL_IOMUX_PIN_P0_1);
     mask_pu = (1 << HAL_IOMUX_PIN_P0_0);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P0_1);
 #elif (UART2_IOMUX_INDEX == 12)
     iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK | IOMUX_GPIO_P13_SEL_MASK)) |
         IOMUX_GPIO_P12_SEL(1) | IOMUX_GPIO_P13_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P1_2) | (1 << HAL_IOMUX_PIN_P1_3);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P1_2) | (1 << HAL_IOMUX_PIN_P1_3);
     mask_pu = (1 << HAL_IOMUX_PIN_P1_2);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P1_3);
 #elif (UART2_IOMUX_INDEX == 14)
     iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P14_SEL_MASK | IOMUX_GPIO_P15_SEL_MASK)) |
         IOMUX_GPIO_P14_SEL(1) | IOMUX_GPIO_P15_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P1_4) | (1 << HAL_IOMUX_PIN_P1_5);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P1_4) | (1 << HAL_IOMUX_PIN_P1_5);
     mask_pu = (1 << HAL_IOMUX_PIN_P1_4);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P1_5);
 #elif (UART2_IOMUX_INDEX == 22)
     iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P22_SEL_MASK | IOMUX_GPIO_P23_SEL_MASK)) |
         IOMUX_GPIO_P22_SEL(1) | IOMUX_GPIO_P23_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P2_2) | (1 << HAL_IOMUX_PIN_P2_3);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P2_2) | (1 << HAL_IOMUX_PIN_P2_3);
     mask_pu = (1 << HAL_IOMUX_PIN_P2_2);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P2_3);
 #elif (UART2_IOMUX_INDEX == 36)
     iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P36_SEL_MASK | IOMUX_GPIO_P37_SEL_MASK)) |
         IOMUX_GPIO_P36_SEL(1) | IOMUX_GPIO_P37_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P3_6) | (1 << HAL_IOMUX_PIN_P3_7);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P3_6) | (1 << HAL_IOMUX_PIN_P3_7);
     mask_pu = (1 << HAL_IOMUX_PIN_P3_6);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P3_7);
 #else
@@ -962,45 +962,45 @@ void hal_iomux_set_uart2(void)
     iomux->REG_02C |= mask_pu;
     iomux->REG_02C &= ~(mask_pu_c);
     // Clear pulldown
-    iomux->REG_030 &= ~mask_pd;
+    iomux->REG_030 &= ~mask_pd_c;
 }
 
 void hal_iomux_set_uart3(void)
 {
-    uint32_t mask_pd, mask_pu, mask_pu_c;
+    uint32_t mask_pd_c, mask_pu, mask_pu_c;
 
     // Set uart1 func
 #if (UART3_IOMUX_INDEX == 04)
     iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK | IOMUX_GPIO_P05_SEL_MASK)) |
         IOMUX_GPIO_P04_SEL(1) | IOMUX_GPIO_P05_SEL(1);
-    mask_pd = (1 << HAL_IOMUX_PIN_P0_4) | (1 << HAL_IOMUX_PIN_P0_5);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P0_4) | (1 << HAL_IOMUX_PIN_P0_5);
     mask_pu = (1 << HAL_IOMUX_PIN_P0_4);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P0_5);
 #elif (UART3_IOMUX_INDEX == 06)
     iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P06_SEL_MASK | IOMUX_GPIO_P07_SEL_MASK)) |
         IOMUX_GPIO_P06_SEL(1) | IOMUX_GPIO_P07_SEL(1);
-    mask_pd = (1 << HAL_IOMUX_PIN_P0_6) | (1 << HAL_IOMUX_PIN_P0_7);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P0_6) | (1 << HAL_IOMUX_PIN_P0_7);
     mask_pu = (1 << HAL_IOMUX_PIN_P0_6);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P0_7);
 #elif (UART3_IOMUX_INDEX == 24)
     iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P24_SEL_MASK | IOMUX_GPIO_P25_SEL_MASK)) |
         IOMUX_GPIO_P24_SEL(1) | IOMUX_GPIO_P25_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P2_4) | (1 << HAL_IOMUX_PIN_P2_5);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P2_4) | (1 << HAL_IOMUX_PIN_P2_5);
     mask_pu = (1 << HAL_IOMUX_PIN_P2_4);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P2_5);
 #elif (UART3_IOMUX_INDEX == 26)
     iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P26_SEL_MASK | IOMUX_GPIO_P27_SEL_MASK)) |
         IOMUX_GPIO_P26_SEL(1) | IOMUX_GPIO_P27_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P2_6) | (1 << HAL_IOMUX_PIN_P2_7);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P2_6) | (1 << HAL_IOMUX_PIN_P2_7);
     mask_pu = (1 << HAL_IOMUX_PIN_P2_6);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P2_7);
 #elif (UART3_IOMUX_INDEX == 34)
     iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P34_SEL_MASK | IOMUX_GPIO_P35_SEL_MASK)) |
         IOMUX_GPIO_P34_SEL(1) | IOMUX_GPIO_P35_SEL(1);
 
-    mask_pd = (1 << HAL_IOMUX_PIN_P3_4) | (1 << HAL_IOMUX_PIN_P3_5);
+    mask_pd_c = (1 << HAL_IOMUX_PIN_P3_4) | (1 << HAL_IOMUX_PIN_P3_5);
     mask_pu = (1 << HAL_IOMUX_PIN_P3_4);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P3_5);
 #else
@@ -1010,7 +1010,7 @@ void hal_iomux_set_uart3(void)
     iomux->REG_02C |= mask_pu;
     iomux->REG_02C &= ~(mask_pu_c);
     // Clear pulldown
-    iomux->REG_030 &= ~mask_pd;
+    iomux->REG_030 &= ~mask_pd_c;
 }
 
 void hal_iomux_set_analog_i2c(void)
@@ -1443,7 +1443,7 @@ void hal_iomux_set_spilcd(void)
         {HAL_IOMUX_PIN_P2_7, HAL_IOMUX_FUNC_SPILCD_CS1,  SPI_VOLTAGE_SEL, HAL_IOMUX_PIN_NOPULL},
 #endif
 #if (SPILCD_IOMUX_CS2_INDEX == 06)
-        {HAL_IOMUX_PIN_P0_0, HAL_IOMUX_FUNC_SPILCD_CS2,  SPI_VOLTAGE_SEL, HAL_IOMUX_PIN_NOPULL},
+        {HAL_IOMUX_PIN_P0_6, HAL_IOMUX_FUNC_SPILCD_CS2,  SPI_VOLTAGE_SEL, HAL_IOMUX_PIN_NOPULL},
 #elif (SPILCD_IOMUX_CS2_INDEX == 31)
         {HAL_IOMUX_PIN_P3_1, HAL_IOMUX_FUNC_SPILCD_CS2,  SPI_VOLTAGE_SEL, HAL_IOMUX_PIN_NOPULL},
 #endif
@@ -2016,23 +2016,7 @@ void hal_iomux_set_dsi_te(void)
 
 void hal_iomux_set_wf_fem(int rf_switch)
 {
-#if WIFI_OUT_FEM
-    if( (rf_switch  == 37) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
-    {
-        iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P13_SEL_MASK)) | IOMUX_GPIO_P13_SEL(13);
-        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P24_SEL_MASK)) | IOMUX_GPIO_P24_SEL(13);
-        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P27_SEL_MASK)) | IOMUX_GPIO_P27_SEL(13);
-    }
-    if( (rf_switch  == 101) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
-    {
-        iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
-        iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK)) | IOMUX_GPIO_P04_SEL(13);
-    }
-
-#else
-
     uint32_t mask_pd, mask_pu;
-
 #if (1 == WIFI_RF_SWITCH) //bes EVB v2
 
     iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P20_SEL_MASK)) | IOMUX_GPIO_P20_SEL(13);
@@ -2131,7 +2115,7 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK)) | IOMUX_GPIO_P04_SEL(13);
     }
 
-    //5G GPIO-02 -sw1，2.4G GPIO-04-sw4
+    //5G GPIO-02 -sw1,2.4G GPIO-04-sw4
     if( (rf_switch  == 6) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
     {
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
@@ -2190,7 +2174,26 @@ void hal_iomux_set_wf_fem(int rf_switch)
     {
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
     }
+
+    /*out fem */
+    if( (rf_switch  == 37) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
+    {
+        iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P13_SEL_MASK)) | IOMUX_GPIO_P13_SEL(13);
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P24_SEL_MASK)) | IOMUX_GPIO_P24_SEL(13);
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P27_SEL_MASK)) | IOMUX_GPIO_P27_SEL(13);
+    }
+    if( (rf_switch  == 101) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
+    {
+        iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
+        iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK)) | IOMUX_GPIO_P04_SEL(13);
+    }
+    if( (rf_switch  == 104) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
+    {
+        iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK)) | IOMUX_GPIO_P12_SEL(13);
+        iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P13_SEL_MASK)) | IOMUX_GPIO_P13_SEL(13);
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P24_SEL_MASK)) | IOMUX_GPIO_P24_SEL(13);
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P27_SEL_MASK)) | IOMUX_GPIO_P27_SEL(13);  
+    }
 #endif
 
-#endif
 }

@@ -143,4 +143,4 @@ tools/build_best2600w_ohos_into_lib.sh \
 -d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys $rel_branch BUILD_PIECE=$BUILD_PIECE" \
 GEN_LIB=1 $rel
 
-cd ../../
+cd ../

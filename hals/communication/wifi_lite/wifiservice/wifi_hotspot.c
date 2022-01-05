@@ -23,12 +23,6 @@
 #include "wifi_hotspot_config.h"
 #include "bwifi_event.h"
 
-enum ENUM_WIFI_BAND {
-    BAND_2G4,
-    BAND_5G,
-    DUAL_BAND
-};
-
 #define RSSI_LEVEL_4_2_G (-65)
 #define RSSI_LEVEL_3_2_G (-75)
 #define RSSI_LEVEL_2_2_G (-82)
@@ -49,11 +43,11 @@ static int HalBesSecTypeConvert(WifiSecurityType security_type)
 {
     switch (security_type) {
     case WIFI_SEC_TYPE_WEP:
-        return SECURITY_WEP104;
+        return BWIFI_SECURITY_WEP104;
     case WIFI_SEC_TYPE_PSK:
-        return SECURITY_WPA_WPA2;
+        return BWIFI_SECURITY_WPA_WPA2;
     case WIFI_SEC_TYPE_SAE:
-        return SECURITY_WPA3_SAE_WPA2;
+        return BWIFI_SECURITY_WPA3_SAE_WPA2;
     default:
         return WIFI_SEC_TYPE_OPEN;
     }
@@ -131,7 +125,7 @@ WifiErrorCode GetStationList(StationInfo *result, unsigned int *size)
         HalHmosWifiLock();
         if (bwifi_softap_get_station_list(mac_list, &count) == BWIFI_R_OK) {
             for (i = 0; i < count; i++) {
-                memcpy((uint8 *)result->macAddress, mac_list++, WIFI_MAC_LEN);
+                memcpy((uint8_t *)result->macAddress, mac_list++, WIFI_MAC_LEN);
                 result->disconnectedReason = 0;
                 result++;
             }

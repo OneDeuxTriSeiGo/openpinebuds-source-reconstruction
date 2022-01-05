@@ -97,7 +97,7 @@ make_best2600w="make T=best2600w_liteos \
                 UART1_IOMUX_INDEX=20 \
                 NET_FTP_CLIENT_SUPPORT=0 UTILS_BES_KV=1 \
                 GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0x80000 \
-                CP_BOOT=1 \
+                CP_BOOT=1 LITTLEFS_PARTITION_SUPPORT=0 LITTLEFS_ENABLE=0 \
                 FAST_TIMER_COMPENSATE=1 WAPI_SUPPORT=0 \
                 USB_AUDIO_FS=0  \
                 AI_VOICE=0 LLD_PRINT_ENABLE=0 \

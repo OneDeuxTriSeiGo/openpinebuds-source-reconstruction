@@ -20,7 +20,7 @@ obj-y += cp_boot.o
 endif
 obj-y += cp_ipc.o
 
-ccflags-y += -Inet/wifi -Inet/net_os
+ccflags-y += -Inet/wifi -Inet/utils
 
 ifeq ($(NUTTX_BUILD),1)
 

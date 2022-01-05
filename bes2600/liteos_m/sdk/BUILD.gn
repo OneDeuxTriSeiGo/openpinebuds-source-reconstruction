@@ -78,12 +78,12 @@ kernel_module(module_name) {
   deps = []
   foreach(bin_file, bin_list) {
     build_enable = bin_file.enable
-      exe_bin = "${bin_file.elf_name}_${board_name}"
-      if (build_enable == "true") {
-        # copy lib generate by bsp target to out directory.
-        copy_lib_name = "gen_bsp_lib_${exe_bin}"
-        deps += [ ":${copy_lib_name}" ]
-      }
+    exe_bin = "${bin_file.elf_name}_${board_name}"
+    if (build_enable == "true") {
+      # copy lib generate by bsp target to out directory.
+      copy_lib_name = "gen_bsp_lib_${exe_bin}"
+      deps += [ ":${copy_lib_name}" ]
+    }
   }
 }
 
