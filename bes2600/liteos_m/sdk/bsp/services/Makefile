@@ -605,11 +605,7 @@ ccflags-y += \
     -Iservices/wifi_app/iperf/ \
     -Iplatform/drivers/wifi/ \
     -Inet/wpa_supplicant_l/src/utils/ \
-    -Inet/include/os/ \
-    -Inet/include/ \
-    -Inet/include/unaligned/ \
-    -Inet/include/byteorder/ \
-    -Inet/net_os/ \
+    -Inet/utils/ \
     -Iservices/wifi_app/sniffer/ \
     -Iservices/wifi_app/bes_airkiss/ \
     -Inv_section/factory_section/ \
@@ -622,7 +618,6 @@ ccflags-y += \
     -Iservices/a7_dsp/common/ \
     -Iutils/ocd/ \
     -Iservices/lplayer/interface/include/ \
-    -Iservices/wifi_app/alsa_adapter/
     -Iservices/lplayer/interface/include/ \
     -Iservices/lplayer/component/audio_sink/include/ \
     -Iservices/lplayer/component/include/ \

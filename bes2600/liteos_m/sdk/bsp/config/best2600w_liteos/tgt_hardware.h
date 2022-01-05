@@ -103,14 +103,19 @@ extern uint8_t wifi_addr[6];
 
 #define CODEC_SADC_VOL (12)
 
-#ifndef TGT_VOLUME_LEVEL_USER_MAX
-#define TGT_VOLUME_LEVEL_USER_MAX        (17)
-#endif
+// #ifndef TGT_VOLUME_LEVEL_USER_MAX    // for user specific
+// #define TGT_VOLUME_LEVEL_USER_MAX        (17)
+// #endif
 
+#ifdef TGT_VOLUME_LEVEL_USER_MAX
 #define TGT_VOLUME_LEVEL_FACTORY_MAX     (6)
 
-/* silence + user_vol_tbl + factory_vol_tbl + 1 */
-#define TGT_VOLUME_LEVEL_QTY_LITEOS      (1 + TGT_VOLUME_LEVEL_USER_MAX + TGT_VOLUME_LEVEL_FACTORY_MAX + 1)
+/* silence + user_vol_tbl + factory_vol_tbl + + debug_vol_tbl + 1 */
+#define TGT_VOLUME_LEVEL_QTY_USER_SPECIFIC      ( 1 + \
+                                                  TGT_VOLUME_LEVEL_USER_MAX + \
+                                                  TGT_VOLUME_LEVEL_FACTORY_MAX + \
+                                                  TGT_VOLUME_LEVEL_DEBUG_MAX + \
+                                                  1 )
 
 #ifdef TGT_VOLUME_LEVEL_USER_MAX
 extern const uint32_t alsa_float_volume_mapping_array[TGT_VOLUME_LEVEL_USER_MAX];
@@ -120,8 +125,13 @@ uint8_t tgt_user_volume_step_get(void);
 #ifdef TGT_VOLUME_LEVEL_FACTORY_MAX
 uint8_t tgt_factory_volume_step_get(void);
 #endif
+#endif // TGT_VOLUME_LEVEL_USER_MAX
 
-extern const struct CODEC_DAC_VOL_T codec_dac_vol[TGT_VOLUME_LEVEL_QTY_LITEOS];
+#ifdef TGT_VOLUME_LEVEL_QTY_USER_SPECIFIC
+extern const struct CODEC_DAC_VOL_T codec_dac_vol[TGT_VOLUME_LEVEL_QTY_USER_SPECIFIC];
+#else
+extern const struct CODEC_DAC_VOL_T codec_dac_vol[TGT_VOLUME_LEVEL_QTY];
+#endif
 
 #define CFG_AUD_EQ_IIR_NUM_BANDS (4)
 

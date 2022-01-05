@@ -16,6 +16,7 @@
 #include CHIP_SPECIFIC_HDR(reg_cmu)
 #include CHIP_SPECIFIC_HDR(reg_aoncmu)
 #include CHIP_SPECIFIC_HDR(reg_btcmu)
+#include CHIP_SPECIFIC_HDR(reg_wfcmu)
 #include "hal_cmu.h"
 #include "hal_aud.h"
 #include "hal_bootmode.h"
@@ -131,6 +132,8 @@ static struct CMU_T * const cmu = (struct CMU_T *)CMU_BASE;
 static struct AONCMU_T * const aoncmu = (struct AONCMU_T *)AON_CMU_BASE;
 
 static struct BTCMU_T * const POSSIBLY_UNUSED btcmu = (struct BTCMU_T *)BT_CMU_BASE;
+
+static struct WLANCMU_T * const POSSIBLY_UNUSED wlancmu = (struct WLANCMU_T *)WIFI_CMU_BASE;
 
 static uint32_t cp_entry;
 
@@ -909,6 +912,7 @@ void hal_cmu_csi_clock_disable(void)
     cmu->XCLK_DISABLE = SYS_XCLK_CSI;
     cmu->QCLK_ENABLE = SYS_QCLK_CSI_LANE | SYS_QCLK_CSI_PIX | SYS_QCLK_CSI_LANG;
     cmu->APCLK_DISABLE = SYS_APCLK_CSI;
+    aoncmu->MIPI_CLK &= ~(AON_CMU_EN_CLK_PIX_CSI | AON_CMU_POL_CLK_CSI_IN);
 }
 
 void hal_cmu_csi_reset_set(void)
@@ -2488,6 +2492,7 @@ int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id)
         CMU_CLK_OUT_SEL_CODEC   = 1,
         CMU_CLK_OUT_SEL_BT      = 2,
         CMU_CLK_OUT_SEL_MCU     = 3,
+        CMU_CLK_OUT_SEL_WF      = 4,
 
         CMU_CLK_OUT_SEL_QTY
     };
@@ -2509,6 +2514,9 @@ int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id)
     } else if (HAL_CMU_CLOCK_OUT_BT_NONE <= id && id <= HAL_CMU_CLOCK_OUT_BT_DACD8) {
         sel = CMU_CLK_OUT_SEL_BT;
         btcmu->CLK_OUT = SET_BITFIELD(btcmu->CLK_OUT, BT_CMU_CFG_CLK_OUT, id - HAL_CMU_CLOCK_OUT_BT_NONE);
+    } else if (HAL_CMU_CLOCK_OUT_WF_32K <= id && id <= HAL_CMU_CLOCK_OUT_WF_BBDIGFIFO) {
+        sel = CMU_CLK_OUT_SEL_WF;
+        wlancmu->CLK_OUT = SET_BITFIELD(wlancmu->CLK_OUT, WLAN_CMU_CFG_CLK_OUT, id - HAL_CMU_CLOCK_OUT_WF_32K);
     }
 
     if (sel < CMU_CLK_OUT_SEL_QTY) {

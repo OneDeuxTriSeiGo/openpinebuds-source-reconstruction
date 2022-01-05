@@ -456,7 +456,6 @@ extern int hal_trace_printf_without_crlf_ts(const char *fmt, ...);
 int hal_trace_set_onoff(uint32_t onoff);
 void hal_trace_register_cp_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
 void hal_trace_unregister_cp_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
-int hal_trace_exp_print_time(char *buf, unsigned int size);
 #ifdef __cplusplus
 }
 #endif

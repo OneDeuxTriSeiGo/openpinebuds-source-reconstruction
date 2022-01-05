@@ -98,9 +98,6 @@ export ARM_CMSE_TARGET ?= best2600w_liteos_se
 
 export OTA_CODE_OFFSET ?= 0
 
-#support WAPI
-export WAPI_SUPPORT ?= 0
-
 KBUILD_CPPFLAGS += -DOTA_CODE_OFFSET=$(OTA_CODE_OFFSET)
 
 ifeq ($(CPU), m4)
@@ -861,18 +858,40 @@ endif
 #KBUILD_CFLAGS += -DWIFI_CONNECT_WITHOUT_SCAN
 KBUILD_CFLAGS += -DWIFI_CONNECT_RETRIES=3
 KBUILD_CFLAGS += -DWIFI_RECONNECT_RETRIES=100
+ifneq ($(WIFI_ON_CP),1)
 KBUILD_CFLAGS += -DWIFI_TX_LONG_RETRIES=15
 KBUILD_CFLAGS += -DWIFI_TX_SHORT_RETRIES=15
+endif
 
-
+ifneq ($(WIFI_ON_CP),1)
+#support 802.1X
 export IEEE8021X_SUPPORT ?= 0
-export P2P_MODE_SUPPORT ?= 0
+
+#support 80211w
+export IEEE80211W_SUPPORT ?= 1
+
+#support WPA3
+export WPA3_SUPPORT ?= 1
+ifeq ($(WPA3_SUPPORT),1)
+export SAE_SUPPORT ?= 1
+export NET_OPENSSL_SUPPORT ?= 1
+endif
+
+#support WAPI
+export WAPI_SUPPORT ?= 0
+endif
+
 export AP_MODE_SUPPORT ?= 1
-export SNIFFER_MODE_SUPPORT ?= 0
 ifeq ($(AP_MODE_SUPPORT),1)
 KBUILD_CFLAGS += -D__AP_MODE__
 endif
 
+export P2P_MODE_SUPPORT ?= 0
+ifeq ($(P2P_MODE_SUPPORT),1)
+KBUILD_CFLAGS += -D__P2P_MODE__
+endif
+
+export SNIFFER_MODE_SUPPORT ?= 0
 ifeq ($(SNIFFER_MODE_SUPPORT),1)
 KBUILD_CFLAGS += -D__SNIFFER_MODE__
 endif
@@ -881,29 +900,6 @@ export DUAL_BAND ?= 0
 ifeq ($(DUAL_BAND),1)
 KBUILD_CPPFLAGS += -D__DUAL_BAND__
 KBUILD_CFLAGS += -D__DUAL_BAND__
-endif
-
-export BT_CLOSE ?= 0
-ifneq ($(BT_CLOSE)_$(USER_BT_STACK),1_0)
-#KBUILD_CFLAGS += -D__WIFI_BT_COEX__
-#KBUILD_CPPFLAGS += -D__WIFI_BT_COEX__
-endif
-
-export BT_USE_UX_VOLUME ?= 1
-ifeq ($(BT_USE_UX_VOLUME), 1)
-KBUILD_CPPFLAGS += -DBT_USE_UX_VOLUME
-endif
-
-export HIECHO_ENABLE ?= 1
-ifeq ($(HIECHO_ENABLE),1)
-KBUILD_CPPFLAGS += -DHIECHO_ENABLE
-KBUILD_CFLAGS += -DHIECHO_ENABLE
-endif
-
-ifeq ($(A7_DSP_ENABLE),1)
-export DSP_ENABLE := 1
-export LARGE_RAM := 0
-KBUILD_CFLAGS += -D__A7_DSP_ENABLE__ -D__A7_DSP_TRANSQ_AF__
 endif
 
 export USE_RTS ?= 1
@@ -934,9 +930,32 @@ ifeq ($(GREEN_FIELD),1)
 KBUILD_CPPFLAGS += -D__GREEN_FIELD__
 endif
 
+export BT_CLOSE ?= 0
+ifneq ($(BT_CLOSE)_$(USER_BT_STACK),1_0)
+#KBUILD_CFLAGS += -D__WIFI_BT_COEX__
+#KBUILD_CPPFLAGS += -D__WIFI_BT_COEX__
+endif
+
+export BT_USE_UX_VOLUME ?= 1
+ifeq ($(BT_USE_UX_VOLUME), 1)
+KBUILD_CPPFLAGS += -DBT_USE_UX_VOLUME
+endif
+
+export HIECHO_ENABLE ?= 1
+ifeq ($(HIECHO_ENABLE),1)
+KBUILD_CPPFLAGS += -DHIECHO_ENABLE
+KBUILD_CFLAGS += -DHIECHO_ENABLE
+endif
+
+ifeq ($(A7_DSP_ENABLE),1)
+export DSP_ENABLE := 1
+export LARGE_RAM := 0
+KBUILD_CFLAGS += -D__A7_DSP_ENABLE__ -D__A7_DSP_TRANSQ_AF__
+endif
+
 init-y      :=
 core-y      := platform/ services/ apps/ services/multimedia/
-core-y      += utils/cqueue/ utils/list/ utils/intersyshci/ thirdparty/ utils/decom/
+core-y      += utils/cqueue/ utils/list/ utils/intersyshci/ thirdparty/ utils/decom/ utils/hexdump/
 
 # **************************
 # services config
@@ -994,75 +1013,8 @@ export LFS_ON_SD_CARD ?= 1
 export ALSA_EN ?= 1
 ifeq ($(ALSA_EN), 1)
 KBUILD_CPPFLAGS += -D__ALSA_EN__
-# ALSA_V1 is old alsa adapter.
-export ALSA_V1_EN ?= 0
-ifneq ($(ALSA_V1_EN),1)
-# use new alsa
-export ALSA_RESAMPLE_PROCESS_EN ?= 1
-export ALSA_AUDIO_PROCESS_EN ?= 0
-export ALSA_AUDIO_PROCESS_RENDER_EN ?= 1
-ifeq ($(ALSA_AUDIO_PROCESS_RENDER_EN),1)
-KBUILD_CPPFLAGS += -DALSA_AUDIO_PROCESS_RENDER_EN
-export ALSA_AUDIO_PROCESS_RENDER_SIMULATE ?= 0
-endif
-ifeq ($(AUDIO_OUTPUT_SW_GAIN), 1)
-export ALSA_SW_GAIN_PROCESS_EN ?= 1
-endif
-export ALSA_STATE_HOOK_EN ?= 1
-export ALSA_DUMP_EN ?= 0
-ifeq ($(ALSA_DUMP_EN), 1)
-KBUILD_CPPFLAGS += -DALSA_DUMP_EN
-endif
-export ALSA_ULTRASOUND_EN ?= 1
-ifeq ($(ALSA_ULTRASOUND_EN), 1)
-KBUILD_CPPFLAGS += -DALSA_ULTRASOUND_EN
-endif
-else
-# use old alsa
-export ALSA_PLAYER_EN ?= 0
-export ALSA_SUPPORT_MULTI_INSTANCE ?= 1
-export ALSA_STEREO_TO_MONO_EN ?= 1
-export ALSA_MONO_TO_STEREO_EN ?= 0
-export ALSA_AUDIO_PROCESS_EN ?= 0
-export ALSA_AUDIO_PROCESS_RENDER_EN ?= 1
-# ALSA_AUDIO_PROCESS_RENDER_EN depends on A7
-ifneq ($(A7_DSP_ENABLE),1)
-export ALSA_AUDIO_PROCESS_RENDER_EN := 0
-endif
-export ALSA_SRC_PROCESS_EN ?= 1
-export ALSA_24BIT_PROCESS_EN ?= 0
-export ALSA_32BIT_PROCESS_EN ?= 0
-export ALSA_FILL_DATA_ON_START ?= 1
-export ALSA_SUPPORT_PERCENT_VOLUME ?= 0
-export ALSA_SUPPORT_ADJUST_ADC_VOLUME ?= 0
-export ALSA_SUPPORT_ULTRASOUND ?= 0
-export ALSA_WIFI_TO_BT ?= 1
-export ALSA_STATE_HOOK_EN ?= 0
-ifeq ($(AUDIO_OUTPUT_SW_GAIN),1)
-export ALSA_SW_PROCESS_EN := 1
-ifeq ($(ALSA_SW_PROCESS_EN),1)
-export ALSA_USER_DATA_FADE_OUT_EN := 1
-endif # ALSA_SW_PROCESS_EN
-endif # AUDIO_OUTPUT_SW_GAIN
-ifeq ($(ALSA_SUPPORT_MULTI_INSTANCE),1)
-export ALSA_STEREO_TO_MONO_EN := 1
-export ALSA_SRC_PROCESS_EN := 1
-endif # ALSA_SUPPORT_MULTI_INSTANCE
-ifeq ($(ALSA_SRC_PROCESS_EN),1)
-export ALSA_SRC_TARGET_SAMPLE_RATE :=48000
-export ALSA_RESAMPLE_USER_HOOK_EN := 1
-endif # ALSA_SRC_PROCESS_EN
-ifeq ($(ALSA_SUPPORT_ADJUST_ADC_VOLUME),1)
-export ALSA_SUPPORT_PERCENT_VOLUME := 1
-endif # ALSA_SUPPORT_ADJUST_ADC_VOLUME
-# over-write some opt for this case.
-ifeq ($(ALSA_AUDIO_PROCESS_RENDER_EN), 1)
-export ALSA_STEREO_TO_MONO_EN := 0
-export ALSA_MONO_TO_STEREO_EN := 1
-export ALSA_32BIT_PROCESS_EN := 1
-export ALSA_INPUT_STEREO_OUTPUT_MONO_EN := 1
-endif
-endif # ALSA_V1_EN
+export ALSA_CONFIG_INDEX ?= 2
+KBUILD_CPPFLAGS += -DALSA_CONFIG_INDEX=$(ALSA_CONFIG_INDEX)
 endif # ALSA_EN
 
 export LPLAYER_EN ?= 1
@@ -1147,12 +1099,12 @@ KBUILD_CPPFLAGS +=  -Iplatform/cmsis/inc \
                     -Iservices/audioflinger \
                     -Iplatform/hal
 
-KBUILD_CPPFLAGS +=  -Inet \
+KBUILD_CPPFLAGS +=  -Inet -Inet/wifi \
 		-Iplatform/drivers/wifi \
 		-Iplatform/drivers/usb/usb_dev/inc
 KBUILD_CPPFLAGS += -Imbed/api -Imbed/common -Imbed/targets/hal/TARGET_BEST/TARGET_BEST100X/TARGET_MBED_BEST1000 \
 				   -Imbed/targets/hal/TARGET_BEST/TARGET_BEST100X -Imbed/hal
-KBUILD_CPPFLAGS += -I$(LWIP_ROOT)/src/include -I$(LWIP_ROOT)/src/include/$(POSIX_PATH)
+KBUILD_CPPFLAGS += -I$(LWIP_ROOT)/src/include
 
 KBUILD_CPPFLAGS += \
     -D__APP_KEY_FN_STYLE_A__ \

@@ -29,6 +29,7 @@
 #include "los_debug.h"
 #include "los_exchook.h"
 #include "los_backtrace.h"
+#include "los_tick.h"
 #include "stdio.h"
 
 #define SYSTICK_EXTERNAL_CLOCK          1
@@ -250,31 +251,6 @@ VOID os_exc_hook(EXC_TYPE excType)
 }
 #endif
 
-WEAK UINT64 HalGetExpandTick(VOID)
-{
-    return LOS_OK;
-}
-
-WEAK INT32 HalGetRtcTime(UINT64 *usec)
-{
-    return LOS_OK;
-}
-
-WEAK INT32 HalGetRtcTimeZone(INT32 *timeZone)
-{
-    return LOS_OK;
-}
-
-WEAK INT32 HalSetRtcTime(UINT64 utcTime, UINT64 *usec)
-{
-    return LOS_OK;
-}
-
-WEAK INT32 HalSetRtcTimeZone(INT32 timeZone)
-{
-    return LOS_OK;
-}
-
 #ifndef SYSTICK_IRQ_PRIORITY
 #define SYSTICK_IRQ_PRIORITY    0xFFU
 #endif
@@ -290,7 +266,7 @@ static uint8_t PendST;
 }
 
 // Setup OS Tick.
-__WEAK int32_t OS_Tick_Setup (uint32_t freq) {
+static int32_t OS_Tick_Setup (uint32_t freq) {
   uint32_t load;
 
   if (freq == 0U) {
@@ -339,8 +315,30 @@ __WEAK int32_t OS_Tick_Setup (uint32_t freq) {
   return (0);
 }
 
+static void os_tick_reload(uint64_t nextResponseTime)
+{
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+    SysTick->LOAD = (uint32_t)(nextResponseTime - 1UL); /* set reload register */
+    SysTick->VAL = 0UL; /* Load the SysTick Counter Value */
+    NVIC_ClearPendingIRQ(SysTick_IRQn);
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+}
+
+static uint64_t os_tick_cycle_get(uint32_t *period)
+{
+    uint32_t hwCycle = 0;
+    uint32_t intSave = LOS_IntLock();
+    uint32_t val = SysTick->VAL;
+    *period = SysTick->LOAD;
+    if (val != 0) {
+        hwCycle = *period - val;
+    }
+    LOS_IntRestore(intSave);
+    return (uint64_t)hwCycle;
+}
+
 /// Enable OS Tick.
-__WEAK void OS_Tick_Enable (void) {
+static void os_tick_enable (void) {
 #ifdef OSTICK_USE_FAST_TIMER
   hal_fast_timer_continue();
   SysTick->CTRL = 0;
@@ -355,7 +353,7 @@ __WEAK void OS_Tick_Enable (void) {
 }
 
 /// Disable OS Tick.
-__WEAK void OS_Tick_Disable (void) {
+static void os_tick_disable (void) {
 #ifdef OSTICK_USE_FAST_TIMER
   hal_fast_timer_pause();
 #else
@@ -367,20 +365,28 @@ __WEAK void OS_Tick_Disable (void) {
 #endif
 }
 
-uint32_t os_tick_init(void)
+static uint32_t os_tick_init(HWI_PROC_FUNC tickHandler)
 {
+    OS_VECTOR_SET(15, tickHandler);
     OS_Tick_Setup(LOSCFG_BASE_CORE_TICK_PER_SECOND);
-    OS_Tick_Enable();
+    os_tick_enable();
     return 0;
 }
 
-void platform_tick_handler(void)
-{
 
-}
+const static ArchTickTimer arch_tick_timer = {
+    .freq = OS_SYS_CLOCK,
+    .irqNum = 15,
+    .init = os_tick_init,
+    .getCycle = os_tick_cycle_get,
+    .reload = os_tick_reload,
+    .lock = os_tick_disable,
+    .unlock = os_tick_enable,
+};
 
-void os_vector_init(void)
+void os_pre_init_hook(void)
 {
+    LOS_TickTimerRegister(&arch_tick_timer, OsTickHandler);
 #ifdef OS_EXC_HOOK
     OS_VECTOR_SET(2, HalExcNMI);
     OS_VECTOR_SET(3, HalExcHardFault);
@@ -391,15 +397,12 @@ void os_vector_init(void)
 #endif
     OS_VECTOR_SET(11, HalSVCHandler);
     OS_VECTOR_SET(14, HalPendSV);
-    OS_VECTOR_SET(15, OsTickHandler);
     hal_cache_sync_all(HAL_CACHE_ID_D_CACHE);
 }
 
 void os_post_init_hook(void)
 {
-    *(volatile UINT32 *)OS_NVIC_CCR &= ~(UNALIGNFAULT); //allow unalign access
     OS_TCB_FROM_TID(g_swtmrTaskID)->taskStatus &= ~OS_TASK_FLAG_SYSTEM_TASK;
-    os_tick_init();
 }
 
 #if !defined(MODULE_KERNEL_STUB)
@@ -484,7 +487,7 @@ osThreadDef_t os_thread_def_main = {(board_main),{"main",osThreadDetached,NULL,0
 #ifdef __NO_STARTFILES__
 void _start(void)
 {
-    os_vector_init();
+    os_pre_init_hook();
     osKernelInitialize();
     osThreadCreate(&os_thread_def_main, 0);
     os_post_init_hook();
@@ -496,7 +499,7 @@ __attribute__((naked)) void software_init_hook (void) {
   __asm (
     ".syntax unified\n"
     ".thumb\n"
-    "bl   os_vector_init\n"
+    "bl   os_pre_init_hook\n"
     "bl   osKernelInitialize\n"
     "movs r0,#0\n"
     "movs r1,#0\n"
@@ -528,7 +531,7 @@ __attribute__((naked)) void software_init_hook (void) {
     "bl   __libc_init_array\n"
     "mov  r0,r4\n"
     "mov  r1,r5\n"
-    "bl   os_vector_init\n"
+    "bl   os_pre_init_hook\n"
     "bl   osKernelInitialize\n"
     "ldr  r0,=os_thread_def_main\n"
     "movs r1,#0\n"

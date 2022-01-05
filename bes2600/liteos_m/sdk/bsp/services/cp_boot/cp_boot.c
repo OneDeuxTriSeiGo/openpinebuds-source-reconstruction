@@ -93,7 +93,7 @@ static void __cp_reboot_thread(void const* arg)
     TRACE(1, "\n\n%-32s start......\n", __FUNCTION__);
     cp_boot();
 #ifdef  WIFI_ON_CP
-    (void) bwifi_cp_reset();
+    (void) bwifi_reinit();
 #endif
     cp_reboot_thread_id = NULL;
     TRACE(1, "%s exit......", __FUNCTION__);

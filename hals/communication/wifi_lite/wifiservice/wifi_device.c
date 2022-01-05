@@ -103,15 +103,15 @@ typedef struct hal_hmos_bwifi_cmd {
 typedef struct {
     int                         scan_size;
     int                         networkId; /* connected AP save it */
-    uint8 wifi_config_map[WIFI_MAX_CONFIG_BITMAP_SIZE];
+    uint8_t wifi_config_map[WIFI_MAX_CONFIG_BITMAP_SIZE];
     WifiDeviceConfig wifi_config[WIFI_MAX_CONFIG_SIZE];
 } HalHmosWifiConfig;
 
 typedef struct {
     volatile HalHmosScanState   scan_state;
-    uint8                       wifi_init;
-    uint8                       hidden;
-    uint8                       hmos_event_thread_init;
+    uint8_t                       wifi_init;
+    uint8_t                       hidden;
+    uint8_t                       hmos_event_thread_init;
     osMutexId                   hal_hmos_mutex_id;
     HalHmosWifiConfig           hmos_config_info;
     WifiLinkedInfo              info;
@@ -347,7 +347,7 @@ static int HalHmosSendEvent(HalHmosWifiCallId event_id, HalHmosWifiCmdInfo *info
 static void HalHmosStaEventConnect(WIFI_USER_EVT_ID evt_id, void *arg)
 {
     WifiLinkedInfo  *info = &(g_HalHmosWifiInfo.info);
-    hmos_printf("F:%s L:%d event:%d, arg=%d\n", __func__, __LINE__, evt_id, (*(uint8 *)arg));
+    hmos_printf("F:%s L:%d event:%d, arg=%d\n", __func__, __LINE__, evt_id, (*(uint8_t *)arg));
 
     if (evt_id == WIFI_USER_EVT_CONNECTED) {
         int i = 0;
@@ -490,17 +490,17 @@ static void HalHmosApEventStaLeave(WIFI_USER_EVT_ID evt_id, void *arg)
 static WifiSecurityType HalHmosSecTypeConvert(BWIFI_SEC_TYPE_T security_type)
 {
     switch (security_type) {
-    case SECURITY_NONE:
+    case BWIFI_SECURITY_NONE:
         return WIFI_SEC_TYPE_OPEN;
-    case SECURITY_WEP40:
-    case SECURITY_WEP104:
+    case BWIFI_SECURITY_WEP40:
+    case BWIFI_SECURITY_WEP104:
         return WIFI_SEC_TYPE_WEP;
-    case SECURITY_WPA:
-    case SECURITY_WPA2:
-    case SECURITY_WPA_WPA2:
+    case BWIFI_SECURITY_WPA:
+    case BWIFI_SECURITY_WPA2:
+    case BWIFI_SECURITY_WPA_WPA2:
         return WIFI_SEC_TYPE_PSK;
-    case SECURITY_WPA3_SAE:
-    case SECURITY_WPA3_SAE_WPA2:
+    case BWIFI_SECURITY_WPA3_SAE:
+    case BWIFI_SECURITY_WPA3_SAE_WPA2:
         return WIFI_SEC_TYPE_SAE;
     default:
         return WIFI_SEC_TYPE_INVALID;
@@ -864,7 +864,7 @@ WifiErrorCode GetDeviceMacAddress(unsigned char *result)
     if (result == NULL)
         return ERROR_WIFI_INVALID_ARGS;
 
-    if (BWIFI_R_OK != bwifi_get_own_mac((uint8 *)result))
+    if (BWIFI_R_OK != bwifi_get_own_mac((uint8_t *)result))
         return ERROR_WIFI_UNKNOWN;
 
     return WIFI_SUCCESS;
@@ -965,10 +965,10 @@ WifiErrorCode GetCountryCode(char *countryCode, unsigned int *len)
         return ERROR_WIFI_INVALID_ARGS;
 
     HalHmosWifiLock();
-    if (bwifi_get_country_code(countryCode, *len) == BWIFI_R_OK)
+    if (bwifi_get_country_code(countryCode) == BWIFI_R_OK)
         ret = WIFI_SUCCESS;
     HalHmosWifiUnLock();
-    hmos_printf("%s=%s,*len=%d\n\r", __func__, countryCode, *len);
+    hmos_printf("%s=%s\n\r", __func__, countryCode);
     return ret;
 }
 

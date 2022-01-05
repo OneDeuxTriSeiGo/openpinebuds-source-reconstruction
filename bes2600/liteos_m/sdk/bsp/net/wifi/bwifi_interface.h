@@ -17,8 +17,8 @@
 
 #include "plat_types.h"
 #include "cmsis_os.h"
-
-#include "bwifi_sta.h"
+#include "wifi_def.h"
+#include "bwifi_hal.h"
 #include "bwifi_event.h"
 #if LWIP_ETHERNETIF
 #include "lwip/netif.h"
@@ -28,24 +28,9 @@
 extern "C" {
 #endif
 
-#ifdef __DUAL_BAND__
-#define BWIFI_BAND_DEFAULT              DUAL_BAND //0: 2.4G; 1: 5G; 2: dual_band
-#else
-#define BWIFI_BAND_DEFAULT              BAND_2G4
-#endif
 #define BWIFI_MAX_COUNTRY_CODE_SIZE     2
 #define BWIFI_CONFIG_VAL_LEN            100
 #define WIFI_SCAN_DUMP
-
-struct wifi_init_paras {
-    char     band;
-    char     country[3];
-    uint16_t *tx_power;
-    uint16_t *tx_power_5G;
-    uint8_t  *wifi_address;
-    void     *fac_wifi;
-    uint32_t coex_mode; // bit0: 0 -TDD, 1 - FDD; bit1: HYBRID
-};
 
 typedef enum {
     WIFI_IF_STATION,
@@ -127,93 +112,16 @@ typedef enum {
     UMAC_CRASH  = 2,
 } BWIFI_MAC_RESET_REASON;
 
-typedef enum bwifi_security_type {
-    SECURITY_NONE,              /*!< open access point */
-    SECURITY_WEP40,             /*!< phrase conforms to WEP */
-    SECURITY_WEP104,            /*!< phrase conforms to WEP EXTENDED */
-    SECURITY_WPA,               /*!< WPA-PSK */
-    SECURITY_WPA2,              /*!< WPA2-PSK */
-    SECURITY_WPA_WPA2,          /*!< WPA WPA2 mixed mode */
-    SECURITY_WPA3_SAE,          /*!< WPA3-SAE */
-    SECURITY_WPA3_SAE_WPA2,     /*!< WPA3-SAE WPA2 mixed mode*/
-    SECURITY_ERROR,             /*!< error mode */
-} BWIFI_SEC_TYPE_T;
-
-#ifndef ETH_ALEN
-#define ETH_ALEN 6
-#endif
-
-struct bwifi_mac_addr {
-    u8 mac[ETH_ALEN];
-};
-
-struct bwifi_bss_info {
-    u8 bssid[ETH_ALEN];
-    char ssid[32 + 1];
-    u8 channel;
-    s8 rssi;
-    BWIFI_SEC_TYPE_T security_type;
-    u8 *ie; //user program couldn't free(ie);
-    u32 ie_length;
-};
-
-struct bwifi_ap_info {
-    char ssid[32 + 1];
-    u8 channel;
-    u8 hidden;
-    BWIFI_SEC_TYPE_T security;
-    int sec_channel_offset;
-    int wpa_mode;
-    char passwd[64];
-};
-
-struct bwifi_ssid {
-    struct bwifi_ssid *next;
-    u8 ssid[32 + 1]; //null-terminated string
-};
-
-struct bwifi_scan_config {
-    struct bwifi_ssid *ssids;   /**< List of specified SSIDs */
-    int *channels;              /**< Array of channels (zero-terminated) to scan or NULL for all channels */
-};
-
-typedef struct bwifi_trans_stat_t {
-    uint32_t tx_succ_cnt;
-    uint32_t tx_fail_cnt;
-    uint32_t tx_retry_cnt;
-    uint32_t rx_cnt;
-    uint32_t txbps; //tx throughput bit/s
-    uint32_t rxbps; //rx throughput bit/s
-} bwifi_trans_stat;
-
-typedef struct bwifi_station_linkinfo_t {
-    bwifi_trans_stat stat;
-    s8 rssi;
-    s8 channel;
-    /* BIT 31: MCS_FLAG = 1, BTI30:ShortGI ,BIT29-26: BW(0 20M,1 40M), BIT25-0,MCS index
-     * BIT 31: MCS_FALG = 0, BIT0-B25 is b/g tx rate
-     * */
-    int tx_rate;
-} bwifi_station_linkinfo;
-
 struct ip_info {
     uint32_t ip;               /**< IP address */
     uint32_t netmask;          /**< netmask */
     uint32_t gw;               /**< gateway */
 };
 
-enum wifi_config_item {
-    WIFI_CONFIG_ITEM_WAPI_CERT_PRIVATE_KEY = 0, /**< WAPI own private key */
-    WIFI_CONFIG_ITEM_WAPI_CERT_AS_CERT,         /**< WAPI AS certification */
-    WIFI_CONFIG_ITEM_WAPI_CERT_ASUE_CERT,       /**< WAPI ASUE certification */
-    WIFI_CONFIG_ITEM_MAX
-};
-
-struct bwifi_config_item {
-    int net_index;                      /**< network index */
-    int item_index;                     /**< config item index */
-    int val_len;                        /**< config item value length */
-    uint8_t val[BWIFI_CONFIG_VAL_LEN];  /**< config item value */
+struct bwifi_quick_connect_config {
+    struct bwifi_station_config config;
+    uint32_t channel;
+    uint32_t ip[3];//struct ip_info ip;
 };
 
 typedef void (*user_evt_handler_t)(WIFI_USER_EVT_ID evt_id, void *arg);
@@ -311,15 +219,15 @@ int bwifi_connect_wps_pbc(void);
 /*
  * Connect to specified ssid, passwd can be NULL for unencrypted AP.
  */
-int bwifi_connect_to_ssid(const char *ssid, const char *passwd, int8 wep_keyid, u8 hidden, u8 *bssid);
+int bwifi_connect_to_ssid(const char *ssid, const char *passwd, int8_t wep_keyid, uint8_t hidden, uint8_t *bssid);
 /*
  * Connect to specified ssid and mfp, passwd can't be NULL
  */
-int bwifi_connect_to_ssid_with_mfp(const char *ssid, const char *passwd, int8 wep_keyid, u8 hidden, u8 *bssid, u8 mfp);
+int bwifi_connect_to_ssid_with_mfp(const char *ssid, const char *passwd, int8_t wep_keyid, uint8_t hidden, uint8_t *bssid, uint8_t mfp);
 /*
  * Connect to specified bssid, passwd can be NULL for unencrypted AP.
  */
-int bwifi_connect_to_bssid(u8 *bssid, const char *passwd);
+int bwifi_connect_to_bssid(uint8_t *bssid, const char *passwd);
 /*
  * Connect to specified network by network id allocated in wpa_supplicant.
  */
@@ -350,10 +258,10 @@ bool bwifi_get_reconnect_policy(void);
  * Get current connected AP info
  */
 int  bwifi_get_current_ssid(char *ssid);
-int  bwifi_get_current_bssid(u8 *bssid);
-int  bwifi_get_own_mac(u8 *addr);
-u8   bwifi_get_current_channel(void);
-int8 bwifi_get_current_rssi(void);
+int  bwifi_get_current_bssid(uint8_t *bssid);
+int  bwifi_get_own_mac(uint8_t *addr);
+uint8_t   bwifi_get_current_channel(void);
+int8_t bwifi_get_current_rssi(void);
 int  bwifi_get_current_rate(void);
 
 /**
@@ -402,7 +310,7 @@ struct netif *bwifi_get_netif(BWIFI_INTF_TYPE_T type);
 int bwifi_set_ip_addr(BWIFI_INTF_TYPE_T type, struct ip_info *ip);
 #endif
 
-void airkiss_notify(uint8 token);
+void airkiss_notify(uint8_t token);
 
 /**
  * Enable or disable the statistics of the frames sent out and received
@@ -423,7 +331,7 @@ void bwifi_trans_stat_en(uint8_t en, uint8_t interval_sec);
  * @note    Elements in bwifi_trans_stat will be cleared every time this function
  *          is called if clear is set to 1.
  */
-void bwifi_trans_stat_get(bwifi_trans_stat *stat, int8 clear);
+void bwifi_trans_stat_get(bwifi_trans_stat *stat, int8_t clear);
 
 /*
  * Initialize wifi hardware and interface
@@ -434,7 +342,7 @@ int bwifi_init(void);
 /*
  * reset wifi stack on cp
  */
-int bwifi_cp_reset(void);
+int bwifi_reinit(void);
 #endif
 
 /*
@@ -445,10 +353,8 @@ int bwifi_set_country_code(char *country);
 /*
  * Get current country code
  */
-int bwifi_get_country_code(char *country, int size);
-int bwifi_set_band(uint8 band);
-int bwifi_get_band(uint8 *band);
-void bwifi_band_switch(uint8 band);
+int bwifi_get_country_code(char *country);
+
 void bwifi_set_connecting_status(void);
 /*
  * Set powersave mode for legacy Wi-Fi.
@@ -496,8 +402,8 @@ void bwifi_softap_stop(void);
  * Returns: 0 on success, nagtive if invalid arguments
  */
 int bwifi_set_softap_config(char *ssid,
-                            u8 channel, int sec_channel_offset,
-                            u8 hidden,
+                            uint8_t channel, int sec_channel_offset,
+                            uint8_t hidden,
                             BWIFI_SEC_TYPE_T security,
                             char *passwd);
 /*
@@ -518,7 +424,7 @@ void bwifi_set_softap_country_code(char *country_code);
  * @ie_len: Length of vendor elements
  * Returns: 0 on success, nagtive on failure
  */
-int bwifi_add_softap_vendor_elements(const u8 *ie, size_t ie_len);
+int bwifi_add_softap_vendor_elements(const uint8_t *ie, size_t ie_len);
 /*
  * Get softap's client list
  * @mac_list: Pointer to buffer to store the mac address list
@@ -545,7 +451,7 @@ BWIFI_SOFTAP_STATUS_T bwifi_get_softap_status(void);
  * @noack: Whether need to wait for ack
  * @chan:  Which channel to send
  */
-int bwifi_send_mgmt_frame_on_chan(const u8 *data, size_t len, int noack, u8 chan);
+int bwifi_send_mgmt_frame_on_chan(const uint8_t *data, size_t len, int noack, uint8_t chan);
 
 /*
  * Enable or disable Wi-Fi recovery mechanism on fatal error.
@@ -562,17 +468,17 @@ void bwifi_recovery_enable(bool en);
  *   - 14 ~ 21: 1*1 MCS rates: MCS0 ~ MCS7;
  *   - 0xff:    default value to disable the fix rate function.
  */
-void bwifi_set_fix_rate(u32 fix_rate_idx);
+void bwifi_set_fix_rate(uint32_t fix_rate_idx);
 /*
  * Get current set fix rate index
  */
-u32  bwifi_get_fix_rate(void);
+uint32_t  bwifi_get_fix_rate(void);
 
 /*
  * Do wifi reset
  * Returns: BWIFI_R_OK on success, others on failure
  */
-int bwifi_do_wifi_reset(void);
+int bwifi_reset(void);
 
 /*
  * set epta parameters of wifi/bt coex
@@ -591,6 +497,36 @@ void bwifi_set_epta_param(int wifi_dur, int bt_dur, int mode);
 2 - bt a2dp active
 */
 void bwifi_bt_state_notify(int state);
+
+/*
+ * get free buf to send
+ * Returns: address of buf pointer
+ */
+static inline uint8_t ** bwifi_get_data_buf(void)
+{
+    return (uint8_t **)BWIFI_HAL_API_CALL(get_send_buf);
+}
+
+/*
+ * send data buf
+ * @devnum: dev interface number
+ * @tx_buf: address of send buffer pointer
+ * @tx_len: send data length
+ * Returns: BWIFI_R_OK on success, others on failure
+ */
+static inline int bwifi_send_data_buf(uint8_t devnum, uint8_t **tx_buf, uint16_t tx_len)
+{
+    return BWIFI_HAL_API_CALL(data_send, devnum, tx_buf, tx_len);
+}
+
+/*
+ * bwifi_str_cmd - send string command
+ * @type: command type, 0 - rf test, other - reserved
+ * @cmd_buf: command string ended with '\0'
+ * @rsp_buf: response string ended with '\0'
+ * Returns: 0 - success, other - failure
+ */
+int bwifi_str_cmd(uint8_t type, uint8_t *cmd_buf, uint8_t *rsp_buf);
 
 #ifdef __cplusplus
 }
