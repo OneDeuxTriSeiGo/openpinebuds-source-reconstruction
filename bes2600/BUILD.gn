@@ -100,23 +100,13 @@ if (ohos_kernel_type == "liteos_m") {
       exe_bin = "${bin_file.elf_name}_${board_name}"
       bsp_target_name = bin_file.bsp_target_name
       print("build", exe_bin, ":", build_enable)
-
-      # copy lib generate by bsp target to out directory.
       copy_lib_name = "gen_bsp_lib_${exe_bin}"
-      print("copy_lib_name:", copy_lib_name)
-      build_ext_component(copy_lib_name) {
-        exec_path = rebase_path(".")
-        out_lib_path = "${out_product_path}/libs/"
-        bsp_lib_path = "./liteos_m/sdk/bsp/out/${bsp_target_name}/libbsp${bsp_target_name}.a"
-        command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
-        deps = [ "liteos_m/sdk:build_sdk_into_lib" ]
-      }
 
       # generate execute bin
       executable(exe_bin) {
         output_name = exe_bin
         output_extension = "elf"
-        deps = [ ":${copy_lib_name}" ]
+        deps = [ "liteos_m/sdk:${copy_lib_name}" ]
 
         ldflags = [
           "-Wl,--gc-sections",
