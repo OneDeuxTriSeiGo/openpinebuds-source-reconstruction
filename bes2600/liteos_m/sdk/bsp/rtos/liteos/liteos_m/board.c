@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 #include "cmsis.h"
+#include "securec.h"
 #include "cmsis_os.h"
 #include "cmsis_nvic.h"
 #include "hal_timer.h"
@@ -315,28 +316,6 @@ static int32_t OS_Tick_Setup (uint32_t freq) {
   return (0);
 }
 
-static void os_tick_reload(uint64_t nextResponseTime)
-{
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-    SysTick->LOAD = (uint32_t)(nextResponseTime - 1UL); /* set reload register */
-    SysTick->VAL = 0UL; /* Load the SysTick Counter Value */
-    NVIC_ClearPendingIRQ(SysTick_IRQn);
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-}
-
-static uint64_t os_tick_cycle_get(uint32_t *period)
-{
-    uint32_t hwCycle = 0;
-    uint32_t intSave = LOS_IntLock();
-    uint32_t val = SysTick->VAL;
-    *period = SysTick->LOAD;
-    if (val != 0) {
-        hwCycle = *period - val;
-    }
-    LOS_IntRestore(intSave);
-    return (uint64_t)hwCycle;
-}
-
 /// Enable OS Tick.
 static void os_tick_enable (void) {
 #ifdef OSTICK_USE_FAST_TIMER
@@ -373,20 +352,8 @@ static uint32_t os_tick_init(HWI_PROC_FUNC tickHandler)
     return 0;
 }
 
-
-const static ArchTickTimer arch_tick_timer = {
-    .freq = OS_SYS_CLOCK,
-    .irqNum = 15,
-    .init = os_tick_init,
-    .getCycle = os_tick_cycle_get,
-    .reload = os_tick_reload,
-    .lock = os_tick_disable,
-    .unlock = os_tick_enable,
-};
-
 void os_pre_init_hook(void)
 {
-    LOS_TickTimerRegister(&arch_tick_timer, OsTickHandler);
 #ifdef OS_EXC_HOOK
     OS_VECTOR_SET(2, HalExcNMI);
     OS_VECTOR_SET(3, HalExcHardFault);
@@ -398,11 +365,13 @@ void os_pre_init_hook(void)
     OS_VECTOR_SET(11, HalSVCHandler);
     OS_VECTOR_SET(14, HalPendSV);
     hal_cache_sync_all(HAL_CACHE_ID_D_CACHE);
-}
 
-void os_post_init_hook(void)
-{
-    OS_TCB_FROM_TID(g_swtmrTaskID)->taskStatus &= ~OS_TASK_FLAG_SYSTEM_TASK;
+    ArchTickTimer tickTimer;
+    (VOID)memcpy_s(&tickTimer, sizeof(ArchTickTimer), LOS_SysTickTimerGet(), sizeof(ArchTickTimer));
+    tickTimer.freq = OS_SYS_CLOCK;
+    tickTimer.irqNum = 15;
+    tickTimer.init = os_tick_init;
+    LOS_TickTimerRegister(&tickTimer, NULL);
 }
 
 #if !defined(MODULE_KERNEL_STUB)
@@ -435,7 +404,6 @@ void board_main(const void * arg)
 #endif
     UINTPTR intSave;
     intSave = LOS_IntLock();
-    os_post_init_hook();
 #ifdef OS_EXC_HOOK
     LOS_RegExcHook(EXC_INTERRUPT, os_exc_hook);
     //LOS_BackTraceInit();
@@ -472,7 +440,6 @@ void board_main(const void * arg)
 {
     UINTPTR intSave;
     intSave = LOS_IntLock();
-    os_post_init_hook();
 #ifdef OS_EXC_HOOK
     LOS_RegExcHook(EXC_INTERRUPT, os_exc_hook);
     OsBackTraceHookSet(os_backtrace_hook);
@@ -490,7 +457,6 @@ void _start(void)
     os_pre_init_hook();
     osKernelInitialize();
     osThreadCreate(&os_thread_def_main, 0);
-    os_post_init_hook();
     osKernelStart();
 }
 #else
