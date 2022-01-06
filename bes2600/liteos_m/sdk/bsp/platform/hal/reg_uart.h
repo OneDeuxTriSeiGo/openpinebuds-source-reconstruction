@@ -40,7 +40,8 @@ struct UART_T {
     __IO uint32_t UARTDMACR;        // 0x048
     __IO uint32_t UARTOVSAMP;       // 0x04C
     __IO uint32_t UARTOVSAMPST;     // 0x050
-    uint32_t RESERVED_04C[995];     // 0x054
+    __IO uint32_t UARTRXEXT;        // 0x054
+    uint32_t RESERVED_058[994];     // 0x058
     __I  uint32_t UARTPID0;         // 0xFE0
     __I  uint32_t UARTPID1;         // 0xFE4
     __I  uint32_t UARTPID2;         // 0xFE8
@@ -113,11 +114,11 @@ struct SAVED_UART_REGS_T {
 #define UARTLCR_H_BRK               (1 << 0)  // Send break
 
 // UARTIFLS reg bits
-#define UARTIFLS_TXFIFO_LEVEL(n)      (((n) & 3) << 0)
-#define UARTIFLS_TXFIFO_LEVEL_MASK    (3 << 0)
+#define UARTIFLS_TXFIFO_LEVEL(n)      (((n) & 7) << 0)
+#define UARTIFLS_TXFIFO_LEVEL_MASK    (7 << 0)
 #define UARTIFLS_TXFIFO_LEVEL_SHIFT   (0)
-#define UARTIFLS_RXFIFO_LEVEL(n)      (((n) & 3) << 3)
-#define UARTIFLS_RXFIFO_LEVEL_MASK    (3 << 3)
+#define UARTIFLS_RXFIFO_LEVEL(n)      (((n) & 7) << 3)
+#define UARTIFLS_RXFIFO_LEVEL_MASK    (7 << 3)
 #define UARTIFLS_RXFIFO_LEVEL_SHIFT   (3)
 
 // Interrupt regs bits
@@ -147,5 +148,9 @@ struct SAVED_UART_REGS_T {
 #define UARTOVSAMPST_START_SHIFT            0
 #define UARTOVSAMPST_START_MASK             (0xF << UARTOVSAMPST_START_SHIFT)
 #define UARTOVSAMPST_START(n)               BITFIELD_VAL(UARTOVSAMPST_START, n)
+
+// UARTRXEXT
+#define UARTRXEXT_BYPASS_HANDSHAKE          (1 << 0)
+#define UARTRXEXT_USE_RXD_REG               (1 << 1)
 
 #endif
