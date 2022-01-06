@@ -353,6 +353,7 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     uart[id].base->UARTICR = ~0UL;
     // Configure UART
     set_baud_rate(id, cfg->baud);
+    uart[id].base->UARTRXEXT = UARTRXEXT_BYPASS_HANDSHAKE | UARTRXEXT_USE_RXD_REG;
     uart[id].base->UARTLCR_H = lcr;
     uart[id].base->UARTDMACR = dmacr;
     uart[id].base->UARTIFLS = UARTIFLS_TXFIFO_LEVEL(cfg->tx_level) |
@@ -953,6 +954,8 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     uint32_t i;
     enum HAL_DMA_PERIPH_T periph;
     struct HAL_DMA_DESC_T desc_c1;
+    enum HAL_UART_FIFO_LEVEL_T rx_level;
+    enum HAL_DMA_BSIZE_T src_bsize;
 
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     ASSERT(uart[id].irq != INVALID_IRQn, "DMA not supported on UART %d", id);
@@ -1038,6 +1041,22 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     }
 
     periph = uart[id].rx_periph;
+    rx_level = GET_BITFIELD(uart[id].base->UARTIFLS, UARTIFLS_RXFIFO_LEVEL);
+    // WARNING: this config is used for uart fifo length 16
+    switch (rx_level) {
+        case HAL_UART_FIFO_LEVEL_1_4:
+            src_bsize = HAL_DMA_BSIZE_4;
+            break;
+        case HAL_UART_FIFO_LEVEL_1_2:
+            src_bsize = HAL_DMA_BSIZE_8;
+            break;
+        case HAL_UART_FIFO_LEVEL_1_8:
+        case HAL_UART_FIFO_LEVEL_3_4:
+        case HAL_UART_FIFO_LEVEL_7_8:
+        default:
+            src_bsize = HAL_DMA_BSIZE_1;
+            break;
+    }
 
     memset(&dma_cfg, 0, sizeof(dma_cfg));
     dma_cfg.dst = (uint32_t)buf;
@@ -1046,7 +1065,7 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     dma_cfg.dst_width = HAL_DMA_WIDTH_BYTE;
     dma_cfg.handler = recv_dma_irq_handler;
     dma_cfg.src = 0; // useless
-    dma_cfg.src_bsize = HAL_DMA_BSIZE_8;
+    dma_cfg.src_bsize = src_bsize;
     dma_cfg.src_periph = periph;
     dma_cfg.src_tsize = len;
     dma_cfg.src_width = HAL_DMA_WIDTH_BYTE;
