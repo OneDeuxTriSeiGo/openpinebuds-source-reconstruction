@@ -28,7 +28,6 @@
 #include "hiview_log.h"
 #include "devmgr_service_start.h"
 #include "ohos_mem_pool.h"
-#include "threading_alt.h"
 
 void OsShowInfo(void)
 {
@@ -115,7 +114,6 @@ int HiLogWriteInternal(const char *buffer, size_t bufLen)
 
 int OhosSystemAdapterHooks(void)
 {
-    mbedtls_threading_set_alt(mbedtlsThreading_MutexInit,mbedtlsThreading_MutexFree,mbedtlsThreading_MutexLock,mbedtlsThreading_MutexUnlock);
     init_trace_system();
     DeviceManagerStart();
     return 0;

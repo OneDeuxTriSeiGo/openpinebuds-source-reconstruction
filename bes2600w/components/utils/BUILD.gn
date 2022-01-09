@@ -23,7 +23,6 @@ static_library("sys_adapter") {
     "src/hm_sys.c",
     "src/platform.c",
     "src/printf.c",
-    "src/threading_alt.c",
   ]
 
   public_configs = [ ":sys_adapter_config" ]
