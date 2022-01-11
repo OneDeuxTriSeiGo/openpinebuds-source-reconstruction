@@ -21,6 +21,5 @@
 #define LWIP_NETIF_STATUS_CALLBACK      1
 #define LWIP_CHECKSUM_ON_COPY           0
 #define CHECKSUM_GEN_UDP                0
-#define LWIP_SOCKET_SELECT_FUNC         1
 
 #endif /* _PORTING_LWIPOPTS_H_ */
