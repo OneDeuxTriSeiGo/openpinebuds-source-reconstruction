@@ -586,8 +586,12 @@ WifiErrorCode EnableWifi(void)
     if (ret == WIFI_SUCCESS) {
         extern struct netif if_wifi;
         struct netif *p_netif = &if_wifi;
-
-        tcpip_init(NULL, NULL);
+        
+	extern unsigned int tcpip_init_flag;
+        if (tcpip_init_flag == 0) {
+            tcpip_init_flag = 1;
+            tcpip_init (NULL, NULL);
+        }
 
         extern int bwifi_get_own_mac(u8 *addr);
         bwifi_get_own_mac(_mac_addr);

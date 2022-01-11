@@ -22,6 +22,9 @@
 #include "bwifi_interface.h"
 #include "wifi_hotspot_config.h"
 #include "bwifi_event.h"
+#include "lwip/tcpip.h"
+#include "lwip/ip_addr.h"
+#include "lwip/netifapi.h"
 
 #define RSSI_LEVEL_4_2_G (-65)
 #define RSSI_LEVEL_3_2_G (-75)
@@ -39,6 +42,10 @@ extern WifiErrorCode HalHmosWifiEventInit();
 extern void HalHmosWifiLock();
 extern void HalHmosWifiUnLock();
 
+unsigned int tcpip_init_flag = 0;
+extern struct netif if_wifi_ap;
+extern void ethernetif_input(u16_t devnum, void *p_buf, int size);
+
 static int HalBesSecTypeConvert(WifiSecurityType security_type)
 {
     switch (security_type) {
@@ -53,8 +60,38 @@ static int HalBesSecTypeConvert(WifiSecurityType security_type)
     }
 }
 
+static void softap_netif_init(struct netif *p_netif)
+{
+    bwifi_reg_eth_input_handler(ethernetif_input);
+    
+    if (tcpip_init_flag == 0) {
+        tcpip_init_flag = 1;
+        tcpip_init(NULL, NULL);
+    } 
+    
+    char _mac_addr[6] = {0x00, 0x80, 0x0e, 0xd8, 0xba, 0x09};
+    lwip_netif_mac_addr_init(p_netif, _mac_addr, 6);
+    p_netif->name[0] = 'a';
+    p_netif->name[1] = 'p';
+    extern err_t ethernetif_init(struct netif *netif);
+    if (netif_add(p_netif, IP4_ADDR_ANY4, IP4_ADDR_ANY4, IP4_ADDR_ANY4, NULL, ethernetif_init, tcpip_input) == 0) {
+        return -1;
+    }
+}
+
+static void softap_netif_deinit(struct netif *p_netif)
+{
+    netif_set_link_down(p_netif);
+    netif_set_down(p_netif);
+    netif_remove(p_netif);
+    bwifi_unreg_eth_input_handler();   
+}
+
 WifiErrorCode EnableHotspot(void)
 {
+    struct netif *p_netif = &if_wifi_ap;
+    softap_netif_init(p_netif);
+
     WifiErrorCode ret           = ERROR_WIFI_UNKNOWN;
     BWIFI_SEC_TYPE_T sectype    = HalBesSecTypeConvert(g_HalHmosWifiApConfig.securityType);
     HalHmosWifiLock();
@@ -70,11 +107,17 @@ WifiErrorCode EnableHotspot(void)
         }
     }
     HalHmosWifiUnLock();
+   
+    netif_set_link_up(p_netif);
+    netif_set_up(p_netif);
+
     return ret;
 }
 
 WifiErrorCode DisableHotspot(void)
 {
+    struct netif *p_netif = &if_wifi_ap;
+    softap_netif_deinit(p_netif);
     HalHmosWifiLock();
     if(g_HalHmosWifiApStatus == WIFI_HOTSPOT_NOT_ACTIVE)
         return ERROR_WIFI_NOT_STARTED;

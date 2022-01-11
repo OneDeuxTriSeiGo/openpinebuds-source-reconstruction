@@ -37,6 +37,10 @@ kernel_module(module_name) {
             [ "$LWIPDIR/api/sockets.c" ] + [ "porting/src/ethernetif.c" ]
   defines = [ "LITEOS_LWIP=1" ]
   defines += [ "CHECKSUM_BY_HARDWARE=1" ]
+  sources -= [
+    "$LWIPDIR/core/ipv4/dhcp.c",
+  ]
+
 }
 
 config("public") {
