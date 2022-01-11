@@ -31,7 +31,7 @@ import("$LITEOSTHIRDPARTY/lwip/lwip.gni")
 import("$LITEOSTOPDIR/components/net/lwip-2.1/lwip_porting.gni")
 
 module_switch = defined(LOSCFG_NET_LWIP_SACK)
-module_name = "lwip"
+module_name = get_path_info(rebase_path("."), "name")
 kernel_module(module_name) {
   sources = LWIP_PORTING_FILES + LWIPNOAPPSFILES -
             [ "$LWIPDIR/api/sockets.c" ] + [ "porting/src/ethernetif.c" ]

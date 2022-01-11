@@ -17,6 +17,7 @@ module_group("components") {
   modules = [
     "drivers",
     "fs",
+    "net/lwip-2.1",
     "ui",
     "utils",
   ]
