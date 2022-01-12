@@ -316,39 +316,24 @@ static int32_t OS_Tick_Setup (uint32_t freq) {
   return (0);
 }
 
-/// Enable OS Tick.
-static void os_tick_enable (void) {
 #ifdef OSTICK_USE_FAST_TIMER
-  hal_fast_timer_continue();
-  SysTick->CTRL = 0;
-  SysTick->VAL = 0U;
-#else
-  if (PendST != 0U) {
-    PendST = 0U;
-    SCB->ICSR = SCB_ICSR_PENDSTSET_Msk;
-  }
-  SysTick->CTRL |=  SysTick_CTRL_ENABLE_Msk;
-#endif
+/// Enable OS Tick.
+static void os_tick_enable (void)
+{
+    hal_fast_timer_continue();
 }
 
 /// Disable OS Tick.
-static void os_tick_disable (void) {
-#ifdef OSTICK_USE_FAST_TIMER
-  hal_fast_timer_pause();
-#else
-  SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-  if ((SCB->ICSR & SCB_ICSR_PENDSTSET_Msk) != 0U) {
-    SCB->ICSR = SCB_ICSR_PENDSTCLR_Msk;
-    PendST = 1U;
-  }
-#endif
+static void os_tick_disable (void)
+{
+    hal_fast_timer_pause();
 }
+#endif
 
 static uint32_t os_tick_init(HWI_PROC_FUNC tickHandler)
 {
     OS_VECTOR_SET(15, tickHandler);
     OS_Tick_Setup(LOSCFG_BASE_CORE_TICK_PER_SECOND);
-    os_tick_enable();
     return 0;
 }
 
@@ -372,6 +357,12 @@ void os_pre_init_hook(void)
     tickTimer.irqNum = 15;
     tickTimer.init = os_tick_init;
     LOS_TickTimerRegister(&tickTimer, NULL);
+}
+
+extern UINT32 g_swtmrTaskID;
+void os_post_init_hook(void)
+{
+    OS_TCB_FROM_TID(g_swtmrTaskID)->taskStatus &= ~OS_TASK_FLAG_SYSTEM_TASK;
 }
 
 #if !defined(MODULE_KERNEL_STUB)
@@ -457,6 +448,7 @@ void _start(void)
     os_pre_init_hook();
     osKernelInitialize();
     osThreadCreate(&os_thread_def_main, 0);
+    os_post_init_hook();
     osKernelStart();
 }
 #else
@@ -479,6 +471,7 @@ __attribute__((naked)) void software_init_hook (void) {
     "ldr  r0,=os_thread_def_main\n"
     "movs r1,#0\n"
     "bl   osThreadCreate\n"
+    "bl   os_post_init_hook\n"
     "bl   osKernelStart\n"
     "bl   exit\n"
   );
@@ -502,6 +495,7 @@ __attribute__((naked)) void software_init_hook (void) {
     "ldr  r0,=os_thread_def_main\n"
     "movs r1,#0\n"
     "bl   osThreadCreate\n"
+    "bl   os_post_init_hook\n"
     "bl   osKernelStart\n"
     "bl   exit\n"
   );
