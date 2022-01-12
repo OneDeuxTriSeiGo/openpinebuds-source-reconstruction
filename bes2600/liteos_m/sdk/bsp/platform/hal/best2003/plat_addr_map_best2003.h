@@ -425,6 +425,9 @@ extern "C" {
 #define PSRAMCP_BASE				(PSRAM_BASE + PSRAM_SIZE)
 #define PSRAMCPX_BASE				(PSRAMX_BASE + PSRAM_SIZE)
 
+/* For ROM export functions */
+#define NO_MEMMOVE
+
 #ifdef __cplusplus
 }
 #endif
