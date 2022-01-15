@@ -15,6 +15,10 @@ if SOC_SERIES_BES2600
 
 rsource "Kconfig.liteos_m.defconfig.bes2600w"
 
+config HALS_COMMUCATION_WIFI_LITE
+    bool
+    default y
+
 config SOC_SERIES
     string
     default "bes2600"
