@@ -17,7 +17,7 @@
 
 #include "cmsis.h"
 #include "los_compiler.h"
-#include "hal_timer.h"
+
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -27,23 +27,6 @@ extern "C" {
 
 #ifndef   __weak
 #define __weak                                 __attribute__((weak))
-#endif
-
-/* =============================================================================
-                                        System clock module configuration
-============================================================================= */
-/**
- * @ingroup los_config
- * System clock (unit: HZ)
- */
-#if defined(OSTICK_USE_FAST_TIMER)
-#define OS_SYS_CLOCK            (1000UL)
-#else
-#if defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
-#define OS_SYS_CLOCK            (6000000UL)
-#else
-#define OS_SYS_CLOCK            CONFIG_SYSTICK_HZ
-#endif
 #endif
 
 /**
