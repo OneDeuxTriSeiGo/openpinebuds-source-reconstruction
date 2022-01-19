@@ -33,6 +33,24 @@
 #include "los_tick.h"
 #include "stdio.h"
 
+#undef OS_SYS_CLOCK
+/* =============================================================================
+                                        System clock module configuration
+============================================================================= */
+/**
+ * @ingroup los_config
+ * System clock (unit: HZ)
+ */
+#if defined(OSTICK_USE_FAST_TIMER)
+#define OS_SYS_CLOCK            (1000UL)
+#else
+#if defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
+#define OS_SYS_CLOCK            (6000000UL)
+#else
+#define OS_SYS_CLOCK            CONFIG_SYSTICK_HZ
+#endif
+#endif
+
 #define SYSTICK_EXTERNAL_CLOCK          1
 #ifndef OS_TASK_FLAG_SYSTEM_TASK
 #define OS_TASK_FLAG_SYSTEM_TASK                    0x1000U
