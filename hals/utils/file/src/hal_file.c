@@ -18,7 +18,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "hal_trace.h"
-#include "lfs_api.h"
 #include "utils_file.h"
 #include "hal_file.h"
 
