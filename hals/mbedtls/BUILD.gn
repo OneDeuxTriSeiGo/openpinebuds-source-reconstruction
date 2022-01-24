@@ -34,6 +34,7 @@ lite_library("mbedtls_static") {
 
 group("mbedtls") {
   public_deps = [ ":mbedtls_static" ]
+  public_configs = [ ":mbedtls_config" ]
 }
 
 ndk_lib("mbedtls_ndk") {
