@@ -21,7 +21,7 @@ config("mbedtls_config") {
   include_dirs = [ "." ] + MBEDTLS_INLCUDE_DIRS
   defines += [
     "__unix__",
-    "MBEDTLS_CONFIG_FILE=<config/config_liteos_m.h>",
+    "MBEDTLS_CONFIG_FILE=<bes_config/config_liteos_m.h>",
   ]
 }
 
@@ -33,7 +33,7 @@ lite_library("mbedtls_static") {
 }
 
 group("mbedtls") {
-  deps = [ ":mbedtls_static" ]
+  public_deps = [ ":mbedtls_static" ]
 }
 
 ndk_lib("mbedtls_ndk") {
