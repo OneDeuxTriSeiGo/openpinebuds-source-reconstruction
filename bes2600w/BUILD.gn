@@ -101,7 +101,7 @@ build_ext_component("build_sdk_into_lib") {
     }
   }
   print ("product_path:",product_path)
-  command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path}"
+  command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path} ${flash_size}"
 }
 
 # config bin from vendor/bestechnic/<product_name>/config.json
@@ -125,7 +125,7 @@ foreach(bin_file, bin_list) {
       exec_path = rebase_path(".")
       out_lib_path = "${out_product_path}/libs/"
       bsp_lib_path =
-          "./sdk_liteos/bsp/out/${bsp_target_name}_${flash_size}/lib${bsp_target_name}.a"
+          "./sdk_liteos/bsp/out/${bsp_target_name}/lib${bsp_target_name}.a"
       command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
       deps = [ ":build_sdk_into_lib" ]
     }
@@ -155,7 +155,7 @@ foreach(bin_file, bin_list) {
       ldflags += [
         "-Wl,--gc-sections",
         "-Wl,-Map=bin/$output_name.map",
-        "-T$bsp_path/bsp/out/${bsp_target_name}_${flash_size}/_best2001.lds",
+        "-T$bsp_path/bsp/out/${bsp_target_name}/_best2001.lds",
       ]
 
       # force link invisible function ,which ar to lib

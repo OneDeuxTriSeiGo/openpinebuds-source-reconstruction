@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -133,9 +133,15 @@ int hal_spi_activate_cs(uint32_t cs);
 
 int hal_spi_busy(void);
 
+#ifdef BSP_NICKNAME_SUPPORT
+int hal_spi_send_nickname(const void *data, uint32_t len);
+int hal_spi_recv_nickname(const void *cmd, void *data, uint32_t len);
+#define hal_spi_send hal_spi_send_nickname
+#define hal_spi_recv hal_spi_recv_nickname
+#else
 int hal_spi_send(const void *data, uint32_t len);
-
 int hal_spi_recv(const void *cmd, void *data, uint32_t len);
+#endif
 
 int hal_spi_dma_send(const void *data, uint32_t len, HAL_SPI_DMA_HANDLER_T handler);
 

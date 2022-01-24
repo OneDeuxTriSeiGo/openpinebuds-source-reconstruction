@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,6 +17,7 @@
 
 #include "cmsis.h"
 #include "los_compiler.h"
+#include "hal_timer.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -39,8 +40,6 @@ extern "C" {
 #define OS_SYS_CLOCK            (1000UL)
 #else
 #if defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
-extern uint32_t hal_cmu_get_fast_timer_freq(void);
-#define CONFIG_FAST_SYSTICK_HZ  hal_cmu_get_fast_timer_freq()
 #define OS_SYS_CLOCK            CONFIG_FAST_SYSTICK_HZ
 #else
 #define OS_SYS_CLOCK            CONFIG_SYSTICK_HZ
@@ -464,6 +463,10 @@ extern UINT8 __os_heap_start__[];
 #define LOSCFG_KERNEL_TRACE                                 0
 #endif
 
+#ifndef LOSCFG_BACKTRACE_DEPTH
+#define LOSCFG_BACKTRACE_DEPTH                               15
+#endif
+
 /* =============================================================================
                                        printf configuration
 ============================================================================= */
@@ -478,6 +481,15 @@ extern UINT8 __os_heap_start__[];
 #define LOSCFG_BACKTRACE_TYPE 1
 
 #define LOSCFG_BASE_CORE_TICK_RESPONSE_MAX 0xFFFFFFFF
+
+#define UNALIGNFAULT                    (1 << 3)
+
+#define LOSCFG_SECURE_HEAP_SIZE                              2048
+
+/* Configure TICK compensate */
+#ifndef CONFIG_TICK_COMPENSATE
+#define CONFIG_TICK_COMPENSATE                              0
+#endif
 
 #ifdef __cplusplus
 #if __cplusplus

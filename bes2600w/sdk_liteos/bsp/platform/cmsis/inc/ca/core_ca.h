@@ -58,7 +58,7 @@ extern void gic_clear_pending(u32 id);
 #define NVIC_DisableIRQ(irq)                rt_hw_interrupt_mask(irq)
 #define NVIC_GetActive(irq)                 (rt_hw_interrupt_get_irq() == (irq))
 //#define NVIC_GetActive(irq)                 (((GICDistributor->ISACTIVER[(irq) / 32U])  >> ((irq) % 32U)) & 1UL)
-#define NVIC_SetVector(irq, vector)         rt_hw_interrupt_install(irq, vector, NULL, NULL)
+#define NVIC_SetVector(irq, vector)         rt_hw_interrupt_install(irq, (rt_isr_handler_t)vector, NULL, NULL)
 #elif defined (KERNEL_LITEOS_A)
 //#include "los_hwi.h"
 #include "ca/irq_ctrl.h"

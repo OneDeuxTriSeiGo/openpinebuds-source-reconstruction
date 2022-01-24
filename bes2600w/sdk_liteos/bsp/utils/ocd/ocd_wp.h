@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,9 @@
 #ifndef __BES_WATCH_POINT__
 #define __BES_WATCH_POINT__
 
+#ifndef BIT
 #define BIT(x) (1 << (x))
+#endif
 
 /*armv8m*/
 #define DWT_CTRL       0xE0001000  /*DWT Control Register*/

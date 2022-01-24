@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,19 +18,6 @@
 extern "C"
 {
 #endif
-
-typedef unsigned char               u8;
-typedef unsigned short              u16;
-typedef unsigned long               u32;
-typedef unsigned long long          u64;
-
-typedef unsigned char               uint8;
-typedef signed char                 int8;
-typedef unsigned short int          uint16;
-typedef signed short int            int16;
-typedef unsigned int                uint32;
-typedef signed int                  int32;
-
 
 typedef struct {
     int ap_num;                     /**< number of scanning APs */
@@ -52,99 +39,97 @@ typedef enum {
 } BWIFI_CONNECT_INTER_STATE;
 
 typedef struct {
-    u8 ssid[32];                    /**< SSID of the connecting AP */
-    u8 ssid_len;                    /**< SSID length of the connecting AP */
-    u8 bssid[6];                    /**< BSSID of the connecting AP */
+    uint8_t ssid[32];                    /**< SSID of the connecting AP */
+    uint8_t ssid_len;                    /**< SSID length of the connecting AP */
+    uint8_t bssid[6];                    /**< BSSID of the connecting AP */
     BWIFI_CONNECT_INTER_STATE state;/**< intermediate state during connection */
 } BWIFI_EVENT_STAMODE_CONNECTING_T;
 
 typedef struct {
-    u8 ssid[32];                    /**< SSID of connected AP */
-    u8 ssid_len;                    /**< SSID length of connected AP */
-    u8 bssid[6];                    /**< BSSID of connected AP */
-    u8 channel;                     /**< channel of connected AP */
+    uint8_t ssid[32];                    /**< SSID of connected AP */
+    uint8_t ssid_len;                    /**< SSID length of connected AP */
+    uint8_t bssid[6];                    /**< BSSID of connected AP */
+    uint8_t channel;                     /**< channel of connected AP */
 } BWIFI_EVENT_STAMODE_CONNECTED_T;
 
 typedef struct {
-    u8 ssid[32];                    /**< SSID of disconnected AP */
-    u8 ssid_len;                    /**< SSID length of disconnected AP */
-    u8 bssid[6];                    /**< BSSID of disconnected AP */
-    u16 reason;                     /**< reason of disconnection */
+    uint8_t ssid[32];                    /**< SSID of disconnected AP */
+    uint8_t ssid_len;                    /**< SSID length of disconnected AP */
+    uint8_t bssid[6];                    /**< BSSID of disconnected AP */
+    uint16_t reason;                     /**< reason of disconnection */
 } BWIFI_EVENT_STAMODE_DISCONNECTED_T;
 
 typedef struct {
-    u8 old_mode;                    /**< the old auth mode of AP */
-    u8 new_mode;                    /**< the new auth mode of AP */
+    uint8_t old_mode;                    /**< the old auth mode of AP */
+    uint8_t new_mode;                    /**< the new auth mode of AP */
 } BWIFI_EVENT_STAMODE_AUTHMODE_CHANGE_T;
 
 typedef struct {
-    u32 ip;                   /**< IP address that station got from connected AP */
-    u32 mask;                 /**< netmask that station got from connected AP */
-    u32 gw;                   /**< gateway that station got from connected AP */
+    uint32_t ip;                   /**< IP address that station got from connected AP */
+    uint32_t mask;                 /**< netmask that station got from connected AP */
+    uint32_t gw;                   /**< gateway that station got from connected AP */
 } BWIFI_EVENT_STAMODE_GOT_IP_T;
 
 typedef struct {
-    u8 ssid[32];                    /**< SSID of connected AP */
-    u8 ssid_len;                    /**< SSID length of connected AP */
-    u8 bssid[6];                    /**< BSSID of connected AP */
-    u8 channel;                     /**< channel of connected AP */
+    uint8_t ssid[32];                    /**< SSID of connected AP */
+    uint8_t ssid_len;                    /**< SSID length of connected AP */
+    uint8_t bssid[6];                    /**< BSSID of connected AP */
+    uint8_t channel;                     /**< channel of connected AP */
 } BWIFI_EVENT_STAMODE_ROAM_COMPLETE_T;
 
 typedef struct {
-    u32 pac_rxc_rx_buf_in_ptr;
-    u32 pac_rxc_rx_buf_out_ptr;
-    u32 scheduler_events;
-    u32 lmac_pc0;
-    u32 lmac_pc1;
-    u32 lmac_lr;
-    u32 lmac_sp;
-    u32 pac_ntd_status_peek;
-    u32 pac_txc_status;
-    u32 QUEUE_0_CONTROL;
-    u32 QUEUE_1_CONTROL;
-    u32 QUEUE_2_CONTROL;
-    u32 QUEUE_3_CONTROL;
-    u32 wlan_sw_override_1;
-    u32 tsq_in_prog;
-    u32 tsq_in_cmpl;
+    uint32_t pac_rxc_rx_buf_in_ptr;
+    uint32_t pac_rxc_rx_buf_out_ptr;
+    uint32_t scheduler_events;
+    uint32_t lmac_pc0;
+    uint32_t lmac_pc1;
+    uint32_t lmac_lr;
+    uint32_t lmac_sp;
+    uint32_t pac_ntd_status_peek;
+    uint32_t pac_txc_status;
+    uint32_t QUEUE_0_CONTROL;
+    uint32_t QUEUE_1_CONTROL;
+    uint32_t QUEUE_2_CONTROL;
+    uint32_t QUEUE_3_CONTROL;
+    uint32_t wlan_sw_override_1;
+    uint32_t tsq_in_prog;
+    uint32_t tsq_in_cmpl;
 } BWIFI_LMAC_STATUS_DUMP_T;
 
-#if 0
 typedef struct {
-    u8 rst_flag;                         /**< reset flag to indicate status:
+    uint8_t rst_flag;                         /**< reset flag to indicate status:
                                               0 - no reset; 1 - reset start; 2 - reset end.*/
-    u16 error_cause;                     /**< error cause (bitmask) */
+    uint16_t error_cause;                     /**< error cause (bitmask) */
     BWIFI_LMAC_STATUS_DUMP_T dump_info;  /**< LMAC status dump on fatal error */
 } BWIFI_FATAL_ERROR_RESET_T;
-#endif
 
 typedef struct {
-    u16 error_cause;                     /**< error cause (bitmask) */
+    uint16_t error_cause;                     /**< error cause (bitmask) */
     BWIFI_LMAC_STATUS_DUMP_T dump_info;  /**< LMAC status dump on fatal error */
 } BWIFI_EVENT_LMAC_FATAL_ERROR_T;
 
 typedef struct {
-    u8 mac[6];                           /**< MAC address of the station connected or disconnected */
-    u16 reason;                          /**< reason of disconnection */
+    uint8_t mac[6];                           /**< MAC address of the station connected or disconnected */
+    uint16_t reason;                          /**< reason of disconnection */
 } BWIFI_AP_STA_INFO_T;
 
 typedef struct {
-    u8 mac[6];                           /**< MAC address of the station connected to soft-AP */
-//    u8 aid;                            /**< the aid that soft-AP gives to the station connected to */
+    uint8_t mac[6];                           /**< MAC address of the station connected to soft-AP */
+//    uint8_t aid;                            /**< the aid that soft-AP gives to the station connected to */
 } BWIFI_EVENT_SAPMODE_STA_CONNECTED_T;
 
 typedef struct {
-    u8 mac[6];                           /**< MAC address of the station disconnects to soft-AP */
-    u16 reason;                          /**< reason of disconnection */
+    uint8_t mac[6];                           /**< MAC address of the station disconnects to soft-AP */
+    uint16_t reason;                          /**< reason of disconnection */
 } BWIFI_EVENT_SAPMODE_STA_DISCONNECTED_T;
 
 //typedef struct {
 //    int rssi;		/**< Received probe request signal strength */
-//    u8 mac[6];		/**< MAC address of the station which send probe request */
+//    uint8_t mac[6];		/**< MAC address of the station which send probe request */
 //} BWIFI_EVENT_SAPMODE_PROBEREQRECVED_T;
 
 typedef struct {
-    u8 mode;                           /**< wifi/bt coex mode, 0: tdd, 1: fdd */
+    uint8_t mode;                           /**< wifi/bt coex mode, 0: tdd, 1: fdd */
 } BWIFI_EVENT_COEX_MODE_T;
 
 typedef union {
@@ -193,12 +178,12 @@ typedef struct bwifi_event {
   *
   * The example: if tcpip is lwip, set ethernetif_input func.
   *
-  * @param u16 devnum , 0 is station, 1 is softap.
+  * @param uint16_t devnum , 0 is station, 1 is softap.
   * @param void *buf, rx pkt data buf.
   * @param int size, the length of param buf.
   * @return null
   */
-typedef void (*eth_input_handler)(u16 devnum, void *buf, int size);
+typedef void (*eth_input_handler)(uint8_t devnum, void *buf, int size);
 
 /**
   * The Wi-Fi event handler.
@@ -210,9 +195,8 @@ typedef void (*eth_input_handler)(u16 devnum, void *buf, int size);
   *
   * @return null
   */
-typedef void (*BWIFI_EVENT_HANDLER_CB_T)(BWIFI_SYSTEM_EVENT_T *event);
+typedef int (*evt_recv_handler)(BWIFI_SYSTEM_EVENT_T *event);
 
-int bwifi_send_event(BWIFI_SYSTEM_EVENT_T *event);
 
 #ifdef  __cplusplus
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -59,8 +59,9 @@ typedef enum {
     /* management message */
     NET_IPC_MSG_PARAS = 0,
     NET_IPC_MSG_NET_INIT,
-    NET_IPC_MSG_EPTA,
+    NET_IPC_MSG_EPTA_CONN,
     NET_IPC_MSG_EPTA_TTS,
+    NET_IPC_MSG_EPTA_BT,
     NET_IPC_MSG_EPTA_PARAM,
     NET_IPC_MSG_SCAN,
     NET_IPC_MSG_CFG_SCAN,
@@ -113,7 +114,7 @@ typedef enum {
 
     /* data message */
     NET_IPC_MSG_MAC_XMIT,
-    NET_IPC_MSG_SNIFF_SEND_MLME,
+    NET_IPC_MSG_SEND_MLME,
     NET_IPC_MSG_ALLOC_SKB,
 
     /* last message */

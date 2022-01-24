@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -439,14 +439,23 @@ TRACE_FUNC_DECLARE(int hal_trace_rx_wakeup(void), return 0);
 #  define assert(f) ASSERT(f,"%s:%d",__func__,__LINE__)
 #endif
 
+#define LITEOS_WIFI_LOG_TAG     "WIFI:"
+
 #include "stdarg.h"
+typedef int (*HAL_TRACE_OUTPUT_HOOK_T)(const char *tag, const char *fmt, uint32_t len);
+void hal_trace_register_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
+void hal_trace_unregister_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
 typedef int (*HAL_TRACE_PRINTF_HOOK_T)(const char *tag, const char *fmt, va_list ap);
-void hal_trace_register_hook(HAL_TRACE_PRINTF_HOOK_T hook);
+void hal_trace_printf_register_hook(HAL_TRACE_PRINTF_HOOK_T hook);
+void hal_trace_printf_unregister_hook(HAL_TRACE_PRINTF_HOOK_T hook);
 int hal_trace_output_block(const unsigned char *buf, unsigned int len);
 void hal_trace_print_a7(const unsigned char *buf, unsigned int buf_len);
+void hal_trace_print_a7_flush(int onoff);
 extern int hal_trace_printf_without_crlf_ts(const char *fmt, ...);
 #define printf                         hal_trace_printf_without_crlf_ts
 int hal_trace_set_onoff(uint32_t onoff);
+void hal_trace_register_cp_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
+void hal_trace_unregister_cp_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
 #ifdef __cplusplus
 }
 #endif

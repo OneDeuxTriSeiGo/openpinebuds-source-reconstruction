@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +20,7 @@ extern "C" {
 #endif
 
  void app_factorymode_wifi_nosignalingtest(void const *arg);
+ void app_wifi_detail_test(void const *arg);
 
  void app_factory_enter_wifi_nosignaltest_mode(void);
  void app_factory_exit_wifi_nosignaltest_mode(void);

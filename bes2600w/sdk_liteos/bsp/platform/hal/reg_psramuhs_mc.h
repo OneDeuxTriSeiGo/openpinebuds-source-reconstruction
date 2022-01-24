@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -66,7 +66,9 @@ struct PSRAMUHS_MC_T {
     __IO uint32_t REG_0B4;
     __IO uint32_t REG_0B8;
     __IO uint32_t REG_0BC;
-    __IO uint32_t REG_RESERVED_0C0[0x20];
+    __IO uint32_t REG_0C0;
+    __IO uint32_t REG_0C4;
+    __IO uint32_t REG_RESERVED_0C8[0x1E];
     __IO uint32_t REG_140;
     __IO uint32_t REG_144;
     __IO uint32_t REG_148;
@@ -163,9 +165,7 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_ENTRY_SELF_REFRESH_IDLE     (1 << 1)
 #define PSRAM_UHS_MC_STOP_CLK_IDLE               (1 << 2)
 #define PSRAM_UHS_MC_AUTOWAKEUP_EN               (1 << 3)
-#define PSRAM_UHS_MC_SELF_RFR_LP_EN(n)           (((n) & 0xF) << 4)
-#define PSRAM_UHS_MC_SELF_RFR_LP_EN_MASK         (0xF << 4)
-#define PSRAM_UHS_MC_SELF_RFR_LP_EN_SHIFT        (4)
+#define PSRAM_UHS_MC_SELF_RFR_LP_EN              (1 << 4)
 #define PSRAM_UHS_MC_PD_MR(n)                    (((n) & 0xFF) << 8)
 #define PSRAM_UHS_MC_PD_MR_MASK                  (0xFF << 8)
 #define PSRAM_UHS_MC_PD_MR_SHIFT                 (8)

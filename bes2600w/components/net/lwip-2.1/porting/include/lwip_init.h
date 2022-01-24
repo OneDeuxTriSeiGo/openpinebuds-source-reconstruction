@@ -12,34 +12,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef BWIFI_STA_H
-#define BWIFI_STA_H
+#ifndef __LWIP_INIT_H__
+#define __LWIP_INIT_H__
 
-#ifdef  __cplusplus
-extern "C"
-{
+#include <stdbool.h>
+#include <stdint.h>
+#include "wifi_device.h"
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifndef ETH_ALEN
-#define ETH_ALEN 6
-#endif
-
-struct bwifi_station_config {
-    u8 ssid[33];
-    u8 passwd[65];//passwd for encrypted ssid, set "all zero" for unencryped ssid
-    int8_t wep_keyid;//for wep,[0-3] default val:0
-    u8 hidden;//1:hidden
-    u8 bssid[ETH_ALEN];//bssid or "all zero"
-    u8 mfp;
-};
-struct bwifi_quick_connect_config {
-    struct bwifi_station_config config;
-    uint32_t channel;
-    uint32_t ip[3];//struct ip_info ip;
+enum netifType {
+    NET_IF_STA,
+    NET_IF_AP,
+    NET_IF_MAX,
 };
 
-#ifdef  __cplusplus
+int GetDynamicIp(enum netifType intf);
+int SetStaticIp(enum netifType intf, IpConfig *staticIp);
+void SetNetifStatus(enum netifType intf, bool netif_up, bool netif_default);
+int InitNetif();
+struct netif *GetNetif(enum netifType intf);
+int GetNetifIp(enum netifType intf, IpConfig *ip);
+
+#ifdef __cplusplus
 }
 #endif
 
-#endif /*BWIFI_STA_H*/
+#endif

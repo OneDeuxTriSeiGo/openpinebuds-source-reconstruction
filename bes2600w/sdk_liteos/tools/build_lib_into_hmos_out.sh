@@ -16,6 +16,9 @@
 MAKEFILE="./bsp/Makefile"
 if [ ! -f $MAKEFILE ]; then
     echo -e "${MAKEFILE} not exist!"
+    mkdir -p bsp/out/best2600w_liteos/
+    cp -rf bsp/out/best2600w_liteos_${5}/libbest2600w_liteos.a bsp/out/best2600w_liteos/
+    cp -rf bsp/out/best2600w_liteos_${5}/_best2001.lds bsp/out/best2600w_liteos/
     exit
 fi
 
@@ -23,9 +26,15 @@ build_trustzone=$1
 build_mini_sys=$2
 build_bin_type=$3
 product_path=$4
+flash_size=$5
+flash_config=""
 
 if [ "x$build_trustzone" == "x" ];then
     build_trustzone="false"
+fi
+
+if [ "x${flash_size}" == "x32" ]; then
+    flash_config=" PSRAM_XCCELA_MODE=1 "
 fi
 
 rel=" "
@@ -36,13 +45,12 @@ if [ "x$build_bin_type" == "xrelease" ];then
     rel="-r"
 fi
 
+
+source ./tools/config.sh
 if [ -f ${product_path}/config.sh ]; then
     source ${product_path}/config.sh
-else
-    source ./tools/config.sh
 fi
 
-cd bsp
 #pre-handle options of target
 SPACE=" "
 function pre_handle_opt()
@@ -79,6 +87,23 @@ function pre_handle_opt()
     printf "[GEN][$2] ${temp_cmd} \n"
 }
 
+
+temp_basic_opts=""
+for VENDOR_OPT in ${OPT_BEST2600W_LITEOS_MAIN}
+do
+    if [ "x$temp_basic_opts" == "x" ] ;then
+        pre_handle_opt ${VENDOR_OPT} OPT_BEST2600W_SOC_MAIN
+        temp_basic_opts="${temp_cmd}"
+    else
+        pre_handle_opt ${VENDOR_OPT} temp_basic_opts
+        temp_basic_opts="${temp_cmd}"
+
+    fi
+    echo "temp_basic_opts:${temp_basic_opts}"
+done
+
+OPT_BEST2600W_LITEOS_MAIN=" ${temp_basic_opts} "
+
 if [ "x${build_trustzone}" == "xtrue" ]; then
     pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MINI
     OPT_BEST2600W_LITEOS_MINI="${temp_cmd}"
@@ -99,13 +124,14 @@ else
     OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd}"
 fi
 
+cd bsp
 
-tools/build_best2600w_ohos_into_lib.sh \
+tools/build_best2600w_ohos3.0_into_lib.sh \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
--m="$OPT_BEST2600W_LITEOS_MAIN OPENHARMONY_SIG=1 $build_type" \
--c="$OPT_BEST2600W_LITEOS_CP $build_type" \
+-m="$OPT_BEST2600W_LITEOS_MAIN $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../ $build_type" \
+-c="$OPT_BEST2600W_LITEOS_CP $flash_config $build_type" \
 -s="$OPT_BEST2600W_LITEOS_MAIN_MINI_SE $build_type" \
--l="$OPT_BEST2600W_LITEOS_MINI OPENHARMONY_SIG=1 $build_type" \
+-l="$OPT_BEST2600W_LITEOS_MINI $flash_config MODULE_KERNEL_STUB_INC=1 $build_type" \
 -x="$OPT_BEST2600W_LITEOS_BOOT1 $build_type" \
 -y="$OPT_BEST2600W_LITEOS_BOOT2A $build_type" \
 -d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys" \

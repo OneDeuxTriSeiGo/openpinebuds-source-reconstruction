@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,7 +40,7 @@ typedef void (*HAL_RMT_IPC_LOCAL_TX_IRQ_CLEAR)(uint32_t id);
 typedef void (*HAL_RMT_IPC_RX_IRQ_SUSPEND)(uint32_t id);
 typedef void (*HAL_RMT_IPC_RX_IRQ_RESUME)(uint32_t id);
 typedef void (*HAL_RMT_IPC_RX_DONE)(uint32_t id);
-typedef int (*HAL_RMT_IPC_IRQ_ACTIVE)(uint32_t id, enum HAL_RMT_IPC_IRQ_TYPE_T type);
+typedef int (*HAL_RMT_IPC_IRQ_ACTIVE)(uint32_t id, uint32_t type);
 typedef void (*HAL_RMT_IPC_IRQ_ENTRY)(void);
 typedef int (*HAL_RMT_IPC_PM_NOTIF_HANDLER)(enum HAL_PM_STATE_T state);
 
@@ -87,7 +87,7 @@ struct HAL_RMT_IPC_CFG_T {
     HAL_RMT_IPC_IRQ_ENTRY tx_irq_entry;
     HAL_RMT_IPC_PM_NOTIF_HANDLER pm_notif_handler;
 
-    enum HAL_SYS_WAKE_LOCK_USER_T sys_wake_lock;
+    uint8_t sys_wake_lock;
     uint8_t chan_num;
     struct HAL_RMT_IPC_CH_CFG_T * chan_cfg;
     const IRQn_Type * rx_irq_id;
@@ -101,7 +101,7 @@ void hal_rmt_ipc_tx_irq_handler(const struct HAL_RMT_IPC_CFG_T *cfg);
 
 int hal_rmt_ipc_pm_notif_handler(const struct HAL_RMT_IPC_CFG_T *cfg, enum HAL_PM_STATE_T state);
 
-int hal_rmt_ipc_open(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id, HAL_RMT_IPC_RX_IRQ_HANDLER rxhandler, HAL_RMT_IPC_TX_IRQ_HANDLER txhandler, int rx_flowctrl);
+int hal_rmt_ipc_open(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id, HAL_RMT_IPC_RX_IRQ_HANDLER rxhandler, HAL_RMT_IPC_TX_IRQ_HANDLER txhandler, int rx_flowctrl, int mbox_init);
 
 int hal_rmt_ipc_close(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id);
 
@@ -110,6 +110,8 @@ int hal_rmt_ipc_start_recv(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id);
 int hal_rmt_ipc_stop_recv(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id);
 
 int hal_rmt_ipc_send_seq(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id, const void *data, unsigned int len, unsigned int *seq);
+
+int hal_rmt_ipc_rx_done(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id);
 
 void hal_rmt_ipc_tx_irq_run(const struct HAL_RMT_IPC_CFG_T *cfg, uint32_t id);
 

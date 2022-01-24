@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,6 +40,9 @@ struct HAL_SDIO_DEVICE_CB_T {
     void (*hal_sdio_device_send_done)(const uint8_t *buf, uint32_t buf_len);
     void (*hal_sdio_device_recv_done)(uint8_t *buf, uint32_t buf_len);
     void (*hal_sdio_device_int_from_host)(void);
+#ifdef __MCU_FW_2002__
+    void (*hal_sdio_device_pre_rxtx_start)(enum HAL_SDIO_DEVICE_STATUS status, int toggle);
+#endif
 };
 
 //Public use
