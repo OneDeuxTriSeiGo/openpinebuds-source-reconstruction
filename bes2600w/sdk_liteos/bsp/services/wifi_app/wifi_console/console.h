@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,8 +40,8 @@ extern "C" {
 typedef struct cmd_tbl_s {
 	char	*name;									   /* Command Name */
 	int 	maxargs;								   /* maximum number of arguments */
-	int 	(*cmd)(struct cmd_tbl_s *, int, char *[]);
-	char	*usage; 								   /* Usage message(short)*/
+	int 	(*cmd)(struct cmd_tbl_s *, int, char *[], void *handler);
+	char	*usage;                                    /* Usage message(short)*/
 } cmd_tbl_t;
 
 extern cmd_tbl_t cmd_list[CMD_LIST_COUNT];
@@ -61,14 +61,15 @@ extern void *nts_calloc(size_t count, size_t size);
 
 extern void init_console_irq_buffer(void);
 extern void uninit_console_irq_buffer(void);
-extern int run_command (char *cmd);
+extern int run_command (void *handler, char *cmd);
 extern int handle_char (const char c, char *prompt);
 extern uint32_t simple_strtoul(const char *cp,char **endp,unsigned int base);
 extern void show_cmd_usage(const cmd_tbl_t *cmd);
 extern int add_cmd_to_list(const cmd_tbl_t *cmd);
-int do_help(cmd_tbl_t *cmd, int argc, char *argv[]);
+int do_help(cmd_tbl_t *cmd, int argc, char *argv[], void *handler);
 extern int cmd_get_data_size(const char *arg, int default_size);
 int get_at_cmd_echo();
+void console_task_start(void);
 #ifdef __cplusplus
 }
 #endif

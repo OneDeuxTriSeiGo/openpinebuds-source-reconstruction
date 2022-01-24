@@ -215,7 +215,7 @@ mac_data_xmit(uint8 devnum, struct pbuf *p)
 static err_t
 low_level_output(struct netif *netif, struct pbuf *p)
 {
-    uint8 RetryCnt = 2, devnum;
+    uint8 RetryCnt = 20, devnum;
     int xmit;
     err_t ret;
 
@@ -228,7 +228,7 @@ low_level_output(struct netif *netif, struct pbuf *p)
     (netif == &if_wifi) ? (devnum = 0) : (devnum = 1);
 
     while (xmit = mac_data_xmit(devnum, p) < 0 && (RetryCnt--)) {
-        osDelay(10);
+        osDelay(1);
     }
 
 #if ETH_PAD_SIZE
@@ -257,6 +257,7 @@ low_level_input(struct netif *netif, void *p_buf, int size)
     struct pbuf *p, *q;
     u16_t len;
     int rem_len;
+    static int drop_cnt = 0;
 
     /* Obtain the size of the packet and put it into the "len"
      * variable. */
@@ -299,7 +300,7 @@ low_level_input(struct netif *netif, void *p_buf, int size)
 #endif
         LINK_STATS_INC(link.recv);
     } else {
-        printf("low_level_input alloc failed, drop frame!\n");
+        printf("low_level_input alloc failed, drop frame count=%d!\n", ++drop_cnt);
         LINK_STATS_INC(link.memerr);
         LINK_STATS_INC(link.drop);
     }

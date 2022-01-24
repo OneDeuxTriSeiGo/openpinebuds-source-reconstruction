@@ -40,6 +40,11 @@ declare_args() {
   bes_ability_enable = false
   bes_watchdog_enable = false
 
+  # net
+  bes_net_enable = true
+  bes_softap_enable = true
+  bes_iperf_enable = false
+
   ##################################################
   # test configurations
   ##################################################

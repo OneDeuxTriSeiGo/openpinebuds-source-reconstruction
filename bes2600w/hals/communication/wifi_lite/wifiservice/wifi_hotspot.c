@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#ifdef SOFTAP_ENABLE
 #include "wifi_event.h"
 #include "station_info.h"
 #include "wifi_scan_info.h"
@@ -22,15 +22,8 @@
 #include "bwifi_interface.h"
 #include "wifi_hotspot_config.h"
 #include "bwifi_event.h"
-// #include "bwifi_hal.h"
-
-#define HAL_USE_DHCPS
-#ifdef HAL_USE_DHCPS
-#include "lwip/tcpip.h"
-#include "lwip/ip_addr.h"
-#include "lwip/netifapi.h"
-#include "lwip/dhcps.h"
-#endif
+#include "lwip_init.h"
+#include "dhcpd.h"
 
 #define RSSI_LEVEL_4_2_G (-65)
 #define RSSI_LEVEL_3_2_G (-75)
@@ -41,7 +34,6 @@
 #define RSSI_LEVEL_2_5_G (-79)
 #define RSSI_LEVEL_1_5_G (-85)
 
-extern struct netif if_wifi_ap;
 
 static int g_HalHmosWifiApStatus                = WIFI_HOTSPOT_NOT_ACTIVE;
 static HotspotConfig g_HalHmosWifiApConfig      = {0};
@@ -49,76 +41,94 @@ extern WifiErrorCode HalHmosWifiEventInit();
 extern void HalHmosWifiLock();
 extern void HalHmosWifiUnLock();
 
+
+#ifdef HOST_CLIENT_IP
+#define CLIENT_MAX      4
+#define MAC_LEN         6
+/**
+ * @brief Defines station information.
+ */
+struct ClientInfo {
+    uint32_t        xid[CLIENT_MAX];        /**< xid */
+    uint32_t        ip[CLIENT_MAX];   /**< id */
+    uint8_t         mac[CLIENT_MAX][6];   /**< mac */
+};
+
+static struct ClientInfo hostclient = {0};
+
+void HalWifiHostSetClientIpAddr(uint8_t index, uint32_t ip)
+{
+    if (index > CLIENT_MAX) {
+        printf("%s index:%d is too max\n", __func__, index);
+        return;
+    }
+    hostclient.ip[index] = ip;
+}
+
+void HalWifiHostSetClientIp(uint8_t index, uint32_t xid, uint32_t ip, uint8_t *mac)
+{
+    if (index > CLIENT_MAX) {
+        printf("%s index:%d is too max\n", __func__, index);
+        return;
+    }
+    hostclient.ip[0] = ip;
+    hostclient.xid[0] = xid;
+    if (mac) {
+        int ret = memcpy_s(hostclient.mac[index], MAC_LEN, mac, MAC_LEN);
+        if (ret) {
+            printf("%s mac failed\n", __func__);
+        }
+    }
+    printf("%s index:%d xid:%u ip:%u\n", __func__, index, xid, ip);
+}
+#endif
+
 static int HalBesSecTypeConvert(WifiSecurityType security_type)
 {
     switch (security_type) {
     case WIFI_SEC_TYPE_WEP:
-        return SECURITY_WEP104;
+        return BWIFI_SECURITY_WEP104;
     case WIFI_SEC_TYPE_PSK:
-        return SECURITY_WPA_WPA2;
+        return BWIFI_SECURITY_WPA_WPA2;
     case WIFI_SEC_TYPE_SAE:
-        return SECURITY_WPA3_SAE_WPA2;
+        return BWIFI_SECURITY_WPA3_SAE_WPA2;
     default:
         return WIFI_SEC_TYPE_OPEN;
     }
 }
 
-#ifdef HAL_USE_DHCPS
-static void SetAddr(struct netif *pst_lwip_netif)
-{
-    ip4_addr_t st_gw;
-    ip4_addr_t st_ipaddr;
-    ip4_addr_t st_netmask;
-
-    IP4_ADDR(&st_ipaddr, 192, 168, 51, 1);        // IP ADDR  为了和其他数字管家中的其他设备适配， 选择192.168.51网段
-    IP4_ADDR(&st_gw, 192, 168, 51, 1);            // GET WAY ADDR
-    IP4_ADDR(&st_netmask, 255, 255, 255, 0);    // NET MASK CODE
-
-    netifapi_netif_set_addr(pst_lwip_netif, &st_ipaddr, &st_netmask, &st_gw);
-}
-#endif
-
 WifiErrorCode EnableHotspot(void)
 {
-    struct netif *p_netif_ap = &if_wifi_ap;
     WifiErrorCode ret           = ERROR_WIFI_UNKNOWN;
     BWIFI_SEC_TYPE_T sectype    = HalBesSecTypeConvert(g_HalHmosWifiApConfig.securityType);
     HalHmosWifiLock();
-    if (BWIFI_R_OK == bwifi_set_softap_config((char *)g_HalHmosWifiApConfig.ssid, 
+    printf("%s ssid:%s chnum:%d sectype:%d preSharedKey锟斤拷%s", __func__, \
+        g_HalHmosWifiApConfig.ssid, g_HalHmosWifiApConfig.channelNum, sectype, g_HalHmosWifiApConfig.preSharedKey);
+    if (BWIFI_R_OK == bwifi_set_softap_config((char *)g_HalHmosWifiApConfig.ssid,
                         g_HalHmosWifiApConfig.channelNum, 0, 0,
                         sectype, (char *)g_HalHmosWifiApConfig.preSharedKey)) {
         if (g_HalHmosWifiApStatus != WIFI_HOTSPOT_ACTIVE
             &&HalHmosWifiEventInit() == WIFI_SUCCESS) {
             if (bwifi_softap_start() == BWIFI_R_OK) {
+                if (InitNetif() == 0) {
+                    SetNetifStatus(NET_IF_AP, true, true);
+                    DHCPD_daemon_start();
+                }
                 g_HalHmosWifiApStatus = WIFI_HOTSPOT_ACTIVE;
                 ret = WIFI_SUCCESS;
             }
         }
-#ifdef HAL_USE_DHCPS
-        HalTcpIpInit();
-        WifiHotspotNetifInit(p_netif_ap);
-        if (p_netif_ap) {
-            SetAddr(p_netif_ap);
-            printf("[%s] start dhcp server\n", __func__);
-            netifapi_dhcps_start(p_netif_ap, 0, 0);
-        } else {
-            printf("[%s] p_netif_ap is NULL!!!\n", __func__);
-        }
-#endif
     }
     HalHmosWifiUnLock();
-    netif_set_link_up(p_netif_ap);
-    netif_set_up(p_netif_ap);
     return ret;
 }
 
 WifiErrorCode DisableHotspot(void)
 {
     HalHmosWifiLock();
-    struct netif *p_netif_ap = &if_wifi_ap;
-    WifiHotspotNetifDeInit(p_netif_ap);
     if(g_HalHmosWifiApStatus == WIFI_HOTSPOT_NOT_ACTIVE)
         return ERROR_WIFI_NOT_STARTED;
+    DHCPD_daemon_stop();
     bwifi_softap_stop();
     g_HalHmosWifiApStatus = WIFI_HOTSPOT_NOT_ACTIVE;
     HalHmosWifiUnLock();
@@ -158,24 +168,26 @@ WifiErrorCode GetStationList(StationInfo *result, unsigned int *size)
     WifiErrorCode ret                   = ERROR_WIFI_INVALID_ARGS;
     struct bwifi_mac_addr *mac_list     = NULL;
 
-    if (result == NULL) {
-        printf("[%s] result is NULL\n", __func__);
+    if (result == NULL)
         return ret;
-    }
+
     mac_list = (struct bwifi_mac_addr *)malloc(count * sizeof(struct bwifi_mac_addr));
     if (mac_list != NULL) {
         HalHmosWifiLock();
         if (bwifi_softap_get_station_list(mac_list, &count) == BWIFI_R_OK) {
             for (i = 0; i < count; i++) {
-                memcpy((uint8 *)result->macAddress, mac_list++, WIFI_MAC_LEN);
+                memcpy((uint8_t *)result->macAddress, mac_list++, WIFI_MAC_LEN);
                 result->disconnectedReason = 0;
+#ifdef HOST_CLIENT_IP
+                result->ipAddress = hostclient.ip[0];
+                printf("%s inipAddressdex:%u\n", __func__, result->ipAddress);
+#endif
                 result++;
             }
             *size = count;
-             printf("[%s] had sta connect size:%d\n", __func__, count);
-        } else {
+        } else
             *size = 0;
-        }
+
         HalHmosWifiUnLock();
         free(mac_list);
     }
@@ -227,5 +239,4 @@ WifiErrorCode GetBand(int *result)
     *result = g_HalHmosWifiApConfig.band;
     return WIFI_SUCCESS;
 }
-
-
+#endif

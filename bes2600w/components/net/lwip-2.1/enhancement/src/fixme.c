@@ -58,49 +58,8 @@ err_t dhcp_is_bound(struct netif *netif)
         return ERR_INPROGRESS;
     }
 }
-
 #endif /* LWIP_DHCP */
 
-#if LWIP_DHCPS
-
-#include "lwip/dhcps.h"
-
-static err_t netifapi_do_dhcps_start(struct tcpip_api_call_data *m)
-{
-    /* cast through void* to silence alignment warnings.
-     * We know it works because the structs have been instantiated as struct netifapi_msg */
-    err_t ret;
-    struct netifapi_msg *msg = (struct netifapi_msg *)(void *)m;
-    ret = dhcps_start(msg->netif, msg->msg.dhcp_start_params.start_ip, msg->msg.dhcp_start_params.ip_num);
-    return ret;
-}
-
-err_t netifapi_dhcps_start(struct netif *netif, char *start_ip, u16_t ip_num)
-{
-    err_t err;
-    NETIFAPI_VAR_DECLARE(msg);
-
-    LWIP_ERROR("netifapi_dhcps_start : invalid arguments", (netif != NULL), return ERR_VAL);
-    NETIFAPI_VAR_ALLOC(msg);
-
-    NETIFAPI_VAR_REF(msg).netif = netif;
-    NETIFAPI_VAR_REF(msg).msg.dhcp_start_params.start_ip = start_ip;
-    NETIFAPI_VAR_REF(msg).msg.dhcp_start_params.ip_num = ip_num;
-
-    err = tcpip_api_call(netifapi_do_dhcps_start, &API_VAR_REF(msg).call);
-
-    NETIFAPI_VAR_FREE(msg);
-    return err;
-}
-
-err_t netifapi_dhcps_stop(struct netif *netif)
-{
-    LWIP_ERROR("netifapi_dhcps_stop : invalid arguments", (netif != NULL), return ERR_VAL);
-
-    return netifapi_netif_common(netif, dhcps_stop, NULL);
-}
-
-#endif /* LWIP_DHCPS */
 static struct netif *netif_find_by_name(const char *name)
 {
     struct netif *netif = NULL;

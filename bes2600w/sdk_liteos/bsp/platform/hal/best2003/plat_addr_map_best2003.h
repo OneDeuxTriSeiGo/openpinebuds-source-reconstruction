@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -292,6 +292,7 @@ extern "C" {
 #define WIFI_RAM_BASE                           0x80000000
 #define WIFI_PAS_BASE                           0x82000000
 #define WIFI_TRANSQM_BASE                       0x9000A000
+#define WIFI_CMU_BASE                           0x90000000
 
 #define DSP_SUBSYS_BASE                         0x50000000
 
@@ -379,7 +380,6 @@ extern "C" {
 #endif /*DSP_USE_GPDMA*/
 
 /* For linker scripts */
-
 #define VECTOR_SECTION_SIZE                     360
 #define REBOOT_PARAM_SECTION_SIZE               64
 #define ROM_BUILD_INFO_SECTION_SIZE             40
@@ -424,6 +424,9 @@ extern "C" {
 
 #define PSRAMCP_BASE				(PSRAM_BASE + PSRAM_SIZE)
 #define PSRAMCPX_BASE				(PSRAMX_BASE + PSRAM_SIZE)
+
+/* For ROM export functions */
+#define NO_MEMMOVE
 
 #ifdef __cplusplus
 }

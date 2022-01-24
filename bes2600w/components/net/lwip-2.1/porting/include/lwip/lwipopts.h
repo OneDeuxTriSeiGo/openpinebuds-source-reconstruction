@@ -106,7 +106,7 @@
 #define RECV_BUFSIZE_DEFAULT            65535
 #define SO_REUSE_RXTOALL                1
 
-#define LWIP_CHECKSUM_ON_COPY           1
+#define LWIP_CHECKSUM_ON_COPY           0
 #define LWIP_IPV6                       1
 #define LWIP_IPV6_NUM_ADDRESSES         5
 #define LWIP_ND6_NUM_PREFIXES           10
@@ -244,6 +244,6 @@
 #define LWIP_NETIF_STATUS_CALLBACK      1
 #define LWIP_CHECKSUM_ON_COPY           0
 #define CHECKSUM_GEN_UDP                0
-#define LWIP_NETIF_EXT_STATUS_CALLBACK  1
 
+#define LWIP_SOCKET_FCNTL_FUNC          1
 #endif /* _LWIP_PORTING_LWIPOPTS_H_ */

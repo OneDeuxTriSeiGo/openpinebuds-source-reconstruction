@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,13 +43,8 @@ static const uint32_t bes2003_gpdma_fifo_addr[AUDMA_PERIPH_NUM] = {
 #else
     I2C1_BASE + 0x010,      // I2C1 RX
     I2C1_BASE + 0x010,      // I2C1 TX
-#ifdef HMOS_EGRET
-    I2C0_BASE + 0x010,      // I2C0 RX
-    I2C0_BASE + 0x010,      // I2C0 TX
-#else
     SPI_BASE + 0x008,       // SPI RX
     SPI_BASE + 0x008,       // SPI TX
-#endif
 #endif
     SDMMC_BASE + 0x200,     // SDMMC
     BTPCM_BASE + 0x1C0,     // BTPCM RX
@@ -79,13 +74,8 @@ static const enum HAL_DMA_PERIPH_T bes2003_gpdma_fifo_periph[AUDMA_PERIPH_NUM] =
 #else
     HAL_GPDMA_I2C1_RX,
     HAL_GPDMA_I2C1_TX,
-#ifdef HMOS_EGRET
-    HAL_GPDMA_I2C0_RX,
-    HAL_GPDMA_I2C0_TX,
-#else
     HAL_GPDMA_SPI_RX,
     HAL_GPDMA_SPI_TX,
-#endif
 #endif
     HAL_GPDMA_SDMMC,
     HAL_AUDMA_BTPCM_RX,

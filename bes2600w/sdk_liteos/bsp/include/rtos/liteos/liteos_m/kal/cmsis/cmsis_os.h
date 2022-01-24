@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -83,6 +83,15 @@ typedef osStatus_t              osStatus;
 #define osErrorPriority         (-128)
 #define os_status_reserved      osStatusReserved
 #endif
+
+// The stack space occupied is mainly dependent on the underling C standard library
+#if defined(__GNUC__) || defined(__CC_ARM) || defined(__ARMCC_VERSION) || defined(__ICCARM__)
+#    define WORDS_STACK_SIZE   512
+#elif defined(TOOLCHAIN_ARM_MICRO)
+#    define WORDS_STACK_SIZE   128
+#endif
+
+#define DEFAULT_STACK_SIZE         (WORDS_STACK_SIZE*4)
 
 /// \note CAN BE CHANGED: \b osFeature_xxx identifies RTOS features.
 #define osFeature_MainThread  0         ///< main thread      1=main can be thread, 0=not available

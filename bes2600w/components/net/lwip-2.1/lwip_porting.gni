@@ -39,9 +39,9 @@ LWIP_PORTING_FILES = [
   "$LWIP_PORTING_DIR/porting/src/ethernetif.c",
   "$LWIP_PORTING_DIR/enhancement/src/fixme.c",
   "$LWIP_PORTING_DIR/enhancement/src/lwip_ifaddrs.c",
-  "$LWIP_PORTING_DIR/enhancement/src/dhcps.c",
 ]
 
 if (enable_ohos_kernel_liteos_m_shell) {
   LWIP_PORTING_FILES += [ "$LWIP_PORTING_DIR/porting/src/api_shell.c" ]
+  LWIP_PORTING_INCLUDE_DIRS += [ "//kernel/liteos_m/components/shell/include" ]
 }

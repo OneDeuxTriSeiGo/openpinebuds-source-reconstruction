@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -49,6 +49,8 @@ extern "C" {
 #define HAL_SW_BOOTMODE_TEST_MODE               (1 << 20)
 #define HAL_SW_BOOTMODE_TEST_SIGNALINGMODE      (1 << 21)
 #define HAL_SW_BOOTMODE_TEST_NOSIGNALINGMODE    (1 << 22)
+/* For A7 reboot */
+#define HAL_SW_BOOTMODE_A7_REBOOT               (1 << 21)
 
 #define HAL_SW_BOOTMODE_ENTER_HIDE_BOOT         (1 << 23)
 

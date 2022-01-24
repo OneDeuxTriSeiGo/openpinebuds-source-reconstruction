@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,6 +28,7 @@ extern "C" {
 void psramuhs_read_reg(uint32_t reg, uint32_t *val);
 void hal_psramuhsip_mc_busy_wait(void);
 void hal_psramuhsip_wb_busy_wait(void);
+void psramuhsphy_printf_window();
 
 #ifdef __cplusplus
 }

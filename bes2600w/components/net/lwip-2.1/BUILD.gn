@@ -28,11 +28,15 @@
 
 import("//third_party/lwip/lwip.gni")
 import("lwip_porting.gni")
+import("../../components.gni")
 
 config("lwip_depends") {
   defines = [ "_BSD_SOURCE = 1" ]
   defines += [ "LITEOS_LWIP = 1" ]
   defines += [ "CHECKSUM_BY_HARDWARE=1" ]
+  if (bes_softap_enable) {
+    defines += [ "SOFTAP_ENABLE" ]
+  }
 }
 
 static_library("lwip") {
@@ -43,13 +47,14 @@ static_library("lwip") {
 
   include_dirs += LWIP_PORTING_INCLUDE_DIRS
   include_dirs += LWIP_INCLUDE_DIRS
+  include_dirs += [
+    "//foundation/communication/wifi_lite/interfaces/wifiservice/",
+    "//device/bestechnic/bes2600w/sdk_liteos/bsp/net/wifi/",
+  ]
 
   sources = LWIP_PORTING_FILES + LWIPNOAPPSFILES
 
-  sources -= [
-    "$LWIPDIR/api/sockets.c",
-    "$LWIPDIR/core/ipv4/dhcp.c",
-  ]
+  sources -= [ "$LWIPDIR/api/sockets.c" ]
 
   configs += [ ":lwip_depends" ]
 

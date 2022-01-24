@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -385,8 +385,8 @@ void btdrv_reconn(bool en);
 
 #if defined(CHIP_BEST2300) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402) ||   \
     defined(CHIP_BEST2300P) || defined(CHIP_BEST2001) || defined(CHIP_BEST2300A) || \
-    defined(CHIP_BEST1501) || defined(CHIP_BEST2003) || defined(CHIP_BEST1305) ||   \
-    defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
+    defined(CHIP_BEST1501) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003) || \
+	defined(CHIP_BEST1305) || defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
 void btdrv_pcm_enable(void);
 void btdrv_pcm_disable(void);
 void btdrv_spi_trig_data_change(uint8_t spi_sel, uint8_t index, uint32_t value);
@@ -576,6 +576,11 @@ void bt_uart_debug_send(unsigned char *data, unsigned int len);
 #define UART_DUMP16(str, buf, cnt)           hal_uart_dump(str, sizeof(uint16_t), cnt, buf)
 #define UART_DUMP32(str, buf, cnt)           hal_uart_dump(str, sizeof(uint32_t), cnt, buf)
 
+void write_reg16(uint8_t reg16, uint16_t value);
+void read_reg16(uint8_t reg16);
+
+void wifi_write_reg16(uint8_t reg16, uint16_t value);
+void wifi_read_reg16(uint8_t reg16);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,19 +22,6 @@ extern "C" {
 #ifdef CHIP_HAS_TRANSQ
 
 #include "plat_types.h"
-#ifdef EXTEND_TRANSQ_2003
-#define RX_NUM_HIGH                     0
-#define TX_NUM_HIGH                     0
-#define RX_NUM_NORMAL                   30
-#define TX_NUM_NORMAL                   49
-
-#else
-#define RX_NUM_HIGH                     2
-#define TX_NUM_HIGH                     2
-#define RX_NUM_NORMAL                   30
-#define TX_NUM_NORMAL                   30
-
-#endif
 
 enum HAL_TRANSQ_ID_T {
     HAL_TRANSQ_ID_0 = 0,

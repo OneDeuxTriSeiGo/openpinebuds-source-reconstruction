@@ -1,23 +1,55 @@
-/*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/***************************************************************************
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright 2015-2019 BES.
+ * All rights reserved. All unpublished rights reserved.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+ * No part of this work may be used or reproduced in any form or by any
+ * means, or stored in a database or retrieval system, without prior written
+ * permission of BES.
+ *
+ * Use of this work is governed by a license granted by BES.
+ * This work contains confidential and proprietary information of
+ * BES. which is protected by copyright, trade secret,
+ * trademark and other intellectual property rights.
+ *
+ ****************************************************************************/
+/***************************************************************************
+ *
+ * Copyright 2015-2020 BES.
+ * All rights reserved. All unpublished rights reserved.
+ *
+ * No part of this work may be used or reproduced in any form or by any
+ * means, or stored in a database or retrieval system, without prior written
+ * permission of BES.
+ *
+ * Use of this work is governed by a license granted by BES.
+ * This work contains confidential and proprietary information of
+ * BES. which is protected by copyright, trade secret,
+ * trademark and other intellectual property rights.
+ *
+ ****************************************************************************/
+/***************************************************************************
+ *
+ * Copyright 2015-2019 BES.
+ * All rights reserved. All unpublished rights reserved.
+ *
+ * No part of this work may be used or reproduced in any form or by any
+ * means, or stored in a database or retrieval system, without prior written
+ * permission of BES.
+ *
+ * Use of this work is governed by a license granted by BES.
+ * This work contains confidential and proprietary information of
+ * BES. which is protected by copyright, trade secret,
+ * trademark and other intellectual property rights.
+ *
+ ****************************************************************************/
 /* total ramv size is 0x30000 */
 /*MCU use RAM0, CP and CPX use RAM1*/
 /* secure and non-secure ram size */
 /* For linker scripts */
 /* For module features */
 /* For boot struct version */
+/* For ROM export functions */
 /* Linker script to configure memory regions. */
 /* See plat_addr_map.h and common.mk for the macro definitions */
 MEMORY
@@ -857,6 +889,7 @@ SECTIONS
   *(EXCLUDE_FILE(*hal_*.o *cmsis_nvic.o *system_ARMCM4.o *system_utils.o *system_cp.o *cp_accel.o *bpabi.o *div*.o *_dvmd_tls.o *best*.o ) .bss*)
   *:*ffmpeg*.o(COMMON)
   *(.psram_bss*)
+  *(.bss*)
   . = ALIGN(4);
   __mem_pool_start__ = .;
   . += 128*1000;
@@ -924,10 +957,12 @@ SECTIONS
   PROVIDE_HIDDEN (__preinit_array_end = .);
   . = ALIGN(4);
   /* init data */
+  PROVIDE(__ctors_start__ = .);
   PROVIDE_HIDDEN (__init_array_start = .);
   KEEP(*(SORT(.init_array.*)))
   KEEP(*(.init_array))
   PROVIDE_HIDDEN (__init_array_end = .);
+  PROVIDE(__ctors_end__ = .);
   . = ALIGN(4);
   /* finit data */
   PROVIDE_HIDDEN (__fini_array_start = .);
@@ -1136,14 +1171,6 @@ SECTIONS
   KEEP(*(.preinit_array))
   PROVIDE_HIDDEN (__preinit_array_end = .);
   . = ALIGN(4);
-  /* init data */
-  PROVIDE(__ctors_start__ = .);
-  PROVIDE_HIDDEN (__init_array_start = .);
-  KEEP(*(SORT(.init_array.*)))
-  KEEP(*(.init_array))
-  PROVIDE_HIDDEN (__init_array_end = .);
-  PROVIDE(__ctors_end__ = .);
-  . = ALIGN(4);
   /* finit data */
   PROVIDE_HIDDEN (__fini_array_start = .);
   KEEP(*(SORT(.fini_array.*)))
@@ -1181,7 +1208,6 @@ SECTIONS
   . = ALIGN(4);
   __bss_start__ = .;
   _sbss = .;
-  *(.bss*)
   *(COMMON)
   . = ALIGN(4);
   __bss_end__ = .;

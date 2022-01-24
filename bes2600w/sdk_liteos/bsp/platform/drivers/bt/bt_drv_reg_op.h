@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -390,7 +390,8 @@ void bt_drv_i2v_enable_sleep_for_bt_access(void);
 
 int8_t bt_drv_reg_op_get_tx_pwr_dbm(uint16_t conhdl);
 void bt_drv_reg_op_get_pkt_ts_rssi(uint16_t connhdl, CLKN_SER_NUM_T* buf);
-void bt_drv_reg_op_rssi_adjust_mode_setting_for_test_mode(void);
+void bt_drv_reg_op_rssi_adjust_mode_setting_for_test_mode(uint8_t enable);
+void btdrv_reg_op_set_btpcm_mute_pattern(uint16_t pattern);
 bool bt_drv_reg_op_check_link_exist(uint16_t con_hdl);
 void bt_drv_reg_op_setting_wesco(uint8_t wesco);
 void btdrv_reg_op_config_coex_mode(uint8_t mode);

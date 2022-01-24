@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -211,48 +211,80 @@ enum HAL_CMU_MOD_ID_T {
 
 enum HAL_CMU_CLOCK_OUT_ID_T {
     HAL_CMU_CLOCK_OUT_AON_32K           = 0x00,
-    HAL_CMU_CLOCK_OUT_AON_26M           = 0x01,
-    HAL_CMU_CLOCK_OUT_AON_52M           = 0x02,
-    HAL_CMU_CLOCK_OUT_AON_DIG_52M       = 0x03,
-    HAL_CMU_CLOCK_OUT_AON_DIG_104M      = 0x04,
+    HAL_CMU_CLOCK_OUT_AON_OSC           = 0x01,
+    HAL_CMU_CLOCK_OUT_AON_OSCX2         = 0x02,
+    HAL_CMU_CLOCK_OUT_AON_DIG_OSCX2     = 0x03,
+    HAL_CMU_CLOCK_OUT_AON_DIG_OSCX4     = 0x04,
     HAL_CMU_CLOCK_OUT_AON_PER           = 0x05,
     HAL_CMU_CLOCK_OUT_AON_USB           = 0x06,
-    HAL_CMU_CLOCK_OUT_AON_DCDC          = 0x07,
+    HAL_CMU_CLOCK_OUT_AON_DCDC0         = 0x07,
     HAL_CMU_CLOCK_OUT_AON_CHCLK         = 0x08,
     HAL_CMU_CLOCK_OUT_AON_SPDIF0        = 0x09,
     HAL_CMU_CLOCK_OUT_AON_MCU           = 0x0A,
     HAL_CMU_CLOCK_OUT_AON_FLASH         = 0x0B,
-    HAL_CMU_CLOCK_OUT_AON_SYS           = 0x0C,
+    HAL_CMU_CLOCK_OUT_AON_PSRAM         = 0x0C,
+    HAL_CMU_CLOCK_OUT_AON_DDR           = 0x0D,
+    HAL_CMU_CLOCK_OUT_AON_A7            = 0x0E,
+    HAL_CMU_CLOCK_OUT_AON_DCDC1         = 0x0F,
+    HAL_CMU_CLOCK_OUT_AON_OSCX4         = 0x10,
+    HAL_CMU_CLOCK_OUT_AON_DSI           = 0x11,
+    HAL_CMU_CLOCK_OUT_AON_CSI           = 0x12,
+    HAL_CMU_CLOCK_OUT_AON_PIX_DSI       = 0x13,
+    HAL_CMU_CLOCK_OUT_AON_PIX_CSI       = 0x14,
+    HAL_CMU_CLOCK_OUT_AON_PSRAMX2       = 0x15,
+    HAL_CMU_CLOCK_OUT_AON_DCDC2         = 0x16,
+    HAL_CMU_CLOCK_OUT_AON_SYS           = 0x17,
 
-    HAL_CMU_CLOCK_OUT_BT_32K            = 0x40,
-    HAL_CMU_CLOCK_OUT_BT_SYS            = 0x41,
-    HAL_CMU_CLOCK_OUT_BT_52M            = 0x42,
-    HAL_CMU_CLOCK_OUT_BT_26MI           = 0x43,
-    HAL_CMU_CLOCK_OUT_BT_13M            = 0x44,
-    HAL_CMU_CLOCK_OUT_BT_12M            = 0x45,
-    HAL_CMU_CLOCK_OUT_BT_ADC            = 0x46,
-    HAL_CMU_CLOCK_OUT_BT_ADC2           = 0x47,
-    HAL_CMU_CLOCK_OUT_BT_24M            = 0x48,
-    HAL_CMU_CLOCK_OUT_BT_26M            = 0x49,
+    HAL_CMU_CLOCK_OUT_WF_32K            = 0x20,
+    HAL_CMU_CLOCK_OUT_WF_HCLK           = 0x21,
+    HAL_CMU_CLOCK_OUT_WF_PCLK           = 0x22,
+    HAL_CMU_CLOCK_OUT_WF_MAC            = 0x23,
+    HAL_CMU_CLOCK_OUT_WF_PHY            = 0x24,
+    HAL_CMU_CLOCK_OUT_WF_OSC            = 0x25,
+    HAL_CMU_CLOCK_OUT_WF_40M            = 0x26,
+    HAL_CMU_CLOCK_OUT_WF_80M            = 0x27,
+    HAL_CMU_CLOCK_OUT_WF_160M           = 0x28,
+    HAL_CMU_CLOCK_OUT_WF_UART           = 0x29,
+    HAL_CMU_CLOCK_OUT_WF_SPI            = 0x2A,
+    HAL_CMU_CLOCK_OUT_WF_SDIO           = 0x2B,
+    HAL_CMU_CLOCK_OUT_WF_ADC            = 0x2C,
+    HAL_CMU_CLOCK_OUT_WF_TX_DAC         = 0x2D,
+    HAL_CMU_CLOCK_OUT_WF_BBDIGFIFO      = 0x2E,
+
+    HAL_CMU_CLOCK_OUT_BT_NONE           = 0x40,
+    HAL_CMU_CLOCK_OUT_BT_32K            = 0x41,
+    HAL_CMU_CLOCK_OUT_BT_SYS            = 0x42,
+    HAL_CMU_CLOCK_OUT_BT_OSCX2          = 0x43,
+    HAL_CMU_CLOCK_OUT_BT_OSC_2          = 0x44,
+    HAL_CMU_CLOCK_OUT_BT_ADC            = 0x45,
+    HAL_CMU_CLOCK_OUT_BT_ADCD3          = 0x46,
+    HAL_CMU_CLOCK_OUT_BT_DAC            = 0x47,
+    HAL_CMU_CLOCK_OUT_BT_DACD2          = 0x48,
+    HAL_CMU_CLOCK_OUT_BT_DACD4          = 0x49,
+    HAL_CMU_CLOCK_OUT_BT_DACD8          = 0x4A,
 
     HAL_CMU_CLOCK_OUT_MCU_32K           = 0x60,
     HAL_CMU_CLOCK_OUT_MCU_SYS           = 0x61,
     HAL_CMU_CLOCK_OUT_MCU_FLASH         = 0x62,
     HAL_CMU_CLOCK_OUT_MCU_USB           = 0x63,
     HAL_CMU_CLOCK_OUT_MCU_PCLK          = 0x64,
-    HAL_CMU_CLOCK_OUT_MCU_I2S           = 0x65,
+    HAL_CMU_CLOCK_OUT_MCU_I2S0          = 0x65,
     HAL_CMU_CLOCK_OUT_MCU_PCM           = 0x66,
     HAL_CMU_CLOCK_OUT_MCU_SPDIF0        = 0x67,
     HAL_CMU_CLOCK_OUT_MCU_SDMMC         = 0x68,
     HAL_CMU_CLOCK_OUT_MCU_SPI2          = 0x69,
     HAL_CMU_CLOCK_OUT_MCU_SPI0          = 0x6A,
     HAL_CMU_CLOCK_OUT_MCU_SPI1          = 0x6B,
+    HAL_CMU_CLOCK_OUT_MCU_XCLK          = 0x6C,
+    HAL_CMU_CLOCK_OUT_MCU_APCLK         = 0x6D,
+    HAL_CMU_CLOCK_OUT_MCU_I2S1          = 0x6E,
 
     HAL_CMU_CLOCK_OUT_CODEC_ADC_ANA     = 0x80,
     HAL_CMU_CLOCK_OUT_CODEC_CODEC       = 0x81,
     HAL_CMU_CLOCK_OUT_CODEC_IIR         = 0x82,
-    HAL_CMU_CLOCK_OUT_CODEC_RS          = 0x83,
-    HAL_CMU_CLOCK_OUT_CODEC_HCLK        = 0x84,
+    HAL_CMU_CLOCK_OUT_CODEC_RS_DAC      = 0x83,
+    HAL_CMU_CLOCK_OUT_CODEC_RS_ADC      = 0x84,
+    HAL_CMU_CLOCK_OUT_CODEC_HCLK        = 0x85,
 };
 
 enum HAL_CMU_I2S_MCLK_ID_T {
@@ -358,6 +390,12 @@ int hal_cmu_fast_timer_offline(void);
 
 int hal_cmu_ddr_clock_enable();
 
+void hal_cmu_ddr_clock_disable();
+
+void hal_cmu_ddr_reset_set();
+
+void hal_cmu_ddr_reset_clear();
+
 uint32_t hal_cmu_get_aon_chip_id(void);
 
 uint32_t hal_cmu_get_aon_revision_id(void);
@@ -422,13 +460,25 @@ void hal_cmu_dsi_clock_enable_v2(uint8_t pixel_div);
 
 void hal_cmu_dsi_clock_disable(void);
 
+void hal_cmu_dsi_reset_set(void);
+
+void hal_cmu_dsi_reset_clear(void);
+
 void hal_cmu_csi_clock_enable(void);
 
 void hal_cmu_csi_clock_disable(void);
 
+void hal_cmu_csi_reset_set(void);
+
+void hal_cmu_csi_reset_clear(void);
+
 void hal_cmu_lcdc_clock_enable(void);
 
 void hal_cmu_lcdc_clock_disable(void);
+
+void hal_cmu_lcdc_reset_set(void);
+
+void hal_cmu_lcdc_reset_clear(void);
 
 void hal_cmu_shutdown_hook(void);
 

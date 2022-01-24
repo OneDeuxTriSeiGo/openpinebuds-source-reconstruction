@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -217,7 +217,9 @@ static inline void i2sip_w_clk_sync_enable(uint32_t reg_base, enum HAL_I2S_SYNC_
     uint32_t val = 0;
     val = i2sip_read32(reg_base, I2SIP_EN_SEL_OFFSET);
     val = SET_BITFIELD(val, I2SIP_CLK_EN_SEL, type);
+#ifndef WIFI_LMAC_TIRIIGER
     val |= I2SIP_TSF_EVENT_SEL;
+#endif
     i2sip_write32(val, reg_base, I2SIP_EN_SEL_OFFSET);
 }
 

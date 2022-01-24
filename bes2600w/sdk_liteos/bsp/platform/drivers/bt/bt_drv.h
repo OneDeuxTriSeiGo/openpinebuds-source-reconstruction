@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 bestechnic (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,27 +39,29 @@ extern "C" {
 
 #define BT_ACL_CONHDL_BIT       (0x80)
 
-#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2001) || defined(CHIP_BEST2003) || defined(CHIP_BEST1501) || defined(CHIP_BEST1305)
+#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2001) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003) || defined(CHIP_BEST1501) || defined(CHIP_BEST1305)
 #define BTDRV_ISPI_RF_REG(reg)                  (((reg) & 0xFFF) | 0x2000)
 #else
 #define BTDRV_ISPI_RF_REG(reg)                  (reg)
 #endif
 
 // NOTE: Measure this value for every CHIP Version
-#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
+#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
 #define CVSD_OFFSET_BYTES (120)
 #else
 #define CVSD_OFFSET_BYTES (120 - 2)
 #endif
 
 // NOTE: Measure this value for every CHIP Version
-#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
+#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
 #define MSBC_OFFSET_BYTES (0)
 #else
 #define MSBC_OFFSET_BYTES (1)
 #endif
 
-#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST2001)|| defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
+#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST2001) ||\
+       defined(CHIP_BEST1501) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
+	
 #define MSBC_MUTE_PATTERN (0x55)
 #else
 #define MSBC_MUTE_PATTERN (0x00)
@@ -191,7 +193,7 @@ extern "C" {
 #define DEFAULT_XTAL_FCAP                       0x8080
 #endif
 
-#elif defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
+#elif defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
 #if defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
 #ifdef __FPGA_1501P__
 #define BT_EM_ADDR_BASE (0xD0216F34)
@@ -240,7 +242,7 @@ extern "C" {
 #endif
 
 
-#if defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
+#if defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
 //bt max slot clock
 #define MAX_SLOT_CLOCK      ((1L<<28) - 1)
 #else
@@ -379,7 +381,7 @@ extern "C" {
     defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
     defined(__FPGA_BT_2300__) ||defined(__FPGA_BT_1400__) || \
     defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003) || \
-    defined(CHIP_BEST1305) || defined(CHIP_BEST1600SIMU)
+    defined(CHIP_BEST2002) || defined(CHIP_BEST1305) || defined(CHIP_BEST1600SIMU)
 
 ///set dle dft value
 #define HCI_DBG_WR_DLE_DFT_VALUE_CMD_OPCODE           0xFC41
@@ -459,7 +461,7 @@ extern "C" {
 #define HCI_DBG_SET_RF_RX_GAIN_THS_TBL_CMD_OPCODE     0xFCB1
 #define HCI_DBG_SET_RF_RX_GAIN_FIXED_CMD_OPCODE       0xFCB2
 
-#if defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
+#if defined(CHIP_BEST1501) ||defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
 #define HCI_DBG_SET_RSSI_TX_POWER_DFT_THR_CMD_OPCODE     0xFCB3
 #define HCI_DBG_SET_RSSI_TX_POWER_LINK_THR_CMD_OPCODE    0xFCB4
 #define HCI_DBG_SET_CLK_DRAGGING_CMD_OPCODE              0xFCB5
@@ -483,6 +485,8 @@ extern "C" {
 #define HCI_DBG_SIGNAL_TEST_PWR_CTRL_REQ_CMD_OPCODE      0xfcc8
 #define HCI_DBG_BT_COMMON_SETTING_T1_CMD_OPCODE          0xfcca
 #define HCI_DBG_SET_AFH_ASSESS_CMD_OPCODE                0xfccb
+//bt setting interface
+#define HCI_DBG_BT_COMMON_SETTING_T2_CMD_OPCODE       0xFCCF
 #else //!defined(CHIP_BEST1501)
 #define HCI_DBG_SET_BT_SETTING_EXT2_CMD_OPCODE        0xFCB3
 #define HCI_DBG_SET_IBRT_TEST_MODE_CMD_OPCODE         0xFCB4
