@@ -33,6 +33,7 @@
 #include "los_tick.h"
 #include "stdio.h"
 
+#ifndef CP_BUILD
 #undef OS_SYS_CLOCK
 /* =============================================================================
                                         System clock module configuration
@@ -48,6 +49,7 @@
 #define OS_SYS_CLOCK            (6000000UL)
 #else
 #define OS_SYS_CLOCK            CONFIG_SYSTICK_HZ
+#endif
 #endif
 #endif
 

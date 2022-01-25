@@ -420,6 +420,13 @@ ifneq ($(TRACE_BAUD_RATE),)
 CFLAGS_hal_trace.o += -DTRACE_BAUD_RATE=$(TRACE_BAUD_RATE)
 CFLAGS_hal_uart.o += -DTRACE_BAUD_RATE=$(TRACE_BAUD_RATE)
 endif
+ifneq ($(TRACE_PRINTF_LEN),)
+CFLAGS_hal_trace.o += -DTRACE_PRINTF_LEN=$(TRACE_PRINTF_LEN)
+CFLAGS_hal_uart.o += -DTRACE_PRINTF_LEN=$(TRACE_PRINTF_LEN)
+endif
+ifneq ($(TRACE_DUMP_LEN),)
+CFLAGS_hal_trace.o += -DTRACE_DUMP_LEN=$(TRACE_DUMP_LEN)
+endif
 ifneq ($(TRACE_BUF_SIZE),)
 CFLAGS_hal_trace.o += -DTRACE_BUF_SIZE=$(TRACE_BUF_SIZE)
 endif

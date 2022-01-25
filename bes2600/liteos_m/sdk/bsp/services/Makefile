@@ -27,10 +27,10 @@ endif
 ifeq ($(BT_CLOSE),1)
 ifeq ($(WIFI_RF_TEST_ONLY),1)
 ifeq ($(ROM_BUILD),1)
-obj-y += ../utils/crc32/ ../utils/crc16/ ../utils/heap/ 
+obj-y += ../utils/crc32/ ../utils/crc16/ ../utils/heap/
 else
 obj-y += ../utils/crc32/ ../utils/crc16/ ../utils/heap/ norflash_api/ overlay/
-endif		
+endif
 else
 obj-y += audio_dump/ audioflinger/ audio_process/ hw_dsp/ resources/ voice_dev/ \
 			../utils/crc32/ ../utils/crc16/ ../utils/heap/ norflash_api/ overlay/
@@ -54,6 +54,10 @@ ifeq ($(AI_VOICE),1)
 obj-y += app_ai/
 endif
 
+endif
+
+ifeq ($(HISTREAMER_HTTP_EN), 1)
+obj-y += histreamer_http/
 endif
 
 ifeq ($(BT_SOURCE),1)

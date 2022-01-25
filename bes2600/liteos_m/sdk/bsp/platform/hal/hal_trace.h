@@ -439,8 +439,6 @@ TRACE_FUNC_DECLARE(int hal_trace_rx_wakeup(void), return 0);
 #  define assert(f) ASSERT(f,"%s:%d",__func__,__LINE__)
 #endif
 
-#define LITEOS_WIFI_LOG_TAG     "WIFI:"
-
 #include "stdarg.h"
 typedef int (*HAL_TRACE_OUTPUT_HOOK_T)(const char *tag, const char *fmt, uint32_t len);
 void hal_trace_register_hook(HAL_TRACE_OUTPUT_HOOK_T hook);
