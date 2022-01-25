@@ -1451,6 +1451,10 @@ static void hal_uart_irq_handler(void)
 #define TRACE_BAUD_RATE                 (921600)
 #endif
 
+#ifndef TRACE_PRINTF_LEN
+#define TRACE_PRINTF_LEN                (120)
+#endif
+
 int hal_uart_printf_init(void)
 {
     static const struct HAL_UART_CFG_T uart_cfg = {
@@ -1511,7 +1515,7 @@ void hal_uart_printf_output(const uint8_t *buf, uint32_t len)
 
 void hal_uart_printf(const char *fmt, ...)
 {
-    char buf[200];
+    char buf[TRACE_PRINTF_LEN];
     int ret;
     va_list ap;
 

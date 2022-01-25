@@ -109,6 +109,7 @@ typedef enum {
     NET_IPC_MSG_SNIFF_STT,
     NET_IPC_MSG_SNIFF_STP,
     NET_IPC_MSG_SNIFF_FLT,
+    NET_IPC_MSG_SNIFF_CH,
     NET_IPC_MSG_MAC_RECV,
     NET_IPC_MSG_SNIFF_RCV,
 
@@ -116,7 +117,9 @@ typedef enum {
     NET_IPC_MSG_MAC_XMIT,
     NET_IPC_MSG_SEND_MLME,
     NET_IPC_MSG_ALLOC_SKB,
-
+#ifdef CSI_REPORT
+    NET_IPC_MSG_CSI_INFO,
+#endif
     /* last message */
     NET_IPC_MSG_NUM,
 } NET_IPC_MSG_T;

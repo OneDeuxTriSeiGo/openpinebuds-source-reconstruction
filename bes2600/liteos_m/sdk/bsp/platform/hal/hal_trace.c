@@ -79,7 +79,7 @@ static void hal_trace_fault_handler(void);
 #if (defined(DUMP_LOG_ENABLE) || defined(DUMP_CRASH_LOG) || defined(RESUME_MUSIC_AFTER_CRASH_REBOOT))
 #define TRACE_TO_APP
 #endif
-#if defined(CHIP_HAS_CP) && !defined(CP_BOOT) && !defined(CP_BUILD) && !defined(NUTTX_BUILD) && !defined(I2C_PA_CHANNEL_SUPPORT)
+#if defined(CHIP_HAS_CP) && !defined(CP_BOOT) && !defined(CP_BUILD) && !defined(CONFIG_SMP) && !defined(CONFIG_BES_DUALCORE_AMP) && !defined(I2C_PA_CHANNEL_SUPPORT)
 #define CP_TRACE_ENABLE
 #define CP_MEMSC_TIMEOUT_CHECK
 #endif
@@ -109,6 +109,15 @@ static void hal_trace_fault_handler(void);
 #undef TRACE_BUF_SIZE
 #define TRACE_BUF_SIZE                  (16 * 1024)
 #endif
+#endif
+
+
+#ifndef TRACE_PRINTF_LEN
+#define TRACE_PRINTF_LEN                (120)
+#endif
+
+#ifndef TRACE_DUMP_LEN
+#define TRACE_DUMP_LEN                  (250)
 #endif
 
 #define CRASH_BUF_SIZE                  100
@@ -555,18 +564,15 @@ int hal_trace_printf_cp_hook(const char *tag, const char *fmt, uint32_t len)
     }
     return ret;
 }
+
 void hal_trace_cpipc_recv(void *param)
 {
     CP_IPC_MSG_HDR *msg = param;
-    if (msg && (msg->len > strlen(LITEOS_WIFI_LOG_TAG)) && msg->len < 128 &&
-        memcmp(LITEOS_WIFI_LOG_TAG, msg->data, strlen(LITEOS_WIFI_LOG_TAG)) == 0) {
-        char buf[128] = {0};
-        memcpy(buf, msg->data, msg->len);
-        buf[msg->len] = '\0';
-        if (hal_trace_printf_cp_hook(NULL, (const char *)buf, msg->len)) {
-            return;
-        }
-    }
+
+    if (msg && _hal_trace_printf_cp_hook &&
+        _hal_trace_printf_cp_hook(NULL, (const char *)msg->data, msg->len))
+        return;
+
     if (msg && (get_hal_trace_onoff() == 0) ) {
         unsigned char tag_cp[32];
         unsigned int timestamp = (unsigned)TICKS_TO_MS(hal_sys_timer_get());
@@ -1278,6 +1284,28 @@ static void hal_trace_cp_force_unlock(void)
 }
 #endif
 
+static HAL_TRACE_OUTPUT_HOOK_T _hal_trace_output_hook = NULL;
+void hal_trace_register_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
+{
+    _hal_trace_output_hook = hook;
+}
+
+void hal_trace_unregister_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
+{
+    if (_hal_trace_output_hook == hook) {
+        _hal_trace_output_hook = NULL;
+    }
+}
+
+int hal_trace_output_hook(const char *tag, const char *fmt, uint32_t len)
+{
+    int ret = 0;
+    if (_hal_trace_output_hook) {
+        ret = _hal_trace_output_hook(tag, fmt, len);
+    }
+    return ret;
+}
+
 bool crash_occurs[2];
 int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
 {
@@ -1288,7 +1316,11 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
     uint8_t cpu_id = get_cpu_id() ? 1 : 0;
 #endif
 #if defined(NUTTX_BUILD)
+#ifdef CP_TRACE_ENABLE
+    if (cpu_id == 0 && !hal_trace_is_uart_transport(trace_transport))
+#else
     if (!hal_trace_is_uart_transport(trace_transport))
+#endif
     {
 #ifdef __ARM_ARCH_ISA_ARM
 #if defined(CONFIG_BES_LPUART)
@@ -1315,6 +1347,11 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
         return buf_len;
     }
 #endif
+
+    /* output trace by hook */
+    if (hal_trace_output_hook(NULL, (const char *)buf, buf_len)) {
+        return buf_len;
+    }
 
     ret = 0;
 
@@ -1707,46 +1744,24 @@ static inline int hal_trace_format_va(uint32_t attr, char *buf, unsigned int siz
     return len;
 }
 
-static HAL_TRACE_OUTPUT_HOOK_T _hal_trace_printf_hook = NULL;
-void hal_trace_register_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
+static HAL_TRACE_PRINTF_HOOK_T _hal_trace_printf_hook = NULL;
+void hal_trace_printf_register_hook(HAL_TRACE_PRINTF_HOOK_T hook)
 {
     _hal_trace_printf_hook = hook;
 }
 
-void hal_trace_unregister_hook(HAL_TRACE_OUTPUT_HOOK_T hook)
+void hal_trace_printf_unregister_hook(HAL_TRACE_PRINTF_HOOK_T hook)
 {
     if (_hal_trace_printf_hook == hook) {
         _hal_trace_printf_hook = NULL;
     }
 }
 
-int hal_trace_printf_hook(const char *tag, const char *fmt, uint32_t len)
+int hal_trace_printf_hook(const char *tag, const char *fmt, va_list ap)
 {
     int ret = 0;
     if (_hal_trace_printf_hook) {
-        ret = _hal_trace_printf_hook(tag, fmt, len);
-    }
-    return ret;
-}
-
-static HAL_TRACE_PRINTF_HOOK_T _hal_trace_printf_hook2 = NULL;
-void hal_trace_printf_register_hook(HAL_TRACE_PRINTF_HOOK_T hook)
-{
-    _hal_trace_printf_hook2 = hook;
-}
-
-void hal_trace_printf_unregister_hook(HAL_TRACE_PRINTF_HOOK_T hook)
-{
-    if (_hal_trace_printf_hook2 == hook) {
-        _hal_trace_printf_hook2 = NULL;
-    }
-}
-
-int hal_trace_printf_hook2(const char *tag, const char *fmt, va_list ap)
-{
-    int ret = 0;
-    if (_hal_trace_printf_hook2) {
-        ret = _hal_trace_printf_hook2(tag, fmt, ap);
+        ret = _hal_trace_printf_hook(tag, fmt, ap);
     }
     return ret;
 }
@@ -1767,7 +1782,7 @@ int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
     union LOG_BUF_T log_buf;
     char *buf = (char *)&log_buf;
 #else
-    char buf[218];
+    char buf[TRACE_PRINTF_LEN];
 #endif
     if (get_hal_trace_onoff()){
         return 0;
@@ -1775,7 +1790,7 @@ int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
 
 #ifndef __ARM_ARCH_ISA_ARM
     if (!in_isr()) {
-        if (hal_trace_printf_hook2(NULL, fmt, ap)) {
+        if (hal_trace_printf_hook(NULL, fmt, ap)) {
             return 1;
         }
     }
@@ -1897,7 +1912,7 @@ int hal_trace_printf_without_crlf(const char *fmt, ...)
 
 int hal_trace_dump(const char *fmt, unsigned int size,  unsigned int count, const void *buffer)
 {
-    char buf[255];
+    char buf[TRACE_DUMP_LEN];
     int len=0, n=0, i=0;
 
     switch( size )
@@ -3957,21 +3972,13 @@ void hal_trace_print_a7_flush(int onoff)
 
 void hal_trace_print_a7(const unsigned char *buf, unsigned int buf_len)
 {
-    va_list ap;
-
+    /* check platform trace on/off */
     if (get_hal_trace_onoff() == 1)
     {
         return;
     }
 
-    if (hal_trace_printf_hook(NULL, (const char *)buf, buf_len)) {
-        return;
-    }
-
-    if (hal_trace_printf_hook2(NULL, NULL, ap)) {
-        return;
-    }
-
+    /* output trace by local driver */
     if (buf && (buf_len > 0)) {
         if (_print_a7_flush == 0) // don't add A7_TRACE_TAG for A7 crashdump
             hal_trace_output((const unsigned char *)A7_TRACE_TAG, sizeof(A7_TRACE_TAG));

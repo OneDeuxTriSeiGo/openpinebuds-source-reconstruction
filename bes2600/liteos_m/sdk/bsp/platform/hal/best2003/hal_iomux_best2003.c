@@ -2103,6 +2103,7 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_030 &= ~mask_pd;
     }
 
+    //hwBoEn V0, gpio12(sw2)5g txon; gpio13(sw3)0:bt, 1:2g4;
     if( (rf_switch  == 10) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
     {
         iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK)) | IOMUX_GPIO_P12_SEL(13);
@@ -2186,6 +2187,12 @@ void hal_iomux_set_wf_fem(int rf_switch)
     {
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK)) | IOMUX_GPIO_P04_SEL(13);
+    }
+    //hwBoEn V1, gpio13(sw2)5g txon; gpio12(sw3)0:bt, 1:2g4;
+    if((rf_switch  == 103) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
+    {
+        iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK)) | IOMUX_GPIO_P12_SEL(13);
+        iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P13_SEL_MASK)) | IOMUX_GPIO_P13_SEL(13);
     }
     if( (rf_switch  == 104) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
     {
