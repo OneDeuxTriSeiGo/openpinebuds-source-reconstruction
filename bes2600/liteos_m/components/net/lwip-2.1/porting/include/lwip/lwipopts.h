@@ -23,5 +23,6 @@
 #define CHECKSUM_GEN_UDP                0
 #define LWIP_SOCKET_SELECT_FUNC         1
 #define LWIP_SOCKET_FCNTL_FUNC          1
+#define LWIP_NETIF_EXT_STATUS_CALLBACK  1
 
 #endif /* _PORTING_LWIPOPTS_H_ */
