@@ -29,7 +29,7 @@ lite_library("mbedtls_static") {
   target_type = "static_library"
   public_configs = [ ":mbedtls_config" ]
   sources = MBEDTLS_SOURCES - [ "$MBEDTLSDIR/library/entropy_poll.c" ] +
-            [ "library/entropy_poll.c" ]
+            [ "library/entropy_poll.c" ] + [ "$MBEDTLSDIR/library/debug.c" ]
 }
 
 group("mbedtls") {
