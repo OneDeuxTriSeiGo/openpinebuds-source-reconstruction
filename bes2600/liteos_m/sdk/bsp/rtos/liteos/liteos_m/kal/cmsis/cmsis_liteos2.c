@@ -753,14 +753,14 @@ osTimerId_t osTimerExtNew(osTimerFunc_t func, osTimerType_t type, void *argument
 osStatus_t osTimerStart(osTimerId_t timer_id, uint32_t ticks)
 {
     UINT32 uwRet;
-    SWTMR_CTRL_S *pstSwtmr;
+    LosSwtmrCB *pstSwtmr;
 
     if ((0 == ticks) || (NULL == timer_id)) {
         return osErrorParameter;
     }
 
     UINT32 intSave = LOS_IntLock();
-    pstSwtmr = (SWTMR_CTRL_S *)timer_id;
+    pstSwtmr = (LosSwtmrCB *)timer_id;
     pstSwtmr->uwInterval = ticks;
     uwRet = LOS_SwtmrStart(pstSwtmr->usTimerID);
     LOS_IntRestore(intSave);
@@ -784,7 +784,7 @@ const char *osTimerGetName(osTimerId_t timer_id)
 osStatus_t osTimerStop(osTimerId_t timer_id)
 {
     UINT32 uwRet;
-    SWTMR_CTRL_S *pstSwtmr = (SWTMR_CTRL_S *)timer_id;
+    LosSwtmrCB *pstSwtmr = (LosSwtmrCB *)timer_id;
 
     if (NULL == pstSwtmr) {
         return osErrorParameter;
@@ -807,14 +807,14 @@ uint32_t osTimerIsRunning(osTimerId_t timer_id)
         return 0;
     }
 
-    return (OS_SWTMR_STATUS_TICKING == ((SWTMR_CTRL_S *)timer_id)->ucState);
+    return (OS_SWTMR_STATUS_TICKING == ((LosSwtmrCB *)timer_id)->ucState);
 }
 
 
 osStatus_t osTimerDelete(osTimerId_t timer_id)
 {
     UINT32 uwRet;
-    SWTMR_CTRL_S *pstSwtmr = (SWTMR_CTRL_S *)timer_id;
+    LosSwtmrCB *pstSwtmr = (LosSwtmrCB *)timer_id;
 
     if (NULL == pstSwtmr) {
         return osErrorParameter;
