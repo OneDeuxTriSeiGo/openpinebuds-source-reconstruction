@@ -157,6 +157,7 @@ static void net_intf_status_change_cb(struct netif *netif)
         printf("net_intf_status_change_cb **ip = %s\n", inet_ntoa(ip));
         printf("net_intf_status_change_cb **netmask = %s\n", inet_ntoa(mask));
         printf("net_intf_status_change_cb **gw = %s\n", inet_ntoa(gw));
+        bwifi_change_current_status(BWIFI_STATUS_GOT_IP);
     }
 }
 
