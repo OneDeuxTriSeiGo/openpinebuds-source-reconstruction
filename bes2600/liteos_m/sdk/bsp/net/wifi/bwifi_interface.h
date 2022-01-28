@@ -310,6 +310,14 @@ struct netif *bwifi_get_netif(BWIFI_INTF_TYPE_T type);
 int bwifi_set_ip_addr(BWIFI_INTF_TYPE_T type, struct ip_info *ip);
 #endif
 
+/**
+ * Change current wifi status
+ *
+ * @new_status: The new wifi status
+ * Returns: void
+ */
+void bwifi_change_current_status(BWIFI_STATUS_T new_status);
+
 void airkiss_notify(uint8_t token);
 
 /**
