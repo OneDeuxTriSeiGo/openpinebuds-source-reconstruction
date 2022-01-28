@@ -22,7 +22,7 @@ root {
             priority = 50;
             device_gpio :: device {
                 gpio0 :: deviceNode {
-                    policy = 2;
+                    policy = 0;
                     priority = 100;
                     moduleName = "BES_GPIO_MODULE_HDF";
                     serviceName = "HDF_PLATFORM_GPIO";
