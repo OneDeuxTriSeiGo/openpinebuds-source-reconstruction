@@ -36,6 +36,7 @@
                 <filteritem type="filepath" name="bes2600/pack_tools" desc="bestechnic flashing tools"/>
                 <filteritem type="filepath" name="bes2600/liteos_m/sdk/bsp/tools/mklittlefs" desc="bestechnic use littlefs image making tools"/>
                 <filteritem type="filepath" name="bes2600/liteos_m/sdk/bsp/out/LICENSE" desc="bestechnic bin LICENSE"/>
+                <filteritem type="filepath" name="bes2600/liteos_m/sdk/LICENSE" desc="bestechnic LICENSE"/>
             </filefilter>
             <filefilter name="defaultFilter" desc="bestechnic using MIT files, but invalid copyright">
                 <filteritem type="filepath" name="bes2600/liteos_m/components/utils/src/printf.c" desc="bestechnic using MIT files, but invalid copyright"/>
