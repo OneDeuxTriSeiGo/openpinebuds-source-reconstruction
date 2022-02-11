@@ -59,7 +59,7 @@ int HalFileClose(int fd)
 
 int HalFileRead(int fd, char *buf, unsigned int len)
 {
-    if (fd > LITTLE_FS_MAX_OPEN_FILES) {
+    if (fd > LOSCFG_LFS_MAX_OPEN_FILES) {
         return -1;
     }
 
@@ -68,7 +68,7 @@ int HalFileRead(int fd, char *buf, unsigned int len)
 
 int HalFileWrite(int fd, const char *buf, unsigned int len)
 {
-    if (fd > LITTLE_FS_MAX_OPEN_FILES) {
+    if (fd > LOSCFG_LFS_MAX_OPEN_FILES) {
         return -1;
     }
 
@@ -96,7 +96,7 @@ int HalFileStat(const char *path, unsigned int *fileSize)
 
 int HalFileSeek(int fd, int offset, unsigned int whence)
 {
-    if (fd > LITTLE_FS_MAX_OPEN_FILES) {
+    if (fd > LOSCFG_LFS_MAX_OPEN_FILES) {
         return -1;
     }
 
