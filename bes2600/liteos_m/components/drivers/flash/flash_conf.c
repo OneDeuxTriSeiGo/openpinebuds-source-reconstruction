@@ -15,7 +15,12 @@
 #include "flash.h"
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#include "hcs_macro.h"
+#include "hdf_config_macro.h"
+#else
 #include "device_resource_if.h"
+#endif
 
 /* Logic partition on flash devices */
 hal_logic_partition_t g_halPartitions[] = {
@@ -125,7 +130,41 @@ hal_logic_partition_t g_halPartitions[] = {
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
 };
-
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#define DISPLAY_MISC_STORAGE_FLASH_CONFIG HCS_NODE(HCS_NODE(HCS_NODE(HCS_ROOT, misc), storage_config), flash_config)
+static uint32_t FlashGetResource()
+{
+    int32_t num = HCS_ARRAYS_SIZE(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, partitions));
+    if (num < 0 || num > HAL_PARTITION_MAX) {
+        HDF_LOGE("%s: invalid partitions num %d", __func__, num);
+        return HDF_FAILURE;
+    }
+    uint32_t partition;
+    uint32_t partitions[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, partitions));
+    uint32_t partition_owner[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, owner));
+    char * description[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, description));
+    uint32_t start_addr[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, start_addr));
+    uint32_t length[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, length));
+    uint32_t options[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_STORAGE_FLASH_CONFIG, options));
+    for (int32_t i = 0; i < num; i++) {
+        partition = partitions[i];
+        if (partition >= HAL_PARTITION_MAX) {
+            HDF_LOGE("%s: invalid partition %u", __func__, partition);
+            return HDF_FAILURE;
+        }
+        g_halPartitions[partition].partition_owner = partition_owner[i];
+        g_halPartitions[partition].partition_description = description[i];
+        g_halPartitions[partition].partition_start_addr = start_addr[i];
+        g_halPartitions[partition].partition_length = length[i];
+        g_halPartitions[partition].partition_options = options[i];
+        HDF_LOGD("%s: partition[%u] owner=%u, description=%s, start_addr=0x%x, length=0x%x, options=%u", __func__, partition,
+                 g_halPartitions[partition].partition_owner, g_halPartitions[partition].partition_description,
+                 g_halPartitions[partition].partition_start_addr, g_halPartitions[partition].partition_length,
+                 g_halPartitions[partition].partition_options);
+    }
+    return HDF_SUCCESS;
+}
+#else
 static uint32_t FlashGetResource(const struct DeviceResourceNode *resourceNode)
 {
     struct DeviceResourceIface *resource = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
@@ -175,18 +214,26 @@ static uint32_t FlashGetResource(const struct DeviceResourceNode *resourceNode)
     }
     return HDF_SUCCESS;
 }
-
+#endif
 static int32_t FlashDriverInit(struct HdfDeviceObject *object)
 {
     if (object == NULL) {
         return HDF_FAILURE;
     }
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+    if (FlashGetResource() != HDF_SUCCESS) {
+        HDF_LOGE("%s: FlashGetResource failed", __func__);
+        return HDF_FAILURE;
+    }
+#else
     if (object->property) {
         if (FlashGetResource(object->property) != HDF_SUCCESS) {
             HDF_LOGE("%s: FlashGetResource failed", __func__);
             return HDF_FAILURE;
         }
     }
+#endif
+
     return HDF_SUCCESS;
 }
 

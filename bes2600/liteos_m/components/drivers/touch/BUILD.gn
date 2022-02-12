@@ -19,6 +19,9 @@ hdf_driver("touch") {
     "touch_fts.c",
     "touch_ztw523.c",
   ]
+  if (defined(LOSCFG_DRIVERS_HDF_CONFIG_MACRO)) {
+    deps = [ "//device/board/fnlink/shields" ]
+  }
 }
 
 config("public") {

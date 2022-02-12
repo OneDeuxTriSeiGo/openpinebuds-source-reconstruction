@@ -16,9 +16,14 @@
 #include "hdf_log.h"
 #include "lcd_abs_if.h"
 #include "hdf_device_desc.h"
-#include "device_resource_if.h"
 #include "hal_gpio.h"
 #include "hal_iomux.h"
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#include "hcs_macro.h"
+#include "hdf_config_macro.h"
+#else
+#include "device_resource_if.h"
+#endif
 
 #ifdef CONFIG_DISPLAY_A064
 #define WIDTH 480
@@ -294,8 +299,25 @@ static int32_t PanelSetBacklight(struct PanelData *panel, uint32_t level)
     }
     return HDF_SUCCESS;
 }
-
 #define REAL_PIN(n) (n / 10 * 8 + n % 10)
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#define DISPLAY_PANEL_CONFIG HCS_NODE(HCS_NODE(HCS_NODE(HCS_ROOT, display), panel_config), a064_config)
+static uint32_t PanelGetResource(struct PanelDevice *priv)
+{
+    uint32_t temp;
+    temp = HCS_PROP(DISPLAY_PANEL_CONFIG, rst_pin);
+    priv->pin_rst.pin = REAL_PIN(temp);
+
+    temp = HCS_PROP(DISPLAY_PANEL_CONFIG, te_pin);
+    priv->pin_te.pin = REAL_PIN(temp);
+
+    temp = HCS_PROP(DISPLAY_PANEL_CONFIG, led_pin);
+    priv->pin_led.pin = REAL_PIN(temp);
+
+    HDF_LOGD("%s: rst_pin=%d, te_pin=%d, led_pin=%d", __func__, priv->pin_rst.pin, priv->pin_te.pin, priv->pin_led.pin);
+    return HDF_SUCCESS;
+}
+#else
 static uint32_t PanelGetResource(struct PanelDevice *priv, const struct DeviceResourceNode *resourceNode)
 {
     struct DeviceResourceIface *res = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
@@ -322,18 +344,25 @@ static uint32_t PanelGetResource(struct PanelDevice *priv, const struct DeviceRe
     HDF_LOGD("%s: rst_pin=%d, te_pin=%d, led_pin=%d", __func__, priv->pin_rst.pin, priv->pin_te.pin, priv->pin_led.pin);
     return HDF_SUCCESS;
 }
-
+#endif
 static int32_t PanelDriverInit(struct HdfDeviceObject *object)
 {
     if (object == NULL) {
         return HDF_FAILURE;
     }
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+    if (PanelGetResource(&priv) != HDF_SUCCESS) {
+        HDF_LOGE("%s: PanelGetResource failed", __func__);
+        return HDF_FAILURE;
+    }
+#else
     if (object->property) {
         if (PanelGetResource(&priv, object->property) != HDF_SUCCESS) {
             HDF_LOGE("%s: PanelGetResource failed", __func__);
             return HDF_FAILURE;
         }
     }
+#endif
     priv.panelData.info = &priv.panelInfo;
     priv.panelData.init = PanelInit;
     priv.panelData.on = PanelOn;

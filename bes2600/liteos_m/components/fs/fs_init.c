@@ -18,15 +18,43 @@
 #include "los_config.h"
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#include "hcs_macro.h"
+#include "hdf_config_macro.h"
+#else
 #include "device_resource_if.h"
-
+#endif
 struct fs_cfg {
     char *mount_point;
     struct lfs_config lfs_cfg;
 };
 
 static struct fs_cfg fs[LOSCFG_LFS_MAX_MOUNT_SIZE] = {0};
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#define DISPLAY_MISC_FS_LITTLEFS_CONFIG HCS_NODE(HCS_NODE(HCS_NODE(HCS_ROOT, misc), fs_config), littlefs_config)
+static uint32_t FsGetResource(struct fs_cfg *fs)
+{
+    int32_t num = HCS_ARRAYS_SIZE(HCS_NODE(DISPLAY_MISC_FS_LITTLEFS_CONFIG, mount_points));
+    if (num < 0 || num > LOSCFG_LFS_MAX_MOUNT_SIZE) {
+        HDF_LOGE("%s: invalid mount_points num %d", __func__, num);
+        return HDF_FAILURE;
+    }
+    char * mount_points[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_FS_LITTLEFS_CONFIG, mount_points));
+    uint32_t partitions[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_FS_LITTLEFS_CONFIG, partitions));
+    uint32_t block_size[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_FS_LITTLEFS_CONFIG, block_size));
+    uint32_t block_count[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_FS_LITTLEFS_CONFIG, block_count));
+    for (int32_t i = 0; i < num; i++) {
+        fs[i].mount_point = mount_points[i];
+        fs[i].lfs_cfg.context = partitions[i];
+        fs[i].lfs_cfg.block_size = block_size[i];
+        fs[i].lfs_cfg.block_count = block_count[i];
 
+        HDF_LOGD("%s: fs[%d] mount_point=%s, partition=%u, block_size=%u, block_count=%u", __func__, i,
+                 fs[i].mount_point, (uint32_t)fs[i].lfs_cfg.context, fs[i].lfs_cfg.block_size, fs[i].lfs_cfg.block_count);
+    }
+    return HDF_SUCCESS;
+}
+#else
 static uint32_t FsGetResource(struct fs_cfg *fs, const struct DeviceResourceNode *resourceNode)
 {
     struct DeviceResourceIface *resource = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
@@ -61,18 +89,26 @@ static uint32_t FsGetResource(struct fs_cfg *fs, const struct DeviceResourceNode
     }
     return HDF_SUCCESS;
 }
-
+#endif
 static int32_t FsDriverInit(struct HdfDeviceObject *object)
 {
     if (object == NULL) {
         return HDF_FAILURE;
     }
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+    if (FsGetResource(fs) != HDF_SUCCESS) {
+        HDF_LOGE("%s: FsGetResource failed", __func__);
+        return HDF_FAILURE;
+    }
+#else
     if (object->property) {
         if (FsGetResource(fs, object->property) != HDF_SUCCESS) {
             HDF_LOGE("%s: FsGetResource failed", __func__);
             return HDF_FAILURE;
         }
     }
+#endif
+
     for (int i = 0; i < sizeof(fs) / sizeof(fs[0]); i++) {
         if (fs[i].mount_point == NULL)
             continue;

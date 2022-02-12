@@ -24,4 +24,7 @@ hdf_driver("fs_adapter") {
   ]
 
   deps = [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
+  if (defined(LOSCFG_DRIVERS_HDF_CONFIG_MACRO)) {
+    deps += [ "//device/board/fnlink/shields" ]
+  }
 }
