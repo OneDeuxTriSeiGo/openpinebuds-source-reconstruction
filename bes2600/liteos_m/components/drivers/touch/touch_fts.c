@@ -17,9 +17,13 @@
 #include "gpio_if.h"
 #include "i2c_if.h"
 #include "hdf_device_desc.h"
-#include "device_resource_if.h"
 #include "hdf_log.h"
-
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#include "hcs_macro.h"
+#include "hdf_config_macro.h"
+#else
+#include "device_resource_if.h"
+#endif
 static int tpd_interrupt_handler(uint16_t gpio, void *arg);
 
 struct tpd_priv {
@@ -522,7 +526,20 @@ struct touch_device g_touch_fts = {
     .read = tpd_get_point,
     .irq_enable = tpd_irq_enable,
 };
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+#define DISPLAY_INPUT_TOUCH HCS_NODE(HCS_NODE(HCS_NODE(HCS_ROOT, input), touch_config), touch_fts)
+static uint32_t TouchDeviceGetResource(struct tpd_priv *priv)
+{
+    priv->gpio_rst = HCS_PROP(DISPLAY_INPUT_TOUCH, gpio_rst);
+    priv->gpio_int = HCS_PROP(DISPLAY_INPUT_TOUCH, gpio_int);
+    priv->i2c_client.id = HCS_PROP(DISPLAY_INPUT_TOUCH, i2c_id);
+    priv->i2c_client.addr = HCS_PROP(DISPLAY_INPUT_TOUCH, i2c_addr);
 
+    HDF_LOGD("%s: gpio_rst=%d, gpio_int=%d, i2c_id=%d, i2c_addr=%d", __func__,
+             priv->gpio_rst, priv->gpio_int, priv->i2c_client.id, priv->i2c_client.addr);
+    return HDF_SUCCESS;
+}
+#else
 static uint32_t TouchDeviceGetResource(struct tpd_priv *priv, const struct DeviceResourceNode *resourceNode)
 {
     struct DeviceResourceIface *res = DeviceResourceGetIfaceInstance(HDF_CONFIG_SOURCE);
@@ -550,18 +567,25 @@ static uint32_t TouchDeviceGetResource(struct tpd_priv *priv, const struct Devic
              priv->gpio_rst, priv->gpio_int, priv->i2c_client.id, priv->i2c_client.addr);
     return HDF_SUCCESS;
 }
-
+#endif
 static int32_t TouchDriverInit(struct HdfDeviceObject *object)
 {
     if (object == NULL) {
         return HDF_FAILURE;
     }
+#ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
+    if (TouchDeviceGetResource(&priv) != HDF_SUCCESS) {
+        HDF_LOGE("%s: TouchDeviceGetResource failed", __func__);
+        return HDF_FAILURE;
+    }
+#else
     if (object->property) {
         if (TouchDeviceGetResource(&priv, object->property) != HDF_SUCCESS) {
             HDF_LOGE("%s: TouchDeviceGetResource failed", __func__);
             return HDF_FAILURE;
         }
     }
+#endif
     if (RegisterTouchDevice(&g_touch_fts) != HDF_SUCCESS) {
         HDF_LOGE("%s: RegisterTouchDevice failed", __func__);
         return HDF_FAILURE;

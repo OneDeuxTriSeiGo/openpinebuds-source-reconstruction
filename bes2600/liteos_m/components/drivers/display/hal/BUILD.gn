@@ -31,4 +31,7 @@ hdf_driver("hal_display") {
     "//drivers/peripheral/base",
     "//drivers/framework/support/platform/include/mipi",
   ]
+  if (defined(LOSCFG_DRIVERS_HDF_CONFIG_MACRO)) {
+    deps = [ "//device/board/fnlink/shields" ]
+  }
 }

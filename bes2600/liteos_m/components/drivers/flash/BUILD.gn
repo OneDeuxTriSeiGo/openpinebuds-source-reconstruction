@@ -23,6 +23,9 @@ hdf_driver("flash") {
   if (bes_trustzone_enable) {
     defines = [ "ARM_CMNS=1" ]
   }
+  if (defined(LOSCFG_DRIVERS_HDF_CONFIG_MACRO)) {
+    deps = [ "//device/board/fnlink/shields" ]
+  }
 }
 
 config("public") {
