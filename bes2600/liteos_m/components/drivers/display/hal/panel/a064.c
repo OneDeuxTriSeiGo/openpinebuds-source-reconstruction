@@ -18,6 +18,7 @@
 #include "hdf_device_desc.h"
 #include "hal_gpio.h"
 #include "hal_iomux.h"
+#include "hal_dsi.h"
 #ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
 #include "hcs_macro.h"
 #include "hdf_config_macro.h"
@@ -28,6 +29,10 @@
 #ifdef CONFIG_DISPLAY_A064
 #define WIDTH 480
 #define HEIGHT 480
+
+static void PanelPowerControl(bool on);
+static int32_t PanelCheckStatus(struct PanelData *panel);
+static int32_t PanelReadId();
 
 static uint8_t cmd0[] = {0xF0, 0x55, 0xAA, 0x52, 0x08, 0x00};
 static uint8_t cmd1[] = {0xF6, 0x5A, 0x87};
@@ -53,7 +58,7 @@ static uint8_t cmd20[] = {0x83, 0x93};
 static uint8_t cmd21[] = {0x9A, 0x79};
 static uint8_t cmd22[] = {0x9B, 0x62};
 static uint8_t cmd23[] = {0x82, 0x34, 0x34};
-static uint8_t cmd24[] = {0xB1, 0x90}; //10 REV-0-BGR-X-X-X-GS-SS   //mipi
+static uint8_t cmd24[] = {0xB1, 0x90}; // 10 REV-0-BGR-X-X-X-GS-SS   //mipi
 static uint8_t cmd25[] = {0x6D, 0x00, 0x1F, 0x19, 0x1A, 0x10, 0x0e, 0x0c, 0x0a, 0x02, 0x07, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x08, 0x01, 0x09, 0x0b, 0x0D, 0x0F, 0x1a, 0x19, 0x1f, 0x00};
 static uint8_t cmd26[] = {0x64, 0x38, 0x05, 0x01, 0xdb, 0x03, 0x03, 0x38, 0x04, 0x01, 0xdc, 0x03, 0x03, 0x7A, 0x7A, 0x7A, 0x7A};
 static uint8_t cmd27[] = {0x65, 0x38, 0x03, 0x01, 0xdd, 0x03, 0x03, 0x38, 0x02, 0x01, 0xde, 0x03, 0x03, 0x7A, 0x7A, 0x7A, 0x7A};
@@ -133,6 +138,7 @@ struct DsiCmdDesc g_offCmd[] = {
 struct PanelDevice {
     struct PanelData panelData;
     struct PanelInfo panelInfo;
+    struct PanelEsd panelEsd;
     DevHandle mipiHandle;
     struct HAL_IOMUX_PIN_FUNCTION_MAP pin_rst;
     struct HAL_IOMUX_PIN_FUNCTION_MAP pin_te;
@@ -153,6 +159,12 @@ static struct PanelDevice priv = {
         .intfType = MIPI_DSI,
         .intfSync = OUTPUT_USER,
         .mipi = {DSI_2_LANES, DSI_VIDEO_MODE, VIDEO_BURST_MODE, FORMAT_RGB_24_BIT},
+    },
+    .panelEsd = {
+        .support = true,
+        .interval = 30 * 1000,
+        .recoveryNum = 5,
+        .checkFunc = PanelCheckStatus,
     },
     .pin_rst = {
         HAL_GPIO_PIN_P0_3,
@@ -185,6 +197,7 @@ static int32_t PanelInit(struct PanelData *panel)
         return HDF_FAILURE;
     }
     HDF_LOGI("%s: width %d, height %d", __func__, WIDTH, HEIGHT);
+    PanelPowerControl(true);
 
     struct PanelInfo *panelInfo = panel->info;
     struct MipiCfg cfg = {0};
@@ -208,6 +221,7 @@ static int32_t PanelInit(struct PanelData *panel)
         HDF_LOGE("%s: MipiDsiSetCfg failed", __func__);
         return HDF_FAILURE;
     }
+    PanelReadId();
     return HDF_SUCCESS;
 }
 
@@ -244,14 +258,38 @@ static int32_t PanelReadId()
     HDF_LOGI("%s: read id %02X-%02X-%02X", __func__, read_id[0], read_id[1], read_id[2]);
     return HDF_SUCCESS;
 }
+#define DSI_INIT_DELAY 100
+static int32_t PanelCheckStatus(struct PanelData *panel)
+{
+    uint8_t powerMode = 0;
+    uint8_t payload[] = {0x0A};
+    struct DsiCmdDesc cmd = {0x06, 0, sizeof(payload), payload};
+    int64_t cnt = panel->esd->recoveryNum;
+    do {
+        int32_t ret = MipiDsiRx(priv.mipiHandle, &cmd, 1, &powerMode);
+        if (ret == HDF_SUCCESS) {
+            HDF_LOGD("%s: powerMode 0x%x ok", __func__, powerMode);
+            break;
+        }
+        HDF_LOGE("%s: reset", __func__);
+        hal_dsi_init(WIDTH);
+        osDelay(DSI_INIT_DELAY);
+        for (int32_t i = 0; i < sizeof(g_OnCmd) / sizeof(g_OnCmd[0]); i++) {
+            ret = MipiDsiTx(priv.mipiHandle, &(g_OnCmd[i]));
+            if (ret != HDF_SUCCESS) {
+                HDF_LOGE("%s: MipiDsiTx failed", __func__);
+                return HDF_FAILURE;
+            }
+        }
+    } while (--cnt > 0);
+    if (cnt < panel->esd->recoveryNum) {
+        hal_dsi_start();
+    }
+    return HDF_SUCCESS;
+}
 
 static int32_t PanelOn(struct PanelData *panel)
 {
-    (void)panel;
-    PanelPowerControl(true);
-    if (PanelReadId() != HDF_SUCCESS) {
-        return HDF_FAILURE;
-    }
     /* send mipi power on code */
     int32_t count = sizeof(g_OnCmd) / sizeof(g_OnCmd[0]);
     int32_t i;
@@ -264,6 +302,7 @@ static int32_t PanelOn(struct PanelData *panel)
     }
     /* set mipi to hs mode */
     MipiDsiSetHsMode(priv.mipiHandle);
+    PanelCheckStatus(panel);
     hal_gpio_pin_set_dir(priv.pin_led.pin, HAL_GPIO_DIR_OUT, 1);
     osDelay(20);
     return HDF_SUCCESS;
@@ -271,7 +310,6 @@ static int32_t PanelOn(struct PanelData *panel)
 
 static int32_t PanelOff(struct PanelData *panel)
 {
-    (void)panel;
     /* send mipi power off code */
     int32_t count = sizeof(g_offCmd) / sizeof(g_offCmd[0]);
     int32_t i;
@@ -284,7 +322,6 @@ static int32_t PanelOff(struct PanelData *panel)
     }
     /* set mipi to lp mode */
     MipiDsiSetLpMode(priv.mipiHandle);
-    PanelPowerControl(false);
     return HDF_SUCCESS;
 }
 
@@ -297,6 +334,7 @@ static int32_t PanelSetBacklight(struct PanelData *panel, uint32_t level)
         HDF_LOGE("%s: MipiDsiTx failed", __func__);
         return HDF_FAILURE;
     }
+    PanelCheckStatus(panel);
     return HDF_SUCCESS;
 }
 #define REAL_PIN(n) (n / 10 * 8 + n % 10)
@@ -364,6 +402,7 @@ static int32_t PanelDriverInit(struct HdfDeviceObject *object)
     }
 #endif
     priv.panelData.info = &priv.panelInfo;
+    priv.panelData.esd = &priv.panelEsd;
     priv.panelData.init = PanelInit;
     priv.panelData.on = PanelOn;
     priv.panelData.off = PanelOff;

@@ -20,7 +20,7 @@
 #include "mipi_dsi_if.h"
 
 /* support max panel number */
-#define PANEL_MAX 2
+#define PANEL_MAX 1
 
 enum LcdIntfType {
     MIPI_DSI,
