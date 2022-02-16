@@ -15,6 +15,7 @@
 #include "ui_main.h"
 #include "cmsis_os.h"
 #include "pthread.h"
+#include "core/render_manager.h"
 #include "common/graphic_startup.h"
 #include "common/image_decode_ability.h"
 #include "common/input_device_manager.h"
@@ -93,12 +94,14 @@ static void RenderTEHandler()
 }
 #endif
 
+static constexpr uint32_t UI_MAIN_TASK_DELAY = 5000;
+static constexpr uint32_t ONE_SECOND = 1000;
 static void *UiMainTask(void *arg)
 {
     (void)arg;
 
     (void)pthread_setname_np(pthread_self(), "UiMain");
-
+    osDelay(UI_MAIN_TASK_DELAY);
     InitUiKit();
     RunApp();
 
@@ -106,8 +109,7 @@ static void *UiMainTask(void *arg)
     const ACELite::TEHandlingHooks hooks = {RenderTEHandler, nullptr};
     ACELite::ProductAdapter::RegTEHandlers(hooks);
 #endif
-#ifdef ENABLE_FPS
-    uint32_t cnt = 0;
+#if ENABLE_FPS_SUPPORT
     uint32_t start = HALTick::GetInstance().GetTime();
 #endif
     while (1) {
@@ -115,20 +117,19 @@ static void *UiMainTask(void *arg)
         // Here render all js app in the same task.
         ACELite::ProductAdapter::DispatchTEMessage();
 #endif
+#if FULLY_RENDER
         DisplayDevice::GetInstance()->UpdateFBBuffer();
+#endif
         uint32_t temp = HALTick::GetInstance().GetTime();
         TaskManager::GetInstance()->TaskHandler();
         uint32_t time = HALTick::GetInstance().GetElapseTime(temp);
         if (time < DEFAULT_TASK_PERIOD) {
             osDelay(DEFAULT_TASK_PERIOD - time);
         }
-#ifdef ENABLE_FPS
-        cnt++;
-        time = HALTick::GetInstance().GetElapseTime(start);
-        if (time >= 1000) {
-            GRAPHIC_LOGD("%u fps", 1000 * cnt / time);
+#if ENABLE_FPS_SUPPORT
+        if (HALTick::GetInstance().GetElapseTime(start) >= ONE_SECOND) {
+            GRAPHIC_LOGD("%u fps", (uint32_t)RenderManager::GetInstance().GetFPS());
             start = HALTick::GetInstance().GetTime();
-            cnt = 0;
         }
 #endif
     }
