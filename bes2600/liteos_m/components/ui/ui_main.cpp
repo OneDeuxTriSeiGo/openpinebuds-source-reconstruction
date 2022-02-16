@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 #include "ui_main.h"
-#include "cmsis_os2.h"
+#include "cmsis_os.h"
+#include "pthread.h"
 #include "common/graphic_startup.h"
 #include "common/image_decode_ability.h"
 #include "common/input_device_manager.h"
@@ -92,14 +93,17 @@ static void RenderTEHandler()
 }
 #endif
 
-static void UiMainTask(void *arg)
+static void *UiMainTask(void *arg)
 {
     (void)arg;
+
+    (void)pthread_setname_np(pthread_self(), "UiMain");
+
     InitUiKit();
     RunApp();
 
 #ifdef ENABLE_ACE
-    const ACELite::TEHandlingHooks hooks = {RenderTEHandler, NULL};
+    const ACELite::TEHandlingHooks hooks = {RenderTEHandler, nullptr};
     ACELite::ProductAdapter::RegTEHandlers(hooks);
 #endif
 #ifdef ENABLE_FPS
@@ -128,15 +132,22 @@ static void UiMainTask(void *arg)
         }
 #endif
     }
+    return nullptr;
 }
 
+#define UI_THREAD_STACK_SIZE (1024 * 32)
 void UiMain(void)
 {
-    osThreadAttr_t attr = {0};
-    attr.stack_size = 1024 * 32; // more than 20KB
-    attr.priority = osPriorityNormal;
-    attr.name = "UiMain";
-    if (osThreadNew((osThreadFunc_t)UiMainTask, NULL, &attr) == NULL) {
+    struct sched_param param = {0};
+
+    pthread_t thread;
+    pthread_attr_t attr;
+    (void)pthread_attr_init(&attr);
+    (void)pthread_attr_setstacksize(&attr, UI_THREAD_STACK_SIZE);
+    param.sched_priority = 15; // 15: UiMainTask priority
+    (void)pthread_attr_setschedparam(&attr, &param);
+    (void)pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+    if (pthread_create(&thread, &attr, UiMainTask, nullptr) != 0) {
         GRAPHIC_LOGE("Failed to create UiMainTask");
     }
 }
