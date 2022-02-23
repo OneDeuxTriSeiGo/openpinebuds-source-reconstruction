@@ -92,39 +92,39 @@ fi
 
 temp_basic_opts=""
 temp_extra_opts=""
-for VENDOR_OPT in ${OPT_BEST2600W_LITEOS_MAIN}
+for VENDOR_OPT in ${OPT_LITEOS_MAIN}
 do
-    pre_handle_opt ${VENDOR_OPT} OPT_BEST2600W_SOC_MAIN
+    pre_handle_opt ${VENDOR_OPT} OPT_SOC_MAIN
     temp_basic_opts="${temp_cmd}"
     echo "temp_basic_opts:${temp_basic_opts}"
     temp_extra_opts+=" ${temp_extra_cmd} "
 done
 echo "temp_extra_opts:${temp_extra_opts}"
 
-OPT_BEST2600W_LITEOS_MAIN=" ${temp_basic_opts} ${temp_extra_opts}"
+OPT_LITEOS_MAIN=" ${temp_basic_opts} ${temp_extra_opts}"
 
 if [ "x${build_trustzone}" == "xtrue" ]; then
     if [ "x${build_mini_sys}" == "xtrue" ]; then
-        pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MINI
-        OPT_BEST2600W_LITEOS_MINI="${temp_cmd} ${temp_extra_cmd}"
-        pre_handle_opt TZ_MINI_OFFSET=0x56000 OPT_BEST2600W_LITEOS_BOOT2A
-        OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
+        pre_handle_opt ARM_CMNS=1 OPT_LITEOS_MINI
+        OPT_LITEOS_MINI="${temp_cmd} ${temp_extra_cmd}"
+        pre_handle_opt TZ_MINI_OFFSET=0x56000 OPT_LITEOS_BOOT2A
+        OPT_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
     fi
-    pre_handle_opt ARM_CMNS=1 OPT_BEST2600W_LITEOS_MAIN
-    OPT_BEST2600W_LITEOS_MAIN="${temp_cmd} ${temp_extra_cmd} "
-    pre_handle_opt TZ_MAIN_OFFSET=0x30000 OPT_BEST2600W_LITEOS_BOOT2A
-    OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
+    pre_handle_opt ARM_CMNS=1 OPT_LITEOS_MAIN
+    OPT_LITEOS_MAIN="${temp_cmd} ${temp_extra_cmd} "
+    pre_handle_opt TZ_MAIN_OFFSET=0x30000 OPT_LITEOS_BOOT2A
+    OPT_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
 else
     if [ "x${build_mini_sys}" == "xtrue" ]; then
-        pre_handle_opt ARM_CMNS=0 OPT_BEST2600W_LITEOS_MINI
-        OPT_BEST2600W_LITEOS_MINI="${temp_cmd} ${temp_extra_cmd} "
-        pre_handle_opt TZ_MINI_OFFSET=0xB00000 OPT_BEST2600W_LITEOS_BOOT2A
-        OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
+        pre_handle_opt ARM_CMNS=0 OPT_LITEOS_MINI
+        OPT_LITEOS_MINI="${temp_cmd} ${temp_extra_cmd} "
+        pre_handle_opt TZ_MINI_OFFSET=0xB00000 OPT_LITEOS_BOOT2A
+        OPT_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
     fi
-    pre_handle_opt ARM_CMNS=0 OPT_BEST2600W_LITEOS_MAIN
-    OPT_BEST2600W_LITEOS_MAIN="${temp_cmd} ${temp_extra_cmd} "
-    pre_handle_opt TZ_MAIN_OFFSET=0x80000 OPT_BEST2600W_LITEOS_BOOT2A
-    OPT_BEST2600W_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
+    pre_handle_opt ARM_CMNS=0 OPT_LITEOS_MAIN
+    OPT_LITEOS_MAIN="${temp_cmd} ${temp_extra_cmd} "
+    pre_handle_opt TZ_MAIN_OFFSET=0x80000 OPT_LITEOS_BOOT2A
+    OPT_LITEOS_BOOT2A="${temp_cmd} ${temp_extra_cmd} "
 fi
 
 
@@ -133,13 +133,13 @@ cd bsp
 chmod a+x tools/build_best2600w_ohos_into_lib.sh
 
 tools/build_best2600w_ohos_into_lib.sh \
--a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
--m="$OPT_BEST2600W_LITEOS_MAIN NO_LIBC=1 BOARD_OS_WRAP_MALLOC=1 $rel_filter $rel_flash_config $flash_config NO_LIBC=1 MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
--c="$OPT_BEST2600W_LITEOS_CP $build_type $flash_config " \
--s="$OPT_BEST2600W_LITEOS_MAIN_MINI_SE $build_type" \
--l="$OPT_BEST2600W_LITEOS_MINI NO_LIBC=1 BOARD_OS_WRAP_MALLOC=1 $rel_flash_config $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
--x="$OPT_BEST2600W_LITEOS_BOOT1 $build_type" \
--y="$OPT_BEST2600W_LITEOS_BOOT2A $build_type" \
+-a="$OPT_LITEOS_A7 $build_type" \
+-m="$OPT_LITEOS_MAIN NO_LIBC=1 BOARD_OS_WRAP_MALLOC=1 $rel_filter $rel_flash_config $flash_config NO_LIBC=1 MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
+-c="$OPT_LITEOS_CP $build_type $flash_config " \
+-s="$OPT_LITEOS_MAIN_MINI_SE $build_type" \
+-l="$OPT_LITEOS_MINI NO_LIBC=1 BOARD_OS_WRAP_MALLOC=1 $rel_flash_config $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../../../ $build_type" \
+-x="$OPT_LITEOS_BOOT1 $build_type" \
+-y="$OPT_LITEOS_BOOT2A $build_type" \
 -d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys $rel_branch BUILD_PIECE=$BUILD_PIECE" \
 GEN_LIB=1 $rel
 
