@@ -20,11 +20,15 @@ OPT_BEST2600W_SOC_A7=" \
 # == area config soc main bin begin == #
 OPT_BEST2600W_SOC_MAIN=" \
 LIBC_INIT_AFTER_OS_INIT=1  \
+RF_TX_CONTROL_IO=100       \
+UART1_IOMUX_INDEX=02       \
 "
 # == area config liteos main bin end   == #
 
 # == area config liteos cp bin begin == #
 OPT_BEST2600W_SOC_CP=" \
+RF_TX_CONTROL_IO=100       \
+UART1_IOMUX_INDEX=02       \
 "
 # == area config liteos cp bin end   == #
 
