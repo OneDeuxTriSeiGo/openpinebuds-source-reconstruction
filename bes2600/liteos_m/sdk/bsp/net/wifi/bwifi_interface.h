@@ -534,7 +534,7 @@ static inline int bwifi_send_data_buf(uint8_t devnum, uint8_t **tx_buf, uint16_t
  * @rsp_buf: response string ended with '\0'
  * Returns: 0 - success, other - failure
  */
-int bwifi_str_cmd(uint8_t type, uint8_t *cmd_buf, uint8_t *rsp_buf);
+int bwifi_str_cmd(uint8_t type, uint8_t *cmd_buf, uint8_t *rsp_buf, uint32_t rsp_size);
 
 #ifdef __cplusplus
 }

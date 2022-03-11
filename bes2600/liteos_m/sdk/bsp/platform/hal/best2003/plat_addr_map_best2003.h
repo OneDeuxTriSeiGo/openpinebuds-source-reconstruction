@@ -58,7 +58,16 @@ extern "C" {
 #define BT_RAMRUNX_BASE                          RAMX3_BASE
 #endif
 
+#ifndef CP_FLASH_SIZE
+#define CP_FLASH_SIZE 0
+#endif
+
 #ifdef CHIP_HAS_CP
+#if (CP_FLASH_SIZE > 0)
+#define CP_FLASH_BASE                           (FLASH_BASE + FLASH_SIZE - CP_FLASH_SIZE)
+#define CP_FLASHX_BASE                          (FLASHX_BASE + FLASH_SIZE - CP_FLASH_SIZE)
+#endif
+
 #ifdef LARGE_RAM
 /*MCU use RAM0/1/2/3, CPX use RAM4, and CP use RAM5*/
 #define RAMCP_TOP                               (RAM5_BASE + RAM5_SIZE)
@@ -180,7 +189,9 @@ extern "C" {
 #define FLASH1X_NC_BASE                         0x09000000
 #endif
 
+#ifndef PSRAM_BASE
 #define PSRAM_BASE                              0x34000000
+#endif
 #define PSRAM_NC_BASE                           0x30000000
 #define PSRAMX_BASE                             0x14000000
 #define PSRAMX_NC_BASE                          0x10000000
@@ -424,6 +435,8 @@ extern "C" {
 
 #define PSRAMCP_BASE				(PSRAM_BASE + PSRAM_SIZE)
 #define PSRAMCPX_BASE				(PSRAMX_BASE + PSRAM_SIZE)
+
+#define PSRAMFS_BASE				(PSRAM_BASE + MCU_PSRAM_SIZE + PSRAMCP_SIZE)
 
 /* For ROM export functions */
 #define NO_MEMMOVE

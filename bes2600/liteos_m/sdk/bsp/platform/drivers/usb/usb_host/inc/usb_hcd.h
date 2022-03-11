@@ -38,15 +38,15 @@ extern "C" {
 #if 0
 // register GINTSTS
 // USB HCD Interrupt Status
-#define USB_HCD_STS_INT		    0x0001   	/* USB Interrupt */  //PrtInt
-#define USB_HCD_STS_ERRINT      0x0002	    /* USB Error Interrupt */
-#define USB_HCD_STS_PCD         0x0004	    /* Port Change Detect */ //ConIDStsChng
-#define USB_HCD_STS_FLR         0x0008	    /* Frame List Rellover */
-#define USB_HCD_STS_HSE	        0x00010	    /* Host System Error */
-#define USB_HCD_STS_IAA	        0x00020	    /* Interrupt on Async Advance */
+#define USB_HCD_STS_INT         0x0001      /* USB Interrupt */  //PrtInt
+#define USB_HCD_STS_ERRINT      0x0002      /* USB Error Interrupt */
+#define USB_HCD_STS_PCD         0x0004      /* Port Change Detect */ //ConIDStsChng
+#define USB_HCD_STS_FLR         0x0008      /* Frame List Rellover */
+#define USB_HCD_STS_HSE         0x00010     /* Host System Error */
+#define USB_HCD_STS_IAA         0x00020     /* Interrupt on Async Advance */
 #define USB_HCD_STS_SRI         0x00080     /* SOF - ECHI Derivation */ //Sof
-#define USB_HCD_STS_HCH   		0x01000	    /* Host Controller has Halted */
-#define USB_HCD_STS_RECL    	0x02000  	/* Reclamation */
+#define USB_HCD_STS_HCH         0x01000     /* Host Controller has Halted */
+#define USB_HCD_STS_RECL        0x02000     /* Reclamation */
 #define USB_HCD_STS_PSS         0x04000     /* Periodic Schedule Status */
 #define USB_HCD_STS_ASS         0x08000     /* Asynchronous Schedule Status */
 #define USB_HCD_STS_UAI         0x40000     /* USB Asynchronous Interrupt -EHCI derivation */
@@ -57,12 +57,12 @@ typedef enum {
     USB_HCD_STATUS_HALT = 0,
     USB_HCD_STATUS_OPER = 1,
     USB_HCD_STATUS_DEAD = 2,
-}USB_HCD_STATUS_T;
+} USB_HCD_STATUS_T;
 
 typedef enum {
     USB_HCD_TYPE_FULL_SPEED = 0,
     USB_HCD_TYPE_HIGH_SPEED = 1,
-}USB_HCD_TYPE_T;
+} USB_HCD_TYPE_T;
 
 // Register GINTSTS
 typedef enum {
@@ -104,27 +104,27 @@ typedef enum {
 
     // Resume/Remote Wakeup Detected Interrupt (WkUpInt)
     USB_HCD_INTSTS_WKUPINT       = (0x1<<31),
-}USB_HCD_INTSTS_T;
+} USB_HCD_INTSTS_T;
 
 // Register HPRT
 typedef enum {
-   USB_PORT_STATUS_UNKNOWN    =     0x00,
-   USB_PORT_STATUS_CONNECTION =     (0x01 << 0),
-   USB_PORT_STATUS_ENABLE =         (0x01 << 1),
-   USB_PORT_STAT_SUSPEND =          (0x01 << 2),
-   USB_PORT_STATUS_OVERCURRENT =    (0x01 << 3),
-   USB_PORT_STATUS_RESET =          (0x01 << 4),
-   USB_PORT_STATUS_POWER =          (0x01 << 5),
-   USB_PORT_STATUS_FULL_SPEED =     (0x01 << 6),
-   USB_PORT_STATUS_HIGH_SPEED =     (0x01 << 7),
-}USB_PORT_STATUS_T;
+    USB_PORT_STATUS_UNKNOWN    =     0x00,
+    USB_PORT_STATUS_CONNECTION =     (0x01 << 0),
+    USB_PORT_STATUS_ENABLE =         (0x01 << 1),
+    USB_PORT_STAT_SUSPEND =          (0x01 << 2),
+    USB_PORT_STATUS_OVERCURRENT =    (0x01 << 3),
+    USB_PORT_STATUS_RESET =          (0x01 << 4),
+    USB_PORT_STATUS_POWER =          (0x01 << 5),
+    USB_PORT_STATUS_FULL_SPEED =     (0x01 << 6),
+    USB_PORT_STATUS_HIGH_SPEED =     (0x01 << 7),
+} USB_PORT_STATUS_T;
 
 
 typedef enum {
     USB_HCD_PLUG_STATUS_UNKNOWN,
     USB_HCD_PLUG_STATUS_IN,
     USB_HCD_PLUG_STATUS_OUT,
-}USB_HCD_PLUG_STATUS_T;
+} USB_HCD_PLUG_STATUS_T;
 
 typedef enum {
     USB_HCD_EP_TYPE_CTRL,
@@ -132,7 +132,7 @@ typedef enum {
     USB_HCD_EP_TYPE_BULK,
     USB_HCD_EP_TYPE_INT,
     USB_HCD_EP_TYPE_QTY
-}USB_HCD_EP_TYPE_T;
+} USB_HCD_EP_TYPE_T;
 
 typedef enum
 {
@@ -154,17 +154,31 @@ typedef enum
     HCD_CMD_DESTROY_ENDPOINT = 15,      // Destroy a endpoint.
     HCD_CMD_RESET_ENDPOINT = 16,        // Reset endpoint.
     HCD_CMD_PROCESS_DONE_QUEUE = 17,        // Process a transmission that has already occurred
-}HCD_CMD_T;
+} HCD_CMD_T;
+
+typedef struct
+{
+    bool is_used;
+    bool is_in;
+    USBHOST_ENDPOINT_DESCRIPTOR_T endpoint;
+} HCD_ENDPOINT;
+
+typedef struct
+{
+    int device;
+    int ep_number;
+    HCD_ENDPOINT ep[USB_HCD_MAX_ENDPOINTS];
+} USB_DEVICE;
 
 typedef  void (*HCD_INTERRUPT_HANDLE_CB) (void);
 
 typedef  void (*HCD_PLUG_HANDLE_CB) (void);
 typedef void (*HCD_TRANSFER_CALLBACK)(int32_t device,\
-                                int32_t endpoint,\
-                                int32_t status,\
-                                uint8_t* data,\
-                                int32_t length,\
-                                void* user_data);
+                                      int32_t endpoint,\
+                                      int32_t status,\
+                                      uint8_t* data,\
+                                      int32_t length,\
+                                      void* user_data);
 
 typedef struct _USB_HCD {
     char              name[USB_HCD_NAME_LEN + 1];
@@ -188,17 +202,23 @@ typedef struct _USB_HCD {
 } USB_HCD_T;
 
 // cmd  HCD_CMD_GET_PORT_STATUS Parameter
+typedef struct _HCD_DEVICE_PORT_T
+{
+    uint8_t device;
+    uint8_t port;
+} HCD_DEVICE_PORT_T;
+
 typedef struct _HCD_DEVICE_EP_T
 {
     uint8_t device;
     uint8_t ep;
-}HCD_DEVICE_EP_T;
+} HCD_DEVICE_EP_T;
 
 typedef struct _HCD_HUB_EP_T
 {
     uint8_t hub;
     uint8_t ep;
-}HCD_HUB_EP_T;
+} HCD_HUB_EP_T;
 
 
 // cmd HCD_CMD_TRANSFER_REQUEST Parameter.
@@ -211,7 +231,7 @@ typedef struct _HCD_TRANSFER_T
     uint32_t data_len;
     HCD_TRANSFER_CALLBACK callback;
     void* user_data;
-}HCD_TRANSFER_T;
+} HCD_TRANSFER_T;
 
 // cmd HCD_CMD_TRANSFER_REQUEST(CONTROL) Parameter.
 typedef struct _HCD_CONTROL_TRANSFER_T
@@ -225,10 +245,9 @@ typedef struct _HCD_CONTROL_TRANSFER_T
     uint8_t* data;
     int length;
     int actual_len;
-    USBHOST_CALLBACK callback;
+    USBHOSTCALLBACK callback;
     void * user_data;
-}HCD_CONTROL_TRANSFER_T;
-
+} HCD_CONTROL_TRANSFER_T;
 
 // cmd  HCD_CMD_CREATE_ENDPOINT Parameter
 typedef struct _HCD_CREATE_ENDPOINT_T
@@ -238,33 +257,39 @@ typedef struct _HCD_CREATE_ENDPOINT_T
     uint8_t attributes;
     uint32_t max_packet_size;
     uint32_t interval;
-}HCD_CREATE_ENDPOINT_T;
+} HCD_CREATE_ENDPOINT_T;
 
 typedef  void (*HCD_INTERRUPT_HANDLE_CB) (void);
-
 typedef  void (*HCD_PLUG_HANDLE_CB) (void);
 
 int usb_hcd_init(USB_HCD_T * hcd, HCD_INTERRUPT_HANDLE_CB int_handle, HCD_PLUG_HANDLE_CB plug_handle);
-
 int usb_register_interrupt_cb(HCD_INTERRUPT_HANDLE_CB handle);
-
 int usb_hcd_cmd(USB_HCD_T * hcd,HCD_CMD_T cmd, void* param);
-
-// Get interrupt status, return USB HCD Interrupt Status.
-int usb_hcd_get_interrupt_status(void);
-
-// Get port status, return USB HCD Port Status.
-int usb_hcd_get_port_status(void);
-
-// Get usb plug status, return USB HCD Plug Status.
-int usb_hcd_get_plug_status(void);
-
-// Detect usb device plug staus.
-int usb_hcd_detect(USB_HCD_PLUG_STATUS_T plug_status);
-
+int usb_hcd_get_interrupt_status(void); // Get interrupt status, return USB HCD Interrupt Status.
+int usb_hcd_get_port_status(void);      // Get port status, return USB HCD Port Status.
+int usb_hcd_get_plug_status(void);      // Get usb plug status, return USB HCD Plug Status.
+int usb_hcd_detect(USB_HCD_PLUG_STATUS_T plug_status);// Detect usb device plug staus.
 void usb_hcd_set_timeout(uint32_t ms);
-
 void usb_hcd_log_disable_for_debug(bool disable);
+int usb_hcd_cmd_get_port_status(USB_HCD_T * hcd);
+int usb_hcd_cmd_create_point(USB_HCD_T * hcd, uint8_t device, uint8_t port, uint8_t attributes, uint8_t interval, uint8_t max_packet_size);
+void usb_hcd_cmd_destroy_point(USB_HCD_T * hcd, USB_DEVICE usb_device);
+void usb_hcd_cmd_disable_controller(USB_HCD_T * hcd);
+void usb_hcd_cmd_enable_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_disable_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_power_on_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_power_off_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_resume_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_suspend_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_reset_port(USB_HCD_T * hcd);
+int usb_hcd_cmd_get_frame_number_port(USB_HCD_T * hcd);
+void usb_hcd_cmd_set_frame_number_port(USB_HCD_T * hcd, uint32_t frame_number);
+void usb_hcd_cmd_transfer_req(USB_HCD_T * hcd);
+void usb_hcd_cmd_set_addr(USB_HCD_T * hcd);
+void usb_hcd_cmd_get_descriptor(USB_HCD_T * hcd, int descriptor_type, uint8_t* buff, int buff_len);
+void usb_hcd_cmd_set_config(USB_HCD_T * hcd);
+void usb_hcd_cmd_process_done_queue(USB_HCD_T * hcd);
+int  usb_hcd_cmd_bulk_transfer_req(USB_HCD_T * hcd, int device, int ep, uint8_t* data, int length, HCD_TRANSFER_CALLBACK callback, void* userdata);
 
 #ifdef __cplusplus
 }

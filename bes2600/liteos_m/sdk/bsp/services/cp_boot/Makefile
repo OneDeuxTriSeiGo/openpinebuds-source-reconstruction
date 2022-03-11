@@ -17,6 +17,7 @@ obj-y :=
 ifeq ($(CP_BOOT), 1)
 obj-y += cp_code.o
 obj-y += cp_boot.o
+CFLAGS_cp_boot.o += -DFLASH_SIZE=$(FLASH_SIZE)
 endif
 obj-y += cp_ipc.o
 

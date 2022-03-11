@@ -22,6 +22,8 @@ extern "C" {
 #include "stdint.h"
 #include "stdbool.h"
 
+typedef void (*HAL_DSI_TE_GPIO_IRQ_HANDLER)(void);
+
 struct HAL_DSI_CFG_T {
     uint32_t active_width;
     uint32_t active_height;//screen size
@@ -104,8 +106,6 @@ enum DSI_MODE_T {
 
 typedef void (*HAL_DSI_XFER_COMPLETE_CALLBACK_T)(uint8_t layerId, uint8_t channel, uint32_t addr);
 
-void hal_dsi_init(uint16_t h_res);
-
 /**
  * @param
  *      h_res       horizontal resolution
@@ -119,9 +119,7 @@ void hal_dsi_init(uint16_t h_res);
  * dsi_clk = Byteclk * lane-number = Total-pixel * bpp(bit) / 8
  * dsi_pclk = dsi_clk / bpp(byte) = H-total * V-total * fps
  */
-void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint32_t dsi_bitclk, uint32_t dsi_pclk);
-
-void hal_dsi_start(void);
+void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint8_t lane_number, uint32_t dsi_bitclk, uint32_t dsi_pclk);
 
 void hal_lcdc_init(const struct HAL_DSI_CFG_T *cfg, const uint8_t *layer0,
     const uint8_t *layer1, const uint8_t *layer2);
@@ -140,6 +138,134 @@ void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count, unsigned char
 
 void hal_lcdc_update_addr(uint8_t layerId, uint8_t channel, uint32_t addr);
 void hal_lcdc_set_callback(HAL_DSI_XFER_COMPLETE_CALLBACK_T callback);
+
+/**
+ * @brief hal_dsi_init - init dsi phy
+ *
+ * @param h_res : panel horizontal resolution
+ */
+#if defined(NUTTX_BUILD)
+void hal_dsi_init(uint16_t h_res);
+#else
+void hal_dsi_init(uint16_t h_res ,uint8_t lane_number);
+#endif
+/**
+ * @brief hal_dsi_reset - reset phy, besause hs mode phy work error,
+ *                        lp cmd send has some errors.
+ *
+ * @param h_res : panel horizontal resolution
+ */
+void hal_dsi_reset(uint16_t h_res);
+
+/**
+ * @brief hal_dsi_send_cmd - send cmd by lp mode
+ *
+ * @param cmd
+ */
+void hal_dsi_send_cmd(uint8_t cmd);
+
+/**
+ * @brief hal_dsi_read_cmd - read data by lp mode
+ *
+ * @param cmd : cmd
+ * @param read_buf : read buffer
+ * @param len : read len
+ * @return int
+ */
+int hal_dsi_read_cmd(uint8_t cmd,uint8_t* read_buf,uint8_t len);
+
+/**
+ * @brief hal_dsi_send_cmd_data - send cmd with data by lp mode
+ *
+ * @param cmd : cmd
+ * @param len : send param num
+ * @param p0 : param0
+ * @param p1 : param1
+ * @param p2 : param2
+ * @param p3 : param3
+ */
+void hal_dsi_send_cmd_data(uint8_t cmd, uint32_t len, uint8_t p0,
+                           uint8_t p1, uint8_t p2, uint8_t p3);
+/**
+ * @brief hal_dsi_send_long_array - send cmd with data with array
+ *
+ * @param len : array len
+ * @param data : array data
+ */
+void hal_dsi_send_long_array(uint32_t len,uint32_t *data);
+
+/**
+ * @brief hal_dsi_send_cmd_list - send cmd with data list
+ *
+ * @param cmd
+ * @param para_count
+ * @param para_list
+ */
+void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count,
+                           unsigned char *para_list);
+
+/**
+ * hal_dsi_irqn - get dsi irq number
+ */
+int hal_dsi_irqn(void);
+
+/**
+ * hal_dsi_get_irqstate - get dsi irq state
+ */
+uint32_t hal_dsi_get_irqstate(void);
+
+/**
+ * hal_dsi_teirq_enable - enable dsi te irq
+ */
+void hal_dsi_teirq_enable(void);
+
+/**
+ * hal_dsi_irq_disable - disable dsi all irqs
+ */
+void hal_dsi_irq_disable(void);
+
+/**
+ * hal_dsi_clear_teirq_flag - clear dsi te irq state
+ */
+void hal_dsi_clear_teirq_flag(void);
+
+/**
+ * hal_dsi_irq_is_te - irq is te
+ * @regval : dsi ISR value
+ */
+bool hal_dsi_irq_is_te(uint32_t regval);
+
+/**
+ * hal_dsi_irq_is_err - dsi is irq err
+ */
+bool hal_dsi_irq_is_err(uint32_t regval);
+
+/**
+ * hal_dsi_irq_clear_err - clear dsi error flag.
+ */
+void hal_dsi_irq_clear_err(uint32_t status);
+
+/**
+ * hal_dsi_enter_ulps_mode - enter ulps mode
+ */
+void hal_dsi_enter_ulps_mode();
+
+/**
+ * hal_dsi_exit_ulps_mode - exit ulps mode
+ */
+void hal_dsi_exit_ulps_mode();
+
+void hal_dsi_start(void);
+
+void hal_dsi_sleep(void);
+
+void hal_dsi_wakeup(void);
+
+void hal_dsi_te_gpio_irq_register(HAL_DSI_TE_GPIO_IRQ_HANDLER hdlr);
+
+void hal_dsi_te_gpio_irq_enable(void);
+
+void hal_dsi_te_gpio_irq_disable(void);
 
 #ifdef __cplusplus
 }

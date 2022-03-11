@@ -331,6 +331,11 @@
 #define CLKOUT_IOMUX_INDEX                  20
 #endif
 
+#ifndef WIFI_UART_IOMUX_INDEX
+//00(nothing), 20, 21, 30
+#define WIFI_UART_IOMUX_INDEX               00
+#endif
+
 #ifndef UART1_IOMUX_INDEX
 //02, 10, 20, 30, 32
 #define UART1_IOMUX_INDEX                   20
@@ -705,10 +710,11 @@ uint32_t hal_iomux_set_io_voltage_domains(enum HAL_IOMUX_PIN_T pin, enum HAL_IOM
     if (pin >= HAL_IOMUX_PIN_LED_NUM) {
         return 1;
     }
+#if !defined(CHIP_A7_DSP)
     if (pin == HAL_IOMUX_PIN_LED1 || pin == HAL_IOMUX_PIN_LED2) {
         pmu_led_set_voltage_domains(pin, volt);
     }
-
+#endif
     return 0;
 }
 
@@ -726,8 +732,10 @@ uint32_t hal_iomux_set_io_pull_select(enum HAL_IOMUX_PIN_T pin, enum HAL_IOMUX_P
         } else if (pull_sel == HAL_IOMUX_PIN_PULLDOWN_ENABLE) {
             iomux->REG_030 |= (1 << pin);
         }
+#if !defined(CHIP_A7_DSP)
     } else if (pin == HAL_IOMUX_PIN_LED1 || pin == HAL_IOMUX_PIN_LED2) {
         pmu_led_set_pull_select(pin, pull_sel);
+#endif
     }
 
     return 0;
@@ -1854,12 +1862,8 @@ void hal_iomux_set_bt_rf_sw(int rx_on, int tx_on)
 }
 void hal_iomux_set_wifi_uart(void)
 {
-#ifndef KERNEL_LITEOS_M
+#if (WIFI_UART_IOMUX_INDEX == 20)
     uint32_t mask_pd, mask_pu, mask_pu_c;
-
-
-	#if USE_GPIO21_LMAC_LOG
-
     iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P20_SEL_MASK | IOMUX_GPIO_P21_SEL_MASK)) |
         IOMUX_GPIO_P20_SEL(8) | IOMUX_GPIO_P21_SEL(8);
 
@@ -1867,22 +1871,42 @@ void hal_iomux_set_wifi_uart(void)
     mask_pu = (1 << HAL_IOMUX_PIN_P2_0);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P2_1);
 
-	#else
+    // Setup pullup
+    iomux->REG_02C |= mask_pu;
+    iomux->REG_02C &= ~(mask_pu_c);
+    // Clear pulldown
+    iomux->REG_030 &= ~mask_pd;
 
-    // Set wifi uart func
+#elif (WIFI_UART_IOMUX_INDEX == 21)
+    uint32_t mask_pd, mask_pu, mask_pu_c;
+    iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P21_SEL_MASK)) | IOMUX_GPIO_P21_SEL(8);
 
+    mask_pd = (1 << HAL_IOMUX_PIN_P2_1);
+    mask_pu_c = (1 << HAL_IOMUX_PIN_P2_1);
+
+    // Setup pullup
+    // iomux->REG_02C |= mask_pu;
+    iomux->REG_02C &= ~(mask_pu_c);
+    // Clear pulldown
+    iomux->REG_030 &= ~mask_pd;
+
+#elif (WIFI_UART_IOMUX_INDEX == 30)
+    uint32_t mask_pd, mask_pu, mask_pu_c;
     iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P30_SEL_MASK | IOMUX_GPIO_P31_SEL_MASK)) |
         IOMUX_GPIO_P30_SEL(7) | IOMUX_GPIO_P31_SEL(7);
 
     mask_pd = (1 << HAL_IOMUX_PIN_P3_0) | (1 << HAL_IOMUX_PIN_P3_1);
     mask_pu = (1 << HAL_IOMUX_PIN_P3_0);
     mask_pu_c = (1 << HAL_IOMUX_PIN_P3_1);
-	#endif
+
     // Setup pullup
     iomux->REG_02C |= mask_pu;
     iomux->REG_02C &= ~(mask_pu_c);
     // Clear pulldown
     iomux->REG_030 &= ~mask_pd;
+
+#else
+    //default:nothing
 #endif
 }
 
@@ -2014,6 +2038,11 @@ void hal_iomux_set_dsi_te(void)
     hal_iomux_init(pinmux, ARRAY_SIZE(pinmux));
 }
 
+enum HAL_IOMUX_PIN_T hal_iomux_get_dsi_te_pin(void)
+{
+    return HAL_IOMUX_PIN_P2_1;
+}
+
 void hal_iomux_set_wf_fem(int rf_switch)
 {
     uint32_t mask_pd, mask_pu;
@@ -2078,7 +2107,7 @@ void hal_iomux_set_wf_fem(int rf_switch)
         // mask_pu_c = (1 << HAL_IOMUX_PIN_P2_1);
 
         // Setup voltage as VIO
-        iomux->REG_090 &= ~(IOMUX_GPIO_P20_SEL_VIO);
+        iomux->REG_094 &= ~(IOMUX_GPIO_P20_SEL_VIO);
 
         // Setup pullup
         iomux->REG_02C |= mask_pu;
@@ -2103,7 +2132,7 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_030 &= ~mask_pd;
     }
 
-    //hwBoEn V0, gpio12(sw2)5g txon; gpio13(sw3)0:bt, 1:2g4;
+    //gpio12(sw2)5g txon; gpio13(sw3)0:bt, 1:2g4;
     if( (rf_switch  == 10) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
     {
         iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK)) | IOMUX_GPIO_P12_SEL(13);
@@ -2170,10 +2199,15 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P20_SEL_MASK)) | IOMUX_GPIO_P20_SEL(13);
     }
 
-    //fengheyuan(no fem), gpio02 rxon
+    //gpio02 rxon
     if ((rf_switch  == 102) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
     {
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
+    }
+    //gpio35 :epta;
+    if ((rf_switch  == 105) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
+    {
+        iomux->REG_010 = (iomux->REG_010 & ~(IOMUX_GPIO_P35_SEL_MASK)) | IOMUX_GPIO_P35_SEL(13);
     }
 
     /*out fem */
@@ -2188,7 +2222,7 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P02_SEL_MASK)) | IOMUX_GPIO_P02_SEL(13);
         iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK)) | IOMUX_GPIO_P04_SEL(13);
     }
-    //hwBoEn V1, gpio13(sw2)5g txon; gpio12(sw3)0:bt, 1:2g4;
+    //gpio13(sw2)5g txon; gpio12(sw3)0:bt, 1:2g4;
     if((rf_switch  == 103) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
     {
         iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK)) | IOMUX_GPIO_P12_SEL(13);
@@ -2201,6 +2235,31 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P24_SEL_MASK)) | IOMUX_GPIO_P24_SEL(13);
         iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P27_SEL_MASK)) | IOMUX_GPIO_P27_SEL(13);  
     }
+
+    if ((rf_switch  == 106) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)
+    {
+        iomux->REG_004 = (iomux->REG_004 & ~(IOMUX_GPIO_P04_SEL_MASK)) | IOMUX_GPIO_P04_SEL(13);
+    }
+
+    if( (rf_switch  == 107) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
+    {
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P22_SEL_MASK)) | IOMUX_GPIO_P22_SEL(13);
+        mask_pd = (1 << HAL_IOMUX_PIN_P2_2);
+        mask_pu = (1 << HAL_IOMUX_PIN_P2_2);
+        // Setup voltage as VIO
+        iomux->REG_094 &= ~(IOMUX_GPIO_P22_SEL_VIO);
+
+        // Setup pullup
+        iomux->REG_02C |= mask_pu;
+        // Clear pulldown
+        iomux->REG_030 &= ~mask_pd;
+    }
+
+    if( (rf_switch  == 108) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4 )
+    {
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P22_SEL_MASK)) | IOMUX_GPIO_P22_SEL(13);
+    }
+
 #endif
 
 }

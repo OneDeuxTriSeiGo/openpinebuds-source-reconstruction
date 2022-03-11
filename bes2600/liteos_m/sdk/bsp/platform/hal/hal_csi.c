@@ -28,15 +28,7 @@ static struct CSI_REG_T * const csi = (struct CSI_REG_T *)CSI_BASE;
 void hal_csi_init(void)
 {
     hal_cmu_csi_clock_enable();
-    hal_cmu_clock_set_mode(HAL_CMU_MOD_Q_CSI_LANE, HAL_CMU_CLK_AUTO);
-    hal_cmu_clock_set_mode(HAL_CMU_MOD_Q_CSI_PIX, HAL_CMU_CLK_AUTO);
-    hal_cmu_clock_set_mode(HAL_CMU_MOD_Q_CSI_LANG, HAL_CMU_CLK_AUTO);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_CSI_LANE);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_CSI_PIX);
-    hal_cmu_clock_enable(HAL_CMU_MOD_Q_CSI_LANG);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_CSI_LANE);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_CSI_PIX);
-    hal_cmu_reset_clear(HAL_CMU_MOD_Q_CSI_LANG);
+    hal_cmu_csi_reset_clear();
 
 #ifndef FPGA
     csiphy_open(0);

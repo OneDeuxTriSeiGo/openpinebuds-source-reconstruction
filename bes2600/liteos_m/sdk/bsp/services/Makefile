@@ -103,6 +103,7 @@ obj-y += app_ai/
 endif
 endif
 
+ifneq ($(BT_CLOSE),1)
 ifeq ($(BLE),1)
 ifeq ($(BLE_V2),1)
 obj-y += \
@@ -132,6 +133,7 @@ obj-y += \
     ../utils/retention_ram/ \
     ble_profiles/
 
+endif
 endif
 endif
 
@@ -200,12 +202,18 @@ obj-y += ai_voice/ \
 endif
 
 ifeq ($(CHIP_HAS_CP),1)
-ifeq ($(CP_ENABLE), 1)
+obj-y += cp_boot/
+ifeq ($(CP_ENABLE),1)
 obj-y += cp_server/
 endif
-obj-y += cp_boot/
+ifeq ($(CP_DSP),1)
+obj-y += cp_dsp/
+endif
 endif
 
+ifeq ($(MCU_DSP),1)
+obj-y += mcu_dsp/
+endif
 
 ifeq ($(IBRT),1)
 
@@ -287,8 +295,10 @@ ifeq ($(USE_BT_SERVICE_ADAPTER),1)
 obj-y += bt_service/
 endif
 
+ifneq ($(BT_CLOSE),1)
 ifeq ($(USE_BT_ADAPTER),1)
 obj-y += bluetooth_adapter/
+endif
 endif
 
 ifeq ($(LPLAYER_EN),1)
@@ -488,12 +498,18 @@ endif
 
 ifneq ($(NUTTX_BUILD),1)
 ifeq ($(CHIP_HAS_CP),1)
-# src_obj += cp_accel/
-ifeq ($(CP_ENABLE), 1)
-src_obj += cp_server/ cp_boot/
+src_obj += cp_boot/
+ifeq ($(CP_ENABLE),1)
+src_obj += cp_server/
 endif
-src_obj +=  cp_boot/
+ifeq ($(CP_DSP),1)
+src_obj += cp_dsp/
 endif
+endif
+endif
+
+ifeq ($(MCU_DSP),1)
+src_obj += mcu_dsp/
 endif
 
 ifeq ($(LPLAYER_EN),1)

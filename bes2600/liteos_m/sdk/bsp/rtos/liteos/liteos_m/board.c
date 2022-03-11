@@ -552,6 +552,24 @@ void *__wrap__realloc_r(void *reent,
     return ptr;
 }
 
+
+void *__wrap__calloc_r(struct _reent *reent, size_t nitems, size_t size)
+{
+    size_t real_size;
+    void *ptr = NULL;
+
+    if (nitems == 0 || size == 0) {
+        return NULL;
+    }
+
+    real_size = (size_t)(nitems * size);
+    ptr = LOS_MemAlloc(OS_SYS_MEM_ADDR, real_size);
+    if (ptr != NULL) {
+        (void)memset(ptr, 0, real_size);
+    }
+    return ptr;
+}
+
 void *__wrap_calloc(size_t count, size_t size)
 {
     void * ptr = NULL;
@@ -575,6 +593,15 @@ void *__wrap_realloc(void * rmem, size_t newsize)
     } else
         LOS_MemFree(OS_SYS_MEM_ADDR, rmem);
     return ptr;
+}
+
+void __wrap__free_r(struct _reent *reent, void *aptr)
+{
+    if (aptr == NULL) {
+        return;
+    }
+
+    LOS_MemFree(OS_SYS_MEM_ADDR, aptr);
 }
 
 void __wrap_free(void *rmem)

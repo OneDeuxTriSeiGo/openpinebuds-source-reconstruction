@@ -117,6 +117,9 @@ struct PSRAM_PHY_T {
 #define PSRAM_ULP_PHY_REG_LDO_VTUNE(n)           (((n) & 0x7) << 10)
 #define PSRAM_ULP_PHY_REG_LDO_VTUNE_MASK         (0x7 << 10)
 #define PSRAM_ULP_PHY_REG_LDO_VTUNE_SHIFT        (10)
+#define PSRAM_ULP_PHY_REG_LDO_RES(n)             (((n) & 0xf) << 28)
+#define PSRAM_ULP_PHY_REG_LDO_RES_MASK           (0xf << 28)
+#define PSRAM_ULP_PHY_REG_LDO_RES_SHIFT          (28)
 
 // reg_4c
 #define PSRAM_ULP_PHY_REG_PSRAM_PU               (1 << 0)

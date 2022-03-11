@@ -137,11 +137,12 @@ typedef enum IRQn
     TRUSTZONE_IRQn              =  68,      /*!< TrustZone Interrupt                */
     BT_STAMP_IRQn               =  69,      /*!< BT Playtime Stamp Interrupt        */
     CSI0_IRQn                   =  70,      /*!< CSI0 Interrupt                     */
-    CSI1_IRQn                   =  CSI0_IRQn, /*!< CSI1 Interrupt                     */
-    CSIDMA_IRQn                 =  CSI0_IRQn, /*!< CSI DMA Interrupt                  */
-    DSI0_IRQn                   =  71,       /*!< DSI0 Interrupt                     */
-    DSI1_IRQn                   =  DSI0_IRQn, /*!< DSI1 Interrupt                     */
-    DISPLAY_IRQn                =  DSI0_IRQn, /*!< DISPLAY Interrupt                  */
+    CSI1_IRQn                   =  CSI0_IRQn, /*!< CSI1 Interrupt                   */
+    CSIDMA_IRQn                 =  CSI0_IRQn, /*!< CSI DMA Interrupt                */
+    DSI0_IRQn                   =  71,       /*!< DSI0 Interrupt                    */
+    DSI1_IRQn                   =  DSI0_IRQn, /*!< DSI1 Interrupt                   */
+    DSI_IRQn                    =  DSI0_IRQn, /*!< DSI Interrupt                   */
+    DISPLAY_IRQn                =  DSI0_IRQn, /*!< DISPLAY Interrupt                */
 
     USER_IRQn_QTY,
     INVALID_IRQn                = USER_IRQn_QTY,

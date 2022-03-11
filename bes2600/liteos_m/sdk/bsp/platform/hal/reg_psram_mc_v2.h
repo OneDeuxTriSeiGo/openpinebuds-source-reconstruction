@@ -563,6 +563,7 @@ struct PSRAM_MC_T {
 // reg_190
 
 // reg_200
+#define PSRAM_ULP_PHY_REG_CEB_PU                 (1 << 0)
 #define PSRAM_ULP_MC_RESERVED_0(n)               (((n) & 0xFF) << 0)
 #define PSRAM_ULP_MC_RESERVED_0_MASK             (0xFF << 0)
 #define PSRAM_ULP_MC_RESERVED_0_SHIFT            (0)

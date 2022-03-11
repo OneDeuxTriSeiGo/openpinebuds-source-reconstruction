@@ -20,7 +20,7 @@
 #include "hal_spi.h"
 #include "hal_location.h"
 
-#ifdef CHIP_BEST2003
+#if defined(CHIP_BEST2003) || defined(CHIP_BEST2002)
 #define PHY_SPI_TX_BITS                 27
 #define PHY_SPI_RX_BITS                 27
 #define PHY_READ_CMD(r)                 ((1 << 26) | (((r) & 0x3FF) << 16))

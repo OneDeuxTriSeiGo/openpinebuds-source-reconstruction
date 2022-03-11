@@ -552,9 +552,10 @@ struct bwifi_hal_ops {
 	 * @type: command type, 0 - wifi rf test, other - reserved
 	 * @cmd_buf: command string ended with '\0'
 	 * @rsp_buf: response string ended with '\0'
+	 * @rsp_size: size of buffer to hold the rsp_buf's content
 	 * Returns: 0 - success, other - failure
 	 */
-    int (*str_cmd)(uint8_t type, uint8_t *cmd_buf, uint8_t *rsp_buf);
+    int (*str_cmd)(uint8_t type, uint8_t *cmd_buf, uint8_t *rsp_buf, uint32_t rsp_size);
 };
 
 extern struct bwifi_hal_ops whops;

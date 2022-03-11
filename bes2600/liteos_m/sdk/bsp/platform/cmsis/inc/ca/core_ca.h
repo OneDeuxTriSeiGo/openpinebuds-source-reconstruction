@@ -107,6 +107,8 @@ uint32_t __get_SPSR(void);
 void __set_SPSR(uint32_t spsr);
 #endif
 
+#define CA_L1C_LEVEL	(2U)
+
 /*******************************************************************************
  *                 CMSIS definitions
  ******************************************************************************/
@@ -1070,7 +1072,7 @@ __STATIC_FORCEINLINE void L1C_CleanInvalidateCache(uint32_t op) {
   uint32_t clidr;
   uint32_t cache_type;
   clidr =  __get_CLIDR();
-  for(uint32_t i = 0U; i<7U; i++)
+  for(uint32_t i = 0U; i<CA_L1C_LEVEL; i++)
   {
     cache_type = (clidr >> i*3U) & 0x7UL;
     if ((cache_type >= 2U) && (cache_type <= 4U))
@@ -1078,6 +1080,34 @@ __STATIC_FORCEINLINE void L1C_CleanInvalidateCache(uint32_t op) {
       __L1C_MaintainDCacheSetWay(i, op);
     }
   }
+}
+
+/** \brief  Clean and Invalidate cache by address range
+* \param [in] op 0 - invalidate, 1 - clean, otherwise - invalidate and clean
+*/
+__STATIC_FORCEINLINE void L1C_CleanInvalidateCacheRange(uint32_t op, uint32_t start, uint32_t end) {
+  uint32_t ccsidr;
+  uint32_t size;
+
+  /* set csselr, select ccsidr register */
+  __set_CSSELR(0);
+  /* get current ccsidr register */
+  ccsidr = __get_CCSIDR();
+
+  /* get cache line size */
+  size = 1 << ((ccsidr & 0x00000007U) + 2U + 2U);
+  start &= ~(size - 1);
+  end &= ~(size - 1);
+  while (start <= end) {
+    switch (op)
+    {
+      case 0U: __set_DCIMVAC(start);  break;
+      case 1U: __set_DCCMVAC(start);  break;
+      default: __set_DCCIMVAC(start); break;
+    }
+    start += size;
+  }
+  __DMB();
 }
 
 /** \brief  Clean and Invalidate the entire data or unified cache

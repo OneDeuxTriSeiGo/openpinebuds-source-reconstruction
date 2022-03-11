@@ -827,16 +827,49 @@ void hal_cmu_ddr_reset_clear()
 
 int hal_cmu_dsp_set_freq(enum HAL_CMU_FREQ_T freq);
 
+void hal_cmu_dsi_phy_reset_set(void)
+{
+    hal_cmu_reset_set(HAL_CMU_MOD_Q_DSI_32K);
+    hal_cmu_reset_set(HAL_CMU_MOD_Q_DSI_PN);
+    hal_cmu_reset_set(HAL_CMU_MOD_Q_DSI_TV);
+    hal_cmu_reset_set(HAL_CMU_MOD_Q_DSI_PIX);
+    hal_cmu_reset_set(HAL_CMU_MOD_Q_DSI_DSI);
+}
+
+void hal_cmu_dsi_phy_reset_clear(void)
+{
+    // TODO: Move clock enable APIs out
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_32K);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_PN);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_TV);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_PIX);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_DSI);
+
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_32K);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_PN);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_TV);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_PIX);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_DSI);
+}
+
 void hal_cmu_dsi_clock_enable(void)
 {
+#if !defined(DSP_ENABLE) && !defined(CHIP_BEST2003_DSP)
+    hal_cmu_dsp_clock_enable();
+    hal_cmu_dsp_reset_clear();
+    hal_sys_timer_delay(US_TO_TICKS(10));
+#endif
     hal_cmu_dsp_set_freq(HAL_CMU_FREQ_780M);
     cmu->DSP_DIV = SET_BITFIELD(cmu->DSP_DIV, CMU_CFG_DIV_APCLK, 0x0);
     hal_cmu_pll_enable(HAL_CMU_PLL_DSI, HAL_CMU_PLL_USER_DSI);
     cmu->APCLK_ENABLE = SYS_APCLK_DISPLAY;
     aoncmu->MIPI_CLK = AON_CMU_EN_CLK_PIX_DSI | AON_CMU_POL_CLK_DSI_IN |
-        SET_BITFIELD(aoncmu->MIPI_CLK, AON_CMU_CFG_DIV_PIX_DSI, 0xc);
+        SET_BITFIELD(aoncmu->MIPI_CLK, AON_CMU_CFG_DIV_PIX_DSI, 0x4);
     cmu->QCLK_ENABLE = SYS_QCLK_DSI_DSI | SYS_QCLK_DSI_PIX;
     hal_sys_timer_delay_us(10);
+    hal_cmu_dsi_reset_set();//QR DSI/PIX CLK bit 4/5; APR APB CLK bit 8
+    hal_sys_timer_delay(US_TO_TICKS(10));
+    hal_cmu_dsi_reset_clear();
 }
 
 void hal_cmu_dsi_clock_enable_v2(uint8_t pixel_div)
@@ -872,10 +905,32 @@ void hal_cmu_dsi_reset_clear(void)
     hal_sys_timer_delay_us(10);
 }
 
+void hal_cmu_dsi_sleep(void)
+{
+    hal_cmu_dsi_clock_disable();
+}
+
+void hal_cmu_dsi_wakeup(void)
+{
+    hal_cmu_dsi_clock_enable();
+}
+
 void hal_cmu_lcdc_clock_enable(void)
 {
+    hal_cmu_lcdc_reset_clear();
     cmu->XCLK_ENABLE = SYS_XCLK_DSI | SYS_XCLK_DISPLAYX | SYS_XCLK_DISPLAYH;
     cmu->QCLK_ENABLE = SYS_QCLK_DSI_32K | SYS_QCLK_DSI_PN | SYS_QCLK_DSI_TV;
+
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_32K);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_PN);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_TV);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_PIX);
+    hal_cmu_clock_enable(HAL_CMU_MOD_Q_DSI_DSI);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_32K);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_PN);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_TV);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_PIX);
+    hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_DSI);
 }
 
 void hal_cmu_lcdc_clock_disable(void)
@@ -897,6 +952,15 @@ void hal_cmu_lcdc_reset_clear(void)
     hal_sys_timer_delay_us(10);
 }
 
+void hal_cmu_lcdc_sleep(void)
+{
+    hal_cmu_lcdc_clock_disable();
+}
+
+void hal_cmu_lcdc_wakeup(void)
+{
+    hal_cmu_lcdc_clock_enable();
+}
 void hal_cmu_csi_clock_enable(void)
 {
     cmu->DSP_DIV = SET_BITFIELD(cmu->DSP_DIV, CMU_CFG_DIV_APCLK, 0x0);
@@ -905,6 +969,10 @@ void hal_cmu_csi_clock_enable(void)
     cmu->APCLK_ENABLE = SYS_APCLK_CSI;
     cmu->XCLK_ENABLE = SYS_XCLK_CSI;
     cmu->QCLK_ENABLE = SYS_QCLK_CSI_LANE | SYS_QCLK_CSI_PIX | SYS_QCLK_CSI_LANG;
+
+    hal_cmu_clock_set_mode(HAL_CMU_MOD_Q_CSI_LANE, HAL_CMU_CLK_AUTO);
+    hal_cmu_clock_set_mode(HAL_CMU_MOD_Q_CSI_PIX, HAL_CMU_CLK_AUTO);
+    hal_cmu_clock_set_mode(HAL_CMU_MOD_Q_CSI_LANG, HAL_CMU_CLK_AUTO);
 }
 
 void hal_cmu_csi_clock_disable(void)
@@ -2800,6 +2868,7 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_dma_req_init(void)
 
 void BOOT_TEXT_FLASH_LOC hal_cmu_module_init_state(void)
 {
+    aoncmu->CLK_OUT = AON_CMU_EN_CLK_DCDC0 | AON_CMU_CFG_DIV_DCDC(1);
     aoncmu->CODEC_DIV = (aoncmu->CODEC_DIV & ~AON_CMU_SEL_AON_OSCX2) | AON_CMU_SEL_AON_OSC;
     // Slow down PMU fast clock
     //aoncmu->CLK_OUT = (aoncmu->CLK_OUT & ~(AON_CMU_BYPASS_DIV_DCDC | AON_CMU_CFG_DIV_DCDC_MASK)) | AON_CMU_CFG_DIV_DCDC(2);
@@ -3313,6 +3382,16 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_wlan_set_sleep_allow(uint32_t auto_mode)
     }
 }
 
+static void GPV_init(void)
+{
+#ifdef GPV_MAIN_BASE
+    volatile uint32_t *gpv_ctrl_psram = (volatile uint32_t *)(GPV_MAIN_BASE+0x6000);
+    volatile uint32_t *gpv_ctrl_x2h = (volatile uint32_t *)(GPV_MAIN_BASE+0x7000);
+    gpv_ctrl_psram[17] |= 0x2; //0x50306044
+    gpv_ctrl_x2h[17] |= 0x2; //0x50307044
+#endif
+}
+
 void hal_cmu_dsp_clock_enable(void)
 {
     enum HAL_CMU_PLL_T dsp;
@@ -3349,6 +3428,10 @@ void hal_cmu_dsp_clock_enable(void)
     hal_cmu_clock_enable(HAL_CMU_MOD_O_WDT_AP);
     hal_cmu_clock_enable(HAL_CMU_MOD_O_TIMER0_AP);
     hal_cmu_clock_enable(HAL_CMU_MOD_O_TIMER1_AP);
+#ifndef ARM_CMNS
+    ///TODO: add cmse interface if trustzone is enabled
+    GPV_init();
+#endif
 #endif
 }
 

@@ -26,7 +26,7 @@ root {
                     priority = 100;
                     moduleName = "BES_GPIO_MODULE_HDF";
                     serviceName = "HDF_PLATFORM_GPIO";
-                    deviceMatchAttr = "gpio_config";
+                    deviceMatchAttr = "bes2600_gpio_config";
                 }
             }
             device_i2c :: device {
