@@ -27,6 +27,7 @@ typedef enum {
     CP_IPC_MSG_NET_MGMT_AGENT,
     CP_IPC_MSG_NET_MGMT_SRV,
 #endif
+    CP_IPC_EVENT,
     CP_IPC_MSG_TEST,
     IPC_MSG_TYPE_NUM
 }CP_IPC_MSG_TYPE;

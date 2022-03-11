@@ -25,6 +25,15 @@ EXCLUDE_OBJS += hal_norflash_se.o
 obj-y := $(filter-out $(EXCLUDE_OBJS),$(obj-y))
 endif
 
+ifeq ($(NUTTX_BUILD), 1)
+obj-y := $(filter-out hal_dsi.o,$(obj-y))
+CFLAGS_hal_dsi_v2.o += -Iplatform/drivers/graphic
+else
+obj-y := $(filter-out hal_dsi_v2.o,$(obj-y))
+CFLAGS_hal_dsi.o += -Iplatform/drivers/graphic
+CFLAGS_hal_lcdc.o += -Iplatform/drivers/graphic
+endif
+
 subdir-ccflags-y += -Iplatform/drivers/ana  -Iservices/cp_boot/ -Iservices/transq_msg/ -Iservices/a7_dsp/common/
 
 ifneq ($(PERIPH_PLL_FREQ),)

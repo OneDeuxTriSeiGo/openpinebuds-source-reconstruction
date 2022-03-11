@@ -85,6 +85,7 @@ void hal_iomux_set_i2s0(void);
 void hal_iomux_set_i2s1(void);
 void hal_iomux_set_spdif0(void);
 void hal_iomux_set_spdif1(void);
+enum HAL_IOMUX_PIN_T hal_iomux_get_dsi_te_pin(void);
 void hal_iomux_set_dig_mic_clock_pin(enum HAL_IOMUX_PIN_T pin);
 void hal_iomux_set_dig_mic_data0_pin(enum HAL_IOMUX_PIN_T pin);
 void hal_iomux_set_dig_mic_data1_pin(enum HAL_IOMUX_PIN_T pin);

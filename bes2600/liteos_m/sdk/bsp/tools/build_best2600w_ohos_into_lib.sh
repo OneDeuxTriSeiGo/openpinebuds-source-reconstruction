@@ -68,7 +68,7 @@ make_boot2b="make T=ota_boot2b \
             BOOTINFO_OFFSET=0xFD0000 \
             all lst -j${JOBS}"
 
-BUILDOPT_M33="CHIP=best2003 A7_DSP_ENABLE=1 DSP_AUDIO_TASK=1 DSP_CODEC_SUPPORT=0\
+BUILDOPT_M33="CHIP=best2003 A7_DSP_ENABLE=1 DSP_AUDIO_TASK=1 DSP_CODEC_SUPPORT=1\
               PSRAMUHS_ENABLE=1 PSRAM_ENABLE=1 SPEECH_MSG_ENABLE=1 \
               SPEECH_MSG_TEST_CASE=0 A7_PROJECT=dummy"
 
@@ -76,6 +76,7 @@ BUILDOPT_CP="PSRAMCP_SIZE=0x100000 DUAL_BAND=1 AP_MODE_SUPPORT=1"
 
 make_cmcp="make T=cmcp DEBUG_PORT=4 \
            LIB_BIN_IN_SRC_DIR=1 \
+           WIFI_RF_OUT_FEM_SW=0 \
            GEN_SDK_LIB_NET=1 \
            ${BUILDOPT_CP} -j${JOBS}"
 
@@ -93,6 +94,7 @@ make_best2600w="make T=best2600w_liteos \
                 NET_JANSSON_SUPPORT=0 \
                 NET_CJSON_SUPPORT=0 \
                 RF_TX_CONTROL_IO=12 \
+                WIFI_RF_OUT_FEM_SW=0 \
                 PA_ENABLE_IO=21 \
                 UART1_IOMUX_INDEX=20 \
                 NET_FTP_CLIENT_SUPPORT=0 UTILS_BES_KV=1 \
@@ -119,6 +121,7 @@ make_best2600w_mini="make T=best2600w_liteos_mini \
                 NET_JANSSON_SUPPORT=0 \
                 NET_CJSON_SUPPORT=0 \
                 RF_TX_CONTROL_IO=12 \
+                WIFI_RF_OUT_FEM_SW=0 \
                 PA_ENABLE_IO=21 \
                 UART1_IOMUX_INDEX=20 \
                 USE_EXT_CONSOLE=1 REL_AT_C=0 AT_CMD=0  LITTLEFS_ENABLE=0 \
@@ -374,11 +377,17 @@ if [ "x${BUILD_PIECE}" != "xtrue"  ] ;then
    done
    if [ $arg == "SDK=1" ];then
       echo "~~~~~ not clear bsp, decide in app script ~~~~~"
+      mkdir -p out/ota_boot1/
+      cp -rf prebuild/ota_boot1.bin out/ota_boot1/
+      mkdir -p out/ota_boot2a/
+      cp -rf prebuild/ota_boot2a.bin out/ota_boot2a/
    else
       echo "~~~~~ clear bsp all now ~~~~~~"
       rm -rf out/cmcp
       rm -rf out/${A7_DSP_BIN_NAME}
       rm -rf out/best2600w_liteos
+      rm -rf out/ota_boot1
+      rm -rf out/ota_boot2a
    fi
 fi
 
@@ -398,8 +407,10 @@ if [ "x${BUILD_PIECE}" == "xtrue"  ] ;then
 fi
 
 if [ "x${BUILD_PIECE}" != "xtrue"  ] ;then
-   rm -rf out/ota_boot1
-   rm -rf out/ota_boot2a
+   if [ "x$BUILD_SDK" != "x1" ]; then
+       rm -rf out/ota_boot1;
+       rm -rf out/ota_boot2a;
+   fi
    rm -rf out/cmcp
    rm -rf out/${A7_DSP_BIN_NAME}
    rm -rf out/best2600w_liteos
@@ -411,9 +422,10 @@ if [ "x${BUILD_PIECE}" != "xtrue"  ] ;then
    mkdir -p out/prebuild
 
 # make ota boot
-   build_cmd make_boot1
-   build_cmd make_boot2a
-
+   if [ "x$BUILD_SDK" != "x1" ]; then
+      build_cmd make_boot1;
+      build_cmd make_boot2a;
+   fi
 # make_a7
    build_cmd make_a7 TOOLCHAIN_9_2_1
 
@@ -424,9 +436,10 @@ if [ "x${BUILD_PIECE}" != "xtrue"  ] ;then
    if [ "x$BUILD_SDK" == "x1" ]; then
       # use prebuild cp bin
       echo "=============mkdir out for cmcp==============="
-      mkdir -p out/cmcp/
-      cp prebuild/cmcp.bin out/cmcp/cmcp.bin
-      ls out/cmcp/
+      mkdir -p out/cmcp_16/
+      cp prebuild/cmcp_16.bin out/cmcp_16/cmcp_16.bin
+      mkdir -p out/cmcp_32/
+      cp prebuild/cmcp_32.bin out/cmcp_32/cmcp_32.bin
       echo "=============mkdir out for cmcp==============="
    else
 #build cp

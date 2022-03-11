@@ -2,10 +2,8 @@
 root {
     platform {
         gpio_config {
-            match_attr = "gpio_config";
+            match_attr = "bes2600_gpio_config";
             pin = [0, 1];
-            // touch_ztw523: TSP_RST - GPIO12, TSP_INT-GPIO27
-            // touch_fts: TSP_RST - GPIO05, TSP_INT-GPIO27
             realPin = [5, 27];
             config = [5, 2];
             pinNum = 2;
@@ -28,7 +26,6 @@ root {
                 match_attr = "i2c1_config";
                 port = 1;
                 speed = 200000;
-                // TSP_SCL/SDA - I2C1 = GPIO06/GPIO07
                 scl_pin = 6;
                 sda_pin = 7;
                 use_dma = 0;

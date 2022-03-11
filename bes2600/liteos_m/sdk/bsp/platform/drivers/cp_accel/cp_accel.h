@@ -54,6 +54,8 @@ enum CP_TASK_EVENT
 
     CP_EVENT_EQ_DRC_PROCESSING = 0x0,
 
+    CP_EVENT_GENIE_PROCESSING = 0x00,
+
     /// Maximum number of event
     CP_EVENT_MAX = 0x2,
 };
@@ -80,6 +82,7 @@ enum CP_TASK_TYPE
     CP_TASK_POWER_CONSUMPTION_MEASUREMENT = 0x05,
     CP_TASK_A2DP_ENCODE = 0x06,
     CP_TASK_EQ_DRC = 0x07,
+    CP_TASK_GENIE = 0x08,
     /// Maximum number of tasks
     CP_TASK_MAX,
 };

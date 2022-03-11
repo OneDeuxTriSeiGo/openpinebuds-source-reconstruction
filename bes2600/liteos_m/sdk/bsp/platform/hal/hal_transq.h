@@ -87,6 +87,13 @@ enum HAL_TRANSQ_RET_T hal_transq_close(enum HAL_TRANSQ_ID_T id);
 
 enum HAL_TRANSQ_RET_T hal_transq_flush(enum HAL_TRANSQ_ID_T id);
 
+#if defined(__MCU_FW_2002__) && defined(CONFIG_SDIO_SUPPORT)
+void hal_transq_previous_init(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri);
+void hal_transq_clear_previous(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri, int data_toggle);
+void hal_transq_previous_toggle(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri);
+void hal_transq_int_enable(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri);
+#endif
+
 uint8_t get_rx_irq_count(enum HAL_TRANSQ_ID_T id);
 
 #ifdef __ARM_ARCH_ISA_ARM

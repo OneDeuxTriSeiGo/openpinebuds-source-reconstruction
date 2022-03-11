@@ -126,6 +126,7 @@ static int32_t MipiDsiDevInit()
 static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
 {
     enum DSI_MODE_T dsi_mode = DSI_MODE_CMD;
+    uint8_t dsi_lane = (uint8_t)cntlr->cfg.lane;
     uint32_t dsi_bitclk = cntlr->cfg.phyDataRate;
     uint32_t dsi_pclk = cntlr->cfg.pixelClk;
     priv.cfg.active_width = cntlr->cfg.timing.xPixels;
@@ -154,7 +155,7 @@ static int32_t MipiDsiDevSetCntlrCfg(struct MipiDsiCntlr *cntlr)
     HDF_LOGD("%s: width %u, height %u, dsi_bitclk %u, dsi_pclk %u", __func__,
              priv.cfg.active_width, priv.cfg.active_height, dsi_bitclk, dsi_pclk);
     /* Init the hardware and clear the display */
-    hal_dsi_init_v2(cntlr->cfg.timing.xPixels, dsi_mode, dsi_bitclk, dsi_pclk);
+    hal_dsi_init_v2(cntlr->cfg.timing.xPixels, dsi_mode, dsi_lane, dsi_bitclk, dsi_pclk);
     osDelay(100);
     return HDF_SUCCESS;
 }

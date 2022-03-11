@@ -1802,6 +1802,16 @@ int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
 
     level = GET_BITFIELD(attr, TR_ATTR_LEVEL);
     module = GET_BITFIELD(attr, TR_ATTR_MOD);
+#if defined(NUTTX_BUILD) && !defined(CONFIG_ARCH_CHIP_DEBUG_H)
+    bool is_nolf = attr & TR_ATTR_NO_LF;
+    //if (!is_nolf)
+    {
+        len = snprintf(buf, TRACE_PRINTF_LEN,"%s\n", fmt);
+        fmt = buf;
+    }
+    vsyslog(level+1, fmt , ap);
+    return len;
+#else
 
 #ifdef CRASH_DUMP_ENABLE
     if (!in_crash_dump)
@@ -1832,10 +1842,9 @@ int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
     }
 
     return hal_trace_output((unsigned char *)buf, len);
-}
-#if defined(NUTTX_BUILD) && !defined(CONFIG_ARCH_CHIP_DEBUG_H)
-uint8_t tmp_int_buff[512];
 #endif
+}
+
 int hal_trace_printf(uint32_t attr, const char *fmt, ...)
 {
     int ret;
@@ -1846,35 +1855,7 @@ int hal_trace_printf(uint32_t attr, const char *fmt, ...)
     }
 
     va_start(ap, fmt);
-#if defined(NUTTX_BUILD) && !defined(CONFIG_ARCH_CHIP_DEBUG_H)
-    enum TR_LEVEL_T level;
-    enum TR_MODULE_T module;
-    bool is_nolf = attr & TR_ATTR_NO_LF;
-    level = GET_BITFIELD(attr, TR_ATTR_LEVEL);
-    module = GET_BITFIELD(attr, TR_ATTR_MOD);
-    char *tmpfmt = NULL;
-    ret = 0;
-    if (!is_nolf)
-    {
-        if (up_interrupt_context())
-        {
-            sprintf(tmp_int_buff, "%s\n", fmt);
-            fmt = tmp_int_buff;
-        }
-        else
-            ret = asprintf(&tmpfmt, "%s\n", fmt);
-    }
-    if (ret < 0 || tmpfmt == NULL)
-        vsyslog(level+1, fmt , ap);
-    else
-    {
-        vsyslog(level+1, tmpfmt , ap);
-        free(tmpfmt);
-    }
-    ret = 0;
-#else
     ret = hal_trace_printf_internal(attr, fmt, ap);
-#endif
     va_end(ap);
 
     if (attr & TR_ATTR_IMM) {
@@ -2910,7 +2891,7 @@ static void NORETURN USED hal_trace_assert_dump_internal(ASSERT_DUMP_ARGS)
     hal_trace_crash_end();
 }
 
-void NORETURN NAKED hal_trace_assert_dump(ASSERT_DUMP_ARGS)
+void NORETURN NAKED WEAK hal_trace_assert_dump(ASSERT_DUMP_ARGS)
 {
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) && !defined(DEBUG)
     // No way to read out the debug information. Just stop here

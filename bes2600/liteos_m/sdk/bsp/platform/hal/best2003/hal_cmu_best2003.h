@@ -207,6 +207,12 @@ enum HAL_CMU_MOD_ID_T {
     HAL_CMU_MOD_O_PSRAM = HAL_CMU_MOD_O_PSRAM200,
     HAL_CMU_MOD_H_PSRAMUHS = HAL_CMU_MOD_H_PSRAM1G,
     HAL_CMU_MOD_O_PSRAMUHS = HAL_CMU_MOD_O_PSRAM1G,
+    HAL_CMU_MOD_H_LCDC = HAL_CMU_MOD_QTY,
+    HAL_CMU_MOD_X_DISPB = HAL_CMU_MOD_QTY,
+    HAL_CMU_MOD_X_DISP = HAL_CMU_MOD_QTY,
+    HAL_CMU_MOD_H_DISPPRE = HAL_CMU_MOD_QTY,
+    HAL_CMU_MOD_H_DISP = HAL_CMU_MOD_QTY,
+
 };
 
 enum HAL_CMU_CLOCK_OUT_ID_T {
@@ -454,6 +460,10 @@ uint32_t hal_cmu_get_osc_ready_cycle_cnt(void);
 
 uint32_t hal_cmu_get_osc_switch_overhead(void);
 
+void hal_cmu_dsi_phy_reset_set(void);
+
+void hal_cmu_dsi_phy_reset_clear(void);
+
 void hal_cmu_dsi_clock_enable(void);
 
 void hal_cmu_dsi_clock_enable_v2(uint8_t pixel_div);
@@ -481,6 +491,14 @@ void hal_cmu_lcdc_reset_set(void);
 void hal_cmu_lcdc_reset_clear(void);
 
 void hal_cmu_shutdown_hook(void);
+
+void hal_cmu_dsi_sleep(void);
+
+void hal_cmu_dsi_wakeup(void);
+
+void hal_cmu_lcdc_sleep(void);
+
+void hal_cmu_lcdc_wakeup(void);
 
 #ifdef __cplusplus
 }

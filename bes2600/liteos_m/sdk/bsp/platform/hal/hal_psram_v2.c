@@ -22,6 +22,7 @@
 #include "hal_timer.h"
 #include "hal_trace.h"
 #include "hal_cache.h"
+#include "hal_chipid.h"
 #include "pmu.h"
 #include "reg_psram_mc_v2.h"
 #include "reg_psram_phy_v2.h"
@@ -457,9 +458,20 @@ static void hal_psram_phy_init(uint32_t clk)
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_IEN1, 0xd);
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_IEN2, 0x7);
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_VTUNE, 0x2);
+#if CHIP_PSRAM_CTRL_VER >= 3
+    val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_RES, 0x4);
+#endif
     psram_phy->REG_048 = val;
     hal_sys_timer_delay_us(100);
 
+#if CHIP_PSRAM_CTRL_VER >= 3
+#ifdef CHIP_BEST2003
+    // chip 2006
+    if (hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_8) {
+        psram_mc->REG_200 |= PSRAM_ULP_PHY_REG_CEB_PU;
+    }
+#endif
+#endif
     val = hal_psram_phy_read_reg(&psram_phy->REG_04C);
     val |= PSRAM_ULP_PHY_REG_PSRAM_PU;
     //val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_PSRAM_SWRC, 0x3);
@@ -756,7 +768,7 @@ static void hal_psram_mc_init(uint32_t clk)
 #if CHIP_PSRAM_CTRL_VER == 2
     psram_mc->REG_03C = PSRAM_ULP_MC_HIGH_PRI_LEVEL(1);
 #else
-    psram_mc->REG_03C = PSRAM_ULP_MC_HIGH_PRI_LEVEL(4);
+    psram_mc->REG_03C = PSRAM_ULP_MC_HIGH_PRI_LEVEL(7);
 #endif
 #ifdef PSRAM_WRAP_ENABLE
     psram_mc->REG_040 = PSRAM_ULP_MC_CP_WRAP_EN;

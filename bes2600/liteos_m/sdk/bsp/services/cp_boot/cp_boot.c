@@ -34,12 +34,21 @@ extern uint32_t __cp_code_start[];
 extern uint32_t __cp_code_end[];
 extern uint32_t __cp_StackTop[];
 
+#ifdef CP_DSP
+extern void main2cp_init(void);
+#endif
+
+#ifdef CP_XIP
+#define CP_BOOT_ENTRY  (CP_FLASHX_BASE)
+#define CP_LOAD_ENTRY  (CP_FLASH_BASE
+#else
 #if (PSRAMCP_SIZE > 0)
 #define CP_BOOT_ENTRY  (PSRAM_TO_PSRAMX(PSRAMCP_BASE))
 #define CP_LOAD_ENTRY  (PSRAMCP_BASE)
 #else
 #define CP_BOOT_ENTRY  (0x00200000 + RAM_SIZE)
 #define CP_LOAD_ENTRY  (0x20000000 + RAM_SIZE)
+#endif
 #endif
 
 #ifdef DSP_IMAGE_COMP
@@ -48,16 +57,15 @@ extern int dsp_code_decom (unsigned char *outStream, unsigned int *uncompressedS
 #endif
 void cp_boot(void)
 {
-    uint32_t remains;
-
     TRACE(0, "%s", __FUNCTION__);
 
     hal_cmu_cp_disable();
     hal_sysfreq_req(HAL_SYSFREQ_USER_INIT, HAL_CMU_FREQ_390M);
 
+#ifndef CP_XIP
+    uint32_t remains;
     /* load cp image */
     remains = ((uint32_t)__cp_code_end - (uint32_t)__cp_code_start);//length of byte
-
 #ifdef DSP_IMAGE_COMP
     /* compress cp bin */
     unsigned int uncompressed_size = 0;
@@ -74,6 +82,8 @@ void cp_boot(void)
     memcpy((unsigned char *)CP_LOAD_ENTRY, (unsigned char *)__cp_code_start, remains);
     TRACE(0, "load cp image end 0x%p", (void *)CP_BOOT_ENTRY);
 #endif // DSP_IMAGE_COMP
+#endif
+
 #if defined(CONFIG_RPTUN)
 #if !defined(CONFIG_BES_RPTUN_DELAY_BOOT)
     bes_rptun_heap_init();
@@ -84,6 +94,9 @@ void cp_boot(void)
     hal_cmu_cp_boot(CP_BOOT_ENTRY);
     cp_ipc_start();
     osDelay(100);
+#ifdef CP_DSP
+    main2cp_init();
+#endif
     hal_sysfreq_req(HAL_SYSFREQ_USER_INIT, HAL_CMU_FREQ_390M);
 }
 

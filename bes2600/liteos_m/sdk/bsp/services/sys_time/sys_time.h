@@ -34,6 +34,10 @@ typedef int16_t s16_t;
 typedef uint32_t u32_t;
 typedef int32_t s32_t;
 
+#define DIFF_SEC_GMT8          ((u32_t)(8*3600))
+
+void hal_sys_time_set_ntp_delta(int delta);
+
 void set_ntp_update(void);
 
 int get_ntp_ready(void);

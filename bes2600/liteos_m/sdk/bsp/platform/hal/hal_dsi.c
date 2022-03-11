@@ -33,6 +33,8 @@ static struct LCDC_REG_T * const lcdc = (struct LCDC_REG_T *)LCDC_BASE;
 
 static struct DSI_REG_T * const dsi = (struct DSI_REG_T *)DSI_BASE;
 
+static uint8_t  lane_num = 0;
+
 enum DSI_CMD_TYPE_T {
     CLN_ENT_LP = 0,
     CLN_EXIT_LP = 1,
@@ -416,7 +418,7 @@ void hal_dsi_send_cmd_list(unsigned cmd, unsigned char para_count,
     }
 }
 
-void hal_dsi_init(uint16_t h_res)
+void hal_dsi_init(uint16_t h_res ,uint8_t lane_number)
 {
     if (!dsi_init_v2) {
         hal_iomux_set_dsi_te();
@@ -430,14 +432,16 @@ void hal_dsi_init(uint16_t h_res)
 #ifndef FPGA
     dsiphy_open(0);
 #endif
-
+    if (lane_number <= 2) {
+        lane_num = lane_number;
+    }
     //DSI init-1
     if (dsi_mode == DSI_MODE_VIDEO) {
-        dsi->REG_000 = DSI_R_LANE_NUM(0x1) | DSI_R_LPCD_DLY(1) | DSI_R_VIDEO_MODE|
+        dsi->REG_000 = DSI_R_LANE_NUM(lane_num - 1) | DSI_R_LPCD_DLY(1) | DSI_R_VIDEO_MODE|
             DSI_R_EOTP_EN |DSI_R_HSA_LP | DSI_R_HSE_EN | DSI_R_HFP_LP |
             DSI_R_T_LPX(0x6) | DSI_R_CLK_PRE(0x3) | DSI_R_CLK_POST(0x7);
     } else {
-        dsi->REG_000 = DSI_R_LANE_NUM(0x0) | DSI_R_LPCD_DLY(1) |
+        dsi->REG_000 = DSI_R_LANE_NUM(lane_num - 1) | DSI_R_LPCD_DLY(1) |
             DSI_R_HSA_LP | DSI_R_HSE_EN | DSI_R_HFP_LP | DSI_R_EOTP_EN |
             DSI_R_T_LPX(0x6) | DSI_R_CLK_PRE(0x3) | DSI_R_CLK_POST(0x7);
     }
@@ -475,7 +479,7 @@ void hal_dsi_init(uint16_t h_res)
     hal_cmu_reset_clear(HAL_CMU_MOD_Q_DSI_DSI);
 }
 
-void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint32_t dsi_bitclk, uint32_t dsi_pclk)
+void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint8_t lane_number, uint32_t dsi_bitclk, uint32_t dsi_pclk)
 {
     // TODO: add more dsi_clk configurations
     uint32_t dsi_clk = 200;
@@ -489,12 +493,16 @@ void hal_dsi_init_v2(uint16_t h_res, enum DSI_MODE_T mode, uint32_t dsi_bitclk, 
         TRACE(0, "invalid pixel_div %u", pixel_div);
         return;
     }
+    if (lane_number < 1 || lane_number > 2) {
+        TRACE(0, "invalid lane_number %d", lane_number);
+        return;
+    }
     dsi_mode = mode;
     dsi_init_v2 = true;
     TRACE(0, "dsi_clk %u, pixel_div %u, dsi_mode %u", dsi_clk, pixel_div, dsi_mode);
     pmu_set_dsi_clk(dsi_clk);
     hal_cmu_dsi_clock_enable_v2(pixel_div);
-    hal_dsi_init(h_res);
+    hal_dsi_init(h_res, lane_number);
 }
 
 void hal_dsi_start(void)
@@ -502,12 +510,13 @@ void hal_dsi_start(void)
     if (dsi_mode == DSI_MODE_VIDEO) {
         dsi->REG_000 = DSI_R_LPCD_DLY(1) | DSI_R_HSA_LP |DSI_R_HBP_LP| DSI_R_HSE_EN | DSI_R_HFP_LP |
             DSI_R_EOTP_EN |DSI_R_VIDEO_MODE| DSI_R_T_LPX(0x4) | DSI_R_CLK_PRE(0x3)|
-            DSI_R_CLK_POST(0x7)|DSI_R_LANE_NUM(0x1);
+            DSI_R_CLK_POST(0x7) | DSI_R_LANE_NUM(lane_num - 1);
         dsi->REG_000 &=  ~(DSI_R_EOTP_EN |DSI_R_HSA_LP|DSI_R_HBP_LP);
     } else {
         dsi->REG_000 = DSI_R_LPCD_DLY(1) | DSI_R_HSA_LP | DSI_R_HSE_EN | DSI_R_HFP_LP | DSI_R_EOTP_EN |
                         DSI_R_T_LPX(0x4) | DSI_R_CLK_PRE(0x3) | DSI_R_CLK_POST(0x7);
     }
+
     dsi->REG_004 = DSI_R_HS_EXIT_TIME(0xb) | DSI_R_HS_PRPR_TIME(0x4) | DSI_R_HS_ZERO_TIME(0xb) |
                     DSI_R_HS_TRAIL_TIME(0x9) | DSI_R_T_WAKEUP(0x207);
     dsi->REG_008 = DSI_R_CLK_EXIT_TIME(0xb) | DSI_R_CLK_PRPR_TIME(0x8) | DSI_R_CLK_ZERO_TIME(0x1f) |
@@ -571,7 +580,8 @@ void hal_lcdc_init(const struct HAL_DSI_CFG_T *cfg, const uint8_t *layer0,
     lcdc->REG_118 = LCD_CFG_PN_H_ACTIVE(cfg->active_width) | LCD_CFG_PN_V_ACTIVE(cfg->active_height);
     lcdc->REG_11C = LCD_CFG_PN_H_FPORCH(cfg->h_front_porch) | LCD_CFG_PN_H_BPORCH(cfg->h_back_porch);
     lcdc->REG_120 = LCD_CFG_PN_V_FPORCH(cfg->v_front_porch) | LCD_CFG_PN_V_BPORCH(cfg->v_back_porch);
-    lcdc->REG_13C = LCD_CFG_PN_V_SPXLCNT(0x17e) | LCD_CFG_PN_V_EPXLCNT(0x17e);
+    //The REG_13C config value should < cfg->total_width.Don't set to a fixed value.
+    lcdc->REG_13C = LCD_CFG_PN_V_SPXLCNT(cfg->total_width -1) | LCD_CFG_PN_V_EPXLCNT(cfg->total_width -1);
     // lcdc->REG_124 = LCD_CFG_PN_BLANKCOLOR(cfg->blankcolor);
     lcdc->REG_124 = 0; // FIXME
     lcdc->REG_1DC = 1 << 24; // fix red/blue mirror
@@ -774,12 +784,12 @@ void hal_lcdc_frame_done_irq_enable(void)
 void hal_dsi_sleep()
 {
     dsiphy_sleep();
-    hal_cmu_dsi_clock_disable();
+    hal_cmu_dsi_sleep();
 }
 
 void hal_dsi_wakeup()
 {
-    hal_cmu_dsi_clock_enable();
+    hal_cmu_dsi_wakeup();
     dsiphy_wakeup();
 }
 
@@ -791,16 +801,6 @@ void hal_dsi_start_hs_clock()
 void hal_dsi_stop_hs_clock()
 {
     dsi->REG_014 = 0;
-}
-
-void hal_lcdc_sleep()
-{
-    hal_cmu_lcdc_clock_disable();
-}
-
-void hal_lcdc_wakeup()
-{
-    hal_cmu_lcdc_clock_enable();
 }
 
 #endif
