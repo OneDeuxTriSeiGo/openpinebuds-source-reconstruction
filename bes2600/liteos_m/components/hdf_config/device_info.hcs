@@ -51,6 +51,40 @@ root {
                     deviceMatchAttr = "i2c1_config";
                 }
             }
+            device_pwm :: device {
+               pwm0 :: deviceNode {
+                  policy = 2;
+                  priority = 99;
+                  moduleName = "BES_PWM_MODULE_HDF";
+                  serviceName = "HDF_PLATFORM_PWM_0";
+                  deviceMatchAttr = "pwm0_config";
+               }
+            }
+            device_spi :: device {
+                spi0 :: deviceNode {
+                    policy = 2;
+                    priority = 100;
+                    moduleName = "BES_SPI_MODULE_HDF";
+                    serviceName = "HDF_PLATFORM_SPI_0";
+                    deviceMatchAttr = "spi0_config";
+                }
+                spi1 :: deviceNode {
+                    policy = 2;
+                    priority = 100;
+                    moduleName = "BES_SPI_MODULE_HDF";
+                    serviceName = "HDF_PLATFORM_SPI_1";
+                    deviceMatchAttr = "spi1_config";
+                }
+            }
+            device_uart :: device {
+                uart0 :: deviceNode {
+                    policy = 2;
+                    priority = 100;
+                    moduleName = "BES_UART_MODULE_HDF";
+                    serviceName = "HDF_PLATFORM_UART_0";
+                    deviceMatchAttr = "uart0_config";
+                }
+            }
             device_mipi_dsi :: device {
                 mipi_dsi0 :: deviceNode {
                     policy = 2;
