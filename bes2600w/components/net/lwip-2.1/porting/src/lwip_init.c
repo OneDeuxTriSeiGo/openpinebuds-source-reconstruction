@@ -98,7 +98,6 @@ int GetDynamicIp(enum netifType intf)
         return -1;
     }
     osSemaphoreDelete(dhcp_sem);
-    dhcp_stop(netif);
     return 0;
 }
 

@@ -29,7 +29,6 @@ static_library("wifiservice") {
     deps += [ "//device/bestechnic/${board_name}/components/net/dhcpd:dhcpd" ]
     defines = [
     "SOFTAP_ENABLE",
-    "HOST_CLIENT_IP"
     ]
   }
 }

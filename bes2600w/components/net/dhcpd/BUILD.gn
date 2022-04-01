@@ -22,5 +22,4 @@ static_library("dhcpd") {
   sources = [ "dhcpd.c" ]
   public_configs = [ ":public" ]
   deps = [ "../lwip-2.1:lwip" ]
-  defines = [ "HOST_CLIENT_IP" ]
 }

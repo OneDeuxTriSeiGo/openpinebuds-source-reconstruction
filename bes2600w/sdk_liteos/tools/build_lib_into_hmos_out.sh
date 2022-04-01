@@ -34,7 +34,7 @@ if [ "x$build_trustzone" == "x" ];then
 fi
 
 if [ "x${flash_size}" == "x32" ]; then
-    flash_config=" PSRAM_XCCELA_MODE=1 "
+    flash_config=" PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000 "
 fi
 
 rel=" "
@@ -132,8 +132,8 @@ tools/build_best2600w_ohos3.0_into_lib.sh \
 -c="$OPT_BEST2600W_LITEOS_CP $flash_config $build_type" \
 -s="$OPT_BEST2600W_LITEOS_MAIN_MINI_SE $build_type" \
 -l="$OPT_BEST2600W_LITEOS_MINI $flash_config MODULE_KERNEL_STUB_INC=1 $build_type" \
--x="$OPT_BEST2600W_LITEOS_BOOT1 $build_type" \
--y="$OPT_BEST2600W_LITEOS_BOOT2A $build_type" \
+-x="$OPT_BEST2600W_LITEOS_BOOT1 $build_type $flash_config " \
+-y="$OPT_BEST2600W_LITEOS_BOOT2A $build_type $flash_config " \
 -d=" BUILD_SE=$build_trustzone BUILD_MINI=$build_mini_sys" \
 GEN_LIB=1 $rel
 

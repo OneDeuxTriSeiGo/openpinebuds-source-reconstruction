@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include "hal_cmu.h"
 #include "hm_sys.h"
@@ -28,6 +29,11 @@
 #include "hiview_log.h"
 #include "devmgr_service_start.h"
 #include "ohos_mem_pool.h"
+#include "app_ble_include.h"
+
+#define BTIF_BAM_NOT_ACCESSIBLE     0x00    /* Non-discoverable or connectable */
+#define BTIF_BAM_GENERAL_ACCESSIBLE 0x03    /* General discoverable and connectable */
+const static uint8_t adv_addr_set[6] = {0x66, 0x34, 0x33, 0x23, 0x22, 0x11};
 
 void OsShowInfo(void)
 {
@@ -56,10 +62,121 @@ static int doShowOsInfo(cmd_tbl_t *cmd, int argc, char *argv[])
     return 0;
 }
 
+
+static int doBtInit(cmd_tbl_t *cmd, int argc, char *argv[])
+{
+    uint8_t BtEnable;
+    if (argc < 2) {
+        printf("Input pare error, AT+INITBT=1 is ok.\n");
+        return -1;
+    }
+
+    BtEnable = atoi(argv[1]);
+
+    if (BtEnable) {
+        if (!app_is_stack_ready()) {
+            bes_bt_init();
+        } else {
+            printf("%s  bt already init\n", __func__);
+        }
+    }
+    return 0;
+}
+
+int doBtScanEnable(cmd_tbl_t *cmd, int argc, char *argv[])
+{
+    uint8_t advEnable;
+    if (argc < 2) {
+        printf("Input pare error, AT+OPENBT=1 is ok\n");
+        return -1;
+    }
+    advEnable = atoi(argv[1]);
+
+    printf( "%s() %s %d\n",__func__,argv[0],advEnable);
+
+    if (advEnable) {
+        app_bt_accessmode_set_by_AT_command(BTIF_BAM_GENERAL_ACCESSIBLE);
+    } else {
+        app_bt_accessmode_set_by_AT_command(BTIF_BAM_NOT_ACCESSIBLE);
+    }
+
+    return 0;
+}
+
+int doBleAdvEnable(cmd_tbl_t *cmd, int argc, char *argv[])
+{
+    uint8_t advEnable;
+    uint16_t advInterval;
+    char *advname = "ble_adv_test";
+    char advdata[31] = {0};
+
+    if (argc < 3) {
+        printf("Input pare error, AT+OPENBLE=1, interval (interval is 20 ~ 10000ms) is ok\n");
+        return -1;
+    }
+    advEnable = atoi(argv[1]);
+    advInterval = atoi(argv[2]);
+    advdata[0] = 0x02;
+    advdata[1] = 0x01;
+    advdata[2] = 0x06;
+    advdata[3] = 0x1b;
+    advdata[4] = 0x09;
+    memcpy(&advdata[5], advname, strlen(advname));
+
+    printf("%s() %s %d  %d\n", __func__, argv[0], advEnable, advInterval);
+
+    if (advEnable) {
+        app_ble_custom_init();
+        app_ble_custom_adv_write_data(0,
+                                    true,
+                                    (uint8_t *)adv_addr_set,
+                                    NULL,
+                                    advInterval,
+                                    ADV_TYPE_UNDIRECT,
+                                    12,
+                                    (uint8_t *)advdata, 31,
+                                    NULL, 0);
+
+        app_ble_custom_adv_start(0);
+    } else {
+        app_ble_custom_adv_stop(0);
+    }
+
+    return 0;
+}
+
+int doBleScanEenable(cmd_tbl_t *cmd, int argc, char *argv[])
+{
+    uint8_t scanEnable;
+    uint16_t scanWindow, scanInterval;
+
+    if (argc < 4) {
+        printf("Input pare error, AT+OPENBLE=1,scanWindow(is 5~10000ms),\
+                interval(10 ~ 10000ms), scanWindow < interval is ok\n");
+        return -1;
+    }
+
+    scanEnable = atoi(argv[1]);
+    scanWindow = atoi(argv[2]);
+    scanInterval = atoi(argv[3]);
+    printf( "%s() %s %d  %d  %d\n", __func__, argv[0], scanEnable, scanWindow, scanInterval);
+
+    if (scanEnable) {
+        app_ble_start_scan(0, scanWindow, scanInterval);
+    } else {
+        app_ble_stop_scan();
+    }
+
+    return 0;
+}
 void RegisterCustomATCmd()
 {
     cmd_tbl_t cmd_list[] = {
         {"AT+SHOWOSINFO", 1, doShowOsInfo, "AT+SHOWOSINFO - show memory and cpu usage\n"},
+        {"AT+INITBT", 2, doBtInit, "AT+INITBT  - init bt\n"},
+        {"AT+OPENBT", 2, doBtScanEnable, "AT+OPENBT  - Open bt,\n"},
+        {"AT+OPENBLE", 3, doBleAdvEnable, "AT+OPENBLE  - Open ble,\n"},
+        {"AT+SCANBLE", 4, doBleScanEenable, "AT+SCANBLE  - Scanning ble,\n"},
     };
     for (int i = 0; i < sizeof(cmd_list) / sizeof(cmd_tbl_t); i++) {
         console_cmd_add(&cmd_list[i]);
