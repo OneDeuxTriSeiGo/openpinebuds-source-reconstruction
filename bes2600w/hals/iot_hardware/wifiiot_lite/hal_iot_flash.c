@@ -19,7 +19,12 @@
 
 unsigned int IoTFlashRead(unsigned int flashOffset, unsigned int size, unsigned char *ramData)
 {
-    return hal_flash_read(HAL_PARTITION_RESOURCE,flashOffset,ramData,size);
+    unsigned int len = 0;
+    int ret = hal_flash_read(HAL_PARTITION_RESOURCE,&flashOffset,ramData,size);
+    if (ret == 0) {
+        len = flashOffset;
+    }
+    return len;
 }
 
 unsigned int IoTFlashWrite(unsigned int flashOffset, unsigned int size,
@@ -27,9 +32,9 @@ unsigned int IoTFlashWrite(unsigned int flashOffset, unsigned int size,
 {
     int ret = -1;
     if (doErase) {
-        ret = hal_flash_write(HAL_PARTITION_RESOURCE,flashOffset, size, ramData);
+        ret = hal_flash_write(HAL_PARTITION_RESOURCE,&flashOffset, ramData, size);
     } else {
-        ret = hal_flash_erase_write(HAL_PARTITION_RESOURCE,flashOffset, size, ramData);
+        ret = hal_flash_erase_write(HAL_PARTITION_RESOURCE,&flashOffset, ramData, size);
     }
     return ret;
 }

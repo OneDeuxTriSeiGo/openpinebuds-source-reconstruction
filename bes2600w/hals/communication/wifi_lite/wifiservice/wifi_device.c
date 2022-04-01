@@ -829,8 +829,7 @@ WifiErrorCode GetLinkedInfo(WifiLinkedInfo *result)
     }
     info->rssi = bwifi_get_current_rssi();
     memcpy(result, info, sizeof(WifiLinkedInfo));
-    hmos_printf("%s ssid=%s rssi=%d stat=%d ipAddress:%d\n\r", __func__,
-                info->ssid, info->rssi, info->connState, info->ipAddress);
+
     return WIFI_SUCCESS;
 }
 
@@ -928,32 +927,32 @@ WifiErrorCode AdvanceScan(WifiScanParams *params)
         return ERROR_WIFI_BUSY;
     }
     HalHmosWifiLock();
-    if (params != NULL) {
-        if (params->scanType == WIFI_FREQ_SCAN) {
-            chan[0] = HalHmosConvertFreqToChan(params->freqs);
-            /* free it by the thread HalHmosWifiEventThread */
-            scan_config.scan_info.channels = (int *)malloc(sizeof(chan));
-            if (scan_config.scan_info.channels != NULL) {
-                hmos_printf("%s chann =%p\n\r", __func__, scan_config.scan_info.channels);
-                memcpy(scan_config.scan_info.channels, chan, sizeof(chan));
-            }
-        } else if (params->scanType == WIFI_SSID_SCAN) {
-            /* free it by the thread HalHmosWifiEventThread */
-            scan_ssid = (struct bwifi_ssid *)malloc(sizeof(struct bwifi_ssid));
-            if (scan_ssid != NULL) {
 
-                memcpy(scan_ssid->ssid, params->ssid, params->ssidLen);
-                scan_config.scan_info.ssids = scan_ssid;
-                scan_ssid->next = NULL;
-                scan_ssid->ssid[(int)(0xff & params->ssidLen)] = '\0';
-                hmos_printf("%s ssid =%p ssid=%s\n\r", __func__, scan_ssid, scan_ssid->ssid);
-                ret = WIFI_SUCCESS;
-            }
-        } else {
-            printf("WIFI_BSSID_SCAN and WIFI_BAND_SCAN not support\n");
-            ret = ERROR_WIFI_INVALID_ARGS;
+    if (params->scanType == WIFI_FREQ_SCAN) {
+        chan[0] = HalHmosConvertFreqToChan(params->freqs);
+        /* free it by the thread HalHmosWifiEventThread */
+        scan_config.scan_info.channels = (int *)malloc(sizeof(chan));
+        if (scan_config.scan_info.channels != NULL) {
+            hmos_printf("%s chann =%p\n\r", __func__, scan_config.scan_info.channels);
+            memcpy(scan_config.scan_info.channels, chan, sizeof(chan));
         }
+    } else if (params->scanType == WIFI_SSID_SCAN) {
+        /* free it by the thread HalHmosWifiEventThread */
+        scan_ssid = (struct bwifi_ssid *)malloc(sizeof(struct bwifi_ssid));
+        if (scan_ssid != NULL) {
+
+            memcpy(scan_ssid->ssid, params->ssid, params->ssidLen);
+            scan_config.scan_info.ssids = scan_ssid;
+            scan_ssid->next = NULL;
+            scan_ssid->ssid[(int)(0xff & params->ssidLen)] = '\0';
+            hmos_printf("%s ssid =%p ssid=%s\n\r", __func__, scan_ssid, scan_ssid->ssid);
+            ret = WIFI_SUCCESS;
+        }
+    } else {
+        printf("WIFI_BSSID_SCAN and WIFI_BAND_SCAN not support\n");
+        ret = ERROR_WIFI_INVALID_ARGS;
     }
+
     ret = ((HalHmosSendEvent(HMOS_ON_WIFI_SCAN_STATE_CHANGED, &scan_config) == 0) ? WIFI_SUCCESS : ERROR_WIFI_BUSY);
     HalHmosWifiUnLock();
 

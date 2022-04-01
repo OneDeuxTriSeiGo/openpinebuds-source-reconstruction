@@ -55,9 +55,9 @@
 MEMORY
 {
  ROM (rx) : ORIGIN = 0x00020000, LENGTH = 0x00010000
- FLASH (r) : ORIGIN = (0x2C000000 + 0x80000), LENGTH = (0x1000000 - ((0x2C000000 + 0x80000) - 0x2C000000))
- FLASH_NC (r) : ORIGIN = (((0x2C000000 + 0x80000)) - 0x2C000000 + 0x28000000), LENGTH = (0x1000000 - ((0x2C000000 + 0x80000) - 0x2C000000))
- FLASHX (rx) : ORIGIN = (((0x2C000000 + 0x80000)) - 0x2C000000 + 0x0C000000), LENGTH = (0x1000000 - ((0x2C000000 + 0x80000) - 0x2C000000))
+ FLASH (r) : ORIGIN = (0x2C000000 + 0x80000), LENGTH = (0x2000000 - ((0x2C000000 + 0x80000) - 0x2C000000))
+ FLASH_NC (r) : ORIGIN = (((0x2C000000 + 0x80000)) - 0x2C000000 + 0x28000000), LENGTH = (0x2000000 - ((0x2C000000 + 0x80000) - 0x2C000000))
+ FLASHX (rx) : ORIGIN = (((0x2C000000 + 0x80000)) - 0x2C000000 + 0x0C000000), LENGTH = (0x2000000 - ((0x2C000000 + 0x80000) - 0x2C000000))
  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 0x180000-0x40000+0x30000-0x80000 - 0x16000
  RAMX (rx) : ORIGIN = 0x00200000, LENGTH = 0x180000-0x40000+0x30000-0x80000 - 0x16000
  FRAMX (rwx) : ORIGIN = 0x00200000 + 0x180000-0x40000+0x30000-0x80000 - 0x16000, LENGTH = 0x16000
@@ -243,6 +243,16 @@ SECTIONS
  {
   __sram_text_start__ = .;
   *:rtos_lib.o(.text*)
+  /*
+		   Enhance wifi throughput in the liteos system.
+		   include file *los_*, *driverif*, *sys_arch*, *sockets_porting*, *ethernetif*, *tcp*
+		 */
+  *los_*.o(.text*)
+  *driverif*.o(.text*)
+  *sys_arch*.o(.text*)
+  *sockets_porting*.o(.text*)
+  *ethernetif*.o(.text*)
+  *tcp*.o(.text*)
   *:hal_memsc.o(.text*)
   *:hal_trace.o(.text*)
   *:hal_trace_mod.o(.text*)
@@ -420,6 +430,16 @@ SECTIONS
     AT (__sram_text_data_start_flash__ + SIZEOF(.sram_text))
  {
   *:rtos_lib.o(.data* .rodata*)
+  /*
+		   Enhance wifi throughput in the liteos system.
+		   include file *los_*, *driverif*, *sys_arch*, *sockets_porting*, *ethernetif*, *tcp*
+		 */
+  *los_*.o(.data* .rodata*)
+  *driverif*.o(.data* .rodata*)
+  *sys_arch*.o(.data* .rodata*)
+  *sockets_porting*.o(.data* .rodata*)
+  *ethernetif*.o(.data* .rodata*)
+  *tcp*.o(.data* .rodata*)
   *:utils.o(.data* .rodata*)
   *:cqueue.o(.data* .rodata*)
   *:iir_process.o(.data* .rodata*)

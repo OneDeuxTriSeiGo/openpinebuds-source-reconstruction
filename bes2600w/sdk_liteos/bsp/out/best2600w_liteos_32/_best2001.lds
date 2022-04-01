@@ -243,6 +243,16 @@ SECTIONS
  {
   __sram_text_start__ = .;
   *:rtos_lib.o(.text*)
+  /*
+		   Enhance wifi throughput in the liteos system.
+		   include file *los_*, *driverif*, *sys_arch*, *sockets_porting*, *ethernetif*, *tcp*
+		 */
+  *los_*.o(.text*)
+  *driverif*.o(.text*)
+  *sys_arch*.o(.text*)
+  *sockets_porting*.o(.text*)
+  *ethernetif*.o(.text*)
+  *tcp*.o(.text*)
   *:hal_memsc.o(.text*)
   *:hal_trace.o(.text*)
   *:hal_trace_mod.o(.text*)
@@ -420,6 +430,16 @@ SECTIONS
     AT (__sram_text_data_start_flash__ + SIZEOF(.sram_text))
  {
   *:rtos_lib.o(.data* .rodata*)
+  /*
+		   Enhance wifi throughput in the liteos system.
+		   include file *los_*, *driverif*, *sys_arch*, *sockets_porting*, *ethernetif*, *tcp*
+		 */
+  *los_*.o(.data* .rodata*)
+  *driverif*.o(.data* .rodata*)
+  *sys_arch*.o(.data* .rodata*)
+  *sockets_porting*.o(.data* .rodata*)
+  *ethernetif*.o(.data* .rodata*)
+  *tcp*.o(.data* .rodata*)
   *:utils.o(.data* .rodata*)
   *:cqueue.o(.data* .rodata*)
   *:iir_process.o(.data* .rodata*)

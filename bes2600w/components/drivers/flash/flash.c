@@ -25,6 +25,8 @@
 #include "pmu.h"
 #include "crc32_c.h"
 
+#define FLASH_RW_STATISTICS
+
 #if BES_HAL_DEBUG
 #define ENTER_FUNCTION() printf("%s enter ->\n", __FUNCTION__)
 #define LEAVE_FUNCTION() printf("%s <- leave\n", __FUNCTION__)
@@ -90,6 +92,7 @@ user_writeable_flash_info user_writeable_partitions[] = {
     {"factory", HAL_PARTITION_ENV},
     {"factory_backup", HAL_PARTITION_ENV_REDUND},
     {"system_mini", HAL_PARTITION_SYSTEM_MINI},
+    {"userdata", HAL_PARTITION_USERDATA},
 };
 
 struct HAL_FLASH_BAD_INFO g_flashBadInfo[BLOCK_MAX_INFO];
@@ -375,11 +378,12 @@ int32_t hal_flash_erase(hal_partition_t in_partition, uint32_t off_set, uint32_t
     }
 
     start_addr = info.partition_start_addr + off_set;
+#ifdef FLASH_RW_STATISTICS
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_ERASE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-
+#endif
     ret = flash_erase(start_addr, size);
     if (!ret) {
         goto RETURN;
@@ -431,12 +435,12 @@ int32_t hal_flash_write(hal_partition_t in_partition, uint32_t *off_set, const v
         in_buf_len = partition_end - start_addr;
         TRACE(0, "flash over write, new len is %d\r\n", in_buf_len);
     }
-
+#ifdef FLASH_RW_STATISTICS
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_WRITE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-
+#endif
     ret = flash_write(start_addr, in_buf, in_buf_len);
     if (!ret) {
         *off_set += in_buf_len;
@@ -489,12 +493,12 @@ int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set, c
         in_buf_len = partition_end - start_addr;
         TRACE(0, "flash over write, new len is %d\r\n", in_buf_len);
     }
-
+#ifdef FLASH_RW_STATISTICS
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_ERASE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-
+#endif
     ret = flash_erase(start_addr, in_buf_len);
     if (ret) {
         TRACE(0, "flash erase fail\r\n");
@@ -502,12 +506,12 @@ int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set, c
         SetFlashBadOptionInfo(in_partition, start_addr, FLASH_ERASE);
         goto RETURN;
     }
-
+#ifdef FLASH_RW_STATISTICS
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_WRITE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-
+#endif
     ret = flash_write(start_addr, in_buf, in_buf_len);
     if (!ret) {
         *off_set += in_buf_len;
@@ -547,11 +551,12 @@ int32_t hal_flash_read(hal_partition_t in_partition, uint32_t *off_set, void *ou
     }
 
     start_addr = info.partition_start_addr + *off_set;
+#ifdef FLASH_RW_STATISTICS
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_READ);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-
+#endif
     ret = flash_read(start_addr, out_buf, in_buf_len);
     if (!ret) {
         goto RETURN;
