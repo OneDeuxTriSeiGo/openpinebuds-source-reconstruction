@@ -62,17 +62,17 @@ typedef struct {
     int32_t handle;
     /** attribute list */
     BleGattAttr attrList;
-} OHOS_BleGattCharact;
+} BleGattCharact;
 static BtGattServerCallbacks * ohos_g_gattServ_cb = NULL;
 #define GATT_DECL_INCLUDED_SERVICE       { 0x02, 0x28 }
-OHOS_BleGattCharact ohos_g_gatt_att[10] = {0};
+BleGattCharact ohos_g_gatt_att[10] = {0};
 
 static char g_gattPrimaryService[GATT_SHORT_UUID_LEN] =        { 0x00, 0x28 };
 static char g_gattCharacteristicUuid[GATT_SHORT_UUID_LEN] =    { 0x03, 0x28 };
 static char g_gattCharacteristicCfgUuid[GATT_SHORT_UUID_LEN] = { 0x02, 0x29 };
 
 
-static unsigned char  BesGattServerSwapProp(int prop)
+static unsigned char BesGattServerSwapProp(int prop)
 {
     unsigned char bes_prop = 0;
 
@@ -100,7 +100,7 @@ static unsigned char  BesGattServerSwapProp(int prop)
     return bes_prop;
 }
 
-static unsigned char  BesGattServerSwapPerm(unsigned char perm)
+static unsigned char BesGattServerSwapPerm(unsigned char perm)
 {
     unsigned char bes_perm = 0;
 
@@ -141,7 +141,7 @@ static uint8_t ohos_Encryption_levle_to_bes(BleSecAct secAct)
         case OHOS_BLE_SEC_ENCRYPT_MITM:
             encryptLevel = (GAP_AUTH_SEC_CON | GAP_AUTH_MITM | GAP_AUTH_BOND);
             break;
-        defalut :
+        default:
             encryptLevel = (GAP_AUTH_SEC_CON | GAP_AUTH_MITM | GAP_AUTH_BOND);
             break;
     }
@@ -437,7 +437,7 @@ static void BesGattServerRegisterCallback(void)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsRegister(BtUuid appUuid)
+int BleGattsRegister(BtUuid appUuid)
 {
     int32_t server_if = 0;
     int status  = BT_STS_SUCCESS;
@@ -479,7 +479,7 @@ int OHOS_BleGattsRegister(BtUuid appUuid)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
- int OHOS_BleGattsUnRegister(int serverId)
+ int BleGattsUnRegister(int serverId)
 {
     bes_gatt_server_unregister_service(serverId);
     BTA_TRACE(1, "%s", __func__);
@@ -496,7 +496,7 @@ int OHOS_BleGattsRegister(BtUuid appUuid)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsDisconnect(int serverId, BdAddr bdAddr, int connId)
+int BleGattsDisconnect(int serverId, BdAddr bdAddr, int connId)
 {
     // todo
     int status = OHOS_GATT_SUCCESS;
@@ -527,7 +527,7 @@ int OHOS_BleGattsDisconnect(int serverId, BdAddr bdAddr, int connId)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsAddService(int serverId, BtUuid srvcUuid, bool isPrimary, int number)
+int BleGattsAddService(int serverId, BtUuid srvcUuid, bool isPrimary, int number)
 {
     int status = BT_STS_SUCCESS;
     bes_adapter_attm_item_t att_item;
@@ -571,7 +571,7 @@ int OHOS_BleGattsAddService(int serverId, BtUuid srvcUuid, bool isPrimary, int n
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsAddIncludedService(int serverId, int srvcHandle, int includedHandle)
+int BleGattsAddIncludedService(int serverId, int srvcHandle, int includedHandle)
 {
     uint8_t included_uuid[2] = GATT_DECL_INCLUDED_SERVICE;
     bes_adapter_attm_item_t att_item;
@@ -617,7 +617,7 @@ int OHOS_BleGattsAddIncludedService(int serverId, int srvcHandle, int includedHa
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsAddCharacteristic(int serverId, int srvcHandle, BtUuid characUuid,
+int BleGattsAddCharacteristic(int serverId, int srvcHandle, BtUuid characUuid,
                             int properties, int permissions)
 
 {
@@ -666,7 +666,7 @@ int OHOS_BleGattsAddCharacteristic(int serverId, int srvcHandle, BtUuid characUu
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsAddDescriptor(int serverId, int srvcHandle, BtUuid descUuid, int permissions, int properties)
+int BleGattsAddDescriptor(int serverId, int srvcHandle, BtUuid descUuid, int permissions)
 {
     bes_adapter_attm_item_t att_item;
     int status = BT_STS_SUCCESS;
@@ -681,7 +681,7 @@ int OHOS_BleGattsAddDescriptor(int serverId, int srvcHandle, BtUuid descUuid, in
             att_item.ext_perm = 256;
         else
             att_item.ext_perm = 0;
-        att_item.prop = BesGattServerSwapProp(properties);
+        att_item.prop = 0;
         att_item.perm = BesGattServerSwapPerm(permissions);
         descr_handle = service_db->start_handle + service_db->handle_offset;
         status = bes_gatt_server_add_att_item(serverId,
@@ -708,7 +708,7 @@ int OHOS_BleGattsAddDescriptor(int serverId, int srvcHandle, BtUuid descUuid, in
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsStartService(int serverId, int srvcHandle)
+int BleGattsStartService(int serverId, int srvcHandle)
 {
     int status = BT_STS_SUCCESS;
     bes_adapter_ble_service_db_t* service_db = btadapter_ble_service_get_service_by_if(serverId);
@@ -737,7 +737,7 @@ int OHOS_BleGattsStartService(int serverId, int srvcHandle)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsStopService(int serverId, int srvcHandle)
+int BleGattsStopService(int serverId, int srvcHandle)
 {
     int status = OHOS_BT_STATUS_FAIL;
     bes_adapter_ble_service_db_t* service_db = btadapter_ble_service_get_service_by_if(serverId);
@@ -766,7 +766,7 @@ int OHOS_BleGattsStopService(int serverId, int srvcHandle)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsDeleteService(int serverId, int srvcHandle)
+int BleGattsDeleteService(int serverId, int srvcHandle)
 {
     int status = OHOS_BT_STATUS_FAIL;
     return status;
@@ -779,7 +779,7 @@ int OHOS_BleGattsDeleteService(int serverId, int srvcHandle)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsClearServices(int serverId)
+int BleGattsClearServices(int serverId)
 {
     int status = OHOS_BT_STATUS_FAIL;
     return status;
@@ -794,7 +794,7 @@ int OHOS_BleGattsClearServices(int serverId)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsSendResponse(int serverId, GattsSendRspParam *param)
+int BleGattsSendResponse(int serverId, GattsSendRspParam *param)
 {
     if (param == NULL){
         return -1;
@@ -835,7 +835,7 @@ int OHOS_BleGattsSendResponse(int serverId, GattsSendRspParam *param)
  * @since 6
  */
 
-int OHOS_BleGattsSendIndication(int serverId, GattsSendIndParam *param)
+int BleGattsSendIndication(int serverId, GattsSendIndParam *param)
 {
     if (param == NULL){
         return -1;
@@ -867,7 +867,7 @@ int OHOS_BleGattsSendIndication(int serverId, GattsSendIndParam *param)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattsSetEncryption(BdAddr bdAddr, BleSecAct secAct)
+int BleGattsSetEncryption(BdAddr bdAddr, BleSecAct secAct)
 {
     app_set_authen_level(ohos_Encryption_levle_to_bes(secAct));
     return OHOS_BT_STATUS_SUCCESS;
@@ -882,7 +882,7 @@ int OHOS_BleGattsSetEncryption(BdAddr bdAddr, BleSecAct secAct)
  * @since 6
  */
 extern void BleRegisterConnCallback(void);
-int OHOS_BleGattsRegisterCallbacks(BtGattServerCallbacks *func)
+int BleGattsRegisterCallbacks(BtGattServerCallbacks *func)
 {
     if(func)
     {
@@ -907,15 +907,15 @@ int OHOS_BleGattsRegisterCallbacks(BtGattServerCallbacks *func)
  * @since 6
  */
 
-int OHOS_BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
+int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
 {
     int status = OHOS_BT_STATUS_SUCCESS;
     int32_t server_id = 0;
     static int32_t handle_offset = 0;
     static int32_t att_num = 0;
-    BTA_TRACE(4, "%s:srvcHandle:%p srvcInfo:%p srvcIndfo->attrNum:%d\n", __func__, srvcHandle, srvcInfo,srvcInfo->attrNum);
 
     if (srvcHandle && srvcInfo && srvcInfo->attrList) {
+        BTA_TRACE(4, "%s:srvcHandle:%p srvcInfo:%p srvcIndfo->attrNum:%d\n", __func__, srvcHandle, srvcInfo,srvcInfo->attrNum);
         for (int i=0; i<srvcInfo->attrNum; i++)
         {
             BTA_TRACE(3, "%s:srvcInfo->attrList[%d].attrType=%d\n", __func__, i, srvcInfo->attrList[i].attrType);
@@ -935,8 +935,8 @@ int OHOS_BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     BTA_TRACE(2, "%s:serUuid:%p \n", __func__, serUuid.uuid);
                     bes_adapter_attm_item_t att_item;
                     bes_adapter_ble_service_db_t* service_db = btadapter_ble_service_get_service_by_if(server_id);
-                    BTA_TRACE(3, "%s:service_db:%p %d\n", __func__, service_db,service_db->nattb);
-                    if(service_db){
+                    if (service_db) {
+                        BTA_TRACE(3, "%s:service_db:%p %d\n", __func__, service_db, service_db->nattb);
                         memset(&att_item, 0 ,sizeof(att_item));
                         service_db->nattb = srvcInfo->attrNum;
                         service_db->is_primary = true;
@@ -963,7 +963,7 @@ int OHOS_BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     BtUuid characUuid;
                     characUuid.uuid = g_gattCharacteristicUuid;
                     characUuid.uuidLen = sizeof(g_gattCharacteristicUuid);
-                    OHOS_BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, OHOS_GATT_CHARACTER_PROPERTY_BIT_READ, OHOS_GATT_PERMISSION_READ);
+                    BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, OHOS_GATT_CHARACTER_PROPERTY_BIT_READ, OHOS_GATT_PERMISSION_READ);
                     handle_offset ++;
                     break;
                 }
@@ -972,7 +972,7 @@ int OHOS_BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     BtUuid characUuid;
                     characUuid.uuid = srvcInfo->attrList[i].uuid;
                     characUuid.uuidLen = OHOS_BLE_UUID_MAX_LEN;
-                    OHOS_BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, srvcInfo->attrList[i].properties, srvcInfo->attrList[i].permission);
+                    BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, srvcInfo->attrList[i].properties, srvcInfo->attrList[i].permission);
                     ohos_g_gatt_att[att_num].start_hdl = *srvcHandle;
                     ohos_g_gatt_att[att_num].end_hdl = *srvcHandle + MAX_GATT_ATT_NUM;
                     ohos_g_gatt_att[att_num].handle = *srvcHandle + handle_offset;
@@ -987,18 +987,18 @@ int OHOS_BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     BtUuid characUuid;
                     characUuid.uuid = g_gattCharacteristicCfgUuid;
                     characUuid.uuidLen = sizeof(g_gattCharacteristicCfgUuid);
-                    OHOS_BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, OHOS_GATT_CHARACTER_PROPERTY_BIT_READ, OHOS_GATT_PERMISSION_READ);
+                    BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, OHOS_GATT_CHARACTER_PROPERTY_BIT_READ, OHOS_GATT_PERMISSION_READ);
                     handle_offset ++;
                     break;
                 }
                 case OHOS_BLE_ATTRIB_TYPE_CHAR_USER_DESCR:
                 {
-                    BtUuid characUuid;
-                    characUuid.uuid = srvcInfo->attrList[i].uuid;
-                    characUuid.uuidLen = OHOS_BLE_UUID_MAX_LEN;
+                    BtUuid descUuid;
+                    descUuid.uuid = srvcInfo->attrList[i].uuid;
+                    descUuid.uuidLen = OHOS_BLE_UUID_MAX_LEN;
                     TRACE(2,"%s permission is %d",__func__,srvcInfo->attrList[i].permission);
-                    DUMP8("%02x ",characUuid.uuid,OHOS_BLE_UUID_MAX_LEN);
-                    OHOS_BleGattsAddDescriptor(server_id, *srvcHandle, characUuid, srvcInfo->attrList[i].permission,srvcInfo->attrList[i].properties);
+                    DUMP8("%02x ",descUuid.uuid,OHOS_BLE_UUID_MAX_LEN);
+                    BleGattsAddDescriptor(server_id, *srvcHandle, descUuid, srvcInfo->attrList[i].permission);
 
                     ohos_g_gatt_att[att_num].start_hdl = *srvcHandle;
                     ohos_g_gatt_att[att_num].end_hdl = *srvcHandle + MAX_GATT_ATT_NUM;
@@ -1011,7 +1011,7 @@ int OHOS_BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                 default:break;
             }
         }
-        OHOS_BleGattsStartService(server_id, *srvcHandle);
+        BleGattsStartService(server_id, *srvcHandle);
     }
     return status;
 }

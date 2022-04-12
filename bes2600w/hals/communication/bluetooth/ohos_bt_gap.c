@@ -148,7 +148,7 @@ static void set_bt_scan_limited_mode(int mode, int duration)
  * @return Returns <b>true</b> if the operation is accepted;
  *         returns <b>false</b> if the operation is rejected.
  */
-bool OHOS_EnableBle(void)
+bool EnableBle(void)
 {
     if (bt_ble_switch == 0)
     {
@@ -168,7 +168,7 @@ bool OHOS_EnableBle(void)
  * @return Returns <b>true</b> if the operation is accepted;
  *         returns <b>false</b> if the operation is rejected.
  */
-bool OHOS_DisableBle(void)
+bool DisableBle(void)
 {
     if (bt_ble_switch == 1)
     {
@@ -184,7 +184,7 @@ bool OHOS_DisableBle(void)
  * @return Returns <b>true</b> if the operation is accepted;
  *         returns <b>false</b> if the operation is rejected.
  */
-bool OHOS_EnableBt(void)
+bool EnableBt(void)
 {
     LOG_I("%s", __func__);
 #ifdef IBRT
@@ -204,7 +204,7 @@ bool OHOS_EnableBt(void)
  * @return Returns <b>true</b> if the operation is accepted;
  *         returns <b>false</b> if the operation is rejected.
  */
-bool OHOS_DisableBt(void)
+bool DisableBt(void)
 {
     LOG_I("%s", __func__);
 #ifdef IBRT
@@ -225,7 +225,7 @@ bool OHOS_DisableBt(void)
  *
  * @return Returns classic enable/disable state, {@link BtStackState}.
  */
-int OHOS_GetBtState()
+int GetBtState()
 {
     return bt_ble_switch;
 }
@@ -236,7 +236,7 @@ int OHOS_GetBtState()
  * @return Returns <b>true</b> if ble is enabled;
  *         returns <b>false</b> if ble is not enabled.
  */
-bool OHOS_IsBleEnabled()
+bool IsBleEnabled()
 {
     return bt_ble_switch;
 }
@@ -247,7 +247,7 @@ bool OHOS_IsBleEnabled()
  * @return Returns <b>true</b> if the operation is accepted;
  *         returns <b>false</b> if the operation is rejected.
  */
-bool OHOS_GetLocalAddr(unsigned char *mac, unsigned int len)
+bool GetLocalAddr(unsigned char *mac, unsigned int len)
 {
     uint8_t *bt_addr = factory_section_get_bt_address();
     if (!bt_addr) {
@@ -271,7 +271,7 @@ bool OHOS_GetLocalAddr(unsigned char *mac, unsigned int len)
            length - localName length, initail set length to zero, and call this func to set real length
  *  @return Local host bluetooth name
  */
-bool OHOS_GetLocalName(unsigned char *localName, unsigned char *length)
+bool GetLocalName(unsigned char *localName, unsigned char *length)
 {
     uint8_t* l_name = NULL;
      uint8_t * bt_addr = NULL;
@@ -318,7 +318,7 @@ bool OHOS_GetLocalName(unsigned char *localName, unsigned char *length)
  * @return Returns <b>true</b> if the operation is successful;
  *         returns <b>false</b> if the operation fails.
  */
-bool OHOS_SetLocalName(unsigned char *localName, unsigned char length)
+bool SetLocalName(unsigned char *localName, unsigned char length)
 {
     if (localName == NULL){
         return false;
@@ -341,7 +341,7 @@ bool OHOS_SetLocalName(unsigned char *localName, unsigned char length)
  * @return Returns <b>true</b> if the operation is successful;
  *         returns <b>false</b> if the operation fails.
  */
-bool OHOS_BluetoothFactoryReset(void)
+bool BluetoothFactoryReset(void)
 {
     LOG_I("%s", __func__);
     bt_bdaddr_t invalid_addr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
@@ -361,13 +361,13 @@ bool OHOS_BluetoothFactoryReset(void)
  * @param duration Scan time, see details {@link GapBtScanMode}
  * @return special mode
  */
-int OHOS_GetBtScanMode(void)
+int GetBtScanMode(void)
 {
     return bt_scan_mode;
 
 }
 #ifdef IBRT
-void ohos_bt_scan_mode_handler(int scanMode, int duration)
+void bt_scan_mode_handler(int scanMode, int duration)
 {
     if (scanMode == BTIF_BAM_NOT_ACCESSIBLE)
     {
@@ -396,7 +396,7 @@ void ohos_bt_scan_mode_handler(int scanMode, int duration)
  * @return Returns <b>true</b> if the operation is successful;
  *         returns <b>false</b> if the operation fails.
  */
-bool OHOS_SetBtScanMode(int mode, int duration)
+bool SetBtScanMode(int mode, int duration)
 {
     LOG_I("%s mode=%d duration=%d", __func__, mode, duration);
     const btif_access_mode_info_t info = {0x800, 0x12, 0x800, 0x12};
@@ -412,12 +412,12 @@ bool OHOS_SetBtScanMode(int mode, int duration)
         bt_access_mode.ux_scan_duration = (uint32_t)duration;
         if (tws_ctrl_send_cmd(APP_TWS_CMD_SYNC_SCAN_MODE, (uint8_t*)&bt_access_mode, sizeof(bt_access_mode)) != 0)
         {
-            ohos_bt_scan_mode_handler(scanMode, duration);
+            bt_scan_mode_handler(scanMode, duration);
         }
     }
     else
     {
-        ohos_bt_scan_mode_handler(scanMode, duration);
+        bt_scan_mode_handler(scanMode, duration);
     }
     return true;
 #else
@@ -443,14 +443,14 @@ bool OHOS_SetBtScanMode(int mode, int duration)
  * @param pairList - 按照maxPairNums申请的设备列表数�?          maxPairNums - 指定需要获取的设备列表最大个�?          realPairNums - 实际的配对设备列表个�? * @return Returns <b>true</b> if the operation is successful;
  *         returns <b>false</b> if the operation fails.
  */
-bool OHOS_GetPariedDevicesNum(unsigned int *number)
+bool GetPariedDevicesNum(unsigned int *number)
 {
     *number = nv_record_get_paired_dev_count();
     LOG_I("%s paried num:%d", __func__, *number);
     return true;
 }
 
-bool OHOS_GetPairedDevicesList(PairedDeviceInfo *devInfo, int *number)
+bool GetPairedDevicesList(PairedDeviceInfo *devInfo, int *number)
 {
     LOG_I("%s", __func__);
     btif_device_record_t record;
@@ -474,7 +474,7 @@ bool OHOS_GetPairedDevicesList(PairedDeviceInfo *devInfo, int *number)
  * @param device Remote device.
  * @return Returns device pair state. see detail {@link GapBtPairedState}
  */
-int OHOS_GetPairState()
+int GetPairState()
 {
     return g_BtPairedState;
 }
@@ -485,7 +485,7 @@ int OHOS_GetPairState()
  * @return Returns <b>true</b> if the operation is successful;
  *         returns <b>false</b> if the operation fails.
  */
-bool OHOS_RemovePair(const BdAddr addr)
+bool RemovePair(const BdAddr addr)
 {
     LOG_I("%s addr:%02x %02x %02x", __func__);
     nv_record_ddbrec_delete((bt_bdaddr_t*)&addr);
@@ -498,7 +498,7 @@ bool OHOS_RemovePair(const BdAddr addr)
  * @return Returns <b>true</b> if the operation is successful;
  *         returns <b>false</b> if the operation fails.
  */
-bool OHOS_RemoveAllPairs(void)
+bool RemoveAllPairs(void)
 {
     LOG_I("doing factory reset");
     //if ibrt connected, need stop ibrt and disconnect tws link firstly.
@@ -509,7 +509,7 @@ bool OHOS_RemoveAllPairs(void)
         osDelay(2000);
     }
 #endif
-    app_bt_call_func_in_bt_thread(0, 0, 0, 0, (uint32_t)OHOS_BluetoothFactoryReset);
+    app_bt_call_func_in_bt_thread(0, 0, 0, 0, (uint32_t)BluetoothFactoryReset);
     return true;
 }
 /**
@@ -518,7 +518,7 @@ bool OHOS_RemoveAllPairs(void)
  * @return Returns <b>true</b> if device acl connected;
  *         returns <b>false</b> if device does not acl connect.
  */
-bool OHOS_IsAclConnected(BdAddr addr)
+bool IsAclConnected(BdAddr addr)
 {
     struct BT_DEVICE_T *curr_device = NULL;
     for(int i=0;i<BT_DEVICE_NUM;i++)
@@ -539,7 +539,7 @@ bool OHOS_IsAclConnected(BdAddr addr)
  * @return Returns <b>true</b> if device acl connected;
  *         returns <b>false</b> if device does not acl connect.
  */
-bool OHOS_DisconnectRemoteDevice(BdAddr *addr)
+bool DisconnectRemoteDevice(BdAddr *addr)
 {
     if (addr)
     {
@@ -568,7 +568,7 @@ static void bt_pair_state_change(bt_bdaddr_t* addr, uint32_t para)
     g_BtPairedState = para;
 }
 
-int OHOS_GapRegisterCallbacks(BtGapCallBacks *func)
+int GapRegisterCallbacks(BtGapCallBacks *func)
 {
     LOG_I("%s", __func__);
     ohos_g_gap_cb_func = func;
