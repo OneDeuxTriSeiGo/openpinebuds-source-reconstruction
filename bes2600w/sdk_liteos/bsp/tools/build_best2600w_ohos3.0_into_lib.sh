@@ -94,7 +94,7 @@ make_best2600w="make T=best2600w_liteos \
                 GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0x80000 \
                 CP_BOOT=1 LITTLEFS_PARTITION_SUPPORT=0 LITTLEFS_ENABLE=0 \
                 FAST_TIMER_COMPENSATE=1 WAPI_SUPPORT=0 \
-                USB_AUDIO_FS=0  \
+                USB_AUDIO_FS=0 DEBUG_SPP_LOG=1 \
                 AI_VOICE=0 LLD_PRINT_ENABLE=0 \
                 NET_LWIP_EXTERN=1 NET_LWIP_SUPPORT=0 SYS_TIME_IF=0 \
                 ${BUILDOPT_CP} $BUILDOPT_M33 DSP_BIN_NAME=$A7_DSP_BIN_NAME -j${JOBS} "
@@ -109,19 +109,19 @@ make_best2600w_mini="make T=best2600w_liteos_mini \
                 LIB_BIN_IN_SRC_DIR=1 \
                 MODULE_KERNEL_STUB=1 \
                 PSRAM_ENABLE=1 \
-                NET_LIBCURL_SUPPORT=1 \
-                NET_MBEDTLS_SUPPORT=1 \
                 NET_JANSSON_SUPPORT=0 \
                 NET_CJSON_SUPPORT=0 \
-                RF_TX_CONTROL_IO=12 \
+                RF_TX_CONTROL_IO=100 \
                 PA_ENABLE_IO=21 \
-                UART1_IOMUX_INDEX=20 \
-                USE_EXT_CONSOLE=1 REL_AT_C=0 AT_CMD=0  LITTLEFS_ENABLE=0 \
+                UART1_IOMUX_INDEX=02 \
                 NET_FTP_CLIENT_SUPPORT=0 UTILS_BES_KV=1 \
-                GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0xb00000 \
-                CP_BOOT=1 \
-                MBEDTLS_FS_IO=1 \
-                $BUILDOPT_CP -j${JOBS}"
+                GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0xB00000 \
+                CP_BOOT=1 LITTLEFS_PARTITION_SUPPORT=0 LITTLEFS_ENABLE=0 \
+                FAST_TIMER_COMPENSATE=1 WAPI_SUPPORT=0 \
+                USB_AUDIO_FS=0 DEBUG_SPP_LOG=1 \
+                AI_VOICE=0 LLD_PRINT_ENABLE=0 \
+                NET_LWIP_EXTERN=1 NET_LWIP_SUPPORT=0 SYS_TIME_IF=0 \
+                ${BUILDOPT_CP} $BUILDOPT_M33 DSP_BIN_NAME=$A7_DSP_BIN_NAME -j${JOBS} "
 
 ################################ functions list begin #########################
 BUILD_INFO_LIST=()
@@ -500,7 +500,8 @@ tools/lzma e out/cmcp/cmcp.bin out/cmcp/cmcp.bin.lzma
 mv out/cmcp/cmcp.bin.lzma out/cmcp/cmcp.bin
 # make_best2600w
 build_cmd make_best2600w
-
+# make_best2600w_mini
+build_cmd make_best2600w_mini
 fi
 
 # release script

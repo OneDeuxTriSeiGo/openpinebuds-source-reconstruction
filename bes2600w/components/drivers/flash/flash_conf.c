@@ -67,14 +67,14 @@ hal_logic_partition_t g_halPartitions[] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "cm33_main",
         .partition_start_addr = 0x80000,
-        .partition_length = 0x7E0000, //8064KB
+        .partition_length = 0x570000, //5768KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_SYSTEM_MINI] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "system_mini",
         .partition_start_addr = 0x860000,
-        .partition_length = 0x300000, //3072KB
+        .partition_length = 0x570000, //5768KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_RESOURCE] = {

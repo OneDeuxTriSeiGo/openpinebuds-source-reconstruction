@@ -179,7 +179,8 @@ int32_t MipiDsiDevGetCmd(struct MipiDsiCntlr *cntlr, struct DsiCmdDesc *cmd, uin
     if (!cmd || !cmd->payload || !out || readLen < 1) {
         return HDF_ERR_INVALID_PARAM;
     }
-    return hal_dsi_read_cmd(cmd->payload[0], out, readLen);
+    int ret = hal_dsi_read_cmd(cmd->payload[0], out, readLen);
+    return (ret == readLen) ? HDF_SUCCESS : HDF_FAILURE;
 }
 
 static void MipiDsiDevCallback(uint8_t layerId, uint8_t channel, uint32_t addr)

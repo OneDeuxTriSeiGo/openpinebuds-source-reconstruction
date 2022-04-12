@@ -75,7 +75,7 @@ static ohos_ble_adv_record g_ohos_adv_record[HARMONY_ADV_MAX_SIZE];
 
 static void adv_enable_timer_handler(void const *param)
 {
-    OHOS_BleStopAdv(*(uint8_t*)param);
+    BleStopAdv(*(uint8_t*)param);
     adv_timer_run_state = ADV_TIMER_IDLE;
 }
 
@@ -122,7 +122,7 @@ static uint8_t ohos_io_cap_to_bes(BleIoCapMode mode)
         case OHOS_BLE_IO_CAP_NONE:
             bes_io_cap = BTM_IO_NO_IO;
             break;
-        defalut :
+        default:
             bes_io_cap = BTM_IO_NO_IO;
             break;
     }
@@ -155,7 +155,7 @@ static uint8_t ohos_authreq_to_bes(uint8_t mode)
         case OHOS_BLE_AUTH_REQ_SC_MITM_BOND:
             bes_auth = GAP_AUTH_REQ_SEC_CON_BOND;
             break;
-        defalut :
+        default:
             bes_auth = GAP_AUTH_REQ_NO_MITM_BOND;
             break;
     }
@@ -243,7 +243,7 @@ void app_ble_custome_set_adv_para(int actv_user,
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_InitBtStack(void)
+int InitBtStack(void)
 {
     if(!app_is_stack_ready())
     {
@@ -259,7 +259,7 @@ int OHOS_InitBtStack(void)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_EnableBtStack(void)
+int EnableBtStack(void)
 {
     return OHOS_BT_STATUS_SUCCESS;
 }
@@ -271,7 +271,7 @@ int OHOS_EnableBtStack(void)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_DisableBtStack(void)
+int DisableBtStack(void)
 {
     return OHOS_BT_STATUS_SUCCESS;
 }
@@ -285,13 +285,14 @@ int OHOS_DisableBtStack(void)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_SetDeviceName(const char *name, unsigned int len)
+int SetDeviceName(const char *name, unsigned int len)
 {
+    int status = OHOS_BT_STATUS_FAIL;
     if(name){
-        factory_section_set_bt_name(name,len);  //bt name
-        return true;
+        status = factory_section_set_bt_name(name,len);  //bt name
+        return bes_status_to_ohos(status);
     }
-    return false;
+    return status;
 }
 
 /**
@@ -303,7 +304,7 @@ int OHOS_SetDeviceName(const char *name, unsigned int len)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleSetAdvData(int advId, const BleConfigAdvData *data)
+int BleSetAdvData(int advId, const BleConfigAdvData *data)
 {
     if (data == NULL){
         return -1;
@@ -337,7 +338,7 @@ int OHOS_BleSetAdvData(int advId, const BleConfigAdvData *data)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleStartAdv(int advId, const BleAdvParams *param)
+int BleStartAdv(int advId, const BleAdvParams *param)
 {
     if (param == NULL){
         return -1;
@@ -382,13 +383,13 @@ int OHOS_BleStartAdv(int advId, const BleAdvParams *param)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleStopAdv(int advId)
+int BleStopAdv(int advId)
 {
     ohos_ble_adv_record * advRecord = NULL;
 
     advRecord = BleGetAdvRecordByAdvId(advId);
     if(advRecord == NULL){
-        return -1;
+        return OHOS_BT_STATUS_FAIL;
     }
 
     app_ble_custom_adv_stop_3p(advRecord->adv_index);
@@ -397,7 +398,7 @@ int OHOS_BleStopAdv(int advId)
     if(ohos_g_gatt_callback){
         ohos_g_gatt_callback->advDisableCb(advId, 0);
     }
-    return 0;
+    return OHOS_BT_STATUS_SUCCESS;
 }
 
 /**
@@ -409,7 +410,7 @@ int OHOS_BleStopAdv(int advId)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleUpdateAdv(int advId, const BleConfigAdvData *data, const BleAdvParams *param)
+int BleUpdateAdv(int advId, const BleConfigAdvData *data, const BleAdvParams *param)
 {
     if (param == NULL){
         return -1;
@@ -455,7 +456,7 @@ int OHOS_BleUpdateAdv(int advId, const BleConfigAdvData *data, const BleAdvParam
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleSetSecurityIoCap(BleIoCapMode mode)
+int BleSetSecurityIoCap(BleIoCapMode mode)
 {
     uint8_t bes_io_cap = ohos_io_cap_to_bes(mode);
     app_sec_set_io_capabilities(bes_io_cap);
@@ -470,7 +471,7 @@ int OHOS_BleSetSecurityIoCap(BleIoCapMode mode)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleSetSecurityAuthReq(BleAuthReqMode mode)
+int BleSetSecurityAuthReq(BleAuthReqMode mode)
 {
     uint8_t authreq = ohos_authreq_to_bes(mode);
     app_sec_set_auth(authreq);
@@ -487,7 +488,7 @@ int OHOS_BleSetSecurityAuthReq(BleAuthReqMode mode)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattSecurityRsp(BdAddr bdAddr, bool accept)
+int BleGattSecurityRsp(BdAddr bdAddr, bool accept)
 {
     app_set_accept_ble_state(accept);
     return OHOS_BT_STATUS_SUCCESS;
@@ -521,13 +522,13 @@ void BleRegisterConnCallback(void)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_ReadBtMacAddr(unsigned char *mac, unsigned int len)
+int ReadBtMacAddr(unsigned char *mac, unsigned int len)
 {
     if (NULL == mac)
-        return false;
+        return OHOS_BT_STATUS_FAIL;
 
     memcpy(mac,factory_section_get_bt_address(),len);
-    return true;
+    return OHOS_BT_STATUS_SUCCESS;
 }
 
 /**
@@ -539,7 +540,7 @@ int OHOS_ReadBtMacAddr(unsigned char *mac, unsigned int len)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleSetScanParameters(int clientId, BleScanParams *param)
+int BleSetScanParameters(int clientId, BleScanParams *param)
 {
     memcpy(&blescanparamter,param,sizeof(BleScanParams));
     if(ohos_g_gatt_callback){
@@ -555,7 +556,7 @@ int OHOS_BleSetScanParameters(int clientId, BleScanParams *param)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleStartScan(void)
+int BleStartScan(void)
 {
     app_ble_start_scan(blescanparamter.scanFilterPolicy, blescanparamter.scanWindow, blescanparamter.scanInterval);
     return OHOS_BT_STATUS_SUCCESS;
@@ -568,7 +569,7 @@ int OHOS_BleStartScan(void)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleStopScan(void)
+int BleStopScan(void)
 {
     app_ble_stop_scan();
     return OHOS_BT_STATUS_SUCCESS;
@@ -595,7 +596,7 @@ static void ble_scan_result_callback(ble_bdaddr_t *bleAddr,int8_t rssi,uint8_t *
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleGattRegisterCallbacks(BtGattCallbacks *func)
+int BleGattRegisterCallbacks(BtGattCallbacks *func)
 {
     if (func != NULL) {
         if (func->securityRespondCb != NULL) {
@@ -633,7 +634,7 @@ int OHOS_BleGattRegisterCallbacks(BtGattCallbacks *func)
  * returns an error code defined in {@link BtStatus} otherwise.
  * @since 6
  */
-int OHOS_BleStartAdvEx(int *advId, const StartAdvRawData rawData, BleAdvParams advParam)
+int BleStartAdvEx(int *advId, const StartAdvRawData rawData, BleAdvParams advParam)
 {
     uint32_t duration;
     if (!adv_enable_timer_id) {
@@ -647,8 +648,8 @@ int OHOS_BleStartAdvEx(int *advId, const StartAdvRawData rawData, BleAdvParams a
     advData.scanRspLength = rawData.rspDataLen;
     duration = advParam.duration;
 
-    OHOS_BleSetAdvData(*advId, &advData);
-    OHOS_BleStartAdv(*advId, &advParam);
+    BleSetAdvData(*advId, &advData);
+    BleStartAdv(*advId, &advParam);
 
     if(duration != 0) {
         if (adv_timer_run_state == ADV_TIMER_IDLE) {

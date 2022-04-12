@@ -19,37 +19,49 @@
 
 unsigned int IoTFlashRead(unsigned int flashOffset, unsigned int size, unsigned char *ramData)
 {
-    unsigned int len = 0;
     int ret = hal_flash_read(HAL_PARTITION_RESOURCE,&flashOffset,ramData,size);
     if (ret == 0) {
-        len = flashOffset;
+        ret = IOT_SUCCESS;
+    } else {
+        ret = IOT_FAILURE;
     }
-    return len;
+    return ret;
 }
 
 unsigned int IoTFlashWrite(unsigned int flashOffset, unsigned int size,
                            const unsigned char *ramData, unsigned char doErase)
 {
-    int ret = -1;
+    int ret = IOT_FAILURE;
     if (doErase) {
         ret = hal_flash_write(HAL_PARTITION_RESOURCE,&flashOffset, ramData, size);
     } else {
         ret = hal_flash_erase_write(HAL_PARTITION_RESOURCE,&flashOffset, ramData, size);
+    }
+    if (ret == 0) {
+        ret = IOT_SUCCESS;
+    } else {
+        ret = IOT_FAILURE;
     }
     return ret;
 }
 
 unsigned int IoTFlashErase(unsigned int flashOffset, unsigned int size)
 {
-    return hal_flash_erase(HAL_PARTITION_RESOURCE,flashOffset, size);
+    int ret = hal_flash_erase(HAL_PARTITION_RESOURCE,flashOffset, size);
+    if (ret == 0) {
+        ret = IOT_SUCCESS;
+    } else {
+        ret = IOT_FAILURE;
+    }
+    return ret;
 }
 
 unsigned int IoTFlashInit(void)
 {
-    return 1;
+    return IOT_SUCCESS;
 }
 
 unsigned int IoTFlashDeinit(void)
 {
-    return 1;
+    return IOT_SUCCESS;
 }
