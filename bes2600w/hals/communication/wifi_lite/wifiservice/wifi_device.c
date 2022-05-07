@@ -29,6 +29,9 @@
 #include "lwip/tcpip.h"
 #include "cmsis_os2.h"
 #include "lwip_init.h"
+#ifdef WIFI_STORAGE
+#include "wifi_storage.h"
+#endif
 
 #define WIFI_MAX_CONFIG_BITMAP_SIZE    (((WIFI_MAX_CONFIG_SIZE) >> 3) + (WIFI_MAX_CONFIG_SIZE % 8? 1 : 0))
 #define HMOS_DEBUG
@@ -113,6 +116,9 @@ typedef struct {
     volatile HalHmosScanState   scan_state;
     uint8_t                       wifi_init;
     uint8_t                       hidden;
+#ifdef WIFI_STORAGE
+    uint8_t                       wifi_config_stored;
+#endif
     uint8_t                       hmos_event_thread_init;
     osMutexId                   hal_hmos_mutex_id;
     HalHmosWifiConfig           hmos_config_info;
@@ -305,6 +311,14 @@ WifiErrorCode HalHmosWifiEventInit(void)
     bwifi_reg_user_evt_handler(WIFI_USER_EVT_AP_STA_CONNECTED, HalHmosApEventStaJoin);
     bwifi_reg_user_evt_handler(WIFI_USER_EVT_AP_STA_DISCONNECTED, HalHmosApEventStaLeave);
 
+#ifdef WIFI_STORAGE
+    struct WifiDeviceConfig cfg = {0};
+    if (ReadWifiDeviceConfigFromFile(&cfg) == 0) {
+        g_HalHmosWifiInfo.wifi_config_stored = 1;
+    } else {
+        g_HalHmosWifiInfo.wifi_config_stored = 0;
+    }
+#endif
     g_HalHmosWifiInfo.hmos_event_thread_init = true;
     return WIFI_SUCCESS;
 }
@@ -720,6 +734,12 @@ WifiErrorCode AddDeviceConfig(const WifiDeviceConfig *config, int *result)
         *result = netId;
         ret = WIFI_SUCCESS;
     }
+#ifdef WIFI_STORAGE
+    // write the newest config
+    if (WriteWifiDeviceConfigToFile(config) != 0) {
+        ret = ERROR_WIFI_UNKNOWN;
+    }
+#endif
     HalHmosWifiUnLock();
     return ret;
 }
@@ -729,10 +749,10 @@ WifiErrorCode GetDeviceConfigs(WifiDeviceConfig *result, unsigned int *size)
     int i = 0 ;
     int cnt = 0;
     HalHmosWifiConfig  *hmos_config_info = &(g_HalHmosWifiInfo.hmos_config_info);
-
+#ifndef WIFI_STORAGE
     if (g_HalHmosWifiInfo.hmos_config_info.wifi_config_map[0 >> 3] == 0)
         return ERROR_WIFI_NOT_AVAILABLE;
-
+#endif
     HalHmosWifiLock();
     for (i = 0; i < WIFI_MAX_CONFIG_SIZE; i++) {
         hmos_printf("%s i=%d cnt=%d\n\r", __func__, i, cnt);
@@ -742,6 +762,17 @@ WifiErrorCode GetDeviceConfigs(WifiDeviceConfig *result, unsigned int *size)
         }
     }
     *size = cnt;
+
+#ifdef WIFI_STORAGE
+    if (cnt == 0) {
+        struct WifiDeviceConfig cfg = {0};
+        if (ReadWifiDeviceConfigFromFile(&cfg) == 0) {
+            memcpy(result, &cfg, sizeof(WifiDeviceConfig));
+            *size = 1;
+            HalHmosAddNetIdConfig(&(g_HalHmosWifiInfo.hmos_config_info), cfg.netId, &cfg);
+        }
+    }
+#endif
     HalHmosWifiUnLock();
     return WIFI_SUCCESS;
 }

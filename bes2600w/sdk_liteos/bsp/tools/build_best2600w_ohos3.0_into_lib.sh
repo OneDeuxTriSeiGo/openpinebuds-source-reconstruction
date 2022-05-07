@@ -45,14 +45,15 @@ buid_m33_arry=("make_best2600w" "make_best2600w_32" "make_best2600w_mini")
 BUILD_SE="false"
 BUILD_MINI="false"
 make_boot1="make T=ota_boot1 \
-            REMAP_SUPPORT=0 \
+            REMAP_SUPPORT=1 \
             BOOT2A_OFFSET=0x10000 \
             BOOT2B_OFFSET=0x20000 \
             BOOTINFO_OFFSET=0xFD0000 \
             all lst -j${JOBS}"
 
 make_boot2a="make T=ota_boot2a \
-            REMAP_SUPPORT=0 \
+            REMAP_SUPPORT=1 \
+            BOOTINFO_OFFSET=0xFD0000
             all lst -j${JOBS}"
 
 make_boot2b="make T=ota_boot2b \
@@ -115,7 +116,7 @@ make_best2600w_mini="make T=best2600w_liteos_mini \
                 PA_ENABLE_IO=21 \
                 UART1_IOMUX_INDEX=02 \
                 NET_FTP_CLIENT_SUPPORT=0 UTILS_BES_KV=1 \
-                GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0xB00000 \
+                GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0x5F0000 \
                 CP_BOOT=1 LITTLEFS_PARTITION_SUPPORT=0 LITTLEFS_ENABLE=0 \
                 FAST_TIMER_COMPENSATE=1 WAPI_SUPPORT=0 \
                 USB_AUDIO_FS=0 DEBUG_SPP_LOG=1 \

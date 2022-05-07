@@ -25,7 +25,7 @@
 #include "pmu.h"
 #include "crc32_c.h"
 
-#define FLASH_RW_STATISTICS
+// #define FLASH_RW_STATISTICS
 
 #if BES_HAL_DEBUG
 #define ENTER_FUNCTION() printf("%s enter ->\n", __FUNCTION__)
@@ -91,6 +91,7 @@ user_writeable_flash_info user_writeable_partitions[] = {
     {"misc", HAL_PARTITION_MISC},
     {"factory", HAL_PARTITION_ENV},
     {"factory_backup", HAL_PARTITION_ENV_REDUND},
+    {"cm33_main", HAL_PARTITION_CM33_MAIN},
     {"system_mini", HAL_PARTITION_SYSTEM_MINI},
     {"userdata", HAL_PARTITION_USERDATA},
 };
@@ -261,7 +262,8 @@ static int32_t SetFlashOptionInfo(hal_partition_t partition, uint32_t size, uint
 {
     uint32_t blockNum;
 
-    if (((partition != HAL_PARTITION_DATA) && (partition != HAL_PARTITION_LOG) && (partition != HAL_PARTITION_RESOURCE)) || (option >= MAX_FLASH_OPTIONS)) {
+    if (((partition != HAL_PARTITION_DATA) && (partition != HAL_PARTITION_LOG) && \
+        (partition != HAL_PARTITION_RESOURCE)) || (option >= MAX_FLASH_OPTIONS)) {
         TRACE(0, "%s---%d----%d-----%d\r\n", __FUNCTION__, partition, size, option);
         return -1;
     }
@@ -1070,7 +1072,7 @@ static int ota_partition_read_erase_write(const hal_partition_t partition, uint3
     return ret;
 }
 
-static int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr)
+int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr)
 {
     int ret;
     uint32_t num;
@@ -1152,7 +1154,7 @@ int ota_flash_write(const hal_partition_t partition, const uint32_t addr, const 
         }
     }
 
-    ota_partition_check_magic(partition, addr);
+    //ota_partition_check_magic(partition, addr);
 
 end:
     pmu_flash_read_config();

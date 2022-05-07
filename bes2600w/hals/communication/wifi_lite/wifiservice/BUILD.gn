@@ -12,6 +12,11 @@
 # limitations under the License.
 
 import("//device/bestechnic/bes2600w/components/components.gni")
+
+declare_args() {
+  bes_wifi_storage_enable = true
+}
+
 static_library("wifiservice") {
   sources = [
     "wifi_device.c",
@@ -30,5 +35,14 @@ static_library("wifiservice") {
     defines = [
     "SOFTAP_ENABLE",
     ]
+  }
+
+  if (bes_wifi_storage_enable) {
+    defines += [
+      "WIFI_STORAGE",
+      #"WIFI_SECURITY_STORAGE",
+    ]
+    sources += [ "wifi_storage.c" ]
+    deps += [ "//third_party/mbedtls:mbedtls_static" ]
   }
 }

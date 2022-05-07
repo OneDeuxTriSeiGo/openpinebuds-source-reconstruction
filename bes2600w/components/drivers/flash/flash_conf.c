@@ -73,7 +73,7 @@ hal_logic_partition_t g_halPartitions[] = {
     [HAL_PARTITION_SYSTEM_MINI] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "system_mini",
-        .partition_start_addr = 0x860000,
+        .partition_start_addr = 0x5F0000,
         .partition_length = 0x570000, //5768KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
