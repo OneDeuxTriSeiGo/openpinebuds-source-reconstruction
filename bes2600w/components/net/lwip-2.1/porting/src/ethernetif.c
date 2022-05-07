@@ -327,8 +327,6 @@ liteos_low_level_output(struct netif *netif, struct pbuf *p)
 void
 ethernetif_input(u16_t devnum, void *p_buf, int size)
 {
-    TRACE(0, "%s %d, %d", __func__, __LINE__, size);
-
     struct eth_hdr *ethhdr;
     struct netif *netif;
     struct pbuf *p;

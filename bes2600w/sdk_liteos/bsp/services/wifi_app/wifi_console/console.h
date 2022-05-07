@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-#define CMD_CBSIZE       128
+#define CMD_CBSIZE       168
 #define CMD_PROMPT       "best_wifi> "
 #define CMD_MAXARGS      16
 #define CMD_LIST_COUNT   128

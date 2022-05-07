@@ -305,6 +305,8 @@ int32_t GetFlashRewriteCycle(hal_partition_t partition, uint32_t blockNum, uint3
 
 int32_t GetFlashBadBlockNum(hal_partition_t partition, uint32_t *blockNum);
 
+int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr);
+
 #ifdef __cplusplus
 }
 #endif
