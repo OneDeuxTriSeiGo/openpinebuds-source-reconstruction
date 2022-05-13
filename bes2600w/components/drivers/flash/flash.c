@@ -24,9 +24,10 @@
 #include "cmsis.h"
 #include "pmu.h"
 #include "crc32_c.h"
+#include "app_flash_api.h"
+//extern void watchdog_ping(void);
 
-// #define FLASH_RW_STATISTICS
-
+//#define APP_FLASH_API_USED
 #if BES_HAL_DEBUG
 #define ENTER_FUNCTION() printf("%s enter ->\n", __FUNCTION__)
 #define LEAVE_FUNCTION() printf("%s <- leave\n", __FUNCTION__)
@@ -41,19 +42,24 @@
 #define FAIL_FUNCTION() printf("%s:%d fail!\n", __FUNCTION__, __LINE__)
 
 #define FLASH_PAGE_SIZE_IN_BYTES 256
-#define OTA_MALLOC_BUF_SIZE FLASH_BLOCK_SIZE_IN_BYTES
-#define ONE_BLOCK_SIZE (64 * 1024)
-#define BLOCK_MAX_INFO 40
-#define RW_MAX_BLOCK 13
-#define RW_MAX_PARTITION 3
-#define MAX_FLASH_OPTIONS 3
+#define OTA_MALLOC_BUF_SIZE      FLASH_BLOCK_SIZE_IN_BYTES
+#define ONE_BLOCK_SIZE           (64 * 1024)
+#define BLOCK_MAX_INFO           80
+#define RW_MAX_BLOCK             80
+#define RW_MAX_PARTITION         6
+#define MAX_FLASH_OPTIONS        3
+#define MAGIC_CHECK_ADDRESS0     0x1c
+#define MAGIC_CHECK_ADDRESS1     0xec
+#define MAGIC_CHECK_ADDRESS2     0x57
+#define MAGIC_CHECK_ADDRESS3     0xbe
+#define ERASE_BLOCK              4096
 extern const hal_logic_partition_t g_halPartitions[];
 
 static bootinfo_zone cur_bootinfo_zone = BOOTINFO_ZONE_MAX;
 static bootinfo_zone cur_bootinfoBK_zone = BOOTINFO_ZONE_MAX;
 
 enum FLASH_OPTIONS {
-    FLASH_READ = 0,
+    FLASH_READ  = 0,
     FLASH_WRITE = 1,
     FLASH_ERASE = 2,
 };
@@ -80,20 +86,19 @@ struct HAL_FLASH_RW_INFO {
 typedef struct {
     char *bin_name;
     hal_partition_t partition;
+    enum NORFLASH_API_MODULE_ID_T module;
 } user_writeable_flash_info;
 
 user_writeable_flash_info user_writeable_partitions[] = {
-    {"boot", HAL_PARTITION_BOOTLOADER},
-    {"data", HAL_PARTITION_DATA},
-    {"log", HAL_PARTITION_LOG},
-    {"littlefs", HAL_PARTITION_RESOURCE},
-    {"secure", HAL_PARTITION_TRUSTZONEA},
-    {"misc", HAL_PARTITION_MISC},
-    {"factory", HAL_PARTITION_ENV},
-    {"factory_backup", HAL_PARTITION_ENV_REDUND},
-    {"cm33_main", HAL_PARTITION_CM33_MAIN},
-    {"system_mini", HAL_PARTITION_SYSTEM_MINI},
-    {"userdata", HAL_PARTITION_USERDATA},
+    {"boot", HAL_PARTITION_BOOTLOADER, NORFLASH_API_MODULE_ID_CUSTOM},
+    {"data", HAL_PARTITION_DATA, NORFLASH_API_MODULE_ID_CUSTOM1},
+    {"log", HAL_PARTITION_LOG, NORFLASH_API_MODULE_ID_CUSTOM2},
+    {"littlefs", HAL_PARTITION_RESOURCE, NORFLASH_API_MODULE_ID_CUSTOM3},
+    {"secure", HAL_PARTITION_TRUSTZONEA, NORFLASH_API_MODULE_ID_CUSTOM4},
+    {"misc", HAL_PARTITION_MISC, NORFLASH_API_MODULE_ID_CUSTOM5},
+    {"factory", HAL_PARTITION_ENV, NORFLASH_API_MODULE_ID_CUSTOM6},
+    {"factory_backup", HAL_PARTITION_ENV_REDUND, NORFLASH_API_MODULE_ID_CUSTOM7},
+    {"system_mini", HAL_PARTITION_SYSTEM_MINI, NORFLASH_API_MODULE_ID_CUSTOM8},
 };
 
 struct HAL_FLASH_BAD_INFO g_flashBadInfo[BLOCK_MAX_INFO];
@@ -108,7 +113,14 @@ struct HAL_FLASH_RW_INFO g_flashRwInfo[RW_MAX_PARTITION] = {
     },
     {
         .partition = HAL_PARTITION_RESOURCE,
-    }};
+    },
+    {
+        .partition = HAL_PARTITION_MISC,
+    },
+    {
+        .partition = HAL_PARTITION_USERDATA,
+    },
+};
 
 static void FlashOptionStructInit(void)
 {
@@ -125,6 +137,7 @@ static void FlashOptionStructInit(void)
     g_rwFlashInitFlag = true;
 }
 
+#ifndef APP_FLASH_API_USED
 int bes_check_user_write_flash_addr(const uint32_t addr, const uint32_t size)
 {
     hal_logic_partition_t info;
@@ -142,6 +155,72 @@ int bes_check_user_write_flash_addr(const uint32_t addr, const uint32_t size)
         }
     }
     return ret;
+}
+#else
+int bes_check_user_write_flash_addr(const uint32_t addr, const uint32_t size,
+	enum NORFLASH_API_MODULE_ID_T *module, uint32_t *module_offset)
+{
+    hal_logic_partition_t info;
+    int32_t ret = -1;
+    int32_t index = 0;
+
+    for (index = 0; index < sizeof(user_writeable_partitions) / sizeof(user_writeable_partitions[0]); index++) {
+        if (hal_flash_info_get(user_writeable_partitions[index].partition, &info) != 0) {
+            TRACE(0, "hal_flash_info_get fail");
+            continue;
+        }
+
+        if ((info.partition_start_addr <= addr) && ((addr + size) <= (info.partition_start_addr + info.partition_length))) {
+            if (module)
+                *module = user_writeable_partitions[index].module;
+            if (module_offset)
+                *module_offset = addr - info.partition_start_addr;
+            ret = 0;
+            break;
+        }
+    }
+
+    return ret;
+}
+#endif
+
+int CheckUseAccessable(unsigned char *partitionName, unsigned int *partition, hal_logic_partition_t *info)
+{
+    int32_t index;
+    int32_t ret = -1;
+
+    if ((partitionName == NULL) || (partition == NULL) || (info == NULL)) {
+        return -1;
+    }
+
+    for (index = 1; index < sizeof(user_writeable_partitions) / sizeof(user_writeable_partitions[0]); index++) {
+        if (strcmp(user_writeable_partitions[index].bin_name, partitionName) != 0) {
+            continue;
+        }
+        if (hal_flash_info_get(user_writeable_partitions[index].partition, info) != 0) {
+            TRACE(0, "hal_flash_info_get fail");
+            return ret;
+        } else {
+            *partition = user_writeable_partitions[index].partition;
+            return 0;
+        }
+    }
+
+    return ret;
+}
+
+int GetUseAccessableName(char **partitionName, unsigned int index)
+{
+    if (partitionName == NULL) {
+        return -1;
+    }
+
+    if (index < sizeof(user_writeable_partitions) / sizeof(user_writeable_partitions[0])) {
+        *partitionName = user_writeable_partitions[index].bin_name;
+        return 0;
+    }
+
+    return -1;
 }
 
 osMutexId FlashMutex = NULL;
@@ -190,6 +269,31 @@ void *my_memcpy(void *dst, void *src, size_t num)
     return dst;
 }
 
+#ifdef APP_FLASH_API_USED
+static bool g_flashApiInited = false;
+static void flash_api_init(void)
+{
+    hal_logic_partition_t info;
+    int32_t index = 0;
+
+    if (g_flashApiInited == true) {
+    	return ;
+    } else {
+    	g_flashApiInited = true;
+    }
+
+    for (index = 0; index < sizeof(user_writeable_partitions) / sizeof(user_writeable_partitions[0]); index++) {
+        if (hal_flash_info_get(user_writeable_partitions[index].partition, &info) != 0) {
+            TRACE(0, "hal_flash_info_get fail");
+            continue;
+        }
+        app_flash_register_module(user_writeable_partitions[index].module,
+            TO_FLASH_NC_ADDR(info.partition_start_addr), info.partition_length, 0);
+    }
+}
+#endif
+
+#ifndef APP_FLASH_API_USED
 int flash_read(const uint32_t addr, uint8_t *dst, const uint32_t size)
 {
     int ret = 0;
@@ -257,13 +361,87 @@ int flash_erase(const uint32_t addr, const uint32_t size)
 
     return ret;
 }
+#else
+int flash_read(const uint32_t addr, uint8_t *dst, const uint32_t size)
+{
+    int ret = 0;
+    enum NORFLASH_API_MODULE_ID_T module;
+    uint32_t module_offset;
+
+    ret = bes_check_user_write_flash_addr(addr, size, &module, &module_offset);
+    if (ret) {
+        TRACE(0, "fatal error %s %d, addr:0x%x, size:0x%x", __func__, __LINE__, addr, size);
+        return ret;
+    }
+
+    if (dst == NULL) {
+        ret = -1;
+        goto RETURN;
+    }
+
+    flash_api_init();
+    FlashosMutexWait();
+    app_flash_read(module, module_offset, dst, size);
+    osMutexRelease(FlashMutex);
+
+RETURN:
+    return ret;
+}
+
+int flash_write(const uint32_t addr, const uint8_t *src, const uint32_t size)
+{
+    int ret = 0;
+    enum NORFLASH_API_MODULE_ID_T module;
+    uint32_t module_offset;
+
+    ret = bes_check_user_write_flash_addr(addr, size, &module, &module_offset);
+    if (ret) {
+        return ret;
+    }
+
+    if (src == NULL) {
+        return -1;
+    }
+
+    flash_api_init();
+    FlashosMutexWait();
+    app_flash_program(module, module_offset, src, size, false);
+    app_flash_flush_pending_op(module, NORFLASH_API_ALL);
+    osMutexRelease(FlashMutex);
+
+    return ret;
+}
+
+int flash_erase(const uint32_t addr, const uint32_t size)
+{
+    int ret = 0;
+    enum NORFLASH_API_MODULE_ID_T module;
+    uint32_t module_offset;
+
+    if ((addr % ERASE_BLOCK != 0) || (size % ERASE_BLOCK != 0)) {
+        TRACE(0, "%s error, addr:0x%x size:0x%x", __func__, addr, size);
+        return -1;
+    }
+
+    ret = bes_check_user_write_flash_addr(addr, size, &module, &module_offset);
+    if (ret) {
+        return ret;
+    }
+
+    flash_api_init();
+    FlashosMutexWait();
+    app_flash_erase(module, module_offset, size);
+    osMutexRelease(FlashMutex);
+
+    return ret;
+}
+#endif
 
 static int32_t SetFlashOptionInfo(hal_partition_t partition, uint32_t size, uint32_t option)
 {
     uint32_t blockNum;
 
-    if (((partition != HAL_PARTITION_DATA) && (partition != HAL_PARTITION_LOG) && \
-        (partition != HAL_PARTITION_RESOURCE)) || (option >= MAX_FLASH_OPTIONS)) {
+    if (((partition != HAL_PARTITION_DATA) && (partition != HAL_PARTITION_LOG) && (partition != HAL_PARTITION_RESOURCE)) || (option >= MAX_FLASH_OPTIONS)) {
         TRACE(0, "%s---%d----%d-----%d\r\n", __FUNCTION__, partition, size, option);
         return -1;
     }
@@ -278,10 +456,12 @@ static int32_t SetFlashOptionInfo(hal_partition_t partition, uint32_t size, uint
         if (g_flashRwInfo[i].partition == partition) {
             for (size_t j = 0; j < RW_MAX_BLOCK; j++) {
                 if (g_flashRwInfo[i].blockInfo[j].flag) {
-                    if (g_flashRwInfo[i].blockInfo[j].blocknum == blockNum)
+                    if (g_flashRwInfo[i].blockInfo[j].blocknum == blockNum) {
                         g_flashRwInfo[i].blockInfo[j].count[option]++;
-                    else
+                        break;
+                    } else {
                         continue;
+                    }
                 } else {
                     g_flashRwInfo[i].blockInfo[j].blocknum = blockNum;
                     g_flashRwInfo[i].blockInfo[j].count[option]++;
@@ -369,6 +549,7 @@ int32_t hal_flash_info_get(hal_partition_t in_partition, hal_logic_partition_t *
 int32_t hal_flash_erase(hal_partition_t in_partition, uint32_t off_set, uint32_t size)
 {
     uint32_t start_addr;
+    uint32_t partition_end;
     hal_logic_partition_t info;
     int32_t ret = 0;
 
@@ -380,12 +561,17 @@ int32_t hal_flash_erase(hal_partition_t in_partition, uint32_t off_set, uint32_t
     }
 
     start_addr = info.partition_start_addr + off_set;
-#ifdef FLASH_RW_STATISTICS
+    partition_end = info.partition_start_addr + info.partition_length;
+    if ((start_addr + size) > partition_end) {
+        TRACE(0, "flash over partition, off_set:0x%x size:0x%x\n", off_set, size);
+        ret = -1;
+        goto RETURN;
+    }
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_ERASE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-#endif
+
     ret = flash_erase(start_addr, size);
     if (!ret) {
         goto RETURN;
@@ -411,7 +597,7 @@ RETURN:
  *
  * @return  0 : On success, EIO : If an error occurred with any step
  */
-int32_t hal_flash_write(hal_partition_t in_partition, uint32_t *off_set, const void *in_buf, uint32_t in_buf_len)
+int32_t hal_flash_write(hal_partition_t in_partition, uint32_t off_set, const void *in_buf, uint32_t in_buf_len)
 {
     int32_t ret = 0;
     uint32_t start_addr;
@@ -425,28 +611,27 @@ int32_t hal_flash_write(hal_partition_t in_partition, uint32_t *off_set, const v
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + *off_set;
+    start_addr = info.partition_start_addr + off_set;
     partition_end = info.partition_start_addr + info.partition_length;
     if (start_addr >= partition_end) {
-        TRACE(0, "flash over write\r\n");
+        TRACE(0, "flash over partition\r\n");
         ret = -1;
         goto RETURN;
     }
 
     if ((start_addr + in_buf_len) > partition_end) {
-        in_buf_len = partition_end - start_addr;
-        TRACE(0, "flash over write, new len is %d\r\n", in_buf_len);
+        TRACE(0, "flash over partition, off_set:0x%x in_buf_len:0x%x\r\n", off_set, in_buf_len);
+        ret = -1;
+        goto RETURN;
     }
-#ifdef FLASH_RW_STATISTICS
+
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_WRITE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-#endif
+
     ret = flash_write(start_addr, in_buf, in_buf_len);
-    if (!ret) {
-        *off_set += in_buf_len;
-    } else {
+    if (ret) {
         SetFlashBadOptionInfo(in_partition, start_addr, FLASH_WRITE);
     }
 
@@ -468,7 +653,7 @@ RETURN:
  *
  * @return  0 : On success, EIO : If an error occurred with any step
  */
-int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set, const void *in_buf, uint32_t in_buf_len)
+int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t off_set, const void *in_buf, uint32_t in_buf_len)
 {
     int32_t ret = 0;
     uint32_t start_addr;
@@ -482,25 +667,26 @@ int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set, c
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + *off_set;
+    start_addr = info.partition_start_addr + off_set;
     partition_end = info.partition_start_addr + info.partition_length;
 
     if (start_addr >= partition_end) {
-        TRACE(0, "flash over write\r\n");
+        TRACE(0, "flash over partition\r\n");
         ret = -1;
         goto RETURN;
     }
 
     if ((start_addr + in_buf_len) > partition_end) {
-        in_buf_len = partition_end - start_addr;
-        TRACE(0, "flash over write, new len is %d\r\n", in_buf_len);
+        TRACE(0, "flash over partition, off_set:0x%x in_buf_len:0x%x\r\n", off_set, in_buf_len);
+        ret = -1;
+        goto RETURN;
     }
-#ifdef FLASH_RW_STATISTICS
+
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_ERASE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-#endif
+
     ret = flash_erase(start_addr, in_buf_len);
     if (ret) {
         TRACE(0, "flash erase fail\r\n");
@@ -508,16 +694,14 @@ int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set, c
         SetFlashBadOptionInfo(in_partition, start_addr, FLASH_ERASE);
         goto RETURN;
     }
-#ifdef FLASH_RW_STATISTICS
+
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_WRITE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-#endif
+
     ret = flash_write(start_addr, in_buf, in_buf_len);
-    if (!ret) {
-        *off_set += in_buf_len;
-    } else {
+    if (ret) {
         SetFlashBadOptionInfo(in_partition, start_addr, FLASH_WRITE);
     }
 
@@ -539,10 +723,11 @@ RETURN:
  *
  * @return  0 : On success, EIO : If an error occurred with any step
  */
-int32_t hal_flash_read(hal_partition_t in_partition, uint32_t *off_set, void *out_buf, uint32_t in_buf_len)
+int32_t hal_flash_read(hal_partition_t in_partition, uint32_t off_set, void *out_buf, uint32_t in_buf_len)
 {
     int32_t ret = 0;
     uint32_t start_addr;
+    uint32_t partition_end;
     hal_logic_partition_t info;
 
     ENTER_FUNCTION();
@@ -552,17 +737,27 @@ int32_t hal_flash_read(hal_partition_t in_partition, uint32_t *off_set, void *ou
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + *off_set;
-#ifdef FLASH_RW_STATISTICS
+    start_addr = info.partition_start_addr + off_set;
+    partition_end = info.partition_start_addr + info.partition_length;
+    if (start_addr >= partition_end) {
+        TRACE(0, "flash over partition\r\n");
+        ret = -1;
+        goto RETURN;
+    }
+
+    if ((start_addr + in_buf_len) > partition_end) {
+        TRACE(0, "flash over partition, off_set:0x%x in_buf_len:0x%x\r\n", off_set, in_buf_len);
+        ret = -1;
+        goto RETURN;
+    }
+
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_READ);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
     }
-#endif
+
     ret = flash_read(start_addr, out_buf, in_buf_len);
-    if (!ret) {
-        goto RETURN;
-    } else {
+    if (ret) {
         SetFlashBadOptionInfo(in_partition, start_addr, FLASH_READ);
     }
 
@@ -660,6 +855,19 @@ int ota_set_bootinfo_crc32value(MiscDataInfo *info)
     return ERR_OK;
 }
 
+uint32_t ota_get_partition_start_addr(hal_partition_t partition)
+{
+    int ret = 0;
+    hal_logic_partition_t partition_info;
+
+    ret = hal_flash_info_get(partition, &partition_info);
+    if (ret) {
+        return ERR_RETURN;
+    } else {
+        return partition_info.partition_start_addr;
+    }
+}
+
 int ota_write_bootinfo_to_flash(MiscDataInfo *info, bootinfo_block block, bootinfo_zone zone)
 {
     int ret = 0;
@@ -668,21 +876,29 @@ int ota_write_bootinfo_to_flash(MiscDataInfo *info, bootinfo_block block, bootin
     uint32_t cur_addr = 0;
     uint32_t next_addr = 0;
     uint8_t buffer[FLASH_SECTOR_SIZE_IN_BYTES] = {0};
+    uint32_t bootinfo_a_addr;
+    uint32_t bootinfo_b_addr;
 
     if (block >= BOOTINFO_INVALID) {
         return ERR_PARAMETER;
     }
+
+    bootinfo_a_addr = ota_get_partition_start_addr(HAL_PARTITION_MISC);
+    if (bootinfo_a_addr == ERR_RETURN) {
+        return ERR_RETURN;
+    }
+    bootinfo_b_addr = bootinfo_a_addr + BOOT_INFO_A_B_SIZE;
 
     ota_set_bootinfo_crc32value(info);
 
     cur_zone = zone;
     next_zone = (cur_zone + 1) % (BOOT_INFO_A_B_SIZE / FLASH_SECTOR_SIZE_IN_BYTES);
     if (block == BOOTINFO_ORIGIN) {
-        cur_addr = BOOT_INFO_A_ADDR + cur_zone * FLASH_SECTOR_SIZE_IN_BYTES;
-        next_addr = BOOT_INFO_A_ADDR + next_zone * FLASH_SECTOR_SIZE_IN_BYTES;
+        cur_addr = bootinfo_a_addr + cur_zone * FLASH_SECTOR_SIZE_IN_BYTES;
+        next_addr = bootinfo_a_addr + next_zone * FLASH_SECTOR_SIZE_IN_BYTES;
     } else if (block == BOOTINFO_BACKUP) {
-        cur_addr = BOOT_INFO_B_ADDR + cur_zone * FLASH_SECTOR_SIZE_IN_BYTES;
-        next_addr = BOOT_INFO_B_ADDR + next_zone * FLASH_SECTOR_SIZE_IN_BYTES;
+        cur_addr = bootinfo_b_addr + cur_zone * FLASH_SECTOR_SIZE_IN_BYTES;
+        next_addr = bootinfo_b_addr + next_zone * FLASH_SECTOR_SIZE_IN_BYTES;
     }
 
     pmu_flash_write_config();
@@ -690,6 +906,7 @@ int ota_write_bootinfo_to_flash(MiscDataInfo *info, bootinfo_block block, bootin
 
     //erase current sector
     lock = int_lock_global();
+    norflash_api_flush_all();
     ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, cur_addr, FLASH_SECTOR_SIZE_IN_BYTES);
     int_unlock_global(lock);
     if (ret != HAL_NORFLASH_OK) {
@@ -699,6 +916,7 @@ int ota_write_bootinfo_to_flash(MiscDataInfo *info, bootinfo_block block, bootin
 
     // erase next sector
     lock = int_lock_global();
+    norflash_api_flush_all();
     ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, next_addr, FLASH_SECTOR_SIZE_IN_BYTES);
     int_unlock_global(lock);
     if (ret != HAL_NORFLASH_OK) {
@@ -708,6 +926,7 @@ int ota_write_bootinfo_to_flash(MiscDataInfo *info, bootinfo_block block, bootin
 
     // write next sector
     lock = int_lock_global();
+    norflash_api_flush_all();
     ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, next_addr, buffer, FLASH_SECTOR_SIZE_IN_BYTES);
     int_unlock_global(lock);
     if (ret != HAL_NORFLASH_OK) {
@@ -728,16 +947,24 @@ int ota_check_bootinfo_block(bootinfo_block block)
     MiscDataInfo *info = NULL;
     uint32_t crc32_value = 0;
     uint8_t *flash_pointer = NULL;
+    uint32_t bootinfo_a_addr;
+    uint32_t bootinfo_b_addr;
 
     if (block >= BOOTINFO_INVALID) {
         return ERR_PARAMETER;
     }
 
+    bootinfo_a_addr = ota_get_partition_start_addr(HAL_PARTITION_MISC);
+    if (bootinfo_a_addr == ERR_RETURN) {
+        return ERR_RETURN;
+    }
+    bootinfo_b_addr = bootinfo_a_addr + BOOT_INFO_A_B_SIZE;
+
     for (bootinfo_zone num = BOOTINFO_ZONE_0; num < BOOTINFO_ZONE_MAX; num++) {
         if (block == BOOTINFO_ORIGIN) {
-            info = (MiscDataInfo *)(FLASH_NC_BASE + BOOT_INFO_A_ADDR + num * FLASH_SECTOR_SIZE_IN_BYTES);
+            info = (MiscDataInfo *)(FLASH_NC_BASE + bootinfo_a_addr + num * FLASH_SECTOR_SIZE_IN_BYTES);
         } else if (block == BOOTINFO_BACKUP) {
-            info = (MiscDataInfo *)(FLASH_NC_BASE + BOOT_INFO_B_ADDR + num * FLASH_SECTOR_SIZE_IN_BYTES);
+            info = (MiscDataInfo *)(FLASH_NC_BASE + bootinfo_b_addr + num * FLASH_SECTOR_SIZE_IN_BYTES);
         }
 
         if (info->headerMagic != MISC_HEADER_MAGIC) {
@@ -780,10 +1007,13 @@ int ota_set_bootinfo_to_zoneAB(MiscDataInfo *info)
 
     ret = ota_write_bootinfo_to_flash(info, BOOTINFO_ORIGIN, ota_get_bootinfo_zone_num(BOOTINFO_ORIGIN));
     if (ret) {
+        TRACE(0, "ota_write_bootinfo_to_flash fail.%s %d", __func__, __LINE__);
+        return ret;
     }
 
     ret = ota_write_bootinfo_to_flash(info, BOOTINFO_BACKUP, ota_get_bootinfo_zone_num(BOOTINFO_BACKUP));
     if (ret) {
+        TRACE(0, "ota_write_bootinfo_to_flash fail.%s %d", __func__, __LINE__);
     }
 
     return ret;
@@ -838,6 +1068,8 @@ int ota_get_bootinfo(MiscDataInfo *info, bootinfo_block block, bootinfo_zone zon
 {
     uint32_t lock = 0;
     uint32_t start_addr = 0;
+    uint32_t bootinfo_a_addr;
+    uint32_t bootinfo_b_addr;
 
     if (block >= BOOTINFO_INVALID) {
         return ERR_PARAMETER;
@@ -847,10 +1079,16 @@ int ota_get_bootinfo(MiscDataInfo *info, bootinfo_block block, bootinfo_zone zon
         return ERR_PARAMETER;
     }
 
+    bootinfo_a_addr = ota_get_partition_start_addr(HAL_PARTITION_MISC);
+    if (bootinfo_a_addr == ERR_RETURN) {
+        return ERR_RETURN;
+    }
+    bootinfo_b_addr = bootinfo_a_addr + BOOT_INFO_A_B_SIZE;
+
     if (block == BOOTINFO_ORIGIN) {
-        start_addr = BOOT_INFO_A_ADDR + zone * FLASH_SECTOR_SIZE_IN_BYTES;
+        start_addr = bootinfo_a_addr + zone * FLASH_SECTOR_SIZE_IN_BYTES;
     } else if (block == BOOTINFO_BACKUP) {
-        start_addr = BOOT_INFO_B_ADDR + zone * FLASH_SECTOR_SIZE_IN_BYTES;
+        start_addr = bootinfo_b_addr + zone * FLASH_SECTOR_SIZE_IN_BYTES;
     }
 
     pmu_flash_write_config();
@@ -866,11 +1104,11 @@ int SetMiscData(MiscDataType type, const void *data, uint32_t dataLen)
 {
     MiscDataInfo ctrl;
     int ret = 0;
+    int len = 0;
     bootinfo_block block = BOOTINFO_INVALID;
 
     FlashosMutexWait();
     block = ota_get_valid_bootinfo_block();
-
     ret = ota_get_bootinfo(&ctrl, block, ota_get_bootinfo_zone_num(block));
     if (ret) {
         osMutexRelease(FlashMutex);
@@ -894,8 +1132,12 @@ int SetMiscData(MiscDataType type, const void *data, uint32_t dataLen)
         memcpy(&ctrl.bootTimes, data, dataLen);
         break;
     case MISC_RD_MODE_INFO:
-        memcpy(&ctrl.rdMode.rdDataLen, data, dataLen);
-        ctrl.len += dataLen;
+        memset((char *)&ctrl.rdMode, 0, sizeof(RdModeInfo));
+        len = (dataLen > sizeof(RdModeInfo)) ? sizeof(RdModeInfo) : dataLen;
+        memcpy((char *)&ctrl.rdMode, data, len);
+        if (ctrl.len < len) {
+            ctrl.len += len;
+        }
         break;
     default:
         return ERR_PARAMETER;
@@ -911,6 +1153,7 @@ int GetMiscData(MiscDataType type, void *data, uint32_t dataLen)
 {
     MiscDataInfo ctrl;
     int ret = 0;
+    int len = 0;
     bootinfo_block block = BOOTINFO_INVALID;
 
     if (type >= MISC_DATA_MAX) {
@@ -949,13 +1192,48 @@ int GetMiscData(MiscDataType type, void *data, uint32_t dataLen)
         memcpy(data, &ctrl.bootTimes, dataLen);
         break;
     case MISC_RD_MODE_INFO:
-        memcpy(data, &ctrl.rdMode.rdDataLen, dataLen);
+        len = (dataLen > sizeof(RdModeInfo)) ? sizeof(RdModeInfo) : dataLen;
+        memcpy(data, (char *)&ctrl.rdMode, len);
         break;
     default:
         return ERR_PARAMETER;
     }
 
     return ERR_OK;
+}
+
+int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr)
+{
+    return 0;
+}
+
+int ota_hal_read_flash(const hal_partition_t partition, const uint32_t addr, uint8_t *dst, const uint32_t size)
+{
+    int ret = -1;
+
+    if (partition == HAL_PARTITION_BOOT2A) {
+        //ret = NORFLASH_API_WRAP(hal_norflash_read_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0, addr, dst, size);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        ret = NORFLASH_API_WRAP(hal_norflash_read)(HAL_FLASH_ID_0, addr, dst, size);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        if (ret) {
+            TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
+            return -1;
+        }
+    } else 	if (partition == HAL_PARTITION_RTOSA) {
+        //ret = NORFLASH_API_WRAP(hal_norflash_read_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2, addr, dst, size);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
+        ret = NORFLASH_API_WRAP(hal_norflash_read)(HAL_FLASH_ID_0, addr, dst, size);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
+        if (ret) {
+            TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
+            return -1;
+        }
+    } else {
+        ret = NORFLASH_API_WRAP(hal_norflash_read)(HAL_FLASH_ID_0, addr, dst, size);
+    }
+
+    return ret;
 }
 
 int ota_flash_read(const hal_partition_t partition, const uint32_t addr, uint8_t *dst, const uint32_t size)
@@ -974,13 +1252,13 @@ int ota_flash_read(const hal_partition_t partition, const uint32_t addr, uint8_t
     if (ret) {
         return ERR_RETURN;
     }
-
     flash_offset = addr + partitionInfo.partition_start_addr;
 
+    hal_cache_invalidate_all(HAL_CACHE_ID_I_CACHE);
     FlashosMutexWait();
     pmu_flash_write_config();
     lock = int_lock_global();
-    ret = NORFLASH_API_WRAP(hal_norflash_read)(HAL_FLASH_ID_0, flash_offset, dst, size);
+    ret = ota_hal_read_flash(partition, flash_offset, dst, size);
     int_unlock_global(lock);
     pmu_flash_read_config();
     osMutexRelease(FlashMutex);
@@ -989,118 +1267,59 @@ RETURN:
     return ret;
 }
 
-static void ota_feed_watchdog(void)
+int ota_hal_erase_flash(const hal_partition_t partition, const uint32_t addr, const uint32_t size)
 {
-#ifdef __WATCHER_DOG_RESET__
-    app_wdt_ping();
-#endif
-}
+    int ret = -1;
 
-static int ota_partition_common_erase_write(const hal_partition_t partition, uint32_t start_addr, uint32_t erase_len, uint8_t *src_buf, uint32_t src_len)
-{
-    int ret = 0;
-    uint32_t lock = 0;
-
-    lock = int_lock_global();
-
-    ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, start_addr, erase_len);
-    if (ret != HAL_NORFLASH_OK) {
-        SetFlashBadOptionInfo(partition, start_addr, FLASH_ERASE);
-        int_unlock_global(lock);
-        return ERR_RETURN;
+    if (partition == HAL_PARTITION_BOOT2A) {
+        //ret = NORFLASH_API_WRAP(hal_norflash_erase_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0, addr, size);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, addr, size);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        if (ret) {
+            TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
+            return -1;
+        }
+    } else 	if (partition == HAL_PARTITION_RTOSA) {
+        //ret = NORFLASH_API_WRAP(hal_norflash_erase_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2, addr, size);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, addr, size);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        if (ret) {
+            TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
+            return -1;
+        }
+    } else {
+        ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, addr, size);
     }
-
-    ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, start_addr, src_buf, src_len);
-    if (ret != HAL_NORFLASH_OK) {
-        SetFlashBadOptionInfo(partition, start_addr, FLASH_WRITE);
-        int_unlock_global(lock);
-        ret = ERR_RETURN;
-    }
-
-    int_unlock_global(lock);
 
     return ret;
 }
 
-static int ota_partition_erase_write(const hal_partition_t partition, uint32_t *start_addr, uint8_t *src_buf, uint32_t src_len)
+int ota_hal_write_flash(const hal_partition_t partition, const uint32_t addr, uint8_t *src, const uint32_t size)
 {
-    int ret = 0;
-    uint32_t lock = 0, num = 0;
+    int ret = -1;
 
-    lock = int_lock_global();
-
-    for (num = 0; num < src_len / OTA_MALLOC_BUF_SIZE; num++) {
-        ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, *start_addr, OTA_MALLOC_BUF_SIZE);
-        if (ret != HAL_NORFLASH_OK) {
-            SetFlashBadOptionInfo(partition, *start_addr, FLASH_ERASE);
-            int_unlock_global(lock);
-            return ERR_RETURN;
+    if (partition == HAL_PARTITION_BOOT2A) {
+        //ret = NORFLASH_API_WRAP(hal_norflash_write_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0, addr, src, size);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, addr, src, size);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);		
+        if (ret) {
+            TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
+            return -1;
         }
-
-        ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, *start_addr, src_buf, OTA_MALLOC_BUF_SIZE);
-        if (ret != HAL_NORFLASH_OK) {
-            SetFlashBadOptionInfo(partition, *start_addr, FLASH_WRITE);
-            int_unlock_global(lock);
-            ret = ERR_RETURN;
+    } else 	if (partition == HAL_PARTITION_RTOSA) {
+        //ret = NORFLASH_API_WRAP(hal_norflash_write_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2, addr, src, size);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
+        ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, addr, src, size);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);		
+        if (ret) {
+            TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
+            return -1;
         }
-
-        *start_addr += OTA_MALLOC_BUF_SIZE;
-        src_buf += OTA_MALLOC_BUF_SIZE;
-    }
-
-    int_unlock_global(lock);
-
-    return ret;
-}
-
-static int ota_partition_read_erase_write(const hal_partition_t partition, uint32_t start_addr, uint8_t *dst_buf, uint32_t dst_buf_len, uint32_t dst_offset, uint8_t *src_buf, uint32_t src_len)
-{
-    int ret = 0;
-    uint32_t lock;
-
-    lock = int_lock_global();
-    ret = NORFLASH_API_WRAP(hal_norflash_read)(HAL_FLASH_ID_0, start_addr, dst_buf, dst_buf_len);
-    int_unlock_global(lock);
-    if (ret != HAL_NORFLASH_OK) {
-        SetFlashBadOptionInfo(partition, start_addr, FLASH_READ);
-        return ret;
-    }
-
-    memcpy((dst_buf + dst_offset), src_buf, src_len);
-
-    ret = ota_partition_common_erase_write(partition, start_addr, dst_buf_len, dst_buf, dst_buf_len);
-    return ret;
-}
-
-int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr)
-{
-    int ret;
-    uint32_t num;
-    hal_logic_partition_t partition_info;
-    uint8_t ota_partition[6] = {HAL_PARTITION_BOOT2A, HAL_PARTITION_BOOT2B, HAL_PARTITION_TRUSTZONEA,
-                                HAL_PARTITION_TRUSTZONEB, HAL_PARTITION_CM33_MAIN, HAL_PARTITION_SYSTEM_MINI};
-    uint8_t read_buf[FLASH_SECTOR_SIZE_IN_BYTES] = {0};
-    uint8_t magic_buf[4] = {0};
-
-    ret = hal_flash_info_get(partition, &partition_info);
-    if (ret) {
-        return ERR_RETURN;
-    }
-
-    for (num = 0; num < sizeof(ota_partition); num++) {
-        if ((partition == ota_partition[num]) && (addr == 0)) {
-            uint32_t flash_offset = partition_info.partition_start_addr;
-            magic_buf[0] = 0x1c;
-            magic_buf[1] = 0xec;
-            magic_buf[2] = 0x57;
-            magic_buf[3] = 0xbe;
-
-            ret = ota_partition_read_erase_write(partition, flash_offset, read_buf, sizeof(read_buf), 0, magic_buf, sizeof(magic_buf));
-            if (ret != HAL_NORFLASH_OK) {
-                return ERR_RETURN;
-            }
-            break;
-        }
+    } else {
+        ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, addr, src, size);
     }
 
     return ret;
@@ -1109,61 +1328,228 @@ int ota_partition_check_magic(const hal_partition_t partition, const uint32_t ad
 int ota_flash_write(const hal_partition_t partition, const uint32_t addr, const uint8_t *src, const uint32_t size)
 {
     int ret = -1;
-    uint32_t left_len = 0, align_len = 0, fill_len = 0, flash_offset = 0, lengthToBurn = size;
+    uint32_t lock;
+    uint32_t num;
+    uint32_t left_len = 0; 
+    uint32_t align_len = 0;
+    uint32_t fill_len = 0;
+    uint32_t flash_offset = 0; 
+    uint32_t lengthToBurn = size;
     uint8_t *ptrSource = (uint8_t *)src;
+    volatile char *flashPointer = NULL;
     uint8_t *buf = NULL;
-    hal_logic_partition_t partitionInfo;
+    hal_logic_partition_t partition_info;
+    uint8_t ota_partition[] = {
+        HAL_PARTITION_BOOT2A, HAL_PARTITION_BOOT2B, HAL_PARTITION_RTOSA, HAL_PARTITION_RTOSB
+    };
+    uint8_t read_buf[FLASH_SECTOR_SIZE_IN_BYTES] = {0};
 
-    if (NULL == ptrSource)
-        return ERR_RETURN;
-
-    hal_flash_info_get(partition, &partitionInfo);
-    flash_offset = addr + partitionInfo.partition_start_addr;
-
-    if ((addr % OTA_MALLOC_BUF_SIZE != 0) || (lengthToBurn % OTA_MALLOC_BUF_SIZE != 0)) {
-        buf = (uint8_t *)malloc(OTA_MALLOC_BUF_SIZE);
-        if (!buf)
-            return ERR_RETURN;
+    if (NULL == ptrSource) {
+        ret = -2;
+        goto RETURN;
     }
 
-    ota_feed_watchdog();
+    ret = hal_flash_info_get(partition, &partition_info);
+    if (ret) {
+        return ERR_RETURN;
+    }
+    if ((addr + size) > partition_info.partition_length) {
+        TRACE(0, "error addr:0x%x size:0x%x partition_info.partition_length:0x%x", addr, size, partition_info.partition_length);
+        return -1;
+    }
+    flash_offset = addr + partition_info.partition_start_addr;
+
+    //watchdog_ping();
 
     FlashosMutexWait();
-    pmu_flash_write_config();
-
-    if (flash_offset % OTA_MALLOC_BUF_SIZE != 0) {
-        left_len = OTA_MALLOC_BUF_SIZE - flash_offset % OTA_MALLOC_BUF_SIZE;
-        fill_len = (left_len >= lengthToBurn) ? lengthToBurn : left_len;
-        align_len = flash_offset - flash_offset % OTA_MALLOC_BUF_SIZE;
-        ret = ota_partition_read_erase_write(partition, align_len, buf, OTA_MALLOC_BUF_SIZE, (flash_offset % OTA_MALLOC_BUF_SIZE), ptrSource, fill_len);
-        if (ret != HAL_NORFLASH_OK)
+    if (addr % OTA_MALLOC_BUF_SIZE != 0) {
+        buf = (uint8_t *)malloc(OTA_MALLOC_BUF_SIZE);
+        if (!buf) {
+            ret = -1;
             goto end;
-        lengthToBurn -= fill_len;
-        flash_offset += fill_len;
-    }
-
-    if (lengthToBurn > 0) {
-        ret = ota_partition_erase_write(partition, &flash_offset, ptrSource, lengthToBurn);
-        if (ret != HAL_NORFLASH_OK)
-            goto end;
-
-        if (lengthToBurn % OTA_MALLOC_BUF_SIZE) {
-            ret = ota_partition_read_erase_write(partition, flash_offset, buf, OTA_MALLOC_BUF_SIZE, 0, ptrSource, (lengthToBurn % OTA_MALLOC_BUF_SIZE));
-            if (ret != HAL_NORFLASH_OK)
+        }
+    } else {
+        if (size % OTA_MALLOC_BUF_SIZE != 0) {
+            buf = (uint8_t *)malloc(OTA_MALLOC_BUF_SIZE);
+            if (!buf) {
+                ret = -1;
                 goto end;
+            }
         }
     }
 
-    //ota_partition_check_magic(partition, addr);
+    pmu_flash_write_config();
+    if (flash_offset % OTA_MALLOC_BUF_SIZE != 0) {
+        left_len = OTA_MALLOC_BUF_SIZE - flash_offset % OTA_MALLOC_BUF_SIZE;
+        fill_len = (left_len >= lengthToBurn) ? lengthToBurn : left_len;
+
+        align_len = flash_offset;
+        align_len -= align_len % OTA_MALLOC_BUF_SIZE;
+        memset(buf, 0, OTA_MALLOC_BUF_SIZE);
+        lock = int_lock_global();
+        ret = ota_hal_read_flash(partition, align_len, buf, OTA_MALLOC_BUF_SIZE);
+        int_unlock_global(lock);
+        if (ret != HAL_NORFLASH_OK) {
+            TRACE(0, "error %s %d, ota_hal_read_flash ret:%d", __func__, __LINE__, ret);
+            SetFlashBadOptionInfo(partition, flash_offset, FLASH_READ);
+            goto end;
+        }
+
+        lock = int_lock_global();
+        norflash_api_flush_all();
+        ret = ota_hal_erase_flash(partition, align_len, OTA_MALLOC_BUF_SIZE);
+        int_unlock_global(lock);
+        if (ret != HAL_NORFLASH_OK) {
+            TRACE(0, "error %s %d, ota_hal_erase_flash ret:%d", __func__, __LINE__, ret);
+            SetFlashBadOptionInfo(partition, flash_offset, FLASH_ERASE);
+            goto end;
+        }
+
+        memcpy((buf + flash_offset % OTA_MALLOC_BUF_SIZE), ptrSource, fill_len);
+        lock = int_lock_global();
+        norflash_api_flush_all();
+        ret = ota_hal_write_flash(partition, align_len, buf, OTA_MALLOC_BUF_SIZE);
+        int_unlock_global(lock);
+        if (ret != HAL_NORFLASH_OK) {
+            TRACE(0, "error %s %d, ota_hal_write_flash ret:%d", __func__, __LINE__, ret);
+            SetFlashBadOptionInfo(partition, flash_offset, FLASH_WRITE);
+            goto end;
+        }
+
+#ifdef __WATCHER_DOG_RESET__
+        //app_wdt_ping();
+#endif
+
+        lengthToBurn -= fill_len;
+        flash_offset += fill_len;
+        ptrSource += fill_len;
+    }
+
+    if (lengthToBurn > 0) {
+        for (num = 0; num < lengthToBurn / OTA_MALLOC_BUF_SIZE; num++) {
+            lock = int_lock_global();
+            norflash_api_flush_all();
+            ret = ota_hal_erase_flash(partition, flash_offset, OTA_MALLOC_BUF_SIZE);
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_erase_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_ERASE);
+                goto end;
+            }
+
+            lock = int_lock_global();
+            norflash_api_flush_all();
+            ret = ota_hal_write_flash(partition, flash_offset, ptrSource, OTA_MALLOC_BUF_SIZE);
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_write_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_WRITE);
+                goto end;
+            }
+
+#ifdef __WATCHER_DOG_RESET__
+            //app_wdt_ping();
+#endif
+            flash_offset += OTA_MALLOC_BUF_SIZE;
+            ptrSource += OTA_MALLOC_BUF_SIZE;
+        }
+
+        left_len = lengthToBurn % OTA_MALLOC_BUF_SIZE;
+        if (left_len) {
+            memset(buf, 0, OTA_MALLOC_BUF_SIZE);
+            lock = int_lock_global();
+            ret = ota_hal_read_flash(partition, flash_offset, buf, OTA_MALLOC_BUF_SIZE);
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_read_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_READ);
+                goto end;
+            }
+
+            lock = int_lock_global();
+            norflash_api_flush_all();
+            ret = ota_hal_erase_flash(partition, flash_offset, OTA_MALLOC_BUF_SIZE);
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_erase_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_ERASE);
+                goto end;
+            }
+
+            memcpy(buf, ptrSource, left_len);
+            lock = int_lock_global();
+            norflash_api_flush_all();
+            ret = ota_hal_write_flash(partition, flash_offset, buf, OTA_MALLOC_BUF_SIZE);
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_write_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_WRITE);
+                goto end;
+            }
+
+#ifdef __WATCHER_DOG_RESET__
+            //app_wdt_ping();
+#endif
+        }
+    }
+
+    for (num = 0; num < sizeof(ota_partition); num++) {
+        if ((partition == ota_partition[num]) && (addr == 0)) {
+            flash_offset = partition_info.partition_start_addr;
+            hal_cache_invalidate_all(HAL_CACHE_ID_I_CACHE);
+            lock = int_lock_global();
+            ret = ota_hal_read_flash(partition, flash_offset, read_buf, sizeof(read_buf));
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_read_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_READ);
+                goto end;
+            }
+
+            read_buf[0] = MAGIC_CHECK_ADDRESS0;
+            read_buf[1] = MAGIC_CHECK_ADDRESS1;
+            read_buf[2] = MAGIC_CHECK_ADDRESS2;
+            read_buf[3] = MAGIC_CHECK_ADDRESS3;
+
+            lock = int_lock_global();
+            norflash_api_flush_all();
+            ret = ota_hal_erase_flash(partition, flash_offset, sizeof(read_buf));
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_erase_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_ERASE);
+                goto end;
+            }
+
+            memcpy(buf, ptrSource, left_len);
+            lock = int_lock_global();
+            norflash_api_flush_all();
+            ret = ota_hal_write_flash(partition, flash_offset, read_buf, sizeof(read_buf));
+            int_unlock_global(lock);
+            if (ret != HAL_NORFLASH_OK) {
+                TRACE(0, "error %s %d, ota_hal_write_flash ret:%d", __func__, __LINE__, ret);
+                SetFlashBadOptionInfo(partition, flash_offset, FLASH_WRITE);
+                goto end;
+            }
+            break;
+        }
+    }
 
 end:
     pmu_flash_read_config();
-    if ((addr % OTA_MALLOC_BUF_SIZE != 0) || (lengthToBurn % OTA_MALLOC_BUF_SIZE != 0))
+    if (addr % OTA_MALLOC_BUF_SIZE != 0) {
         free(buf);
-
+        buf = NULL;
+    } else {
+        if (size % OTA_MALLOC_BUF_SIZE != 0) {
+            free(buf);
+            buf = NULL;
+        }
+    }
     hal_cache_invalidate_all(HAL_CACHE_ID_I_CACHE);
     osMutexRelease(FlashMutex);
 
+RETURN:
     return ret;
 }
 
@@ -1318,3 +1704,4 @@ int32_t GetFlashStatisticInfo(hal_partition_t partition, uint32_t blockNum, uint
 
     return 0;
 }
+

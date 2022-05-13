@@ -19,6 +19,10 @@ if [ ! -f $MAKEFILE ]; then
     mkdir -p bsp/out/best2600w_liteos/
     cp -rf bsp/out/best2600w_liteos_${5}/libbest2600w_liteos.a bsp/out/best2600w_liteos/
     cp -rf bsp/out/best2600w_liteos_${5}/_best2001.lds bsp/out/best2600w_liteos/
+    mkdir -p bsp/out/ota_boot1/
+    mkdir -p bsp/out/ota_boot2a/
+    cp -rf bsp/out/ota_boot1_${5}/ota_boot1.bin bsp/out/ota_boot1/
+    cp -rf bsp/out/ota_boot2a_${5}/ota_boot2a.bin bsp/out/ota_boot2a/
     exit
 fi
 

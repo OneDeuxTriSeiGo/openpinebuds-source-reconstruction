@@ -33,22 +33,24 @@ extern "C" {
 #define PAR_OPT_WRITE_EN (0x1u << PAR_OPT_WRITE_POS)
 
 typedef enum {
-    HAL_PARTITION_ERROR = -1,
-    HAL_PARTITION_BOOTLOADER = 2,
-    HAL_PARTITION_BOOT2A = 3,
-    HAL_PARTITION_BOOT2B = 4,
-    HAL_PARTITION_TRUSTZONEA = 5,
-    HAL_PARTITION_TRUSTZONEB = 6,
-    HAL_PARTITION_TZ_INFO = 7,
-    HAL_PARTITION_CM33_MAIN = 8,
+    HAL_PARTITION_ERROR       = -1,
+    HAL_PARTITION_BOOTLOADER  = 2,
+    HAL_PARTITION_BOOT2A      = 3,
+    HAL_PARTITION_BOOT2B      = 4,
+    HAL_PARTITION_TRUSTZONEA  = 5,
+    HAL_PARTITION_TRUSTZONEB  = 6,
+    HAL_PARTITION_TZ_INFO     = 7,
+    HAL_PARTITION_CM33_MAIN   = 8,
+    HAL_PARTITION_RTOSA       = HAL_PARTITION_CM33_MAIN,
     HAL_PARTITION_SYSTEM_MINI = 9,
-    HAL_PARTITION_RESOURCE = 10,
-    HAL_PARTITION_LOG = 11,
-    HAL_PARTITION_DATA = 12,
-    HAL_PARTITION_MISC = 13,
-    HAL_PARTITION_USERDATA = 14,
-    HAL_PARTITION_ENV = 15,
-    HAL_PARTITION_ENV_REDUND = 16,
+    HAL_PARTITION_RTOSB       = HAL_PARTITION_SYSTEM_MINI,
+    HAL_PARTITION_RESOURCE    = 10,
+    HAL_PARTITION_LOG         = 11,
+    HAL_PARTITION_DATA        = 12,
+    HAL_PARTITION_MISC        = 13,
+    HAL_PARTITION_USERDATA    = 14,
+    HAL_PARTITION_ENV         = 15,
+    HAL_PARTITION_ENV_REDUND  = 16,
     HAL_PARTITION_MAX,
 } hal_partition_t;
 
@@ -68,17 +70,15 @@ typedef struct {
     uint32_t partition_options;
 } hal_logic_partition_t;
 
-#define BOOT_INFO_A_ADDR 0xFD0000
-#define BOOT_INFO_A_B_SIZE 0x6000
-#define BOOT_INFO_B_ADDR (BOOT_INFO_A_ADDR + BOOT_INFO_A_B_SIZE)
-#define SECURE_CHECK_MAX_TIME 3
+#define BOOT_INFO_A_B_SIZE         0x6000
+#define SECURE_CHECK_MAX_TIME      3
 #define EXCEPTION_REBOOT_COUNT_MAX 3
-#define CMU_BOOTMODE_WATCHDOG_BIT (1 << 0)
-#define OTA_BOOT_INFO_HEAD_LEN (4 + 4)
-#define OTA_BOOT_INFO_BODY_LEN 20
-#define RD_DATA_LEN_MAX 200
-#define RD_SIGN_LEN_MAX 384
-#define MISC_HEADER_MAGIC 0x6564636A
+#define CMU_BOOTMODE_WATCHDOG_BIT  (1 << 0)
+#define OTA_BOOT_INFO_HEAD_LEN     (4 + 4)
+#define OTA_BOOT_INFO_BODY_LEN     24
+#define RD_DATA_LEN_MAX            200
+#define RD_SIGN_LEN_MAX            384
+#define MISC_HEADER_MAGIC          0x6564636A
 
 typedef struct {
     int rdDataLen;                /* 研发模式明文长度 */
@@ -213,7 +213,7 @@ int32_t hal_flash_erase(hal_partition_t in_partition, uint32_t off_set, uint32_t
  *
  * @return  0 : On success, EIO : If an error occurred with any step
  */
-int32_t hal_flash_write(hal_partition_t in_partition, uint32_t *off_set,
+int32_t hal_flash_write(hal_partition_t in_partition, uint32_t off_set,
                         const void *in_buf, uint32_t in_buf_len);
 
 /**
@@ -229,7 +229,7 @@ int32_t hal_flash_write(hal_partition_t in_partition, uint32_t *off_set,
  *
  * @return  0 : On success, EIO : If an error occurred with any step
  */
-int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set,
+int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t off_set,
                               const void *in_buf, uint32_t in_buf_len);
 
 /**
@@ -245,7 +245,7 @@ int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set,
  *
  * @return  0 : On success, EIO : If an error occurred with any step
  */
-int32_t hal_flash_read(hal_partition_t in_partition, uint32_t *off_set,
+int32_t hal_flash_read(hal_partition_t in_partition, uint32_t off_set,
                        void *out_buf, uint32_t in_buf_len);
 
 /**
@@ -304,6 +304,10 @@ int32_t GetFlashStatisticInfo(hal_partition_t partition, uint32_t blockNum, uint
 int32_t GetFlashRewriteCycle(hal_partition_t partition, uint32_t blockNum, uint32_t op, uint32_t *times);
 
 int32_t GetFlashBadBlockNum(hal_partition_t partition, uint32_t *blockNum);
+
+int CheckUseAccessable(unsigned char *partitionName, unsigned int *partition, hal_logic_partition_t *info);
+
+int GetUseAccessableName(char **partitionName, unsigned int index);
 
 int ota_partition_check_magic(const hal_partition_t partition, const uint32_t addr);
 
