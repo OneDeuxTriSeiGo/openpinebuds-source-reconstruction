@@ -407,6 +407,7 @@ SECTIONS
   *:k_*.o(.text*)
   *:wifi_drv*.o(.text*)
   *:dpd*.o(.text*)
+  *:*flash.o(.text*)
   /* freeRTOS kernel */
   *:heap_5.o(.text*)
   *:port.o(.text*)

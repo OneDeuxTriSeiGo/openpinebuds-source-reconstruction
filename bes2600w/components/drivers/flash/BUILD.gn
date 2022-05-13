@@ -30,6 +30,7 @@ static_library("flash") {
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/platform/hal",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/platform/drivers/ana",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/utils/crc32",
+    "//device/bestechnic/${board_name}/sdk_liteos/bsp/services/norflash_api",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/include/rtos/liteos/liteos_m/kal/cmsis",
     "//base/update/ota_lite/hals",
     "//base/update/ota_lite/interfaces/kits",

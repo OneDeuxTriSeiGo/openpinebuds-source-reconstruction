@@ -19,14 +19,14 @@ int32_t littlefs_block_read(const struct lfs_config *c, lfs_block_t block,
                             lfs_off_t off, void *dst, lfs_size_t size)
 {
     uint32_t addr = c->block_size * block + off;
-    return hal_flash_read((hal_partition_t)c->context, &addr, dst, size);
+    return hal_flash_read((hal_partition_t)c->context, addr, dst, size);
 }
 
 int32_t littlefs_block_write(const struct lfs_config *c, lfs_block_t block,
                              lfs_off_t off, const void *dst, lfs_size_t size)
 {
     uint32_t addr = c->block_size * block + off;
-    return hal_flash_write((hal_partition_t)c->context, &addr, dst, size);
+    return hal_flash_write((hal_partition_t)c->context, addr, dst, size);
 }
 
 int32_t littlefs_block_erase(const struct lfs_config *c, lfs_block_t block)

@@ -426,13 +426,17 @@ else
    rm -rf out/cmcp
    rm -rf out/${A7_DSP_BIN_NAME}
    rm -rf out/best2600w_liteos
+   rm -rf out/ota_boot1
+   rm -rf out/ota_boot2a
 fi
 
 
 # clear out/
 rm -rf out/log
-rm -rf out/ota_boot1
-rm -rf out/ota_boot2a
+if [ "x$BUILD_SDK" != "x1" ]; then
+   rm -rf out/ota_boot1;
+   rm -rf out/ota_boot2a;
+fi
 rm -rf out/cmcp
 rm -rf out/${A7_DSP_BIN_NAME}
 rm -rf out/best2600w_liteos
@@ -444,8 +448,10 @@ rm -rf out/prebuild
 mkdir -p out/prebuild
 
 # make ota boot
-build_cmd make_boot1
-build_cmd make_boot2a
+if [ "x$BUILD_SDK" != "x1" ]; then
+   build_cmd make_boot1;
+   build_cmd make_boot2a;
+fi
 
 # make_a7
 build_cmd make_a7 TOOLCHAIN_10_3_1
@@ -464,6 +470,24 @@ mv out/prebuild/best2003_ramrun_fw.lzma out/prebuild/best2003_ramrun_fw.bin
 
 if [ "x$RELEASE_SDK" == "x1" ]; then
 
+mkdir -p out/ota_boot1_16/
+cp -rf out/ota_boot1/ota_boot1.bin out/ota_boot1_16/
+
+#build boot1 32M
+make_ota_boot1_32="${make_boot1}  PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000"
+build_cmd make_ota_boot1_32
+mkdir -p out/ota_boot1_32/
+cp -rf out/ota_boot1/ota_boot1.bin out/ota_boot1_32/
+
+mkdir -p out/ota_boot2a_16/
+cp -rf out/ota_boot2a/ota_boot2a.bin out/ota_boot2a_16/
+
+#build boot2a 32M
+make_ota_boot2a_32="${make_boot2a}  PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000"
+build_cmd make_ota_boot2a_32
+mkdir -p out/ota_boot2a_32/
+cp -rf out/ota_boot2a/ota_boot2a.bin out/ota_boot2a_32/
+
 #build cp 16M
 build_cmd make_cmcp
 # compress cp bin
@@ -479,13 +503,13 @@ rm -rf out/cmcp
 rm -rf out/best2600w_liteos
 
 #build cp 32M
-make_cmcp_32="${make_cmcp} PSRAM_XCCELA_MODE=1"
+make_cmcp_32="${make_cmcp}  PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000"
 build_cmd make_cmcp_32
 # compress cp bin
 tools/lzma e out/cmcp/cmcp.bin out/cmcp/cmcp.bin.lzma
 mv out/cmcp/cmcp.bin.lzma out/cmcp/cmcp.bin
 
-make_best2600w_32="${make_best2600w} PSRAM_XCCELA_MODE=1"
+make_best2600w_32="${make_best2600w}  PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000"
 build_cmd make_best2600w_32
 mkdir -p out/best2600w_liteos_32/
 cp -rf out/best2600w_liteos/libbest2600w_liteos.a out/best2600w_liteos_32/
