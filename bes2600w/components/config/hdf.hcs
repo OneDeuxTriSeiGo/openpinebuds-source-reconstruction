@@ -97,8 +97,8 @@ root {
                 partitions = [10];
                 owner = [0];
                 description = ["littlefs"];
-                start_addr = [0xB60000];
-                length = [0x400000];
+                start_addr = [0x1880000];
+                length = [0x440000];
                 options = [3];
             }
         }

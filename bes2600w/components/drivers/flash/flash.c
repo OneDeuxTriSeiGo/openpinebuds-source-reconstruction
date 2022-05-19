@@ -1220,7 +1220,7 @@ int ota_hal_read_flash(const hal_partition_t partition, const uint32_t addr, uin
             TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
             return -1;
         }
-    } else 	if (partition == HAL_PARTITION_RTOSA) {
+    } else if (partition == HAL_PARTITION_RTOSA) {
         //ret = NORFLASH_API_WRAP(hal_norflash_read_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2, addr, dst, size);
         hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
         ret = NORFLASH_API_WRAP(hal_norflash_read)(HAL_FLASH_ID_0, addr, dst, size);
@@ -1280,11 +1280,11 @@ int ota_hal_erase_flash(const hal_partition_t partition, const uint32_t addr, co
             TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
             return -1;
         }
-    } else 	if (partition == HAL_PARTITION_RTOSA) {
+    } else if (partition == HAL_PARTITION_RTOSA) {
         //ret = NORFLASH_API_WRAP(hal_norflash_erase_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2, addr, size);
-        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
         ret = NORFLASH_API_WRAP(hal_norflash_erase)(HAL_FLASH_ID_0, addr, size);
-        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
         if (ret) {
             TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
             return -1;
@@ -1304,16 +1304,16 @@ int ota_hal_write_flash(const hal_partition_t partition, const uint32_t addr, ui
         //ret = NORFLASH_API_WRAP(hal_norflash_write_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0, addr, src, size);
         hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
         ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, addr, src, size);
-        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);		
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_0);
         if (ret) {
             TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
             return -1;
         }
-    } else 	if (partition == HAL_PARTITION_RTOSA) {
+    } else if (partition == HAL_PARTITION_RTOSA) {
         //ret = NORFLASH_API_WRAP(hal_norflash_write_remap)(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2, addr, src, size);
         hal_norflash_disable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
         ret = NORFLASH_API_WRAP(hal_norflash_write)(HAL_FLASH_ID_0, addr, src, size);
-        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);		
+        hal_norflash_enable_remap(HAL_FLASH_ID_0, HAL_NORFLASH_REMAP_ID_2);
         if (ret) {
             TRACE(0, "%s %d hal_norflash_read_remap error!", __func__, __LINE__);
             return -1;
@@ -1521,7 +1521,6 @@ int ota_flash_write(const hal_partition_t partition, const uint32_t addr, const 
                 goto end;
             }
 
-            memcpy(buf, ptrSource, left_len);
             lock = int_lock_global();
             norflash_api_flush_all();
             ret = ota_hal_write_flash(partition, flash_offset, read_buf, sizeof(read_buf));
