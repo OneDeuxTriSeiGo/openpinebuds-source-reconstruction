@@ -48,18 +48,18 @@ make_boot1="make T=ota_boot1 \
             REMAP_SUPPORT=1 \
             BOOT2A_OFFSET=0x10000 \
             BOOT2B_OFFSET=0x20000 \
-            BOOTINFO_OFFSET=0xFD0000 \
+            BOOTINFO_OFFSET=0x1FC0000 \
             all lst -j${JOBS}"
 
 make_boot2a="make T=ota_boot2a \
             REMAP_SUPPORT=1 \
-            BOOTINFO_OFFSET=0xFD0000
+            BOOTINFO_OFFSET=0x1FC0000
             all lst -j${JOBS}"
 
 make_boot2b="make T=ota_boot2b \
             TZ_MAIN_OFFSET=0x30000 \
             TZ_MINI_OFFSET=0x56000 \
-            BOOTINFO_OFFSET=0xFD0000 \
+            BOOTINFO_OFFSET=0x1FC0000 \
             all lst -j${JOBS}"
 
 BUILDOPT_M33="CHIP=best2003 A7_DSP_ENABLE=1 DSP_AUDIO_TASK=1 DSP_CODEC_SUPPORT=0\
@@ -73,6 +73,8 @@ make_cmcp="make T=cmcp DEBUG_PORT=4 \
            GEN_SDK_LIB_NET=1 \
            RF_TX_CONTROL_IO=100 \
            UART1_IOMUX_INDEX=02 \
+           WIFI_BT_COEX_FDD=0 \
+           WIFI_BT_COEX_HYBRID=0 \
            ${BUILDOPT_CP} -j${JOBS}"
 
 make_a7="make T=$A7_DSP_BIN_NAME \
@@ -91,6 +93,8 @@ make_best2600w="make T=best2600w_liteos \
                 RF_TX_CONTROL_IO=100 \
                 PA_ENABLE_IO=21 \
                 UART1_IOMUX_INDEX=02 \
+                WIFI_BT_COEX_FDD=0 \
+                WIFI_BT_COEX_HYBRID=0 \
                 NET_FTP_CLIENT_SUPPORT=0 UTILS_BES_KV=1 \
                 GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0x80000 \
                 CP_BOOT=1 LITTLEFS_PARTITION_SUPPORT=0 LITTLEFS_ENABLE=0 \
@@ -115,8 +119,10 @@ make_best2600w_mini="make T=best2600w_liteos_mini \
                 RF_TX_CONTROL_IO=100 \
                 PA_ENABLE_IO=21 \
                 UART1_IOMUX_INDEX=02 \
+                WIFI_BT_COEX_FDD=0 \
+                WIFI_BT_COEX_HYBRID=0 \
                 NET_FTP_CLIENT_SUPPORT=0 UTILS_BES_KV=1 \
-                GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0x5F0000 \
+                GEN_SDK_LIB_NET=0 OTA_CODE_OFFSET=0xC80000 \
                 CP_BOOT=1 LITTLEFS_PARTITION_SUPPORT=0 LITTLEFS_ENABLE=0 \
                 FAST_TIMER_COMPENSATE=1 WAPI_SUPPORT=0 \
                 USB_AUDIO_FS=0 DEBUG_SPP_LOG=1 \

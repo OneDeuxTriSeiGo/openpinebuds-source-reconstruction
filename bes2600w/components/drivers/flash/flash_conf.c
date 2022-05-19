@@ -67,62 +67,62 @@ hal_logic_partition_t g_halPartitions[] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "cm33_main",
         .partition_start_addr = 0x80000,
-        .partition_length = 0x570000, //5768KB
+        .partition_length = 0xC00000, //12M
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_SYSTEM_MINI] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "system_mini",
-        .partition_start_addr = 0x5F0000,
-        .partition_length = 0x570000, //5768KB
+        .partition_start_addr = 0xC80000,
+        .partition_length = 0xC00000, //12M
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_RESOURCE] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "littlefs",
-        .partition_start_addr = 0xB60000,
-        .partition_length = 0x400000, //4096KB
+        .partition_start_addr = 0x1880000,
+        .partition_length = 0x440000, //4352KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_LOG] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "log",
-        .partition_start_addr = 0xF60000,
+        .partition_start_addr = 0x1CC0000,
         .partition_length = 0x30000, //192KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_DATA] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "data",
-        .partition_start_addr = 0xF90000,
+        .partition_start_addr = 0x1DC0000,
         .partition_length = 0x40000, //256KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_MISC] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "misc",
-        .partition_start_addr = 0xFD0000,
+        .partition_start_addr = 0x1FC0000,
         .partition_length = 0xC000, //48KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_USERDATA] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "userdata",
-        .partition_start_addr = 0xFDC000,
+        .partition_start_addr = 0x1FD0000,
         .partition_length = 0x4000, //16KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_ENV] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "factory",
-        .partition_start_addr = 0xFE0000,
+        .partition_start_addr = 0x1FE0000,
         .partition_length = 0x10000, //64KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },
     [HAL_PARTITION_ENV_REDUND] = {
         .partition_owner = HAL_FLASH_EMBEDDED,
         .partition_description = "factory_backup",
-        .partition_start_addr = 0xFF0000,
+        .partition_start_addr = 0x1FF0000,
         .partition_length = 0x10000, //64KB
         .partition_options = PAR_OPT_READ_EN | PAR_OPT_WRITE_EN,
     },

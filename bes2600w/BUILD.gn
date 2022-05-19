@@ -82,6 +82,7 @@ out_product_path = "${ohos_root_path}out/${board_name}/${product_name}"
 build_ext_component("init_burn_tools") {
   exec_path = rebase_path("burn_tools")
   command = "./tools/init_burn_tools.sh ./ ${out_product_path}"
+  print ("init_burn_tools command:",command)
 }
 
 # build sdk into lib
@@ -102,6 +103,7 @@ build_ext_component("build_sdk_into_lib") {
   }
   print ("product_path:",product_path)
   command = "./tools/build_lib_into_hmos_out.sh ${build_tz} ${build_mini} ${ohos_build_type} ${product_path} ${flash_size}"
+  print ("build_sdk_into_lib command:",command)
 }
 
 # config bin from vendor/bestechnic/<product_name>/config.json
@@ -127,6 +129,7 @@ foreach(bin_file, bin_list) {
       bsp_lib_path =
           "./sdk_liteos/bsp/out/${bsp_target_name}/lib${bsp_target_name}.a"
       command = "cp -rf ${bsp_lib_path} ${out_lib_path}"
+      print ("copy_lib_name command:",command)
       deps = [ ":build_sdk_into_lib" ]
     }
 
@@ -182,6 +185,7 @@ foreach(bin_file, bin_list) {
       src_elf = "${out_bin_path}/${exe_bin}.elf"
       dest_bin = "${out_bin_path}/${exe_bin}.bin"
       command = "arm-none-eabi-objcopy -O binary ${src_elf} ${dest_bin}"
+      print ("gen_bin_name command:",command)
       deps = [ ":${exe_bin}" ]
     }
 
@@ -193,6 +197,7 @@ foreach(bin_file, bin_list) {
       copy_dest = "./release_bin"
       bin_name_ota = burn_name
       command = "cp -rf ${out_bin_path}/${exe_bin}.bin ${copy_dest}/${bin_name_ota}.bin"
+      print ("copy_burn_bin_name command:",command)
       deps = [ ":${gen_bin_name}" ]
       deps += [":init_burn_tools" ]
     }
@@ -225,6 +230,7 @@ foreach(bin_file, bin_list) {
       }
       copy_dst = "./write_flash_gui/ota_bin"
       command = "cp -rf ${copy_src}/${bin_name_ota}.bin ${copy_dst}/${burn_name}.bin"
+      print ("copy_bin_name command:",command)
     }
   }
 }
@@ -244,6 +250,7 @@ foreach(fs_bin, fs_list) {
     build_ext_component(gen_fs_name) {
       exec_path = rebase_path("burn_tools")
       command = "./tools/genfs.sh ${block_size} ${fs_size} ${fs_src} ${out_product_path} ${fs_name}"
+      print ("gen_fs_name command:",command)
       deps = [":init_burn_tools" ]
     }
 
@@ -260,6 +267,7 @@ foreach(fs_bin, fs_list) {
 
     # if use copy signature bin
     copy_fs_name = "copy_${fs_name}_to_gui"
+    print ("copy_fs_name:",copy_fs_name)
     build_ext_component(copy_fs_name) {
       exec_path = rebase_path("${out_product_path}")
       deps = []
@@ -273,6 +281,7 @@ foreach(fs_bin, fs_list) {
         deps += [ ":${gen_fs_name}" ]
       }
       command = "cp -rf ${copy_src}/${fs_name_ota}.bin ./write_flash_gui/ota_bin/${fs_name}.bin"
+      print ("copy_fs_name command:",command)
     }
   }
 }
@@ -288,10 +297,11 @@ foreach(bsp_bin, bsp_bin_list) {
     copy_burn_bin_name = "copy_${bsp_bin_name}_to_relase_bin"
     build_ext_component(copy_burn_bin_name) {
       exec_path = rebase_path(".")
-      bsp_out_bin_path = "sdk_liteos/bsp/out/${bsp_bin_name}"
+      bsp_out_bin_path = "sdk_liteos/bsp/out/${bsp_bin_name}_${flash_size}"
       copy_dest = "${out_product_path}/release_bin"
       bin_name_ota = burn_name
       command = "cp -rf ${bsp_out_bin_path}/${bsp_bin_name}.bin ${copy_dest}/${bin_name_ota}.bin"
+      print ("copy_burn_bin_name command:",command)
       deps = [ ":build_sdk_into_lib" ]
       deps += [":init_burn_tools" ]
     }
@@ -322,6 +332,7 @@ foreach(bsp_bin, bsp_bin_list) {
         deps += [ ":${copy_burn_bin_name}" ]
       }
       command = "cp -rf ./${copy_src}/${bsp_bin_name_ota}.bin ./write_flash_gui/ota_bin/${bsp_bin_name_ota}.bin"
+      print ("copy_bsp_bin_name command:",command)
     }
   }
 }
@@ -331,13 +342,16 @@ update_product_yaml = "update_${product_name}_yaml"
 build_ext_component(update_product_yaml) {
   exec_path = rebase_path("${ohos_root_path}")
   command = "cp -rf ${product_path}/${flash_partition_dir}/wifi_Download_cfg.yaml ${out_product_path}/write_flash_gui/"
+  print ("update_product_yaml command:",command)
   deps = [":init_burn_tools" ]
 }
 
 # pack write flash gui to write_flash_gui-<time>.tar.gz
 build_ext_component("pack_flash_gui") {
   exec_path = rebase_path("burn_tools")
+  print ("exec_path:",exec_path)
   command = "./tools/pack_burn_tools.sh ${out_product_path} ${pack_burn}"
+  print ("pack_flash_gui command:",command)
   deps = [":${update_product_yaml}"]
 
   # bin configed from vendor/bestechnic/<product_name>/config.json
