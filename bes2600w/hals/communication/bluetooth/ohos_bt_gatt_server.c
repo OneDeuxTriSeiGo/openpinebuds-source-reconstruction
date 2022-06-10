@@ -66,7 +66,7 @@ typedef struct {
 static BtGattServerCallbacks * ohos_g_gattServ_cb = NULL;
 #define GATT_DECL_INCLUDED_SERVICE       { 0x02, 0x28 }
 BleGattCharact ohos_g_gatt_att[10] = {0};
-
+static char g_gatt_connect_flag = 0;
 static char g_gattPrimaryService[GATT_SHORT_UUID_LEN] =        { 0x00, 0x28 };
 static char g_gattCharacteristicUuid[GATT_SHORT_UUID_LEN] =    { 0x03, 0x28 };
 static char g_gattCharacteristicCfgUuid[GATT_SHORT_UUID_LEN] = { 0x02, 0x29 };
@@ -160,6 +160,22 @@ BleGattAttr *find_attlist_according_handle(int32_t handle)
     return NULL;
 }
 
+int32_t ohos_att_handle_switch_to_bes(int32_t handle)
+{
+    int32_t offset_val = 1,g_handle;
+    for(int i=0; i<10; i++)
+    {
+        if((ohos_g_gatt_att[i].start_hdl < handle) && (ohos_g_gatt_att[i].end_hdl > handle)){
+            g_handle = ohos_g_gatt_att[i].handle - offset_val;
+            if(g_handle == handle){
+                return ohos_g_gatt_att[i].handle;
+            }
+            offset_val += 1;
+        }
+    }
+    return 0;
+}
+
 #if  1// for test  call back funcs should be define in uper layler
 /**
  * @brief Inform the gatt server init result
@@ -178,13 +194,16 @@ static void BesGattServerConnCreatedCallback(int32_t serverIf,
     BdAddr ble_addr;
 
     memcpy(&ble_addr, addr, OHOS_BD_ADDR_LEN);
-
-    if(ohos_g_gattServ_cb){
-        ohos_g_gattServ_cb->connectServerCb(connId,
-                                                                serverIf,
-                                                                &ble_addr);
+    if (g_gatt_connect_flag == 0)
+    {
+        g_gatt_connect_flag = 1;
+        if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->connectServerCb)) {
+            ohos_g_gattServ_cb->connectServerCb(connId,
+                                                                    serverIf,
+                                                                &   ble_addr);
+        }
+        BTA_TRACE(1, "%s %d %d", __func__, serverIf, connId);
     }
-    BTA_TRACE(1, "%s %d %d", __func__, serverIf, connId);
 }
 
 static void BesGattServerDisconnectCallback(int32_t serverIf, uint8_t* addr, int connId)
@@ -192,13 +211,16 @@ static void BesGattServerDisconnectCallback(int32_t serverIf, uint8_t* addr, int
     BdAddr ble_addr;
 
     memcpy(&ble_addr, addr, OHOS_BD_ADDR_LEN);
-
-    if(ohos_g_gattServ_cb){
-        ohos_g_gattServ_cb->disconnectServerCb(connId,
-                                          serverIf,
-                                          &ble_addr);
+    if (g_gatt_connect_flag == 1)
+    {
+        g_gatt_connect_flag = 0;
+        if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->disconnectServerCb)){
+            ohos_g_gattServ_cb->disconnectServerCb(connId,
+                                              serverIf,
+                                              &ble_addr);
+        }
+        BTA_TRACE(1, "%s %d %d", __func__, serverIf, connId);
     }
-    BTA_TRACE(1, "%s %d %d", __func__, serverIf, connId);
 }
 
 /**
@@ -210,7 +232,7 @@ static void BesGattServerDisconnectCallback(int32_t serverIf, uint8_t* addr, int
 static void BesGattServerAddServiceCallback(int status, int serverId, BtUuid *uuid, int srvcHandle)
 {
     BTA_TRACE(1, "%s %d", __func__, srvcHandle);
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->serviceAddCb)) {
         ohos_g_gattServ_cb->serviceAddCb(status,serverId,uuid,srvcHandle);
     }
 }
@@ -272,7 +294,7 @@ static uint16_t BesGattServerReqWriteCallback(int32_t server_if,
     writeCbPara.offset = offset;
     writeCbPara.length = length;
     writeCbPara.value = data;
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->requestWriteCb)) {
         ohos_g_gattServ_cb->requestWriteCb(writeCbPara);
     }
 
@@ -336,7 +358,7 @@ static void BesGattServerNTFCallback(int32_t server_if,
     readCbPara.transId = 1;
     readCbPara.isLong = false;
 
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->requestReadCb)) {
         ohos_g_gattServ_cb->requestReadCb(readCbPara);
     }
     bes_adapter_ble_service_db_t * service_db = btadapter_ble_service_get_service_by_if(server_if);
@@ -399,7 +421,7 @@ static void BesGattServerDeleteServerCallback(int32_t server_if)
 
 static void BesGattServerMtuExchangeCallback(uint8_t conidx, uint16_t mtu)
 {
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->mtuChangeCb)) {
         ohos_g_gattServ_cb->mtuChangeCb(conidx, mtu);
     }
     BTA_TRACE(1, "%s conidx:%d mtu:%d", __func__, conidx, mtu);
@@ -461,7 +483,7 @@ int BleGattsRegister(BtUuid appUuid)
         status = -1;
     }
 
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->registerServerCb)) {
         ohos_g_gattServ_cb->registerServerCb(status ,
                                                              server_if,
                                                              &appUuid);
@@ -547,7 +569,7 @@ int BleGattsAddService(int serverId, BtUuid srvcUuid, bool isPrimary, int number
         status = bes_gatt_server_add_att_item(serverId,
                                                                         service_db->handle_offset ++,
                                                                         &att_item);
-        if(ohos_g_gattServ_cb){
+        if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->serviceAddCb)) {
                ohos_g_gattServ_cb->serviceAddCb(status ,
                                                                serverId,
                                                                &srvcUuid,
@@ -589,7 +611,7 @@ int BleGattsAddIncludedService(int serverId, int srvcHandle, int includedHandle)
                                                             service_db->handle_offset ++,
                                                             &att_item);
     }
-     if(ohos_g_gattServ_cb){
+     if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->includeServiceAddCb)) {
            ohos_g_gattServ_cb->includeServiceAddCb(status,
                                                                     serverId,
                                                                     srvcHandle,
@@ -642,7 +664,7 @@ int BleGattsAddCharacteristic(int serverId, int srvcHandle, BtUuid characUuid,
                                                             &att_item);
     }
 
-     if(ohos_g_gattServ_cb){
+     if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->characteristicAddCb)) {
            ohos_g_gattServ_cb->characteristicAddCb(status,
                                                                     serverId,
                                                                     &characUuid,
@@ -689,7 +711,7 @@ int BleGattsAddDescriptor(int serverId, int srvcHandle, BtUuid descUuid, int per
                                                                         &att_item);
     }
 
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->descriptorAddCb)) {
            ohos_g_gattServ_cb->descriptorAddCb(status,
                                                                 serverId,
                                                                 &descUuid,
@@ -720,7 +742,7 @@ int BleGattsStartService(int serverId, int srvcHandle)
     }else
         status = -1;
 
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->serviceStartCb)) {
            ohos_g_gattServ_cb->serviceStartCb(status,
                                                             serverId,
                                                             srvcHandle);
@@ -747,7 +769,7 @@ int BleGattsStopService(int serverId, int srvcHandle)
         BTA_TRACE(1, "%s start_handle:%d handle_num:%d user_handle_num:%d", __func__, service_db->start_handle, service_db->handle_offset, service_db->nattb);
     }else
         status = -1;
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->serviceStopCb)) {
            ohos_g_gattServ_cb->serviceStopCb(status,
                                                             serverId,
                                                             srvcHandle);
@@ -814,7 +836,7 @@ int BleGattsSendResponse(int serverId, GattsSendRspParam *param)
     }else
         status = -1;
 
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->responseConfirmationCb)) {
         ohos_g_gattServ_cb->responseConfirmationCb(status,
                                                                         param->attrHandle);
     }
@@ -846,12 +868,17 @@ int BleGattsSendIndication(int serverId, GattsSendIndParam *param)
 
     if(service_db)
     {
+        if(ohos_att_handle_switch_to_bes(param->attrHandle)){
+            param->attrHandle = ohos_att_handle_switch_to_bes(param->attrHandle);
+        }
         status = bes_gatt_server_send_indication(serverId,param->connectId,param->attrHandle,
             param->confirm,param->value,param->valueLen);
+        BTA_TRACE(3, "%s sendLen:%d confirm:%d handlr:0x%x serverId:%d connectId:%d", __func__, param->valueLen,
+                    param->confirm, param->attrHandle, serverId, param->connectId);
     } else
         status = BT_STS_FAILED;
 
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->indicationSentCb)) {
               ohos_g_gattServ_cb->indicationSentCb(param->connectId,status);
     }
 
@@ -884,7 +911,7 @@ int BleGattsSetEncryption(BdAddr bdAddr, BleSecAct secAct)
 extern void BleRegisterConnCallback(void);
 int BleGattsRegisterCallbacks(BtGattServerCallbacks *func)
 {
-    if(func)
+    if (func)
     {
         ohos_g_gattServ_cb = func;
         BleRegisterConnCallback();
@@ -915,6 +942,24 @@ int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
     static int32_t att_num = 0;
 
     if (srvcHandle && srvcInfo && srvcInfo->attrList) {
+        att_num = srvcInfo->attrNum;
+        for (int i=0; i<srvcInfo->attrNum; i++)
+        {
+            if(srvcInfo->attrList[i].attrType == OHOS_BLE_ATTRIB_TYPE_CHAR)
+            {
+                if ((srvcInfo->attrList[i].properties & OHOS_GATT_CHARACTER_PROPERTY_BIT_NOTIFY)
+                    || (srvcInfo->attrList[i].properties & OHOS_GATT_CHARACTER_PROPERTY_BIT_INDICATE))
+                {
+                    att_num = att_num + 2;
+                }
+                else
+                {
+                    att_num = att_num + 1;
+                }
+            }
+        }
+    }
+    if (srvcHandle && srvcInfo && srvcInfo->attrList) {
         BTA_TRACE(4, "%s:srvcHandle:%p srvcInfo:%p srvcIndfo->attrNum:%d\n", __func__, srvcHandle, srvcInfo,srvcInfo->attrNum);
         for (int i=0; i<srvcInfo->attrNum; i++)
         {
@@ -930,7 +975,7 @@ int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                                                             srvcInfo->attrList[i].uuid,
                                                             sizeof(srvcInfo->attrList[i].uuid),
                                                             true,
-                                                            srvcInfo->attrNum,
+                                                            att_num,
                                                             false);
                     BTA_TRACE(2, "%s:serUuid:%p \n", __func__, serUuid.uuid);
                     bes_adapter_attm_item_t att_item;
@@ -938,14 +983,14 @@ int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     if (service_db) {
                         BTA_TRACE(3, "%s:service_db:%p %d\n", __func__, service_db, service_db->nattb);
                         memset(&att_item, 0 ,sizeof(att_item));
-                        service_db->nattb = srvcInfo->attrNum;
+                        service_db->nattb = att_num;
                         service_db->is_primary = true;
                         memcpy(att_item.uuid, serUuid.uuid, serUuid.uuidLen);
                         att_item.uuid_len = serUuid.uuidLen;
                         att_item.ext_perm = 0;
                         att_item.prop = OHOS_GATT_CHARACTER_PROPERTY_BIT_READ;
                         att_item.perm = OHOS_GATT_PERMISSION_READ;
-                        bes_gatt_server_update_att_num(server_id, srvcInfo->attrNum);
+                        bes_gatt_server_update_att_num(server_id, att_num);
                         BTA_TRACE(2, "%s:att_item:%p \n", __func__, &att_item);
                         int servstatus = bes_gatt_server_add_att_item(server_id, service_db->handle_offset++, &att_item);
                         if(ohos_g_gattServ_cb && ohos_g_gattServ_cb->serviceAddCb) {
@@ -965,7 +1010,6 @@ int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     characUuid.uuidLen = sizeof(g_gattCharacteristicUuid);
                     BleGattsAddCharacteristic(server_id, *srvcHandle, characUuid, OHOS_GATT_CHARACTER_PROPERTY_BIT_READ, OHOS_GATT_PERMISSION_READ);
                     handle_offset ++;
-                    break;
                 }
                 case OHOS_BLE_ATTRIB_TYPE_CHAR_VALUE:
                 {
@@ -980,7 +1024,11 @@ int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
                     BTA_TRACE(3, "%s:ohos_g_gatt_att[%d].handle:%x srvcInfo->attrList[%d].properties:0x%x srvcInfo->attrList[%d].func.write:%p\n", __func__,
                               att_num, ohos_g_gatt_att[att_num-1].handle, i, srvcInfo->attrList[i].properties, i, srvcInfo->attrList[i].func.write);
                     handle_offset ++;
-                    break;
+                    if ( !((srvcInfo->attrList[i].properties & OHOS_GATT_CHARACTER_PROPERTY_BIT_NOTIFY)
+                        || (srvcInfo->attrList[i].properties & OHOS_GATT_CHARACTER_PROPERTY_BIT_INDICATE)))
+                    {
+                        break;
+                    }
                 }
                 case OHOS_BLE_ATTRIB_TYPE_CHAR_CLIENT_CONFIG:
                 {
@@ -1028,7 +1076,7 @@ int BleGattsStartServiceEx(int *srvcHandle, BleGattService *srvcInfo)
  */
 int BleGattsStopServiceEx(int srvcHandle)
 {
-    if(ohos_g_gattServ_cb){
+    if ((ohos_g_gattServ_cb) && (ohos_g_gattServ_cb->serviceStopCb)) {
         ohos_g_gattServ_cb->serviceStopCb(0,0,srvcHandle);
     }
 

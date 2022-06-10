@@ -19,10 +19,16 @@ if [ ! -f $MAKEFILE ]; then
     mkdir -p bsp/out/best2600w_liteos/
     cp -rf bsp/out/best2600w_liteos_${5}/libbest2600w_liteos.a bsp/out/best2600w_liteos/
     cp -rf bsp/out/best2600w_liteos_${5}/_best2001.lds bsp/out/best2600w_liteos/
+    # mkdir -p bsp/out/best2600w_liteos_mini/
+    # cp -rf bsp/out/best2600w_liteos_mini_${5}/libbest2600w_liteos_mini.a bsp/out/best2600w_liteos_mini/
+    # cp -rf bsp/out/best2600w_liteos_mini_${5}/_best2001.lds bsp/out/best2600w_liteos_mini/
     mkdir -p bsp/out/ota_boot1/
     mkdir -p bsp/out/ota_boot2a/
     cp -rf bsp/out/ota_boot1_${5}/ota_boot1.bin bsp/out/ota_boot1/
     cp -rf bsp/out/ota_boot2a_${5}/ota_boot2a.bin bsp/out/ota_boot2a/
+    mkdir -p bsp/out/cmcp/
+    cp -rf bsp/out/cmcp_${5}/cmcp.bin bsp/out/cmcp/
+    cp -rf bsp/out/cmcp_${5}/_cmcp.lds bsp/out/cmcp/
     exit
 fi
 
@@ -39,7 +45,10 @@ fi
 
 if [ "x${flash_size}" == "x32" ]; then
     flash_config=" PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000 "
+elif [ "x${flash_size}" == "x16" ]; then
+    flash_config=" PSRAM_XCCELA_MODE=0 FLASH_SIZE=0x1000000 "
 fi
+printf "flash_size:${flash_size},flash_config=${flash_config}\n"
 
 rel=" "
 build_type="BUILD_TYPE=DEBUG"
@@ -130,7 +139,7 @@ fi
 
 cd bsp
 
-tools/build_best2600w_ohos3.0_into_lib.sh \
+tools/build_best2600w_ohos3.0_into_lib.sh flash_size=$flash_size \
 -a="$OPT_BEST2600W_LITEOS_A7 $build_type" \
 -m="$OPT_BEST2600W_LITEOS_MAIN $flash_config MODULE_KERNEL_STUB_INC=1 EXTERN_ROOT_PATH=./../../../../../ $build_type" \
 -c="$OPT_BEST2600W_LITEOS_CP $flash_config $build_type" \

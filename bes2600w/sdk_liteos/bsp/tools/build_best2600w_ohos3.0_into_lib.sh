@@ -418,11 +418,16 @@ done
 
 # for fit build increate
 BUILD_SDK=0
+BUILD_FLASH_SIZE=16
 for arg in $*
 do
    if [ $arg == "SDK=1" ];then
       BUILD_SDK=1
       echo "find SDK = 1"
+   fi
+   if [ $arg == "flash_size=32" ];then
+      echo "************************** FLASH_SIZE=0x2000000 ************************"
+      BUILD_FLASH_SIZE=32
    fi
 done
 if [ $arg == "SDK=1" ];then
@@ -450,13 +455,25 @@ rm -rf out/best2600w_liteos_se
 rm -rf out/best2600w_liteos_mini
 rm -rf out/best2600w_liteos_mini_se
 rm -rf out/prebuild
+rm -rf out/ota_boot1_$BUILD_FLASH_SIZE
+rm -rf out/ota_boot2a_$BUILD_FLASH_SIZE
+rm -rf out/best2600w_liteos_$BUILD_FLASH_SIZE
+rm -rf out/best2600w_liteos_mini_$BUILD_FLASH_SIZE
+rm -rf out/cmcp_$BUILD_FLASH_SIZE
 
 mkdir -p out/prebuild
+mkdir -p out/ota_boot1_$BUILD_FLASH_SIZE
+mkdir -p out/ota_boot2a_$BUILD_FLASH_SIZE
+mkdir -p out/best2600w_liteos_$BUILD_FLASH_SIZE
+mkdir -p out/best2600w_liteos_mini_$BUILD_FLASH_SIZE
+mkdir -p out/cmcp_$BUILD_FLASH_SIZE
 
 # make ota boot
 if [ "x$BUILD_SDK" != "x1" ]; then
    build_cmd make_boot1;
    build_cmd make_boot2a;
+   cp -rf out/ota_boot1/ota_boot1.bin out/ota_boot1_$BUILD_FLASH_SIZE/
+   cp -rf out/ota_boot2a/ota_boot2a.bin out/ota_boot2a_$BUILD_FLASH_SIZE/
 fi
 
 # make_a7
@@ -499,6 +516,9 @@ build_cmd make_cmcp
 # compress cp bin
 tools/lzma e out/cmcp/cmcp.bin out/cmcp/cmcp.bin.lzma
 mv out/cmcp/cmcp.bin.lzma out/cmcp/cmcp.bin
+mkdir -p out/cmcp_16/
+cp -rf out/cmcp/cmcp.bin out/cmcp_16/
+cp -rf out/cmcp/_cmcp.lds out/cmcp_16/
 
 build_cmd make_best2600w
 mkdir -p out/best2600w_liteos_16/
@@ -514,6 +534,9 @@ build_cmd make_cmcp_32
 # compress cp bin
 tools/lzma e out/cmcp/cmcp.bin out/cmcp/cmcp.bin.lzma
 mv out/cmcp/cmcp.bin.lzma out/cmcp/cmcp.bin
+mkdir -p out/cmcp_32/
+cp -rf out/cmcp/cmcp.bin out/cmcp_32/
+cp -rf out/cmcp/_cmcp.lds out/cmcp_32/
 
 make_best2600w_32="${make_best2600w}  PSRAM_XCCELA_MODE=1 FLASH_SIZE=0x2000000"
 build_cmd make_best2600w_32
@@ -533,6 +556,13 @@ mv out/cmcp/cmcp.bin.lzma out/cmcp/cmcp.bin
 build_cmd make_best2600w
 # make_best2600w_mini
 build_cmd make_best2600w_mini
+
+cp -rf out/cmcp/cmcp.bin out/cmcp_$BUILD_FLASH_SIZE/
+cp -rf out/best2600w_liteos/libbest2600w_liteos.a out/best2600w_liteos_$BUILD_FLASH_SIZE/
+cp -rf out/best2600w_liteos/_best2001.lds out/best2600w_liteos_$BUILD_FLASH_SIZE/
+cp -rf out/best2600w_liteos_mini/libbest2600w_liteos.a out/best2600w_liteos_mini_$BUILD_FLASH_SIZE/
+cp -rf out/best2600w_liteos_mini/_best2001.lds out/best2600w_liteos_mini_$BUILD_FLASH_SIZE/
+
 fi
 
 # release script
