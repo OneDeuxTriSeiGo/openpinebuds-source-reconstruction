@@ -30,6 +30,7 @@
 #include "devmgr_service_start.h"
 #include "ohos_mem_pool.h"
 #include "app_ble_include.h"
+#include "flash.h"
 
 #define BTIF_BAM_NOT_ACCESSIBLE     0x00    /* Non-discoverable or connectable */
 #define BTIF_BAM_GENERAL_ACCESSIBLE 0x03    /* General discoverable and connectable */
@@ -169,6 +170,45 @@ int doBleScanEenable(cmd_tbl_t *cmd, int argc, char *argv[])
 
     return 0;
 }
+
+static int doOtaMode(cmd_tbl_t *cmd, int argc, char *argv[])
+{
+    uint8_t scanEnable;
+    uint16_t scanWindow, scanInterval;
+
+    if (argc < 2) {
+        printf("%s %d parameter too less!!\n", __func__, __LINE__);
+        return -1;
+    }
+    if (strcmp(argv[1], "write") == 0) {
+        if (argc == 2) {
+            printf("%s %d please input: AT+OTAMODE=write,0/1\n", __func__, __LINE__);
+            return;
+        }
+        int upg_mode = atoi(argv[2]);
+        printf("%s %d upg_mode: %d!!\n", __func__, __LINE__, upg_mode);
+        int ret = SetMiscData(MISC_UPG_MODE, &upg_mode, sizeof(int));
+        if(ret) {
+            printf("set upg mode fail!!! ret=%d\n", ret);
+            return -1;
+        }
+        ret = SetMiscData(MISC_CUR_BOOT_AREA, &upg_mode, sizeof(int));
+        if(ret) {
+            printf("set cur boot area fail!!! ret=%d\n", ret);
+            return -1;
+        }
+    } else if (strcmp(argv[1], "read") == 0) {
+        int curbootArea = 3;
+        GetMiscData(MISC_UPG_MODE, &curbootArea,  sizeof(int));
+        printf("MISC_UPG_MODE UPDATA=%d\n", curbootArea);
+        curbootArea = 3;
+        GetMiscData(MISC_CUR_BOOT_AREA, &curbootArea,  sizeof(int));
+        printf("curbootArea=%d\n", curbootArea);
+    }
+
+    return 0;
+}
+
 void RegisterCustomATCmd()
 {
     cmd_tbl_t cmd_list[] = {
@@ -177,6 +217,7 @@ void RegisterCustomATCmd()
         {"AT+OPENBT", 2, doBtScanEnable, "AT+OPENBT  - Open bt,\n"},
         {"AT+OPENBLE", 3, doBleAdvEnable, "AT+OPENBLE  - Open ble,\n"},
         {"AT+SCANBLE", 4, doBleScanEenable, "AT+SCANBLE  - Scanning ble,\n"},
+        {"AT+OTAMODE", 4, doOtaMode, "AT+OTAMODE  - Scanning ble,\n"},
     };
     for (int i = 0; i < sizeof(cmd_list) / sizeof(cmd_tbl_t); i++) {
         console_cmd_add(&cmd_list[i]);

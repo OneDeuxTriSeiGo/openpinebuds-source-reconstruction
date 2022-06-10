@@ -1140,6 +1140,7 @@ int SetMiscData(MiscDataType type, const void *data, uint32_t dataLen)
         }
         break;
     default:
+        osMutexRelease(FlashMutex);
         return ERR_PARAMETER;
     }
 

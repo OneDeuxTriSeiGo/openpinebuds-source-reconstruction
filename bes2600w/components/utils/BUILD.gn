@@ -57,6 +57,7 @@ static_library("sys_adapter") {
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/services/ble_stack_v2/ip/ble/hl/inc/",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/config/best2600w_liteos/",
     "//device/bestechnic/${board_name}/sdk_liteos/bsp/services/bt_if_enhanced/inc/",
+    "//device/bestechnic/bes2600w/components/drivers/flash/",
   ]
 
   cflags = [ "-DLOG_FMT_MAX_LEN=128" ]

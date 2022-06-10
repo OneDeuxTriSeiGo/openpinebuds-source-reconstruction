@@ -178,6 +178,7 @@ static int general_random_ble_address(BdAddr *local_addr)
 static ohos_ble_adv_record* BleGetFreeAdvRecord(void)
 {
     for(int i = 0; i < HARMONY_ADV_MAX_SIZE; i ++){
+        printf("g_ohos_adv_record[%d].flag=%d\r\n", i, g_ohos_adv_record[i].flag);
         if(g_ohos_adv_record[i].flag == HARMONY_ADV_FREE_FLAG){
             g_ohos_adv_record[i].flag = HARMONY_ADV_OCCUPIED_FLAG;
             return &g_ohos_adv_record[i];
@@ -236,6 +237,8 @@ void app_ble_custome_set_adv_para(int actv_user,
                                                                                 uint8_t adv_type,
                                                                                 int8_t tx_power_dbm);
 
+static void ble_scan_result_callback(ble_bdaddr_t *bleAddr,int8_t rssi,uint8_t *adv_buf,uint8_t len);
+
 /**
  * @brief Initializes the Bluetooth protocol stack.
  *
@@ -249,6 +252,11 @@ int InitBtStack(void)
     {
         bes_bt_init();
     }
+
+    BleInitAdvRecord();
+    app_ble_custom_init();
+    app_ble_adv_report_callback_register(ble_scan_result_callback);
+
     return OHOS_BT_STATUS_SUCCESS;
 }
 
@@ -289,8 +297,12 @@ int SetDeviceName(const char *name, unsigned int len)
 {
     int status = OHOS_BT_STATUS_FAIL;
     if(name){
+        printf("SetDeviceName name=%s\r\n", name);
         status = factory_section_set_bt_name(name,len);  //bt name
-        return bes_status_to_ohos(status);
+        printf("SetDeviceName status=%d\r\n", status);
+        int ret = bes_status_to_ohos(status);
+        printf("SetDeviceName ret=%d\r\n", ret);
+        return ret;
     }
     return status;
 }
@@ -323,7 +335,7 @@ int BleSetAdvData(int advId, const BleConfigAdvData *data)
                                                             data->advLength,
                                                             data->scanRspData,
                                                             data->scanRspLength);
-    if(ohos_g_gatt_callback){
+    if((ohos_g_gatt_callback) && (ohos_g_gatt_callback->advDataCb)){
         ohos_g_gatt_callback->advDataCb(advId,0);
     }
     return 0;
@@ -369,7 +381,7 @@ int BleStartAdv(int advId, const BleAdvParams *param)
                                                                adv_type,
                                                                param->txPower);
     app_ble_custom_adv_start_3p(advRecord->adv_index);
-    if(ohos_g_gatt_callback){
+    if ((ohos_g_gatt_callback) && (ohos_g_gatt_callback->advEnableCb)){
         ohos_g_gatt_callback->advEnableCb(advId, 0);
     }
     return 0;
@@ -614,9 +626,6 @@ int BleGattRegisterCallbacks(BtGattCallbacks *func)
                 ohos_g_gatt_callback->scanParamSetCb = func->scanParamSetCb;
             if (func->scanResultCb)
                 ohos_g_gatt_callback->scanResultCb = func->scanResultCb;
-            BleInitAdvRecord();
-            app_ble_custom_init();
-            app_ble_adv_report_callback_register(ble_scan_result_callback);
         }
     }
     return 0;
@@ -640,16 +649,21 @@ int BleStartAdvEx(int *advId, const StartAdvRawData rawData, BleAdvParams advPar
     if (!adv_enable_timer_id) {
         adv_enable_timer_id = osTimerCreate(osTimer(adv_enable_timer), osTimerOnce, &adv_enable_para);
     }
-    adv_enable_para = *advId;
+    if (advId) {
+        adv_enable_para = *advId;
+    } else {
+        adv_enable_para = 0;
+    }
     BleConfigAdvData advData;
     advData.advData = rawData.advData;
     advData.advLength = rawData.advDataLen;
     advData.scanRspData = rawData.rspData;
     advData.scanRspLength = rawData.rspDataLen;
     duration = advParam.duration;
-
-    BleSetAdvData(*advId, &advData);
-    BleStartAdv(*advId, &advParam);
+    int ret1 = BleSetAdvData(adv_enable_para, &advData);
+    int ret2 = BleStartAdv(adv_enable_para, &advParam);
+    printf("BleStartAdvEx ret=%d\r\n", ret1);
+    printf("BleStartAdv ret=%d\r\n", ret2);
 
     if(duration != 0) {
         if (adv_timer_run_state == ADV_TIMER_IDLE) {
