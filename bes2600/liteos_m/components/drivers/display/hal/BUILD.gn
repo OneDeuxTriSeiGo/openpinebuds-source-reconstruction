@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//drivers/adapter/khdf/liteos_m/hdf.gni")
+import("//drivers/hdf_core/adapter/khdf/liteos_m/hdf.gni")
 
 config("public") {
   include_dirs = [ "." ]
@@ -29,7 +29,7 @@ hdf_driver("hal_display") {
     "//drivers/peripheral/display/interfaces/include",
     "//drivers/peripheral/display/hal",
     "//drivers/peripheral/base",
-    "//drivers/framework/support/platform/include/mipi",
+    "//drivers/hdf_core/framework/support/platform/include/mipi",
   ]
   if (defined(LOSCFG_DRIVERS_HDF_CONFIG_MACRO)) {
     deps = [ "//device/board/fnlink/shields" ]
