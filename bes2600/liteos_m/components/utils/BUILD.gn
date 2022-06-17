@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//drivers/adapter/khdf/liteos_m/hdf.gni")
+import("//drivers/hdf_core/adapter/khdf/liteos_m/hdf.gni")
 
 config("public") {
   include_dirs = [ "include" ]
@@ -32,7 +32,7 @@ kernel_module("sys_adapter") {
     "//utils/native/lite/memory/include",
     "//base/hiviewdfx/hilog_lite/frameworks/mini",
     "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
-    "//drivers/framework/core/common/include/manager",
+    "//drivers/hdf_core/framework/core/common/include/manager",
   ]
 
   cflags = [ "-DLOG_FMT_MAX_LEN=128" ]

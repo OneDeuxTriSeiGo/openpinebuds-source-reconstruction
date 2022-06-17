@@ -11,12 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//drivers/adapter/khdf/liteos_m/hdf.gni")
+import("//drivers/hdf_core/adapter/khdf/liteos_m/hdf.gni")
 
 hdf_driver("mipi_dsi") {
   sources = [ "mipi_dsi.c" ]
 
-  include_dirs = [ "//drivers/framework/support/platform/include/mipi" ]
+  include_dirs =
+      [ "//drivers/hdf_core/framework/support/platform/include/mipi" ]
 }
 
 config("public") {
