@@ -166,7 +166,7 @@ static void WifiConnectionChangedHandler(int state, WifiLinkedInfo *info)
     struct netif *p_netif = &if_wifi;
     if (p_netif == NULL)
         return;
-    if (state == WIFI_STATE_NOT_AVALIABLE) {
+    if (state == WIFI_STATE_NOT_AVAILABLE) {
         /* clear IP address in case that dhcp_stop not do it */
         netifapi_netif_set_addr(p_netif, IP4_ADDR_ANY4, IP4_ADDR_ANY4, IP4_ADDR_ANY4);
         dns_setserver(0, IP4_ADDR_ANY);
@@ -176,7 +176,7 @@ static void WifiConnectionChangedHandler(int state, WifiLinkedInfo *info)
             osTimerStop(_dhcp_timer_id);
             dhcp_stop(p_netif);
         }
-    } else if ( state == WIFI_STATE_AVALIABLE) {
+    } else if ( state == WIFI_STATE_AVAILABLE) {
         netif_set_link_up(p_netif);
         netif_set_up(p_netif);
         if (_station_static_ip == true) {
@@ -234,7 +234,7 @@ static void HalHmosWifiEventThread(void const *argument)
             memset(&event, 0, sizeof(HalHmosEventInfo));
             event.event_id = cmd->cmd_id;
             if (cmd->cmd_id == HMOS_ON_WIFI_SCAN_STATE_CHANGED) {
-                event.event_info.wifi_scan_sate_changed.state = WIFI_STATE_AVALIABLE;
+                event.event_info.wifi_scan_sate_changed.state = WIFI_STATE_AVAILABLE;
                 g_HalHmosWifiInfo.scan_state = SCAN_TRIGGER;
                 if (cmd->cmd_info.scan_info.ssids == NULL && cmd->cmd_info.scan_info.channels == NULL) {
                     hmos_config_info->scan_size = bwifi_scan();
@@ -355,7 +355,7 @@ static void HalHmosStaEventConnect(WIFI_USER_EVT_ID evt_id, void *arg)
         HalHmosEventInfo event;
         event.event_id = HMOS_ON_WIFI_CONNECTION_CHANGED;
 
-        event.event_info.wifi_connection_changed.state = WIFI_STATE_AVALIABLE;
+        event.event_info.wifi_connection_changed.state = WIFI_STATE_AVAILABLE;
         info->rssi = bwifi_get_current_rssi();
         info->disconnectedReason = 0;
         info->connState = WIFI_CONNECTED;
@@ -385,7 +385,7 @@ static void HalHmosStaEventDisconn(WIFI_USER_EVT_ID evt_id, void *arg)
         HalHmosEventInfo event;
 
         event.event_id = HMOS_ON_WIFI_CONNECTION_CHANGED;
-        event.event_info.wifi_connection_changed.state = WIFI_STATE_AVALIABLE;
+        event.event_info.wifi_connection_changed.state = WIFI_STATE_AVAILABLE;
         info->connState = WIFI_DISCONNECTED;
         info->disconnectedReason = (unsigned short)(*(u16 *)arg);
         info->disconnectedReason &= 0x7fff;
@@ -411,7 +411,7 @@ static void HalHmosApEventEnabled(WIFI_USER_EVT_ID evt_id, void *arg)
         HalHmosEventInfo event;
 
         event.event_id = HMOS_ON_HOTSPOT_STATE_CHANGED;
-        event.event_info.hotspot_state_changed.state = WIFI_STATE_AVALIABLE;
+        event.event_info.hotspot_state_changed.state = WIFI_STATE_AVAILABLE;
         memcpy(&(event.event_info.wifi_connection_changed.info), info, sizeof(WifiLinkedInfo));
 
         for (i = 0; i < WIFI_MAX_EVENT_SIZE; i++) {
@@ -432,7 +432,7 @@ static void HalHmosApEventDisabled(WIFI_USER_EVT_ID evt_id, void *arg)
         HalHmosEventInfo event;
 
         event.event_id = HMOS_ON_HOTSPOT_STATE_CHANGED;
-        event.event_info.hotspot_state_changed.state = WIFI_STATE_NOT_AVALIABLE;
+        event.event_info.hotspot_state_changed.state = WIFI_STATE_NOT_AVAILABLE;
         memcpy(&(event.event_info.wifi_connection_changed.info), info, sizeof(WifiLinkedInfo));
 
         for (i = 0; i < WIFI_MAX_EVENT_SIZE; i++) {
