@@ -255,8 +255,8 @@ hb build -f
 1. windows10 安装uart 串口驱动 [CP2102usbqd](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers)。
 2. 把 out/`<board>`/`<product name>`/write_flash_gui-`<product name>`-`<timestamp>`.tar.gz 拷贝到windows 环境解压。
 3. 双击 write_flash_gui-`<product name>`-`<timestamp>`/write_flash_gui/Wifi_download_main.exe。
-4. 点击串口列表 ![fileset](https://gitee.com/besyangjian/images/raw/master/fileset.png) 点击 list 按钮勾选弹出来的串口，然后点击ok。
-5. 点击开始烧录 ![start](https://gitee.com/besyangjian/images/raw/master/start.png) 等待烧录。
+4. 点击串口列表 ![fileset](https://gitee.com/bestechnic/images/raw/master/fileset.png) 点击 list 按钮勾选弹出来的串口，然后点击ok。
+5. 点击开始烧录 ![start](https://gitee.com/bestechnic/images/raw/master/start.png) 等待烧录。
 6. 模组 单击 reset按钮（详见板子的按钮）进行烧录,烧录成功图形界面会显示success,反之显示fail。
 7. 打开串口工具(BAUDRATE:1500000)，reset 或者power 按键（详见板子的按钮） 启动板子，查看log。
 
