@@ -110,3 +110,7 @@ write_flash_gui*
 
 # configuration file
 # *.ini
+
+# Except these files
+!bes2600/liteos_m/sdk/bsp/out/**/*.bin
+!bes2600/liteos_m/sdk/bsp/out/**/*.a
