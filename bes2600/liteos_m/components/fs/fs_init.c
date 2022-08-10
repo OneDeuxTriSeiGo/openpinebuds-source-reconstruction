@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 #include <sys/mount.h>
-#include "littlefs.h"
 #include "flash.h"
+#include "los_fs.h"
 #include "los_config.h"
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
@@ -26,7 +26,7 @@
 #endif
 struct fs_cfg {
     char *mount_point;
-    struct lfs_config lfs_cfg;
+    struct PartitionCfg partCfg;
 };
 
 static struct fs_cfg fs[LOSCFG_LFS_MAX_MOUNT_SIZE] = {0};
@@ -45,12 +45,12 @@ static uint32_t FsGetResource(struct fs_cfg *fs)
     uint32_t block_count[] = HCS_ARRAYS(HCS_NODE(DISPLAY_MISC_FS_LITTLEFS_CONFIG, block_count));
     for (int32_t i = 0; i < num; i++) {
         fs[i].mount_point = mount_points[i];
-        fs[i].lfs_cfg.context = partitions[i];
-        fs[i].lfs_cfg.block_size = block_size[i];
-        fs[i].lfs_cfg.block_count = block_count[i];
+        fs[i].partCfg.partNo = partitions[i];
+        fs[i].partCfg.blockSize = block_size[i];
+        fs[i].partCfg.blockCount = block_count[i];
 
         HDF_LOGD("%s: fs[%d] mount_point=%s, partition=%u, block_size=%u, block_count=%u", __func__, i,
-                 fs[i].mount_point, (uint32_t)fs[i].lfs_cfg.context, fs[i].lfs_cfg.block_size, fs[i].lfs_cfg.block_count);
+                 fs[i].mount_point, (uint32_t)fs[i].partCfg.partNo, fs[i].partCfg.blockSize, fs[i].partCfg.blockCount);
     }
     return HDF_SUCCESS;
 }
@@ -72,20 +72,20 @@ static uint32_t FsGetResource(struct fs_cfg *fs, const struct DeviceResourceNode
             HDF_LOGE("%s: failed to get mount_points", __func__);
             return HDF_FAILURE;
         }
-        if (resource->GetUint32ArrayElem(resourceNode, "partitions", i, (uint32_t *)&fs[i].lfs_cfg.context, 0) != HDF_SUCCESS) {
+        if (resource->GetUint32ArrayElem(resourceNode, "partitions", i, (uint32_t *)&fs[i].partCfg.partNo, 0) != HDF_SUCCESS) {
             HDF_LOGE("%s: failed to get partitions", __func__);
             return HDF_FAILURE;
         }
-        if (resource->GetUint32ArrayElem(resourceNode, "block_size", i, &fs[i].lfs_cfg.block_size, 0) != HDF_SUCCESS) {
-            HDF_LOGE("%s: failed to get block_size", __func__);
+        if (resource->GetUint32ArrayElem(resourceNode, "blockSize", i, &fs[i].partCfg.blockSize, 0) != HDF_SUCCESS) {
+            HDF_LOGE("%s: failed to get blockSize", __func__);
             return HDF_FAILURE;
         }
-        if (resource->GetUint32ArrayElem(resourceNode, "block_count", i, &fs[i].lfs_cfg.block_count, 0) != HDF_SUCCESS) {
-            HDF_LOGE("%s: failed to get block_count", __func__);
+        if (resource->GetUint32ArrayElem(resourceNode, "blockCount", i, &fs[i].partCfg.blockCount, 0) != HDF_SUCCESS) {
+            HDF_LOGE("%s: failed to get blockCount", __func__);
             return HDF_FAILURE;
         }
-        HDF_LOGD("%s: fs[%d] mount_point=%s, partition=%u, block_size=%u, block_count=%u", __func__, i,
-                 fs[i].mount_point, (uint32_t)fs[i].lfs_cfg.context, fs[i].lfs_cfg.block_size, fs[i].lfs_cfg.block_count);
+        HDF_LOGD("%s: fs[%d] mount_point=%s, partition=%u, blockSize=%u, blockCount=%u", __func__, i,
+                 fs[i].mount_point, (uint32_t)fs[i].partCfg.partNo, fs[i].partCfg.blockSize, fs[i].partCfg.blockCount);
     }
     return HDF_SUCCESS;
 }
@@ -113,18 +113,16 @@ static int32_t FsDriverInit(struct HdfDeviceObject *object)
         if (fs[i].mount_point == NULL)
             continue;
 
-        fs[i].lfs_cfg.read = littlefs_block_read;
-        fs[i].lfs_cfg.prog = littlefs_block_write;
-        fs[i].lfs_cfg.erase = littlefs_block_erase;
-        fs[i].lfs_cfg.sync = littlefs_block_sync;
+        fs[i].partCfg.readFunc = hal_flash_read;
+        fs[i].partCfg.writeFunc = hal_flash_write;
+        fs[i].partCfg.eraseFunc = hal_flash_erase;
+        fs[i].partCfg.readSize = 256; /* 256, lfs read size */
+        fs[i].partCfg.writeSize = 256; /* 256, lfs prog size */
+        fs[i].partCfg.cacheSize = 256; /* 256, lfs cache size */
+        fs[i].partCfg.lookaheadSize = 16; /* 16, lfs lookahead size */
+        fs[i].partCfg.blockCycles = 1000; /* 1000, lfs block cycles */
 
-        fs[i].lfs_cfg.read_size = 256;
-        fs[i].lfs_cfg.prog_size = 256;
-        fs[i].lfs_cfg.cache_size = 256;
-        fs[i].lfs_cfg.lookahead_size = 16;
-        fs[i].lfs_cfg.block_cycles = 1000;
-
-        int ret = mount(NULL, fs[i].mount_point, "littlefs", 0, &fs[i].lfs_cfg);
+        int ret = mount(NULL, fs[i].mount_point, "littlefs", 0, &fs[i].partCfg);
         HDF_LOGI("%s: mount fs on '%s' %s\n", __func__, fs[i].mount_point, (ret == 0) ? "succeed" : "failed");
     }
     return HDF_SUCCESS;

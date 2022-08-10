@@ -79,6 +79,7 @@ typedef struct {
 #define RD_DATA_LEN_MAX 200
 #define RD_SIGN_LEN_MAX 384
 #define MISC_HEADER_MAGIC 0x6564636A
+#define DEV_FLASH_NAME "flash0"
 
 typedef struct {
     int rdDataLen;                /* 研发模式明文长度 */

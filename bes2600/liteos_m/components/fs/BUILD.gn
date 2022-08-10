@@ -18,10 +18,7 @@ config("public") {
 }
 
 hdf_driver("fs_adapter") {
-  sources = [
-    "fs_init.c",
-    "littlefs.c",
-  ]
+  sources = [ "fs_init.c" ]
 
   deps = [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
   if (defined(LOSCFG_DRIVERS_HDF_CONFIG_MACRO)) {
