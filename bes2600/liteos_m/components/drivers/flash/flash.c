@@ -374,7 +374,7 @@ int32_t hal_flash_erase(hal_partition_t in_partition, uint32_t off_set, uint32_t
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + off_set;
+    start_addr = off_set;
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_ERASE);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");
@@ -419,7 +419,7 @@ int32_t hal_flash_write(hal_partition_t in_partition, uint32_t *off_set, const v
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + *off_set;
+    start_addr = *off_set;
     partition_end = info.partition_start_addr + info.partition_length;
     if (start_addr >= partition_end) {
         TRACE(0, "flash over write\r\n");
@@ -476,7 +476,7 @@ int32_t hal_flash_erase_write(hal_partition_t in_partition, uint32_t *off_set, c
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + *off_set;
+    start_addr = *off_set;
     partition_end = info.partition_start_addr + info.partition_length;
 
     if (start_addr >= partition_end) {
@@ -546,7 +546,7 @@ int32_t hal_flash_read(hal_partition_t in_partition, uint32_t *off_set, void *ou
         goto RETURN;
     }
 
-    start_addr = info.partition_start_addr + *off_set;
+    start_addr = *off_set;
     ret = SetFlashOptionInfo(in_partition, start_addr, FLASH_READ);
     if (ret < 0) {
         TRACE(0, "SetFlashOptionInfo FAIL\r\n");

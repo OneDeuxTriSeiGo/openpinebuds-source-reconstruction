@@ -15,6 +15,8 @@
 #include "flash.h"
 #include "hdf_log.h"
 #include "hdf_device_desc.h"
+#include "los_fs.h"
+
 #ifdef LOSCFG_DRIVERS_HDF_CONFIG_MACRO
 #include "hcs_macro.h"
 #include "hdf_config_macro.h"
@@ -233,6 +235,15 @@ static int32_t FlashDriverInit(struct HdfDeviceObject *object)
         }
     }
 #endif
+
+    int lengthArray[HAL_PARTITION_MAX];
+    int addrArray[HAL_PARTITION_MAX];
+    for (int i = 0; i < HAL_PARTITION_MAX; i++) {
+        lengthArray[i] = g_halPartitions[i].partition_length;
+        addrArray[i] = g_halPartitions[i].partition_start_addr;
+    }
+
+    (VOID)LOS_DiskPartition(DEV_FLASH_NAME, "littlefs", lengthArray, addrArray, HAL_PARTITION_MAX);
 
     return HDF_SUCCESS;
 }
