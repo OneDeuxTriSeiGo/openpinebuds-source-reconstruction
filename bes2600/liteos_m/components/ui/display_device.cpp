@@ -59,7 +59,7 @@ void DisplayDevice::UpdateFBBuffer()
     }
 }
 
-void DisplayDevice::Flush()
+void DisplayDevice::Flush(const Rect& flushRect)
 {
     FbdevFlush();
 }
