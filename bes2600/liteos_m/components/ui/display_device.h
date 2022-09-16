@@ -26,7 +26,7 @@ public:
     virtual ~DisplayDevice() {}
     static DisplayDevice *GetInstance();
 
-    void Flush() override;
+    void Flush(const Rect&) override;
     BufferInfo *GetFBBufferInfo() override;
     void UpdateFBBuffer();
 
