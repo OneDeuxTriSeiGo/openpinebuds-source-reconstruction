@@ -44,6 +44,8 @@ uint16_t btadapter_ble_service_get_start_task_id(void);
 //ble server
 bes_adapter_ble_service_db_t * btadapter_ble_service_get_free_db(bool use_bes_db);
 
+bes_adapter_client_db_t * btadapter_ble_client_get_db_connect(uint32_t client_if);
+
 bes_adapter_ble_service_db_t * btadapter_ble_service_get_service_by_if(int32_t server_if);
 
 bes_adapter_ble_service_db_t * btadapter_ble_service_get_service_by_handle(uint16_t handle);
@@ -91,6 +93,8 @@ void btadapter_ble_service_send_gatt_write_response( uint8_t conidx,
                                                                                                         uint16_t att_status);
 
 //client
+bes_adapter_client_db_t * btadapter_ble_client_get_db_by_if(uint32_t client_if);
+
 adapter_client_task_env_t * bes_gatt_client_get_task_env(void);
 
 void btadapter_ble_register_client_callback(bes_gattc_state_callback_t * cb);
@@ -103,6 +107,8 @@ uint16_t btadapter_ble_client_get_start_task_id(void);
 bes_adapter_client_db_t * btadapter_ble_client_get_free_db(void);
 
 bes_adapter_client_db_t * btadapter_ble_client_get_db_by_id(int32_t conidx);
+
+bes_adapter_client_db_t* btadapter_ble_client_get_db_by_addr(uint8_t *addr);
 
 void btadapter_ble_client_db_init(void);
 
@@ -127,6 +133,8 @@ uint16_t btadapter_ble_service_enable_stack_db(bes_adapter_ble_service_db_t *ser
 bes_gatt_status_e btadapter_ble_client_register_svc_notify(uint8_t conidx, 
                                                                                                                                 bes_gattc_svc_notify_t * svc_notify);
 
+bes_gatt_status_e btadapter_ble_client_unregister_svc_notify(uint8_t conidx,
+                                                                                                                                bes_gattc_svc_notify_t * svc_notify);
 bes_gatt_status_e btadapter_ble_client_start_service_discovery(adapter_client_task_env_t* task_env,
                                                                                                                         uint8_t conidx, 
                                                                                                                         bes_gatt_discovery_type_e discType,

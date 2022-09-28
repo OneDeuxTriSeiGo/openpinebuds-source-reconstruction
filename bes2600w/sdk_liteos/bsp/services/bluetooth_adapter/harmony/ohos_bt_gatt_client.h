@@ -35,13 +35,6 @@ typedef struct {
     unsigned char *data;
 } BtGattNotifyData;
 
-/* Parameters for GATT read operations */
-typedef struct {
-    unsigned short handle;
-    unsigned short dataLen;
-    unsigned char *data;
-} BtGattReadData;
-
 /* Callback invoked in response to BleGattcRegister */
 typedef void (*RegisterClientCallback)(int status, int clientId, const BtUuid *appUuid);
 
@@ -82,7 +75,7 @@ typedef void (*ReadRemoteRssiCallback)(int clientId, const BdAddr *bdAddr, int r
 typedef void (*RegisterNotificationCallback)(int connId, int registered, int status, unsigned short handle);
 
 /* Callback invoked when a remote device sends a notification/indication that a client has registered for */
-typedef void (*NotificationCallback)(int connId, BtGattNotifyData notifyData);
+typedef void (*NotificationCallback)(int clientId, BtGattReadData *notifyData, int status);
 
 typedef struct {
     RegisterClientCallback registerClientCb;
@@ -145,19 +138,19 @@ int BleGattcConnectParaUpdate(const BdAddr *bdAddr, BtGattcConnPara connPara);
 /*
  * @brief This function is called to request a GATT service discovery on a GATT server.
           Optionally, the results can be filtered for a given UUID.
- * @param[in] <bdAddr> remote address
+ * @param[in] clientid
  * @param[in] <filterUuid> a UUID of the service application is interested in. If Null, discover for all services
  * @return 0-success, other-fail
  */
-int BleGattcSearchServices(int connId, BtUuid filterUuid);
+int BleGattcSearchServices(int clientId, BtUuid filterUuid);
 
 /*
  * @brief This function is called to read a characteristics value from the server.
- * @param[in] <connId> connection ID
+ * @param[in] <connId> clientid
  * @param[in] <handle> characteritic handle to read
  * @return 0-success, other-fail
  */
-int BleGattcReadCharacteristic(int connId, int handle);
+int BleGattcReadCharacteristic(int clientId,  BtGattCharacteristic characteristic);
 
 /*
  * @brief This function is called to write a characteristics value to the server.
@@ -168,7 +161,7 @@ int BleGattcReadCharacteristic(int connId, int handle);
  * @param[in] <value> the data to be writen
  * @return 0-success, other-fail
  */
-int BleGattcWriteCharacteristic(int connId, int handle, int writeType, int len, char *value);
+int BleGattcWriteCharacteristic(int clientId, BtGattCharacteristic characteristic, BtGattWriteType writeType, int len, char *value);
 
 /*
  * @brief This function is called to read a characteristics value from the server.
@@ -176,7 +169,7 @@ int BleGattcWriteCharacteristic(int connId, int handle, int writeType, int len, 
  * @param[in] <handle> descriptor handle to read
  * @return 0-success, other-fail
  */
-int BleGattcReadDescriptor(int connId, int handle);
+int BleGattcReadDescriptor(int clientId, BtGattDescriptor descriptor);
 
 /*
  * @brief This function is called to write a descriptor value to the server.
@@ -187,7 +180,7 @@ int BleGattcReadDescriptor(int connId, int handle);
  * @param[in] <value> the data to be writen
  * @return 0-success, other-fail
  */
-int BleGattcWriteDescriptor(int connId, int handle, int writeType, int len, char *value);
+int BleGattcWriteDescriptor(int clientId, BtGattDescriptor descriptor, int len, char *value);
 
 /*
  * @brief This function is called to send an execute write request to the server(or cancel the prepare write).
@@ -221,7 +214,7 @@ int BleGattcReadRemoteRssi(int connId, const BdAddr *bdAddr);
  * @param[in] <enable> 1-register, 0-deregister
  * @return 0-success, other-fail
  */
-int BleGattcRegisterNotifications(int clientId, const BdAddr *bdAddr, int handle, int enable);
+int BleGattcRegisterNotification(int clientId, BtGattCharacteristic characteristic, int enable);
 
 /*
  * @brief Callback invoked for gatt client function

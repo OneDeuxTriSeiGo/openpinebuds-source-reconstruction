@@ -50,6 +50,21 @@
  */
 #define OHOS_BLE_UUID_MAX_LEN 16
 
+/* 16进制基数 */
+#define HEX_BASE_NUM 16
+
+/* UUID字节转换为字符长 */
+#define UUID_BYTE_TO_LENGTH 2
+
+/* 定义UUID占用字节 */
+#define UUID_LEN_2_BYTE 2
+#define UUID_LEN_4_BYTE 4
+#define UUID_LEN_16_BYTE 16
+
+/* UUID的字符长 */
+#define UUID_4_LENGTH 4
+#define UUID_8_LENGTH 8
+#define UUID_32_LENGTH 32
 /**
  * @brief Characteristic Properties的定义。
  *
@@ -343,5 +358,42 @@ typedef struct {
     /** UUID字段 */
     char *uuid;
 } BtUuid;
+
+typedef struct {
+    unsigned char len;
+    union {
+        unsigned short uuid16;
+        unsigned int uuid32;
+        unsigned char uuid128[16];
+    } uuid;
+} Uuid;
+
+typedef struct {
+    BtUuid serviceUuid;
+    BtUuid characteristicUuid;
+} BtGattCharacteristic;
+
+typedef struct {
+    BtGattCharacteristic characteristic;
+    BtUuid descriptorUuid;
+} BtGattDescriptor;
+
+typedef struct {
+    union{
+        BtGattCharacteristic    characteristic;
+        BtGattDescriptor         descriptor;
+    }attribute;
+    unsigned short dataLen;
+    unsigned char *data;
+}BtGattReadData;
+
+typedef enum
+{
+    OHOS_STATE_CONNECTINHG = 0x00,
+    OHOS_STATE_CONNECTED,
+    OHOS_STATE_DISCONNECTING,
+    OHOS_STATE_DISCONNECTED
+
+}BtConnectState;
 #endif
 /** @} */
