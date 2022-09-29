@@ -206,6 +206,7 @@ typedef struct _bes_gatt_services_s
 
 typedef struct __adapter_client_db{
     bool occupied;
+    uint32_t client_if;
     uint8_t ble_addr[6];
     //16 32 128
     uint16_t uuid_len;
