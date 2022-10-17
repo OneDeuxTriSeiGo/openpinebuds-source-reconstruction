@@ -24,7 +24,7 @@
 #if defined(MBEDTLS_ENTROPY_C)
 
 #include "mbedtls/entropy.h"
-#include "mbedtls/entropy_poll.h"
+#include "entropy_poll.h"
 
 #if defined(MBEDTLS_TEST_NULL_ENTROPY)
 #include "stdlib.h"
