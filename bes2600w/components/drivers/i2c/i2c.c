@@ -22,8 +22,14 @@
 #include "hal_iomux_best2003.h"
 #include "hal_trace.h"
 
+#define HAL_I2C_ID_NUM 3
+#define HAL_I2C_BUS_0 0
+#define HAL_I2C_BUS_1 1
+#define HAL_I2C_BUS_2 2
+
 osMutexDef(i2c0_mutex);
 osMutexDef(i2c1_mutex);
+osMutexDef(i2c2_mutex);
 
 #define DEC_NUM 10
 #define GROUP_PIN_NUM 8
@@ -87,14 +93,18 @@ int32_t InitI2cDevice(struct I2cDevice *device)
         return HDF_FAILURE;
     }
 
-    if (i2cPort == 0) {
+    if (i2cPort == HAL_I2C_BUS_0) {
         device->mutex = osMutexCreate(osMutex(i2c0_mutex));
         pinmuxI2c[0].function = HAL_IOMUX_FUNC_I2C_M0_SCL;
         pinmuxI2c[1].function = HAL_IOMUX_FUNC_I2C_M0_SDA;
-    } else {
+    } else if (i2cPort == HAL_I2C_BUS_1) {
         device->mutex = osMutexCreate(osMutex(i2c1_mutex));
         pinmuxI2c[0].function = HAL_IOMUX_FUNC_I2C_M1_SCL;
         pinmuxI2c[1].function = HAL_IOMUX_FUNC_I2C_M1_SDA;
+    } else if (i2cPort == HAL_I2C_BUS_2) {
+        device->mutex = osMutexCreate(osMutex(i2c2_mutex));
+        pinmuxI2c[0].function = HAL_IOMUX_FUNC_I2C_M2_SCL;
+        pinmuxI2c[1].function = HAL_IOMUX_FUNC_I2C_M2_SDA;
     }
 
     if (device->mutex == NULL) {
