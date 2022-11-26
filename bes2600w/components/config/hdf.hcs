@@ -37,6 +37,19 @@ root {
                 address_width = 8;
                 mode = 0;
             }
+            i2c2 {
+                match_attr = "i2c2_config";
+                port = 2;
+                speed = 100000;
+                // TSP_SCL/SDA - I2C2 = GPIO12/GPIO13
+                scl_pin = 12;
+                sda_pin = 13;
+                use_dma = 0;
+                use_sync = 1;
+                as_master = 1;
+                address_width = 8;
+                mode = 0;
+            }
         }
     }
     display {

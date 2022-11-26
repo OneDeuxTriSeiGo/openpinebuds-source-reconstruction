@@ -50,6 +50,13 @@ root {
                     serviceName = "";
                     deviceMatchAttr = "i2c1_config";
                 }
+                i2c2 :: deviceNode {
+                    policy = 0;
+                    priority = 100;
+                    moduleName = "HDF_PLATFORM_I2C";
+                    serviceName = "";
+                    deviceMatchAttr = "i2c2_config";
+                }
             }
             device_mipi_dsi :: device {
                 mipi_dsi0 :: deviceNode {

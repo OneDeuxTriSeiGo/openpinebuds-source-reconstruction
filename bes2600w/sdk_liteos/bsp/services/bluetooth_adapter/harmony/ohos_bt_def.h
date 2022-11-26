@@ -387,7 +387,7 @@ typedef struct {
     unsigned char *data;
 }BtGattReadData;
 
-typedef enum
+typedef enum 
 {
     OHOS_STATE_CONNECTINHG = 0x00,
     OHOS_STATE_CONNECTED,
