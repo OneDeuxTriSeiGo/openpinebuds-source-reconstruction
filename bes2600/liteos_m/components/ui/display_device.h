@@ -15,11 +15,11 @@
 #ifndef DISPLAY_DEVICE_H
 #define DISPLAY_DEVICE_H
 
-#include "engines/gfx/gfx_engine_manager.h"
+#include "engines/gfx/soft_engine.h"
 
 namespace OHOS
 {
-class DisplayDevice : public BaseGfxEngine
+class DisplayDevice : public SoftEngine
 {
 public:
     DisplayDevice() {}
