@@ -81,7 +81,7 @@ device/soc/
 #                                  +--------+     +------------------------------+
 ```
 
-以下内容步骤参考[quickstart-lite-env-setup-linux](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/quick-start/quickstart-lite-env-setup-linux.md)。
+以下内容步骤参考[quickstart-lite-env-setup-linux](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/Readme-CN.md)。
 
 仓库包含编译构建脚本和打包镜像工具。
 
@@ -233,8 +233,6 @@ sudo apt-get install build-essential gcc g++ make zlib* libffi-dev e2fsprogs pkg
    ```
 
 ## 编译流程
-
-[编译构建使用指](https://gitee.com/openharmony/docs/blob/master/zh-cn/device-dev/subsystems/subsys-build-mini-lite.md)
 
 ```shell
 hb set -root .
