@@ -64,6 +64,7 @@ INC_DIR  += -I$(EXTERN_ROOT_PATH)kernel/liteos_m/arch/arm/cortex-m33/gcc/NTZ/
 INC_DIR  += -I$(EXTERN_ROOT_PATH)third_party/bounds_checking_function/include/
 INC_DIR  += -I$(EXTERN_ROOT_PATH)kernel/liteos_m/components/exchook/
 INC_DIR  += -I$(EXTERN_ROOT_PATH)kernel/liteos_m/components/backtrace/
+INC_DIR  += -I$(EXTERN_ROOT_PATH)kernel/liteos_m/arch/arm/common/
 ccflags-y += $(INC_DIR)
 else
 INC_DIR  = kernel/include

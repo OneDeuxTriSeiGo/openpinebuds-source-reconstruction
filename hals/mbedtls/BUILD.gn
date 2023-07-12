@@ -25,20 +25,7 @@ config("mbedtls_config") {
   ]
 }
 
-lite_library("mbedtls_static") {
-  target_type = "static_library"
-  public_configs = [ ":mbedtls_config" ]
-  sources = MBEDTLS_SOURCES - [ "$MBEDTLSDIR/library/entropy_poll.c" ] +
-            [ "library/entropy_poll.c" ] + [ "$MBEDTLSDIR/library/debug.c" ]
-}
-
 group("mbedtls") {
-  public_deps = [ ":mbedtls_static" ]
   public_configs = [ ":mbedtls_config" ]
 }
 
-ndk_lib("mbedtls_ndk") {
-  lib_extension = ".a"
-  deps = [ ":mbedtls" ]
-  head_files = [ "include" ]
-}

@@ -33,7 +33,6 @@ hdf_driver("ui_adapter") {
   public_deps = [ "//foundation/arkui/ui_lite:ui" ]
   if (bes_ace_enable) {
     defines = [ "ENABLE_ACE" ]
-    public_deps += [ "//foundation/arkui/ace_engine_lite/frameworks:ace_lite" ]
   }
 
   include_dirs = [
@@ -41,5 +40,7 @@ hdf_driver("ui_adapter") {
     "//drivers/peripheral/base",
     "//foundation/arkui/ui_lite/frameworks",
     "//third_party/freetype/include",
+    "//foundation/arkui/ace_engine_lite/frameworks/include/base/",
+    "//foundation/arkui/ace_engine_lite/interfaces/inner_api/builtin/jsi",
   ]
 }
