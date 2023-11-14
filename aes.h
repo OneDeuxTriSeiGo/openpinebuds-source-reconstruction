@@ -1,3 +1,7 @@
+// Source from https://github.com/kokke/tiny-AES128-C
+// Public Domain / CC0 / Unlicense
+// Copyright (C) 2017 kokke (CC0-1.0)
+
 #ifndef _AES_H_
 #define _AES_H_
 
