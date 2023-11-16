@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Jean-Marc Valin
+/* Copyright (C) 2007-2008 Jean-Marc Valin
 
    File: speex_resampler.h
    Resampling code
@@ -75,6 +75,9 @@
 #define speex_resampler_skip_zeros CAT_PREFIX(RANDOM_PREFIX,_resampler_skip_zeros)
 #define speex_resampler_reset_mem CAT_PREFIX(RANDOM_PREFIX,_resampler_reset_mem)
 #define speex_resampler_strerror CAT_PREFIX(RANDOM_PREFIX,_resampler_strerror)
+
+/* We don't support visibility on Win32 */
+#define EXPORT
 
 #define spx_int16_t short
 #define spx_int32_t int
