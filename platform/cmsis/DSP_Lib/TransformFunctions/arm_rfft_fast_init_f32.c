@@ -270,12 +270,16 @@ arm_status arm_rfft_fast_init_f32(
 
   switch (fftLen)
   {
+#ifdef ENABLE_ARM_RFFT_F32_4096
   case 4096U:
     fptr = arm_rfft_4096_fast_init_f32;
     break;
+#endif
+#ifdef ENABLE_ARM_RFFT_F32_4096
   case 2048U:
     fptr = arm_rfft_2048_fast_init_f32;
     break;
+#endif
   case 1024U:
     fptr = arm_rfft_1024_fast_init_f32;
     break;
