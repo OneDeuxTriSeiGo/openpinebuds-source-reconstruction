@@ -1,1 +1,0 @@
-@page javascript_demo 轻应用javascript示例代码

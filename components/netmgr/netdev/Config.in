@@ -1,4 +1,0 @@
-config AOS_COMP_NETDEV
-    bool
-    help
-      Help message for NET DEVICE

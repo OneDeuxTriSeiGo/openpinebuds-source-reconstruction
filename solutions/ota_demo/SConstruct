@@ -1,9 +1,0 @@
-#! /bin/env python
-
-from aostools import Make
-
-defconfig = Make()
-
-Export('defconfig')
-
-defconfig.build_components()

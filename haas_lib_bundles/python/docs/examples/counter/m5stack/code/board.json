@@ -1,9 +1,0 @@
-{
-    "name": "haasedu",
-    "version": "1.0.0",
-    "io": {
-    },
-    "debugLevel": "ERROR",
-    "repl": "disable"
-}
-

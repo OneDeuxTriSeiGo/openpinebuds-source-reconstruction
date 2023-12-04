@@ -1,1 +1,0 @@
-#define OSCL_DLL_ENTRY_POINT_DEFAULT()

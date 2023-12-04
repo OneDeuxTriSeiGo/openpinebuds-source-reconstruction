@@ -1,3 +1,0 @@
-#define MICROPY_HW_BOARD_NAME "EDUk1 module"
-#define MICROPY_HW_MCU_NAME "EDUk1"
-#define MICROPY_SW_VENDOR_NAME "HaaSPython"

@@ -1,1 +1,0 @@
-![查看详情](../images/HaaSPython_2.0_detail.png)
