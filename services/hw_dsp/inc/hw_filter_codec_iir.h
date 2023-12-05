@@ -39,7 +39,7 @@ struct hw_filter_codec_iir_state_;
 typedef struct hw_filter_codec_iir_state_ hw_filter_codec_iir_state;
 
 // Creat a instance from hw_filter_codec_iir module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 hw_filter_codec_iir_state *hw_filter_codec_iir_create(int32_t sample_rate, int32_t channel_num, int32_t bits, hw_filter_codec_iir_cfg *cfg);
 
 // Destory a hw_filter_codec_iir instance

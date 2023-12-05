@@ -47,7 +47,7 @@ typedef enum
 	INVALID_CMD_CODE,
 	PARAMETER_LENGTH_OUT_OF_RANGE,
 	PARAMETER_LENGTH_TOO_SHORT,
-	HANDLING_FAILED,	
+	HANDLING_FAILED,
 	TIMEOUT_WAITING_RESPONSE,
 	// TO ADD: new return status
 } BLE_CUSTOM_CMD_RET_STATUS_E;
@@ -70,18 +70,18 @@ typedef enum
  * @param cmdCode	Custom command code, from BLE_CUSTOM_CMD_CODE_E
  * @param ptrParam 	Pointer of the received parameter
  * @param paramLen 	Length of the recevied parameter
- * 
+ *
  */
 typedef void (*BLE_CustomCmdHandler_t)(uint32_t cmdCode, uint8_t* ptrParam, uint32_t paramLen);
 
 /**
- * @brief Format of the custom command response handler function, 
+ * @brief Format of the custom command response handler function,
  *	called when the response to formerly sent command is received
  *
  * @param retStatus	Handling return status of the command
  * @param ptrParam 	Pointer of the received parameter
  * @param paramLen 	Length of the recevied parameter
- * 
+ *
  */
 typedef void (*BLE_CustomCmd_Response_Handler_t)(BLE_CUSTOM_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
 
@@ -90,7 +90,7 @@ typedef void (*BLE_CustomCmd_Response_Handler_t)(BLE_CUSTOM_CMD_RET_STATUS_E ret
  *
  * @param ptrData	Pointer of the received raw data
  * @param dataLen 	Length of the received raw data
- * 
+ *
  */
 typedef void (*BLE_RawDataReceived_Handler_t)(uint8_t* ptrData, uint32_t dataLen);
 
@@ -109,7 +109,7 @@ typedef struct
 } BLE_CUSTOM_CMD_INSTANCE_T;
 
 /**< maximum payload size of one BLE custom command */
-#define BLE_CUSTOM_CMD_MAXIMUM_PAYLOAD_SIZE		20	// assure that one BLE packet can include all the data 
+#define BLE_CUSTOM_CMD_MAXIMUM_PAYLOAD_SIZE		20	// assure that one BLE packet can include all the data
 
 /**
  * @brief BLE custom command playload
@@ -142,7 +142,7 @@ void 						BLE_start_raw_data_xfer_control_rsp_handler(BLE_CUSTOM_CMD_RET_STATUS
 void 						BLE_stop_raw_data_xfer_control_rsp_handler(BLE_CUSTOM_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
 uint8_t* 					BLE_custom_command_raw_data_buffer_pointer(void);
 uint16_t 					BLE_custom_command_received_raw_data_size(void);
-BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_response_to_command(uint32_t responsedCmdCode, BLE_CUSTOM_CMD_RET_STATUS_E returnStatus, 
+BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_response_to_command(uint32_t responsedCmdCode, BLE_CUSTOM_CMD_RET_STATUS_E returnStatus,
 								uint8_t* rspData, uint32_t rspDataLen, BLE_CUSTOM_CMD_TRANSMISSION_PATH_E path);
 BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_custom_command(uint32_t cmdCode, uint8_t* ptrParam, uint32_t paramLen, BLE_CUSTOM_CMD_TRANSMISSION_PATH_E path);
 BLE_CUSTOM_CMD_RET_STATUS_E BLE_custom_command_receive_data(uint8_t* ptrData, uint32_t dataLength);

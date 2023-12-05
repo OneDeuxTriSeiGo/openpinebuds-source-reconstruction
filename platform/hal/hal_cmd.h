@@ -54,7 +54,7 @@
 //         HAL_CMD_REBOOT,
 //         HAL_CMD_NOTIFICATION,
 
-//         HAL_CMD_INVALID = 0xff	
+//         HAL_CMD_INVALID = 0xff
 // } EL_CMD_E;
 
 // typedef enum {
