@@ -135,7 +135,8 @@ struct SpeexResamplerState_ {
  * @return Newly created resampler state
  * @retval NULL Error: not enough memory
  */
-SpeexResamplerState *speex_resampler_init(spx_uint32_t nb_channels,
+void speex_resampler_init(SpeexResamplerState *st,
+                                          spx_uint32_t nb_channels,
                                           spx_uint32_t in_rate,
                                           spx_uint32_t out_rate,
                                           int quality,
@@ -154,7 +155,8 @@ SpeexResamplerState *speex_resampler_init(spx_uint32_t nb_channels,
  * @return Newly created resampler state
  * @retval NULL Error: not enough memory
  */
-SpeexResamplerState *speex_resampler_init_frac(spx_uint32_t nb_channels,
+void speex_resampler_init_frac(SpeexResamplerState *st,
+                                               spx_uint32_t nb_channels,
                                                spx_uint32_t ratio_num,
                                                spx_uint32_t ratio_den,
                                                spx_uint32_t in_rate,
