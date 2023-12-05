@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  CRC check coutines  
+  \brief  CRC check coutines
 */
 
 #include "sbr_crc.h"

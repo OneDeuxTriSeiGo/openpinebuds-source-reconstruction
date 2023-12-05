@@ -713,7 +713,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_Fill(
         )
 {
   TRANSPORTDEC_ERROR tpErr;
-  /* loop counter for layers; if not TT_MP4_RAWPACKETS used as index for only 
+  /* loop counter for layers; if not TT_MP4_RAWPACKETS used as index for only
      available layer                                                           */
   INT layer      = 0;
   INT nrOfLayers = self->nrOfLayers;
@@ -749,7 +749,7 @@ static void aacDecoder_UpdateBitStreamCounters(CStreamInfo *pSi, HANDLE_FDK_BITS
 
   /* Note: The amount of bits consumed might become negative when parsing a
      bit stream with several sub frames, and we find out at the last sub frame
-     that the total frame length does not match the sum of sub frame length. 
+     that the total frame length does not match the sum of sub frame length.
      If this happens, the transport decoder might want to rewind to the supposed
      ending of the transport frame, and this position might be before the last
      access unit beginning. */

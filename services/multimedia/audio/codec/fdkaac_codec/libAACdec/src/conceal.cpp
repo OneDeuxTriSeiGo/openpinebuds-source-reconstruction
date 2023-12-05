@@ -492,7 +492,7 @@ AAC_DECODER_ERROR
     }
 
     /* now dequantize factors */
-    for (i = 0; i < CONCEAL_MAX_NUM_FADE_FACTORS; i++) 
+    for (i = 0; i < CONCEAL_MAX_NUM_FADE_FACTORS; i++)
     {
       concealParams->fadeOutFactor[i] =
         FX_DBL2FX_SGL( fLdPow(    CONCEAL_MIN_ATTENUATION_FACTOR_025_LD,
@@ -604,19 +604,19 @@ static void CConcealment_fakePnsData (
     -------+----------------+----------------+
         5  |                |  -99.0 dB
        15  |                |  -90.0 dB
-       25  |                |  -89.7 dB 
+       25  |                |  -89.7 dB
        35  |                |  -85.3 dB
       ...  |    ...         |   ...
        45  |  -69.9 dB      |  -70.0 dB
-       50  |  -62.2 dB      |  
+       50  |  -62.2 dB      |
        55  |  -55.6 dB      |  -54.6 dB
        60  |  -47.0 dB      |
        65  |  -39.5 dB      |  -39.5 dB
-       70  |  -31.9 dB      |  
+       70  |  -31.9 dB      |
        75  |  -24.4 dB      |  -24.4 dB
-       80  |  -16.9 dB      |  
+       80  |  -16.9 dB      |
        85  |   -9.4 dB (c)  |   -9.4 dB
-       90  |   -3.9 dB (c)  |  
+       90  |   -3.9 dB (c)  |
        95  |                |   -2.1 dB
       100  |                |   -1.6 dB
       105  |                |   -1.4 dB
@@ -714,7 +714,7 @@ void
       FDKmemcpy(pSpecScale, tSpecScale, 8*sizeof(SHORT));
     }
   }
-  
+
 }
 
 
@@ -753,7 +753,7 @@ int
     CConcealment_Store ( hConcealmentInfo,
                          pAacDecoderChannelInfo,
                          pAacDecoderStaticChannelInfo );
-    /* Reset index to random sign vector to make sign calculation frame agnostic 
+    /* Reset index to random sign vector to make sign calculation frame agnostic
        (only depends on number of subsequently concealed spectral blocks) */
         hConcealmentInfo->iRandomPhase = 0;
   }
@@ -935,7 +935,7 @@ static int
       /* mute spectral data */
       FDKmemclear(pSpectralCoefficient, samplesPerFrame * sizeof(FIXP_DBL));
 
-      if ( !(flags & (AC_USAC|AC_RSVD50)) 
+      if ( !(flags & (AC_USAC|AC_RSVD50))
            && pConcealCommonData->comfortNoiseLevel >= 0
            && pConcealCommonData->comfortNoiseLevel <= 61 /* -90dB */)
         {
@@ -1317,7 +1317,7 @@ static void
 {
   const SHORT *pSfbOffset;
   int line, sfb, scaleFactorBandsTotal = 0;
-  
+
   /* In the following calculations, enAccu is initialized with LSB-value in order to avoid zero energy-level */
 
   line = 0;
@@ -1839,7 +1839,7 @@ int
 }
 
 /*!
-  \brief Get the number of delay frames introduced by concealment technique. 
+  \brief Get the number of delay frames introduced by concealment technique.
 
   \return Number of delay frames.
  */

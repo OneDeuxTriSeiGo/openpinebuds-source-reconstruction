@@ -314,7 +314,7 @@ TRANSPORTDEC_ERROR adtsRead_DecodeHeader(
   {
     int pceBits = 0;
     UINT alignAnchor = FDKgetValidBits(hBs);
-    
+
     if (FDKreadBits(hBs,3) == ID_PCE) {
       /* Got luck! Parse the PCE */
       int crcReg;

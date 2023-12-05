@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Envelope extraction  
+  \brief  Envelope extraction
   The functions provided by this module are mostly called by applySBR(). After it is
   determined that there is valid SBR data, sbrGetHeaderData() might be called if the current
   SBR data contains an \ref SBR_HEADER_ELEMENT as opposed to a \ref SBR_STANDARD_ELEMENT. This function
@@ -301,7 +301,7 @@ sbrGetHeaderData (HANDLE_SBR_HEADER_DATA hHeaderData,
   headerExtra2 = FDKreadBits (hBs, 1);
 
   /* Handle extra header information */
-  if( headerExtra1) 
+  if( headerExtra1)
   {
     pBsData->freqScale = FDKreadBits (hBs, 2);
     pBsData->alterScale = FDKreadBits (hBs, 1);
@@ -974,7 +974,7 @@ extractLowDelayGrid (HANDLE_FDK_BITSTREAM hBitBuf,          /*!< bitbuffer handl
 
       /* decode freq res: */
       for (k = 0; k < pFrameInfo->nEnvelopes; k++) {
-          pFrameInfo->freqRes[k] = (UCHAR) FDKreadBits (hBitBuf, 1); /* f = F [1 bits] */          
+          pFrameInfo->freqRes[k] = (UCHAR) FDKreadBits (hBitBuf, 1); /* f = F [1 bits] */
       }
 
 

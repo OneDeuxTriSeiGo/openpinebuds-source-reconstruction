@@ -83,7 +83,7 @@ void SystemInit (void)
   L1C_EnableCaches();
   L1C_EnableBTAC();
 
-#if (__L2C_PRESENT == 1) 
+#if (__L2C_PRESENT == 1)
   // Enable GIC
   L2C_Enable();
 #endif

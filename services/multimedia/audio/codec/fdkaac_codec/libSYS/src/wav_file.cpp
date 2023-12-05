@@ -286,7 +286,7 @@ INT WAV_InputRead (HANDLE_WAV wav, void *buffer, UINT numSamples, int nBits)
             tmp >>= (wav->header.bitsPerSample-nBits);
           else
             tmp <<= (nBits-wav->header.bitsPerSample);
-            
+
           if (nBits == 8)
             *bptr++ = (SCHAR) tmp;
           if (nBits == 16)
@@ -468,7 +468,7 @@ INT WAV_OutputWrite(HANDLE_WAV wav, void *sampleBuffer, UINT numberOfSamples, in
     SHORT *sptr = (SHORT*)sampleBuffer;
     LONG  *lptr = (LONG*)sampleBuffer;
     LONG tmp;
-    
+
     int bps = Unpack(wav->header.bitsPerSample);
     UINT i;
 
@@ -484,7 +484,7 @@ INT WAV_OutputWrite(HANDLE_WAV wav, void *sampleBuffer, UINT numberOfSamples, in
       {
         int result;
         int shift;
-        
+
         switch (nBufBits) {
           case 8:  tmp = *bptr++; break;
           case 16: tmp = *sptr++; break;
@@ -504,14 +504,14 @@ INT WAV_OutputWrite(HANDLE_WAV wav, void *sampleBuffer, UINT numberOfSamples, in
         else
           tmp <<= shift;
 
-        /* Write sample */        
+        /* Write sample */
         result=FDKfwrite_EL(&tmp, bps>>3, 1, wav->fp);
         if (result <= 0) {
           FDKprintfErr("WAV_OutputWrite(): error: unable to write to file %d\n", wav->fp);
           return -1;
         }
       }
-    } 
+    }
 
     wav->header.dataSize += (numberOfSamples * (bps>>3));
     return 0;

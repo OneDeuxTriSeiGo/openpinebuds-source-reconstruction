@@ -352,7 +352,7 @@ int *p_loc)
                 pack_store_ldac(p_ac->a_rspec[isp], wl, p_stream, p_loc);
             }
         }
-    }    
+    }
 
     return;
 }

@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file   qmf.h
-  \brief  Complex qmf analysis/synthesis   
+  \brief  Complex qmf analysis/synthesis
   \author Markus Werner
 
 */

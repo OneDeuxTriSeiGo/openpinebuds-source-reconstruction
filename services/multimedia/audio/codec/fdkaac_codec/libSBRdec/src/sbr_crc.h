@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  CRC checking routines  
+  \brief  CRC checking routines
 */
 #ifndef __SBR_CRC_H
 #define __SBR_CRC_H

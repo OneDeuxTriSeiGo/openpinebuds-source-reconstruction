@@ -84,7 +84,7 @@ amm-info@iis.fraunhofer.de
 /*!
 \file
 \brief Memory layout
- 
+
 */
 #ifndef _SBR_RAM_H_
 #define _SBR_RAM_H_

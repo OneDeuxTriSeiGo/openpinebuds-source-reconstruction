@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Debugging aids   
+  \brief  Debugging aids
 */
 
 #ifndef __SBR_DEB_H

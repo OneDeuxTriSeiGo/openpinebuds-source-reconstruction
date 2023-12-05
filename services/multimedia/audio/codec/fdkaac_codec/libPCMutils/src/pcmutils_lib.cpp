@@ -1418,7 +1418,7 @@ PCMDMX_ERROR pcmDmx_Open (
   )
 {
   HANDLE_PCM_DOWNMIX self;
-  
+
   if (pSelf == NULL) {
     return (PCMDMX_INVALID_HANDLE);
   }

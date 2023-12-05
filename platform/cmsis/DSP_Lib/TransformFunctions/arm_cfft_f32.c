@@ -46,7 +46,7 @@ extern void arm_bitreversal_32(
 
 /**
   @defgroup ComplexFFT Complex FFT Functions
- 
+
   @par
                    The Fast Fourier Transform (FFT) is an efficient algorithm for computing the
                    Discrete Fourier Transform (DFT).  The FFT can be orders of magnitude faster
@@ -64,7 +64,7 @@ extern void arm_bitreversal_32(
                    <pre>{real[0], imag[0], real[1], imag[1], ...} </pre>
                    The FFT result will be contained in the same array and the frequency domain
                    values will have the same interleaving.
- 
+
   @par Floating-point
                    The floating-point complex FFT uses a mixed-radix algorithm.  Multiple radix-8
                    stages are performed along with a single radix-2 or radix-4 stage, as needed.
@@ -189,7 +189,7 @@ extern void arm_bitreversal_32(
                          break;
                      }
   @endcode
- 
+
  */
 
 void arm_cfft_radix8by2_f32 (arm_cfft_instance_f32 * S, float32_t * p1)

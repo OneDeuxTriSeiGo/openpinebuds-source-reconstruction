@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Frequency scale calculation  
+  \brief  Frequency scale calculation
 */
 
 #include "sbrdec_freq_sca.h"

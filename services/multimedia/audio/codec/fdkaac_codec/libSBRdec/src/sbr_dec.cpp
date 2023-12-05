@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Sbr decoder  
+  \brief  Sbr decoder
   This module provides the actual decoder implementation. The SBR data (side information) is already
   decoded. Only three functions are provided:
 
@@ -774,7 +774,7 @@ createSbrDec (SBR_CHANNEL * hSbrChannel,
               const int     downsampleFac,        /*!< Downsampling factor */
               const UINT    qmfFlags,             /*!< flags -> 1: HQ/LP selector, 2: CLDFB */
               const UINT    flags,
-              const int     overlap, 
+              const int     overlap,
               int           chan)                 /*!< Channel for which to assign buffers etc. */
 
 {
@@ -928,7 +928,7 @@ resetSbrDec (HANDLE_SBR_DEC hSbrDec,
              )
 {
   SBR_ERROR sbrError = SBRDEC_OK;
-  
+
   int old_lsb = hSbrDec->SynthesisQMF.lsb;
   int new_lsb = hHeaderData->freqBandData.lowSubband;
   int l, startBand, stopBand, startSlot, size;

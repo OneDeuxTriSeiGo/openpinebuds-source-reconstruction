@@ -409,7 +409,7 @@ static void InitNonPCWSideInformationForCurrentSet(H_HCR_INFO pHcr)
 
     codebookDim = pCbDimension[pExtendedSortedCodebook[extendedSortedCodebookIdx]];
     startNode   = *aHuffTable[pExtendedSortedCodebook[extendedSortedCodebookIdx]];
-    
+
     for ( k = pNumExtendedSortedCodewordInSection[numExtendedSortedCodewordInSectionIdx]; k != 0; k-- ) {
       iterationCounter++;
       if (iterationCounter > (1024>>2)) {

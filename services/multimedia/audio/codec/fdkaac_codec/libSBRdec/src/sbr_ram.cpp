@@ -84,7 +84,7 @@ amm-info@iis.fraunhofer.de
 /*!
   \file
   \brief Memory layout
-   
+
 
   This module declares all static and dynamic memory spaces
 */

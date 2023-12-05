@@ -1219,7 +1219,7 @@ LINKSPEC_CPP AAC_DECODER_ERROR CAacDecoder_DecodeFrame(
 
     if (! (self->flags & (AC_USAC|AC_RSVD50|AC_ELD|AC_SCALABLE|AC_ER)))
       type = (MP4_ELEMENT_ID) FDKreadBits(bs,3);
-    else 
+    else
       type = self->elements[element_count];
 
     setHcrType(&self->aacCommonData.overlay.aac.erHcrInfo, type);

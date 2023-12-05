@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  SBR bit writing routines  
+  \brief  SBR bit writing routines
 */
 
 
@@ -284,7 +284,7 @@ void sbrEncoder_GetHeader(SBR_ENCODER   *sbrEncoder,
                           int            fSendHeaders)
 {
   encodeSbrHeaderData (&sbrEncoder->sbrElement[element_index]->sbrHeaderData, hBs);
-    
+
   if (fSendHeaders == 0) {
     /* Prevent header being embedded into the SBR payload. */
     sbrEncoder->sbrElement[element_index]->sbrBitstreamData.NrSendHeaderData = -1;

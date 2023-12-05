@@ -277,9 +277,9 @@ void BidirectionalEstimation_UseLowerScfOfCurrentFrame (CAacDecoderChannelInfo *
   else {
     MaximumScaleFactorBands = 64;
   }
-  
+
   /* If an error was detected just in forward or backward direction, set the corresponding border for concealment to a
-     appropriate scalefactor band. The border is set to first or last sfb respectively, because the error will possibly 
+     appropriate scalefactor band. The border is set to first or last sfb respectively, because the error will possibly
      not follow directly after the corrupt bit but just after decoding some more (wrong) scalefactors. */
   if (pRvlc->conceal_min == CONCEAL_MIN_INIT)
     pRvlc->conceal_min = 0;
@@ -306,7 +306,7 @@ void BidirectionalEstimation_UseLowerScfOfCurrentFrame (CAacDecoderChannelInfo *
         break;
       case INTENSITY_HCB:
       case INTENSITY_HCB2:
-        if (refIsFwd < refIsBwd) 
+        if (refIsFwd < refIsBwd)
           pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = refIsFwd;
         else
           pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = refIsBwd;
@@ -320,7 +320,7 @@ void BidirectionalEstimation_UseLowerScfOfCurrentFrame (CAacDecoderChannelInfo *
       default:
         if (refScfFwd < refScfBwd)
           pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = refScfFwd;
-        else 
+        else
           pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = refScfBwd;
         break;
     }
@@ -329,42 +329,42 @@ void BidirectionalEstimation_UseLowerScfOfCurrentFrame (CAacDecoderChannelInfo *
     pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[pRvlc->conceal_max] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[pRvlc->conceal_max];
     pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[pRvlc->conceal_min] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[pRvlc->conceal_min];
 
-    /* consider the smaller of the forward and backward decoded value as the correct one */  
-    startBand = conceal_min;      
-    if (conceal_group_min == conceal_group_max)   
-      endBand = conceal_max;      
-    else          
-      endBand = pRvlc->maxSfbTransmitted-1;       
+    /* consider the smaller of the forward and backward decoded value as the correct one */
+    startBand = conceal_min;
+    if (conceal_group_min == conceal_group_max)
+      endBand = conceal_max;
+    else
+      endBand = pRvlc->maxSfbTransmitted-1;
 
-    for (group=conceal_group_min; group <= conceal_group_max; group++) {  
-      for (band=startBand; band <= endBand; band++) {  
-        bnds = 16*group+band;  
-        if (pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds] < pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[bnds])  
+    for (group=conceal_group_min; group <= conceal_group_max; group++) {
+      for (band=startBand; band <= endBand; band++) {
+        bnds = 16*group+band;
+        if (pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds] < pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[bnds])
           pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds];
         else
           pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[bnds];
-      }  
-      startBand = 0;   
-      if ((group+1) == conceal_group_max)  
-        endBand = conceal_max;  
-    }  
+      }
+      startBand = 0;
+      if ((group+1) == conceal_group_max)
+        endBand = conceal_max;
+    }
   }
 
   /* now copy all data to the output buffer which needs not to be concealed */
-  if (conceal_group_min == 0) 
-    endBand = conceal_min;    
-  else        
-    endBand = pRvlc->maxSfbTransmitted;     
+  if (conceal_group_min == 0)
+    endBand = conceal_min;
+  else
+    endBand = pRvlc->maxSfbTransmitted;
   for (group=0; group <= conceal_group_min; group++) {
     for (band=0; band < endBand; band++) {
       bnds = 16*group+band;
       pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds];
     }
-    if ((group+1) == conceal_group_min) 
-      endBand = conceal_min;    
+    if ((group+1) == conceal_group_min)
+      endBand = conceal_min;
   }
 
-  startBand = conceal_max+1;    
+  startBand = conceal_max+1;
   for (group=conceal_group_max; group < pRvlc->numWindowGroups; group++) {
     for (band=startBand; band < pRvlc->maxSfbTransmitted; band++) {
       bnds = 16*group+band;
@@ -378,19 +378,19 @@ void BidirectionalEstimation_UseLowerScfOfCurrentFrame (CAacDecoderChannelInfo *
   function:      BidirectionalEstimation_UseScfOfPrevFrameAsReference
 
   description:   This approach by means of bidirectional estimation is generally performed when
-                 a single bit error has been detected, the bit error can be isolated between 
-                 'conceal_min' and 'conceal_max', the 'sf_concealment' flag is set and the 
-                 previous frame has the same block type as the current frame. The scalefactor 
-                 decoded in forward and backward direction and the scalefactor of the previous 
-                 frame are compared with each other. The smaller scalefactor will be considered 
-                 as the correct one. At this the codebook of the previous and current frame must 
-                 be of the same set (scf, nrg, is) in each scalefactorband. Otherwise the 
-                 scalefactor of the previous frame is not considered in the minimum calculation. 
-                 The reconstruction of the scalefactors with this approach archieve good results 
-                 in audio quality. The strategy must be applied to scalefactors, intensity data 
+                 a single bit error has been detected, the bit error can be isolated between
+                 'conceal_min' and 'conceal_max', the 'sf_concealment' flag is set and the
+                 previous frame has the same block type as the current frame. The scalefactor
+                 decoded in forward and backward direction and the scalefactor of the previous
+                 frame are compared with each other. The smaller scalefactor will be considered
+                 as the correct one. At this the codebook of the previous and current frame must
+                 be of the same set (scf, nrg, is) in each scalefactorband. Otherwise the
+                 scalefactor of the previous frame is not considered in the minimum calculation.
+                 The reconstruction of the scalefactors with this approach archieve good results
+                 in audio quality. The strategy must be applied to scalefactors, intensity data
                  and noise energy seperately.
 -----------------------------------------------------------------------------------------------
-  output:        Concealed scalefactor, noise energy and intensity data between conceal_min and 
+  output:        Concealed scalefactor, noise energy and intensity data between conceal_min and
                  conceal_max
 -----------------------------------------------------------------------------------------------
   return:        -
@@ -416,7 +416,7 @@ void BidirectionalEstimation_UseScfOfPrevFrameAsReference (
   }
 
   /* If an error was detected just in forward or backward direction, set the corresponding border for concealment to a
-     appropriate scalefactor band. The border is set to first or last sfb respectively, because the error will possibly 
+     appropriate scalefactor band. The border is set to first or last sfb respectively, because the error will possibly
      not follow directly after the corrupt bit but just after decoding some more (wrong) scalefactors. */
   if (pRvlc->conceal_min == CONCEAL_MIN_INIT)
     pRvlc->conceal_min = 0;
@@ -429,15 +429,15 @@ void BidirectionalEstimation_UseScfOfPrevFrameAsReference (
   conceal_max = pRvlc->conceal_max % MaximumScaleFactorBands;
   conceal_group_max = pRvlc->conceal_max / MaximumScaleFactorBands;
 
-  pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[pRvlc->conceal_max] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[pRvlc->conceal_max];  
-  pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[pRvlc->conceal_min] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[pRvlc->conceal_min];  
+  pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[pRvlc->conceal_max] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[pRvlc->conceal_max];
+  pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[pRvlc->conceal_min] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[pRvlc->conceal_min];
 
   /* consider the smaller of the forward and backward decoded value as the correct one */
-  startBand = conceal_min;    
-  if (conceal_group_min == conceal_group_max) 
-    endBand = conceal_max;    
-  else        
-    endBand = pRvlc->maxSfbTransmitted-1;     
+  startBand = conceal_min;
+  if (conceal_group_min == conceal_group_max)
+    endBand = conceal_max;
+  else
+    endBand = pRvlc->maxSfbTransmitted-1;
 
   for (group=conceal_group_min; group <= conceal_group_max; group++) {
     for (band=startBand; band <= endBand; band++) {
@@ -470,7 +470,7 @@ void BidirectionalEstimation_UseScfOfPrevFrameAsReference (
         default:
           if (   (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=ZERO_HCB)
               && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=NOISE_HCB)
-              && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=INTENSITY_HCB) 
+              && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=INTENSITY_HCB)
               && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=INTENSITY_HCB2) )
           {
             commonMin = FDKmin(pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds], pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[bnds]);
@@ -481,26 +481,26 @@ void BidirectionalEstimation_UseScfOfPrevFrameAsReference (
           break;
       }
     }
-    startBand = 0; 
+    startBand = 0;
     if ((group+1) == conceal_group_max)
       endBand = conceal_max;
   }
 
   /* now copy all data to the output buffer which needs not to be concealed */
-  if (conceal_group_min == 0) 
-    endBand = conceal_min;    
-  else        
-    endBand = pRvlc->maxSfbTransmitted;     
+  if (conceal_group_min == 0)
+    endBand = conceal_min;
+  else
+    endBand = pRvlc->maxSfbTransmitted;
   for (group=0; group <= conceal_group_min; group++) {
     for (band=0; band < endBand; band++) {
       bnds = 16*group+band;
       pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds];
     }
-    if ((group+1) == conceal_group_min) 
-      endBand = conceal_min;    
+    if ((group+1) == conceal_group_min)
+      endBand = conceal_min;
   }
 
-  startBand = conceal_max+1;    
+  startBand = conceal_max+1;
   for (group=conceal_group_max; group < pRvlc->numWindowGroups; group++) {
     for (band=startBand; band < pRvlc->maxSfbTransmitted; band++) {
       bnds = 16*group+band;
@@ -513,15 +513,15 @@ void BidirectionalEstimation_UseScfOfPrevFrameAsReference (
 /*---------------------------------------------------------------------------------------------
   function:      StatisticalEstimation
 
-  description:   This approach by means of statistical estimation is generally performed when 
-                 both the start value and the end value are different and no further errors have 
-                 been detected. Considering the forward and backward decoded scalefactors, the 
-                 set with the lower scalefactors in sum will be considered as the correct one. 
-                 The scalefactors are differentially encoded. Normally it would reach to compare 
-                 one pair of the forward and backward decoded scalefactors to specify the lower 
+  description:   This approach by means of statistical estimation is generally performed when
+                 both the start value and the end value are different and no further errors have
+                 been detected. Considering the forward and backward decoded scalefactors, the
+                 set with the lower scalefactors in sum will be considered as the correct one.
+                 The scalefactors are differentially encoded. Normally it would reach to compare
+                 one pair of the forward and backward decoded scalefactors to specify the lower
                  set. But having detected no further errors does not necessarily mean the absence
-                 of errors. Therefore all scalefactors decoded in forward and backward direction 
-                 are summed up seperately. The set with the lower sum will be used. The strategy 
+                 of errors. Therefore all scalefactors decoded in forward and backward direction
+                 are summed up seperately. The set with the lower sum will be used. The strategy
                  must be applied to scalefactors, intensity data and noise energy seperately.
 -----------------------------------------------------------------------------------------------
   output:        Concealed scalefactor, noise energy and intensity data
@@ -621,12 +621,12 @@ void StatisticalEstimation (CAacDecoderChannelInfo *pAacDecoderChannelInfo)
 
 /*---------------------------------------------------------------------------------------------
   description:   Approach by means of predictive interpolation
-                 This approach by means of predictive estimation is generally performed when 
-                 the error cannot be isolated between 'conceal_min' and 'conceal_max', the 
-                 'sf_concealment' flag is set and the previous frame has the same block type 
-                 as the current frame. Check for each scalefactorband if the same type of data 
-                 (scalefactor, internsity data, noise energies) is transmitted. If so use the 
-                 scalefactor (intensity data, noise energy) in the current frame. Otherwise set 
+                 This approach by means of predictive estimation is generally performed when
+                 the error cannot be isolated between 'conceal_min' and 'conceal_max', the
+                 'sf_concealment' flag is set and the previous frame has the same block type
+                 as the current frame. Check for each scalefactorband if the same type of data
+                 (scalefactor, internsity data, noise energies) is transmitted. If so use the
+                 scalefactor (intensity data, noise energy) in the current frame. Otherwise set
                  the scalefactor (intensity data, noise energy) for this scalefactorband to zero.
 -----------------------------------------------------------------------------------------------
   output:        Concealed scalefactor, noise energy and intensity data
@@ -680,8 +680,8 @@ void PredictiveInterpolation (
 
         default:
           if (   (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=ZERO_HCB)
-              && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=NOISE_HCB) 
-              && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=INTENSITY_HCB) 
+              && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=NOISE_HCB)
+              && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=INTENSITY_HCB)
               && (pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousCodebook[bnds]!=INTENSITY_HCB2) ) {
             commonMin = FDKmin(pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd[bnds],pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfBwd[bnds]);
             pAacDecoderChannelInfo->pDynData->aScaleFactor[bnds] = FDKmin(commonMin, pAacDecoderStaticChannelInfo->concealmentInfo.aRvlcPreviousScaleFactor[bnds]);

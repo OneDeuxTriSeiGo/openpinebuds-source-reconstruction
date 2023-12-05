@@ -84,7 +84,7 @@ amm-info@iis.fraunhofer.de
 /*!
   \file
   \brief  Definition of constant tables
-   
+
 
   This module contains most of the constant data that can be stored in ROM.
 */

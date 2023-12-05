@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Inverse Filtering detection prototypes  
+  \brief  Inverse Filtering detection prototypes
 */
 #ifndef _INV_FILT_DET_H
 #define _INV_FILT_DET_H

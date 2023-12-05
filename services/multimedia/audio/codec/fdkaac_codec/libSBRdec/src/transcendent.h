@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  FDK Fixed Point Arithmetic Library Interface  
+  \brief  FDK Fixed Point Arithmetic Library Interface
 */
 
 #ifndef __TRANSCENDENT_H

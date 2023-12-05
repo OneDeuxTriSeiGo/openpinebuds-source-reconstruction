@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Low Power Profile Transposer,  
+  \brief  Low Power Profile Transposer,
 */
 
 #ifndef _LPP_TRANS_H

@@ -10,7 +10,7 @@ extern "C" {
 
 
 
-typedef struct  
+typedef struct
 {
   lhdc_ver_t version;
   uint32_t   sample_rate;

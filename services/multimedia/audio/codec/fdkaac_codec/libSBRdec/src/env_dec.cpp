@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  envelope decoding  
+  \brief  envelope decoding
   This module provides envelope decoding and error concealment algorithms. The main
   entry point is decodeSbrData().
 

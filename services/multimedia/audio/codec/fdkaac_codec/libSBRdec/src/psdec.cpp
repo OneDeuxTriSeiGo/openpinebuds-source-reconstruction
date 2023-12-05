@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  parametric stereo decoder  
+  \brief  parametric stereo decoder
 */
 
 #include "psdec.h"

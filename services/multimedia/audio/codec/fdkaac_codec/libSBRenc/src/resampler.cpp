@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  FDK resampler tool box: 
+  \brief  FDK resampler tool box:
   \author M. Werner
 */
 

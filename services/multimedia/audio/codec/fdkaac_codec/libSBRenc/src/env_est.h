@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Envelope estimation structs and prototypes  
+  \brief  Envelope estimation structs and prototypes
 */
 #ifndef __ENV_EST_H
 #define __ENV_EST_H

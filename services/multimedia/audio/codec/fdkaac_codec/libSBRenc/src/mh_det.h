@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  missing harmonics detection header file  
+  \brief  missing harmonics detection header file
 */
 
 #ifndef __MH_DETECT_H

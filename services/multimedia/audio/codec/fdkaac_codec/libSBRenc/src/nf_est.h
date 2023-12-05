@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Noise floor estimation structs and prototypes  
+  \brief  Noise floor estimation structs and prototypes
 */
 
 #ifndef __NF_EST_H

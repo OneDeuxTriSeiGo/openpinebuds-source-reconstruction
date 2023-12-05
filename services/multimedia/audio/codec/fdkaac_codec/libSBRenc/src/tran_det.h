@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Transient detector prototypes  
+  \brief  Transient detector prototypes
 */
 #ifndef __TRAN_DET_H
 #define __TRAN_DET_H

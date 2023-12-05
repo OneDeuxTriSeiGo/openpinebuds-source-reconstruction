@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Sbr miscellaneous helper functions prototypes  
+  \brief  Sbr miscellaneous helper functions prototypes
   \author
 */
 

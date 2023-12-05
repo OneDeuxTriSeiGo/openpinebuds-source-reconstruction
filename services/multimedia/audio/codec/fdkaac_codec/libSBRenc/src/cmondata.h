@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Core Coder's and SBR's shared data structure definition  
+  \brief  Core Coder's and SBR's shared data structure definition
 */
 #ifndef __SBR_CMONDATA_H
 #define __SBR_CMONDATA_H

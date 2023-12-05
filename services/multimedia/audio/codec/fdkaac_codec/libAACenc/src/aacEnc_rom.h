@@ -89,7 +89,7 @@ amm-info@iis.fraunhofer.de
 ******************************************************************************/
 /*!
   \file
-  \brief  Memory layout   
+  \brief  Memory layout
   \author Markus Lohwasser
 */
 

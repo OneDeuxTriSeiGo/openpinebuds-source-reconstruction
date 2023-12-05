@@ -230,8 +230,8 @@ LDACBT_API int ldacBT_init_handle_encode( HANDLE_LDAC_BT hLdacBT, int mtu, int e
 
     /* Calculate how many LDAC frames fit into payload packet */
     hLdacBT->tx.nfrm_in_pkt = hLdacBT->tx.tx_size / hLdacBT->frmlen_tx;
-    
-    
+
+
     /* Get ldac encode setting */
     result = ldaclib_get_encode_setting( pCfg->frmlen_1ch, sfid, &nbasebands, &grad_mode,
                      &grad_qu_l, &grad_qu_h, &grad_ofst_l, &grad_ofst_h, &abc_flag);
@@ -604,7 +604,7 @@ LDACBT_API int ldacBT_encode( HANDLE_LDAC_BT hLdacBT, void *p_pcm, int *pcm_used
     /* check for next frame buffer status */
     if( *stream_sz == 0 ){
         if( (( ptfbuf->used + frmlen_wrote) > hLdacBT->tx.tx_size) ||
-            (  ptfbuf->nfrm_in >= LDACBT_NFRM_TX_MAX ) || 
+            (  ptfbuf->nfrm_in >= LDACBT_NFRM_TX_MAX ) ||
             (( ptfbuf->used + frmlen_wrote) >= LDACBT_ENC_STREAM_BUF_SZ ) ||
             ( p_pcm == NULL ) /* flush encode */
             )

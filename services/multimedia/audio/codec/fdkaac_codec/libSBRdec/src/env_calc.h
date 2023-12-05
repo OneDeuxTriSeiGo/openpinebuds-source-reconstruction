@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Envelope calculation prototypes  
+  \brief  Envelope calculation prototypes
 */
 #ifndef __ENV_CALC_H
 #define __ENV_CALC_H

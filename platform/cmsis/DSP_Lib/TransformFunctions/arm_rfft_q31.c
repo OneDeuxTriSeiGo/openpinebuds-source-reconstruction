@@ -226,7 +226,7 @@ void arm_split_rifft_q31(
   const q31_t * pBTable,
         q31_t * pDst,
         uint32_t modifier)
-{       
+{
         q31_t outR, outI;                              /* Temporary variables for output */
   const q31_t *pCoefA, *pCoefB;                        /* Temporary pointers for twiddle factors */
         q31_t CoefA1, CoefA2, CoefB1;                  /* Temporary variables for twiddle coefficients */

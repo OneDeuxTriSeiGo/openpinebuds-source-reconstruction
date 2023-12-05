@@ -290,7 +290,7 @@ LNK_SECTION_CODE_L1 FIXP_DBL CalcInvLdData(FIXP_DBL x)
 
   FIXP_SGL frac = (FIXP_SGL)(LONG)(x & 0x3FF);
   UINT index3 = (UINT)(LONG)(x >> 10) & 0x1F;
-  UINT index2 = (UINT)(LONG)(x >> 15) & 0x1F; 
+  UINT index2 = (UINT)(LONG)(x >> 15) & 0x1F;
   UINT index1 = (UINT)(LONG)(x >> 20) & 0x1F;
   int exp  = (x >  FL2FXCONST_DBL(0.0f)) ? (31 - (int)(x>>25)) : (int)(-(x>>25));
 
@@ -298,7 +298,7 @@ LNK_SECTION_CODE_L1 FIXP_DBL CalcInvLdData(FIXP_DBL x)
   UINT lookup2 = exp2w_tab_long[index2];
   UINT lookup3 = exp2x_tab_long[index3];
   UINT lookup3f = lookup3 + (UINT)(LONG)fMultDiv2((FIXP_DBL)(0x0016302F),(FIXP_SGL)frac);
-  
+
   UINT lookup12 = (UINT)(LONG)fMult((FIXP_DBL)lookup1,  (FIXP_DBL) lookup2);
   UINT lookup   = (UINT)(LONG)fMult((FIXP_DBL)lookup12, (FIXP_DBL) lookup3f);
 

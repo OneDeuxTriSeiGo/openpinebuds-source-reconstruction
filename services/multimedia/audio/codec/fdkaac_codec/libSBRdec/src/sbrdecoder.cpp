@@ -1033,7 +1033,7 @@ SBR_ERROR sbrDecoder_Parse(
   if ( self == NULL || self->pSbrElement[elementIndex] == NULL ) {
     errorStatus = SBRDEC_NOT_INITIALIZED;
     goto bail;
-  } 
+  }
 
   hSbrElement = self->pSbrElement[elementIndex];
 
@@ -1135,7 +1135,7 @@ SBR_ERROR sbrDecoder_Parse(
             hSbrHeader,
             headerStatus,
             pSbrChannel,
-            hSbrElement->nChannels 
+            hSbrElement->nChannels
             );
 
       if (errorStatus == SBRDEC_OK) {
@@ -1303,7 +1303,7 @@ bail:
  * \param self SBR decoder handle
  * \param timeData pointer to output buffer
  * \param interleaved flag indicating interleaved channel output
- * \param channelMapping pointer to UCHAR array where next 2 channel offsets are stored. 
+ * \param channelMapping pointer to UCHAR array where next 2 channel offsets are stored.
  * \param elementIndex enumerating index of the SBR element to render.
  * \param numInChannels number of channels from core coder (reading stride).
  * \param numOutChannels pointer to a location to return number of output channels.
@@ -1510,7 +1510,7 @@ sbrDecoder_DecodeElement (
     h_ps_d->psDecodedPrv = (self->flags & SBRDEC_PS_DECODED) ? 1 : 0 ;
   }
 
-  if ( psPossible 
+  if ( psPossible
     )
   {
     FDK_ASSERT(strideOut > 1);

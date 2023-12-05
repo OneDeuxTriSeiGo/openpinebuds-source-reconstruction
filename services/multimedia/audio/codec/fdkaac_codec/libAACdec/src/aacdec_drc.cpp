@@ -405,7 +405,7 @@ int aacDecoder_drcMarkPayload (
         int dmxLevelsPresent, compressionPresent;
         int coarseGrainTcPresent, fineGrainTcPresent;
 
-        /* bs_info field */ 
+        /* bs_info field */
         FDKreadBits(bs, 8);                          /* mpeg_audio_type, dolby_surround_mode, presentation_mode */
         bitCnt+=8;
 
@@ -568,7 +568,7 @@ static int aacDecoder_drcReadCompression (
     return 0;
   }
 
-  /* Evaluate bs_info field */ 
+  /* Evaluate bs_info field */
   if (FDKreadBits(bs, 2) != 3) {               /* mpeg_audio_type */
     /* No MPEG-4 audio data */
     return 0;
@@ -660,7 +660,7 @@ static int aacDecoder_drcReadCompression (
 }
 
 
-/* 
+/*
  * Prepare DRC processing
  */
 static int aacDecoder_drcExtractAndMap (
@@ -973,7 +973,7 @@ void aacDecoder_drcApply (
      * if scaling drc_cut (or drc_boost), or control word drc_mantissa is 0
      * then there is no dynamic range compression
      *
-     * if pDrcChData->drcSgn[band] is 
+     * if pDrcChData->drcSgn[band] is
      *  1 then gain is < 1 :  factor = 2^(-self->cut   * pDrcChData->drcMag[band] / 24)
      *  0 then gain is > 1 :  factor = 2^( self->boost * pDrcChData->drcMag[band] / 24)
      */
@@ -1039,7 +1039,7 @@ void aacDecoder_drcApply (
   }
 
   /*  apply factor to spectral lines
-   *  short blocks must take care that bands fall on 
+   *  short blocks must take care that bands fall on
    *  block boundaries!
    */
   if (!bSbrPresent)
@@ -1102,7 +1102,7 @@ void aacDecoder_drcApply (
 }
 
 
-/* 
+/*
  * Prepare DRC processing
  */
 int aacDecoder_drcProlog (
@@ -1134,7 +1134,7 @@ int aacDecoder_drcProlog (
 }
 
 
-/* 
+/*
  * Finalize DRC processing
  */
 int aacDecoder_drcEpilog (

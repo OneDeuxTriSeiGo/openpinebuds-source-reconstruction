@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Envelope decoding  
+  \brief  Envelope decoding
 */
 #ifndef __ENV_DEC_H
 #define __ENV_DEC_H

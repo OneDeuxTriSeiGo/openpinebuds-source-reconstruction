@@ -85,7 +85,7 @@ amm-info@iis.fraunhofer.de
 #define __RESAMPLER_H
 /*!
   \file
-  \brief  Fixed Point Resampler Tool Box  
+  \brief  Fixed Point Resampler Tool Box
 */
 
 #include "common_fix.h"

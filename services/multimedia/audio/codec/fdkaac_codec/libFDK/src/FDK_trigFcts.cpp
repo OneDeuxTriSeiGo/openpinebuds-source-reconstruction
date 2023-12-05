@@ -296,7 +296,7 @@ FIXP_DBL fixp_atan(FIXP_DBL x)
 FIXP_DBL fixp_cos(FIXP_DBL x, int scale)
 {
     FIXP_DBL residual, error, sine, cosine;
-    
+
     residual = fixp_sin_cos_residual_inline(x, scale, &sine, &cosine);
     error = fMult(sine, residual);
 
@@ -306,7 +306,7 @@ FIXP_DBL fixp_cos(FIXP_DBL x, int scale)
 FIXP_DBL fixp_sin(FIXP_DBL x, int scale)
 {
     FIXP_DBL residual, error, sine, cosine;
-    
+
     residual = fixp_sin_cos_residual_inline(x, scale, &sine, &cosine);
     error = fMult(cosine, residual);
 
@@ -316,7 +316,7 @@ FIXP_DBL fixp_sin(FIXP_DBL x, int scale)
 void fixp_cos_sin (FIXP_DBL x, int scale, FIXP_DBL *cos, FIXP_DBL *sin)
 {
     FIXP_DBL residual, error0, error1, sine, cosine;
-    
+
     residual = fixp_sin_cos_residual_inline(x, scale, &sine, &cosine);
     error0 = fMult(sine, residual);
     error1 = fMult(cosine, residual);

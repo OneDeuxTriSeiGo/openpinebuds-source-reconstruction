@@ -84,7 +84,7 @@ amm-info@iis.fraunhofer.de
 /*!
 \file
 \brief Declaration of constant tables
- 
+
 */
 #ifndef __SBR_ROM_H
 #define __SBR_ROM_H

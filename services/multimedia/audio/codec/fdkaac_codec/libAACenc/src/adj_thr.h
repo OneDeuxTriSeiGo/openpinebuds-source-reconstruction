@@ -120,7 +120,7 @@ void FDKaacEnc_AdjThrInit(ADJ_THR_STATE *hAdjThr,
                 INT advancedBitsToPe,
                 FIXP_DBL vbrQualFactor,
                 const INT dZoneQuantEnable);
- 
+
 
 void FDKaacEnc_DistributeBits(ADJ_THR_STATE *adjThrState,
     ATS_ELEMENT       *AdjThrStateElement,

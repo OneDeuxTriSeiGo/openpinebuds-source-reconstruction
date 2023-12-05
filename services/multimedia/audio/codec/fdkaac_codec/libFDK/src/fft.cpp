@@ -1176,7 +1176,7 @@ static inline void fftN2(
 
   C_ALLOC_SCRATCH_START(aDst, FIXP_DBL, length*2);
   C_ALLOC_SCRATCH_START(aDst2, FIXP_DBL, dim2*2);
-     
+
   FDK_ASSERT(length == dim1*dim2);
 
   /* Perform dim2 times the fft of length dim1. The input samples are at the address of pSrc and the
@@ -1283,7 +1283,7 @@ length 15. Between the fft's a modolation is calculated.
 static inline void fft60(FIXP_DBL *pInput, INT *pScalefactor)
 {
   fftN2(
-          pInput, 60, 4, 15, 
+          pInput, 60, 4, 15,
           fft_4, fft15,
           RotVectorReal60, RotVectorImag60
           );
@@ -1303,7 +1303,7 @@ length 15. Between the fft's a modulation is calculated.
 static inline void fft240(FIXP_DBL *pInput, INT *pScalefactor)
 {
   fftN2(
-          pInput, 240, 16, 15, 
+          pInput, 240, 16, 15,
           fft_16, fft15,
           RotVectorReal240, RotVectorImag240
           );
@@ -1322,7 +1322,7 @@ length 15. Between the fft's a modulation is calculated.
 static inline void fft480(FIXP_DBL *pInput, INT *pScalefactor)
 {
   fftN2(
-          pInput, 480, 32, 15, 
+          pInput, 480, 32, 15,
           fft_32, fft15,
           RotVectorReal480, RotVectorImag480
           );
@@ -1338,7 +1338,7 @@ void fft(int length, FIXP_DBL *pInput, INT *pScalefactor)
   }
   else
   {
-  
+
   switch (length) {
     case 16:
       fft_16(pInput);

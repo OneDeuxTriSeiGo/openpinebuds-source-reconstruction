@@ -347,7 +347,7 @@ void sbrDecoder_drcApplySlot (
       if (band == ((int)numBands-1)) {
         topQmf = (64);
       }
-    
+
       for (bin = bottomQmf; bin < topQmf; bin++) {
         FIXP_DBL drcFact1_mag = hDrcData->prevFact_mag[bin];
         FIXP_DBL drcFact2_mag = fact_mag[band];

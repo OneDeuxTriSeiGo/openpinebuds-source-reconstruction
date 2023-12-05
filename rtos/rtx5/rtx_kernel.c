@@ -287,7 +287,7 @@ static int32_t svcRtxKernelLock (void) {
   }
   return lock;
 }
- 
+
 /// Unlock the RTOS Kernel scheduler.
 /// \note API identical to osKernelUnlock
 static int32_t svcRtxKernelUnlock (void) {
@@ -577,7 +577,7 @@ int32_t osKernelLock (void) {
   }
   return lock;
 }
- 
+
 /// Unlock the RTOS Kernel scheduler.
 int32_t osKernelUnlock (void) {
   int32_t lock;

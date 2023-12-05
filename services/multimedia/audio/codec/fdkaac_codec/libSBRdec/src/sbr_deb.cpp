@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Print selected debug messages   
+  \brief  Print selected debug messages
 */
 
 #include "sbr_deb.h"

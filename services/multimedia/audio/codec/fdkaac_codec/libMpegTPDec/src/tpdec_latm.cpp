@@ -275,7 +275,7 @@ TRANSPORTDEC_ERROR CLatmDemux_ReadStreamMuxConfig(
             tmpBs = *bs;
             FDKsyncCache(&tmpBs);
             tmpBs.hBitBuf.ValidBits = ascLen;
-            
+
             /* Read ASC */
             if ((ErrorStatus = AudioSpecificConfig_Parse(&pAsc[TPDEC_TRACKINDEX(prog,lay)], &tmpBs, 1, pTpDecCallbacks))) {
               return (ErrorStatus);

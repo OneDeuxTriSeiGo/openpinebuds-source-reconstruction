@@ -23,7 +23,7 @@ extern "C" {
 #define LDACBT_API
 #endif /* LDACBT_API  */
 
-/* This file contains the definitions, declarations and macros for an implimentation of 
+/* This file contains the definitions, declarations and macros for an implimentation of
  * LDAC encode processing.
  *
  * The basic flow of the encode processing is as follows:
@@ -230,7 +230,7 @@ LDACBT_API int  ldacBT_get_bitrate( HANDLE_LDAC_BT hLdacBt );
  * "cm" is configured to channel_mode in LDAC, which is determined by SRC and SNK devices in
  * Bluetooth transmission.
  * "fmt" is configured to input pcm audio format.
- * When the configuration of "mtu", "cm", or "sf" changed, the re-initialization is required. 
+ * When the configuration of "mtu", "cm", or "sf" changed, the re-initialization is required.
  *
  *  Format
  *      int  ldacBT_init_handle_encode( HANDLE_LDAC_BT hLdacBt, int mtu, int eqmid, int cm,

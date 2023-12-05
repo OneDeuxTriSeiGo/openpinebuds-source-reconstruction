@@ -180,7 +180,7 @@ void merge_rfft_f32(
 
 /**
   @defgroup RealFFT Real FFT Functions
- 
+
   @par
                    The CMSIS DSP library includes specialized algorithms for computing the
                    FFT of real data sequences.  The FFT is defined over complex data but
@@ -213,8 +213,8 @@ void merge_rfft_f32(
                    The older functions \ref arm_rfft_f32() and \ref arm_rfft_init_f32() have been deprecated
                    but are still documented.
   @par
-                   The FFT of a real N-point sequence has even symmetry in the frequency domain. 
-                   The second half of the data equals the conjugate of the first half flipped in frequency. 
+                   The FFT of a real N-point sequence has even symmetry in the frequency domain.
+                   The second half of the data equals the conjugate of the first half flipped in frequency.
                    Looking at the data, we see that we can uniquely represent the FFT using only N/2 complex numbers.
                    These are packed into the output array in alternating real and imaginary components:
   @par

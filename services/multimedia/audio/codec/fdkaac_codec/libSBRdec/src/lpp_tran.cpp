@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Low Power Profile Transposer,  
+  \brief  Low Power Profile Transposer,
   This module provides the transposer. The main entry point is lppTransposer(). The function generates
   high frequency content by copying data from the low band (provided by core codec) into the high band.
   This process is also referred to as "patching". The function also implements spectral whitening by means of

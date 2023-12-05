@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Envelope calculation  
+  \brief  Envelope calculation
 
   The envelope adjustor compares the energies present in the transposed
   highband to the reference energies conveyed with the bitstream.
@@ -1293,9 +1293,9 @@ FIXP_DBL maxSubbandSample( FIXP_DBL ** re,   /*!< Real part of input and output 
   FDK_ASSERT(width <= (64));
 
   if ( width > 0 ) {
-    if (im!=NULL) 
+    if (im!=NULL)
     {
-      for (int l=start_pos; l<next_pos; l++) 
+      for (int l=start_pos; l<next_pos; l++)
       {
 #ifdef FUNCTION_FDK_get_maxval
         maxVal = FDK_get_maxval(maxVal, &re[l][lowSubband], &im[l][lowSubband], width);
@@ -1379,7 +1379,7 @@ static void calcNrgPerSubband(FIXP_DBL  **analysBufferReal, /*!< Real part of su
 
     if (analysBufferImag!=NULL)
     {
-      for (l=start_pos;l<next_pos;l++) 
+      for (l=start_pos;l<next_pos;l++)
       {
         bufferImag[l] = analysBufferImag[l][k];
         maxVal |= (FIXP_DBL)((LONG)(bufferImag[l])^((LONG)bufferImag[l]>>(DFRACT_BITS-1)));
@@ -1913,7 +1913,7 @@ static void adjustTimeSlotLC(FIXP_DBL *ptrReal,       /*!< Subband samples to be
   if ( noSubbands > 2 ) {
     if (!(harmIndex&0x1)) {
       /* harmIndex 0,2 */
-      if(!harmIndex) 
+      if(!harmIndex)
       {
         sineSign = 0;
       }
@@ -1921,13 +1921,13 @@ static void adjustTimeSlotLC(FIXP_DBL *ptrReal,       /*!< Subband samples to be
       for (k=noSubbands-2; k!=0; k--) {
         FIXP_DBL sinelevel = *pSineLevel++;
         index++;
-        if (((signalReal = (sineSign ? -sinelevel : sinelevel)) == FL2FXCONST_DBL(0.0f))  && !noNoiseFlag) 
+        if (((signalReal = (sineSign ? -sinelevel : sinelevel)) == FL2FXCONST_DBL(0.0f))  && !noNoiseFlag)
         {
           /* Add noisefloor to the amplified signal */
           index &= (SBR_NF_NO_RANDOM_VAL - 1);
           signalReal += (fMultDiv2(FDK_sbrDecoder_sbr_randomPhase[index][0], pNoiseLevel[0])<<4);
         }
-        
+
         /* The next multiplication constitutes the actual envelope adjustment of the signal. */
         signalReal += fMultDiv2(*ptrReal,*pGain++) << ((int)scale_change);
 
@@ -2130,9 +2130,9 @@ static void adjustTimeSlotHQ(
     }
 
   }
-  else 
+  else
   {
-    for (k=0; k<noSubbands; k++) 
+    for (k=0; k<noSubbands; k++)
     {
       smoothedGain  = gain[k];
       signalReal = fMultDiv2(*ptrReal, smoothedGain) << scale_change;
@@ -2140,9 +2140,9 @@ static void adjustTimeSlotHQ(
 
       index++;
 
-      if ((sineLevel = pSineLevel[k]) != FL2FXCONST_DBL(0.0f)) 
+      if ((sineLevel = pSineLevel[k]) != FL2FXCONST_DBL(0.0f))
       {
-        switch (harmIndex) 
+        switch (harmIndex)
         {
         case 0:
           signalReal += sineLevel;
@@ -2164,7 +2164,7 @@ static void adjustTimeSlotHQ(
           break;
         }
       }
-      else 
+      else
       {
         if (noNoiseFlag == 0)
         {

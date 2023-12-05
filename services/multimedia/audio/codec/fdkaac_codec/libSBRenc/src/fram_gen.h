@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Framing generator prototypes and structs  
+  \brief  Framing generator prototypes and structs
 */
 #ifndef _FRAM_GEN_H
 #define _FRAM_GEN_H

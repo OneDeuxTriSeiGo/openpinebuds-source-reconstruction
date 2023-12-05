@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  SBR bit writing  
+  \brief  SBR bit writing
 */
 #ifndef __BIT_SBR_H
 #define __BIT_SBR_H

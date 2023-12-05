@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  DPCM Envelope coding  
+  \brief  DPCM Envelope coding
 */
 
 #ifndef __CODE_ENV_H

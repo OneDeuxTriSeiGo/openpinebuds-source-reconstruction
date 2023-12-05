@@ -22,7 +22,7 @@
     Subfunction: Calculate Bits for Audio Block
 ***************************************************************************************************/
 static int encode_audio_block_a_ldac(
-AB *p_ab, 
+AB *p_ab,
 int hqu)
 {
     AC *p_ac;
@@ -75,7 +75,7 @@ int hqu)
 	p_idwl1 = p_ac->a_idwl1;
 	p_idwl2 = p_ac->a_idwl2;
 
-        if (grad_mode == LDAC_MODE_0) { 
+        if (grad_mode == LDAC_MODE_0) {
             for (iqu = 0; iqu < hqu; iqu++) {
                 idwl1 = p_idsf[iqu] + p_grad[iqu];
                 if (idwl1 < LDAC_MINIDWL1) {
@@ -186,7 +186,7 @@ int nadjqus)
 
     /* Calculate Bits */
     for (ich = 0; ich < nchs; ich++) {
-        p_ac = p_ab->ap_ac[ich]; 
+        p_ac = p_ab->ap_ac[ich];
 	p_idwl1 = p_ac->a_idwl1;
 	p_idwl2 = p_ac->a_idwl2;
 	p_tmp = p_ac->a_tmp;
@@ -536,7 +536,7 @@ int *p_nbits_spec)
     Subfunction: Adjust Remaining Bits
 ***************************************************************************************************/
 static int adjust_remain_bits_ldac(
-AB *p_ab, 
+AB *p_ab,
 int *p_nbits_spec,
 int *p_nadjqus)
 {
@@ -640,7 +640,7 @@ int *p_nadjqus)
             }
         }
         else if (nbits_spec > nbits_avail) {
-            nadjqus -= step; 
+            nadjqus -= step;
         }
         else {
             if (nadjqus > p_ab->nqus) {
@@ -708,7 +708,7 @@ AB *p_ab)
             increase_offset_low_ldac(p_ab, &nbits_spec);
 
             increase_qu_low_0_ldac(p_ab, &nbits_spec);
-        }    
+        }
         else {
             increase_offset_low_ldac(p_ab, &nbits_spec);
 

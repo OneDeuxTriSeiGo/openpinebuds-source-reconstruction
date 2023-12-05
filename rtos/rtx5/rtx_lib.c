@@ -461,7 +461,7 @@ __attribute__((section(".rodata"))) =
   0U,
 #endif
   { &os_isr_queue[0], (uint16_t)(sizeof(os_isr_queue)/sizeof(void *)), 0U },
-  { 
+  {
     // Memory Pools (Variable Block Size)
 #if ((OS_THREAD_OBJ_MEM != 0) && (OS_THREAD_USER_STACK_SIZE != 0))
     &os_thread_stack[0], sizeof(os_thread_stack),
@@ -494,7 +494,7 @@ __attribute__((section(".rodata"))) =
 #endif
     &os_mpi_thread,
 #else
-    NULL, 
+    NULL,
     NULL,
 #endif
 #if (OS_TIMER_OBJ_MEM != 0)

@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Envelope extraction prototypes  
+  \brief  Envelope extraction prototypes
 */
 
 #ifndef __ENVELOPE_EXTRACTION_H

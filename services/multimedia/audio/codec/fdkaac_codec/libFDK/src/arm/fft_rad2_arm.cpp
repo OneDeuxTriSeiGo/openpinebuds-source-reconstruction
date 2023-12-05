@@ -169,7 +169,7 @@ void dit_fft(FIXP_DBL *x, const INT ldn, const FIXP_STP *trigdata, const INT tri
                 FIXP_DBL *xt1 = x+ ((r)<<1);
                 FIXP_DBL *xt2 = xt1 + (mh<<1);
                 */
-                FIXP_DBL vr,vi,ur,ui;                 
+                FIXP_DBL vr,vi,ur,ui;
 
                 //cplxMultDiv2(&vi, &vr, x[t2+1], x[t2], (FIXP_SGL)1.0, (FIXP_SGL)0.0);
                 vi = xt2[1]>>1;

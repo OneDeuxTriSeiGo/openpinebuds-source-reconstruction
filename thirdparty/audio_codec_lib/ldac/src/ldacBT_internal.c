@@ -48,8 +48,8 @@ DECLFUNC const LDACBT_EQMID_PROPERTY tbl_ldacbt_eqmid_property[] = {
  */
 DECLFUNC const LDACBT_CONFIG tbl_ldacbt_config[] = {
 /*
- *   index          , NFRM , LDAC  , FRM   
- *                  , ---- ,  FRM  ,  LEN  
+ *   index          , NFRM , LDAC  , FRM
+ *                  , ---- ,  FRM  ,  LEN
  *                  , PCKT ,   LEN ,    /CH
  *                  ,      , [byte], [byte]
  */
@@ -316,8 +316,8 @@ DECLFUNC int ldacBT_update_frmlen(HANDLE_LDAC_BT hLdacBT, int frmlen)
 
 ldac_setup_AGAIN:
     /* update LDAC parameters. */
-    
-    
+
+
     if( frmlen == UNSET ){
         goto ldac_setup_END;
     }
@@ -325,7 +325,7 @@ ldac_setup_AGAIN:
     /* check & update frameLength */
     ldaclib_get_encode_frame_length( hLdacBT->hLDAC, &fl );
     if( fl == 0 ){ // This meens that the handle was not initialized yet. Shall not happen.
-        
+
         goto ldac_setup_END;
     }
     else if( frmlen == fl ){

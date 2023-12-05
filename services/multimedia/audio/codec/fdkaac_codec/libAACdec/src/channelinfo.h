@@ -320,8 +320,8 @@ AAC_DECODER_ERROR IcsRead(
 /* stereo.cpp, only called from this file */
 
 /*!
-  \brief Applies MS stereo. 
-  
+  \brief Applies MS stereo.
+
   The function applies MS stereo.
 
   \param pAacDecoderChannelInfo aac channel info.
@@ -329,7 +329,7 @@ AAC_DECODER_ERROR IcsRead(
   \param pWindowGroupLength pointer to window group length array.
   \param windowGroups number of window groups.
   \param scaleFactorBandsTransmittedL number of transmitted scalefactor bands in left channel.
-  \param scaleFactorBandsTransmittedR number of transmitted scalefactor bands in right channel. 
+  \param scaleFactorBandsTransmittedR number of transmitted scalefactor bands in right channel.
                                       May differ from scaleFactorBandsTransmittedL only for USAC.
   \return  none
 */

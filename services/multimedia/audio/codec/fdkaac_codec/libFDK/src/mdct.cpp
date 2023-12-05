@@ -306,7 +306,7 @@ INT  imdct_block(
     dct_IV(pSpec, tl, &specShiftScale);
 
     /* Optional scaling of time domain - no yet windowed - of current spectrum */
-    /* and de-scale current spectrum signal (time domain, no yet windowed) */	
+    /* and de-scale current spectrum signal (time domain, no yet windowed) */
     if (gain != (FIXP_DBL)0) {
       scaleValuesWithFactor(pSpec, gain, tl, scalefactor[w] + specShiftScale);
     } else {
@@ -372,7 +372,7 @@ INT  imdct_block(
   }
 
   /* Save overlap */
-  
+
   pOvl = hMdct->overlap.freq + hMdct->ov_size - tl/2;
   FDK_ASSERT(pOvl >= hMdct->overlap.time + hMdct->ov_offset);
   FDK_ASSERT(tl/2 <= hMdct->ov_size);

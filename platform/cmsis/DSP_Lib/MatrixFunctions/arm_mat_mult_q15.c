@@ -78,7 +78,7 @@ arm_status arm_mat_mult_q15(
         uint16_t numRowsB = pSrcB->numRows;            /* Number of rows of input matrix A */
         uint32_t col, i = 0U, row = numRowsB, colCnt;  /* Loop counters */
         arm_status status;                             /* Status of matrix multiplication */
-        
+
         q31_t in;                                      /* Temporary variable to hold the input value */
         q31_t inA1, inB1, inA2, inB2;
 

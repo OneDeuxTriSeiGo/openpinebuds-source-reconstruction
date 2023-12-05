@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file   dct.cpp
-  \brief  DCT Implementations   
+  \brief  DCT Implementations
   Library functions to calculate standard DCTs. This will most likely be replaced by hand-optimized
   functions for the specific target processor.
 

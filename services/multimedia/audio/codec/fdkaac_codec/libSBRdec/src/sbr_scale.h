@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
 \file
-\brief Sbr scaling factors,  
+\brief Sbr scaling factors,
 To deal with the dynamic range in the different processing stages, a
 fixed point specific code has to rely on scaling factors. A floating
 point code carries a scaling factor -- the exponent -- for each value,

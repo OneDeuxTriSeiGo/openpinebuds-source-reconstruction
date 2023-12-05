@@ -44,7 +44,7 @@ extern "C" {
 /* The Maximum number of frames that can transrate in one packet.(LDAC A2DP spec) */
 #define LDACBT_NFRM_TX_MAX 15
 /* Lowest Common Multiple of (2,3,4)Bytes * 2ch * 256samples */
-#define LDACBT_ENC_PCM_BUF_SZ 6144 
+#define LDACBT_ENC_PCM_BUF_SZ 6144
 /* The maximum pcm word length allowed. Unit:Byte */
 #define LDACBT_PCM_WLEN_MAX 4
 /* The size of LDACBT_TRANSPORT_FRM_BUF's buffer. Unit:Byte  */
@@ -104,7 +104,7 @@ typedef struct _st_ldacbt_eqmid_property
 } LDACBT_EQMID_PROPERTY, * P_LDACBT_EQMID_PROPERTY;
 
 /* The structure for the configuration of LDAC. */
-typedef struct _st_ldacbt_config 
+typedef struct _st_ldacbt_config
 {
     int id;
     int nfrm_in_pkt; /* number of ldac frame in packet */
@@ -136,7 +136,7 @@ typedef struct _ldacbt_transport_frame_buf {
 } LDACBT_TRANSPORT_FRM_BUF;
 /* The structure of ring buffer for the input PCM. */
 typedef struct _ldacbt_pcm_ring_buf {
-    char buf[LDACBT_ENC_PCM_BUF_SZ]; 
+    char buf[LDACBT_ENC_PCM_BUF_SZ];
     int wp;
     int rp;
     int nsmpl;

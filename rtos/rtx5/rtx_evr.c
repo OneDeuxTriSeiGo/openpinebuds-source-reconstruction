@@ -313,7 +313,7 @@ __WEAK void EvrRtxMemoryBlockFree (osRtxMpInfo_t *mp_info, void *block, int32_t 
 #if (!defined(EVR_RTX_DISABLE) && (OS_EVR_KERNEL != 0) && !defined(EVR_RTX_KERNEL_ERROR_DISABLE))
 __WEAK void EvrRtxKernelError (int32_t status) {
 #if defined(RTE_Compiler_EventRecorder)
-  (void)EventRecord2(EvtRtxKernelError, (uint32_t)status, 0U); 
+  (void)EventRecord2(EvtRtxKernelError, (uint32_t)status, 0U);
 #else
   (void)status;
 #endif

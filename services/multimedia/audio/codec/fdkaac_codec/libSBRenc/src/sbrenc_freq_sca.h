@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  frequency scale prototypes  
+  \brief  frequency scale prototypes
 */
 #ifndef __FREQ_SCA2_H
 #define __FREQ_SCA2_H

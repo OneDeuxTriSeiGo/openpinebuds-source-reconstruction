@@ -144,7 +144,7 @@ int nlnn)
         zero_cross = calc_zero_cross_number_ldac(p_ac->p_acsub->a_time, nsmpl);
 
         a_status[ich] = LDAC_FRMSTAT_LEV_0;
-        if (low_energy < LDAC_TH_LOWENERGY_L) { 
+        if (low_energy < LDAC_TH_LOWENERGY_L) {
             a_status[ich] = LDAC_FRMSTAT_LEV_3;
         }
         else {

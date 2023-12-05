@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  SBR main definitions  
+  \brief  SBR main definitions
 */
 #ifndef __SBR_DEF_H
 #define __SBR_DEF_H

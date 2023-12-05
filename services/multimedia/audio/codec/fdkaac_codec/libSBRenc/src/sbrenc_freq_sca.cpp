@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  frequency scale  
+  \brief  frequency scale
   \author Tobias Chalupka
 */
 

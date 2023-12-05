@@ -1167,7 +1167,7 @@ const FIXP_WTP *const windowSlopes[2][3][9] =
       NULL,
       NULL,
       NULL,
-      SineWindow120, 
+      SineWindow120,
       NULL,
       SineWindow480,
       SineWindow960

@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Huffman Decoder  
+  \brief  Huffman Decoder
 */
 #ifndef __HUFF_DEC_H
 #define __HUFF_DEC_H

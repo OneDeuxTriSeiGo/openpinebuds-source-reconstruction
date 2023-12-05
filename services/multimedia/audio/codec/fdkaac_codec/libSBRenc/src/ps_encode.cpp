@@ -89,7 +89,7 @@ amm-info@iis.fraunhofer.de
 ******************************************************************************/
 /*!
   \file
-  \brief  PS parameter extraction, encoding functions  
+  \brief  PS parameter extraction, encoding functions
 */
 
 #include "ps_main.h"

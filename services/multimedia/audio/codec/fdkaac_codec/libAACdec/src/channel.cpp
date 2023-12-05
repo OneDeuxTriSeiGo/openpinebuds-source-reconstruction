@@ -306,7 +306,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
     case ms:
       if ( CJointStereo_Read(
               hBs,
-             &pAacDecoderChannelInfo[0]->pComData->jointStereoData, 
+             &pAacDecoderChannelInfo[0]->pComData->jointStereoData,
               GetWindowGroups(&pAacDecoderChannelInfo[0]->icsInfo),
               GetScaleMaxFactorBandsTransmitted(&pAacDecoderChannelInfo[0]->icsInfo,
                                                 &pAacDecoderChannelInfo[1]->icsInfo),
@@ -330,7 +330,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
 
     case scale_factor_data:
       if (flags & AC_ER_RVLC) {
-        /* read RVLC data from bitstream (error sens. cat. 1) */ 
+        /* read RVLC data from bitstream (error sens. cat. 1) */
         CRvlc_Read(pAacDecoderChannelInfo[ch], hBs);
       }
       else
@@ -360,7 +360,7 @@ AAC_DECODER_ERROR CChannelElement_Read(HANDLE_FDK_BITSTREAM hBs,
 
     case gain_control_data:
       break;
-    
+
     case gain_control_data_present:
       if (FDKreadBits(hBs, 1)) {
         error = AAC_DEC_UNSUPPORTED_GAIN_CONTROL_DATA;

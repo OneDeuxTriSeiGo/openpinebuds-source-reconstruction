@@ -55,7 +55,7 @@ static uint32_t isr_queue_put (os_object_t *object) {
   } else {
     ret = 0U;
   }
-  
+
   if (primask == 0U) {
     __enable_irq();
   }

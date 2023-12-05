@@ -275,15 +275,15 @@ SCHAR rvlcDecodeEscapeWord (CErRvlcInfo          *pRvlc,
      function:     rvlcDecodeEscapes
 
      description:  Decodes all huffman coded RVLC Escape Words.
-                   Here a difference to the pseudo-code-implementation from standard can be 
+                   Here a difference to the pseudo-code-implementation from standard can be
                    found. A while loop (and not two nested for loops) is used for two reasons:
 
-                   1. The plain huffman encoded escapes are decoded before the RVL-coded 
-                      scalefactors. Therefore the escapes are present in the second step 
-                      when decoding the RVL-coded-scalefactor values in forward and 
+                   1. The plain huffman encoded escapes are decoded before the RVL-coded
+                      scalefactors. Therefore the escapes are present in the second step
+                      when decoding the RVL-coded-scalefactor values in forward and
                       backward direction.
 
-                      When the RVL-coded scalefactors are decoded and there a escape is 
+                      When the RVL-coded scalefactors are decoded and there a escape is
                       needed, then it is just taken out of the array in ascending order.
 
                    2. It's faster.
@@ -354,7 +354,7 @@ SCHAR decodeRVLCodeword (HANDLE_FDK_BITSTREAM  bs, CErRvlcInfo *pRvlc)
   USHORT *pBitstrIndxRvl   = pRvlc->pBitstrIndxRvl_RVL;
   UINT    treeNode         = *pRvlCodeTree;
 
-  for (i=MAX_LEN_RVLC_CODE_WORD-1; i >= 0; i--) { 
+  for (i=MAX_LEN_RVLC_CODE_WORD-1; i >= 0; i--) {
     carryBit = rvlcReadBitFromBitstream(bs,             /* get next bit */
                                         pBitstrIndxRvl,
                                         direction);
@@ -366,27 +366,27 @@ SCHAR decodeRVLCodeword (HANDLE_FDK_BITSTREAM  bs, CErRvlcInfo *pRvlc)
 
     if ((branchNode & TEST_BIT_10) == TEST_BIT_10) {    /* test bit 10 ; if set --> a RVLC-codeword is completely decoded */
       value = (SCHAR) (branchNode & CLR_BIT_10);
-      *pRvlc->pRvlBitCnt_RVL -= (MAX_LEN_RVLC_CODE_WORD - i);  
-      
+      *pRvlc->pRvlBitCnt_RVL -= (MAX_LEN_RVLC_CODE_WORD - i);
+
       /* check available bits for decoding */
       if (*pRvlc->pRvlBitCnt_RVL < 0) {
-        if (direction ==  FWD) { 
+        if (direction ==  FWD) {
           pRvlc->errorLogRvlc |= RVLC_ERROR_RVL_SUM_BIT_COUNTER_BELOW_ZERO_FWD; }
-        else { 
+        else {
           pRvlc->errorLogRvlc |= RVLC_ERROR_RVL_SUM_BIT_COUNTER_BELOW_ZERO_BWD; }
         value = -1;                                     /* signalize an error in return value, because too many bits was decoded */
       }
-      
+
       /* check max value of dpcm value */
       if (value > MAX_ALLOWED_DPCM_INDEX) {
-        if (direction ==  FWD) { 
-          pRvlc->errorLogRvlc |= RVLC_ERROR_FORBIDDEN_CW_DETECTED_FWD; 
+        if (direction ==  FWD) {
+          pRvlc->errorLogRvlc |= RVLC_ERROR_FORBIDDEN_CW_DETECTED_FWD;
         }
-        else { 
-          pRvlc->errorLogRvlc |= RVLC_ERROR_FORBIDDEN_CW_DETECTED_BWD; 
+        else {
+          pRvlc->errorLogRvlc |= RVLC_ERROR_FORBIDDEN_CW_DETECTED_BWD;
         }
         value = -1;                                     /* signalize an error in return value, because a forbidden cw was detected*/
-      }                                                       
+      }
 
       return value;                                     /* return a dpcm value with offset +7 or an error status */
     }
@@ -394,8 +394,8 @@ SCHAR decodeRVLCodeword (HANDLE_FDK_BITSTREAM  bs, CErRvlcInfo *pRvlc)
       treeNode = *(pRvlCodeTree + branchValue);         /* update treeNode for further step in decoding tree */
     }
   }
-  
-  return -1;  
+
+  return -1;
 }
 
 
@@ -429,7 +429,7 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
   SHORT* pScfFwd = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfFwd;
   SHORT* pScfEsc = pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfEsc;
   UCHAR* pEscFwdCnt = &(pRvlc->numDecodedEscapeWordsFwd);
-  
+
   pRvlc->pRvlBitCnt_RVL = &(pRvlc->length_of_rvlc_sf_fwd);
   pRvlc->pBitstrIndxRvl_RVL = &(pRvlc->bitstreamIndexRvlFwd);
 
@@ -439,7 +439,7 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
   pRvlc->sf_used    = 0;
   pRvlc->lastScf    = 0;
   pRvlc->lastNrg    = 0;
-  pRvlc->lastIs     = 0;         
+  pRvlc->lastIs     = 0;
 
   rvlcCheckIntensityCb(pRvlc,pAacDecoderChannelInfo);
 
@@ -469,11 +469,11 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
             return;
           }
           else {
-            if (dpcm == MIN_RVL) { 
-              dpcm -= *pScfEsc++; 
+            if (dpcm == MIN_RVL) {
+              dpcm -= *pScfEsc++;
             }
-            else { 
-              dpcm += *pScfEsc++; 
+            else {
+              dpcm += *pScfEsc++;
             }
             (*pEscFwdCnt)++;
             if (pRvlc->conceal_max_esc == CONCEAL_MAX_INIT) {
@@ -491,7 +491,7 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
           pRvlc->noise_used = 1;
           pRvlc->first_noise_band = bnds;
           noisenrg += pRvlc->dpcm_noise_nrg;
-          pScfFwd[bnds] = 100 + noisenrg;                  
+          pScfFwd[bnds] = 100 + noisenrg;
           pRvlc->lastNrg = noisenrg;
         }
         else {
@@ -507,11 +507,11 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
               return;
             }
             else {
-              if (dpcm == MIN_RVL) { 
-                dpcm -= *pScfEsc++; 
+              if (dpcm == MIN_RVL) {
+                dpcm -= *pScfEsc++;
               }
-              else { 
-                dpcm += *pScfEsc++; 
+              else {
+                dpcm += *pScfEsc++;
               }
               (*pEscFwdCnt)++;
               if (pRvlc->conceal_max_esc == CONCEAL_MAX_INIT) {
@@ -521,7 +521,7 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
           }
           noisenrg += dpcm;
           pScfFwd[bnds] = 100 + noisenrg;
-          pRvlc->lastNrg = noisenrg;         
+          pRvlc->lastNrg = noisenrg;
         }
         pAacDecoderChannelInfo->data.aac.PnsData.pnsUsed[bnds] = 1;
         break ;
@@ -540,10 +540,10 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
             return;
           }
           else {
-            if (dpcm == MIN_RVL) { 
+            if (dpcm == MIN_RVL) {
               dpcm -= *pScfEsc++; }
-            else { 
-              dpcm += *pScfEsc++; 
+            else {
+              dpcm += *pScfEsc++;
             }
             (*pEscFwdCnt)++;
             if (pRvlc->conceal_max_esc == CONCEAL_MAX_INIT) {
@@ -573,13 +573,13 @@ void rvlcDecodeForward (CErRvlcInfo            *pRvlc,
         return;
       }
       else {
-        if (dpcm == MIN_RVL) { 
-          dpcm -= *pScfEsc++; 
+        if (dpcm == MIN_RVL) {
+          dpcm -= *pScfEsc++;
         }
-        else { 
-          dpcm += *pScfEsc++; 
+        else {
+          dpcm += *pScfEsc++;
         }
-        (*pEscFwdCnt)++;  
+        (*pEscFwdCnt)++;
         if (pRvlc->conceal_max_esc == CONCEAL_MAX_INIT) {
           pRvlc->conceal_max_esc = bnds;
         }
@@ -650,7 +650,7 @@ void rvlcDecodeBackward (CErRvlcInfo            *pRvlc,
         else {
           dpcm += *pScfEsc--;
         }
-        (*pEscBwdCnt)++;  
+        (*pEscBwdCnt)++;
         if (pRvlc->conceal_min_esc == CONCEAL_MIN_INIT) {
           pRvlc->conceal_min_esc = bnds;
         }
@@ -704,13 +704,13 @@ void rvlcDecodeBackward (CErRvlcInfo            *pRvlc,
           }
         }
         pScfBwd[bnds] = position;
-        position -= dpcm;  
-        pRvlc->firstIs = position; 
+        position -= dpcm;
+        pRvlc->firstIs = position;
         break;
 
       case NOISE_HCB :
         if ( bnds == pRvlc->first_noise_band ) {
-          pScfBwd[bnds] = pRvlc->dpcm_noise_nrg + pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain - SF_OFFSET - 90 - 256;         
+          pScfBwd[bnds] = pRvlc->dpcm_noise_nrg + pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain - SF_OFFSET - 90 - 256;
           pRvlc->firstNrg = pScfBwd[bnds];
         }
         else {
@@ -784,7 +784,7 @@ void rvlcDecodeBackward (CErRvlcInfo            *pRvlc,
 
 
 /*---------------------------------------------------------------------------------------------
-     function:     rvlcFinalErrorDetection             
+     function:     rvlcFinalErrorDetection
 
      description:  Call RVLC concealment if error was detected in decoding process
 -----------------------------------------------------------------------------------------------
@@ -846,31 +846,31 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
 
   if (pRvlc->sf_used) {
     /* first decoded scf does not match to global gain in backward direction */
-    if (pRvlc->firstScf != (pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain - SF_OFFSET) ) 
+    if (pRvlc->firstScf != (pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain - SF_OFFSET) )
       ErrorStatusFirstScf = 1;
 
     /* last decoded scf does not match to rev global gain in forward direction */
-    if (pRvlc->lastScf != (pRvlc->rev_global_gain - SF_OFFSET) ) 
+    if (pRvlc->lastScf != (pRvlc->rev_global_gain - SF_OFFSET) )
       ErrorStatusLastScf = 1;
   }
 
   if (pRvlc->noise_used) {
     /* first decoded nrg does not match to dpcm_noise_nrg in backward direction */
-    if (pRvlc->firstNrg != (pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain + pRvlc->dpcm_noise_nrg - SF_OFFSET -90 - 256) ) 
+    if (pRvlc->firstNrg != (pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain + pRvlc->dpcm_noise_nrg - SF_OFFSET -90 - 256) )
       ErrorStatusFirstNrg = 1;
 
     /* last decoded nrg does not match to dpcm_noise_last_position in forward direction */
-    if (pRvlc->lastNrg != (pRvlc->rev_global_gain + pRvlc->dpcm_noise_last_position - SF_OFFSET - 90 - 256) ) 
+    if (pRvlc->lastNrg != (pRvlc->rev_global_gain + pRvlc->dpcm_noise_last_position - SF_OFFSET - 90 - 256) )
       ErrorStatusLastNrg = 1;
   }
 
   if (pRvlc->intensity_used) {
     /* first decoded is position does not match in backward direction */
-    if (pRvlc->firstIs != (-SF_OFFSET) ) 
+    if (pRvlc->firstIs != (-SF_OFFSET) )
       ErrorStatusFirstIs = 1;
 
     /* last decoded is position does not match in forward direction */
-    if (pRvlc->lastIs != (pRvlc->dpcm_is_last_position - SF_OFFSET) ) 
+    if (pRvlc->lastIs != (pRvlc->dpcm_is_last_position - SF_OFFSET) )
       ErrorStatusLastIs = 1;
   }
 
@@ -890,42 +890,42 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
 #endif
 
   if (    ErrorStatusLengthEscapes
-      || ( 
-           (   (pRvlc->conceal_max == CONCEAL_MAX_INIT) 
+      || (
+           (   (pRvlc->conceal_max == CONCEAL_MAX_INIT)
             && (pRvlc->numDecodedEscapeWordsFwd != pRvlc->numDecodedEscapeWordsEsc)
             && (ErrorStatusLastScf || ErrorStatusLastNrg || ErrorStatusLastIs) )
-           
-            && 
 
-           (   (pRvlc->conceal_min == CONCEAL_MIN_INIT) 
+            &&
+
+           (   (pRvlc->conceal_min == CONCEAL_MIN_INIT)
             && (pRvlc->numDecodedEscapeWordsBwd != pRvlc->numDecodedEscapeWordsEsc)
-            && (ErrorStatusFirstScf || ErrorStatusFirstNrg || ErrorStatusFirstIs) ) 
-         )    
-      || (   (pRvlc->conceal_max == CONCEAL_MAX_INIT) 
+            && (ErrorStatusFirstScf || ErrorStatusFirstNrg || ErrorStatusFirstIs) )
+         )
+      || (   (pRvlc->conceal_max == CONCEAL_MAX_INIT)
           && ((pRvlc->rev_global_gain - SF_OFFSET - pRvlc->lastScf) < -15)
          )
-      || (   (pRvlc->conceal_min == CONCEAL_MIN_INIT) 
+      || (   (pRvlc->conceal_min == CONCEAL_MIN_INIT)
           && ((pAacDecoderChannelInfo->pDynData->RawDataInfo.GlobalGain - SF_OFFSET - pRvlc->firstScf) < -15)
          )
      ) {
     if ((pRvlc->conceal_max == CONCEAL_MAX_INIT) || (pRvlc->conceal_min == CONCEAL_MIN_INIT)) {
-      pRvlc->conceal_max = 0; 
+      pRvlc->conceal_max = 0;
       pRvlc->conceal_min = FDKmax(0, (pRvlc->numWindowGroups-1)*16+pRvlc->maxSfbTransmitted-1);
     }
     else {
-      pRvlc->conceal_max = FDKmin(pRvlc->conceal_max,pRvlc->conceal_max_esc); 
+      pRvlc->conceal_max = FDKmin(pRvlc->conceal_max,pRvlc->conceal_max_esc);
       pRvlc->conceal_min = FDKmax(pRvlc->conceal_min,pRvlc->conceal_min_esc);
     }
   }
 
   ErrorStatusComplete =    ErrorStatusLastScf || ErrorStatusFirstScf || ErrorStatusLastNrg || ErrorStatusFirstNrg
-                        || ErrorStatusLastIs || ErrorStatusFirstIs || ErrorStatusForbiddenCwFwd || ErrorStatusForbiddenCwBwd 
-                        || ErrorStatusLengthFwd || ErrorStatusLengthBwd || ErrorStatusLengthEscapes || ErrorStatusNumEscapesFwd 
+                        || ErrorStatusLastIs || ErrorStatusFirstIs || ErrorStatusForbiddenCwFwd || ErrorStatusForbiddenCwBwd
+                        || ErrorStatusLengthFwd || ErrorStatusLengthBwd || ErrorStatusLengthEscapes || ErrorStatusNumEscapesFwd
                         || ErrorStatusNumEscapesBwd;
 
   currentBlockType = (GetWindowSequence(&pAacDecoderChannelInfo->icsInfo) == EightShortSequence) ? 0 : 1;
 
-   
+
   if (!ErrorStatusComplete) {
     int band;
     int group;
@@ -959,10 +959,10 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
     int group;
 
     /* A single bit error was detected in decoding of dpcm values. It also could be an error with more bits in decoding
-       of escapes and dpcm values whereby an illegal codeword followed not directly after the corrupted bits but just 
+       of escapes and dpcm values whereby an illegal codeword followed not directly after the corrupted bits but just
        after decoding some more (wrong) scalefactors. Use the smaller scalefactor from forward decoding, backward decoding
        and previous frame. */
-    if (   ((pRvlc->conceal_min != CONCEAL_MIN_INIT) || (pRvlc->conceal_max != CONCEAL_MAX_INIT)) && (pRvlc->conceal_min <= pRvlc->conceal_max) 
+    if (   ((pRvlc->conceal_min != CONCEAL_MIN_INIT) || (pRvlc->conceal_max != CONCEAL_MAX_INIT)) && (pRvlc->conceal_min <= pRvlc->conceal_max)
         && (pAacDecoderStaticChannelInfo->concealmentInfo.rvlcPreviousBlockType == currentBlockType) && pAacDecoderStaticChannelInfo->concealmentInfo.rvlcPreviousScaleFactorOK
         && pRvlc->sf_concealment && ConcealStatus )
     {
@@ -974,7 +974,7 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
     }
 
     /* A single bit error was detected in decoding of dpcm values. It also could be an error with more bits in decoding
-       of escapes and dpcm values whereby an illegal codeword followed not directly after the corrupted bits but just 
+       of escapes and dpcm values whereby an illegal codeword followed not directly after the corrupted bits but just
        after decoding some more (wrong) scalefactors. Use the smaller scalefactor from forward and backward decoding. */
     if (   (pRvlc->conceal_min <= pRvlc->conceal_max)  && ((pRvlc->conceal_min != CONCEAL_MIN_INIT) || (pRvlc->conceal_max != CONCEAL_MAX_INIT))
         && !(pAacDecoderStaticChannelInfo->concealmentInfo.rvlcPreviousScaleFactorOK && pRvlc->sf_concealment && (pAacDecoderStaticChannelInfo->concealmentInfo.rvlcPreviousBlockType == currentBlockType))
@@ -987,10 +987,10 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
 #endif
     }
 
-    /* No errors were detected in decoding of escapes and dpcm values however the first and last value 
-       of a group (is,nrg,sf) is incorrect */                        
-    if (   (pRvlc->conceal_min <= pRvlc->conceal_max)  && ((ErrorStatusLastScf && ErrorStatusFirstScf) 
-        || (ErrorStatusLastNrg && ErrorStatusFirstNrg) || (ErrorStatusLastIs && ErrorStatusFirstIs)) 
+    /* No errors were detected in decoding of escapes and dpcm values however the first and last value
+       of a group (is,nrg,sf) is incorrect */
+    if (   (pRvlc->conceal_min <= pRvlc->conceal_max)  && ((ErrorStatusLastScf && ErrorStatusFirstScf)
+        || (ErrorStatusLastNrg && ErrorStatusFirstNrg) || (ErrorStatusLastIs && ErrorStatusFirstIs))
         && !(ErrorStatusForbiddenCwFwd || ErrorStatusForbiddenCwBwd || ErrorStatusLengthEscapes ) && ConcealStatus)
     {
       StatisticalEstimation (pAacDecoderChannelInfo);
@@ -1000,7 +1000,7 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
 #endif
     }
 
-    /* A error with more bits in decoding of escapes and dpcm values was detected. Use the smaller scalefactor from forward 
+    /* A error with more bits in decoding of escapes and dpcm values was detected. Use the smaller scalefactor from forward
        decoding, backward decoding and previous frame. */
     if (   (pRvlc->conceal_min <= pRvlc->conceal_max) && pAacDecoderStaticChannelInfo->concealmentInfo.rvlcPreviousScaleFactorOK && pRvlc->sf_concealment
         && (pAacDecoderStaticChannelInfo->concealmentInfo.rvlcPreviousBlockType == currentBlockType) && ConcealStatus )
@@ -1012,7 +1012,7 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
 #endif
     }
 
-    /* Call frame concealment, because no better strategy was found. Setting the scalefactors to zero is done for debugging 
+    /* Call frame concealment, because no better strategy was found. Setting the scalefactors to zero is done for debugging
        purposes */
     if (ConcealStatus) {
       for (group=0; group < pRvlc->numWindowGroups; group++) {
@@ -1038,7 +1038,7 @@ void rvlcFinalErrorDetection (CAacDecoderChannelInfo  *pAacDecoderChannelInfo,
 
 
 /*---------------------------------------------------------------------------------------------
-     function:     CRvlc_Read             
+     function:     CRvlc_Read
 
      description:  Read RVLC ESC1 data (side info) from bitstream.
 -----------------------------------------------------------------------------------------------
@@ -1071,7 +1071,7 @@ void CRvlc_Read (
 
   if (GetWindowSequence(&pAacDecoderChannelInfo->icsInfo) == EightShortSequence) {
     pRvlc->length_of_rvlc_sf = FDKreadBits(bs,11);                 /* #3 */
-  }            
+  }
   else {
     pRvlc->length_of_rvlc_sf = FDKreadBits(bs,9);                  /* #3 */
   }
@@ -1081,13 +1081,13 @@ void CRvlc_Read (
     for (band=0; band < pRvlc->maxSfbTransmitted; band++) {
       if (pAacDecoderChannelInfo->pDynData->aCodeBook[16*group+band] == NOISE_HCB) {
         pRvlc->noise_used = 1;
-        break;  
+        break;
       }
     }
   }
 
-  if (pRvlc->noise_used) 
-    pRvlc->dpcm_noise_nrg = FDKreadBits(bs, 9);              /* #4  PNS */    
+  if (pRvlc->noise_used)
+    pRvlc->dpcm_noise_nrg = FDKreadBits(bs, 9);              /* #4  PNS */
 
   pRvlc->sf_escapes_present = FDKreadBits(bs, 1);            /* #5      */
 
@@ -1095,8 +1095,8 @@ void CRvlc_Read (
     pRvlc->length_of_rvlc_escapes = FDKreadBits(bs, 8);      /* #6      */
   }
 
-  if (pRvlc->noise_used) { 
-    pRvlc->dpcm_noise_last_position = FDKreadBits(bs, 9);    /* #7  PNS */    
+  if (pRvlc->noise_used) {
+    pRvlc->dpcm_noise_last_position = FDKreadBits(bs, 9);    /* #7  PNS */
     pRvlc->length_of_rvlc_sf -= 9;
   }
 
@@ -1106,14 +1106,14 @@ void CRvlc_Read (
 
 
 /*---------------------------------------------------------------------------------------------
-     function:     CRvlc_Decode             
+     function:     CRvlc_Decode
 
      description:  Decode rvlc data
                    The function reads both the escape sequences and the scalefactors in forward
-                   and backward direction. If an error occured during decoding process which can 
-                   not be concealed with the rvlc concealment frame concealment will be initiated. 
-                   Then the element "rvlcCurrentScaleFactorOK" in the decoder channel info is set 
-                   to 0 otherwise it is set to 1. 
+                   and backward direction. If an error occured during decoding process which can
+                   not be concealed with the rvlc concealment frame concealment will be initiated.
+                   Then the element "rvlcCurrentScaleFactorOK" in the decoder channel info is set
+                   to 0 otherwise it is set to 1.
 -----------------------------------------------------------------------------------------------
         input:     - pointer rvlc structure
                    - pointer channel info structure
@@ -1133,7 +1133,7 @@ void CRvlc_Decode (
   INT  bitCntOffst;
   UINT saveBitCnt;
 
-  rvlcInit(pRvlc,pAacDecoderChannelInfo,bs);  
+  rvlcInit(pRvlc,pAacDecoderChannelInfo,bs);
 
   /* save bitstream position */
   saveBitCnt = FDKgetBitCnt(bs);
@@ -1156,7 +1156,7 @@ void CRvlc_Decode (
   if ( pRvlc->sf_escapes_present)
     rvlcDecodeEscapes(pRvlc, pAacDecoderChannelInfo->pComData->overlay.aac.aRvlcScfEsc, bs);
 
-  rvlcDecodeForward(pRvlc,pAacDecoderChannelInfo, bs);    
+  rvlcDecodeForward(pRvlc,pAacDecoderChannelInfo, bs);
   rvlcDecodeBackward(pRvlc,pAacDecoderChannelInfo, bs);
   rvlcFinalErrorDetection(pAacDecoderChannelInfo, pAacDecoderStaticChannelInfo);
 

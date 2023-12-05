@@ -8736,7 +8736,7 @@ const q31_t twiddleCoef_128_q31[192] = {
   @par
   Convert Floating point to Q31(Fixed point 1.31):
  	round(twiddleCoefQ31(i) * pow(2, 31))
- 
+
  */
 const q31_t twiddleCoef_256_q31[384] = {
 	(q31_t)0x7FFFFFFF, (q31_t)0x00000000, (q31_t)0x7FF62182,
@@ -8885,7 +8885,7 @@ const q31_t twiddleCoef_256_q31[384] = {
   @par
   Convert Floating point to Q31(Fixed point 1.31):
  	round(twiddleCoefQ31(i) * pow(2, 31))
- 
+
  */
 const q31_t twiddleCoef_512_q31[768] = {
     (q31_t)0x7FFFFFFF, (q31_t)0x00000000, (q31_t)0x7FFD885A,
@@ -9162,7 +9162,7 @@ const q31_t twiddleCoef_512_q31[768] = {
   @par
   Convert Floating point to Q31(Fixed point 1.31):
  	round(twiddleCoefQ31(i) * pow(2, 31))
- 
+
  */
 const q31_t twiddleCoef_1024_q31[1536] = {
 	(q31_t)0x7FFFFFFF, (q31_t)0x00000000, (q31_t)0x7FFF6216,
@@ -13331,7 +13331,7 @@ const q15_t twiddleCoef_512_q15[768] = {
   @par
   Convert Floating point to q15(Fixed point 1.15):
  	round(twiddleCoefq15(i) * pow(2, 15))
- 
+
  */
 const q15_t twiddleCoef_1024_q15[1536] = {
 	(q15_t)0x7FFF, (q15_t)0x0000, (q15_t)0x7FFF, (q15_t)0x00C9,

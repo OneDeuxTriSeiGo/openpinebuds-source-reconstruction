@@ -83,7 +83,7 @@ amm-info@iis.fraunhofer.de
 
 /*!
   \file
-  \brief  Sbr miscellaneous helper functions  
+  \brief  Sbr miscellaneous helper functions
 */
 #include "sbr_misc.h"
 

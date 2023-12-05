@@ -313,7 +313,7 @@ static uint32_t svcRtxEventFlagsClear (osEventFlagsId_t ef_id, uint32_t flags) {
   event_flags = EventFlagsClear(ef, flags);
 
   EvrRtxEventFlagsClearDone(ef, event_flags);
-  
+
   return event_flags;
 }
 

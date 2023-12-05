@@ -461,11 +461,11 @@ inline INT SMLAWT(const LONG accu, const LONG a, const LONG b)
 #endif /* ARM compiler selector */
 
 
-static void qmfSynPrototypeFirSlot1_filter(FIXP_QMF *RESTRICT realSlot, 
-                                           FIXP_QMF *RESTRICT imagSlot, 
-                                           const FIXP_DBL *RESTRICT p_flt, 
+static void qmfSynPrototypeFirSlot1_filter(FIXP_QMF *RESTRICT realSlot,
+                                           FIXP_QMF *RESTRICT imagSlot,
+                                           const FIXP_DBL *RESTRICT p_flt,
                                            FIXP_QSS *RESTRICT sta,
-                                           FIXP_DBL *pMyTimeOut, 
+                                           FIXP_DBL *pMyTimeOut,
                                            int no_channels)
 {
   /* This code was the base for the above listed assembler sequence */
@@ -522,7 +522,7 @@ static void qmfSynPrototypeFirSlot1_filter(FIXP_QMF *RESTRICT realSlot,
 
      p_flt    += 5;
      p_fltm   -= 5;
-  } 
+  }
   while ((--no_channels) != 0);
 
 }
@@ -587,13 +587,13 @@ INT qmfSynPrototypeFirSlot2(
   }
 
   pMyTimeOut = &MyTimeOut[0];
-#if (SAMPLE_BITS == 16)      
+#if (SAMPLE_BITS == 16)
   const FIXP_DBL max_pos = (FIXP_DBL) 0x00007FFF << scale;
   const FIXP_DBL max_neg = (FIXP_DBL) 0xFFFF8001 << scale;
 #else
   scale = -scale;
   const FIXP_DBL max_pos = (FIXP_DBL) 0x7FFFFFFF >> scale;
-  const FIXP_DBL max_neg = (FIXP_DBL) 0x80000001 >> scale;  
+  const FIXP_DBL max_neg = (FIXP_DBL) 0x80000001 >> scale;
 #endif
   const FIXP_DBL add_neg = (1 << scale) - 1;
 
@@ -677,7 +677,7 @@ INT qmfSynPrototypeFirSlot2(
 #else
       timeOut[0] = result1 << scale;
 #endif
-      
+
       timeOut -= stride;
       if (result2 < 0)        result2 += add_neg;
       if (result2 < max_neg)  result2 = max_neg;
@@ -687,7 +687,7 @@ INT qmfSynPrototypeFirSlot2(
 #else
       timeOut[0] = result2 << scale;
 #endif
-      
+
       result1 = pMyTimeOut[0]; pMyTimeOut++;
       result2 = pMyTimeOut[0]; pMyTimeOut++;
       timeOut -= stride;
@@ -699,7 +699,7 @@ INT qmfSynPrototypeFirSlot2(
 #else
       timeOut[0] = result1 << scale;
 #endif
-      
+
       timeOut -= stride;
       if (result2 < 0)        result2 += add_neg;
       if (result2 < max_neg)  result2 = max_neg;

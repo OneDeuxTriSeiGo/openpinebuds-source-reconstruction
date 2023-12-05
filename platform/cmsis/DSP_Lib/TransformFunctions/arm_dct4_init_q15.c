@@ -48,7 +48,7 @@
   C command to generate the table
   <pre>
   for(i = 0; i< N; i++)
-  { 
+  {
     weights[(2*i)]   =  cos(i*c);
     weights[(2*i)+1] = -sin(i*c);
   } </pre>
