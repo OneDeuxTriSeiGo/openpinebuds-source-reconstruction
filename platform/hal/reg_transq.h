@@ -42,11 +42,11 @@ struct TRANSQ_T
         __IO uint32_t ADDR;             // 0x030 + N * 8
         __IO uint32_t LEN;              // 0x038 + N * 8
     } WSLOT[TRANSQ_SLOT_NUM_WIFI];
-    
+
     __IO uint32_t RMT_INTMASK_E;          // 0x1b0
     __IO uint32_t RMT_INTSET_E;           // 0x1b4
     __IO uint32_t LDONE_INTMASK_E;        // 0x1b8
-    
+
     union {
         __I  uint32_t LDONE_RIS;        // 0x1bc
         __O  uint32_t LDONE_INTCLR;     // 0x1bc

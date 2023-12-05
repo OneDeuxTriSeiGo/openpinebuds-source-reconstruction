@@ -59,7 +59,7 @@ mode: hwfft_mode_t类型HWFFT_MODE_FFT:  复数， 输入n个复数，输出n个
                                                                    实数，输入 n/2+1个复数，输出n个实数；此时sym_fft必须为1；
                                       HWFFT_MODE_EQVL_FFT: 兼容软件spx_fft计算fft模式
                                       HWFFT_MODE_EQVL_IFFT: 兼容软件spx_ifft计算ifft模式
-                                                                 
+
 order: hwfft_order_t类型，支持 512/256/128/64 点的 fft/ifft
 
 sym_fft:  1: 将利用fft的对称性;对fft，输入n个实数，输出是n/2+1 个复数；

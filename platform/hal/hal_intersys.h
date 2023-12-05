@@ -27,7 +27,7 @@ enum HAL_INTERSYS_ID_T {
 #if defined(__FPGA_1501P__)
     HAL_INTERSYS_ID_2,
     HAL_INTERSYS_ID_3,
-#endif    
+#endif
     HAL_INTERSYS_ID_QTY
 };
 
