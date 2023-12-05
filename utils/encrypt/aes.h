@@ -51,12 +51,12 @@ void AES128_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length,
 void AES128_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv);
 
 bool AES128_CBC_Encrypt(
-    uint8_t *plaintext, 
+    uint8_t *plaintext,
     size_t plaintext_len,
-    uint8_t *cyphertext, 
-    size_t* cyphertext_len, 
-    uint8_t iv[16], 
-    uint8_t key[16], 
+    uint8_t *cyphertext,
+    size_t* cyphertext_len,
+    uint8_t iv[16],
+    uint8_t key[16],
     size_t padding_len);
 
 #endif // #if defined(CBC) && CBC
