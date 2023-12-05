@@ -43,6 +43,8 @@ NOTE:   String length must be evenly divisible by 16byte (str_len % 16 == 0)
 #include <string.h> // CBC mode, for memset
 #include "aes.h"
 
+#define AES128 1
+
 /*****************************************************************************/
 /* Defines:                                                                  */
 /*****************************************************************************/
@@ -477,7 +479,7 @@ static void InvCipher(void)
 #if defined(ECB) && (ECB == 1)
 
 
-void AES_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t* output, const uint32_t length)
+void AES128_ECB_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output, const uint32_t length)
 {
   // Copy input to output, and work in-memory on output
   memcpy(output, input, length);
@@ -490,7 +492,7 @@ void AES_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t* output, 
   Cipher();
 }
 
-void AES_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *output, const uint32_t length)
+void AES128_ECB_decrypt(uint8_t* input, const uint8_t* key, uint8_t *output, const uint32_t length)
 {
   // Copy input to output, and work in-memory on output
   memcpy(output, input, length);
@@ -522,7 +524,7 @@ static void XorWithIv(uint8_t* buf)
   }
 }
 
-void AES_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv)
+void AES128_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv)
 {
   uintptr_t i;
   uint8_t extra = length % BLOCKLEN; /* Remaining bytes in the last non-full block */
@@ -561,7 +563,7 @@ void AES_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, co
   }
 }
 
-void AES_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv)
+void AES128_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv)
 {
   uintptr_t i;
   uint8_t extra = length % BLOCKLEN; /* Remaining bytes in the last non-full block */
@@ -602,9 +604,7 @@ void AES_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, co
 
 
 
-#if defined(CTR) && (CTR == 1)
-
-void AES_CTR_xcrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const uint8_t* iv)
+void AES128_CTR_encrypt_buffer(uint8_t* input, uint32_t length, const uint8_t* key, uint8_t* iv, uint8_t* output)
 {
   uint8_t buffer[BLOCKLEN], counter[BLOCKLEN];
   
@@ -635,6 +635,4 @@ void AES_CTR_xcrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, con
     output[i] = (input[i]) ^ (buffer[i & 0x0F]);
   }
 }
-
-#endif // #if defined(CTR) && (CTR == 1)
 
