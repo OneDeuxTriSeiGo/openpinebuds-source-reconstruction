@@ -15,7 +15,7 @@
 
  ********************************************************************/
 /**
-   @file smallft.h
+   @file adp_filter.h
    @brief Discrete Rotational Fourier Transform (DRFT)
 */
 
