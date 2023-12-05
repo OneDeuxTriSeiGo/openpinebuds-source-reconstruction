@@ -46,11 +46,12 @@
 
 
 
+typedef short spx_int16_t;
+typedef int spx_int32_t;
+typedef unsigned short spx_uint16_t;
+typedef unsigned int spx_uint32_t;
 
-#define spx_int16_t short
-#define spx_int32_t int
-#define spx_uint16_t unsigned short
-#define spx_uint32_t unsigned int
+
 
 
 
