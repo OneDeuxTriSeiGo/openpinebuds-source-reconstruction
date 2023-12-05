@@ -20,8 +20,8 @@
 #define APP_TOTA_PATH_TYPE_SPP	(1 << 0)
 
 #define APP_TOTA_PATH_TYPE		(APP_TOTA_PATH_TYPE_SPP)
-	
-#define APP_TOTA_CONNECTED             (1 << 0)    
+
+#define APP_TOTA_CONNECTED             (1 << 0)
 #define APP_TOTA_DISCONNECTED          (~(1 << 0))
 
 #ifdef __cplusplus

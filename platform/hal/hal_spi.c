@@ -1405,7 +1405,7 @@ int hal_spi_slave_dma_recv(void *data, uint32_t len, HAL_SPI_DMA_HANDLER_T handl
         hal_gpdma_free_chan(spi_rxdma_chan[id]);
         spi_rxdma_chan[id] = HAL_DMA_CHAN_NONE;
         ret = 5;
-    }    
+    }
 #else
     SPI_ASSERT(0,"Wrong case");
 #endif

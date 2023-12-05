@@ -2233,7 +2233,7 @@ void hal_iomux_set_wf_fem(int rf_switch)
         iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P12_SEL_MASK)) | IOMUX_GPIO_P12_SEL(13);
         iomux->REG_008 = (iomux->REG_008 & ~(IOMUX_GPIO_P13_SEL_MASK)) | IOMUX_GPIO_P13_SEL(13);
         iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P24_SEL_MASK)) | IOMUX_GPIO_P24_SEL(13);
-        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P27_SEL_MASK)) | IOMUX_GPIO_P27_SEL(13);  
+        iomux->REG_00C = (iomux->REG_00C & ~(IOMUX_GPIO_P27_SEL_MASK)) | IOMUX_GPIO_P27_SEL(13);
     }
 
     if ((rf_switch  == 106) && hal_get_chip_metal_id() >= HAL_CHIP_METAL_ID_4)

@@ -58,7 +58,7 @@ void 						app_tota_data_xfer_control_handler(APP_TOTA_CMD_CODE_E funcCode, uint
 void 						app_tota_control_data_xfer(bool isStartXfer);
 void 						app_tota_start_data_xfer_control_rsp_handler(APP_TOTA_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
 void 						app_tota_stop_data_xfer_control_rsp_handler(APP_TOTA_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
-APP_TOTA_CMD_RET_STATUS_E 	app_tota_send_response_to_command(APP_TOTA_CMD_CODE_E responsedCmdCode, APP_TOTA_CMD_RET_STATUS_E returnStatus, 
+APP_TOTA_CMD_RET_STATUS_E 	app_tota_send_response_to_command(APP_TOTA_CMD_CODE_E responsedCmdCode, APP_TOTA_CMD_RET_STATUS_E returnStatus,
 								uint8_t* rspData, uint32_t rspDataLen, APP_TOTA_TRANSMISSION_PATH_E path);
 APP_TOTA_CMD_RET_STATUS_E 	app_tota_send_command(APP_TOTA_CMD_CODE_E cmdCode, uint8_t* ptrParam, uint32_t paramLen, APP_TOTA_TRANSMISSION_PATH_E path);
 void 						app_tota_cmd_handler_init(void);

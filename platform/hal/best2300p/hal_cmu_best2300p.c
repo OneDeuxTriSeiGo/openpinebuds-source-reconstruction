@@ -3705,7 +3705,7 @@ void hal_cmu_shutdown_hook(void)
 
     hal_cmu_dsp_reset_set();
     hal_cmu_dsp_clock_disable();
-    
+
 #ifdef REUSE_WIFI_CALI_RESULT
     save_wifi_cali_result();
 #endif

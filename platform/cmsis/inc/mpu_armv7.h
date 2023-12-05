@@ -153,7 +153,7 @@
 * \param OuterCp Configures the outer cache policy.
 * \param InnerCp Configures the inner cache policy.
 * \param IsShareable Configures the memory as shareable or non-shareable.
-*/ 
+*/
 #define ARM_MPU_ACCESS_NORMAL(OuterCp, InnerCp, IsShareable) ARM_MPU_ACCESS_((4U | (OuterCp)), IsShareable, ((InnerCp) >> 1U), ((InnerCp) & 1U))
 
 /**
@@ -268,7 +268,7 @@ __STATIC_INLINE void ARM_MPU_SetSubRegion(uint32_t rnr, uint32_t subRegion)
 __STATIC_INLINE void ARM_MPU_OrderedMemcpy(volatile uint32_t* dst, const uint32_t* __RESTRICT src, uint32_t len)
 {
   uint32_t i;
-  for (i = 0U; i < len; ++i) 
+  for (i = 0U; i < len; ++i)
   {
     dst[i] = src[i];
   }
@@ -278,7 +278,7 @@ __STATIC_INLINE void ARM_MPU_OrderedMemcpy(volatile uint32_t* dst, const uint32_
 * \param table Pointer to the MPU configuration table.
 * \param cnt Amount of regions to be configured.
 */
-__STATIC_INLINE void ARM_MPU_Load(ARM_MPU_Region_t const* table, uint32_t cnt) 
+__STATIC_INLINE void ARM_MPU_Load(ARM_MPU_Region_t const* table, uint32_t cnt)
 {
   const uint32_t rowWordSize = sizeof(ARM_MPU_Region_t)/4U;
   while (cnt > MPU_TYPE_RALIASES) {

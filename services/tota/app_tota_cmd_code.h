@@ -66,7 +66,7 @@ typedef enum
 
 	APP_TOTA_PATH_IDLE = 0xff
 } APP_TOTA_TRANSMISSION_PATH_E;
-	
+
 /**
  * @brief The command code
  *
@@ -113,7 +113,7 @@ typedef enum
     OP_TOTA_AUDIO_DUMP_CMD=0x9030,
     OP_TOTA_RAW_DATA_SET_CMD = 0x9100,
     OP_TOTA_COMMAND_COUNT,
-    
+
     OP_TOTA_DATA_XFER = 0xFFFF,	// to mark that it's a data packet
 } APP_TOTA_CMD_CODE_E;
 
@@ -128,15 +128,15 @@ typedef enum
 	TOTA_INVALID_DATA_PACKET = 2,
 	TOTA_PARAM_LEN_OUT_OF_RANGE = 3,
 	TOTA_PARAMETER_LENGTH_TOO_SHORT = 4,
-	TOTA_PARAM_LEN_TOO_SHORT = 5,	
+	TOTA_PARAM_LEN_TOO_SHORT = 5,
 	TOTA_CMD_HANDLING_FAILED = 6,
 	TOTA_WAITING_RSP_TIMEOUT = 7,
 	TOTA_DATA_XFER_ALREADY_STARTED = 8,
 	TOTA_DATA_XFER_NOT_STARTED_YET = 9,
 	TOTA_DATA_SEGMENT_CRC_CHECK_FAILED = 10,
 	TOTA_WHOLE_DATA_CRC_CHECK_FAILED = 11,
-	TOTA_DATA_XFER_LEN_NOT_MATCHED = 12,	
-	
+	TOTA_DATA_XFER_LEN_NOT_MATCHED = 12,
+
 	// TO ADD: new return status
 } APP_TOTA_CMD_RET_STATUS_E;
 
@@ -146,18 +146,18 @@ typedef enum
  * @param cmdCode	Custom command code
  * @param ptrParam 	Pointer of the received parameter
  * @param paramLen 	Length of the recevied parameter
- * 
+ *
  */
 typedef void (*app_tota_cmd_handler_t)(APP_TOTA_CMD_CODE_E cmdCode, uint8_t* ptrParam, uint32_t paramLen);
 
 /**
- * @brief Format of the tota command response handler function, 
+ * @brief Format of the tota command response handler function,
  *	called when the response to formerly sent command is received
  *
  * @param retStatus	Handling return status of the command
  * @param ptrParam 	Pointer of the received parameter
  * @param paramLen 	Length of the recevied parameter
- * 
+ *
  */
 typedef void (*app_tota_cmd_response_handler_t)(APP_TOTA_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
 
