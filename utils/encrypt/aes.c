@@ -479,6 +479,8 @@ static void InvCipher(void)
 #if defined(ECB) && (ECB == 1)
 
 
+//TODO: Update sources to match tiny-AES128-C 
+//TODO: commit: 8592c76b4860c7bd76fd58558386e30820956641
 void AES128_ECB_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output, const uint32_t length)
 {
   // Copy input to output, and work in-memory on output
@@ -492,6 +494,8 @@ void AES128_ECB_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output, con
   Cipher();
 }
 
+//TODO: Update sources to match tiny-AES128-C 
+//TODO: commit: 8592c76b4860c7bd76fd58558386e30820956641
 void AES128_ECB_decrypt(uint8_t* input, const uint8_t* key, uint8_t *output, const uint32_t length)
 {
   // Copy input to output, and work in-memory on output
