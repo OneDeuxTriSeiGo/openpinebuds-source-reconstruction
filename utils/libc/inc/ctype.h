@@ -34,7 +34,6 @@
 #define __CTYPE_EXT_H
 
 
-#if defined(NCSW_LINUX) && defined(__KERNEL__) || defined(NCSW_FREEBSD)
 /*
  * NOTE! This ctype does not handle EOF like the standard C
  * library is required to.
@@ -84,10 +83,6 @@ static __inline__ unsigned char __toupper(unsigned char c)
 
 #define tolower(c) __tolower(c)
 #define toupper(c) __toupper(c)
-
-#else
-#include <ctype.h>
-#endif /* defined(NCSW_LINUX) && defined(__KERNEL__) || defined(NCSW_FREEBSD) */
 
 
 #endif /* __CTYPE_EXT_H */
