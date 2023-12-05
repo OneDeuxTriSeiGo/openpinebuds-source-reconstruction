@@ -12,6 +12,9 @@
 //
 // CBC enables AES128 encryption in CBC-mode of operation and handles 0-padding.
 // ECB enables the basic ECB 16-byte block algorithm. Both can be enabled simultaneously.
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 // The #ifndef-guard allows it to be configured before #include'ing or at compile time.
 #ifndef CBC
@@ -40,5 +43,8 @@ void AES128_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length,
 #endif // #if defined(CBC) && CBC
 
 void AES128_CTR_encrypt_buffer(uint8_t* input, uint32_t length, const uint8_t* key, uint8_t* iv, uint8_t* output);
+#if defined(__cplusplus)
+}
+#endif
 
 #endif //_AES_H_
