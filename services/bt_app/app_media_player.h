@@ -29,7 +29,7 @@ typedef enum
     T_AUDIO_ID = 0x0,
 
     T_AUDIO_NUMBER,
-    
+
 }MEDIA_AUDIO_TYPE;
 
 typedef enum
@@ -79,7 +79,7 @@ typedef enum
     APP_PROMPT_STANDALONE_REMOTE_PLAY   = 5,
 } APP_PROMPT_PLAY_REQ_TYPE_E;
 
-typedef struct 
+typedef struct
 {
     uint16_t id;
     uint16_t status;
@@ -130,7 +130,7 @@ void media_PlayAudio(AUD_ID_ENUM id,uint8_t device_id);
 // If there are music/phone call on-going, the prompt will be mixed.
 void media_PlayAudio_locally(AUD_ID_ENUM id, uint8_t device_id);
 
-// Prompt will be played on peer device only if they're connected. 
+// Prompt will be played on peer device only if they're connected.
 // If there are music/phone call on-going, the music or phone call output will be stopped
 // until the prompt playing is completed.
 void media_PlayAudio_remotely(AUD_ID_ENUM id, uint8_t device_id);
@@ -150,7 +150,7 @@ void media_PlayAudio_standalone_locally(AUD_ID_ENUM id, uint8_t device_id);
 // until the prompt playing is completed.
 void media_PlayAudio_standalone_remotely(AUD_ID_ENUM id, uint8_t device_id);
 
-void app_prompt_push_request(APP_PROMPT_PLAY_REQ_TYPE_E reqType, 
+void app_prompt_push_request(APP_PROMPT_PLAY_REQ_TYPE_E reqType,
     AUD_ID_ENUM id, uint8_t device_id, bool isLocalPlaying);
 
 void media_Set_IncomingNumber(const char* pNumber);

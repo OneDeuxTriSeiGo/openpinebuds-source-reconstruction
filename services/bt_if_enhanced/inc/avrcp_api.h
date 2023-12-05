@@ -239,7 +239,7 @@ typedef avctp_response_t avrcp_response_t;
 #define BTIF_AVRCP_RESPONSE_REJECTED           AVCTP_RESPONSE_REJECTED
 #define BTIF_AVRCP_RESPONSE_IN_TRANSITION      AVCTP_RESPONSE_IN_TRANSITION
 #define BTIF_AVRCP_RESPONSE_IMPLEMENTED_STABLE AVCTP_RESPONSE_IMPLEMENTED_STABLE
-#define BTIF_AVRCP_RESPONSE_CHANGED            AVRCP_RESP_CHANGED 
+#define BTIF_AVRCP_RESPONSE_CHANGED            AVRCP_RESP_CHANGED
 #define BTIF_AVRCP_RESPONSE_INTERIM            AVCTP_RESPONSE_INTERIM
 
 #define BTIF_AVRCP_RESPONSE_BROWSING           AVCTP_RESPONSE_BROWSING
@@ -1648,13 +1648,13 @@ extern "C" {
 
     bt_status_t btif_avrcp_ct_send_capability_company_id_rsp(btif_avrcp_channel_t * channel, uint8_t trans_id);
 
-    bt_status_t btif_avrcp_ct_send_capability_rsp(btif_avrcp_channel_t * channel, avrcp_capabilityId_t capid, uint16_t mask, uint8_t trans_id);    
+    bt_status_t btif_avrcp_ct_send_capability_rsp(btif_avrcp_channel_t * channel, avrcp_capabilityId_t capid, uint16_t mask, uint8_t trans_id);
 
     bt_status_t btif_avrcp_ct_send_absolute_volume_rsp(btif_avrcp_channel_t * channel, uint8_t volume, uint8_t trans_id, uint8_t error_n);
-    
+
     bt_status_t btif_avrcp_ct_send_volume_change_interim_rsp(btif_avrcp_channel_t * channel, uint8_t volume, uint8_t trans_id);
     bt_status_t btif_avrcp_ct_send_volume_change_actual_rsp(btif_avrcp_channel_t * channel, int volume);
-    
+
     bt_status_t btif_avrcp_send_play_status_change_interim_rsp(btif_avrcp_channel_t * channel, uint8_t play_status, uint8_t trans_id);
     bt_status_t btif_avrcp_send_play_status_change_actual_rsp(btif_avrcp_channel_t * channel, uint8_t play_status);
 

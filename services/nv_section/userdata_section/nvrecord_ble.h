@@ -67,6 +67,6 @@ void clac_linkKey(uint8_t *ltk, uint8_t *pBdAddr);
 }
 #endif
 
-#endif 
+#endif
 #endif // #if defined(NEW_NV_RECORD_ENABLED)
 

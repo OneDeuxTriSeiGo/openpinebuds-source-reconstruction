@@ -137,7 +137,7 @@ typedef enum app_ble_adv_type
 #endif
 
 /// Activity action
-typedef enum 
+typedef enum
 {
     /// Activity do nothing
     BLE_ACTV_ACTION_IDLE = 0,

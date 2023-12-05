@@ -430,7 +430,7 @@ extern "C" {
     bt_status_t btif_a2dp_register(btif_a2dp_stream_t *Stream,
                                    btif_a2dp_endpoint_type_t sep_type,
                                    btif_avdtp_codec_t *sep_codec,
-                                   btif_avdtp_content_prot_t *sep_cp,                               
+                                   btif_avdtp_content_prot_t *sep_cp,
                                    uint8_t sep_priority,
                                    btif_a2dp_callback Callback);
 

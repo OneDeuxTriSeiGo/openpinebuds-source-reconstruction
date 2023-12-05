@@ -161,7 +161,7 @@ enum TASK_API_ID
     TASK_ID_BCSC         = 64,   // Body Composition Client Task
 
     TASK_ID_GFPSP        = 65,   //google fast pair service provider
-    TASK_ID_GFPSS        = 66,   // seeker 
+    TASK_ID_GFPSS        = 66,   // seeker
 
     TASK_ID_VOICEPATH    = 67,   // Voice Path Task
 
@@ -207,11 +207,11 @@ enum TASK_API_ID
     TASK_ID_BLE_ADAPTER_SERVER,
     TASK_ID_BLE_ADAPTER_SERVER_END = TASK_ID_BLE_ADAPTER_SERVER + (BLE_ADAPTER_PROFILES_NUM - 1),
     TASK_ID_BLE_ADAPTER_CLIENT,
-#endif 
+#endif
     TASK_ID_MESH         = 200,  // Mesh Task
 
     TASK_ID_GAF          = 210,  // Generic Audio Framework
-    
+
     TASK_ID_BUDS         = 211,
 
     TASK_ID_AM0          = 240,  // BLE Audio Mode 0

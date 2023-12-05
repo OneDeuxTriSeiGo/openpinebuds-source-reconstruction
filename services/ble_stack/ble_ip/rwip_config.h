@@ -45,7 +45,7 @@
  ****************************************************************************************
  */
 #define DBG_SWDIAG(bank , field , value)
-    
+
 #if defined(__IAG_BLE_INCLUDE__)
 #ifndef FPGA
 #define _BLE_NVDS_

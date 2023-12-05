@@ -186,7 +186,7 @@ enum BT_PAIR_TYPE{
 
 // type: ACL_CONNECT/ACL_DISCONNECT event;
 // addr: peer device address;
-// para: event reason. For ACL_CONNECT event, it is acl link status reason; For ACL_DISCONNECT event, it is disconnect 
+// para: event reason. For ACL_CONNECT event, it is acl link status reason; For ACL_DISCONNECT event, it is disconnect
 // status reason.
 typedef void (*bt_acl_conn_state_change_cb_t)(uint8_t type,bt_bdaddr_t* addr, uint32_t para);
 typedef void (*bt_pair_state_change_cb_t)(bt_bdaddr_t* addr, uint32_t para);

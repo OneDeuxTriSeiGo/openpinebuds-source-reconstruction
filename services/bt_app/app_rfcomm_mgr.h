@@ -43,7 +43,7 @@ typedef enum
 
 typedef bool (*rfcomm_callback_func)(uint8_t device_id, RFCOMM_EVENT_E event, uint8_t serviceIndex,
     uint16_t connHandle, uint8_t* pBtAddr, uint8_t* pSentDataBuf, uint16_t sentDataLen);
-    
+
 typedef int (*spp_handle_data_event_func_t)(uint8_t device_id, void *pDev, uint8_t process, uint8_t *pData, uint16_t dataLen);
 
 typedef struct

@@ -31,7 +31,7 @@ extern "C" {
 
 typedef void btif_dip_client_t;
 
-typedef struct 
+typedef struct
 {
     uint16_t spec_id;
     uint16_t vend_id;

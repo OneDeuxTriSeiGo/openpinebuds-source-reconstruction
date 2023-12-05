@@ -490,7 +490,7 @@ struct BT_DEVICE_MANAGER_T {
     struct app_bt_config config;
 
 #ifdef IBRT
-    struct app_bt_tws_conn_info tws_conn;    
+    struct app_bt_tws_conn_info tws_conn;
 #endif
 };
 

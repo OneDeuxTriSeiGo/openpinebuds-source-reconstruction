@@ -112,7 +112,7 @@ typedef  struct btdevice_profile{
     uint8_t a2dp_codectype;
 }btdevice_profile;
 
-typedef struct 
+typedef struct
 {
     uint16_t spec_id;
     uint16_t vend_id;

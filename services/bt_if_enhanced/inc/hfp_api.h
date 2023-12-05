@@ -214,7 +214,7 @@ extern "C" {
         uint8_t value;
         bool initial_support;
     };
-    
+
 #ifdef USE_BT_ADAPTER
     void btif_hfp_register_user_event_callback(hf_event_cb_t cb);
     hf_event_cb_t btif_hfp_get_user_event_callback(void);

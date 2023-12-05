@@ -145,7 +145,7 @@ typedef struct {
     btif_device_record_t record;
     bool tws_connect_success;
     uint8_t tws_name_len;
-    uint8_t tws_name[251];    
+    uint8_t tws_name[251];
 } ibrt_mode_t;
 
 enum NV_FACOTRY_T{
@@ -243,7 +243,7 @@ typedef struct btdevice_profile {
     uint8_t a2dp_codectype;
 } btdevice_profile;
 
-typedef struct 
+typedef struct
 {
     uint16_t spec_id;
     uint16_t vend_id;

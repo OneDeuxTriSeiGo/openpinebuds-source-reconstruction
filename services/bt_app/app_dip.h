@@ -26,7 +26,7 @@ typedef enum {
     MOBILE_CONNECT_ANDROID,
 } MOBILE_CONN_TYPE_E;
 
-typedef struct 
+typedef struct
 {
     uint16_t spec_id;
     uint16_t vend_id;

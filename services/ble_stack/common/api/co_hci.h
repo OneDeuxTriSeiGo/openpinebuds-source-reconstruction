@@ -6618,7 +6618,7 @@ struct hci_le_set_cig_params_cmd
     /// Interval in microseconds of periodic SDUs master to slave (20 bits meaningful Range 0x000FF - 0xFFFFF).
     uint32_t sdu_interval_m2s;
     /// Interval in microseconds of periodic SDUs slave to master (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint32_t sdu_interval_s2m;    
+    uint32_t sdu_interval_s2m;
     #endif
     /// Slave Clock Accuracy:
     /// 0x00: 251 ppm to 500 ppm,  0x01: 151 ppm to 250 ppm, 0x02: 101 ppm to 150 ppm, 0x03: 76 ppm to 100 ppm

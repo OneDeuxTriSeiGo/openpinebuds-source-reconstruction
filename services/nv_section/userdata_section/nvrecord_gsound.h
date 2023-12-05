@@ -37,20 +37,20 @@ extern "C"{
 /**
  * @brief Init the gsound info pointer which is pointing to the gsound info
  * saved in nv_section
- * 
+ *
  */
 void nv_record_gsound_rec_init(void);
 
 /**
  * @brief Get the pointer of gsound info saved in nv_section
- * 
+ *
  * @param ptr           Pointer to get the result
  */
 void nv_record_gsound_rec_get_ptr(void **ptr);
 
 /**
  * @brief Update the enable state of gsound service in nv_section
- * 
+ *
  * @param enable        true for enable, false for disable
  */
 void nv_record_gsound_rec_updata_enable_state(bool enable);
@@ -111,7 +111,7 @@ uint32_t nv_record_gsound_rec_get_hotword_model_addr(const char *model_id, bool 
 
 /**
  * @brief get supported hotword model ID
- * 
+ *
  * @param models_out : pointer of supported model id string
  * @param length_out : length of supported model id string
  */
