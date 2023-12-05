@@ -37,17 +37,13 @@
 #ifndef LWIP_HDR_ERRNO_H
 #define LWIP_HDR_ERRNO_H
 
-#include "lwip/opt.h"
-
-#ifdef LWIP_PROVIDE_ERRNO
-
 #define  EPERM         1  /* Operation not permitted */
 #define  ENOENT        2  /* No such file or directory */
 #define  ESRCH         3  /* No such process */
 #define  EINTR         4  /* Interrupted system call */
 #define  EIO           5  /* I/O error */
 #define  ENXIO         6  /* No such device or address */
-#define  E2BIG         7  /* Arg list too long */
+#define  E2BIG         7  /* Argument list too long */
 #define  ENOEXEC       8  /* Exec format error */
 #define  EBADF         9  /* Bad file number */
 #define  ECHILD       10  /* No child processes */
@@ -168,15 +164,5 @@
 
 #define  ENOMEDIUM      123  /* No medium found */
 #define  EMEDIUMTYPE    124  /* Wrong medium type */
-
-#ifndef errno
-extern int errno;
-#endif
-
-#endif /* LWIP_PROVIDE_ERRNO */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* LWIP_HDR_ERRNO_H */

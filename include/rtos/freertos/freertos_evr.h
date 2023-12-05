@@ -26,7 +26,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "RTE_Components.h"
+//#include "RTE_Components.h"
 
 #if !defined(RTE_Compiler_EventRecorder)
   /* Disable debug events if Event Recorder is not used */

@@ -35,24 +35,24 @@
 #ifndef FFTWRAP_H
 #define FFTWRAP_H
 
-#include "arch.h"
+#include "adp_arch.h"
 
 /** Compute tables for an FFT */
-void *spx_fft_init(int size);
+void *adp_spx_fft_init(int size);
 
 /** Destroy tables for an FFT */
-void spx_fft_destroy(void *table);
+void adp_spx_fft_destroy(void *table);
 
 /** Forward (real to half-complex) transform */
-void spx_fft(void *table, spx_word16_t *in, spx_word16_t *out);
+void adp_spx_fft(void *table, spx_word16_t *in, spx_word16_t *out);
 
 /** Backward (half-complex to real) transform */
-void spx_ifft(void *table, spx_word16_t *in, spx_word16_t *out);
+void adp_spx_ifft(void *table, spx_word16_t *in, spx_word16_t *out);
 
 /** Forward (real to half-complex) transform of float data */
-void spx_fft_float(void *table, float *in, float *out);
+void adp_spx_fft_float(void *table, float *in, float *out);
 
 /** Backward (half-complex to real) transform of float data */
-void spx_ifft_float(void *table, float *in, float *out);
+void adp_spx_ifft_float(void *table, float *in, float *out);
 
 #endif

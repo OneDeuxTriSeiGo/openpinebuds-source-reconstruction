@@ -433,7 +433,7 @@ osTimerDef_t os_timer_def_##name = \
 /// \param[in]     argument      argument to the timer call back function.
 /// \return timer ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osTimerCreate shall be consistent in every CMSIS-RTOS.
-osTimerId osTimerCreate (osTimerDef_t *timer_def, os_timer_type type, void *argument);
+osTimerId osTimerCreate (const osTimerDef_t *timer_def, os_timer_type type, void *argument);
 
 /// Start or restart a timer.
 /// \param[in]     timer_id      timer ID obtained by \ref osTimerCreate.
@@ -511,7 +511,7 @@ osMutexDef_t os_mutex_def_##name = { (os_mutex_cb_##name) }
 /// \param[in]     mutex_def     mutex definition referenced with \ref osMutex.
 /// \return mutex ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osMutexCreate shall be consistent in every CMSIS-RTOS.
-osMutexId osMutexCreate (osMutexDef_t *mutex_def);
+osMutexId osMutexCreate (const osMutexDef_t *mutex_def);
 
 /// Wait until a Mutex becomes available.
 /// \param[in]     mutex_id      mutex ID obtained by \ref osMutexCreate.
@@ -562,7 +562,7 @@ osSemaphoreDef_t os_semaphore_def_##name = { (os_semaphore_cb_##name) }
 /// \param[in]     count         number of available resources.
 /// \return semaphore ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osSemaphoreCreate shall be consistent in every CMSIS-RTOS.
-osSemaphoreId osSemaphoreCreate (osSemaphoreDef_t *semaphore_def, int32_t count);
+osSemaphoreId osSemaphoreCreate (const osSemaphoreDef_t *semaphore_def, int32_t count);
 
 /// Wait until a Semaphore token becomes available.
 /// \param[in]     semaphore_id  semaphore object referenced with \ref osSemaphoreCreate.
@@ -617,7 +617,7 @@ osPoolDef_t os_pool_def_##name = \
 /// \param[in]     pool_def      memory pool definition referenced with \ref osPool.
 /// \return memory pool ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osPoolCreate shall be consistent in every CMSIS-RTOS.
-osPoolId osPoolCreate (osPoolDef_t *pool_def);
+osPoolId osPoolCreate (const osPoolDef_t *pool_def);
 
 /// Allocate a memory block from a memory pool.
 /// \param[in]     pool_id       memory pool ID obtain referenced with \ref osPoolCreate.
@@ -673,7 +673,7 @@ osMessageQDef_t os_messageQ_def_##name = \
 /// \param[in]     thread_id     thread ID (obtained by \ref osThreadCreate or \ref osThreadGetId) or NULL.
 /// \return message queue ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osMessageCreate shall be consistent in every CMSIS-RTOS.
-osMessageQId osMessageCreate (osMessageQDef_t *queue_def, osThreadId thread_id);
+osMessageQId osMessageCreate (const osMessageQDef_t *queue_def, osThreadId thread_id);
 
 /// Put a Message to a Queue.
 /// \param[in]     queue_id      message queue ID obtained with \ref osMessageCreate.
@@ -727,7 +727,7 @@ osMailQDef_t os_mailQ_def_##name =  \
 /// \param[in]     thread_id     thread ID (obtained by \ref osThreadCreate or \ref osThreadGetId) or NULL.
 /// \return mail queue ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osMailCreate shall be consistent in every CMSIS-RTOS.
-osMailQId osMailCreate (osMailQDef_t *queue_def, osThreadId thread_id);
+osMailQId osMailCreate (const osMailQDef_t *queue_def, osThreadId thread_id);
 
 /// Allocate a memory block from a mail.
 /// \param[in]     queue_id      mail queue ID obtained with \ref osMailCreate.

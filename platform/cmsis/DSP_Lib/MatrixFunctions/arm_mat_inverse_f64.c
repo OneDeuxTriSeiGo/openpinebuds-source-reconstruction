@@ -185,7 +185,7 @@ arm_status arm_mat_inverse_f64(
       }
 
       /* Update the status if the matrix is singular */
-      if (maxC == 0.0)
+      if (maxC == (float64_t)0.0)
       {
         return ARM_MATH_SINGULAR;
       }
@@ -197,7 +197,7 @@ arm_status arm_mat_inverse_f64(
       k = 1U;
 
       /* Check if the pivot element is the most significant of the column */
-      if ( (in > 0.0 ? in : -in) != maxC)
+      if ( (in > (float64_t)0.0 ? in : -in) != maxC)
       {
         /* Loop over the number rows present below */
         i = numRows - (l + 1U);
@@ -210,7 +210,7 @@ arm_status arm_mat_inverse_f64(
 
           /* Look for the most significant element to
            * replace in the rows below */
-          if ((*pInT2 > 0.0 ? *pInT2: -*pInT2) == maxC)
+          if ((*pInT2 > (float64_t)0.0 ? *pInT2: -*pInT2) == maxC)
           {
             /* Loop over number of columns
              * to the right of the pilot element */
@@ -257,7 +257,7 @@ arm_status arm_mat_inverse_f64(
       }
 
       /* Update the status if the matrix is singular */
-      if ((flag != 1U) && (in == 0.0))
+      if ((flag != 1U) && (in == (float64_t)0.0))
       {
         return ARM_MATH_SINGULAR;
       }
@@ -650,12 +650,12 @@ arm_status arm_mat_inverse_f64(
     /* Set status as ARM_MATH_SUCCESS */
     status = ARM_MATH_SUCCESS;
 
-    if ((flag != 1U) && (in == 0.0))
+    if ((flag != 1U) && (in == (float64_t)0.0))
     {
       pIn = pSrc->pData;
       for (i = 0; i < numRows * numCols; i++)
       {
-        if (pIn[i] != 0.0)
+        if (pIn[i] != (float64_t)0.0)
             break;
       }
 

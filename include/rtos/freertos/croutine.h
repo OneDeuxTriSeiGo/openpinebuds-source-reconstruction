@@ -24,7 +24,6 @@
  *
  * 1 tab == 4 spaces!
  */
-
 #ifndef CO_ROUTINE_H
 #define CO_ROUTINE_H
 
@@ -32,7 +31,7 @@
 	#error "include FreeRTOS.h must appear in source files before include croutine.h"
 #endif
 
-#include "list.h"
+#include "freertos_list.h"
 
 #ifdef __cplusplus
 extern "C" {

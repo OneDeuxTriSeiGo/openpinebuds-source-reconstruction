@@ -34,7 +34,6 @@
 #define __CTYPE_EXT_H
 
 
-#if defined(NCSW_LINUX) && defined(__KERNEL__) || defined(NCSW_FREEBSD)
 /*
  * NOTE! This ctype does not handle EOF like the standard C
  * library is required to.
@@ -49,7 +48,7 @@
 #define _X    0x40    /* hex digit */
 #define _SP   0x80    /* hard space (0x20) */
 
-extern unsigned char _ctype[];
+extern const unsigned char _ctype[];
 
 #define __ismask(x) (_ctype[(int)(unsigned char)(x)])
 
@@ -68,14 +67,14 @@ extern unsigned char _ctype[];
 #define isascii(c) (((unsigned char)(c))<=0x7f)
 #define toascii(c) (((unsigned char)(c))&0x7f)
 
-static __inline__ unsigned char __tolower(unsigned char c)
+static inline unsigned char __tolower(unsigned char c)
 {
     if (isupper(c))
         c -= 'A'-'a';
     return c;
 }
 
-static __inline__ unsigned char __toupper(unsigned char c)
+static inline unsigned char __toupper(unsigned char c)
 {
     if (islower(c))
         c -= 'a'-'A';
@@ -84,10 +83,6 @@ static __inline__ unsigned char __toupper(unsigned char c)
 
 #define tolower(c) __tolower(c)
 #define toupper(c) __toupper(c)
-
-#else
-#include <ctype.h>
-#endif /* defined(NCSW_LINUX) && defined(__KERNEL__) || defined(NCSW_FREEBSD) */
 
 
 #endif /* __CTYPE_EXT_H */
