@@ -58,4 +58,3 @@ bool btif_dip_check_is_ios_by_vend_id(uint16_t vend_id, uint16_t vend_id_source)
 #endif
 
 #endif
-

@@ -161,4 +161,3 @@
 #define BTIF_NUM_BT_DEVICES          2
 
 #endif /*__SYS_BT_CFG_H__*/
-

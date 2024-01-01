@@ -761,4 +761,3 @@ void app_ble_clear_all_white_list(void);
 #endif
 
 #endif /* #ifndef __APP_BLE_MODE_SWITCH_H__ */
-

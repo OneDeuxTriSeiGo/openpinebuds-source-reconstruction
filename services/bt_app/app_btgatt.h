@@ -27,4 +27,3 @@ void app_btgatt_addsdp(uint16_t pServiceUUID, uint16_t startHandle, uint16_t end
 #endif
 
 #endif
-

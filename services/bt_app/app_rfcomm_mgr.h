@@ -73,4 +73,3 @@ void app_rfcomm_services_remove_sdp(void);
 #endif
 
 #endif // __APP_RFCOMM_MGR_H__
-

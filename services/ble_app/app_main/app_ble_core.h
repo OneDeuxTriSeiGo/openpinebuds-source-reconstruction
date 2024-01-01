@@ -381,4 +381,3 @@ void app_ble_core_print_ble_state(void);
 #endif
 
 #endif /* #ifndef __APP_BLE_CORE_H__ */
-

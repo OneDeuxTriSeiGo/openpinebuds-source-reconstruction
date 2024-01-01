@@ -40,4 +40,3 @@ int nvrec_dev_get_sn(char *sn);
 #endif
 #endif  // #ifdef NVREC_BAIDU_DATA_SECTION
 #endif  // #ifdef NEW_NV_RECORD_ENABLED
-

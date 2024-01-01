@@ -219,4 +219,3 @@ void app_prompt_flush_pending_prompts(void);
 #endif
 
 #endif
-

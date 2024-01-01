@@ -345,4 +345,3 @@ extern "C" {
 }
 #endif
 #endif /*__HCI_API__H__*/
-

@@ -86,4 +86,3 @@ void app_bt_hid_disconnect_all_channels(void);
 #endif /* BT_HID_DEVICE */
 
 #endif /* __APP_BT_HID_H__ */
-

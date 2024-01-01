@@ -50,4 +50,3 @@ void app_dip_get_remote_info(uint8_t device_id);
 #endif
 
 #endif
-

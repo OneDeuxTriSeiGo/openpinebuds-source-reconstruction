@@ -166,4 +166,3 @@ int app_hfp_siri_voice(bool en);
 }
 #endif                          /*  */
 #endif /*__APP_HFP_H__*/
-

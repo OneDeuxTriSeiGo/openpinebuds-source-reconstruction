@@ -48,4 +48,3 @@ struct SMS_MSG_T{
 #endif /* BT_MAP_SUPPORT */
 
 #endif /*__APP_BTMAP_SMS_H__*/
-
