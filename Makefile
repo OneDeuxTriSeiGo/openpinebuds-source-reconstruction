@@ -948,11 +948,11 @@ ifeq ($(KBUILD_OUTPUT),)
 allclean: clean ;
 else
 ifeq ($(SUBMODS),)
-quiet_cmd_allclean  = RMDIR   $(KBUILD_OUTPUT)
-      cmd_allclean  = $(call CMDRMDIR,$(KBUILD_OUTPUT))
+quiet_cmd_clean  = RMDIR   $(KBUILD_OUTPUT)
+      cmd_clean  = $(call CMDRMDIR,$(KBUILD_OUTPUT))
 
 allclean:
-	+$(call cmd,allclean)
+	+$(call cmd,clean)
 else
 allclean: clean ;
 endif
