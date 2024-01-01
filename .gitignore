@@ -32,11 +32,6 @@
 /cscope.*
 /ncscope.*
 /compile_commands.json
-# gnu global files
-GPATH
-GRTAGS
-GSYMS
-GTAGS
 
 # Object files
 *.o
@@ -99,18 +94,6 @@ lib/
 Build dir
 /out/
 *.pre
-*.bin
-*.yaml
-
-*.tar.gz
-write_flash_gui*
-*.lds
-*/liteos_m/sdk/bsp/out/log
-*.mri
 
 # configuration file
 # *.ini
-
-# Except these files
-!bes2600/liteos_m/sdk/bsp/out/**/*.bin
-!bes2600/liteos_m/sdk/bsp/out/**/*.a
