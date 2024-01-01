@@ -74,4 +74,3 @@ void hal_mcu2cp_set_send_msg_list_cp(void);
 #endif
 
 #endif
-

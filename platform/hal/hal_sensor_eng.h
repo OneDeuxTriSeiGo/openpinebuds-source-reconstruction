@@ -73,5 +73,3 @@ void hal_sensor_process_rx_buffer(void);
 #endif
 
 #endif
-
-

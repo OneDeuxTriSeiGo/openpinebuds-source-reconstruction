@@ -51,4 +51,3 @@ endif
 endif #rhino
 
 subdir-ccflags-y += -Iplatform/cmsis/inc -Iplatform/hal -Iutils/hwtimer_list
-

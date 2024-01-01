@@ -33,4 +33,3 @@ SUBMODS := $(patsubst %/,%,$(SUBMODS))
 SUBMODS := $(filter-out $(addsuffix /%,$(SUBMODS)),$(SUBMODS))
 export SUBMODS
 endif
-

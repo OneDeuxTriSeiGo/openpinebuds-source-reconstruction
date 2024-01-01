@@ -366,4 +366,3 @@ uint32_t hal_psc_get_power_loop_cycle_cnt(void)
 {
     return 6 + 14 + 14; // 1.5 + 4.5 + 14 + 14
 }
-

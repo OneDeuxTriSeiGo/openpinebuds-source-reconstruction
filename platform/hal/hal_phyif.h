@@ -34,4 +34,3 @@ int hal_phyif_reg_read(unsigned short reg, unsigned short *val);
 #endif
 
 #endif
-

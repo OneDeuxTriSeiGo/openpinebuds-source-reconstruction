@@ -49,4 +49,3 @@ int hal_pwm_breathing_led_disable(enum HAL_PWM_ID_T id);
 #endif
 
 #endif
-

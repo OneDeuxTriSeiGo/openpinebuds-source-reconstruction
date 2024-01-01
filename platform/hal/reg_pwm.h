@@ -114,4 +114,3 @@ struct PWM_T
 #define REG_PWM3_ST1(n)                     BITFIELD_VAL(REG_PWM3_ST1, n)
 
 #endif
-

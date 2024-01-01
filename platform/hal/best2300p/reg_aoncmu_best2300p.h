@@ -711,4 +711,3 @@ struct AONCMU_T {
 #define AON_ORST_PWM7                           (1 << 17)
 
 #endif
-

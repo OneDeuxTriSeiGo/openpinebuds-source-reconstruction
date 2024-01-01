@@ -144,4 +144,3 @@ static inline bool hal_overlay_is_used(void) { return false;}
 #endif
 
 #endif /*__HAL_OVERLAY_H__*/
-

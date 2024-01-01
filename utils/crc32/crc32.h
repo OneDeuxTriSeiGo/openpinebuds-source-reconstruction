@@ -26,4 +26,3 @@ unsigned long crc32_c(unsigned long crc, const unsigned char *buf, unsigned int 
 #endif
 
 #endif
-

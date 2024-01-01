@@ -149,4 +149,3 @@ int cp_accel_get_cpu_usage(struct CP_ACCEL_CPU_USAGE_T *usage);
 #endif
 
 #endif
-

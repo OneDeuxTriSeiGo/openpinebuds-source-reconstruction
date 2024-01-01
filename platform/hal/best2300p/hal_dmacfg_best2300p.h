@@ -166,4 +166,3 @@ static const enum HAL_DMA_PERIPH_T bes2003_audma_fifo_periph[GPDMA_PERIPH_NUM] =
 #endif
 
 #endif
-

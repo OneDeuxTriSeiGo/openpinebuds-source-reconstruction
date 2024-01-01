@@ -86,4 +86,3 @@ bool hal_memsc_aon_avail(enum HAL_MEMSC_AON_ID_T id)
     return !!(aoncmu->MEMSC_STATUS & (1 << id));
 }
 #endif
-

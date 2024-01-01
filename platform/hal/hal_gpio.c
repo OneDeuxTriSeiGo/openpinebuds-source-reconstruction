@@ -483,4 +483,3 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
 }
 
 #endif
-

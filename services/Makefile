@@ -651,4 +651,3 @@ endif
 ifeq ($(SPEECH_MSG_TEST_CASE),1)
 ccflags-y += -Iservices/a7_dsp/os/test/speech_msg_test/
 endif
-

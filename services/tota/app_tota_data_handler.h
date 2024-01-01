@@ -92,4 +92,3 @@ void app_anc_tota_send_data(APP_TOTA_TRANSMISSION_PATH_E path, uint8_t* ptrData,
 #endif
 
 #endif // #ifndef __APP_TOTA_DATA_HANDLER_H__
-

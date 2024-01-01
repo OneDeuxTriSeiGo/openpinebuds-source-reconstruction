@@ -116,4 +116,3 @@ struct SAVED_SPI_REGS_T {
 #define SPI_SSPRXCR_RXBITS_SHIFT    (0)
 
 #endif
-

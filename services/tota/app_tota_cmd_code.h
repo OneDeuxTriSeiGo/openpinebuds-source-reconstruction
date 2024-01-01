@@ -188,4 +188,3 @@ typedef struct
 
 
 #endif // #ifndef __APP_TOTA_CMD_CODE_H__
-

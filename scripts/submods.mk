@@ -22,4 +22,3 @@ get_submodgoals = $(foreach m, \
 
 get_multi_objs = $(addprefix $(obj)/, $($(subst $(obj)/,,$(1:.o=-y))) \
   $($(subst $(obj)/,,$(1:.o=-objs))))
-

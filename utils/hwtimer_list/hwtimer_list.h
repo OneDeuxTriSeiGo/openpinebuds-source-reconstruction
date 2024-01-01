@@ -53,4 +53,3 @@ int hwtimer_active(HWTIMER_ID id);
 #endif
 
 #endif
-

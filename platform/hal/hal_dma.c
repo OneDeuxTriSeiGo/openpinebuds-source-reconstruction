@@ -1106,4 +1106,3 @@ void hal_dma_print_busy_chan(void)
     }
 #endif
 }
-

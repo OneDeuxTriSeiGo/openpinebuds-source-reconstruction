@@ -505,4 +505,3 @@ void hal_cmu_lcdc_wakeup(void);
 #endif
 
 #endif
-

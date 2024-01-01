@@ -2051,4 +2051,3 @@ void SRAM_TEXT_LOC hal_spi_wakeup(void)
 #endif
 
 #endif // !SPI_ROM_ONLY
-

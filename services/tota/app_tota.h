@@ -216,4 +216,3 @@ APP_TOTA_TRANSMISSION_PATH_E app_tota_get_datapath(void);
 #endif
 
 #endif
-

@@ -26,4 +26,3 @@ int xmodem_stop_xfer(void);
 int xmodem_send_stream(const uint8_t *data, size_t size, int ascii);
 
 #endif /*__XYZ_MODEM__*/
-

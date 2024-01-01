@@ -588,4 +588,3 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_setup(void)
 #endif // !FPGA
 
 #endif // !CHIP_SUBSYS_SENS
-

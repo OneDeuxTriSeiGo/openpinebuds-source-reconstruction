@@ -31,4 +31,3 @@ void otaConfigureBleBdAddr(void);
 #endif
 
 #endif	// #define __RETENTION_RAM_H__
-

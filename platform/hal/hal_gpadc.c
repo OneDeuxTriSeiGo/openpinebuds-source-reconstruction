@@ -923,4 +923,3 @@ int hal_adckey_set_irq(enum HAL_ADCKEY_IRQ_T type)
 }
 
 #endif // !GPADC_CHIP_SPECIFIC
-

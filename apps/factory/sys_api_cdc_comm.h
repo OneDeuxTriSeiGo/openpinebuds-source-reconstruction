@@ -52,4 +52,3 @@ unsigned int system_get_bootmode(void);
 #endif
 
 #endif
-

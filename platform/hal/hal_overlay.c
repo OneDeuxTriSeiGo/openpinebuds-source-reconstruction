@@ -355,4 +355,3 @@ bool hal_overlay_is_used(void)
 }
 
 #endif
-

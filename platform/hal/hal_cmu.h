@@ -505,4 +505,3 @@ void hal_cmu_wakeup_check(void);
 #endif
 
 #endif
-

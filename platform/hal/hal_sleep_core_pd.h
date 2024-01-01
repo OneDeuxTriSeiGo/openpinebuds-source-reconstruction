@@ -30,4 +30,3 @@ void NORETURN hal_sleep_core_power_up(void);
 #endif
 
 #endif
-

@@ -26,4 +26,3 @@ obj-y += beco/
 endif
 
 subdir-ccflags-y += -Iplatform/cmsis/inc -Iplatform/hal -Iutils/hwtimer_list -Iplatform/drivers/wifi/$(CHIP)
-

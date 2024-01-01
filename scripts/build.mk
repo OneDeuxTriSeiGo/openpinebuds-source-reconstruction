@@ -524,4 +524,3 @@ endif
 %::
 	@$(call echo-help,*** Error: No rule is defined for target: $@)
 	@exit 1
-

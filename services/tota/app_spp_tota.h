@@ -38,4 +38,3 @@ void app_spp_tota_init_tx_buf(uint8_t* ptr);
 void app_spp_tota_client_open(btif_remote_device_t *remDev);
 
 #endif
-

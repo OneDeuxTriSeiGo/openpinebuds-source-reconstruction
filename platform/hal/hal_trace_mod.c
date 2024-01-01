@@ -29,4 +29,3 @@ const char *hal_trace_get_log_module_desc(enum TR_MODULE_T module)
     }
     return NULL;
 }
-

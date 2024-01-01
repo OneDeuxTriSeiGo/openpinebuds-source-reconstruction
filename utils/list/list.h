@@ -85,4 +85,3 @@ void *list_node(const list_node_t *node);
 #endif
 
 #endif//__FMDEC_H__
-
