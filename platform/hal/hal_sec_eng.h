@@ -169,4 +169,3 @@ enum HAL_SE_RET_T hal_se_hash_rom(enum HAL_SE_HASH_MODE_T mode, const struct HAL
 #endif
 
 #endif
-

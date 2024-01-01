@@ -155,5 +155,3 @@
 #define SDMMCIP_REG_FIFO_OFFSET         0x200
 
 #endif  /* __SDMMCIP_REG_HW_H */
-
-

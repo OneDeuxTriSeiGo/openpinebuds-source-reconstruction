@@ -228,4 +228,3 @@ uint32_t hal_usb_get_soffn(void);
 #endif
 
 #endif
-
