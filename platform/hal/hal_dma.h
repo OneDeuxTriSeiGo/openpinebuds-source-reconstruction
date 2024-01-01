@@ -106,10 +106,6 @@ enum HAL_DMA_PERIPH_T {
     HAL_GPDMA_I2C2_TX           = 31,
     HAL_GPDMA_I2C3_RX           = 32,
     HAL_GPDMA_I2C3_TX           = 33,
-    HAL_GPDMA_UART3_RX          = 34,
-    HAL_GPDMA_UART3_TX          = 35,
-    HAL_GPDMA_IR_RX             = 36,
-    HAL_GPDMA_IR_TX             = 37,
 
     HAL_AUDMA_CODEC_RX          = 50,
     HAL_AUDMA_CODEC_TX          = 51,
@@ -254,10 +250,6 @@ void hal_dma_clear_burst_addr_inc(uint8_t ch);
 void hal_dma_set_desc_burst_addr_inc(struct HAL_DMA_DESC_T *desc, const struct HAL_DMA_BURST_ADDR_INC_T *inc);
 
 void hal_dma_clear_desc_burst_addr_inc(struct HAL_DMA_DESC_T *desc);
-
-void hal_dma_record_busy_chan(void);
-
-void hal_dma_print_busy_chan(void);
 
 //=============================================================
 
