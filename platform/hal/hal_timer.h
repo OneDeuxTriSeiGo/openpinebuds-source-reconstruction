@@ -39,15 +39,11 @@ extern "C" {
 
 #define CONFIG_SYSTICK_HZ           hal_sys_timer_systick_hz()
 
-#define CONFIG_SYSTICK_HZ_FLOAT     hal_sys_timer_systick_hz_float()
-
 #define __MS_TO_TICKS(ms)           hal_sys_timer_ms_to_ticks(ms)
 
 #define __US_TO_TICKS(us)           hal_sys_timer_us_to_ticks(us)
 
 #define __TICKS_TO_MS(tick)         hal_sys_timer_ticks_to_ms(tick)
-
-#define __SLIM_TICKS_TO_MS(tick)    ((tick) / ((uint32_t)CONFIG_SYSTICK_HZ / 1000))
 
 #define __TICKS_TO_US(tick)         hal_sys_timer_ticks_to_us(tick)
 
@@ -55,15 +51,11 @@ extern "C" {
 
 #define CONFIG_SYSTICK_HZ           CONFIG_SYSTICK_HZ_NOMINAL
 
-#define CONFIG_SYSTICK_HZ_FLOAT     ((float)CONFIG_SYSTICK_HZ_NOMINAL)
-
 #define __MS_TO_TICKS(ms)           ((ms) * ((uint32_t)CONFIG_SYSTICK_HZ / 1000))
 
 #define __US_TO_TICKS(us)           (((us) * ((uint32_t)CONFIG_SYSTICK_HZ / 1000) + 1000 - 1) / 1000 + 1)
 
 #define __TICKS_TO_MS(tick)         ((tick) / ((uint32_t)CONFIG_SYSTICK_HZ / 1000))
-
-#define __SLIM_TICKS_TO_MS(tick)    ((tick) / ((uint32_t)CONFIG_SYSTICK_HZ / 1000))
 
 #define __TICKS_TO_US(tick)         ((tick) * 1000 / ((uint32_t)CONFIG_SYSTICK_HZ / 1000))
 
@@ -101,8 +93,6 @@ extern "C" {
 #define GET_CURRENT_TICKS()         hal_sys_timer_get()
 
 #define GET_CURRENT_MS()            TICKS_TO_MS(GET_CURRENT_TICKS())
-
-uint32_t hal_systick_timer_get(void);
 
 void hal_sys_timer_open(void);
 
