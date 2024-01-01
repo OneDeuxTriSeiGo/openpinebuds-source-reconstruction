@@ -88,10 +88,10 @@ Debug/
 Release/
 /ipch/
 
-Library dir
-lib/
+# Library dir
+#lib/
 
-Build dir
+# Build dir
 /out/
 *.pre
 
