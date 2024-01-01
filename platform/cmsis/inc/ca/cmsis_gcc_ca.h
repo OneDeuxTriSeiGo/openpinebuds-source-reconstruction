@@ -809,33 +809,6 @@ __STATIC_INLINE void __FPU_Enable(void)
   );
 }
 
-/**
-  \brief   Get APSR Register
-  \details Returns the content of the APSR Register.
-  \return               APSR Register value
- */
-__STATIC_FORCEINLINE uint32_t __get_APSR(void)
-{
-  uint32_t result;
-
-  __ASM volatile ("MRS %0, apsr" : "=r" (result) );
-  return(result);
-}
-
-
-/**
-  \brief   Get xPSR Register
-  \details Returns the content of the xPSR Register.
-  \return               xPSR Register value
- */
-__STATIC_FORCEINLINE uint32_t __get_xPSR(void)
-{
-  uint32_t result;
-
-  __ASM volatile ("MRS %0, xpsr" : "=r" (result) );
-  return(result);
-}
-
 #pragma GCC diagnostic pop
 
 #endif /* __CMSIS_GCC_CA_H */
