@@ -46,7 +46,7 @@ extern "C" {
 
 typedef struct _anc_rir_coefs {
     int32_t coef_b[3];
-	int32_t coef_a[3];
+    int32_t coef_a[3];
 } anc_iir_coefs;
 
 typedef struct _aud_item {
@@ -73,25 +73,25 @@ typedef struct _aud_item {
 
 typedef struct {
 #if (AUD_SECTION_STRUCT_VERSION == 1)
-	aud_item anc_cfg_ff_l;
-  	aud_item anc_cfg_ff_r;
-   	aud_item anc_cfg_fb_l;
-  	aud_item anc_cfg_fb_r;
+    aud_item anc_cfg_ff_l;
+    aud_item anc_cfg_ff_r;
+    aud_item anc_cfg_fb_l;
+    aud_item anc_cfg_fb_r;
 #elif (AUD_SECTION_STRUCT_VERSION == 2)
-	aud_item anc_cfg_ff_l;
-  	aud_item anc_cfg_ff_r;
-   	aud_item anc_cfg_fb_l;
-  	aud_item anc_cfg_fb_r;
+    aud_item anc_cfg_ff_l;
+    aud_item anc_cfg_ff_r;
+    aud_item anc_cfg_fb_l;
+    aud_item anc_cfg_fb_r;
 
-   	aud_item anc_cfg_tt_l;
-  	aud_item anc_cfg_tt_r;
-   	aud_item anc_cfg_mc_l;
-  	aud_item anc_cfg_mc_r;
+    aud_item anc_cfg_tt_l;
+    aud_item anc_cfg_tt_r;
+    aud_item anc_cfg_mc_l;
+    aud_item anc_cfg_mc_r;
 #elif (AUD_SECTION_STRUCT_VERSION == 3)
-	aud_item anc_cfg_ff_l;
-   	aud_item anc_cfg_fb_l;
-   	aud_item anc_cfg_tt_l;
-   	aud_item anc_cfg_mc_l;
+    aud_item anc_cfg_ff_l;
+    aud_item anc_cfg_fb_l;
+    aud_item anc_cfg_tt_l;
+    aud_item anc_cfg_mc_l;
 #endif
 
 } struct_anc_cfg;
