@@ -46,4 +46,3 @@ uint8_t *nv_record_tws_get_self_ble_info(void);
 
 #endif
 #endif // #if defined(NEW_NV_RECORD_ENALBED)
-

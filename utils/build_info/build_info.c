@@ -63,4 +63,3 @@ const char BUILD_INFO_LOCATION sys_build_info[] =
     NEW_LINE_STR "REV_INFO=" TO_STR(REVISION_INFO)
     NEW_LINE_STR;
 #endif
-

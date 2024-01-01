@@ -71,4 +71,3 @@ uint32_t hal_timer_get_elapsed_time(void);
 #endif
 
 #endif
-

@@ -212,4 +212,3 @@ const struct boot_hdr_t BOOT_STRUCT_LOC boot_struct = {
 #endif
 
 struct REBOOT_PARAM_T REBOOT_PARAM_LOC reboot_param;
-

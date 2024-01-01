@@ -157,4 +157,3 @@ uint16_t 					BLE_custom_command_get_entry_index_from_cmd_code(uint16_t cmdCode)
 #endif
 
 #endif // #ifndef __APP_BLE_CMD_HANDLER_H__
-

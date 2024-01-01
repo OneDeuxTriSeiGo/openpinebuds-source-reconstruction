@@ -30,4 +30,3 @@ int hal_analogif_reg_read(unsigned short reg, unsigned short *val);
 #endif
 
 #endif
-

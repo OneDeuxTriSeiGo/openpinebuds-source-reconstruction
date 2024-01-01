@@ -81,5 +81,3 @@ void log_dump_clear(void);
 }
 #endif
 #endif
-
-

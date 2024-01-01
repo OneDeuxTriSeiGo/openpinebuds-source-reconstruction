@@ -40,4 +40,3 @@ void hal_psc_bt_disable(void);
 #endif
 
 #endif
-

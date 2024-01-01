@@ -89,4 +89,3 @@ int mpu_set_armv8_psramuhs(enum MPU_ID_T id, uint32_t addr, uint32_t len, enum M
 #endif
 
 #endif
-

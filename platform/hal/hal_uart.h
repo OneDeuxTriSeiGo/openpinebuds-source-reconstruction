@@ -252,4 +252,3 @@ void hal_uart_output(const unsigned char *buf, int size);
 #endif
 
 #endif
-

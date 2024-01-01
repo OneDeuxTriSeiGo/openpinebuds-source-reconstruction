@@ -197,4 +197,3 @@ int hal_sleep_get_stats(struct CPU_USAGE_T *usage);
 #endif
 
 #endif
-

@@ -40,4 +40,3 @@ void nv_record_update_factory_tester_status(uint32_t status);
 #endif
 #endif
 #endif // #if defined(NEW_NV_RECORD_ENALBED)
-

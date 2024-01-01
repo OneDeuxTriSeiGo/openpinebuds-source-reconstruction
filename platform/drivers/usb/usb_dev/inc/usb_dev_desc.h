@@ -61,4 +61,3 @@ const uint8_t *uaud_string_desc(uint8_t index);
 #endif
 
 #endif
-

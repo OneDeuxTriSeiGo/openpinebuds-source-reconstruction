@@ -441,4 +441,3 @@ volatile uint32_t *hal_cmu_get_memsc_addr(void);
 #endif
 
 #endif
-
