@@ -48,19 +48,11 @@ void NVIC_SetDefaultFaultHandler(NVIC_DEFAULT_FAULT_HANDLER_T handler);
 
 void NVIC_SetDefaultFaultHandler_cp(NVIC_DEFAULT_FAULT_HANDLER_T handler);
 
-void NVIC_SetResetHandler(NVIC_DEFAULT_FAULT_HANDLER_T handler);
-
-void NVIC_SetIrqHandler(uint16_t irq, NVIC_DEFAULT_FAULT_HANDLER_T handler);
-
-void NVIC_SetIrqHandler_cp(uint16_t irq, NVIC_DEFAULT_FAULT_HANDLER_T handler);
-
 IRQn_Type NVIC_GetCurrentActiveIRQ(void);
 
 void NVIC_PowerDownSleep(uint32_t *buf, uint32_t cnt);
 
 void NVIC_PowerDownWakeup(uint32_t *buf, uint32_t cnt);
-
-uint32_t* NVIC_GetVectorTab();
 
 #ifdef __ARM_ARCH_ISA_ARM
 enum EXCEPTION_ID_T {
