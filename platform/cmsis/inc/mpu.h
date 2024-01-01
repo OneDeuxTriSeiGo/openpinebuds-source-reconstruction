@@ -103,7 +103,7 @@ int mpu_set(enum MPU_ID_T id, uint32_t addr, uint32_t len, int srd_bits,
 int mpu_clear(enum MPU_ID_T id);
 
 /*mpu setup for mcu */
-int mpu_setup(const mpu_regions_t *mpu_table, uint32_t region_num);
+int mpu_setup(void);
 
 /*mpu setup for cp mcu */
 int mpu_setup_cp(const mpu_regions_t *mpu_table, uint32_t region_num);
