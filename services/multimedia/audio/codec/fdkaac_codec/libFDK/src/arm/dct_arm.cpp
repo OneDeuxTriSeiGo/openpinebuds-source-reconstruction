@@ -390,10 +390,10 @@ dst_IV_loop2:
     SMLAWB  accu1, accu1, val_tw, accu3       // accu1 = -accu1*val_tw.h-(-accu2)*val_tw.l
     SMLAWB  accu2, accu2, val_tw, accu4       // accu2 = (-accu1)*val_tw.l+(-accu2)*val_tw.h
     STR     accu1, [pDat_1], #-4              // *pDat_1-- = accu1
-  	STR     accu2, [pDat_0], #4               // *pDat_0++ = accu2
+    STR     accu2, [pDat_0], #4               // *pDat_0++ = accu2
 
-  	LDR     accu4, [pDat_0]                   // accu4 = pDat_0[0]
-  	LDR     accu3, [pDat_0, #4]               // accu3 = pDat_0[1]
+    LDR     accu4, [pDat_0]                   // accu4 = pDat_0[0]
+    LDR     accu3, [pDat_0, #4]               // accu3 = pDat_0[1]
 
     RSB     accu4, accu4, #0                  // accu4 = -accu4
     RSB     accu3, accu3, #0                  // accu3 = -accu3
@@ -422,10 +422,10 @@ dst_IV_loop2_2nd_part:
     SMLAWB  accu1, accu1, val_tw, accu3       // accu1 = -accu1*val_tw.h-(-accu2)*val_tw.l
     SMLAWB  accu2, accu2, val_tw, accu4       // accu2 = (-accu1)*val_tw.l+(-accu2)*val_tw.h
     STR     accu1, [pDat_1], #-4              // *pDat_1-- = accu1
-  	STR     accu2, [pDat_0], #4               // *pDat_0++ = accu2
+    STR     accu2, [pDat_0], #4               // *pDat_0++ = accu2
 
-  	LDR     accu4, [pDat_0]                   // accu4 = pDat_0[0]
-  	LDR     accu3, [pDat_0, #4]               // accu3 = pDat_0[1]
+    LDR     accu4, [pDat_0]                   // accu4 = pDat_0[0]
+    LDR     accu3, [pDat_0, #4]               // accu3 = pDat_0[1]
 
     RSB     accu4, accu4, #0                  // accu4 = -accu4
     RSB     accu3, accu3, #0                  // accu3 = -accu3

@@ -107,7 +107,7 @@ amm-info@iis.fraunhofer.de
    (noise energy B). Hence the quota-matrix contains A/B = q/(1-q).
 
    The samples in nrgVector are scaled by 1.0/16.0
-		The samples in pNrgVectorFreq	are scaled by 1.0/2.0
+        The samples in pNrgVectorFreq   are scaled by 1.0/2.0
    The samples in quotaMatrix are scaled by RELAXATION
 
   \return none.

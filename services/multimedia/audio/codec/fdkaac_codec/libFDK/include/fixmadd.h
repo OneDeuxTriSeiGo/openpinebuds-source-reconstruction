@@ -98,7 +98,7 @@ amm-info@iis.fraunhofer.de
 #if defined(__arm__)
 #include "arm/fixmadd_arm.h"
 
-#elif defined(__mips__)	/* cppp replaced: elif */
+#elif defined(__mips__) /* cppp replaced: elif */
 #include "mips/fixmadd_mips.h"
 
 #endif /* all cores */

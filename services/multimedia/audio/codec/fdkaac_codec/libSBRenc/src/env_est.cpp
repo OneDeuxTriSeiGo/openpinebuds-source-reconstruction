@@ -298,7 +298,7 @@ FDKsbrEnc_getEnergyFromCplxQmfData(FIXP_DBL **RESTRICT energyValues,/*!< the res
   /* Scale timeslot pair energies and write to output buffer */
   scale = CountLeadingBits(max_val);
   {
-  	FIXP_DBL *nrgValues = tmpNrg;
+    FIXP_DBL *nrgValues = tmpNrg;
     for (k=0; k<numberCols>>1; k++) {
       scaleValues(energyValues[k], nrgValues, numberBands, scale);
       nrgValues += numberBands;
@@ -384,7 +384,7 @@ FDKsbrEnc_getEnergyFromCplxQmfDataFull(FIXP_DBL **RESTRICT energyValues,/*!< the
   /* Scale timeslot pair energies and write to output buffer */
   scale = CountLeadingBits(max_val);
   {
-  	FIXP_DBL *nrgValues = tmpNrg;
+    FIXP_DBL *nrgValues = tmpNrg;
     for (k=0; k<numberCols; k++) {
       scaleValues(energyValues[k], nrgValues, numberBands, scale);
       nrgValues += numberBands;
@@ -465,8 +465,8 @@ sbrNoiseFloorLevelsQuantisation(SCHAR    *RESTRICT iNoiseLevels, /*! quantized n
       /* tmp = tmp >> (DFRACT_BITS-1-6); */ /* conversion to integer happens here */
       /* rounding is done by shifting one bit less than necessary to the right, adding '1' and then shifting the final bit */
       tmp = ((((INT)NoiseLevels[i])>>(DFRACT_BITS-1-LD_DATA_SHIFT)) ); /* conversion to integer */
-			 if (tmp != 0)
-			   tmp += 1;
+             if (tmp != 0)
+               tmp += 1;
     }
 
     if (coupling) {

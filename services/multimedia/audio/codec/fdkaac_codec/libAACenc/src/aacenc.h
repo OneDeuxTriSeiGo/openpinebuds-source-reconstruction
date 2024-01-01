@@ -310,7 +310,7 @@ void FDKaacEnc_AacInitDefaultConfig(AACENC_CONFIG     *config);
 
 /*---------------------------------------------------------------------------
 
-	    functionname:FDKaacEnc_Open
+        functionname:FDKaacEnc_Open
     description: allocate and initialize a new encoder instance
     returns:     0 if success
 

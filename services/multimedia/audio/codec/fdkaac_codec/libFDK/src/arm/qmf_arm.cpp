@@ -125,7 +125,7 @@ qmfForwardModulationLP_odd( HANDLE_QMF_FILTER_BANK anaQmf, /*!< Handle of Qmf An
 
 #ifdef FUNCTION_qmfAnaPrototypeFirSlot
 
-#if defined(__GNUC__)	/* cppp replaced: elif */
+#if defined(__GNUC__)   /* cppp replaced: elif */
 
 inline INT SMULBB (const SHORT a, const LONG b)
 {
@@ -419,7 +419,7 @@ void qmfAnaPrototypeFirSlot( FIXP_QMF *analysisBuffer,
 
 #if defined(FUNCTION_qmfSynPrototypeFirSlot)
 
-#if defined(__GNUC__)	/* cppp replaced: elif */
+#if defined(__GNUC__)   /* cppp replaced: elif */
 
 inline INT SMULWB (const LONG a, const LONG b)
 {

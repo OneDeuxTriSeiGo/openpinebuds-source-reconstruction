@@ -118,8 +118,8 @@ void FDKaacEnc_PreEchoControl(FIXP_DBL   *RESTRICT pbThresholdNm1,
     FIXP_DBL tmpThreshold1, tmpThreshold2;
     int scaling;
 
-	/* If lastWindowSequence in previous frame was start- or stop-window,
-	   skip preechocontrol calculation */
+    /* If lastWindowSequence in previous frame was start- or stop-window,
+       skip preechocontrol calculation */
     if (calcPreEcho==0) {
       /* copy thresholds to internal memory */
       FDKmemcpy(pbThresholdNm1, pbThreshold, numPb*sizeof(FIXP_DBL));
@@ -137,7 +137,7 @@ void FDKaacEnc_PreEchoControl(FIXP_DBL   *RESTRICT pbThresholdNm1,
             tmpThreshold1 = maxAllowedIncreaseFactor * (pbThresholdNm1[i]>>scaling);
             tmpThreshold2 = fMult(minRemainingThresholdFactor, pbThreshold[i]);
 
-			FIXP_DBL tmp = pbThreshold[i];
+            FIXP_DBL tmp = pbThreshold[i];
 
             /* copy thresholds to internal memory */
             pbThresholdNm1[i] = tmp;

@@ -212,7 +212,7 @@ FDK_INLINE UINT FDKreadBits(HANDLE_FDK_BITSTREAM hBitStream,
   INT missingBits = numberOfBits - hBitStream->BitsInCache;
   if (missingBits > 0)
   {
-    const UINT bits	 = hBitStream->CacheWord << missingBits;
+    const UINT bits  = hBitStream->CacheWord << missingBits;
     const UINT validBits = FDK_getValidBits (&hBitStream->hBitBuf);
 
     if (validBits >= 32)

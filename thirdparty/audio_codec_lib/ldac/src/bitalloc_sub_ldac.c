@@ -22,7 +22,7 @@
 static int encode_band_info_ldac(
 __attribute__((unused)) AB *p_ab)
 {
-    int	nbits;
+    int nbits;
 
     nbits = LDAC_NBANDBITS + LDAC_FLAGBITS;
 
@@ -35,7 +35,7 @@ __attribute__((unused)) AB *p_ab)
 static int encode_gradient_ldac(
 AB *p_ab)
 {
-    int	nbits;
+    int nbits;
 
     if (p_ab->grad_mode == LDAC_MODE_0) {
         nbits = LDAC_GRADMODEBITS + LDAC_GRADQU0BITS*2 + LDAC_GRADOSBITS*2 + LDAC_NADJQUBITS;

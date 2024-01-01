@@ -383,23 +383,23 @@ static void removeLowPassDetection(UCHAR *RESTRICT pAddHarmSfb,
     nrgHigh = pNrgVector[i + 2];
 
     if(nrgLow != FL2FXCONST_DBL(0.0f) && nrgLow > nrgHigh){
-		   nrgLowLD64 = CalcLdData(nrgLow>>1);
-		   nrgDiffLD64 = CalcLdData((nrgLow>>1)-(nrgHigh>>1));
-			 valLD64 = nrgDiffLD64-nrgLowLD64;
+           nrgLowLD64 = CalcLdData(nrgLow>>1);
+           nrgDiffLD64 = CalcLdData((nrgLow>>1)-(nrgHigh>>1));
+             valLD64 = nrgDiffLD64-nrgLowLD64;
       if(valLD64 > maxValAboveLD64){
         maxValAboveLD64 = valLD64;
       }
     }
-		 else {
+         else {
       if(nrgHigh != FL2FXCONST_DBL(0.0f) && nrgHigh > nrgLow){
-		     nrgHighLD64 = CalcLdData(nrgHigh>>1);
-		     nrgDiffLD64 = CalcLdData((nrgHigh>>1)-(nrgLow>>1));
-			   valLD64 = nrgDiffLD64-nrgHighLD64;
+             nrgHighLD64 = CalcLdData(nrgHigh>>1);
+             nrgDiffLD64 = CalcLdData((nrgHigh>>1)-(nrgLow>>1));
+               valLD64 = nrgDiffLD64-nrgHighLD64;
         if(valLD64 > maxValAboveLD64){
           maxValAboveLD64 = valLD64;
         }
       }
-		 }
+         }
   }
 
   if(maxValLD64 > mhThresh.derivThresMaxLD64 && maxValAboveLD64 < mhThresh.derivThresAboveLD64){
@@ -407,9 +407,9 @@ static void removeLowPassDetection(UCHAR *RESTRICT pAddHarmSfb,
 
     for(i = maxDerivPos - 1; i > maxDerivPos - 5 && i >= 0 ; i--){
       if(pNrgVector[i] != FL2FXCONST_DBL(0.0f) && pNrgVector[i] > pNrgVector[maxDerivPos + 2]){
-		     nrgDiffLD64 = CalcLdData((pNrgVector[i]>>1)-(pNrgVector[maxDerivPos + 2]>>1));
-				 nrgLD64 = CalcLdData(pNrgVector[i]>>1);
-  			 valLD64 = nrgDiffLD64-nrgLD64;
+             nrgDiffLD64 = CalcLdData((pNrgVector[i]>>1)-(pNrgVector[maxDerivPos + 2]>>1));
+                 nrgLD64 = CalcLdData(pNrgVector[i]>>1);
+             valLD64 = nrgDiffLD64-nrgLD64;
         if(valLD64 < mhThresh.derivThresBelowLD64) {
           bLPsignal = 0;
           break;
@@ -1020,13 +1020,13 @@ static void calculateCompVector(UCHAR *pAddHarmSfb,
             tmp = (tmp >> (DFRACT_BITS-1-LD_DATA_SHIFT-1)) + (FIXP_DBL)1;  /* shift one bit less for rounding */
             compValue = ((INT)(LONG)tmp) >> 1;
 
-						      /* limit the comp-value*/
+                              /* limit the comp-value*/
             if (compValue > maxComp)
               compValue = maxComp;
 
             pEnvComp[scfBand-1] = compValue;
-					     }
-				    }
+                         }
+                    }
       }
 
       /*
@@ -1043,11 +1043,11 @@ static void calculateCompVector(UCHAR *pAddHarmSfb,
               compValue = maxComp;
 
             pEnvComp[scfBand+1] = compValue;
-					 }
-				 }
+                     }
+                 }
       }
-		 }
-	 }
+         }
+     }
 
   if(newDetectionAllowed == 0){
     for(scfBand=0;scfBand<nSfb;scfBand++){

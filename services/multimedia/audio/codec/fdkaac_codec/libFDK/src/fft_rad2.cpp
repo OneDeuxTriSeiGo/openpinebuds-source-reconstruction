@@ -94,10 +94,10 @@ amm-info@iis.fraunhofer.de
 
 #define __FFT_RAD2_CPP__
 
-#if defined(__arm__)	/* cppp replaced: elif */
+#if defined(__arm__)    /* cppp replaced: elif */
 #include "arm/fft_rad2_arm.cpp"
 
-#elif defined(__GNUC__) && defined(__mips__) && defined(__mips_dsp)	/* cppp replaced: elif */
+#elif defined(__GNUC__) && defined(__mips__) && defined(__mips_dsp) /* cppp replaced: elif */
 #include "mips/fft_rad2_mips.cpp"
 
 #endif

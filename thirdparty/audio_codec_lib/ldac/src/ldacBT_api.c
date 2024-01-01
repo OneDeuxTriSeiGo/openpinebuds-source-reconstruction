@@ -299,9 +299,9 @@ LDACBT_API int ldacBT_set_eqmid( HANDLE_LDAC_BT hLdacBT, int eqmid )
     if( (hLdacBT->error_code_api = ldacBT_assert_eqmid( eqmid )) != LDACBT_ERR_NONE ){
         return LDACBT_E_FAIL; /* fatal */
     }
-	ldacBT_set_eqmid_core( hLdacBT, eqmid );
+    ldacBT_set_eqmid_core( hLdacBT, eqmid );
 
-	return LDACBT_S_OK;
+    return LDACBT_S_OK;
 }
 
 /* Get Encode Quality Mode index */

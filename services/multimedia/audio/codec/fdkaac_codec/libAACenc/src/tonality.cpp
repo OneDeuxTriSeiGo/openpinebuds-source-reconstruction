@@ -94,7 +94,7 @@ amm-info@iis.fraunhofer.de
 static const FIXP_DBL normlog = (FIXP_DBL)0xd977d949; /*FL2FXCONST_DBL(-0.4342944819f * FDKlog(2.0)/FDKlog(2.7182818)); */
 
 static void FDKaacEnc_CalcSfbTonality(FIXP_DBL      *RESTRICT spectrum,
-							INT           *RESTRICT sfbMaxScaleSpec,
+                            INT           *RESTRICT sfbMaxScaleSpec,
                             FIXP_DBL      *RESTRICT chaosMeasure,
                             FIXP_SGL      *RESTRICT sfbTonality,
                             INT           sfbCnt,
@@ -103,7 +103,7 @@ static void FDKaacEnc_CalcSfbTonality(FIXP_DBL      *RESTRICT spectrum,
 
 
 void FDKaacEnc_CalculateFullTonality(FIXP_DBL      *RESTRICT spectrum,
-						             INT           *RESTRICT sfbMaxScaleSpec,
+                                     INT           *RESTRICT sfbMaxScaleSpec,
                                      FIXP_DBL      *RESTRICT sfbEnergyLD64,
                                      FIXP_SGL      *RESTRICT sfbTonality,
                                      INT            sfbCnt,
@@ -191,7 +191,7 @@ static void FDKaacEnc_CalcSfbTonality(FIXP_DBL      *RESTRICT spectrum,
         if (chaosMeasureSfbLD64 > FL2FXCONST_DBL(-0.0519051) )     /* > ld(0.05)+ld(2) */
         {
           if (chaosMeasureSfbLD64 <= FL2FXCONST_DBL(0.0) )
-		    sfbTonality[i] = FX_DBL2FX_SGL(fMultDiv2( chaosMeasureSfbLD64 , normlog ) << 7);
+            sfbTonality[i] = FX_DBL2FX_SGL(fMultDiv2( chaosMeasureSfbLD64 , normlog ) << 7);
           else
             sfbTonality[i] = FL2FXCONST_SGL(0.0);
         }

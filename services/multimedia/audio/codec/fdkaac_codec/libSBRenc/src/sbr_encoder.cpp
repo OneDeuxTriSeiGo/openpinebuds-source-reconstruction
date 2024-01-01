@@ -1860,7 +1860,7 @@ INT FDKsbrEnc_DelayCompensation (
       }
       sbrEncoder_UpdateBuffers(hEnvEnc, timeBuffer);
     }
-	  return 0;
+      return 0;
 }
 
 UINT sbrEncoder_LimitBitRate(UINT bitRate, UINT numChannels, UINT coreSampleRate, AUDIO_OBJECT_TYPE aot)

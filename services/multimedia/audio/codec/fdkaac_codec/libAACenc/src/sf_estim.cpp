@@ -399,7 +399,7 @@ static INT FDKaacEnc_improveScf(FIXP_DBL *spec,
             scfBest = scf;
             sfbDistBestLdData = sfbDistLdData;
             for (k=0; k<sfbWidth; k++)
-	             quantSpec[k] = quantSpecTmp[k];
+                 quantSpec[k] = quantSpecTmp[k];
          }
       }
       /* improve by smaller scf ? */
@@ -418,7 +418,7 @@ static INT FDKaacEnc_improveScf(FIXP_DBL *spec,
             scfBest = scf;
             sfbDistBestLdData = sfbDistLdData;
             for (k=0; k<sfbWidth; k++)
-	             quantSpec[k] = quantSpecTmp[k];
+                 quantSpec[k] = quantSpecTmp[k];
          }
          *minScfCalculated = scf;
       }
@@ -866,7 +866,7 @@ static void FDKaacEnc_FDKaacEnc_assimilateMultipleScf2(PSY_OUT_CHANNEL *psyOutCh
         /* loop over all possible scf values for this region */
         bCheckScf = 1;
         for (scfNew=scf[startSfb]+1; scfNew<=scfHi; scfNew++) {
-	         for (k=0; k<MAX_GROUPED_SFB; k++)
+             for (k=0; k<MAX_GROUPED_SFB; k++)
             scfTmp[k] = scf[k];
 
           /* replace scfs in region by scfNew */

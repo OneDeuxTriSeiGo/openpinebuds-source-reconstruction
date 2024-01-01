@@ -92,10 +92,10 @@ amm-info@iis.fraunhofer.de
 #define __ABS_H__
 
 
-#if defined(__mips__)	/* cppp replaced: elif */
+#if defined(__mips__)   /* cppp replaced: elif */
 #include "mips/abs_mips.h"
 
-#elif defined(__x86__)	/* cppp replaced: elif */
+#elif defined(__x86__)  /* cppp replaced: elif */
 #include "x86/abs_x86.h"
 
 #endif /* all cores */

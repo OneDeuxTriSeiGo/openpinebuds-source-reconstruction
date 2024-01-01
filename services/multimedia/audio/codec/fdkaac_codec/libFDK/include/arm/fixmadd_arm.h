@@ -91,7 +91,7 @@ amm-info@iis.fraunhofer.de
 #if defined(__arm__)
 
   /* ############################################################################# */
-  #if defined(__GNUC__) && defined(__arm__) && !defined(__SYMBIAN32__)	/* cppp replaced: elif */
+  #if defined(__GNUC__) && defined(__arm__) && !defined(__SYMBIAN32__)  /* cppp replaced: elif */
   /* ############################################################################# */
     /* ARM GNU GCC */
 

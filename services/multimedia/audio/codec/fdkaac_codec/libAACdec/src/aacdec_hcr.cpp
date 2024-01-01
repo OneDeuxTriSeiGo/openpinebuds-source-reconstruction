@@ -643,7 +643,7 @@ static void HcrReorderQuantizedSpectralCoefficients(
     for ( window = 0; window < (8); window++ ) {
       pOut = SPEC(pQuantizedSpectralCoefficientsBase, window, pAacDecoderChannelInfo->granuleLength);
       for ( i=0; i < (LINES_PER_UNIT_GROUP); i++ ) {
-        pTeVa = pBak + (window << FOUR_LOG_DIV_TWO_LOG) + i * 32;	/* distance of lines between unit groups has to be constant for every framelength (32)!  */
+        pTeVa = pBak + (window << FOUR_LOG_DIV_TWO_LOG) + i * 32;   /* distance of lines between unit groups has to be constant for every framelength (32)!  */
         for ( j=(LINES_PER_UNIT); j != 0; j-- ) {
           *pOut++ = *pTeVa++;
         }

@@ -545,7 +545,7 @@ void WAV_OutputClose(HANDLE_WAV *pWav)
     if (FDKfwrite(&wav->header.riffType, 1, size, wav->fp) != size)
     {
         FDKprintfErr("WAV_OutputClose(): unable to write header\n");
-	}
+    }
 
     if (FDKfclose(wav->fp))
     {

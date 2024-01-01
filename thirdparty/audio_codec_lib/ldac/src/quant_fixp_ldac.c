@@ -172,7 +172,7 @@ AC *p_ac)
 {
     int iqu;
     int nqus = p_ac->p_ab->nqus;
-    int	*p_idwl2 = p_ac->a_idwl2;
+    int *p_idwl2 = p_ac->a_idwl2;
 
     for (iqu = 0; iqu < nqus; iqu++) {
         if (p_idwl2[iqu] > 0) {

@@ -1,5 +1,5 @@
 /*
- *	crc16.h - CRC-16 routine
+ *  crc16.h - CRC-16 routine
  *
  * Implements the standard CRC-16:
  *   Width 16
@@ -23,7 +23,7 @@ extern u16 crc16(u16 crc, const u8 *buffer, size_t len);
 
 static inline u16 crc16_byte(u16 crc, const u8 data)
 {
-	return (crc >> 8) ^ crc16_table[(crc ^ data) & 0xff];
+    return (crc >> 8) ^ crc16_table[(crc ^ data) & 0xff];
 }
 
 #endif /* __CRC16_H */

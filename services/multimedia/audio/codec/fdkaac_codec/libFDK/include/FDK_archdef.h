@@ -168,7 +168,7 @@ amm-info@iis.fraunhofer.de
 #undef LDCOEFF_16BIT
 #undef WINDOWTABLE_16BIT
 
-#elif defined(__arm__) && defined(__ARM_ARCH_5TE__)	/* cppp replaced: elif */	/* cppp replaced: elif */
+#elif defined(__arm__) && defined(__ARM_ARCH_5TE__) /* cppp replaced: elif */   /* cppp replaced: elif */
 #define ARCH_PREFER_MULT_32x16
 #define SINETABLE_16BIT
 #define POW2COEFF_16BIT
@@ -205,7 +205,7 @@ amm-info@iis.fraunhofer.de
 #define LDCOEFF_16BIT
 #define WINDOWTABLE_16BIT
 
-#elif defined(__x86__)	/* cppp replaced: elif */
+#elif defined(__x86__)  /* cppp replaced: elif */
 #define ARCH_PREFER_MULT_32x16
 #define SINETABLE_16BIT
 #define WINDOWTABLE_16BIT

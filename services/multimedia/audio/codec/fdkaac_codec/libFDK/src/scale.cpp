@@ -99,7 +99,7 @@ amm-info@iis.fraunhofer.de
 #define SCALE_INLINE inline
 
 
-#if defined(__mips__)	/* cppp replaced: elif */
+#if defined(__mips__)   /* cppp replaced: elif */
 #include "mips/scale.cpp"
 
 #elif defined(__arm__)
@@ -231,7 +231,7 @@ void scaleValues(FIXP_DBL *dst,       /*!< dst Vector */
 
   /* Return if scalefactor is Zero */
   if (scalefactor==0) {
-	if (dst != src)
+    if (dst != src)
       FDKmemmove(dst, src, len*sizeof(FIXP_DBL));
   }
   else {

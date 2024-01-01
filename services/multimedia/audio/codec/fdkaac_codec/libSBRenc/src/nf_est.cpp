@@ -397,9 +397,9 @@ downSampleLoRes(INT *v_result,              /*!<    */
   org_length=num_Ref;
   result_length=num_result;
 
-  v_index[0]=0;	/* Always use left border */
+  v_index[0]=0; /* Always use left border */
   i=0;
-  while(org_length > 0)	/* Create downsample vector */
+  while(org_length > 0) /* Create downsample vector */
     {
       i++;
       step=org_length/result_length; /* floor; */
@@ -408,10 +408,10 @@ downSampleLoRes(INT *v_result,              /*!<    */
       v_index[i]=v_index[i-1]+step;
     }
 
-  if(i != num_result )	/* Should never happen */
+  if(i != num_result )  /* Should never happen */
     return (1);/* error downsampling */
 
-  for(j=0;j<=i;j++)	/* Use downsample vector to index LoResolution vector. */
+  for(j=0;j<=i;j++) /* Use downsample vector to index LoResolution vector. */
     {
       v_result[j]=freqBandTableRef[v_index[j]];
     }

@@ -420,8 +420,8 @@ static void FDKaacEnc_adaptMinSnr(QC_OUT_CHANNEL     *qcOutChannel[(2)],
     for (sfbGrp=0; sfbGrp < psyOutChannel[ch]->sfbCnt; sfbGrp+=psyOutChannel[ch]->sfbPerGroup) {
       for (sfb=0; sfb<psyOutChannel[ch]->maxSfbPerGroup; sfb++) {
         accu += psyOutChannel[ch]->sfbEnergy[sfbGrp+sfb]>>6;
-				 nSfb++;
-			 }
+                 nSfb++;
+             }
     }
 
     if ((accu == FL2FXCONST_DBL(0.0f)) || (nSfb == 0)) {
@@ -858,7 +858,7 @@ static void FDKaacEnc_FDKaacEnc_calcPeNoAH(INT *pe,
     *pe = pe_tmp >> PE_CONSTPART_SHIFT;
     *constPart = constPart_tmp >> PE_CONSTPART_SHIFT;
 
-	*nActiveLines = nActiveLines_tmp;
+    *nActiveLines = nActiveLines_tmp;
 }
 
 

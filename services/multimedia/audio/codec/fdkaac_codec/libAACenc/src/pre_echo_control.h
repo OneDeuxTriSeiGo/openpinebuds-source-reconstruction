@@ -95,14 +95,14 @@ amm-info@iis.fraunhofer.de
 
 
 void FDKaacEnc_InitPreEchoControl(FIXP_DBL    *pbThresholdnm1,
-						INT         *calcPreEcho,
+                        INT         *calcPreEcho,
                         INT         numPb,
                         FIXP_DBL    *sfbPcmQuantThreshold,
                         INT         *mdctScalenm1);
 
 
 void FDKaacEnc_PreEchoControl(FIXP_DBL    *pbThresholdNm1,
-					INT         calcPreEcho,
+                    INT         calcPreEcho,
                     INT         numPb,
                     INT         maxAllowedIncreaseFactor,
                     FIXP_SGL    minRemainingThresholdFactor,

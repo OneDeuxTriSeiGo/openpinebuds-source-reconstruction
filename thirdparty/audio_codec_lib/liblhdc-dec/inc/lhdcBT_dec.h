@@ -25,15 +25,15 @@ int lhdcBT_dec_decode(const uint8_t *frameData, uint32_t frameBytes, uint8_t* pc
 int lhdcBT_dec_deinit_decoder(void);
 
 
-#define LHDCBT_DEC_NOT_UPD_SEQ_NO			0
-#define LHDCBT_DEC_UPD_SEQ_NO				1
+#define LHDCBT_DEC_NOT_UPD_SEQ_NO           0
+#define LHDCBT_DEC_UPD_SEQ_NO               1
 
 
 #define LHDCBT_DEC_FUNC_SUCCEED             0
 #define LHDCBT_DEC_FUNC_FAIL                -1
 #define LHDCBT_DEC_FUNC_INPUT_NOT_ENOUGH    -2
 #define LHDCBT_DEC_FUNC_OUTPUT_NOT_ENOUGH   -3
-#define LHDCBT_DEC_FUNC_INVALID_SEQ_NO		-4
+#define LHDCBT_DEC_FUNC_INVALID_SEQ_NO      -4
 
 #ifdef __cplusplus
 }

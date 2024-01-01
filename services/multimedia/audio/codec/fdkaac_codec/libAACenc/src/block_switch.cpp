@@ -444,21 +444,21 @@ int FDKaacEnc_SyncBlockSwitching (
         else {
           /* in case all two channels were detected as short-blocks before syncing, use the grouping of channel with higher maxWindowNrg */
           if( (windowSequenceLeftOld  == SHORT_WINDOW) &&
-	            (windowSequenceRightOld == SHORT_WINDOW) )
+                (windowSequenceRightOld == SHORT_WINDOW) )
           {
             if(blockSwitchingControlLeft->maxWindowNrg > blockSwitchingControlRight->maxWindowNrg) {
-	            /* Left Channel wins */
-	            blockSwitchingControlRight->noOfGroups = blockSwitchingControlLeft->noOfGroups;
-	            for (i = 0; i < MAX_NO_OF_GROUPS; i++){
-	              blockSwitchingControlRight->groupLen[i] = blockSwitchingControlLeft->groupLen[i];
-	            }
+                /* Left Channel wins */
+                blockSwitchingControlRight->noOfGroups = blockSwitchingControlLeft->noOfGroups;
+                for (i = 0; i < MAX_NO_OF_GROUPS; i++){
+                  blockSwitchingControlRight->groupLen[i] = blockSwitchingControlLeft->groupLen[i];
+                }
             }
             else {
-	            /* Right Channel wins */
-	            blockSwitchingControlLeft->noOfGroups = blockSwitchingControlRight->noOfGroups;
-	            for (i = 0; i < MAX_NO_OF_GROUPS; i++){
-	              blockSwitchingControlLeft->groupLen[i] = blockSwitchingControlRight->groupLen[i];
-	            }
+                /* Right Channel wins */
+                blockSwitchingControlLeft->noOfGroups = blockSwitchingControlRight->noOfGroups;
+                for (i = 0; i < MAX_NO_OF_GROUPS; i++){
+                  blockSwitchingControlLeft->groupLen[i] = blockSwitchingControlRight->groupLen[i];
+                }
             }
           }
           else if ( (windowSequenceLeftOld  == SHORT_WINDOW) &&
@@ -471,7 +471,7 @@ int FDKaacEnc_SyncBlockSwitching (
             }
           }
           else if ( (windowSequenceRightOld == SHORT_WINDOW) &&
-		                (windowSequenceLeftOld  != SHORT_WINDOW) )
+                        (windowSequenceLeftOld  != SHORT_WINDOW) )
           {
             blockSwitchingControlLeft->noOfGroups = blockSwitchingControlRight->noOfGroups;
             for (i = 0; i < MAX_NO_OF_GROUPS; i++){

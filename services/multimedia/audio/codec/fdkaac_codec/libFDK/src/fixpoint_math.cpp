@@ -163,9 +163,9 @@ void LdDataVector(  FIXP_DBL    *srcVector,
 
 #define MAX_POW2_PRECISION 8
 #ifndef SINETABLE_16BIT
-	#define POW2_PRECISION MAX_POW2_PRECISION
+    #define POW2_PRECISION MAX_POW2_PRECISION
 #else
-	#define POW2_PRECISION 5
+    #define POW2_PRECISION 5
 #endif
 
 /*
