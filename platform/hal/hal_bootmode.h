@@ -49,30 +49,20 @@ extern "C" {
 #define HAL_SW_BOOTMODE_TEST_MODE               (1 << 20)
 #define HAL_SW_BOOTMODE_TEST_SIGNALINGMODE      (1 << 21)
 #define HAL_SW_BOOTMODE_TEST_NOSIGNALINGMODE    (1 << 22)
-/* For A7 reboot */
-#define HAL_SW_BOOTMODE_A7_REBOOT               (1 << 21)
 
 #define HAL_SW_BOOTMODE_ENTER_HIDE_BOOT         (1 << 23)
 
 #define HAL_SW_BOOTMODE_CUSTOM_OP1_AFTER_REBOOT (1 << 24)
 #define HAL_SW_BOOTMODE_REBOOT_FROM_CRASH       (1 << 25)
-
 #define HAL_SW_BOOTMODE_SINGLE_LINE_DOWNLOAD    (1 << 26)
-
-#define HAL_SW_BOOTMODE_CUSTOM_OP2_AFTER_REBOOT (1 << 27)
 
 #ifdef __USB_COMM__
 #define HAL_SW_BOOTMODE_CDC_COMM                (1 << 28)
-#else
-#define HAL_SW_BOOTMODE_TEST_NORMAL_MODE        (1 << 28)
 #endif
-
 #ifdef ANC_APP
 #define HAL_SW_BOOTMODE_REBOOT_BT_ON            (1 << 29)
 #define HAL_SW_BOOTMODE_REBOOT_ANC_ON           (1 << 30)
 #endif
-
-#define HAL_SW_BOOTMODE_WARM_BOOT               (1 << 29)
 
 #ifdef USER_REBOOT_PLAY_MUSIC_AUTO
 #define HAL_SW_BOOTMODE_LOCAL_PLAYER            (1 << 31)
