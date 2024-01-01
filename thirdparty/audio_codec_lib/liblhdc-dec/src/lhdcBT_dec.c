@@ -402,4 +402,3 @@ static int assemble_lhdc_packet(uint8_t *input, uint32_t input_len, uint8_t **pL
     ALOGD("[WL50] %s: end frame number (%d)", __func__, ret);
     return ret;
 }
-

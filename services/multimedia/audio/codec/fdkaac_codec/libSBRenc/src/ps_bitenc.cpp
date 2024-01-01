@@ -695,4 +695,3 @@ INT FDKsbrEnc_WritePSBitstream(const HANDLE_PS_OUT   psOut,
 
   return bitCnt;
 }
-

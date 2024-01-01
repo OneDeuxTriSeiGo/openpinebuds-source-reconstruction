@@ -2024,7 +2024,3 @@ FDKsbrEnc_GetEnvEstDelay(HANDLE_SBR_EXTRACT_ENVELOPE hSbr)
                         - hSbr->rBufferReadOffset );       /* in reference hold half spec and calc nrg's on overlapped spec */
 
 }
-
-
-
-

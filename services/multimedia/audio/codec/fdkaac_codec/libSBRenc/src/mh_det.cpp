@@ -1468,4 +1468,3 @@ FDKsbrEnc_ResetSbrMissingHarmonicsDetector (HANDLE_SBR_MISSING_HARMONICS_DETECTO
 
   return 0;
 }
-

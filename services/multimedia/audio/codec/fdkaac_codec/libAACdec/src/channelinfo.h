@@ -447,4 +447,3 @@ inline UCHAR GetMaximumTnsBands(const CIcsInfo *pIcsInfo, const int samplingRate
 }
 
 #endif /* #ifndef CHANNELINFO_H */
-

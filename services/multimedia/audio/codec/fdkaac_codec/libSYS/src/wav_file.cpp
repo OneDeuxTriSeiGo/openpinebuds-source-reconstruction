@@ -557,4 +557,3 @@ void WAV_OutputClose(HANDLE_WAV *pWav)
   FDKfree(wav);
   *pWav = NULL;
 }
-

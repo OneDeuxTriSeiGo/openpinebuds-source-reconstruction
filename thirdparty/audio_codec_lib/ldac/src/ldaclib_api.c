@@ -807,4 +807,3 @@ int *p_error_code)
 
     return LDAC_S_OK;
 }
-

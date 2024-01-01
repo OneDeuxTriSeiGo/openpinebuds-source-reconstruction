@@ -111,4 +111,3 @@ void FDKaacEnc_PreEchoControl(FIXP_DBL    *pbThresholdNm1,
                     INT         *mdctScalenm1);
 
 #endif
-

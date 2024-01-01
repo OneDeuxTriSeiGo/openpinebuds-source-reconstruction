@@ -86,5 +86,3 @@ amm-info@iis.fraunhofer.de
  * \brief Calculate second order autocorrelation
  *
  */
-
-

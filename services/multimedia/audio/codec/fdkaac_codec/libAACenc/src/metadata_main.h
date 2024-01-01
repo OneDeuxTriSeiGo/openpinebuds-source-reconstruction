@@ -221,4 +221,3 @@ INT FDK_MetadataEnc_GetDelay(
 
 
 #endif /* _METADATA_MAIN_H */
-

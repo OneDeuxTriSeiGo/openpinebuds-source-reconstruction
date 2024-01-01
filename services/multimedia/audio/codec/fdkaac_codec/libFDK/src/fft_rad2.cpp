@@ -509,4 +509,3 @@ void dit_ifft(FIXP_DBL *x, const INT ldn, const FIXP_STP *trigdata, const INT tr
     }
 }
 #endif
-

@@ -149,4 +149,3 @@ void scaleValueInPlace(FIXP_DBL *value, /*!< Value */
       ( ((LONG)(src) ^ ((LONG)(src) >> (DFRACT_BITS-1))) > ((LONG)(((1U)<<((dBits)-1))-1) >> (scale)) )  \
           ? ((LONG)(src) >> (DFRACT_BITS-1)) ^ (LONG)(((1U)<<((dBits)-1))-1)                             \
           : ((LONG)(src) << (scale))
-

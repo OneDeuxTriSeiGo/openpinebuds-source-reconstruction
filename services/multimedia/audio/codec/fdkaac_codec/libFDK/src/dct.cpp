@@ -536,5 +536,3 @@ void dst_IV(FIXP_DBL *pDat,
   *pDat_e += 2;
 }
 #endif /* !defined(FUNCTION_dst_IV) */
-
-

@@ -142,5 +142,3 @@ TRANSPORTDEC_ERROR drmRead_CrcCheck( HANDLE_DRM pDrm )
 
   return (ErrorStatus);
 }
-
-

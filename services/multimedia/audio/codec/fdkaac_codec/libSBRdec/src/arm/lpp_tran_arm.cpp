@@ -149,6 +149,3 @@ static void lppTransposer_func1(
 }
 #endif  /* #ifdef FUNCTION_LPPTRANSPOSER_func1 */
 #endif  /* __arm__ */
-
-
-

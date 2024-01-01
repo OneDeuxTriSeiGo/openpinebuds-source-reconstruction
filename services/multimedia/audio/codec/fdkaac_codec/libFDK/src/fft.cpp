@@ -1399,5 +1399,3 @@ void ifft(int length, FIXP_DBL *pInput, INT *scalefactor)
       break;
   }
 }
-
-

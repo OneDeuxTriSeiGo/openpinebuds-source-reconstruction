@@ -150,6 +150,3 @@ TRANSPORTDEC_ERROR adifRead_DecodeHeader(
 
   return (ErrorStatus);
 }
-
-
-

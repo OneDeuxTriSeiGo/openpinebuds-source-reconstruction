@@ -500,6 +500,3 @@ DECLFUNC HCENC ga_hcenc_sf1_ldac[LDAC_MAXSFCBLEN_2-LDAC_MINSFCBLEN_2+1] = {
     {sa_hc_sf1_blen4_ldac, 16,  4, 15},
     {sa_hc_sf1_blen5_ldac, 32,  5, 31},
 };
-
-
-

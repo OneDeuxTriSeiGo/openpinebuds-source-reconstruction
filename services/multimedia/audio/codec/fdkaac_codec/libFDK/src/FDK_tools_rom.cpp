@@ -2616,5 +2616,3 @@ const element_list_t * getBitstreamElementList(AUDIO_OBJECT_TYPE aot, SCHAR epCo
   }
   return NULL;
 }
-
-

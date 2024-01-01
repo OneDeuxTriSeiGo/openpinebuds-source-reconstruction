@@ -223,4 +223,3 @@ END - Dynamic RAM - Allocation */
 
 
 #endif /* #ifndef AAC_ENC_RAM_H */
-

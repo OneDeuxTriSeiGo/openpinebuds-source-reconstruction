@@ -35,4 +35,3 @@ enum {
 
 
 #endif /* _LDACBT_EX_H_ */
-

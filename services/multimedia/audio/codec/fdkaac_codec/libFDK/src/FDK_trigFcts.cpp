@@ -323,8 +323,3 @@ void fixp_cos_sin (FIXP_DBL x, int scale, FIXP_DBL *cos, FIXP_DBL *sin)
     *cos  = cosine - error0;
     *sin  = sine + error1;
 }
-
-
-
-
-

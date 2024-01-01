@@ -458,4 +458,3 @@ INT getScalefactor(const FIXP_SGL *vector, /*!< Pointer to input vector */
   return fixmax_I((INT)0,(INT)(fixnormz_D(FX_SGL2FX_DBL((FIXP_SGL)maxVal)) - 1));
 }
 #endif
-

@@ -504,4 +504,3 @@ INT FDKaacEnc_Downsample(DOWNSAMPLER *DownSampler,  /*!< pointer to downsampler 
 
     return 0;
 }
-

@@ -132,4 +132,3 @@ int adifWrite_EncodeHeader(
 int adifWrite_GetHeaderBits( ADIF_INFO *adif );
 
 #endif /* TPENC_ADIF_H */
-

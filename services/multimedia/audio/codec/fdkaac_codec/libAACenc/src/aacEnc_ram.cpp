@@ -180,15 +180,3 @@ C_ALLOC_MEM2 (Ram_aacEnc_QCelement, QC_OUT_ELEMENT, (1), (8))
       FDK_ASSERT(dynamic_RAM!=0);
       return ((QC_OUT_CHANNEL*) (dynamic_RAM + P_BUF_0 + n*sizeof(QC_OUT_CHANNEL)));
   }
-
-
-
-
-
-
-
-
-
-
-
-

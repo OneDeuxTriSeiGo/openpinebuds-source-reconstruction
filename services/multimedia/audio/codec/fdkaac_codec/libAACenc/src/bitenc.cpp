@@ -1471,4 +1471,3 @@ AAC_ENCODER_ERROR FDKaacEnc_WriteBitstream(HANDLE_TRANSPORTENC hTpEnc,
 
   return ErrorStatus;
 }
-

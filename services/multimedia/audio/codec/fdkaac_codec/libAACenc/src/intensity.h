@@ -119,4 +119,3 @@ void FDKaacEnc_IntensityStereoProcessing(
         );
 
 #endif /* _INTENSITY_H */
-

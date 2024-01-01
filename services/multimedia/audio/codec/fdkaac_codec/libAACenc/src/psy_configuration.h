@@ -160,6 +160,3 @@ AAC_ENCODER_ERROR FDKaacEnc_InitPsyConfiguration(INT  bitrate,
                                                  FB_TYPE filterbank);
 
 #endif /* _PSY_CONFIGURATION_H */
-
-
-

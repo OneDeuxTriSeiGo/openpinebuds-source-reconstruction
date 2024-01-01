@@ -87,4 +87,3 @@ amm-info@iis.fraunhofer.de
    Description: Stack consumption information gathering.
 
 ******************************************************************************/
-

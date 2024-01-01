@@ -158,4 +158,3 @@ FDKaacEnc_CalculateChaosMeasure( FIXP_DBL    *paMDCTDataNM0,
                                    numberOfLines,
                                    chaosMeasure );
 }
-

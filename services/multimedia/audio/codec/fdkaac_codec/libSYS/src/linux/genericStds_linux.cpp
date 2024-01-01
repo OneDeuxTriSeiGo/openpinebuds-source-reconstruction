@@ -291,4 +291,3 @@ void FDKepilog(void)
 #endif /* KERNEL_SRAM > 0 */
 
 #endif /* ifdef __arm__ */
-

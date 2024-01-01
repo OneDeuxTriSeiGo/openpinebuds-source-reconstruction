@@ -477,4 +477,3 @@ void FDK_Fetch (HANDLE_FDK_BITBUF hBitBuf, UCHAR *outBuf, UINT *writeBytes)
 
   *writeBytes = bTotal ;
 }
-

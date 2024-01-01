@@ -2314,4 +2314,3 @@ ResetLimiterBands ( UCHAR *limiterBandTable,   /*!< Resulting band borders in QM
 
   return SBRDEC_OK;
 }
-

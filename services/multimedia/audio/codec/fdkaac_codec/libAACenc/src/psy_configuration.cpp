@@ -654,4 +654,3 @@ AAC_ENCODER_ERROR FDKaacEnc_InitPsyConfiguration(INT   bitrate,
 
     return AAC_ENC_OK;
 }
-

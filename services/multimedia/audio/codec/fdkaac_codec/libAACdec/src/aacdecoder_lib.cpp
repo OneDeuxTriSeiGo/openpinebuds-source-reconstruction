@@ -1159,7 +1159,3 @@ LINKSPEC_CPP INT aacDecoder_GetLibInfo ( LIB_INFO *info )
 
   return 0;
 }
-
-
-
-

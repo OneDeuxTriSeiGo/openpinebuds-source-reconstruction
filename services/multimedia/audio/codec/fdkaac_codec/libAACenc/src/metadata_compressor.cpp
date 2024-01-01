@@ -1034,5 +1034,3 @@ DRC_PROFILE FDK_DRC_Generator_getCompProfile(const HDRC_COMP drcComp)
 {
     return drcComp->profile[1];
 }
-
-

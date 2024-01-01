@@ -729,5 +729,3 @@ AB *p_ab)
 
     return LDAC_TRUE;
 }
-
-

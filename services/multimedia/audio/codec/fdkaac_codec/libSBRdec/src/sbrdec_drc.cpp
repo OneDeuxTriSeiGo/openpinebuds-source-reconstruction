@@ -522,4 +522,3 @@ void sbrDecoder_drcApply (
 
   *scaleFactor += maxShift;
 }
-

@@ -202,7 +202,3 @@ int InvMdctTransformLowDelay_fdk (FIXP_DBL *mdctData, const int mdctData_e, INT_
 
   return (1);
 }
-
-
-
-

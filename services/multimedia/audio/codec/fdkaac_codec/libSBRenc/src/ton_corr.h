@@ -209,4 +209,3 @@ FDKsbrEnc_ResetTonCorrParamExtr(HANDLE_SBR_TON_CORR_EST hTonCorr, /*!< Handle to
                       INT noQmfChannels                 /*!< Number of QMF channels. */
                       );
 #endif
-

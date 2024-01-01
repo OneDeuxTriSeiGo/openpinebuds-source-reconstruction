@@ -269,4 +269,3 @@ FIXP_DBL FDKsbrEnc_LSI_divide_scale_fract(FIXP_DBL num, FIXP_DBL denom, FIXP_DBL
 
   return (tmp);
 }
-

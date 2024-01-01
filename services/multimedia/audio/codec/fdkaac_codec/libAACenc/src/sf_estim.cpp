@@ -1328,4 +1328,3 @@ FDKaacEnc_EstimateScaleFactors(PSY_OUT_CHANNEL *psyOutChannel[],
   }
 
 }
-

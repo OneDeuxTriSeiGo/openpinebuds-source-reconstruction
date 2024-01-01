@@ -873,9 +873,3 @@ TRANSPORTENC_ERROR transportEnc_Latm_Init(
 bail:
   return ErrorStatus;
 }
-
-
-
-
-
-

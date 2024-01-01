@@ -1197,4 +1197,3 @@ qmfChangeOutGain (HANDLE_QMF_FILTER_BANK synQmf,     /*!< Handle of Qmf Synthesi
 {
   synQmf->outGain = outputGain;
 }
-

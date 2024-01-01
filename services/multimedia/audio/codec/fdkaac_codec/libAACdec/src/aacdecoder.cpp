@@ -1845,7 +1845,3 @@ LINKSPEC_CPP CStreamInfo* CAacDecoder_GetStreamInfo ( HANDLE_AACDECODER self )
   }
   return &self->streamInfo;
 }
-
-
-
-

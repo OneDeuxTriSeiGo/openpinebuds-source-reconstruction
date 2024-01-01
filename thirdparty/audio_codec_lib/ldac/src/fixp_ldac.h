@@ -64,4 +64,3 @@ DECLFUNC int get_bit_length_ldac(INT32);
 DECLFUNC INT32 get_absmax_ldac(INT32 *, int);
 
 #endif /* _FIXP_LDAC_H */
-

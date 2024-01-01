@@ -2500,6 +2500,3 @@ PCMDMX_ERROR pcmDmx_GetLibInfo( LIB_INFO *info )
 
   return PCMDMX_OK;
 }
-
-
-

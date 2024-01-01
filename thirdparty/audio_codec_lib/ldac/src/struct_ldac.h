@@ -79,4 +79,3 @@ typedef union {
 #endif
 
 #endif /* _STRUCT_H */
-

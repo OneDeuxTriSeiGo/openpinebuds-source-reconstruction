@@ -2136,4 +2136,3 @@ AACENC_ERROR aacEncInfo(
 bail:
     return err;
 }
-

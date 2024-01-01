@@ -274,7 +274,3 @@ typedef struct
 } QC_STATE;
 
 #endif /* _QC_DATA_H */
-
-
-
-

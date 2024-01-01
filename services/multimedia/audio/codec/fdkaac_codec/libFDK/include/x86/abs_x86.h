@@ -103,4 +103,3 @@ amm-info@iis.fraunhofer.de
   #endif /* __x86_64__ */
 
 #endif /*__x86__ */
-

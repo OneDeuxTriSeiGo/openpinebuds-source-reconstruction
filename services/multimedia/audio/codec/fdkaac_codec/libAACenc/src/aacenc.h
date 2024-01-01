@@ -357,4 +357,3 @@ void FDKaacEnc_Close( HANDLE_AAC_ENC*  phAacEnc);   /* encoder handle */
 #endif
 
 #endif /* _aacenc_h_ */
-

@@ -800,6 +800,3 @@ void FDKaacEnc_BCClose(BITCNTR_STATE **phBC)
     FreeRam_aacEnc_BitCntrState(phBC);
   }
 }
-
-
-

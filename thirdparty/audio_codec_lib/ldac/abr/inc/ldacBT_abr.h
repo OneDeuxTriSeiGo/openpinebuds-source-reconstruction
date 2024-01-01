@@ -160,4 +160,3 @@ LDAC_ABR_API int ldac_ABR_Proc(HANDLE_LDAC_BT hLdacBt, HANDLE_LDAC_ABR hLdacAbr,
 #endif
 
 #endif /* _LDACBT_ABR_H_ */
-

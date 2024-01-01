@@ -261,4 +261,3 @@ INT FDKaacEnc_Transform_Real (const INT_PCM * pTimeData,
 
   return 0;
 }
-

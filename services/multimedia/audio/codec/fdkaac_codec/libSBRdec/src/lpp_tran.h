@@ -239,4 +239,3 @@ resetLppTransposer (HANDLE_SBR_LPP_TRANS hLppTrans,
 
 
 #endif /* _LPP_TRANS_H */
-

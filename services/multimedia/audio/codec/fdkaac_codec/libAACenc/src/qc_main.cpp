@@ -1638,4 +1638,3 @@ void  FDKaacEnc_QCClose (QC_STATE  **phQCstate, QC_OUT **phQC)
     }
   }
 }
-

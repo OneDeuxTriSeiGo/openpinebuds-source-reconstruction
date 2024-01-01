@@ -176,4 +176,3 @@ UCHAR hexChar2Dec(const char c)
 
   return (UCHAR)r;
 }
-

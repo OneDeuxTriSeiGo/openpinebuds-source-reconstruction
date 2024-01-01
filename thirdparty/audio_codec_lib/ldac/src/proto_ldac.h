@@ -67,4 +67,3 @@ DECLFUNC size_t align_ldac(size_t);
 DECLFUNC void *calloc_ldac(SFINFO *, size_t, size_t);
 
 #endif /* _PROTO_LDAC_H */
-

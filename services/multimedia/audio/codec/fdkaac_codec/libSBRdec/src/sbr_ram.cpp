@@ -188,7 +188,3 @@ C_ALLOC_MEM_OVERLAY(Ram_SbrDecWorkBuffer1, FIXP_DBL, ((1024)/(32))*(64), SECT_DA
 C_ALLOC_MEM_OVERLAY(Ram_SbrDecWorkBuffer2, FIXP_DBL, ((1024)/(32))*(64), SECT_DATA_L2, WORKBUFFER2_TAG)
 
 /* @} */
-
-
-
-

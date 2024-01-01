@@ -139,4 +139,3 @@ int transportEnc_GetPCEBits(
         );
 
 #endif /* TPENC_ASC_H */
-

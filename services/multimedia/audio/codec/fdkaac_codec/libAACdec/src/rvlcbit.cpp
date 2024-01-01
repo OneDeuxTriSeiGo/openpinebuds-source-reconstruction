@@ -128,4 +128,3 @@ UCHAR rvlcReadBitFromBitstream (HANDLE_FDK_BITSTREAM  bs,
 
   return (bit);
 }
-

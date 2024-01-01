@@ -757,4 +757,3 @@ void FDKaacEnc_IntensityStereoProcessing(
     }
   }
 }
-

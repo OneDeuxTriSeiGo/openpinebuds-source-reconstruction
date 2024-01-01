@@ -402,4 +402,3 @@ void FDKaacEnc_calcSfbQuantEnergyAndDist(FIXP_DBL *mdctSpectrum,
   *en   = CalcLdData(energy)+FL2FXCONST_DBL(0.03125f);
   *dist = CalcLdData(distortion);
 }
-

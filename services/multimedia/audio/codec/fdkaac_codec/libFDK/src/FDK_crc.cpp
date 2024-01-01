@@ -456,4 +456,3 @@ static void crcCalc(
 
   hCrcInfo->crcValue = crc;
 }
-

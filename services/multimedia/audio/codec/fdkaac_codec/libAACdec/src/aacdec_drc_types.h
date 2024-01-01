@@ -171,4 +171,3 @@ typedef struct
 typedef CDrcInfo *HANDLE_AAC_DRC;
 
 #endif /* AACDEC_DRC_TYPES_H */
-

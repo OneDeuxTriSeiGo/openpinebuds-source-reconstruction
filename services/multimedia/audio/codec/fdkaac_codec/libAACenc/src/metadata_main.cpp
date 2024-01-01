@@ -865,5 +865,3 @@ INT FDK_MetadataEnc_GetDelay(
 
     return delay;
 }
-
-

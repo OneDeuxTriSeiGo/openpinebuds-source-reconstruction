@@ -615,4 +615,3 @@ static void psFindBestScaling(
 #endif
 
 }
-

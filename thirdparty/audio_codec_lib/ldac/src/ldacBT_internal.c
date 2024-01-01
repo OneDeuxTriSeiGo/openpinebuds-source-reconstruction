@@ -532,4 +532,3 @@ DECLFUNC int ldacBT_get_eqmid_from_frmlen( int frmlen, int nch, int flgFrmHdr, i
     }
     return eqmid;
 }
-

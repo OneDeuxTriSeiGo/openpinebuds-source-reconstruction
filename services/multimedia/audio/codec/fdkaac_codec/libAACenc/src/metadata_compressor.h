@@ -249,4 +249,3 @@ DRC_PROFILE FDK_DRC_Generator_getCompProfile(
 
 
 #endif /* _METADATA_COMPRESSOR_H */
-

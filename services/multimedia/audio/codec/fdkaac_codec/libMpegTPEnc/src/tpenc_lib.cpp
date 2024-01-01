@@ -639,4 +639,3 @@ TRANSPORTENC_ERROR transportEnc_GetLibInfo( LIB_INFO *info )
 
   return TRANSPORTENC_OK;
 }
-

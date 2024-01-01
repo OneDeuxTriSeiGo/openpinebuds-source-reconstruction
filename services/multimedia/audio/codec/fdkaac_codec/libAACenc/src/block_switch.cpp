@@ -541,5 +541,3 @@ int FDKaacEnc_SyncBlockSwitching (
 
   return 0;
 }
-
-

@@ -1934,4 +1934,3 @@ const USHORT randomSign[AAC_NF_NO_RANDOM_VAL/16] = {
 /* 0011 0111 0101 0110  -> */ 0x6aec,
 /* 1011 0001 1010 0010  -> */ 0x458d
 };
-

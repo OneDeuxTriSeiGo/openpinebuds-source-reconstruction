@@ -430,4 +430,3 @@ UINT CLatmDemux_GetNrOfSubFrames(CLatmDemux *pLatmDemux)
 {
   return pLatmDemux->m_noSubFrames;
 }
-

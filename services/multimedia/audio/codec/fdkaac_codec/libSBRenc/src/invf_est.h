@@ -172,4 +172,3 @@ FDKsbrEnc_resetInvFiltDetector(HANDLE_SBR_INV_FILT_EST hInvFilt,
                      INT numDetectorBands);
 
 #endif /* _QMF_INV_FILT_H */
-

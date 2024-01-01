@@ -44,5 +44,3 @@
 #include "bitalloc_ldac.c"
 #include "pack_ldac.c"
 #include "encode_ldac.c"
-
-

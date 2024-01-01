@@ -2663,4 +2663,3 @@ void FDKaacEnc_AdjThrClose(ADJ_THR_STATE** phAdjThr)
       FreeRam_aacEnc_AdjustThreshold(phAdjThr);
     }
 }
-

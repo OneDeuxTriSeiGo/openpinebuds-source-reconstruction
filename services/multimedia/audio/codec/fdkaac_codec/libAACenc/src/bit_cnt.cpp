@@ -1117,6 +1117,3 @@ INT FDKaacEnc_codeScalefactorDelta(INT delta, HANDLE_FDK_BITSTREAM hBitstream)
   FDKwriteBits(hBitstream,codeWord,codeLength);
   return(0);
 }
-
-
-

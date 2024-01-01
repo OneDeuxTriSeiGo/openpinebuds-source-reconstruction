@@ -18,4 +18,3 @@
 
 #include "ldacBT_internal.c"
 #include "ldacBT_api.c"
-

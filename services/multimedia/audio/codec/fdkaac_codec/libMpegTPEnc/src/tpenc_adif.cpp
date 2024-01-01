@@ -179,4 +179,3 @@ int adifWrite_GetHeaderBits(ADIF_INFO *adif)
 
   return bits;
 }
-

@@ -226,4 +226,3 @@ static inline void inline_fixp_cos_sin (FIXP_DBL x1, FIXP_DBL x2, const int scal
     *out++  = sine   + (error1<<1);
 }
 #endif
-

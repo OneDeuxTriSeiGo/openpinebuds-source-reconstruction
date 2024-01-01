@@ -335,5 +335,3 @@ AC *p_ac)
 
     return;
 }
-
-

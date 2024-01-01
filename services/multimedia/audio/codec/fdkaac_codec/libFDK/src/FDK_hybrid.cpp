@@ -704,6 +704,3 @@ static INT kChannelFiltering(
 
     return err;
 }
-
-
-

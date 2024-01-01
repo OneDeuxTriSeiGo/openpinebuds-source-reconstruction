@@ -1211,5 +1211,3 @@ void CRvlc_ElementCheck (
     }
   }
 }
-
-

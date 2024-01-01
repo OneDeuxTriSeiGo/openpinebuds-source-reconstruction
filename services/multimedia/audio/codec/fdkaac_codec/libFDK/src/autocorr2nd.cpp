@@ -274,5 +274,3 @@ autoCorr2nd_cplx (ACORR_COEFS *ac,           /*!< Pointer to autocorrelation coe
 }
 #endif /* FUNCTION_autoCorr2nd_cplx */
 #endif /* LOW_POWER_SBR_ONLY */
-
-

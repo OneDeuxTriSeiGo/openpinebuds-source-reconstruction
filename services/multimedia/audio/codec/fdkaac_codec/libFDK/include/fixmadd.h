@@ -303,4 +303,3 @@ inline INT fixpadd_S (FIXP_DBL x, const FIXP_SGL a)
 
 
 #endif // __FIXMADD_H__
-

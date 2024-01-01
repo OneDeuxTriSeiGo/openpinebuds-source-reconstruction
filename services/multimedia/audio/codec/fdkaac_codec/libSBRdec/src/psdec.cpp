@@ -1419,4 +1419,3 @@ static void assignTimeSlotsPS (FIXP_DBL *bufAdr,
     ptr += numChan;
   }
 }
-

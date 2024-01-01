@@ -490,4 +490,3 @@ int *p_nbytes_used)
 
     return LDAC_ERR_NONE;
 }
-

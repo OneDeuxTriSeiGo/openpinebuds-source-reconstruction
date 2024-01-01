@@ -493,4 +493,3 @@ void FDKprintDisclaimer(void)
   "of it, may result in severe civil and criminal penalties, and will be\n"   \
   "prosecuted to the maximum extent possible under law.\n\n");
 }
-

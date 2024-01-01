@@ -289,4 +289,3 @@ struct _hcenc_ldac {
 
 
 #endif /* _LDAC_H */
-

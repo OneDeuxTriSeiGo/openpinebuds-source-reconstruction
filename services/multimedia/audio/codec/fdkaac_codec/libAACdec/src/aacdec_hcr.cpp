@@ -1585,7 +1585,3 @@ INT getHcrType(H_HCR_INFO hHcr)
 {
   return hHcr->globalHcrType;
 }
-
-
-
-

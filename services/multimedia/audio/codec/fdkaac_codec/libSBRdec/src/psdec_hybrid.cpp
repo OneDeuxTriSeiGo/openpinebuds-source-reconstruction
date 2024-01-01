@@ -647,6 +647,3 @@ slotBasedHybridSynthesis ( FIXP_DBL  *fixpHybridReal,  /*!< Hybrid real Values *
     chOffset += hybridRes;
   }
 }
-
-
-

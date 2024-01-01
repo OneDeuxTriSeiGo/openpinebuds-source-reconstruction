@@ -1340,5 +1340,3 @@ static void FDKaacEnc_AnalysisFilter(
     }
   }
 }
-
-

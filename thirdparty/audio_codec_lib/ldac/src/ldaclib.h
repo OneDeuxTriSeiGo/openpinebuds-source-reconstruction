@@ -172,4 +172,3 @@ DECLSPEC LDAC_RESULT ldaclib_clear_internal_error_code(HANDLE_LDAC);
 }
 #endif /* __cplusplus */
 #endif /* _LDACLIB_H */
-

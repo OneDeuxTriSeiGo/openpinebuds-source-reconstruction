@@ -387,5 +387,3 @@ int adtsRead_GetRawDataBlockLength(
   }
   return length;
 }
-
-

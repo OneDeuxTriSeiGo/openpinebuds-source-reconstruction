@@ -247,4 +247,3 @@ FDKsbrEnc_AssembleSbrBitstream( HANDLE_COMMON_DATA  hCmonData,
 
   FDKsyncCache(&hCmonData->tmpWriteBitbuf);
 }
-

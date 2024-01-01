@@ -889,7 +889,3 @@ FIXP_DBL fLog2(FIXP_DBL x_m, INT x_e)
   }
   return  x_m;
 }
-
-
-
-

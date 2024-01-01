@@ -1406,4 +1406,3 @@ UINT Hcr_State_BODY_SIGN_ESC__ESC_WORD(HANDLE_FDK_BITSTREAM bs, void *ptr)
 
   return STOP_THIS_STATE;
 }
-

@@ -181,4 +181,3 @@ int nlnn)
         return min_ldac(a_status[0], a_status[1]);
     }
 }
-

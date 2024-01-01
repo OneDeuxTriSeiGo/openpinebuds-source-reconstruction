@@ -1050,8 +1050,3 @@ getSbrExtendedDataSize (HANDLE_PARAMETRIC_STEREO  hParametricStereo)
 
   return (extDataBits+7) >> 3;
 }
-
-
-
-
-

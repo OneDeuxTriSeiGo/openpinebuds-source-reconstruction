@@ -1051,4 +1051,3 @@ FDK_PSENC_ERROR FDKsbrEnc_PSEncode(
 
   return error;
 }
-

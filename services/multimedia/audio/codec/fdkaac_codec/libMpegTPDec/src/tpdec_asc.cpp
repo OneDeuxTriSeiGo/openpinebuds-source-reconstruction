@@ -1515,4 +1515,3 @@ TRANSPORTDEC_ERROR DrmRawSdcAudioConfig_Parse(
 bail:
   return (ErrorStatus);
 }
-

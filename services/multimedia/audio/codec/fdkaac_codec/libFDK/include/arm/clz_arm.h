@@ -119,4 +119,3 @@ amm-info@iis.fraunhofer.de
 #endif /* arm toolchain */
 
 #endif /* __arm__ */
-

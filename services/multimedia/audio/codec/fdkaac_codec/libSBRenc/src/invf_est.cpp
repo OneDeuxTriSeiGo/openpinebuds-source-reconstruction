@@ -525,5 +525,3 @@ FDKsbrEnc_resetInvFiltDetector(HANDLE_SBR_INV_FILT_EST hInvFilt, /*!< Handle to 
 
   return (0);
 }
-
-

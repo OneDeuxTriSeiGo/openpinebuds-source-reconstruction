@@ -1066,4 +1066,3 @@ void FDKsbrEnc_fastTransientDetect(
     delta_energy_scale[timeSlot]   = delta_energy_scale[nTimeSlots + timeSlot];
   }
 }
-

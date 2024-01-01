@@ -382,4 +382,3 @@ INT  imdct_block(
 
   return nrSamples;
 }
-

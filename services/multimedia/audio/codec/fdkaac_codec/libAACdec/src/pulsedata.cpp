@@ -155,4 +155,3 @@ void CPulseData_Apply(CPulseData *PulseData,                /*!< pointer to puls
     }
   }
 }
-

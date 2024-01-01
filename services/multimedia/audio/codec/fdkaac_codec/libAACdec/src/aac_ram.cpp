@@ -137,6 +137,3 @@ C_ALLOC_MEM_OVERLAY(WorkBufferCore1, CWorkBufferCore1, 1, SECT_DATA_L1, WORKBUFF
 
 
 /* @} */
-
-
-

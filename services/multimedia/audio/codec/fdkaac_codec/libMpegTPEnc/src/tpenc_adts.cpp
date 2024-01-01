@@ -312,4 +312,3 @@ void adtsWrite_EndRawDataBlock(HANDLE_ADTS hAdts,
   }
   hAdts->currentBlock++;
 }
-

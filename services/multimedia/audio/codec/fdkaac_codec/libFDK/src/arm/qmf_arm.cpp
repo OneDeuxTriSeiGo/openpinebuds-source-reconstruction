@@ -763,4 +763,3 @@ void qmfSynPrototypeFirSlot( HANDLE_QMF_FILTER_BANK qmf,
 
 
 #endif  /* (QMF_NO_POLY==5) */
-

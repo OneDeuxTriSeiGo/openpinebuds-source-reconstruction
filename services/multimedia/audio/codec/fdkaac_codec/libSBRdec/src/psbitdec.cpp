@@ -590,4 +590,3 @@ ReadPsData (HANDLE_PS_DEC h_ps_d,          /*!< handle to struct PS_DEC */
 
   return (startbits - FDKgetValidBits(hBitBuf));
 }
-
