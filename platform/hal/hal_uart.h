@@ -232,26 +232,12 @@ uint32_t hal_uart_stop_dma_recv(enum HAL_UART_ID_T id);
 int hal_uart_dma_send(enum HAL_UART_ID_T id, const uint8_t *buf, uint32_t len,
                       struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt);
 
-int hal_uart_dma_send2(enum HAL_UART_ID_T id, const uint8_t *buf0, uint32_t len0,
-                       const uint8_t *buf1, uint32_t len1,
-                       struct HAL_DMA_DESC_T desc[2]);
-
 uint32_t hal_uart_stop_dma_send(enum HAL_UART_ID_T id);
 
-// addd for ali tihngs uart2 dma send
-int hal_uart_dma_send_sync_cache(enum HAL_UART_ID_T id, const uint8_t *buf, uint32_t len,
-                      struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt);
 // ========================================================================
 // Test function
 
 int hal_uart_printf_init(void);
-
-void hal_uart_printf_output(const uint8_t *buf, uint32_t len);
-
-static inline void hal_uart_output(const uint8_t *buf, uint32_t len)
-{
-    return hal_uart_printf_output(buf, len);
-}
 
 void hal_uart_printf(const char *fmt, ...);
 
