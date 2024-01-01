@@ -282,4 +282,3 @@ int pmu_get_gpadc_data_bits(void);
 #endif
 
 #endif
-

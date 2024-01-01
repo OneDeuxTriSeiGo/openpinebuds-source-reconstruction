@@ -58,4 +58,3 @@ void usbphy_clean_for_hs_mode(void);
 #endif
 
 #endif
-

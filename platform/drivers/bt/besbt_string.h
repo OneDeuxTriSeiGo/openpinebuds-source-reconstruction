@@ -32,4 +32,3 @@ size_t  memset_s(void *,size_t,int,size_t);
 
 
 #endif /* BES_STRING_H */
-

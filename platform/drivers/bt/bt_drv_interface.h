@@ -582,4 +582,3 @@ void bt_uart_debug_send(unsigned char *data, unsigned int len);
 #endif
 
 #endif
-

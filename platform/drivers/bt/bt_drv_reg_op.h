@@ -399,4 +399,3 @@ void bt_drv_reg_op_setting_wesco(uint8_t wesco);
 #endif
 
 #endif
-
