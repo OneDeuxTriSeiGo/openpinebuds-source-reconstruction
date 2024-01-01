@@ -16,26 +16,8 @@ CONFIG_STRICT_CFLAGS ?= y
 CONFIG_SAVE_TARGET ?= n
 CONFIG_FORCE_WIN_SHELL ?= y
 
-ifneq ($(CONFIG_ARCH_BOARD),)
-T := $(CONFIG_ARCH_BOARD)
-export NUTTX_BUILD :=1
-export KERNEL := NUTTX
-export NUTTX_ROOT := $(TOPDIR)
-NUTTX_LIBS := $(patsubst %,$(NUTTX_ROOT)/staging/%,$(LINKLIBS))
-NUTTX_CFG_FILE := $(NUTTX_ROOT)/.config
-else
-export NUTTX_ROOT := $(srctree)/thirdparty/incubator-nuttx/nuttx
-NUTTX_LIBS := $(filter-out $(NUTTX_ROOT)/staging/libproxies.a ,$(wildcard $(NUTTX_ROOT)/staging/*.a))
-NUTTX_CFG_FILE := $(srctree)/config/$(T)/defconfig
-endif
-
 export CONFIG_STRICT_CFLAGS CONFIG_SAVE_TARGET CONFIG_FORCE_WIN_SHELL
 
-# filter-out modules
-ifeq ($(FORCE_TO_FILTER_MODULE),1)
-filter-out-module :=
-filter-out-file :=
-endif
 # ---------------------------------------------------------------------------
 # Platform and shell detection
 
@@ -337,9 +319,6 @@ VPATH		:= $(srctree)
 
 export srctree objtree VPATH
 
-BES_LIB_DIR ?= lib/bes
-export BES_LIB_DIR
-
 # Git revision
 ifeq ($(WIN_PLAT),y)
 GIT_REVISION := $(shell (where git >nul 2>&1) && (git rev-parse --short HEAD 2>nul))
@@ -416,12 +395,6 @@ AWK		= awk
 PERL	= perl
 PYTHON	= python
 
-ifeq ($(WIN_PLAT),y)
-TO_RCF	= $(PERL) $(subst /,\,$(srctree)/tools/bin2ascii.pl)
-else
-TO_RCF	= $(srctree)/tools/bin2ascii.pl
-endif
-
 KBUILD_CPPFLAGS :=
 
 KBUILD_CFLAGS	:= -fno-common -fmessage-length=0 -Wall \
@@ -450,8 +423,6 @@ KBUILD_CFLAGS	+= -fsingle-precision-constant
 endif
 KBUILD_CFLAGS	+= -Wdouble-promotion -Wfloat-conversion
 
-# NOTE:
-# In armclang -g == -gdwarf-4, and fromelf cannot interleave source in disassembly file when -gdwarf-4 or -O1/2/3 is specified.
 KBUILD_CFLAGS	+= -g
 
 #C_ONLY_FLAGS	:= -std=gnu89
@@ -514,22 +485,7 @@ ifneq ($(filter-out %/,$(init-y) $(core-y)),)
 $(error The object files cannot be linked at top level: $(filter-out %/,$(init-y) $(core-y)))
 endif
 
-# filter-out modules
-ifeq ($(FORCE_TO_FILTER_MODULE),1)
-filter-module := $(patsubst %/,%,$(filter-out-module))
-export filter-module-pattern  := $(addsuffix %,$(filter-module))
-core-y := $(filter-out $(filter-module-pattern),$(core-y))
-filter-obj := $(patsubst %.c, %.o, $(filter-out-file))
-filter-obj += $(patsubst %.S, %.o, $(filter-out-file))
-filter-obj += $(patsubst %.cc, %.o, $(filter-out-file))
-filter-obj += $(patsubst %.cpp, %.o, $(filter-out-file))
-export filter-obj
-endif
-
 ifeq ($(TOOLCHAIN),armclang)
-# Weak symbols must be put in the last library -- stupid armlink!
-core-y += platform/cmsis/weak_sym_armclang/
-
 # Entry objects
 ifeq ($(entry-y),)
 entry-y		+= utils/boot_struct/boot_struct.o
@@ -555,13 +511,7 @@ ifneq ($(BAD_ENTRY_OBJS),)
 $(error Only objects can be defined in entry-y in target.mk: $(BAD_ENTRY_OBJS))
 endif
 IMAGE_ENTRY := $(entry-y)
-USE_ROM_ENTRY := 0
-ifneq ($(ROM_IN_FLASH),1)
 ifeq ($(ROM_BUILD),1)
-USE_ROM_ENTRY := 1
-endif
-endif
-ifeq ($(USE_ROM_ENTRY),1)
 CFLAGS_IMAGE	+= -e Reset_Handler
 else ifeq ($(PROGRAMMER),1)
 CFLAGS_IMAGE	+= -e programmer_start
@@ -651,7 +601,6 @@ IMAGE_MAP := $(addsuffix .map,$(basename $(IMAGE_FILE)))
 IMAGE_BIN := $(addsuffix .bin,$(basename $(IMAGE_FILE)))
 STR_BIN   := $(addsuffix .str,$(basename $(IMAGE_FILE)))
 IMAGE_HEX := $(addsuffix .hex,$(basename $(IMAGE_FILE)))
-IMAGE_RCF := $(addsuffix .rcf,$(basename $(IMAGE_FILE)))
 ifeq ($(LST_SECTION_OPTS),)
 IMAGE_LST := $(addsuffix .lst,$(basename $(IMAGE_FILE)))
 else
@@ -659,20 +608,11 @@ IMAGE_LST := $(addsuffix $(LST_SECTION_NAME).lst,$(basename $(IMAGE_FILE)))
 endif
 append_lst_sec_name = $(addsuffix $(LST_SECTION_NAME)$(suffix $(1)),$(basename $(1)))
 
-IMAGE_LIB := lib$(addsuffix .a,$(basename $(IMAGE_FILE)))
-ifeq ($(LST_SECTION_OPTS),)
-IMAGE_LIB_LST := $(addsuffix .lst,$(basename $(IMAGE_LIB)))
-else
-IMAGE_LIB_LST := $(addsuffix $(LST_SECTION_NAME).lst,$(basename $(IMAGE_LIB)))
-endif
-
-IMAGE_CMSE_LIB := $(addsuffix _CMSE_Lib.o,$(basename $(IMAGE_FILE)))
-
 LDS_TARGET := _$(notdir $(REAL_LDS_FILE))
 
 IMAGE_VER  := build_info.o
 
-targets := $(LDS_TARGET) $(IMAGE_FILE) $(IMAGE_BIN) $(STR_BIN) $(IMAGE_RCF) $(IMAGE_LST) $(IMAGE_VER) $(IMAGE_LIB)
+targets := $(LDS_TARGET) $(IMAGE_FILE) $(IMAGE_BIN) $(STR_BIN) $(IMAGE_LST) $(IMAGE_VER)
 cmd_files := $(wildcard $(foreach f,$(targets),$(call get_depfile_name,$(f))))
 
 ifneq ($(cmd_files),)
@@ -734,38 +674,10 @@ else
 endif
 endif
 
-PHONY += rcf
-rcf: $(IMAGE_RCF) ;
-
-ifeq ($(filter 1,$(ROM_BUILD) $(PROGRAMMER)),)
-ifeq ($(CHIP_SUBSYS),)
-IMAGE_IN_FLASH := 1
-endif
-endif
-ifneq ($(filter 1,$(ROM_IN_FLASH) $(PROGRAMMER_INFLASH) $(BTH_AS_MAIN_MCU)),)
-IMAGE_IN_FLASH := 1
-endif
-ifeq ($(IMAGE_IN_FLASH),1)
-ifeq ($(RAM_SIMU_FLASH),1)
-RCF_OPTIONS := 4 -flash
-else
-RCF_OPTIONS := 1 -flash
-endif
-endif
-
-      cmd_gen-IMAGE_RCF = $(TO_RCF) $< $@ $(RCF_OPTIONS)
-quiet_cmd_gen-IMAGE_RCF = GENRCF  $@
-
-$(IMAGE_RCF): $(IMAGE_BIN)
-	+$(call if_changed,gen-IMAGE_RCF)
-
 PHONY += lst lst_only
 lst lst_only: $(IMAGE_LST) ;
 
-PHONY += lib_lst lib_lst_only
-lib_lst lib_lst_only: $(IMAGE_LIB_LST) ;
-
-ifneq ($(filter lst_only lib_lst_only,$(MAKECMDGOALS)),)
+ifneq ($(filter lst_only,$(MAKECMDGOALS)),)
 NO_COMPILE := 1
 endif
 
@@ -780,10 +692,8 @@ endif
 endif
 quiet_cmd_gen-IMAGE_LST = GENLST  $@
 
-$(IMAGE_LST): $(IMAGE_FILE)
-	+$(call if_changed,gen-IMAGE_LST)
 
-$(IMAGE_LIB_LST): $(IMAGE_LIB)
+$(IMAGE_LST): $(IMAGE_FILE)
 	+$(call if_changed,gen-IMAGE_LST)
 
 # Flags
@@ -804,28 +714,17 @@ C_ONLY_FLAGS   += -Werror=implicit-int
 # require functions to have arguments in prototypes, not empty 'int foo()'
 #C_ONLY_FLAGS    += -Werror=strict-prototypes
 
-ifneq ($(NUTTX_BUILD),1)
 C_ONLY_FLAGS    += -Werror-implicit-function-declaration
-endif
 
 # Prohibit date/time macros, which would make the build non-deterministic
-#KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
+KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
 
-ifneq ($(TOOLCHAIN),armclang)
 KBUILD_CFLAGS   += $(call cc-option,-Wlogical-op)
-KBUILD_CFLAGS   += $(call cc-option,-Wimplicit-fallthrough)
-endif
 
 #KBUILD_CFLAGS   += -Wno-address-of-packed-member
 
 KBUILD_CFLAGS	+= -Wno-trigraphs \
 		   -fno-strict-aliasing
-
-# Never change loops to C library calls like memcpy/memset
-# (otherwise it will be enabled by -O2 in GCC 10)
-ifneq ($(TOOLCHAIN),armclang)
-KBUILD_CFLAGS	+= -fno-tree-loop-distribute-patterns
-endif
 
 #KBUILD_CFLAGS	+= Wundef
 
@@ -867,12 +766,6 @@ core-y		:= $(patsubst %/, %/built-in$(built_in_suffix), $(core-y))
 IMAGE_INIT := $(init-y)
 IMAGE_MAIN := $(core-y)
 
-ifeq ($(ARM_CMNS),1)
-ifneq ($(NUTTX_BUILD),1)
-IMAGE_MAIN += ../$(ARM_CMSE_TARGET)/$(ARM_CMSE_TARGET)_CMSE_Lib.o
-endif
-endif
-
 ifeq ($(NO_COMPILE),1)
 IMAGE-deps :=
 else
@@ -889,10 +782,6 @@ BUILD_INFO_FLAGS := \
 BUILD_INFO_FLAGS += $(LDS_SECTION_FLAGS)
 BUILD_INFO_FLAGS += -DCHIP=$(CHIP)
 
-ifneq ($(HW_VERSION_STRING),)
-BUILD_INFO_FLAGS += -DHW_VERSION_STRING=$(HW_VERSION_STRING)
-endif
-
 ifneq ($(CHIP_SUBTYPE),)
 BUILD_INFO_FLAGS += -DCHIP_SUBTYPE=$(CHIP_SUBTYPE)
 endif
@@ -900,7 +789,7 @@ ifneq ($(SOFTWARE_VERSION),)
 BUILD_INFO_FLAGS += -DSOFTWARE_VERSION=$(SOFTWARE_VERSION)
 endif
 ifneq ($(OTA_BOOT_SIZE),)
-BUILD_INFO_FLAGS += -DOTA_BOOT_OFFSET=$(OTA_BOOT_OFFSET) -DOTA_BOOT_SIZE=$(OTA_BOOT_SIZE)
+BUILD_INFO_FLAGS += -DOTA_BOOT_SIZE=$(OTA_BOOT_SIZE)
 endif
 ifneq ($(OTA_CODE_OFFSET),)
 BUILD_INFO_FLAGS += -DOTA_CODE_OFFSET=$(OTA_CODE_OFFSET)
@@ -950,17 +839,6 @@ $(LDS_TARGET): $(LDS_SRC) FORCE
 PHONY += lds
 lds: $(LDS_TARGET) ;
 
-ifeq ($(NUTTX_BUILD),1)
-KBUILD_CPPFLAGS += -fno-builtin -DNUTTX_BUILD -D__NUTTX_SUPPORT__ -DFREE_WDATA_IN_HOOK
-NUTTX_INCLUDE :=  \
-	-I$(NUTTX_ROOT)/include/libcxx \
-	-I$(NUTTX_ROOT)/include\
-
-#NUTTX_INCLUDE += -include $(srctree)/platform/hal/hal_trace.h
-C++_ONLY_FLAGS += -DCONFIG_WCHAR_BUILTIN $(NUTTX_INCLUDE) -std=c++17 -D__NuttX__ -nostdinc++ -fpermissive
-C_ONLY_FLAGS += $(NUTTX_INCLUDE)
-CPPFLAGS_$(LDS_FILE) += -I$(NUTTX_ROOT)/include
-endif
 
 # Final link of $(IMAGE_FILE)
 # ---------------------------------------------------------------------------
@@ -977,13 +855,9 @@ endif
 #    symbol (and a weak symbol is considered as a defined symbol).
 #
 ifeq ($(TOOLCHAIN),armclang)
-
 #LDFLAGS_IMAGE += --symbols --list_mapping_symbols
 ifeq ($(KBUILD_VERBOSE),1)
 LDFLAGS_IMAGE += --verbose
-endif
-ifeq ($(ARM_CMSE),1)
-LDFLAGS_IMAGE += --import-cmse-lib-out=$(IMAGE_CMSE_LIB)
 endif
 
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
@@ -1000,12 +874,7 @@ endif
 	      $(IMAGE_ENTRY) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
 	      $(LIB_LDFLAGS) $(LIB_LDFLAGS)
 
-else # TOOLCHAIN != armclang
-
-ifeq ($(ARM_CMSE),1)
-LDFLAGS_IMAGE += --cmse-implib --out-implib=$(IMAGE_CMSE_LIB)
-endif
-
+else
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
 		  $(LD_USE_PATCH_SYMBOL) \
 	      -T $(LDS_TARGET) \
@@ -1015,32 +884,19 @@ endif
 	      -Map=$(IMAGE_MAP) \
 	      --gc-sections \
 	      --whole-archive)) \
-	      $(NUTTX_LIBS) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
+	      $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
 	      -Wl,--no-whole-archive $(LIB_LDFLAGS) $(LIB_LDFLAGS)
 
-endif # TOOLCHAIN != armclang
+endif
 quiet_cmd_link-IMAGE_FILE = LINK    $@
 
 # Include targets which we want to
 # execute if the rest of the kernel build went well.
-$(IMAGE_FILE): $(IMAGE-deps) $(NUTTX_LIBS) FORCE
+$(IMAGE_FILE): $(IMAGE-deps) FORCE
 ifneq ($(filter 1,$(COMPILE_ONLY) $(NO_COMPILE)),)
 	@:
 else
 	+$(call if_changed,link-IMAGE_FILE)
-endif
-
-PHONY += lib
-lib: $(IMAGE_LIB) ;
-
-      cmd_gen_image_lib = $(call archive-cmd,$(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER))
-quiet_cmd_gen_image_lib = IMGLIB  $(@)
-
-$(IMAGE_LIB): $(IMAGE-deps) $(NUTTX_LIBS) FORCE
-ifneq ($(filter 1,$(COMPILE_ONLY) $(NO_COMPILE)),)
-	@:
-else
-	@$(call if_changed,gen_image_lib)
 endif
 
 ifneq ($(IMAGE-deps),)
@@ -1069,23 +925,14 @@ else
 clean-dirs      := $(addprefix _clean_, $(IMAGE-alldirs))
 endif
 
-PHONY += $(clean-dirs) clean IMAGE-clean distclean subdir_clean
+PHONY += $(clean-dirs) clean IMAGE-clean
 $(clean-dirs):
 	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
 
 IMAGE-clean:
 	$(Q)$(call CMDRMFILE,$(IMAGE_FILE) $(IMAGE_MAP) \
-		$(IMAGE_BIN) $(STR_BIN) $(IMAGE_HEX) $(IMAGE_RCF) $(IMAGE_LST) \
-		$(addsuffix *$(suffix $(IMAGE_FILE)),$(basename $(IMAGE_FILE))) \
-		$(addsuffix *$(suffix $(IMAGE_LST)),$(basename $(IMAGE_LST))) \
-		$(IMAGE_LIB) $(IMAGE_LIB_LST) $(call append_lst_sec_name,$(IMAGE_LIB)) \
-		$(addsuffix *$(suffix $(IMAGE_LIB)),$(basename $(IMAGE_LIB))) \
-		$(addsuffix *$(suffix $(IMAGE_LIB_LST)),$(basename $(IMAGE_LIB_LST))) \
-		$(IMAGE_CMSE_LIB) \
+		$(IMAGE_BIN) $(STR_BIN) $(IMAGE_HEX) $(IMAGE_LST) \
 		$(IMAGE_VER) $(LDS_TARGET))
-
-distclean: clean
-subdir_clean: clean
 
 clean: IMAGE-clean
 
@@ -1110,13 +957,6 @@ else
 allclean: clean ;
 endif
 endif
-
-PHONY += libclean
-quiet_cmd_libclean	= RMDIR   $(srctree)/$(BES_LIB_DIR)
-      cmd_libclean  = $(call CMDRMDIR,$(srctree)/$(BES_LIB_DIR))
-
-libclean:
-	+$(call cmd,libclean)
 
 quiet_cmd_predefined-macros = GEN     $@
       cmd_predefined-macros = $(CPP) $(filter-out -I% -D% -include%,$(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(C_ONLY_FLAGS)) \
@@ -1208,34 +1048,6 @@ endif
 
 PHONY += FORCE
 FORCE: ;
-
-# Debug makefile variables
-ifneq ($(skip-makefile),1)
-
-ifeq ($(VAR_VAL_QUOTE),1)
-val_quote_l := [
-val_quote_r := ]
-else
-val_quote_l :=
-val_quote_r :=
-endif
-
-debug_var_list := $(patsubst get_var_%,%,$(filter get_var_%,$(MAKECMDGOALS)))
-ifneq ($(debug_var_list),)
-# Avoid expanding functions (e.g., shell functions) and recipe automatic variables
-$(foreach v,$(debug_var_list),$(if $(filter $(v),$(.VARIABLES)),\
-	$(info $(v)=$(val_quote_l)$(value $(v))$(val_quote_r)),\
-	$(info $(v) is not set)))
-endif
-
-ifneq ($(filter get_all_var,$(MAKECMDGOALS)),)
-# Avoid expanding functions (e.g., shell functions) and recipe automatic variables
-$(foreach c,$(sort $(.VARIABLES)),$(info $(c)=$(val_quote_l)$(value $(c))$(val_quote_r)))
-endif
-
-get_var_%: FORCE ;
-get_all_var: FORCE ;
-endif
 
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable so we can use it in if_changed and friends.
