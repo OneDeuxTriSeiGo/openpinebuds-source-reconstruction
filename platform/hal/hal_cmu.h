@@ -277,17 +277,35 @@ void hal_cmu_codec_iir_disable(void);
 
 int hal_cmu_codec_iir_set_div(uint32_t div);
 
+void hal_cmu_codec_iir_eq_enable(uint32_t speed);
+
+void hal_cmu_codec_iir_eq_disable(void);
+
+void hal_cmu_codec_psap_enable(uint32_t speed);
+
+void hal_cmu_codec_psap_disable(void);
+
 void hal_cmu_codec_fir_enable(uint32_t speed);
 
 void hal_cmu_codec_fir_disable(void);
 
 int hal_cmu_codec_fir_set_div(uint32_t div);
 
+void hal_cmu_codec_fir_select_sys_clock(void);
+
+void hal_cmu_codec_fir_select_own_clock(void);
+
 void hal_cmu_codec_rs_enable(uint32_t speed);
 
 void hal_cmu_codec_rs_disable(void);
 
 int hal_cmu_codec_rs_set_div(uint32_t div);
+
+void hal_cmu_codec_rs_adc_enable(uint32_t speed);
+
+void hal_cmu_codec_rs_adc_disable(void);
+
+int hal_cmu_codec_rs_adc_set_div(uint32_t div);
 
 void hal_cmu_codec_set_fault_mask(uint32_t msk);
 
@@ -346,9 +364,18 @@ void hal_cmu_bt_clock_disable(void);
 void hal_cmu_bt_reset_set(void);
 
 void hal_cmu_bt_reset_clear(void);
-void hal_cmu_bt_module_reset_clear(void);
 
 void hal_cmu_bt_module_init(void);
+
+void hal_cmu_bt_sys_clock_force_on(void);
+
+void hal_cmu_bt_sys_clock_auto(void);
+
+void hal_cmu_bt_sys_force_ram_on(void);
+
+void hal_cmu_bt_sys_force_ram_auto(void);
+
+void hal_cmu_bt_sys_set_freq(enum HAL_CMU_FREQ_T freq);
 
 int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id);
 
@@ -374,15 +401,7 @@ void hal_cmu_simu_pass(void);
 
 void hal_cmu_simu_fail(void);
 
-void hal_cmu_misc_init(void);
-
-void hal_cmu_misc_pass(void);
-
-void hal_cmu_misc_fail(void);
-
 void hal_cmu_simu_tag(uint8_t shift);
-
-void hal_cmu_simu_clr_tag(uint8_t shift);
 
 void hal_cmu_simu_set_val(uint32_t val);
 
@@ -401,6 +420,8 @@ void hal_cmu_programmer_enable_pll(void);
 void hal_cmu_init_pll_selection(void);
 
 void hal_cmu_rom_setup(void);
+
+void hal_cmu_programmer_setup(void);
 
 void hal_cmu_fpga_setup(void);
 

@@ -45,21 +45,28 @@ extern "C" {
 // APP_BOOTMODE_START                           (1 << 20)
 // Add new application bootmodes here (from highest bit to lowest bit)
 
-#define HAL_SW_BOOTMODE_TEST_MASK               (0x1F << 20)
+#define HAL_SW_BOOTMODE_TEST_MASK               (7 << 20)
 #define HAL_SW_BOOTMODE_TEST_MODE               (1 << 20)
 #define HAL_SW_BOOTMODE_TEST_SIGNALINGMODE      (1 << 21)
 #define HAL_SW_BOOTMODE_TEST_NOSIGNALINGMODE    (1 << 22)
-#define HAL_SW_BOOTMODE_TEST_SIGNALINGMODE_WIFI (1 << 23)
-#define HAL_SW_BOOTMODE_TEST_NOSIGNALINGMODE_WIFI (1 << 24)
+/* For A7 reboot */
+#define HAL_SW_BOOTMODE_A7_REBOOT               (1 << 21)
 
-#define HAL_SW_BOOTMODE_ENTER_HIDE_BOOT         (1 << 25)
+#define HAL_SW_BOOTMODE_ENTER_HIDE_BOOT         (1 << 23)
 
-#define HAL_SW_BOOTMODE_RESERVED_BIT24          (1 << 26)
-#define HAL_SW_BOOTMODE_REBOOT_FROM_CRASH       (1 << 27)
+#define HAL_SW_BOOTMODE_CUSTOM_OP1_AFTER_REBOOT (1 << 24)
+#define HAL_SW_BOOTMODE_REBOOT_FROM_CRASH       (1 << 25)
+
+#define HAL_SW_BOOTMODE_SINGLE_LINE_DOWNLOAD    (1 << 26)
+
+#define HAL_SW_BOOTMODE_CUSTOM_OP2_AFTER_REBOOT (1 << 27)
 
 #ifdef __USB_COMM__
 #define HAL_SW_BOOTMODE_CDC_COMM                (1 << 28)
+#else
+#define HAL_SW_BOOTMODE_TEST_NORMAL_MODE        (1 << 28)
 #endif
+
 #ifdef ANC_APP
 #define HAL_SW_BOOTMODE_REBOOT_BT_ON            (1 << 29)
 #define HAL_SW_BOOTMODE_REBOOT_ANC_ON           (1 << 30)
@@ -89,8 +96,6 @@ union HAL_HW_BOOTMODE_T hal_rom_hw_bootmode_get(void);
 union HAL_HW_BOOTMODE_T hal_hw_bootmode_get(void);
 
 void hal_hw_bootmode_init(void);
-
-void hal_hw_bootmode_clear(uint8_t clear_bits);
 
 uint32_t hal_sw_bootmode_get(void);
 

@@ -25,8 +25,6 @@ extern "C" {
 #define HAL_NORFLASH_DEVICE_ID_LEN          3
 
 #define HAL_NORFLASH_UNIQUE_ID_LEN          16
-#define FLASH_SECTOR_SIZE_IN_BYTES          4096
-#define FLASH_BLOCK_SIZE_IN_BYTES           (32*1024)
 
 enum HAL_NORFLASH_ID_T {
     HAL_NORFLASH_ID_0 = 0,
@@ -39,13 +37,14 @@ enum HAL_NORFLASH_RET_T {
     HAL_NORFLASH_ERR,
     HAL_NORFLASH_BAD_ID,
     HAL_NORFLASH_BAD_DIV,
-    HAL_NORFLASH_BAD_DIV_VERIF,
+    HAL_NORFLASH_BAD_CALIB_ID,
     HAL_NORFLASH_BAD_CFG,
     HAL_NORFLASH_BAD_OP,
-    HAL_NORFLASH_BAD_CALIB,
+    HAL_NORFLASH_BAD_CALIB_MAGIC,
     HAL_NORFLASH_BAD_ADDR,
     HAL_NORFLASH_BAD_LEN,
     HAL_NORFLASH_NOT_OPENED,
+    HAL_NORFLASH_CFG_NULL,
 };
 
 enum HAL_NORFLASH_SPEED {
@@ -138,9 +137,14 @@ struct HAL_NORFLASH_CONFIG_T {
 
 /* hal api */
 void hal_norflash_set_freq(enum HAL_CMU_FREQ_T freq);
+const struct HAL_NORFLASH_CONFIG_T *hal_norflash_get_init_config(void);
 enum HAL_NORFLASH_RET_T hal_norflash_init(void);
 enum HAL_NORFLASH_RET_T hal_norflash_deinit(void);
 enum HAL_NORFLASH_RET_T hal_norflash_open(enum HAL_NORFLASH_ID_T id, const struct HAL_NORFLASH_CONFIG_T *cfg);
+enum HAL_NORFLASH_RET_T hal_norflash_reopen(enum HAL_FLASH_ID_T id, const struct HAL_NORFLASH_CONFIG_T *cfg);
+enum HAL_NORFLASH_RET_T hal_norflash_apply_config(enum HAL_FLASH_ID_T id, const struct HAL_NORFLASH_CONFIG_T *cfg, uint32_t timing_idx);
+uint32_t hal_norflash_get_timing_index(enum HAL_FLASH_ID_T id);
+void hal_norflash_show_calib_result(enum HAL_FLASH_ID_T id);
 enum HAL_CMU_FREQ_T hal_norflash_clk_to_cmu_freq(uint32_t clk);
 enum HAL_NORFLASH_RET_T hal_norflash_get_size(enum HAL_NORFLASH_ID_T id, uint32_t *total_size, uint32_t *block_size, uint32_t *sector_size, uint32_t *page_size);
 enum HAL_NORFLASH_RET_T hal_norflash_get_boundary(enum HAL_NORFLASH_ID_T id, uint32_t address, uint32_t* block_boundary, uint32_t* sector_boundary);

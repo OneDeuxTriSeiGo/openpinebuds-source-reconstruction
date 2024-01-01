@@ -63,6 +63,32 @@ enum MPU_ATTR_T {
     MPU_ATTR_QTY,
 };
 
+#if defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_7EM__ENHANCE__)
+
+enum MAIR_ATTR_TYPE_T {
+    MAIR_ATTR_FLASH,
+    MAIR_ATTR_INT_SRAM,
+    MAIR_ATTR_EXT_RAM,
+    MAIR_ATTR_DEVICE,
+    MAIR_ATTR_NC_MEM,
+    MAIR_ATTR_5,
+    MAIR_ATTR_6,
+    MAIR_ATTR_7,
+
+    MAIR_ATTR_QTY,
+};
+#endif
+
+typedef struct
+{
+    uint32_t addr;
+    uint32_t len;
+    enum MPU_ATTR_T ap_attr;
+#if defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_7EM__ENHANCE__)
+    enum MAIR_ATTR_TYPE_T mem_attr;
+#endif
+} mpu_regions_t;
+
 int mpu_open(void);
 
 int mpu_close(void);
@@ -76,13 +102,11 @@ int mpu_set(enum MPU_ID_T id, uint32_t addr, uint32_t len, int srd_bits,
 
 int mpu_clear(enum MPU_ID_T id);
 
-int mpu_null_check_enable(void);
+/*mpu setup for mcu */
+int mpu_setup(const mpu_regions_t *mpu_table, uint32_t region_num);
 
-int mpu_fast_ram_protect(void);
-
-void mpu_open_for_psramuhs();
-
-int mpu_set_armv8_psramuhs(enum MPU_ID_T id, uint32_t addr, uint32_t len, enum MPU_ATTR_T attr);
+/*mpu setup for cp mcu */
+int mpu_setup_cp(const mpu_regions_t *mpu_table, uint32_t region_num);
 
 #ifdef __cplusplus
 }

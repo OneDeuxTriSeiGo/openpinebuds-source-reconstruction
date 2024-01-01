@@ -98,6 +98,13 @@ struct HAL_UART_CFG_T {
     bool dma_rx_stop_on_err : 1;
 };
 
+struct HAL_UART_BUF_T {
+    uint8_t *buf;
+    uint32_t len;
+    bool irq;
+    bool loop_hdr;
+};
+
 union HAL_UART_STATUS_T {
     struct {
         uint32_t FE   :1; // frame error
@@ -146,8 +153,6 @@ typedef void (*HAL_UART_IRQ_RXDMA_HANDLER_T)(uint32_t xfer_size, int dma_error, 
 
 typedef void (*HAL_UART_IRQ_TXDMA_HANDLER_T)(uint32_t xfer_size, int dma_error);
 
-typedef void (*HAL_UART_IRQ_BREAK_HANDLER_T)(void);
-
 int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg);
 
 int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg);
@@ -155,6 +160,8 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg);
 int hal_uart_close(enum HAL_UART_ID_T id);
 
 int hal_uart_opened(enum HAL_UART_ID_T id);
+
+int hal_uart_change_baud_rate(enum HAL_UART_ID_T id, uint32_t rate);
 
 int hal_uart_pause(enum HAL_UART_ID_T id);
 
@@ -194,8 +201,7 @@ union HAL_UART_IRQ_T hal_uart_irq_set_mask(enum HAL_UART_ID_T id, union HAL_UART
 
 HAL_UART_IRQ_HANDLER_T hal_uart_irq_set_handler(enum HAL_UART_ID_T id, HAL_UART_IRQ_HANDLER_T handler);
 
-void hal_uart_irq_set_dma_handler(enum HAL_UART_ID_T id, HAL_UART_IRQ_RXDMA_HANDLER_T rxdma,
-                                  HAL_UART_IRQ_TXDMA_HANDLER_T txdma, HAL_UART_IRQ_BREAK_HANDLER_T brk);
+void hal_uart_irq_set_dma_handler(enum HAL_UART_ID_T id, HAL_UART_IRQ_RXDMA_HANDLER_T rxdma, HAL_UART_IRQ_TXDMA_HANDLER_T txdma);
 
 int hal_uart_dma_recv(enum HAL_UART_ID_T id, uint8_t *buf, uint32_t len,
                       struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt);
@@ -208,10 +214,6 @@ int hal_uart_dma_recv_mask(enum HAL_UART_ID_T id, uint8_t *buf, uint32_t len,
                            struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt,
                            const union HAL_UART_IRQ_T *mask);
 
-int hal_uart_dma_recv_mask2(enum HAL_UART_ID_T id, uint8_t *buf0, uint32_t len0,
-                            uint8_t *buf1, uint32_t len1,
-                            struct HAL_DMA_DESC_T desc[2], const union HAL_UART_IRQ_T *mask);
-
 int hal_uart_dma_recv_mask_pingpang(enum HAL_UART_ID_T id, uint8_t *buf, uint32_t len,
                                     struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt,
                                     const union HAL_UART_IRQ_T *mask, uint32_t step);
@@ -219,6 +221,9 @@ int hal_uart_dma_recv_mask_pingpang(enum HAL_UART_ID_T id, uint8_t *buf, uint32_
 int hal_uart_dma_recv_mask_stream(enum HAL_UART_ID_T id, uint8_t *buf, uint32_t len,
                                   struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt,
                                   const union HAL_UART_IRQ_T *mask, uint32_t step);
+
+int hal_uart_dma_recv_mask_buf_list(enum HAL_UART_ID_T id, const struct HAL_UART_BUF_T *ubuf, uint32_t ucnt,
+                                    struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt, const union HAL_UART_IRQ_T *mask);
 
 uint32_t hal_uart_get_dma_recv_addr(enum HAL_UART_ID_T id);
 
@@ -241,9 +246,14 @@ int hal_uart_dma_send_sync_cache(enum HAL_UART_ID_T id, const uint8_t *buf, uint
 
 int hal_uart_printf_init(void);
 
-void hal_uart_printf(const char *fmt, ...);
+void hal_uart_printf_output(const uint8_t *buf, uint32_t len);
 
-void hal_uart_output(const unsigned char *buf, int size);
+static inline void hal_uart_output(const uint8_t *buf, uint32_t len)
+{
+    return hal_uart_printf_output(buf, len);
+}
+
+void hal_uart_printf(const char *fmt, ...);
 
 #endif // CHIP_HAS_UART
 

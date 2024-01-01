@@ -102,6 +102,14 @@ enum HAL_DMA_PERIPH_T {
     HAL_GPDMA_FLASH_TX          = 27,
     HAL_GPDMA_I2C1_RX           = 28,
     HAL_GPDMA_I2C1_TX           = 29,
+    HAL_GPDMA_I2C2_RX           = 30,
+    HAL_GPDMA_I2C2_TX           = 31,
+    HAL_GPDMA_I2C3_RX           = 32,
+    HAL_GPDMA_I2C3_TX           = 33,
+    HAL_GPDMA_UART3_RX          = 34,
+    HAL_GPDMA_UART3_TX          = 35,
+    HAL_GPDMA_IR_RX             = 36,
+    HAL_GPDMA_IR_TX             = 37,
 
     HAL_AUDMA_CODEC_RX          = 50,
     HAL_AUDMA_CODEC_TX          = 51,
@@ -177,12 +185,22 @@ struct HAL_DMA_2D_CFG_T {
     uint16_t ycount;
 };
 
+struct HAL_DMA_BURST_ADDR_INC_T {
+    bool src_inc_en;
+    bool dst_inc_en;
+    int16_t src_inc_val;
+    int16_t dst_inc_val;
+};
+
 //=============================================================
 
-#if (CHIP_HAS_DMA != 0)
 void hal_dma_open(void);
 
 void hal_dma_close(void);
+
+void hal_dma_sleep(void);
+
+void hal_dma_wakeup(void);
 
 bool hal_dma_chan_busy(uint8_t ch);
 
@@ -213,6 +231,8 @@ uint32_t hal_dma_get_cur_src_addr(uint8_t ch);
 
 uint32_t hal_dma_get_cur_dst_addr(uint8_t ch);
 
+void hal_dma_get_cur_src_remain_and_addr(uint8_t ch, uint32_t *remain, uint32_t *src);
+
 uint32_t hal_dma_get_sg_remain_size(uint8_t ch);
 
 enum HAL_DMA_RET_T hal_dma_irq_run_chan(uint8_t ch);
@@ -226,54 +246,19 @@ void hal_dma_remap_periph(enum HAL_DMA_PERIPH_T periph, int enable);
 void hal_dma_tc_irq_enable(uint8_t ch);
 
 void hal_dma_tc_irq_disable(uint8_t ch);
-#else /*CHIP_HAS_DMA != 0*/
-static inline void hal_dma_open(void) {}
 
-static inline void hal_dma_close(void) {}
+void hal_dma_set_burst_addr_inc(uint8_t ch, const struct HAL_DMA_BURST_ADDR_INC_T *inc);
 
-static inline bool hal_dma_chan_busy(uint8_t ch) {return true;}
+void hal_dma_clear_burst_addr_inc(uint8_t ch);
 
-static inline uint8_t hal_dma_get_chan(enum HAL_DMA_PERIPH_T periph, enum HAL_DMA_GET_CHAN_T policy) {return HAL_DMA_CHAN_NONE;}
+void hal_dma_set_desc_burst_addr_inc(struct HAL_DMA_DESC_T *desc, const struct HAL_DMA_BURST_ADDR_INC_T *inc);
 
-static inline void hal_dma_free_chan(uint8_t ch) {}
+void hal_dma_clear_desc_burst_addr_inc(struct HAL_DMA_DESC_T *desc);
 
-static inline uint32_t hal_dma_cancel(uint8_t ch) {return 0;}
+void hal_dma_record_busy_chan(void);
 
-static inline uint32_t hal_dma_stop(uint8_t ch) {return 0;}
+void hal_dma_print_busy_chan(void);
 
-static inline enum HAL_DMA_RET_T hal_dma_init_desc(struct HAL_DMA_DESC_T *desc,
-                                     const struct HAL_DMA_CH_CFG_T *cfg,
-                                     const struct HAL_DMA_DESC_T *next,
-                                     int tc_irq) {return HAL_DMA_ERR;}
-
-static inline enum HAL_DMA_RET_T hal_dma_sg_start(const struct HAL_DMA_DESC_T *desc,
-                                    const struct HAL_DMA_CH_CFG_T *cfg) {return HAL_DMA_ERR;}
-
-static inline enum HAL_DMA_RET_T hal_dma_sg_2d_start(const struct HAL_DMA_DESC_T *desc,
-                                       const struct HAL_DMA_CH_CFG_T *cfg,
-                                       const struct HAL_DMA_2D_CFG_T *src_2d,
-                                       const struct HAL_DMA_2D_CFG_T *dst_2d) {return HAL_DMA_ERR;}
-
-static inline enum HAL_DMA_RET_T hal_dma_start(const struct HAL_DMA_CH_CFG_T *cfg) {return HAL_DMA_ERR;}
-
-static inline uint32_t hal_dma_get_cur_src_addr(uint8_t ch) {return 0;}
-
-static inline uint32_t hal_dma_get_cur_dst_addr(uint8_t ch) {return 0;}
-
-static inline uint32_t hal_dma_get_sg_remain_size(uint8_t ch) {return 0;}
-
-static inline enum HAL_DMA_RET_T hal_dma_irq_run_chan(uint8_t ch) {return HAL_DMA_ERR;}
-
-static inline bool hal_dma_busy(void) {return true;}
-
-static inline HAL_DMA_DELAY_FUNC hal_dma_set_delay_func(HAL_DMA_DELAY_FUNC new_func) {return (HAL_DMA_DELAY_FUNC)0;}
-
-static inline void hal_dma_remap_periph(enum HAL_DMA_PERIPH_T periph, int enable) {}
-
-static inline void hal_dma_tc_irq_enable(uint8_t ch) {}
-
-static inline void hal_dma_tc_irq_disable(uint8_t ch) {}
-#endif /*CHIP_HAS_DMA != 0*/
 //=============================================================
 
 #define hal_audma_open                  hal_dma_open
