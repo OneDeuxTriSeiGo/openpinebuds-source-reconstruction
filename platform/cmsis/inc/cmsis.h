@@ -52,9 +52,6 @@ __extension__ \
  })
 #endif
 
-struct irq_masked_address {uint32_t pc; uint32_t lr;};
-extern struct irq_masked_address irq_masked_addr;
-
 __STATIC_FORCEINLINE uint32_t int_lock_global(void)
 {
 #ifdef __ARM_ARCH_ISA_ARM
@@ -89,13 +86,6 @@ __STATIC_FORCEINLINE void int_unlock_global(uint32_t pri)
 #endif
 }
 
-#if defined(NUTTX_BUILD) || defined(KERNEL_LITEOS_A) ||\
-     (defined(__ARM_ARCH_ISA_ARM) && (defined(KERNEL_RHINO) || defined(KERNEL_RTT)))
-extern uint32_t int_lock(void);
-extern void int_unlock(uint32_t pri);
-extern uint32_t int_lock_local(void);
-extern void int_unlock_local(uint32_t pri);
-#else
 __STATIC_FORCEINLINE uint32_t int_lock(void)
 {
 #ifdef INT_LOCK_EXCEPTION
@@ -106,10 +96,6 @@ __STATIC_FORCEINLINE uint32_t int_lock(void)
     return mask;
 #else
     uint32_t pri = __get_BASEPRI();
-    uint32_t pc;
-    __ASM volatile ("mov %0, PC" : "=r"(pc));
-    irq_masked_addr.pc = pc;
-    irq_masked_addr.lr = (uint32_t)__builtin_return_address(0);
     // Only allow IRQs with priority IRQ_PRIORITY_HIGHPLUSPLUS and IRQ_PRIORITY_REALTIME
     __set_BASEPRI(((IRQ_PRIORITY_HIGHPLUS << (8 - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL));
     return pri;
@@ -132,36 +118,11 @@ __STATIC_FORCEINLINE void int_unlock(uint32_t pri)
 #endif
 }
 
-__STATIC_FORCEINLINE uint32_t int_lock_local(void)
-{
-    return int_lock();
-}
-__STATIC_FORCEINLINE void int_unlock_local(uint32_t pri)
-{
-    int_unlock(pri);
-}
-
-__STATIC_FORCEINLINE uint32_t int_lock_smp_com(void)
-{
-    return int_lock();
-}
-__STATIC_FORCEINLINE void int_unlock_smp_com(uint32_t pri)
-{
-    int_unlock(pri);
-}
-
-
-#endif
 __STATIC_FORCEINLINE int in_isr(void)
 {
 #ifdef __ARM_ARCH_ISA_ARM
-#ifdef KERNEL_RHINO
-    extern int rhino_in_isr(void);
-    return rhino_in_isr();
-#else
     uint32_t mode = __get_mode();
     return mode != CPSR_M_USR && mode != CPSR_M_SYS;
-#endif
 #else
     return __get_IPSR() != 0;
 #endif
@@ -172,24 +133,7 @@ __STATIC_FORCEINLINE int32_t ftoi_nearest(float f)
     return (f >= 0) ? (int32_t)(f + 0.5) : (int32_t)(f - 0.5);
 }
 
-__STATIC_FORCEINLINE uint32_t unsigned_range_value_map(uint32_t from_val, uint32_t from_min, uint32_t from_max, uint32_t to_min, uint32_t to_max)
-{
-    if (from_val <= from_min) {
-        return to_min;
-    }
-    if (from_val >= from_max) {
-        return to_max;
-    }
-    return ((from_val - from_min) * (to_max - to_min) + (from_max - from_min) / 2) / (from_max - from_min) + to_min;
-}
-
 void GotBaseInit(void);
-
-void boot_init_boot_sections(void);
-
-void boot_init_sram_sections(void);
-
-void boot_init_rom_in_flash(void);
 
 int set_bool_flag(bool *flag);
 
