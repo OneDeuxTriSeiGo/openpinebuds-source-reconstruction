@@ -371,10 +371,6 @@ void hal_cmu_bt_sys_clock_force_on(void);
 
 void hal_cmu_bt_sys_clock_auto(void);
 
-void hal_cmu_bt_sys_force_ram_on(void);
-
-void hal_cmu_bt_sys_force_ram_auto(void);
-
 void hal_cmu_bt_sys_set_freq(enum HAL_CMU_FREQ_T freq);
 
 int hal_cmu_clock_out_enable(enum HAL_CMU_CLOCK_OUT_ID_T id);
