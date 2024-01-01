@@ -69,4 +69,3 @@ void AES128_CTR_encrypt_buffer(uint8_t* input, uint32_t length, const uint8_t* k
 
 
 #endif //_AES_H_
-
