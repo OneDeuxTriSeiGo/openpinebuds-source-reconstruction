@@ -62,7 +62,6 @@ struct HAL_TRANSQ_SLOT_NUM_T {
 
 struct HAL_TRANSQ_CFG_T {
     struct HAL_TRANSQ_SLOT_NUM_T slot;
-    uint8_t rx_irq_count;
     HAL_TRANSQ_RX_IRQ_HANDLER rx_handler;
     HAL_TRANSQ_TX_IRQ_HANDLER tx_handler;
 };
@@ -70,8 +69,6 @@ struct HAL_TRANSQ_CFG_T {
 enum HAL_TRANSQ_RET_T hal_transq_get_rx_status(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri, bool *ready);
 
 enum HAL_TRANSQ_RET_T hal_transq_get_tx_status(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri, bool *done);
-
-bool hal_transq_tx_busy(enum HAL_TRANSQ_ID_T id);
 
 enum HAL_TRANSQ_RET_T hal_transq_rx_first(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri, const uint8_t **data, uint32_t *len);
 
@@ -85,25 +82,7 @@ enum HAL_TRANSQ_RET_T hal_transq_open(enum HAL_TRANSQ_ID_T id, const struct HAL_
 
 enum HAL_TRANSQ_RET_T hal_transq_close(enum HAL_TRANSQ_ID_T id);
 
-enum HAL_TRANSQ_RET_T hal_transq_flush(enum HAL_TRANSQ_ID_T id);
-
-#if defined(__MCU_FW_2002__) && defined(CONFIG_SDIO_SUPPORT)
-void hal_transq_previous_init(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri);
-void hal_transq_clear_previous(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri, int data_toggle);
-void hal_transq_previous_toggle(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri);
-void hal_transq_int_enable(enum HAL_TRANSQ_ID_T id, enum HAL_TRANSQ_PRI_T pri);
-#endif
-
-uint8_t get_rx_irq_count(enum HAL_TRANSQ_ID_T id);
-
-#ifdef __ARM_ARCH_ISA_ARM
-#ifdef RTOS
-void hal_transq_local_irq_handler(int irq_num, void *irq_data);
-#endif
-#endif
 #endif // CHIP_HAS_TRANSQ
-
-void hal_transq_local_irq_handler_body(enum HAL_TRANSQ_ID_T id);
 
 #ifdef __cplusplus
 }
