@@ -253,7 +253,7 @@ static void hal_dma_open_inst(enum HAL_DMA_INST_T inst)
 
     dma[inst]->DMACONFIG = (dma[inst]->DMACONFIG & ~(DMA_DMACONFIG_AHB1_BIGENDIAN |
         DMA_DMACONFIG_AHB2_BIGENDIAN | DMA_DMACONFIG_CLK_EN_MASK)) |
-        DMA_DMACONFIG_EN | 
+        DMA_DMACONFIG_EN |
 #ifdef CHIP_BEST3001
         DMA_DMACONFIG_TC_IRQ_EN_MASK |
 #endif
