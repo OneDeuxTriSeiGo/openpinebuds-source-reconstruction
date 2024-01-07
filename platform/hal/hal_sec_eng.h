@@ -140,30 +140,6 @@ int hal_se_hmac_busy(void);
 
 enum HAL_SE_RET_T hal_se_hmac_reset(void);
 
-// ------------------------------------------------------------------------------
-// ROM Functions
-// ------------------------------------------------------------------------------
-
-enum HAL_SE_RET_T hal_se_rom_open(void);
-
-enum HAL_SE_RET_T hal_se_rom_close(void);
-
-int hal_se_hash_rom_done(void);
-
-int hal_se_hash_rom_busy(void);
-
-int hal_se_hash_dma_rom_busy(void);
-
-enum HAL_SE_RET_T hal_se_hash_rom_init(enum HAL_SE_HASH_MODE_T mode);
-
-enum HAL_SE_RET_T hal_se_hash_rom_update(const struct HAL_SE_HASH_CFG_T *cfg);
-
-enum HAL_SE_RET_T hal_se_hash_rom_final(const struct HAL_SE_HASH_CFG_T *cfg, uint64_t total_in_len);
-
-enum HAL_SE_RET_T hal_se_hash_rom_get_digest(void *out, uint32_t out_len, uint32_t *real_len);
-
-enum HAL_SE_RET_T hal_se_hash_rom(enum HAL_SE_HASH_MODE_T mode, const struct HAL_SE_HASH_CFG_T *cfg);
-
 #ifdef __cplusplus
 }
 #endif
