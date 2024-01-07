@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __CRC16_H
 #define __CRC16_H
 
@@ -22,7 +23,7 @@ extern "C" {
 #endif
 
 unsigned short _crc16(unsigned short crc, const unsigned char *buffer, unsigned int len);
-int crc16ccitt(int crc, unsigned char * bytes, int start, int len);
+
 #ifdef __cplusplus
 }
 #endif
