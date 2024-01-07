@@ -22,11 +22,7 @@ extern "C" {
 #ifdef NOSTD
 #define MAIN_ENTRY(...)                 _start(__VA_ARGS__)
 #else
-#if defined(NUTTX_BUILD)
-#define MAIN_ENTRY(...)                 bes_main(__VA_ARGS__)
-#else
 #define MAIN_ENTRY(...)                 main(__VA_ARGS__)
-#endif
 #endif
 
 #ifdef __cplusplus
