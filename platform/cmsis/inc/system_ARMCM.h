@@ -39,8 +39,6 @@ bool config_unaligned_access(bool enable);
 
 uint32_t get_cpu_id(void);
 
-int set_beco_coprocessor(int enable);
-
 #ifdef __cplusplus
 }
 #endif
