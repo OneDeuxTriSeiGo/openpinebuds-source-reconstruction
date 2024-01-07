@@ -238,11 +238,7 @@ struct boot_hdr_t {
 
 struct boot_struct_t {
     struct boot_hdr_t hdr;
-#if HAAS_OTA_ENABLED //OTA user add it for debug.
-    unsigned char ver[16];
-#else
     unsigned int reserved[4];
-#endif
 };
 
 struct code_sig_struct_t {
