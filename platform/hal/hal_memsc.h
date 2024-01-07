@@ -31,29 +31,11 @@ enum HAL_MEMSC_ID_T {
     HAL_MEMSC_ID_QTY
 };
 
-#define HAL_MEMSC_ID_TRACE              HAL_MEMSC_ID_0
-#define HAL_MEMSC_ID_TRNG               HAL_MEMSC_ID_1
-
-enum HAL_MEMSC_AON_ID_T {
-    HAL_MEMSC_AON_ID_0,
-    HAL_MEMSC_AON_ID_1,
-    HAL_MEMSC_AON_ID_2,
-    HAL_MEMSC_AON_ID_3,
-
-    HAL_MEMSC_AON_ID_QTY
-};
-
 int hal_memsc_lock(enum HAL_MEMSC_ID_T id);
 
 void hal_memsc_unlock(enum HAL_MEMSC_ID_T id);
 
 bool hal_memsc_avail(enum HAL_MEMSC_ID_T id);
-
-int hal_memsc_aon_lock(enum HAL_MEMSC_AON_ID_T id);
-
-void hal_memsc_aon_unlock(enum HAL_MEMSC_AON_ID_T id);
-
-bool hal_memsc_aon_avail(enum HAL_MEMSC_AON_ID_T id);
 
 #ifdef __cplusplus
 }
