@@ -21,9 +21,6 @@ extern "C" {
 
 #include "plat_types.h"
 #include "plat_addr_map.h"
-#if defined(NUTTX_BUILD)
-#include "arch/board/board.h"
-#endif
 #include CHIP_SPECIFIC_HDR(hal_iomux)
 
 enum HAL_IOMUX_OP_TYPE_T {
@@ -64,7 +61,6 @@ uint32_t hal_iomux_set_function(enum HAL_IOMUX_PIN_T pin, enum HAL_IOMUX_FUNCTIO
 enum HAL_IOMUX_FUNCTION_T hal_iomux_get_function(enum HAL_IOMUX_PIN_T pin);
 uint32_t hal_iomux_set_io_voltage_domains(enum HAL_IOMUX_PIN_T pin, enum HAL_IOMUX_PIN_VOLTAGE_DOMAINS_T volt);
 uint32_t hal_iomux_set_io_pull_select(enum HAL_IOMUX_PIN_T pin, enum HAL_IOMUX_PIN_PULL_SELECT_T pull_sel);
-uint32_t hal_iomux_set_io_drv(enum HAL_IOMUX_PIN_T pin, uint32_t val);
 
 void hal_iomux_set_default_config(void);
 void hal_iomux_set_uart0_voltage(enum HAL_IOMUX_PIN_VOLTAGE_DOMAINS_T volt);
@@ -75,17 +71,14 @@ bool hal_iomux_uart1_connected(void);
 void hal_iomux_set_uart0(void);
 void hal_iomux_set_uart1(void);
 void hal_iomux_set_uart2(void);
-void hal_iomux_set_uart3(void);
 void hal_iomux_set_analog_i2c(void);
 void hal_iomux_set_analog_i2c_master_slave(void);
 void hal_iomux_set_jtag(void);
 void hal_iomux_set_sdmmc_dt_n_out_group(int enable);
-void hal_iomux_set_sdmmc(void);
 void hal_iomux_set_i2s0(void);
 void hal_iomux_set_i2s1(void);
 void hal_iomux_set_spdif0(void);
 void hal_iomux_set_spdif1(void);
-enum HAL_IOMUX_PIN_T hal_iomux_get_dsi_te_pin(void);
 void hal_iomux_set_dig_mic_clock_pin(enum HAL_IOMUX_PIN_T pin);
 void hal_iomux_set_dig_mic_data0_pin(enum HAL_IOMUX_PIN_T pin);
 void hal_iomux_set_dig_mic_data1_pin(enum HAL_IOMUX_PIN_T pin);
@@ -93,23 +86,8 @@ void hal_iomux_set_dig_mic_data2_pin(enum HAL_IOMUX_PIN_T pin);
 void hal_iomux_set_dig_mic(uint32_t map);
 void hal_iomux_set_spi(void);
 void hal_iomux_set_spilcd(void);
-void hal_iomux_set_spilcd_slave(void);
 void hal_iomux_set_i2c0(void);
 void hal_iomux_set_i2c1(void);
-void hal_iomux_set_i2c2(void);
-void hal_iomux_set_i2c3(void);
-void hal_iomux_set_pwm0(void);
-void hal_iomux_set_pwm1(void);
-void hal_iomux_set_pwm2(void);
-void hal_iomux_set_pwm3(void);
-void hal_iomux_set_pwm4(void);
-void hal_iomux_set_pwm5(void);
-void hal_iomux_set_pwm6(void);
-void hal_iomux_set_pwm7(void);
-void hal_iomux_set_ir(void);
-void hal_iomux_set_sdio_voltage(enum HAL_IOMUX_PIN_VOLTAGE_DOMAINS_T volt);
-void hal_iomux_set_sdio(void);
-void hal_iomux_set_sdmmc(void);
 void hal_iomux_set_clock_out(void);
 void hal_iomux_set_clock_12m(void);
 void hal_iomux_clear_clock_12m(void);
@@ -117,10 +95,8 @@ void hal_iomux_set_bt_tport(void);
 void hal_iomux_set_bt_rf_sw(int rx_on, int tx_on);
 
 void hal_iomux_ispi_access_init(void);
-#ifndef HAL_IOMUX_ISPI_ACCESS_T
 enum HAL_IOMUX_ISPI_ACCESS_T hal_iomux_ispi_access_enable(enum HAL_IOMUX_ISPI_ACCESS_T access);
 enum HAL_IOMUX_ISPI_ACCESS_T hal_iomux_ispi_access_disable(enum HAL_IOMUX_ISPI_ACCESS_T access);
-#endif
 
 int hal_pwrkey_set_irq(enum HAL_PWRKEY_IRQ_T type);
 bool hal_pwrkey_pressed(void);
@@ -128,9 +104,6 @@ bool hal_pwrkey_startup_pressed(void);
 enum HAL_PWRKEY_IRQ_T hal_pwrkey_get_irq_state(void);
 
 void hal_iomux_set_codec_gpio_trigger(enum HAL_IOMUX_PIN_T pin, bool polarity);
-
-void hal_iomux_single_wire_uart_rx(uint32_t uart);
-void hal_iomux_single_wire_uart_tx(uint32_t uart);
 
 #ifdef __cplusplus
 }
