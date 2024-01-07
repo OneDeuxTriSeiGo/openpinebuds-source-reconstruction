@@ -167,10 +167,9 @@ int nvrec_dev_get_sn(char *sn);
 
 uint32_t nv_record_pre_write_operation(void);
 void nv_record_post_write_operation(uint32_t lock);
-#include "nvrecord_wifi.h"
 #endif // #if !defined(NEW_NV_RECORD_ENALBED)
 
-//#define nv_record_debug
+#define nv_record_debug
 #ifdef nv_record_debug
 #define nvrec_trace     TRACE
 #else
@@ -233,7 +232,7 @@ typedef enum
 
 int nvrec_dev_get_dongleaddr(bt_bdaddr_t *dongleaddr);
 int nvrec_dev_get_btaddr(char *btaddr);
-char* nvrec_dev_get_bt_name(void);
+
 const char* nvrec_dev_get_ble_name(void);
 size_t nv_record_get_bt_records_num(void);
 #ifdef __cplusplus
