@@ -20,16 +20,6 @@
 #include "hal_spi.h"
 #include "hal_location.h"
 
-#if defined(CHIP_BEST2003) || defined(CHIP_BEST2002)
-#define PHY_SPI_TX_BITS                 27
-#define PHY_SPI_RX_BITS                 27
-#define PHY_READ_CMD(r)                 ((1 << 26) | (((r) & 0x3FF) << 16))
-#define PHY_WRITE_CMD(r, v)             ((((r) & 0x3FF) << 16) | ((v) & 0xFFFF))
-#define PHY_READ_VAL(v)                 ((v) & 0xFFFF)
-
-#define SPIPHY_REG_CS(r)                ((r) >> 12)
-#define SPIPHY_REG_OFFSET(r)            ((r) & 0x3FF)
-#else
 #define PHY_SPI_TX_BITS                 25
 #define PHY_SPI_RX_BITS                 25
 #define PHY_READ_CMD(r)                 ((1 << 24) | (((r) & 0xFF) << 16))
@@ -39,7 +29,6 @@
 #define SPIPHY_REG_CS(r)                ((r) >> 12)
 #define SPIPHY_REG_PAGE(r)              (((r) >> 8) & 0xF)
 #define SPIPHY_REG_OFFSET(r)            ((r) & 0xFF)
-#endif
 
 static const struct HAL_SPI_CFG_T spi_cfg = {
     .clk_delay_half = false,
