@@ -53,17 +53,6 @@ int codec_anc_close(enum ANC_TYPE_T type);
 int codec_vad_open(const struct AUD_VAD_CONFIG_T *cfg);
 int codec_vad_close(void);
 
-uint32_t codec2_int_open(void);
-uint32_t codec2_int_stream_open(enum AUD_STREAM_T stream);
-uint32_t codec2_int_stream_setup(enum AUD_STREAM_T stream, struct HAL_CODEC_CONFIG_T *cfg);
-void codec2_int_stream_mute(enum AUD_STREAM_T stream, bool mute);
-void codec2_int_stream_set_chan_vol(enum AUD_STREAM_T stream, enum AUD_CHANNEL_MAP_T ch_map, uint8_t vol);
-void codec2_int_stream_restore_chan_vol(enum AUD_STREAM_T stream);
-uint32_t codec2_int_stream_start(enum AUD_STREAM_T stream);
-uint32_t codec2_int_stream_stop(enum AUD_STREAM_T stream);
-uint32_t codec2_int_stream_close(enum AUD_STREAM_T stream);
-uint32_t codec2_int_close(enum CODEC_CLOSE_TYPE_T type);
-
 #ifdef __cplusplus
 }
 #endif
