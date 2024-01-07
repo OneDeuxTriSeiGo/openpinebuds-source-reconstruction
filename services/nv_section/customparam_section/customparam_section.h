@@ -48,23 +48,6 @@ typedef struct
 #define CUSTOM_PARAM_SERIAL_NUM_INDEX   0
 #define CUSTOM_PARAM_SERIAL_NUM_LEN     16
 
-#ifdef BES_BLE_MESH_ENABLE
-typedef void (*ble_addr_set)(unsigned char* addr);
-
-#define CUSTOM_PARAM_SECRET_NUM_INDEX	0
-#define CUSTOM_PARAM_PID_NUM_INDEX	1
-#define CUSTOM_PARAM_MAC_NUM_INDEX	2
-
-#define GENIE_SIZE_PID 4
-#define GENIE_SIZE_KEY 16
-#define GENIE_SIZE_MAC 6
-
-void nv_custom_register(ble_addr_set callback);
-uint8_t *genie_tri_tuple_get_uuid(void);
-uint8_t *genie_tri_tuple_get_auth(void);
-
-#endif
-
 typedef struct
 {
     uint8_t sn[CUSTOM_PARAM_SERIAL_NUM_LEN];
