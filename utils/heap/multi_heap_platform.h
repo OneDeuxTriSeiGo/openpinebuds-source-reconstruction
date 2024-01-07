@@ -1,9 +1,10 @@
 // Copyright 2015-2016 Espressif Systems (Shanghai) PTE LTD
+// Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -74,15 +75,17 @@ inline static void multi_heap_assert(bool condition, const char *format, int lin
 #endif
 
 #else // ESP_PLATFORM
+#include "stdint.h"
+#include "cmsis.h"
+#include "assert.h"
+#include "hal_trace.h"
 
-#include <assert.h>
+#define MULTI_HEAP_PRINTF hal_trace_printf
+#define MULTI_HEAP_STDERR_PRINTF(num,MSG, ...) hal_trace_printf(num,MSG, __VA_ARGS__)
+#define MULTI_HEAP_LOCK(PLOCK)  do {if((PLOCK) != NULL) { uint32_t lockd = int_lock(); *((uint32_t *)(PLOCK)) = lockd; }} while (0)
+#define MULTI_HEAP_UNLOCK(PLOCK) do {if((PLOCK) != NULL) { int_unlock(*(((uint32_t *)(PLOCK))));}} while(0)
 
-#define MULTI_HEAP_PRINTF printf
-#define MULTI_HEAP_STDERR_PRINTF(MSG, ...) fprintf(stderr, MSG, __VA_ARGS__)
-#define MULTI_HEAP_LOCK(PLOCK)
-#define MULTI_HEAP_UNLOCK(PLOCK)
-
-#define MULTI_HEAP_ASSERT(CONDITION, ADDRESS) assert((CONDITION) && "Heap corrupt")
+#define MULTI_HEAP_ASSERT(CONDITION, ADDRESS) do {if (!(CONDITION)) {assert(0 && "Heap corrupt");} } while (0)
 
 #define MULTI_HEAP_BLOCK_OWNER
 #define MULTI_HEAP_SET_BLOCK_OWNER(HEAD)

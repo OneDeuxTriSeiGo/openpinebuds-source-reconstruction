@@ -35,6 +35,7 @@
 //-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
 */
 
+#if 0
 /*--------------------- ROM Configuration ------------------------------------
 //
 // <h> ROM Configuration
@@ -96,5 +97,7 @@
  *----------------------------------------------------------------------------*/
 #define __TTB_BASE       0x80500000
 #define __TTB_SIZE       0x00005000
+
+#endif
 
 #endif /* __MEM_ARMCA7_H */

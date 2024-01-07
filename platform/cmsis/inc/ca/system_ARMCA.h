@@ -9,6 +9,7 @@
  ******************************************************************************/
 /*
  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -25,41 +26,19 @@
  * limitations under the License.
  */
 
-#ifndef __SYSTEM_ARMCA7_H
-#define __SYSTEM_ARMCA7_H
+#ifndef __SYSTEM_ARMCA_H__
+#define __SYSTEM_ARMCA_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
+#include "system_ARMCM.h"
 
-extern uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock)  */
-
-/**
-  \brief Setup the microcontroller system.
-
-   Initialize the System and update the SystemCoreClock variable.
- */
-extern void SystemInit (void);
-
-
-/**
-  \brief  Update SystemCoreClock variable.
-
-   Updates the SystemCoreClock with current core Clock retrieved from cpu registers.
- */
-extern void SystemCoreClockUpdate (void);
-
-/**
-  \brief  Create Translation Table.
-
-   Creates Memory Management Unit Translation Table.
- */
-extern void MMU_CreateTranslationTable(void);
+void MMU_CreateTranslationTable(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __SYSTEM_ARMCA7_H */
+#endif

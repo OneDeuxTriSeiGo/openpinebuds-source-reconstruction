@@ -322,8 +322,6 @@ __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t value)
 
 #if (defined (__ARM_FEATURE_DSP) && (__ARM_FEATURE_DSP == 1))
 
-#define     __SADD8                 __builtin_arm_sadd8
-#define     __SADD16                __builtin_arm_sadd16
 #define     __QADD8                 __builtin_arm_qadd8
 #define     __QSUB8                 __builtin_arm_qsub8
 #define     __QADD16                __builtin_arm_qadd16
@@ -418,7 +416,7 @@ __ASM volatile ("MSR cpsr, %0" : : "r" (cpsr) : "memory");
  */
 __STATIC_FORCEINLINE uint32_t __get_mode(void)
 {
-    return (__get_CPSR() & 0x1FU);
+	return (__get_CPSR() & 0x1FU);
 }
 
 /** \brief  Set Mode

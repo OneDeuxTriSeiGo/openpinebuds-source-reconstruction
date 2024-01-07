@@ -1,9 +1,10 @@
 // Copyright 2015-2016 Espressif Systems (Shanghai) PTE LTD
+// Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -155,6 +156,7 @@ typedef struct {
     size_t allocated_blocks;      ///<  Number of (variable size) blocks allocated in the heap.
     size_t free_blocks;           ///<  Number of (variable size) free blocks in the heap.
     size_t total_blocks;          ///<  Total number of (variable size) blocks in the heap.
+    size_t total_bytes;
 } multi_heap_info_t;
 
 /** @brief Return metadata about a given heap

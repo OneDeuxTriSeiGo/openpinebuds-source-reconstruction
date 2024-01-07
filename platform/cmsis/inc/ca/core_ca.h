@@ -35,6 +35,21 @@
  extern "C" {
 #endif
 
+#ifndef __ASSEMBLER__
+#define NVIC_SetPriority(irq, prio)         GIC_SetPriority(irq, ((prio) << (8 - __GIC_PRIO_BITS)))
+#define NVIC_ClearPendingIRQ(irq)           GIC_ClearPendingIRQ(irq)
+#define NVIC_EnableIRQ(irq)                 GIC_EnableIRQ(irq)
+#define NVIC_DisableIRQ(irq)                GIC_DisableIRQ(irq)
+//#define NVIC_GetActive(irq)                 (GIC_GetIRQStatus(irq) & (1 << 1))
+#define NVIC_GetActive(irq)                 (((GICDistributor->ISACTIVER[(irq) / 32U])  >> ((irq) % 32U)) & 1UL)
+
+#include "ca/irq_ctrl.h"
+#define NVIC_SetVector(irq, vector)         IRQ_SetHandler(irq, (IRQHandler_t)(vector))
+
+uint32_t __get_SPSR(void);
+void __set_SPSR(uint32_t spsr);
+#endif
+
 /*******************************************************************************
  *                 CMSIS definitions
  ******************************************************************************/
@@ -118,7 +133,9 @@
   #endif
 #endif
 
+#ifndef __ASSEMBLER__
 #include "ca/cmsis_compiler_ca.h"               /* CMSIS compiler specific defines */
+#endif
 
 #ifdef __cplusplus
 }
@@ -177,6 +194,8 @@
 #define     __OM     volatile            /*!< \brief Defines 'write only' structure member permissions */
 #define     __IOM    volatile            /*!< \brief Defines 'read / write' structure member permissions */
 #define RESERVED(N, T) T RESERVED##N;    // placeholder struct members used for "reserved" areas
+
+#ifndef __ASSEMBLER__
 
  /*******************************************************************************
   *                 Register Abstraction
@@ -1711,6 +1730,9 @@ __STATIC_INLINE void PTIM_ClearEventFlag(void)
 #define SECTION_NG_MASK         (0xFFFDFFFF)
 #define SECTION_NG_SHIFT        (17)
 
+#define SECTION_SUPER_MASK      (0xFFF7FFFF)
+#define SECTION_SUPER_SHIFT     (18)
+
 #define SECTION_NS_MASK         (0xFFF7FFFF)
 #define SECTION_NS_SHIFT        (19)
 
@@ -1878,7 +1900,7 @@ typedef struct RegionStruct {
                                    MMU_GetSectionDescriptor(&descriptor_l1, region);
 
 //Sect_Normal_NC. Outer & inner non-cacheable, non-shareable, executable, rw, domain 0
-#define section_normal_nc(descriptor_l1, region)     region.rg_t = SECTION; \
+#define section_normal_nc(descriptor_l1, region)    region.rg_t = SECTION; \
                                    region.domain = 0x0; \
                                    region.e_t = ECC_DISABLED; \
                                    region.g_t = GLOBAL; \
@@ -1889,6 +1911,21 @@ typedef struct RegionStruct {
                                    region.xn_t = EXECUTE; \
                                    region.priv_t = RW; \
                                    region.user_t = RW; \
+                                   region.sh_t = NON_SHARED; \
+                                   MMU_GetSectionDescriptor(&descriptor_l1, region);
+
+//Sect_Normal_RO_NC. Outer & inner non-cacheable, non-shareable, executable, ro, domain 0
+#define section_normal_ro_nc(descriptor_l1, region) region.rg_t = SECTION; \
+                                   region.domain = 0x0; \
+                                   region.e_t = ECC_DISABLED; \
+                                   region.g_t = GLOBAL; \
+                                   region.inner_norm_t = NON_CACHEABLE; \
+                                   region.outer_norm_t = NON_CACHEABLE; \
+                                   region.mem_t = NORMAL; \
+                                   region.sec_t = SECURE; \
+                                   region.xn_t = EXECUTE; \
+                                   region.priv_t = READ; \
+                                   region.user_t = READ; \
                                    region.sh_t = NON_SHARED; \
                                    MMU_GetSectionDescriptor(&descriptor_l1, region);
 
@@ -1951,6 +1988,7 @@ typedef struct RegionStruct {
                                    region.sh_t = NON_SHARED; \
                                    MMU_GetSectionDescriptor(&descriptor_l1, region);
 
+#if 0
 //Sect_Device_RO. Device, non-shareable, non-executable, ro, domain 0, base addr 0
 #define section_device_ro(descriptor_l1, region) region.rg_t = SECTION; \
                                    region.domain = 0x0; \
@@ -1980,6 +2018,38 @@ typedef struct RegionStruct {
                                    region.user_t = RW; \
                                    region.sh_t = NON_SHARED; \
                                    MMU_GetSectionDescriptor(&descriptor_l1, region);
+#else
+//Sect_Device_RO. Device, non-shareable, non-executable, ro, domain 0, base addr 0
+#define section_device_ro(descriptor_l1, region) region.rg_t = SECTION; \
+                                   region.domain = 0x0; \
+                                   region.e_t = ECC_DISABLED; \
+                                   region.g_t = GLOBAL; \
+                                   region.inner_norm_t = NON_CACHEABLE; \
+                                   region.outer_norm_t = NON_CACHEABLE; \
+                                   region.mem_t = SHARED_DEVICE; \
+                                   region.sec_t = SECURE; \
+                                   region.xn_t = NON_EXECUTE; \
+                                   region.priv_t = READ; \
+                                   region.user_t = READ; \
+                                   region.sh_t = NON_SHARED; \
+                                   MMU_GetSectionDescriptor(&descriptor_l1, region);
+
+//Sect_Device_RW. Sect_Device_RO, but writeable
+#define section_device_rw(descriptor_l1, region) region.rg_t = SECTION; \
+                                   region.domain = 0x0; \
+                                   region.e_t = ECC_DISABLED; \
+                                   region.g_t = GLOBAL; \
+                                   region.inner_norm_t = NON_CACHEABLE; \
+                                   region.outer_norm_t = NON_CACHEABLE; \
+                                   region.mem_t = SHARED_DEVICE; \
+                                   region.sec_t = SECURE; \
+                                   region.xn_t = NON_EXECUTE; \
+                                   region.priv_t = RW; \
+                                   region.user_t = RW; \
+                                   region.sh_t = NON_SHARED; \
+                                   MMU_GetSectionDescriptor(&descriptor_l1, region);
+#endif
+
 //Page_4k_Device_RW.  Shared device, not executable, rw, domain 0
 #define page4k_device_rw(descriptor_l1, descriptor_l2, region) region.rg_t = PAGE_4k; \
                                    region.domain = 0x0; \
@@ -1993,6 +2063,21 @@ typedef struct RegionStruct {
                                    region.priv_t = RW; \
                                    region.user_t = RW; \
                                    region.sh_t = NON_SHARED; \
+                                   MMU_GetPageDescriptor(&descriptor_l1, &descriptor_l2, region);
+
+//Page_4k_Normal. Outer & inner wb/wa, non-shareable, executable, rw, domain 0
+#define page4k_normal(descriptor_l1, descriptor_l2, region) region.rg_t = PAGE_4k; \
+                                   region.domain = 0x0; \
+                                   region.e_t = ECC_DISABLED; \
+                                   region.g_t = GLOBAL; \
+                                   region.inner_norm_t = WB_WA; \
+                                   region.outer_norm_t = WB_WA; \
+                                   region.mem_t = NORMAL; \
+                                   region.sec_t = SECURE; \
+                                   region.xn_t = EXECUTE; \
+                                   region.priv_t = RW; \
+                                   region.user_t = RW; \
+                                   region.sh_t = SHARED; \
                                    MMU_GetPageDescriptor(&descriptor_l1, &descriptor_l2, region);
 
 //Page_64k_Device_RW.  Shared device, not executable, rw, domain 0
@@ -2113,6 +2198,13 @@ __STATIC_INLINE int MMU_GlobalSection(uint32_t *descriptor_l1, mmu_global_Type g
 {
   *descriptor_l1 &= SECTION_NG_MASK;
   *descriptor_l1 |= ((g_bit & 0x1) << SECTION_NG_SHIFT);
+  return 0;
+}
+
+__STATIC_INLINE int MMU_SuperSection(uint32_t *descriptor_l1, mmu_secure_Type s_bit)
+{
+  *descriptor_l1 &= SECTION_SUPER_MASK;
+  *descriptor_l1 |= ((s_bit & 0x1) << SECTION_SUPER_SHIFT);
   return 0;
 }
 
@@ -2381,7 +2473,7 @@ __STATIC_INLINE int MMU_MemoryPage(uint32_t *descriptor_l2, mmu_memory_Type mem,
           *descriptor_l2 |= 1 << PAGE_4K_TEX1_SHIFT;
           break;
         case WB_NO_WA:
-          *descriptor_l2 |= (1 << PAGE_4K_TEX0_SHIFT) | (1 << PAGE_4K_TEX0_SHIFT);
+          *descriptor_l2 |= (1 << PAGE_4K_TEX0_SHIFT) | (1 << PAGE_4K_TEX1_SHIFT);
           break;
       }
     }
@@ -2414,7 +2506,6 @@ __STATIC_INLINE int MMU_GetSectionDescriptor(uint32_t *descriptor, mmu_region_at
 
   return 0;
 }
-
 
 /** \brief  Create a L1 and L2 4k/64k page descriptor
 
@@ -2492,7 +2583,27 @@ __STATIC_INLINE void MMU_TTSection(uint32_t *ttb, uint32_t base_address, uint32_
   for (i = 0; i < count; i++ )
   {
     //4 bytes aligned
-    *ttb++ = entry;
+    *(volatile uint32_t *)ttb++ = entry;
+    entry += OFFSET_1M;
+  }
+}
+
+__STATIC_INLINE void MMU_TTSuperSection(uint32_t *ttb, uint32_t base_address, uint32_t count, uint32_t descriptor_l1)
+{
+  uint32_t offset;
+  uint32_t entry;
+  uint32_t i;
+
+  offset = base_address >> 20;
+  entry  = (base_address & 0xFF000000) | descriptor_l1 | (1 << SECTION_SUPER_SHIFT);
+
+  //4 bytes aligned
+  ttb = ttb + offset;
+
+  for (i = 0; i < count; i++ )
+  {
+    //4 bytes aligned
+    *(volatile uint32_t *)ttb++ = entry;
     entry += OFFSET_1M;
   }
 }
@@ -2520,7 +2631,7 @@ __STATIC_INLINE void MMU_TTPage4k(uint32_t *ttb, uint32_t base_address, uint32_t
   //4 bytes aligned
   ttb += offset;
   //create l1_entry
-  *ttb = entry;
+  *(volatile uint32_t *)ttb = entry;
 
   offset2 = (base_address & 0xff000) >> 12;
   ttb_l2 += offset2;
@@ -2528,7 +2639,7 @@ __STATIC_INLINE void MMU_TTPage4k(uint32_t *ttb, uint32_t base_address, uint32_t
   for (i = 0; i < count; i++ )
   {
     //4 bytes aligned
-    *ttb_l2++ = entry2;
+    *(volatile uint32_t *)ttb_l2++ = entry2;
     entry2 += OFFSET_4K;
   }
 }
@@ -2556,7 +2667,7 @@ __STATIC_INLINE void MMU_TTPage64k(uint32_t *ttb, uint32_t base_address, uint32_
   //4 bytes aligned
   ttb += offset;
   //create l1_entry
-  *ttb = entry;
+  *(volatile uint32_t *)ttb = entry;
 
   offset2 = (base_address & 0xff000) >> 12;
   ttb_l2 += offset2;
@@ -2567,7 +2678,7 @@ __STATIC_INLINE void MMU_TTPage64k(uint32_t *ttb, uint32_t base_address, uint32_
     for (j = 0; j < 16; j++)
     {
       //4 bytes aligned
-      *ttb_l2++ = entry2;
+      *(volatile uint32_t *)ttb_l2++ = entry2;
     }
     entry2 += OFFSET_64K;
   }
@@ -2603,6 +2714,8 @@ __STATIC_INLINE void MMU_InvalidateTLB(void)
   __ISB();     //ensure instruction fetch path sees new state
 }
 
+
+#endif // !__ASSEMBLER__
 
 #ifdef __cplusplus
 }

@@ -5,7 +5,7 @@
  * @date     20. December 2018
  ******************************************************************************/
 /*
- * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+ * Copyright (c) 2009-2020 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -1887,59 +1887,59 @@ __STATIC_FORCEINLINE uint32_t __UXTAB16(uint32_t op1, uint32_t op2)
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SXTB16(uint32_t op1)
+__STATIC_FORCEINLINE int32_t __SXTB16(uint32_t op1)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("sxtb16 %0, %1" : "=r" (result) : "r" (op1));
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SXTAB16(uint32_t op1, uint32_t op2)
+__STATIC_FORCEINLINE int32_t __SXTAB16(uint32_t op1, uint32_t op2)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("sxtab16 %0, %1, %2" : "=r" (result) : "r" (op1), "r" (op2) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMUAD  (uint32_t op1, uint32_t op2)
+__STATIC_FORCEINLINE int32_t __SMUAD  (uint32_t op1, uint32_t op2)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smuad %0, %1, %2" : "=r" (result) : "r" (op1), "r" (op2) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMUADX (uint32_t op1, uint32_t op2)
+__STATIC_FORCEINLINE int32_t __SMUADX (uint32_t op1, uint32_t op2)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smuadx %0, %1, %2" : "=r" (result) : "r" (op1), "r" (op2) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMLAD (uint32_t op1, uint32_t op2, uint32_t op3)
+__STATIC_FORCEINLINE int32_t __SMLAD (uint32_t op1, uint32_t op2, uint32_t op3)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smlad %0, %1, %2, %3" : "=r" (result) : "r" (op1), "r" (op2), "r" (op3) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMLADX (uint32_t op1, uint32_t op2, uint32_t op3)
+__STATIC_FORCEINLINE int32_t __SMLADX (uint32_t op1, uint32_t op2, uint32_t op3)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smladx %0, %1, %2, %3" : "=r" (result) : "r" (op1), "r" (op2), "r" (op3) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint64_t __SMLALD (uint32_t op1, uint32_t op2, uint64_t acc)
+__STATIC_FORCEINLINE int64_t __SMLALD (uint32_t op1, uint32_t op2, int64_t acc)
 {
   union llreg_u{
     uint32_t w32[2];
-    uint64_t w64;
+    int64_t w64;
   } llr;
   llr.w64 = acc;
 
@@ -1952,11 +1952,11 @@ __STATIC_FORCEINLINE uint64_t __SMLALD (uint32_t op1, uint32_t op2, uint64_t acc
   return(llr.w64);
 }
 
-__STATIC_FORCEINLINE uint64_t __SMLALDX (uint32_t op1, uint32_t op2, uint64_t acc)
+__STATIC_FORCEINLINE int64_t __SMLALDX (uint32_t op1, uint32_t op2, uint64_t acc)
 {
   union llreg_u{
     uint32_t w32[2];
-    uint64_t w64;
+    int64_t w64;
   } llr;
   llr.w64 = acc;
 
@@ -1969,43 +1969,43 @@ __STATIC_FORCEINLINE uint64_t __SMLALDX (uint32_t op1, uint32_t op2, uint64_t ac
   return(llr.w64);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMUSD  (uint32_t op1, uint32_t op2)
+__STATIC_FORCEINLINE int32_t __SMUSD  (uint32_t op1, uint32_t op2)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smusd %0, %1, %2" : "=r" (result) : "r" (op1), "r" (op2) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMUSDX (uint32_t op1, uint32_t op2)
+__STATIC_FORCEINLINE int32_t __SMUSDX (uint32_t op1, uint32_t op2)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smusdx %0, %1, %2" : "=r" (result) : "r" (op1), "r" (op2) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMLSD (uint32_t op1, uint32_t op2, uint32_t op3)
+__STATIC_FORCEINLINE int32_t __SMLSD (uint32_t op1, uint32_t op2, uint32_t op3)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smlsd %0, %1, %2, %3" : "=r" (result) : "r" (op1), "r" (op2), "r" (op3) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint32_t __SMLSDX (uint32_t op1, uint32_t op2, uint32_t op3)
+__STATIC_FORCEINLINE int32_t __SMLSDX (uint32_t op1, uint32_t op2, uint32_t op3)
 {
-  uint32_t result;
+  int32_t result;
 
   __ASM volatile ("smlsdx %0, %1, %2, %3" : "=r" (result) : "r" (op1), "r" (op2), "r" (op3) );
   return(result);
 }
 
-__STATIC_FORCEINLINE uint64_t __SMLSLD (uint32_t op1, uint32_t op2, uint64_t acc)
+__STATIC_FORCEINLINE int64_t __SMLSLD (uint32_t op1, uint32_t op2, uint64_t acc)
 {
   union llreg_u{
     uint32_t w32[2];
-    uint64_t w64;
+    int64_t w64;
   } llr;
   llr.w64 = acc;
 
@@ -2018,11 +2018,11 @@ __STATIC_FORCEINLINE uint64_t __SMLSLD (uint32_t op1, uint32_t op2, uint64_t acc
   return(llr.w64);
 }
 
-__STATIC_FORCEINLINE uint64_t __SMLSLDX (uint32_t op1, uint32_t op2, uint64_t acc)
+__STATIC_FORCEINLINE int64_t __SMLSLDX (uint32_t op1, uint32_t op2, uint64_t acc)
 {
   union llreg_u{
     uint32_t w32[2];
-    uint64_t w64;
+    int64_t w64;
   } llr;
   llr.w64 = acc;
 

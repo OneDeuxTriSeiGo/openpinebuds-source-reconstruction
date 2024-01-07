@@ -5,7 +5,7 @@
  * @date     12. November 2018
  ******************************************************************************/
 /*
- * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+ * Copyright (c) 2009-2020 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -31,7 +31,9 @@
 #ifndef __CORE_CM33_H_GENERIC
 #define __CORE_CM33_H_GENERIC
 
+#ifndef __ASSEMBLER__
 #include <stdint.h>
+#endif
 
 #ifdef __cplusplus
  extern "C" {
@@ -203,7 +205,9 @@
 
 #endif
 
+#ifndef __ASSEMBLER__
 #include "cmsis_compiler.h"               /* CMSIS compiler specific defines */
+#endif
 
 
 #ifdef __cplusplus
@@ -283,6 +287,8 @@
 /*@} end of group Cortex_M33 */
 
 
+
+#ifndef __ASSEMBLER__
 
 /*******************************************************************************
  *                 Register Abstraction
@@ -2897,6 +2903,7 @@ __STATIC_INLINE int32_t ITM_CheckChar (void)
 
 
 
+#endif // !__ASSEMBLER__
 
 #ifdef __cplusplus
 }
