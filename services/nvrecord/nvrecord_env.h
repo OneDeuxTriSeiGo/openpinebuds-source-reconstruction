@@ -52,7 +52,6 @@ struct factory_tester_status_t
     uint32_t status;
 };
 
-#ifdef IS_MULTI_AI_ENABLED
 typedef struct
 {
     bool     voice_key_enable;
@@ -61,7 +60,6 @@ typedef struct
     uint8_t  aiStatusDisableFlag;
     uint8_t  amaAssistantEnableStatus; //one bit for one AI assistant
 } AI_MANAGER_INFO_T;
-#endif
 
 struct nvrecord_env_t
 {
@@ -71,12 +69,9 @@ struct nvrecord_env_t
 #endif
     struct ibrt_mode_t ibrt_mode;
     struct factory_tester_status_t factory_tester_status;
-#if defined(__TENCENT_VOICE__)
+
     uint8_t  flag_value[8];
-#endif
-#ifdef IS_MULTI_AI_ENABLED
     AI_MANAGER_INFO_T   aiManagerInfo;
-#endif
 };
 
 int nv_record_env_init(void);
