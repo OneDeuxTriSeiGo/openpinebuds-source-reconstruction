@@ -46,8 +46,6 @@ enum E_HWTIMER_T hwtimer_update(HWTIMER_ID id, HWTIMER_CALLBACK_T callback, void
 
 enum E_HWTIMER_T hwtimer_stop(HWTIMER_ID id);
 
-int hwtimer_active(HWTIMER_ID id);
-
 #ifdef __cplusplus
 }
 #endif
