@@ -168,8 +168,6 @@ typedef struct {
  */
 void multi_heap_get_info(multi_heap_handle_t heap, multi_heap_info_t *info);
 
-bool multi_heap_ptr_in_heap(multi_heap_handle_t heap, void *p);
-
 #ifdef __cplusplus
 }
 #endif
