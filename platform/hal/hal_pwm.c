@@ -20,8 +20,6 @@
 #include "hal_timer.h"
 #include "hal_trace.h"
 
-#ifdef PWM_BASE
-
 #define PWM_SLOW_CLOCK                  (CONFIG_SYSTICK_HZ)
 #define PWM_FAST_CLOCK                  (hal_cmu_get_crystal_freq() / 2)
 #define PWM_MAX_VALUE                   0xFFFF
@@ -31,27 +29,24 @@
 
 static struct PWM_T * const pwm[] = {
     (struct PWM_T *)PWM_BASE,
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
+#if defined(CHIP_BEST2000)
     (struct PWM_T *)PWM1_BASE,
 #endif
 };
 
 static const enum HAL_CMU_MOD_ID_T pwm_o_mod[] = {
     HAL_CMU_MOD_O_PWM0,
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
+#if defined(CHIP_BEST2000)
     HAL_CMU_MOD_O_PWM4,
 #endif
 };
 
 static const enum HAL_CMU_MOD_ID_T pwm_p_mod[] = {
     HAL_CMU_MOD_P_PWM,
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
+#if defined(CHIP_BEST2000)
     HAL_CMU_MOD_P_PWM1,
 #endif
 };
-
-static uint8_t pwm_map;
-STATIC_ASSERT(sizeof(pwm_map) * 8 >= HAL_PWM_ID_QTY, "pwm_map size too small");
 
 int hal_pwm_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_CFG_T *cfg)
 {
@@ -110,7 +105,7 @@ int hal_pwm_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_CFG_T *cfg)
         toggle = PWM_MAX_VALUE - toggle;
     }
 
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
+#if defined(CHIP_BEST2000)
     if (id < HAL_PWM1_ID_0) {
         index = 0;
         offset = id - HAL_PWM_ID_0;
@@ -174,65 +169,12 @@ int hal_pwm_disable(enum HAL_PWM_ID_T id)
 {
     uint8_t index;
     uint8_t offset;
-    uint32_t lock;
-    uint32_t mask;
 
     if (id >= HAL_PWM_ID_QTY) {
         return 1;
     }
 
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
-    if (id < HAL_PWM1_ID_0) {
-        index = 0;
-        offset = id - HAL_PWM_ID_0;
-        mask = (1 << HAL_PWM1_ID_0) - 1;
-    } else {
-        index = 1;
-        offset = id - HAL_PWM1_ID_0;
-        mask = (1 << HAL_PWM_ID_QTY) - (1 << HAL_PWM1_ID_0);
-    }
-#else
-    index = 0;
-    offset = id - HAL_PWM_ID_0;
-    mask = (1 << HAL_PWM_ID_QTY) - 1;
-#endif
-
-    lock = int_lock();
-
-    if ((pwm_map & (1 << id)) == 0) {
-        goto _exit;
-    }
-    pwm_map &= ~(1 << id);
-
-    pwm[index]->EN &= ~(1 << offset);
-    hal_cmu_reset_set(pwm_o_mod[index] + offset);
-    hal_cmu_clock_disable(pwm_o_mod[index] + offset);
-    if ((pwm_map & mask) == 0) {
-        hal_cmu_reset_set(pwm_p_mod[index]);
-        hal_cmu_clock_disable(pwm_p_mod[index]);
-    }
-
-_exit:
-    int_unlock(lock);
-
-    return 0;
-}
-
-int hal_pwm_breathing_led_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_BR_CFG_T *cfg)
-{
-    uint8_t index;
-    uint8_t offset;
-    uint32_t lock;
-    uint32_t st1;
-    uint32_t st2;
-    uint32_t subcnt_data;
-    uint8_t tg;
-
-    if (id >= HAL_PWM_ID_QTY) {
-        return 1;
-    }
-
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
+#if defined(CHIP_BEST2000)
     if (id < HAL_PWM1_ID_0) {
         index = 0;
         offset = id - HAL_PWM_ID_0;
@@ -244,31 +186,6 @@ int hal_pwm_breathing_led_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_BR_C
     index = 0;
     offset = id - HAL_PWM_ID_0;
 #endif
-
-    if (offset != 2 && offset != 3) {
-        return 2;
-    }
-
-    st1 = MS_TO_TICKS(cfg->off_time_ms);
-    if (st1 > (REG_PWM2_ST1_MASK >> REG_PWM2_ST1_SHIFT)) {
-        st1 = (REG_PWM2_ST1_MASK >> REG_PWM2_ST1_SHIFT);
-    }
-    st2 = MS_TO_TICKS(cfg->on_time_ms);
-    if (st2 > (PWM_TOGGLE23_2_MASK >> PWM_TOGGLE23_2_SHIFT)) {
-        st2 = (REG_PWM2_ST1_MASK >> REG_PWM2_ST1_SHIFT);
-    }
-    subcnt_data = MS_TO_TICKS(cfg->fade_time_ms);
-    subcnt_data = integer_sqrt_nearest(subcnt_data);
-    if (subcnt_data > (SUBCNT_DATA2_MASK >> SUBCNT_DATA2_SHIFT)) {
-        subcnt_data = (SUBCNT_DATA2_MASK >> SUBCNT_DATA2_SHIFT);
-    }
-    // TODO: HW will be fixed from 2500
-    if (subcnt_data > 0xFE) {
-        subcnt_data = 0xFE;
-    }
-    tg = 1;
-
-    lock = int_lock();
 
     if (hal_cmu_reset_get_status(pwm_o_mod[index] + offset) == HAL_CMU_RST_SET) {
         hal_cmu_clock_enable(pwm_o_mod[index] + offset);
@@ -279,72 +196,5 @@ int hal_pwm_breathing_led_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_BR_C
         pwm[index]->EN &= ~(1 << offset);
     }
 
-    hal_cmu_pwm_set_freq(id, 0);
-
-    if (offset == 2) {
-        pwm[index]->ST1_23 = SET_BITFIELD(pwm[index]->ST1_23, REG_PWM2_ST1, st1);
-        pwm[index]->TOGGLE23 = SET_BITFIELD(pwm[index]->TOGGLE23, PWM_TOGGLE23_2, st2);
-        pwm[index]->TWINKLE23 = (pwm[index]->TWINKLE23 & ~(SUBCNT_DATA2_MASK | TG_SUBCNT_D2_ST_MASK)) |
-            SUBCNT_DATA2(subcnt_data) | TG_SUBCNT_D2_ST(tg) | REG_PWM2_BR_EN;
-    } else {
-        pwm[index]->ST1_23 = SET_BITFIELD(pwm[index]->ST1_23, REG_PWM3_ST1, st1);
-        pwm[index]->TOGGLE23 = SET_BITFIELD(pwm[index]->TOGGLE23, PWM_TOGGLE23_3, st2);
-        pwm[index]->TWINKLE23 = (pwm[index]->TWINKLE23 & ~(SUBCNT_DATA3_MASK | TG_SUBCNT_D3_ST_MASK)) |
-            SUBCNT_DATA3(subcnt_data) | TG_SUBCNT_D3_ST(tg) | REG_PWM3_BR_EN;
-    }
-
-    pwm[index]->EN |= (1 << offset);
-
-    int_unlock(lock);
-
     return 0;
 }
-
-int hal_pwm_breathing_led_disable(enum HAL_PWM_ID_T id)
-{
-    uint8_t index;
-    uint8_t offset;
-    uint32_t lock;
-
-    if (id >= HAL_PWM_ID_QTY) {
-        return 1;
-    }
-
-#if defined(CHIP_BEST2000) || defined (CHIP_BEST2003)
-    if (id < HAL_PWM1_ID_0) {
-        index = 0;
-        offset = id - HAL_PWM_ID_0;
-    } else {
-        index = 1;
-        offset = id - HAL_PWM1_ID_0;
-    }
-#else
-    index = 0;
-    offset = id - HAL_PWM_ID_0;
-#endif
-
-    if (offset != 2 && offset != 3) {
-        return 2;
-    }
-
-    lock = int_lock();
-
-    if (hal_cmu_reset_get_status(pwm_o_mod[index] + offset) == HAL_CMU_RST_SET) {
-        goto _exit;
-    }
-
-    if (offset == 2) {
-        pwm[index]->TWINKLE23 &= ~REG_PWM2_BR_EN;
-    } else {
-        pwm[index]->TWINKLE23 &= ~REG_PWM3_BR_EN;
-    }
-
-    hal_pwm_disable(id);
-
-_exit:
-    int_unlock(lock);
-
-    return 0;
-}
-
-#endif
