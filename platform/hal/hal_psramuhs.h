@@ -24,12 +24,7 @@ extern "C" {
 void hal_psramuhs_sleep(void);
 void hal_psramuhs_wakeup(void);
 void hal_psramuhs_init(void);
-void hal_psramuhs_hold();
-void hal_psramuhs_release();
-void psramuhsphy_sleep(void);
-void hal_psramuhs_refresh_enable();
-void hal_psramuhs_refresh_disable();
-uint32_t hal_psramuhs_ca_calib_result();
+
 #ifdef __cplusplus
 }
 #endif
