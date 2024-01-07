@@ -24,7 +24,7 @@
  */
 
 #include "cmsis_compiler.h"
-#include "RTX_Config.h"
+#include "rtx_config.h"
 #include "rtx_os.h"
 
 #ifdef    RTE_Compiler_EventRecorder
