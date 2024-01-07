@@ -209,8 +209,6 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_PRA_MAX_CNT(n)              (((n) & 0xFFFF) << 3)
 #define PSRAM_UHS_MC_PRA_MAX_CNT_MASK            (0xFFFF << 3)
 #define PSRAM_UHS_MC_PRA_MAX_CNT_SHIFT           (3)
-#define PSRAM_UHS_MC_RD_DUAL_ENTRY_MODE          (1 << 19)
-#define PSRAM_UHS_MC_RD_DIS_OUT_OF_ORDER         (1 << 20)
 
 // reg_44
 #define PSRAM_UHS_MC_WB_DRAIN                    (1 << 0)
@@ -368,24 +366,6 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_NEW_CMD_CTRL(n)             (((n) & 0x7) << 0)
 #define PSRAM_UHS_MC_NEW_CMD_CTRL_MASK           (0x7 << 0)
 #define PSRAM_UHS_MC_NEW_CMD_CTRL_SHIFT          (0)
-
-// reg_c0
-#define PSRAM_UHS_MC_T_RF_WIN(n)                 (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_T_RF_WIN_MASK               (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_T_RF_WIN_SHIFT              (0)
-
-// reg_c4
-#define PSRAM_UHS_MC_T_CSCKE(n)                  (((n) & 0xFFFF) << 0)
-#define PSRAM_UHS_MC_T_CSCKE_MASK                (0xFFFF << 0)
-#define PSRAM_UHS_MC_T_CSCKE_SHIFT               (0)
-#define PSRAM_UHS_MC_T_CSCKEH(n)                 (((n) & 0xFFFF) << 16)
-#define PSRAM_UHS_MC_T_CSCKEH_MASK               (0xFFFF << 16)
-#define PSRAM_UHS_MC_T_CSCKEH_SHIFT              (16)
-
-// reg_c8
-#define PSRAM_UHS_MC_T_PHYDATA_DLY(n)            (((n) & 0x3) << 0)
-#define PSRAM_UHS_MC_T_PHYDATA_DLY_MASK          (0x3 << 0)
-#define PSRAM_UHS_MC_T_PHYDATA_DLY_SHIFT         (0)
 
 // reg_140
 #define PSRAM_UHS_MC_CMD_TABLE_ARRAY_RD(n)       (((n) & 0xFF) << 0)
@@ -625,82 +605,6 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_PMU_MAX_RD_ACC_LATENCY_MASK (0xFFFF << 0)
 #define PSRAM_UHS_MC_PMU_MAX_RD_ACC_LATENCY_SHIFT (0)
 
-// reg_470
-#define PSRAM_UHS_MC_TOL_WR_ACC_NUM_TO_DIE(n)    (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_TOL_WR_ACC_NUM_TO_DIE_MASK  (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_TOL_WR_ACC_NUM_TO_DIE_SHIFT (0)
-
-// reg_474
-#define PSRAM_UHS_MC_TOL_WR_CYCLES_IN_MCLK0(n)   (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_TOL_WR_CYCLES_IN_MCLK0_MASK (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_TOL_WR_CYCLES_IN_MCLK0_SHIFT (0)
-
-// reg_478
-#define PSRAM_UHS_MC_TOL_WR_CYCLES_IN_MCLK1(n)   (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_TOL_WR_CYCLES_IN_MCLK1_MASK (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_TOL_WR_CYCLES_IN_MCLK1_SHIFT (0)
-
-// reg_47c
-#define PSRAM_UHS_MC_TOL_RD_ACC_NUM_TO_DIE(n)    (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_TOL_RD_ACC_NUM_TO_DIE_MASK  (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_TOL_RD_ACC_NUM_TO_DIE_SHIFT (0)
-
-// reg_480
-#define PSRAM_UHS_MC_TOL_RD_CYCLES_IN_MCLK0(n)   (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_TOL_RD_CYCLES_IN_MCLK0_MASK (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_TOL_RD_CYCLES_IN_MCLK0_SHIFT (0)
-
-// reg_484
-#define PSRAM_UHS_MC_TOL_RD_CYCLES_IN_MCLK1(n)   (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_UHS_MC_TOL_RD_CYCLES_IN_MCLK1_MASK (0xFFFFFFFF << 0)
-#define PSRAM_UHS_MC_TOL_RD_CYCLES_IN_MCLK1_SHIFT (0)
-
-// reg_490
-#define PSRAM_UHS_MC_DBG_READING_ADDR_0(n)       (((n) & 0x3FFFFFF) << 0)
-#define PSRAM_UHS_MC_DBG_READING_ADDR_0_MASK     (0x3FFFFFF << 0)
-#define PSRAM_UHS_MC_DBG_READING_ADDR_0_SHIFT    (0)
-
-// reg_494
-#define PSRAM_UHS_MC_DBG_FETCH_VLD_0(n)          (((n) & 0xFF) << 0)
-#define PSRAM_UHS_MC_DBG_FETCH_VLD_0_MASK        (0xFF << 0)
-#define PSRAM_UHS_MC_DBG_FETCH_VLD_0_SHIFT       (0)
-#define PSRAM_UHS_MC_DBG_SPLIT_0(n)              (((n) & 0x3) << 8)
-#define PSRAM_UHS_MC_DBG_SPLIT_0_MASK            (0x3 << 8)
-#define PSRAM_UHS_MC_DBG_SPLIT_0_SHIFT           (8)
-#define PSRAM_UHS_MC_DBG_REQ_ST_0(n)             (((n) & 0x7) << 10)
-#define PSRAM_UHS_MC_DBG_REQ_ST_0_MASK           (0x7 << 10)
-#define PSRAM_UHS_MC_DBG_REQ_ST_0_SHIFT          (10)
-#define PSRAM_UHS_MC_DBG_RB_VLD_0(n)             (((n) & 0xFF) << 13)
-#define PSRAM_UHS_MC_DBG_RB_VLD_0_MASK           (0xFF << 13)
-#define PSRAM_UHS_MC_DBG_RB_VLD_0_SHIFT          (13)
-#define PSRAM_UHS_MC_DBG_RD_BUSY_0               (1 << 21)
-
-// reg_498
-#define PSRAM_UHS_MC_DBG_READING_ADDR_1(n)       (((n) & 0x3FFFFFF) << 0)
-#define PSRAM_UHS_MC_DBG_READING_ADDR_1_MASK     (0x3FFFFFF << 0)
-#define PSRAM_UHS_MC_DBG_READING_ADDR_1_SHIFT    (0)
-
-// reg_49c
-#define PSRAM_UHS_MC_DBG_FETCH_VLD_1(n)          (((n) & 0xFF) << 0)
-#define PSRAM_UHS_MC_DBG_FETCH_VLD_1_MASK        (0xFF << 0)
-#define PSRAM_UHS_MC_DBG_FETCH_VLD_1_SHIFT       (0)
-#define PSRAM_UHS_MC_DBG_SPLIT_1(n)              (((n) & 0x3) << 8)
-#define PSRAM_UHS_MC_DBG_SPLIT_1_MASK            (0x3 << 8)
-#define PSRAM_UHS_MC_DBG_SPLIT_1_SHIFT           (8)
-#define PSRAM_UHS_MC_DBG_REQ_ST_1(n)             (((n) & 0x7) << 10)
-#define PSRAM_UHS_MC_DBG_REQ_ST_1_MASK           (0x7 << 10)
-#define PSRAM_UHS_MC_DBG_REQ_ST_1_SHIFT          (10)
-#define PSRAM_UHS_MC_DBG_RB_VLD_1(n)             (((n) & 0xFF) << 13)
-#define PSRAM_UHS_MC_DBG_RB_VLD_1_MASK           (0xFF << 13)
-#define PSRAM_UHS_MC_DBG_RB_VLD_1_SHIFT          (13)
-#define PSRAM_UHS_MC_DBG_RD_BUSY_1               (1 << 21)
-
-// reg_4d4
-#define PSRAM_UHS_MC_WRITE_LOCK                  (1 << 0)
-
-// reg_4d8
-#define PSRAM_UHS_MC_WRITE_UNLOCK                (1 << 0)
-
 // reg_840
 #define PSRAM_UHS_MC_PHY_CTRL_DELAY(n)           (((n) & 0x3) << 0)
 #define PSRAM_UHS_MC_PHY_CTRL_DELAY_MASK         (0x3 << 0)
@@ -715,8 +619,6 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_PHY1_CONFLICT_CLR           (1 << 9)
 #define PSRAM_UHS_MC_PHY_IDLE_PAD_EN             (1 << 10)
 #define PSRAM_UHS_MC_PHY_DUMMY_CYC_EN            (1 << 11)
-#define PSRAM_UHS_MC_PHY0_CA_TRAINING_EN         (1 << 12)
-#define PSRAM_UHS_MC_PHY1_CA_TRAINING_EN         (1 << 13)
 
 // reg_844
 #define PSRAM_UHS_MC_T_WPST(n)                   (((n) & 0x7) << 0)
@@ -737,9 +639,5 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_PHY1_FSM_STATE(n)           (((n) & 0xF) << 6)
 #define PSRAM_UHS_MC_PHY1_FSM_STATE_MASK         (0xF << 6)
 #define PSRAM_UHS_MC_PHY1_FSM_STATE_SHIFT        (6)
-#define PSRAM_UHS_MC_PHY0_DQS_RDY                (1 << 10)
-#define PSRAM_UHS_MC_PHY0_DQS_VLD                (1 << 11)
-#define PSRAM_UHS_MC_PHY1_DQS_RDY                (1 << 12)
-#define PSRAM_UHS_MC_PHY1_DQS_VLD                (1 << 13)
 
 #endif
