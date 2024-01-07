@@ -48,14 +48,6 @@ enum CP_TASK_EVENT
 
     CP_EVENT_HW_PROCESSING = 0x0,
 
-    CP_EVENT_VOICE_ALGO_PROCESSING = 0x00,
-
-    CP_EVENT_A2DP_ENCODE = 0x00,
-
-    CP_EVENT_EQ_DRC_PROCESSING = 0x0,
-
-    CP_EVENT_GENIE_PROCESSING = 0x00,
-
     /// Maximum number of event
     CP_EVENT_MAX = 0x2,
 };
@@ -78,11 +70,6 @@ enum CP_TASK_TYPE
     CP_TASK_SCO = 0x01,
     CP_TASK_AEC = 0x02,
     CP_TASK_HW = 0x03,
-    CP_TASK_VOICE_ALGO = 0x04,
-    CP_TASK_POWER_CONSUMPTION_MEASUREMENT = 0x05,
-    CP_TASK_A2DP_ENCODE = 0x06,
-    CP_TASK_EQ_DRC = 0x07,
-    CP_TASK_GENIE = 0x08,
     /// Maximum number of tasks
     CP_TASK_MAX,
 };
@@ -117,11 +104,6 @@ struct cp_env_tag
     uint8_t cp_msg[CP_TASK_MAX][2];
 };
 
-struct CP_ACCEL_CPU_USAGE_T {
-    uint8_t sleep;
-    uint8_t busy;
-};
-
 /// Retrieves task type from event id.
 #define CP_TASK_ID_GET(cp_event_id) (((cp_event_id) & 0xF0) >> 4)
 /// Retrieves event from event id.
@@ -134,15 +116,11 @@ int cp_accel_open(enum CP_TASK_TYPE task_id, struct cp_task_desc const * p_task_
 
 int cp_accel_close(enum CP_TASK_TYPE task_id);
 
-void cp_accel_init(void);
-
 int cp_accel_init_done(void);
 
 int cp_accel_send_event_mcu2cp(uint8_t event);
 
 int cp_accel_send_event_cp2mcu(uint8_t event);
-
-int cp_accel_get_cpu_usage(struct CP_ACCEL_CPU_USAGE_T *usage);
 
 #ifdef __cplusplus
 }
