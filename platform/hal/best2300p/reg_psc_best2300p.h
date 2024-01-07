@@ -66,10 +66,10 @@ struct AONPSC_T {
     __IO uint32_t REG_0B4;
 };
 
-// reg_000
+// reg_00
 #define PSC_AON_MCU_PG_AUTO_EN                              (1 << 0)
 
-// reg_004
+// reg_04
 #define PSC_AON_MCU_PSW_ACK_VALID                           (1 << 0)
 #define PSC_AON_MCU_RESERVED(n)                             (((n) & 0x7F) << 1)
 #define PSC_AON_MCU_RESERVED_MASK                           (0x7F << 1)
@@ -84,7 +84,7 @@ struct AONPSC_T {
 #define PSC_AON_MCU_POWERUP_STATE_MASK                      (0x7 << 13)
 #define PSC_AON_MCU_POWERUP_STATE_SHIFT                     (13)
 
-// reg_008
+// reg_08
 #define PSC_AON_MCU_POWERDN_TIMER1(n)                       (((n) & 0x3F) << 0)
 #define PSC_AON_MCU_POWERDN_TIMER1_MASK                     (0x3F << 0)
 #define PSC_AON_MCU_POWERDN_TIMER1_SHIFT                    (0)
@@ -101,7 +101,7 @@ struct AONPSC_T {
 #define PSC_AON_MCU_POWERDN_TIMER5_MASK                     (0xFF << 24)
 #define PSC_AON_MCU_POWERDN_TIMER5_SHIFT                    (24)
 
-// reg_00c
+// reg_0c
 #define PSC_AON_MCU_POWERUP_TIMER1(n)                       (((n) & 0x3F) << 0)
 #define PSC_AON_MCU_POWERUP_TIMER1_MASK                     (0x3F << 0)
 #define PSC_AON_MCU_POWERUP_TIMER1_SHIFT                    (0)
@@ -118,13 +118,13 @@ struct AONPSC_T {
 #define PSC_AON_MCU_POWERUP_TIMER5_MASK                     (0x3F << 26)
 #define PSC_AON_MCU_POWERUP_TIMER5_SHIFT                    (26)
 
-// reg_010
+// reg_10
 #define PSC_AON_MCU_POWERDN_START                           (1 << 0)
 
-// reg_014
+// reg_14
 #define PSC_AON_MCU_POWERUP_START                           (1 << 0)
 
-// reg_018
+// reg_18
 #define PSC_AON_MCU_CLK_STOP_REG                            (1 << 0)
 #define PSC_AON_MCU_ISO_EN_REG                              (1 << 1)
 #define PSC_AON_MCU_RESETN_ASSERT_REG                       (1 << 2)
@@ -134,7 +134,7 @@ struct AONPSC_T {
 #define PSC_AON_MCU_RESETN_ASSERT_DR                        (1 << 6)
 #define PSC_AON_MCU_PSW_EN_DR                               (1 << 7)
 
-// reg_01c
+// reg_1c
 #define PSC_AON_MCU_MAIN_STATE_R(n)                         (((n) & 0x3) << 0)
 #define PSC_AON_MCU_MAIN_STATE_R_MASK                       (0x3 << 0)
 #define PSC_AON_MCU_MAIN_STATE_R_SHIFT                      (0)
@@ -172,10 +172,10 @@ struct AONPSC_T {
 #define PSC_AON_CODEC_POWERUP_STATE_R_MASK                  (0x7 << 29)
 #define PSC_AON_CODEC_POWERUP_STATE_R_SHIFT                 (29)
 
-// reg_020
+// reg_20
 #define PSC_AON_BT_PG_AUTO_EN                               (1 << 0)
 
-// reg_024
+// reg_24
 #define PSC_AON_BT_PSW_ACK_VALID                            (1 << 0)
 #define PSC_AON_BT_RESERVED(n)                              (((n) & 0x7F) << 1)
 #define PSC_AON_BT_RESERVED_MASK                            (0x7F << 1)
@@ -190,7 +190,7 @@ struct AONPSC_T {
 #define PSC_AON_BT_POWERUP_STATE_MASK                       (0x7 << 13)
 #define PSC_AON_BT_POWERUP_STATE_SHIFT                      (13)
 
-// reg_028
+// reg_28
 #define PSC_AON_BT_POWERDN_TIMER1(n)                        (((n) & 0x3F) << 0)
 #define PSC_AON_BT_POWERDN_TIMER1_MASK                      (0x3F << 0)
 #define PSC_AON_BT_POWERDN_TIMER1_SHIFT                     (0)
@@ -207,7 +207,7 @@ struct AONPSC_T {
 #define PSC_AON_BT_POWERDN_TIMER5_MASK                      (0xFF << 24)
 #define PSC_AON_BT_POWERDN_TIMER5_SHIFT                     (24)
 
-// reg_02c
+// reg_2c
 #define PSC_AON_BT_POWERUP_TIMER1(n)                        (((n) & 0x3F) << 0)
 #define PSC_AON_BT_POWERUP_TIMER1_MASK                      (0x3F << 0)
 #define PSC_AON_BT_POWERUP_TIMER1_SHIFT                     (0)
@@ -224,13 +224,13 @@ struct AONPSC_T {
 #define PSC_AON_BT_POWERUP_TIMER5_MASK                      (0x3F << 26)
 #define PSC_AON_BT_POWERUP_TIMER5_SHIFT                     (26)
 
-// reg_030
+// reg_30
 #define PSC_AON_BT_POWERDN_START                            (1 << 0)
 
-// reg_034
+// reg_34
 #define PSC_AON_BT_POWERUP_START                            (1 << 0)
 
-// reg_038
+// reg_38
 #define PSC_AON_BT_CLK_STOP_REG                             (1 << 0)
 #define PSC_AON_BT_ISO_EN_REG                               (1 << 1)
 #define PSC_AON_BT_RESETN_ASSERT_REG                        (1 << 2)
@@ -240,10 +240,10 @@ struct AONPSC_T {
 #define PSC_AON_BT_RESETN_ASSERT_DR                         (1 << 6)
 #define PSC_AON_BT_PSW_EN_DR                                (1 << 7)
 
-// reg_040
+// reg_40
 #define PSC_AON_WLAN_PG_AUTO_EN                             (1 << 0)
 
-// reg_044
+// reg_44
 #define PSC_AON_WLAN_PSW_ACK_VALID                          (1 << 0)
 #define PSC_AON_WLAN_RESERVED(n)                            (((n) & 0x7F) << 1)
 #define PSC_AON_WLAN_RESERVED_MASK                          (0x7F << 1)
@@ -258,7 +258,7 @@ struct AONPSC_T {
 #define PSC_AON_WLAN_POWERUP_STATE_MASK                     (0x7 << 13)
 #define PSC_AON_WLAN_POWERUP_STATE_SHIFT                    (13)
 
-// reg_048
+// reg_48
 #define PSC_AON_WLAN_POWERDN_TIMER1(n)                      (((n) & 0x3F) << 0)
 #define PSC_AON_WLAN_POWERDN_TIMER1_MASK                    (0x3F << 0)
 #define PSC_AON_WLAN_POWERDN_TIMER1_SHIFT                   (0)
@@ -275,7 +275,7 @@ struct AONPSC_T {
 #define PSC_AON_WLAN_POWERDN_TIMER5_MASK                    (0xFF << 24)
 #define PSC_AON_WLAN_POWERDN_TIMER5_SHIFT                   (24)
 
-// reg_04c
+// reg_4c
 #define PSC_AON_WLAN_POWERUP_TIMER1(n)                      (((n) & 0x3F) << 0)
 #define PSC_AON_WLAN_POWERUP_TIMER1_MASK                    (0x3F << 0)
 #define PSC_AON_WLAN_POWERUP_TIMER1_SHIFT                   (0)
@@ -292,13 +292,13 @@ struct AONPSC_T {
 #define PSC_AON_WLAN_POWERUP_TIMER5_MASK                    (0x3F << 26)
 #define PSC_AON_WLAN_POWERUP_TIMER5_SHIFT                   (26)
 
-// reg_050
+// reg_50
 #define PSC_AON_WLAN_POWERDN_START                          (1 << 0)
 
-// reg_054
+// reg_54
 #define PSC_AON_WLAN_POWERUP_START                          (1 << 0)
 
-// reg_058
+// reg_58
 #define PSC_AON_WLAN_CLK_STOP_REG                           (1 << 0)
 #define PSC_AON_WLAN_ISO_EN_REG                             (1 << 1)
 #define PSC_AON_WLAN_RESETN_ASSERT_REG                      (1 << 2)
@@ -308,10 +308,10 @@ struct AONPSC_T {
 #define PSC_AON_WLAN_RESETN_ASSERT_DR                       (1 << 6)
 #define PSC_AON_WLAN_PSW_EN_DR                              (1 << 7)
 
-// reg_060
+// reg_60
 #define PSC_AON_CODEC_PG_AUTO_EN                            (1 << 0)
 
-// reg_064
+// reg_64
 #define PSC_AON_CODEC_PSW_ACK_VALID                         (1 << 0)
 #define PSC_AON_CODEC_RESERVED(n)                           (((n) & 0x7F) << 1)
 #define PSC_AON_CODEC_RESERVED_MASK                         (0x7F << 1)
@@ -326,7 +326,7 @@ struct AONPSC_T {
 #define PSC_AON_CODEC_POWERUP_STATE_MASK                    (0x7 << 13)
 #define PSC_AON_CODEC_POWERUP_STATE_SHIFT                   (13)
 
-// reg_068
+// reg_68
 #define PSC_AON_CODEC_POWERDN_TIMER1(n)                     (((n) & 0x3F) << 0)
 #define PSC_AON_CODEC_POWERDN_TIMER1_MASK                   (0x3F << 0)
 #define PSC_AON_CODEC_POWERDN_TIMER1_SHIFT                  (0)
@@ -343,7 +343,7 @@ struct AONPSC_T {
 #define PSC_AON_CODEC_POWERDN_TIMER5_MASK                   (0xFF << 24)
 #define PSC_AON_CODEC_POWERDN_TIMER5_SHIFT                  (24)
 
-// reg_06c
+// reg_6c
 #define PSC_AON_CODEC_POWERUP_TIMER1(n)                     (((n) & 0x3F) << 0)
 #define PSC_AON_CODEC_POWERUP_TIMER1_MASK                   (0x3F << 0)
 #define PSC_AON_CODEC_POWERUP_TIMER1_SHIFT                  (0)
@@ -360,13 +360,13 @@ struct AONPSC_T {
 #define PSC_AON_CODEC_POWERUP_TIMER5_MASK                   (0x3F << 26)
 #define PSC_AON_CODEC_POWERUP_TIMER5_SHIFT                  (26)
 
-// reg_070
+// reg_70
 #define PSC_AON_CODEC_POWERDN_START                         (1 << 0)
 
-// reg_074
+// reg_74
 #define PSC_AON_CODEC_POWERUP_START                         (1 << 0)
 
-// reg_078
+// reg_78
 #define PSC_AON_CODEC_CLK_STOP_REG                          (1 << 0)
 #define PSC_AON_CODEC_ISO_EN_REG                            (1 << 1)
 #define PSC_AON_CODEC_RESETN_ASSERT_REG                     (1 << 2)
@@ -376,72 +376,72 @@ struct AONPSC_T {
 #define PSC_AON_CODEC_RESETN_ASSERT_DR                      (1 << 6)
 #define PSC_AON_CODEC_PSW_EN_DR                             (1 << 7)
 
-// reg_080
+// reg_80
 #define PSC_AON_MCU_INTR_MASK(n)                            (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_MCU_INTR_MASK_MASK                          (0xFFFFFFFF << 0)
 #define PSC_AON_MCU_INTR_MASK_SHIFT                         (0)
 
-// reg_084
+// reg_84
 #define PSC_AON_MCU_INTR_MASK2(n)                           (((n) & 0xFFFF) << 0)
 #define PSC_AON_MCU_INTR_MASK2_MASK                         (0xFFFF << 0)
 #define PSC_AON_MCU_INTR_MASK2_SHIFT                        (0)
 
-// reg_088
+// reg_88
 #define PSC_AON_MCU_INTR_MASK_STATUS(n)                     (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_MCU_INTR_MASK_STATUS_MASK                   (0xFFFFFFFF << 0)
 #define PSC_AON_MCU_INTR_MASK_STATUS_SHIFT                  (0)
 
-// reg_08c
+// reg_8c
 #define PSC_AON_MCU_INTR_MASK_STATUS2(n)                    (((n) & 0xFFFF) << 0)
 #define PSC_AON_MCU_INTR_MASK_STATUS2_MASK                  (0xFFFF << 0)
 #define PSC_AON_MCU_INTR_MASK_STATUS2_SHIFT                 (0)
 
-// reg_090
+// reg_90
 #define PSC_AON_BT_INTR_MASK(n)                             (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_BT_INTR_MASK_MASK                           (0xFFFFFFFF << 0)
 #define PSC_AON_BT_INTR_MASK_SHIFT                          (0)
 
-// reg_094
+// reg_94
 #define PSC_AON_BT_INTR_MASK2(n)                            (((n) & 0xFFFF) << 0)
 #define PSC_AON_BT_INTR_MASK2_MASK                          (0xFFFF << 0)
 #define PSC_AON_BT_INTR_MASK2_SHIFT                         (0)
 
-// reg_098
+// reg_98
 #define PSC_AON_BT_INTR_MASK_STATUS(n)                      (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_BT_INTR_MASK_STATUS_MASK                    (0xFFFFFFFF << 0)
 #define PSC_AON_BT_INTR_MASK_STATUS_SHIFT                   (0)
 
-// reg_09c
+// reg_9c
 #define PSC_AON_BT_INTR_MASK_STATUS2(n)                     (((n) & 0xFFFF) << 0)
 #define PSC_AON_BT_INTR_MASK_STATUS2_MASK                   (0xFFFF << 0)
 #define PSC_AON_BT_INTR_MASK_STATUS2_SHIFT                  (0)
 
-// reg_0a0
+// reg_a0
 #define PSC_AON_WLAN_INTR_MASK(n)                           (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_WLAN_INTR_MASK_MASK                         (0xFFFFFFFF << 0)
 #define PSC_AON_WLAN_INTR_MASK_SHIFT                        (0)
 
-// reg_0a4
+// reg_a4
 #define PSC_AON_WLAN_INTR_MASK2(n)                          (((n) & 0xFFFF) << 0)
 #define PSC_AON_WLAN_INTR_MASK2_MASK                        (0xFFFF << 0)
 #define PSC_AON_WLAN_INTR_MASK2_SHIFT                       (0)
 
-// reg_0a8
+// reg_a8
 #define PSC_AON_WLAN_INTR_MASK_STATUS(n)                    (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_WLAN_INTR_MASK_STATUS_MASK                  (0xFFFFFFFF << 0)
 #define PSC_AON_WLAN_INTR_MASK_STATUS_SHIFT                 (0)
 
-// reg_0ac
+// reg_ac
 #define PSC_AON_WLAN_INTR_MASK_STATUS2(n)                   (((n) & 0xFFFF) << 0)
 #define PSC_AON_WLAN_INTR_MASK_STATUS2_MASK                 (0xFFFF << 0)
 #define PSC_AON_WLAN_INTR_MASK_STATUS2_SHIFT                (0)
 
-// reg_0b0
+// reg_b0
 #define PSC_AON_INTR_RAW_STATUS(n)                          (((n) & 0xFFFFFFFF) << 0)
 #define PSC_AON_INTR_RAW_STATUS_MASK                        (0xFFFFFFFF << 0)
 #define PSC_AON_INTR_RAW_STATUS_SHIFT                       (0)
 
-// reg_0b4
+// reg_b4
 #define PSC_AON_INTR_RAW_STATUS2(n)                         (((n) & 0xFFFF) << 0)
 #define PSC_AON_INTR_RAW_STATUS2_MASK                       (0xFFFF << 0)
 #define PSC_AON_INTR_RAW_STATUS2_SHIFT                      (0)
