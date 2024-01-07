@@ -30,19 +30,9 @@ struct HAL_PWM_CFG_T {
     bool sleep_on;
 };
 
-struct HAL_PWM_BR_CFG_T {
-    uint16_t off_time_ms;
-    uint16_t on_time_ms;
-    uint16_t fade_time_ms;
-};
-
 int hal_pwm_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_CFG_T *cfg);
 
 int hal_pwm_disable(enum HAL_PWM_ID_T id);
-
-int hal_pwm_breathing_led_enable(enum HAL_PWM_ID_T id, const struct HAL_PWM_BR_CFG_T *cfg);
-
-int hal_pwm_breathing_led_disable(enum HAL_PWM_ID_T id);
 
 #ifdef __cplusplus
 }
