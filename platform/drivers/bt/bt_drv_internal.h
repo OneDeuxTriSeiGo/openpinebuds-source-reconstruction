@@ -39,8 +39,6 @@ typedef uint32_t BT_CONTROLER_TRACE_TYPE;
 #define BT_CONTROLER_TRACE_TYPE_SPUV_HCI_BUFF           0x08
 #define BT_CONTROLER_FILTER_TRACE_TYPE_A2DP_STREAM      0x10
 #define BT_CONTROLER_TRACE_TYPE_DUMP_BUFF               0x20
-#define BT_CONTROLER_TRACE_TYPE_SPUV_HCI_BUFF_HIGH      0x40
-#define BT_CONTROLER_TRACE_TYPE_ACL_PACKET              0x80
 
 #define BT_SUB_SYS_TYPE     0
 #define MCU_SYS_TYPE        1
@@ -49,7 +47,6 @@ typedef uint32_t BT_CONTROLER_TRACE_TYPE;
 
 #define BT_FA_INVERT_EN   1
 #define BT_FA_INVERT_DISABLE   0
-
 
 uint8_t btdrv_rf_init(void);
 void btdrv_test_mode_rf_txpwr_init(void);
@@ -74,12 +71,6 @@ void btdrv_dump_mem(uint8_t *dump_mem_start, uint32_t dump_length, uint8_t dump_
 void ld_util_bch_create(uint8_t *lap, uint8_t *bch);
 void btdrv_fast_lock_config(bool fastlock_on);
 void btdrv_ecc_config(void);
-void btdrv_btc_fault_dump(void);
-void btdrv_fa_config(void);
-
-void btdrv_pm_register_notif_handler(void);
-void btdrv_pm_deregister_notif_handler(void);
-int8_t btdrv_get_rssi_avg_thr(bool tws_link);
 
 enum BT_SYNCMODE_REQ_USER_T {
    BT_SYNCMODE_REQ_USER_BT,
