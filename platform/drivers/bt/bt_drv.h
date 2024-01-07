@@ -30,8 +30,6 @@ extern "C" {
 
 #define BT_DRV_REG_OP_ENTER()    do{ uint32_t stime, spent_time; stime= hal_sys_timer_get();
 #define BT_DRV_REG_OP_EXIT()     spent_time = TICKS_TO_US(hal_sys_timer_get()-stime);if (spent_time>500)TRACE(2,"%s exit, %dus",__func__, spent_time);}while(0);
-#define btdrv_read_wifi_reg(reg,val)            hal_analogif_reg_read(ISPI_WFRF_REG(reg),val)
-#define btdrv_write_wifi_reg(reg,val)           hal_analogif_reg_write(ISPI_WFRF_REG(reg),val)
 
 #define SBC_PKT_TYPE_DM1   0x3
 #define SBC_PKT_TYPE_2EV3  0x6
@@ -39,38 +37,16 @@ extern "C" {
 
 #define BT_ACL_CONHDL_BIT       (0x80)
 
-#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2001) || defined(CHIP_BEST2003) || defined(CHIP_BEST1501) || defined(CHIP_BEST1305)
+#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2001)
 #define BTDRV_ISPI_RF_REG(reg)                  (((reg) & 0xFFF) | 0x2000)
 #else
 #define BTDRV_ISPI_RF_REG(reg)                  (reg)
-#endif
-
-// NOTE: Measure this value for every CHIP Version
-#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
-#define CVSD_OFFSET_BYTES (120)
-#else
-#define CVSD_OFFSET_BYTES (120 - 2)
-#endif
-
-// NOTE: Measure this value for every CHIP Version
-#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
-#define MSBC_OFFSET_BYTES (0)
-#else
-#define MSBC_OFFSET_BYTES (1)
-#endif
-
-#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST1305) || defined(CHIP_BEST2001)|| defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
-#define MSBC_MUTE_PATTERN (0x55)
-#else
-#define MSBC_MUTE_PATTERN (0x00)
 #endif
 
 #define btdrv_read_rf_reg(reg,val)              hal_analogif_reg_read(BTDRV_ISPI_RF_REG(reg),val)
 #define btdrv_write_rf_reg(reg,val)             hal_analogif_reg_write(BTDRV_ISPI_RF_REG(reg),val)
 
 #define btdrv_delay(ms)                         hal_sys_timer_delay(MS_TO_TICKS(ms))
-#define btdrv_delay_us(us)                         hal_sys_timer_delay(US_TO_TICKS(us))
-
 
 #define BTDIGITAL_REG(a)                        (*(volatile uint32_t *)(a))
 #define BTDIGITAL_REG_WR(addr, value)         (*(volatile uint32_t *)(addr)) = (value)
@@ -93,43 +69,18 @@ extern "C" {
                                                     v = (tmp>>shift)&mask; \
                                                 }while(0)
 
-#define BTRF_REG_SET_FIELD(reg, mask, shift, v)\
-                                                do{ \
-                                                    unsigned short tmp; \
-                                                    btdrv_read_rf_reg(reg,&tmp); \
-                                                    tmp &= ~(mask<<shift); \
-                                                    tmp |= (v<<shift); \
-                                                    btdrv_write_rf_reg(reg,tmp); \
-                                                }while(0)
-
-#define BTRF_REG_GET_FIELD(reg, mask, shift, v)\
-                                                do{ \
-                                                    unsigned short tmp; \
-                                                    btdrv_read_rf_reg(reg,&tmp); \
-                                                    v = (tmp>>shift)&mask; \
-                                                }while(0)
-
-#define getbit(x,y)   ((x) >> (y)&1)
-
 #define BT_DRV_DEBUG  1
 #if BT_DRV_DEBUG
 #define BT_DRV_TRACE(n, fmt, ...) TRACE(n, fmt, ##__VA_ARGS__)
 #define BT_DRV_DUMP(s,buff,len) DUMP8(s,buff,len)
-#ifndef TOTA_CRASH_DUMP_TOOL_ENABLE
-#define BT_DRV_TRACE_CRASH_DUMP(n, fmt, ...)  TRACE(n, fmt, ##__VA_ARGS__)
-#else
-#define BT_DRV_TRACE_CRASH_DUMP(n, fmt, ...)  REL_TRACE_IMM(n, fmt, ##__VA_ARGS__)
-#endif
 #else
 #define BT_DRV_TRACE(n, fmt, ...) hal_trace_dummy(NULL, ##__VA_ARGS__)
 #define BT_DRV_DUMP(s,buff,len)
 #define BT_DRV_TRACE_CRASH_DUMP(n, fmt, ...) hal_trace_dummy(NULL, ##__VA_ARGS__)
-
 #endif
 
 #define HCI_HOST_NB_CMP_PKTS_CMD_OPCODE         0x0C35
 #define HCI_NB_CMP_PKTS_EVT_CODE                0x13
-#define MAX_NB_SYNC (2)
 
 #if defined(CHIP_BEST2300) || defined(__FPGA_BT_2300__)
 #define BT_EM_ADDR_BASE (0xD021114A)
@@ -157,7 +108,7 @@ extern "C" {
 #define BT_ERRORTYPESTAT_ADDR   (0xd0220060)
 #define MAX_NB_ACTIVE_ACL                   (3)
 
-#elif defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(__FPGA_BT_1400__) || defined(CHIP_BEST2001) || defined(CHIP_BEST1305) || defined(CHIP_BEST1600SIMU)
+#elif defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(__FPGA_BT_1400__) || defined(CHIP_BEST2001)
 #define BT_EM_ADDR_BASE (0xD02111A2)
 #define BT_EM_SIZE (110)
 #define BLE_EM_CS_SIZE      (90)
@@ -185,29 +136,15 @@ extern "C" {
 #define BT_ERRORTYPESTAT_ADDR   (0xd0220060)
 #define MAX_NB_ACTIVE_ACL                   (3)
 
-#if defined(CHIP_BEST2300A) || defined(CHIP_BEST1305)
+#if defined(CHIP_BEST2300A)
 #define DEFAULT_XTAL_FCAP                       0x80ad      //8pf crstal No cap by luobin
 #else
 #define DEFAULT_XTAL_FCAP                       0x8080
 #endif
 
-#elif defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
-#if defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
-#ifdef __FPGA_1501P__
-#define BT_EM_ADDR_BASE (0xD0216F34)
-#else
-#define BT_EM_ADDR_BASE (0xD0216800)
-#endif//fpga_1501p
-#else
-#if defined(CHIP_BEST2003) && defined __BT_RAMRUN__
-#define BT_EM_ADDR_BASE (0xD0215ee0)
-#else
+#elif defined(__FPGA_BT_1500__)
 #define BT_EM_ADDR_BASE (0xD0215000)
-#endif
-
-#endif
 #define BT_EM_SIZE (104)
-#define BLE_EM_CS_SIZE      (112)
 #define EM_BLE_CS_OFFSET    (0x178)
 #define EM_BT_PWRCNTL_ADDR (BT_EM_ADDR_BASE + 0x14)
 #define EM_BT_BT_EXT1_ADDR (BT_EM_ADDR_BASE + 0x60)
@@ -221,8 +158,6 @@ extern "C" {
 #define EM_BT_BTADDR1_ADDR    (BT_EM_ADDR_BASE + 0x8)
 #define EM_BT_LINKCNTL_ADDR    (BT_EM_ADDR_BASE + 0x6)
 #define EM_BT_RXDESCCNT_ADDR    (BT_EM_ADDR_BASE + 0x5A)
-#define BLE_MAXEVTIME_ADDR   (0xD0210030 + EM_BLE_CS_OFFSET)
-#define BLE_CRCINIT1_ADDR    (0xD0210014 + EM_BLE_CS_OFFSET)
 
 #define EM_BT_AUDIOBUF_OFF    0xd0218a70
 #define EM_BT_RXACLBUFPTR_ADDR  0xD0215482
@@ -240,16 +175,10 @@ extern "C" {
 #endif
 
 
-#if defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
-//bt max slot clock
-#define MAX_SLOT_CLOCK      ((1L<<28) - 1)
-#else
 //bt max slot clock
 #define MAX_SLOT_CLOCK      ((1L<<27) - 1)
-#endif
  // A slot is 625 us
 #define SLOT_SIZE           625
-#define HALF_SLOT_SIZE       625                    // A half slot is 312.5 us (in half us)
 
 //#define __PASS_CI_TEST_SETTING__
 #define  BT_LOW_POWER_MODE  1
@@ -378,8 +307,7 @@ extern "C" {
     defined(CHIP_BEST2300A) || defined(CHIP_BEST2001) || \
     defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
     defined(__FPGA_BT_2300__) ||defined(__FPGA_BT_1400__) || \
-    defined(__FPGA_BT_1500__) || defined(CHIP_BEST1501) || defined(CHIP_BEST2003) || \
-    defined(CHIP_BEST1305) || defined(CHIP_BEST1600SIMU)
+    defined(__FPGA_BT_1500__)
 
 ///set dle dft value
 #define HCI_DBG_WR_DLE_DFT_VALUE_CMD_OPCODE           0xFC41
@@ -452,38 +380,12 @@ extern "C" {
 #define HCI_DBG_SET_BT_SETTING_50_CMD_OPCODE          0xFC71
 
 #define HCI_DBG_SET_CUSTOM_PARAM_50_CMD_OPCODE        0xFC73
-#define HCI_DBG_SET_FIX_TWS_INTERVAL_CMD_OPCODE       0xFCAB
 #define HCI_DBG_SET_BT_SETTING_EXT1_CMD_OPCODE        0xFCAE
 #define HCI_DBG_SET_BT_TWS_LINK_CMD_OPCODE            0xFCAF
 #define HCI_DBG_SET_AFH_FOLLOW_CMD_OPCODE             0xFCB0
 #define HCI_DBG_SET_RF_RX_GAIN_THS_TBL_CMD_OPCODE     0xFCB1
 #define HCI_DBG_SET_RF_RX_GAIN_FIXED_CMD_OPCODE       0xFCB2
 
-#if defined(CHIP_BEST1501) || defined(CHIP_BEST2003)
-#define HCI_DBG_SET_RSSI_TX_POWER_DFT_THR_CMD_OPCODE     0xFCB3
-#define HCI_DBG_SET_RSSI_TX_POWER_LINK_THR_CMD_OPCODE    0xFCB4
-#define HCI_DBG_SET_CLK_DRAGGING_CMD_OPCODE              0xFCB5
-#define HCI_DBG_SET_BLE_TXPWR_CMD_OPCODE                 0xFCB6
-#define HCI_DBG_SET_BT_BLE_PARA_CMD_OPCODE               0xFCB7
-#define HCI_DBG_SET_FUNC_PATCH_CMD_OPCODE                0xFCB8
-//#define HCI_DBG_SET_IBRT_TEST_MODE_CMD_OPCODE            0xfcb9
-//#define HCI_DBG_SET_ECC_DATA_TEST_CMD_OPCODE             0xfcbb
-#define HCI_DBG_SET_IBRT_DATA_TEST_CMD_OPCODE            0xfcbc
-#define HCI_DBG_GET_TX_RX_BUF_CNT_CMD_OPCODE             0xfcbd
-//#define HCI_DBG_IBRT_SWITCH_CMD_OPCODE                 0xfcbe
-//#define HCI_DBG_STOP_MULTI_POINT_IBRT_CMD_OPCODE       0xfcbf
-#define HCI_DBG_SET_TXPWR_MODE_CMD_OPCODE                0xfcc0
-#define HCI_DBG_SET_LOW_LATENCY_MODE_CMD_OPCODE          0xfcc1
-#define HCI_DBG_SET_SW_RSSI_CMD_OPCODE                   0xfcc2
-#define HCI_DBG_SET_BT_SCHE_SETTING_CMD_OPCODE           0xfcc3
-#define HCI_DBG_SET_BT_IBRT_SETTING_CMD_OPCODE           0xfcc4
-#define HCI_DBG_SET_BT_HW_FEAT_SETTING_CMD_OPCODE        0xfcc5
-#define HCI_DBG_SIGNAL_TEST_ACTIVATE_CMD_OPCODE          0xfcc6
-#define HCI_DBG_SIGNAL_TEST_CONTROL_CMD_OPCODE           0xfcc7
-#define HCI_DBG_SIGNAL_TEST_PWR_CTRL_REQ_CMD_OPCODE      0xfcc8
-#define HCI_DBG_BT_COMMON_SETTING_T1_CMD_OPCODE          0xfcca
-#define HCI_DBG_SET_AFH_ASSESS_CMD_OPCODE                0xfccb
-#else //!defined(CHIP_BEST1501)
 #define HCI_DBG_SET_BT_SETTING_EXT2_CMD_OPCODE        0xFCB3
 #define HCI_DBG_SET_IBRT_TEST_MODE_CMD_OPCODE         0xFCB4
 #define HCI_DBG_SET_BT_LOCAL_CLK_CMD_OPCODE           0xFCB5
@@ -494,14 +396,6 @@ extern "C" {
 #define HCI_DBG_SET_IBRT_DATA_TEST_CMD_OPCODE         0xFCBC
 #define HCI_DBG_SET_NWINSZ_RXGRN_TO_CMD_OPCODE        0xFCBD
 #define HCI_DBG_ENABLE_SOFTBIT_CMD_OPCODE             0xFCBE
-#define HCI_DBG_SET_BT_SCHE_SETTING_CMD_OPCODE        0xFCC3
-#define HCI_DBG_SET_BT_IBRT_SETTING_CMD_OPCODE        0xFCC4
-#define HCI_DBG_SET_BT_HW_FEAT_SETTING_CMD_OPCODE     0xFCC5
-#endif//defined(CHIP_BEST1501)
-
-#if defined(CHIP_BEST1305) || defined(CHIP_BEST1600SIMU)
-#define HCI_DBG_SET_BT_SETTING_EXT3_CMD_OPCODE        0xfcbf
-#endif
 
 #else
 //bt address not ble address
