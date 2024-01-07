@@ -24,9 +24,6 @@ extern "C" {
 #include "hal_aud.h"
 #include "plat_addr_map.h"
 #include CHIP_SPECIFIC_HDR(analog)
-#ifdef DONGLE_SUPPORT
-#include CHIP_SPECIFIC_HDR(dongle)
-#endif
 
 #define ANALOG_DEBUG_TRACE(n, s, ...)       TR_DUMMY(n, s, ##__VA_ARGS__)
 #define ANALOG_INFO_TRACE_IMM(n, s, ...)    TR_INFO((n) | TR_ATTR_IMM, s, ##__VA_ARGS__)
@@ -40,7 +37,6 @@ extern "C" {
 
 #define FLOAT_TO_PPB_INT(f)                 ((int)(f * 1000 * 1000 * 1000))
 
-#ifndef ANA_AUD_PLL_USER_T
 enum ANA_AUD_PLL_USER_T {
     ANA_AUD_PLL_USER_CODEC      = (1 << 0),
     ANA_AUD_PLL_USER_I2S        = (1 << 1),
@@ -48,13 +44,6 @@ enum ANA_AUD_PLL_USER_T {
     ANA_AUD_PLL_USER_PCM        = (1 << 3),
 
     ANA_AUD_PLL_USER_END        = (1 << 4),
-};
-#endif
-
-enum ANA_DAC_DC_CALIB_MODE_T {
-    ANA_DAC_DC_CALIB_MODE_ADC_ONLY,
-    ANA_DAC_DC_CALIB_MODE_DAC_TO_ADC,
-    ANA_DAC_DC_CALIB_MODE_NORMAL,
 };
 
 void analog_aud_freq_pll_config(uint32_t freq, uint32_t div);
@@ -81,11 +70,7 @@ int32_t analog_codec_dac_max_attn_db(void);
 
 void analog_aud_apply_anc_adc_gain_offset(enum ANC_TYPE_T type, int16_t offset_l, int16_t offset_r);
 
-void analog_aud_restore_anc_dyn_adc_gain(enum ANC_TYPE_T type);
-
 void analog_aud_apply_adc_gain_offset(enum AUD_CHANNEL_MAP_T ch_map, int16_t offset);
-
-void analog_aud_apply_dyn_adc_gain(enum AUD_CHANNEL_MAP_T ch_map, int16_t gain);
 
 void analog_aud_codec_open(void);
 
@@ -120,31 +105,6 @@ void analog_debug_config_anc_calib_mode(bool enable);
 bool analog_debug_get_anc_calib_mode(void);
 
 void analog_productiontest_settings_checker(void);
-
-bool analog_aud_dc_calib_valid(void);
-
-uint16_t analog_aud_dac_dc_diff_to_val(int32_t diff);
-
-uint16_t analog_aud_dc_calib_val_to_efuse(uint16_t val);
-
-int16_t analog_aud_dac_dc_get_step(void);
-
-void analog_aud_save_dc_calib(uint16_t val);
-
-void analog_aud_dc_calib_set_value(uint16_t dc_l, uint16_t dc_r);
-
-void analog_aud_dc_calib_get_cur_value(uint16_t *dc_l, uint16_t *dc_r);
-
-bool analog_aud_dc_calib_get_large_ana_dc_value(uint16_t *ana_dc, int cur_dig_dc, int tgt_dig_dc,
-    int chan, bool init);
-
-void analog_aud_dc_calib_enable(bool en);
-
-void analog_aud_dac_dc_auto_calib_enable(void);
-
-void analog_aud_dac_dc_auto_calib_disable(void);
-
-void analog_aud_dac_dc_auto_calib_set_mode(enum ANA_DAC_DC_CALIB_MODE_T mode);
 
 #ifdef __cplusplus
 }
