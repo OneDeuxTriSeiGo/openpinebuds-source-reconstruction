@@ -65,7 +65,6 @@
 #define SDMMCIP_REG_INTMSK_DTO          (1 << 3)
 #define SDMMCIP_REG_INTMSK_TXDR         (1 << 4)
 #define SDMMCIP_REG_INTMSK_RXDR         (1 << 5)
-#define SDMMCIP_REG_INTMSK_RCRC         (1 << 6)
 #define SDMMCIP_REG_INTMSK_DCRC         (1 << 7)
 #define SDMMCIP_REG_INTMSK_RTO          (1 << 8)
 #define SDMMCIP_REG_INTMSK_DRTO         (1 << 9)
@@ -75,13 +74,6 @@
 #define SDMMCIP_REG_INTMSK_SBE          (1 << 13)
 #define SDMMCIP_REG_INTMSK_ACD          (1 << 14)
 #define SDMMCIP_REG_INTMSK_EBE          (1 << 15)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC1   (1 << 16)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC2   (1 << 17)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC3   (1 << 18)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC4   (1 << 19)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC5   (1 << 20)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC6   (1 << 21)
-#define SDMMCIP_REG_INTMSK_SDIO_FUNC7   (1 << 22)
 
 /* Raw interrupt Regsiter */
 #define SDMMCIP_REG_DATA_ERR (SDMMCIP_REG_INTMSK_EBE  | SDMMCIP_REG_INTMSK_SBE | SDMMCIP_REG_INTMSK_HLE | \
