@@ -40,15 +40,9 @@ typedef void (*HAL_TIMER_IRQ_HANDLER_T)(uint32_t elapsed);
 
 void hal_timer_setup(enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler);
 
-#if 1 // conflict with alios things, need rename
-void hal_timer_start_nickname(uint32_t load);
-void hal_timer_stop_nickname(void);
-#define hal_timer_start hal_timer_start_nickname
-#define hal_timer_stop hal_timer_stop_nickname
-#else
 void hal_timer_start(uint32_t load);
+
 void hal_timer_stop(void);
-#endif
 
 void hal_timer_continue(void);
 
