@@ -34,7 +34,7 @@ extern "C" {
 #define HAL_SEC_LOC(section)            HAL_SEC_NAME_ATTR(HAL_SEC_TO_STR(HAL_SEC_CONCAT_2(section, __LINE__)))
 #endif
 
-#if defined(__GNUC__) && !((defined(ROM_BUILD) && !defined(ROM_IN_FLASH) && !defined(CP_BUILD)) || defined(PROGRAMMER)) && !defined(NANDFLASH_BUILD)
+#if defined(__GNUC__) && !((defined(ROM_BUILD) && !defined(ROM_IN_FLASH)) || defined(PROGRAMMER))
 
 #define BOOT_TEXT_SRAM_LOC              HAL_SEC_LOC(.boot_text_sram)
 #define BOOT_TEXT_SRAM_DEF(n)           HAL_SEC_DEF(.boot_text_sram, n)
@@ -68,9 +68,6 @@ extern "C" {
 #define SRAM_BSS_DEF(n)                 HAL_SEC_DEF(.sram_bss, n)
 #endif
 
-#define VRAM_BSS_LOC                    HAL_SEC_LOC(.vram_bss)
-#define VRAM_BSS_DEF(n)                 HAL_SEC_DEF(.vram_bss, n)
-
 #define FRAM_TEXT_LOC                   HAL_SEC_LOC(.fast_text_sram)
 #define FRAM_TEXT_DEF(n)                HAL_SEC_DEF(.fast_text_sram, n)
 
@@ -96,43 +93,26 @@ extern "C" {
 
 #else
 
-#if defined(__GNUC__) && defined(ROM_SRAM_TEXT_SIMU)
-#define BOOT_TEXT_SRAM_LOC              HAL_SEC_LOC(.rom_ramx)
-#define BOOT_TEXT_SRAM_DEF(n)           HAL_SEC_DEF(.rom_ramx, n)
-#else
 #define BOOT_TEXT_SRAM_LOC
 #define BOOT_TEXT_SRAM_DEF(n)           n
-#endif
 #if defined(__GNUC__) && defined(PROGRAMMER_INFLASH)
 #define BOOT_TEXT_FLASH_LOC             HAL_SEC_LOC(.boot_text_flash)
 #define BOOT_TEXT_FLASH_DEF(n)          HAL_SEC_DEF(.boot_text_flash, n)
-#define BOOT_RODATA_FLASH_LOC           HAL_SEC_LOC(.boot_rodata_flash)
-#define BOOT_RODATA_FLASH_DEF(n)        HAL_SEC_DEF(.boot_rodata_flash, n)
 #else
 #define BOOT_TEXT_FLASH_LOC
 #define BOOT_TEXT_FLASH_DEF(n)          n
-#define BOOT_RODATA_FLASH_LOC
-#define BOOT_RODATA_FLASH_DEF(n)        n
 #endif
-#if defined(__GNUC__) && defined(ROM_SRAM_TEXT_SIMU)
-#define BOOT_RODATA_SRAM_LOC            HAL_SEC_LOC(.data)
-#define BOOT_RODATA_SRAM_DEF(n)         HAL_SEC_DEF(.data, n)
-#else
 #define BOOT_RODATA_SRAM_LOC
 #define BOOT_RODATA_SRAM_DEF(n)         n
-#endif
+#define BOOT_RODATA_FLASH_LOC
+#define BOOT_RODATA_FLASH_DEF(n)        n
 #define BOOT_DATA_LOC
 #define BOOT_DATA_DEF(n)                n
 #define BOOT_BSS_LOC
 #define BOOT_BSS_DEF(n)                 n
 
-#if defined(__GNUC__) && defined(ROM_SRAM_TEXT_SIMU)
-#define SRAM_TEXT_LOC                   HAL_SEC_LOC(.rom_ramx)
-#define SRAM_TEXT_DEF(n)                HAL_SEC_DEF(.rom_ramx, n)
-#else
 #define SRAM_TEXT_LOC
 #define SRAM_TEXT_DEF(n)                n
-#endif
 #define SRAM_DATA_LOC
 #define SRAM_DATA_DEF(n)                n
 #define SRAM_STACK_LOC
@@ -160,7 +140,7 @@ extern "C" {
 
 #endif // !__GNUC__ || ROM_BUILD || PROGRAMMER
 
-#if defined(__GNUC__) && defined(__ARM_ARCH_ISA_ARM) && !defined(NUTTX_BUILD)
+#if defined(__GNUC__) && defined(__ARM_ARCH_ISA_ARM)
 #define SYNC_FLAGS_LOC                  HAL_SEC_LOC(.sync_flags)
 #define SYNC_FLAGS_DEF(n)               HAL_SEC_DEF(.sync_flags, n)
 #else
