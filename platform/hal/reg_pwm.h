@@ -30,8 +30,6 @@ struct PWM_T
     __IO uint32_t TOGGLE01;                 // 0x01C
     __IO uint32_t TOGGLE23;                 // 0x020
     __IO uint32_t PHASEMOD;                 // 0x024
-    __IO uint32_t ST1_23;                   // 0x028
-    __IO uint32_t TWINKLE23;                // 0x02C
 };
 
 #define PWM_EN_0                            (1 << 0)
@@ -90,27 +88,5 @@ struct PWM_T
 #define PWM_PHASEMOD_1                      (1 << 1)
 #define PWM_PHASEMOD_2                      (1 << 2)
 #define PWM_PHASEMOD_3                      (1 << 3)
-
-#define SUBCNT_DATA2_SHIFT                  0
-#define SUBCNT_DATA2_MASK                   (0xFF << SUBCNT_DATA2_SHIFT)
-#define SUBCNT_DATA2(n)                     BITFIELD_VAL(SUBCNT_DATA2, n)
-#define SUBCNT_DATA3_SHIFT                  8
-#define SUBCNT_DATA3_MASK                   (0xFF << SUBCNT_DATA3_SHIFT)
-#define SUBCNT_DATA3(n)                     BITFIELD_VAL(SUBCNT_DATA3, n)
-#define TG_SUBCNT_D2_ST_SHIFT               16
-#define TG_SUBCNT_D2_ST_MASK                (0x7F << TG_SUBCNT_D2_ST_SHIFT)
-#define TG_SUBCNT_D2_ST(n)                  BITFIELD_VAL(TG_SUBCNT_D2_ST, n)
-#define REG_PWM2_BR_EN                      (1 << 23)
-#define TG_SUBCNT_D3_ST_SHIFT               24
-#define TG_SUBCNT_D3_ST_MASK                (0x7F << TG_SUBCNT_D3_ST_SHIFT)
-#define TG_SUBCNT_D3_ST(n)                  BITFIELD_VAL(TG_SUBCNT_D3_ST, n)
-#define REG_PWM3_BR_EN                      (1 << 31)
-
-#define REG_PWM2_ST1_SHIFT                  0
-#define REG_PWM2_ST1_MASK                   (0xFFFF << REG_PWM2_ST1_SHIFT)
-#define REG_PWM2_ST1(n)                     BITFIELD_VAL(REG_PWM2_ST1, n)
-#define REG_PWM3_ST1_SHIFT                  16
-#define REG_PWM3_ST1_MASK                   (0xFFFF << REG_PWM3_ST1_SHIFT)
-#define REG_PWM3_ST1(n)                     BITFIELD_VAL(REG_PWM3_ST1, n)
 
 #endif
