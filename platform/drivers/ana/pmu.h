@@ -35,8 +35,6 @@ extern "C" {
 #endif
 #define pmu_read(reg, val)                  hal_analogif_reg_read(ISPI_PMU_REG(reg), val)
 #define pmu_write(reg, val)                 hal_analogif_reg_write(ISPI_PMU_REG(reg), val)
-#define wifi_read(reg, val)                  hal_analogif_reg_read(ISPI_WFRF_REG(reg), val)
-#define wifi_write(reg, val)                 hal_analogif_reg_write(ISPI_WFRF_REG(reg), val)
 
 #define  PMU_MANUAL_MODE                    1
 #define  PMU_AUTO_MODE                      0
@@ -47,7 +45,6 @@ extern "C" {
 #define  PMU_DSLEEP_MODE_ON                 1
 #define  PMU_DSLEEP_MODE_OFF                0
 
-#ifndef SECURITY_VALUE_T
 union SECURITY_VALUE_T {
     struct {
         unsigned short security_en      :1;
@@ -59,7 +56,6 @@ union SECURITY_VALUE_T {
     };
     unsigned short reg;
 };
-#endif
 
 enum PMU_CHARGER_STATUS_T {
     PMU_CHARGER_PLUGIN,
@@ -159,15 +155,9 @@ void pmu_psram_freq_config(uint32_t freq);
 
 void pmu_fir_high_speed_config(int enable);
 
-void pmu_fir_freq_config(uint32_t freq);
-
 void pmu_iir_freq_config(uint32_t freq);
 
-void pmu_iir_eq_freq_config(uint32_t freq);
-
 void pmu_rs_freq_config(uint32_t freq);
-
-void pmu_rs_adc_freq_config(uint32_t freq);
 
 void pmu_sys_freq_config(enum HAL_CMU_FREQ_T freq);
 
@@ -241,10 +231,6 @@ void pmu_led_set_value(enum HAL_GPIO_PIN_T pin, int data);
 
 int pmu_led_get_value(enum HAL_GPIO_PIN_T pin);
 
-void pmu_led_breathing_enable(enum HAL_IOMUX_PIN_T pin, const struct PMU_LED_BR_CFG_T *cfg);
-
-void pmu_led_breathing_disable(enum HAL_IOMUX_PIN_T pin);
-
 void pmu_wdt_set_irq_handler(PMU_WDT_IRQ_HANDLER_T handler);
 
 int pmu_wdt_config(uint32_t irq_ms, uint32_t reset_ms);
@@ -262,20 +248,6 @@ void pmu_ntc_capture_disable(void);
 int pmu_set_irq_unified_handler(enum PMU_IRQ_TYPE_T type, PMU_IRQ_UNIFIED_HANDLER_T hdlr);
 
 enum HAL_PWRKEY_IRQ_T pmu_pwrkey_irq_value_to_state(uint16_t irq_status);
-
-//=========================================================================
-// APIs for internal use only
-//=========================================================================
-
-void pmu_wdt_save_context(void);
-
-void pmu_wdt_restore_context(void);
-
-void pmu_charger_save_context(void);
-
-void pmu_charger_shutdown_config(void);
-
-int pmu_get_gpadc_data_bits(void);
 
 #ifdef __cplusplus
 }
