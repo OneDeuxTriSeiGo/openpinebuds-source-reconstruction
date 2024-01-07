@@ -122,23 +122,13 @@ int hal_spi_activate_cs(uint32_t cs);
 
 int hal_spi_busy(void);
 
-#if 1 // conflict with alios things, need rename
-int hal_spi_send_nickname(const void *data, uint32_t len);
-int hal_spi_recv_nickname(const void *cmd, void *data, uint32_t len);
-#define hal_spi_send hal_spi_send_nickname
-#define hal_spi_recv hal_spi_recv_nickname
-#else
 int hal_spi_send(const void *data, uint32_t len);
+
 int hal_spi_recv(const void *cmd, void *data, uint32_t len);
-#endif
 
 int hal_spi_dma_send(const void *data, uint32_t len, HAL_SPI_DMA_HANDLER_T handler);
 
 int hal_spi_dma_recv(const void *cmd, void *data, uint32_t len, HAL_SPI_DMA_HANDLER_T handler);
-
-int hal_spi_no_dma_send(const void *data, uint32_t len);
-
-int hal_spi_no_dma_recv(const void *cmd, void *data, uint32_t len );
 
 void hal_spi_stop_dma_send(void);
 
