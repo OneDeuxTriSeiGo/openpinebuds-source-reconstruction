@@ -39,8 +39,6 @@ struct UART_T {
     __O  uint32_t UARTICR;          // 0x044
     __IO uint32_t UARTDMACR;        // 0x048
     __IO uint32_t UARTOVSAMP;       // 0x04C
-    __IO uint32_t UARTOVSAMPST;     // 0x050
-    uint32_t RESERVED_04C[995];     // 0x054
     __I  uint32_t UARTPID0;         // 0xFE0
     __I  uint32_t UARTPID1;         // 0xFE4
     __I  uint32_t UARTPID2;         // 0xFE8
@@ -49,17 +47,6 @@ struct UART_T {
     __I  uint32_t UARTPCID1;        // 0xFF4
     __I  uint32_t UARTPCID2;        // 0xFF8
     __I  uint32_t UARTPCID3;        // 0xFFC
-};
-
-struct SAVED_UART_REGS_T {
-    uint32_t UARTILPR;
-    uint32_t UARTIBRD;
-    uint32_t UARTFBRD;
-    uint32_t UARTLCR_H;
-    uint32_t UARTCR;
-    uint32_t UARTIFLS;
-    uint32_t UARTIMSC;
-    uint32_t UARTDMACR;
 };
 
 // Data status bits
@@ -120,32 +107,9 @@ struct SAVED_UART_REGS_T {
 #define UARTIFLS_RXFIFO_LEVEL_MASK    (3 << 3)
 #define UARTIFLS_RXFIFO_LEVEL_SHIFT   (3)
 
-// Interrupt regs bits
-#define UARTINTERRUPT_RIM           (1 << 0)
-#define UARTINTERRUPT_CTSM          (1 << 1)
-#define UARTINTERRUPT_DCDM          (1 << 2)
-#define UARTINTERRUPT_DSRM          (1 << 3)
-#define UARTINTERRUPT_RX            (1 << 4)
-#define UARTINTERRUPT_TX            (1 << 5)
-#define UARTINTERRUPT_RT            (1 << 6)
-#define UARTINTERRUPT_FE            (1 << 7)
-#define UARTINTERRUPT_PE            (1 << 8)
-#define UARTINTERRUPT_BE            (1 << 9)
-#define UARTINTERRUPT_OE            (1 << 10)
-
 // DMACR reg bits
 #define UARTDMACR_RXDMAE    (1 << 0)
 #define UARTDMACR_TXDMAE    (1 << 1)
 #define UARTDMACR_DMAONERR  (1 << 2)
-
-// UARTOVSAMP
-#define UARTOVSAMP_RATIO_SHIFT              0
-#define UARTOVSAMP_RATIO_MASK               (0xF << UARTOVSAMP_RATIO_SHIFT)
-#define UARTOVSAMP_RATIO(n)                 BITFIELD_VAL(UARTOVSAMP_RATIO, n)
-
-// UARTOVSAMPST
-#define UARTOVSAMPST_START_SHIFT            0
-#define UARTOVSAMPST_START_MASK             (0xF << UARTOVSAMPST_START_SHIFT)
-#define UARTOVSAMPST_START(n)               BITFIELD_VAL(UARTOVSAMPST_START, n)
 
 #endif
