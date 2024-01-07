@@ -20,8 +20,6 @@
 #include "hal_spi.h"
 #include "hal_location.h"
 
-#define PHY_SPI_TX_BITS                 25
-#define PHY_SPI_RX_BITS                 25
 #define PHY_READ_CMD(r)                 ((1 << 24) | (((r) & 0xFF) << 16))
 #define PHY_WRITE_CMD(r, v)             ((((r) & 0xFF) << 16) | ((v) & 0xFFFF))
 #define PHY_READ_VAL(v)                 ((v) & 0xFFFF)
@@ -39,8 +37,8 @@ static const struct HAL_SPI_CFG_T spi_cfg = {
     .rx_sep_line = true,
     .cs = 0,
     .rate = 6500000,
-    .tx_bits = PHY_SPI_TX_BITS,
-    .rx_bits = PHY_SPI_RX_BITS,
+    .tx_bits = 25,
+    .rx_bits = 25,
     .rx_frame_bits = 0,
 };
 
