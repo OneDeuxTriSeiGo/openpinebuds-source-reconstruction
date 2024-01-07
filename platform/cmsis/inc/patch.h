@@ -39,18 +39,6 @@ int patch_disable(PATCH_ID patch_id);
 
 void patch_close(void);
 
-//------------------------------------------------------------
-// The following APIs are for internal use only
-//------------------------------------------------------------
-
-int patch_code_enable_id(uint32_t id, uint32_t addr, uint32_t data);
-
-int patch_code_disable_id(uint32_t id);
-
-int patch_data_enable_id(uint32_t id, uint32_t addr, uint32_t data);
-
-int patch_data_disable_id(uint32_t id);
-
 #ifdef __cplusplus
 }
 #endif
