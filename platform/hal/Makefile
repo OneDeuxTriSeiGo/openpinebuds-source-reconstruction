@@ -351,7 +351,6 @@ CFLAGS_hal_uart.o += -DDEBUG_PORT=$(DEBUG_PORT)
 endif
 
 CFLAGS_hal_usb.o += -Iplatform/drivers/usb/usb_dev/inc -Iutils/hwtimer_list
-CFLAGS_hal_usbhost.o += -Iutils/hwtimer_list
 
 ifeq ($(USB_ISO),1)
 CFLAGS_hal_usb.o += -DUSB_ISO
@@ -388,6 +387,8 @@ endif
 ifeq ($(SIMU_UAUD_MAX_PKT),1)
 CFLAGS_hal_usb.o += -DSIMU_UAUD_MAX_PKT
 endif
+
+CFLAGS_hal_usbhost.o += -Iutils/hwtimer_list
 
 # CMU settings
 export CMU_CFG_FLAGS :=
