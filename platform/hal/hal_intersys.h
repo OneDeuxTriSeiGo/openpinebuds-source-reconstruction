@@ -24,10 +24,7 @@ extern "C" {
 enum HAL_INTERSYS_ID_T {
     HAL_INTERSYS_ID_0,
     HAL_INTERSYS_ID_1,
-#if defined(__FPGA_1501P__)
-    HAL_INTERSYS_ID_2,
-    HAL_INTERSYS_ID_3,
-#endif
+
     HAL_INTERSYS_ID_QTY
 };
 
