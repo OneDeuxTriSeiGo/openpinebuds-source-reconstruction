@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __REG_IOMUX_BEST2003_H_
-#define __REG_IOMUX_BEST2003_H_
+#ifndef __REG_IOMUX_BEST2300P_H_
+#define __REG_IOMUX_BEST2300P_H_
 
 #include "plat_types.h"
 

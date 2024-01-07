@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __HAL_DMACFG_BEST2003_H__
-#define __HAL_DMACFG_BEST2003_H__
+#ifndef __HAL_DMACFG_BEST2300P_H__
+#define __HAL_DMACFG_BEST2300P_H__
 
 #define AUDMA_PERIPH_NUM                        16
 #define GPDMA_PERIPH_NUM                        16

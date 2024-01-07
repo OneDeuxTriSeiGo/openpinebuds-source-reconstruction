@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __REG_BTCMU_BEST2003_H__
-#define __REG_BTCMU_BEST2003_H__
+#ifndef __REG_BTCMU_BEST2300P_H__
+#define __REG_BTCMU_BEST2300P_H__
 
 #include "plat_types.h"
 
