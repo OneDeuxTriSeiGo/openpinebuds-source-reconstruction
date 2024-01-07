@@ -180,9 +180,6 @@ const struct secure_boot_struct_t BOOT_STRUCT_LOC secure_boot_struct = {
             .version = BOOT_STRUCT_VERSION,
             .build_info_start = DEFAULT_BUILD_INFO,
         },
-#if HAAS_OTA_ENABLED
-        .ver = HAAS_OTA_BIN_VER,
-#endif
     },
     .code_sig_struct = DEFAULT_CODE_SIG,
     .norflash_cfg = DEFAULT_NORFLASH_CFG,
