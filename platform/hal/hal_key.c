@@ -32,9 +32,6 @@
 #define HAL_KEY_TRACE(n, s, ...)            TRACE_DUMMY(n, s, ##__VA_ARGS__)
 #endif
 
-// Warning on permanent press
-#define KEY_PERMPRESS_WARNING
-
 #ifdef CHIP_BEST2000
 #define GPIO_MAP_64BIT
 #endif
@@ -45,9 +42,9 @@ typedef uint64_t                            GPIO_MAP_T;
 typedef uint32_t                            GPIO_MAP_T;
 #endif
 
-#ifndef APP_TEST_MODE
-#define CHECK_PWRKEY_AT_BOOT
-#endif
+// #ifndef APP_TEST_MODE
+// #define CHECK_PWRKEY_AT_BOOT
+// #endif
 #ifdef NO_PWRKEY
 #undef CHECK_PWRKEY_AT_BOOT
 #endif
@@ -86,7 +83,6 @@ typedef uint32_t                            GPIO_MAP_T;
 #endif
 
 //common key define
-#define KEY_PERMPRESS_THRESHOLD             MS_TO_TICKS(30000)
 #define KEY_LONGLONGPRESS_THRESHOLD         MS_TO_TICKS(CFG_SW_KEY_LLPRESS_THRESH_MS)
 #define KEY_LONGPRESS_THRESHOLD             MS_TO_TICKS(CFG_SW_KEY_LPRESS_THRESH_MS)
 #define KEY_DOUBLECLICK_THRESHOLD           MS_TO_TICKS(CFG_SW_KEY_DBLCLICK_THRESH_MS)
@@ -142,24 +138,10 @@ static HWTIMER_ID debounce_timer = NULL;
 static bool timer_active = false;
 static struct HAL_KEY_STATUS_T key_status;
 
-#ifdef KEY_PERMPRESS_WARNING
-static bool debounce_started = false;
-static uint32_t time_first_debounce;
-#endif
-
 static void hal_key_disable_allint(void);
 static void hal_key_enable_allint(void);
-static uint32_t adc_key_status;
 static int send_key_event(enum HAL_KEY_CODE_T code, enum HAL_KEY_EVENT_T event)
 {
-    for(int i = 0; i < CFG_HW_ADCKEY_NUMBER; i++) {
-        if(CFG_HW_ADCKEY_MAP_TABLE[i] == code) {
-            if (event == HAL_KEY_EVENT_DOWN)
-                adc_key_status |= CFG_HW_ADCKEY_MAP_TABLE[i];
-            else if (event == HAL_KEY_EVENT_UP)
-                adc_key_status &= ~CFG_HW_ADCKEY_MAP_TABLE[i];
-        }
-    }
     if (key_detected_callback) {
         return key_detected_callback(code, event);
     }
@@ -229,9 +211,6 @@ static enum HAL_KEY_CODE_T hal_adckey_findkey(uint16_t volt)
         return HAL_KEY_CODE_NONE;
     }
 #endif
-#if defined(NUTTX_BUILD)
-    if (volt == 0) volt++;
-#endif
     if (CFG_HW_ADCKEY_ADC_KEYVOLT_BASE <= volt && volt < CFG_HW_ADCKEY_ADC_MAXVOLT) {
         for (index = 0; index < CFG_HW_ADCKEY_NUMBER; index++) {
             if (volt <= adckey_volt_table[index]) {
@@ -292,10 +271,11 @@ _exit:
 static void hal_adckey_open(void)
 {
     uint16_t i;
+    uint32_t basevolt;
+
 
     hal_adckey_reset();
-    /*
-    uint32_t basevolt;
+
     basevolt = (CFG_HW_ADCKEY_ADC_MAXVOLT - CFG_HW_ADCKEY_ADC_MINVOLT) / (CFG_HW_ADCKEY_NUMBER + 2);
 
     adckey_volt_table[0] = CFG_HW_ADCKEY_ADC_KEYVOLT_BASE + basevolt;
@@ -304,9 +284,6 @@ static void hal_adckey_open(void)
         adckey_volt_table[i] = adckey_volt_table[i - 1] + basevolt;
     }
     adckey_volt_table[CFG_HW_ADCKEY_NUMBER - 1] = CFG_HW_ADCKEY_ADC_MAXVOLT;
-    */
-   for(i=0; i< CFG_HW_ADCKEY_NUMBER; ++i)
-        adckey_volt_table[i] = CFG_HW_ADCKEY_VOL_TABLE[i];
     hal_adckey_set_irq_handler(hal_adckey_irqhandler);
 }
 
@@ -371,7 +348,7 @@ static inline bool hal_pwrkey_get_status(void)
 
 static void hal_pwrkey_handle_irq_state(enum HAL_PWRKEY_IRQ_T state)
 {
-    uint32_t time = hal_sys_timer_get();
+//    uint32_t time = hal_sys_timer_get();
 
 #ifdef NO_GROUPKEY
     hal_key_disable_allint();
@@ -405,7 +382,7 @@ static void hal_pwrkey_handle_irq_state(enum HAL_PWRKEY_IRQ_T state)
                 pwr_key.dither = true;
             }
         }
-        pwr_key.time = time;
+        // pwr_key.time = time;
     }
 
 #ifdef CHIP_BEST1000
@@ -633,15 +610,6 @@ enum HAL_KEY_EVENT_T hal_key_read_status(enum HAL_KEY_CODE_T code)
             if(cfg_hw_gpio_key_cfg[i].key_code == code) {
                 gpio_val = hal_gpio_pin_get_val((enum HAL_GPIO_PIN_T)cfg_hw_gpio_key_cfg[i].key_config.pin);
                 if (gpio_val == cfg_hw_gpio_key_cfg[i].key_down) {
-                    return HAL_KEY_EVENT_DOWN;
-                } else {
-                    return HAL_KEY_EVENT_UP;
-                }
-            }
-        }
-        for(i = 0; i < CFG_HW_ADCKEY_NUMBER; i++) {
-            if(CFG_HW_ADCKEY_MAP_TABLE[i] == code) {
-                if (adc_key_status & CFG_HW_ADCKEY_MAP_TABLE[i]) {
                     return HAL_KEY_EVENT_DOWN;
                 } else {
                     return HAL_KEY_EVENT_UP;
@@ -1034,43 +1002,16 @@ static void hal_key_debounce_handler(void *param)
 
     if (key_status.event != HAL_KEY_EVENT_NONE) {
         need_timer = true;
-
-#ifdef KEY_PERMPRESS_WARNING
-        if (debounce_started) {
-            if (time - time_first_debounce >= KEY_PERMPRESS_THRESHOLD) {
-                time_first_debounce = time;
-#if (CFG_HW_GPIOKEY_NUM > 0)
-#ifdef GPIO_MAP_64BIT
-#define GPIO_DOWN_STR                       " gpio_down=0x%X-%X"
-#define GPIO_DOWN_VAL                       , (uint32_t)(gpio_key.pin_down >> 32), (uint32_t)(gpio_key.pin_down)
-#else
-#define GPIO_DOWN_STR                       " gpio_down=0x%X"
-#define GPIO_DOWN_VAL                       , (uint32_t)(gpio_key.pin_down)
-#endif
-#else
-#define GPIO_DOWN_STR
-#define GPIO_DOWN_VAL
-#endif
-                TR_WARN(0, "*** WARNING:keyDbn: Permanent key press? code_down=0x%X" GPIO_DOWN_STR, code_down GPIO_DOWN_VAL);
-            }
-        } else {
-            debounce_started = true;
-            time_first_debounce = time;
-        }
-#endif
     }
 
     if (need_timer) {
         hal_key_debounce_timer_restart();
     } else {
         //hal_sys_wake_unlock(HAL_SYS_WAKE_LOCK_USER_KEY);
-#ifdef KEY_PERMPRESS_WARNING
-        debounce_started = false;
-#endif
     }
 }
 
-#ifdef CHECK_PWRKEY_AT_BOOT
+#if 0//def CHECK_PWRKEY_AT_BOOT
 static void hal_key_boot_handler(void *param)
 {
 #ifndef NO_PWRKEY
