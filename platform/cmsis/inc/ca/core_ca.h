@@ -118,7 +118,7 @@
   #endif
 #endif
 
-#include "cmsis_compiler.h"               /* CMSIS compiler specific defines */
+#include "ca/cmsis_compiler_ca.h"               /* CMSIS compiler specific defines */
 
 #ifdef __cplusplus
 }

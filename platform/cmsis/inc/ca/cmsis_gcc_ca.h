@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-#ifndef __CMSIS_GCC_H
-#define __CMSIS_GCC_H
+#ifndef __CMSIS_GCC_CA_H
+#define __CMSIS_GCC_CA_H
 
 /* ignore some GCC warnings */
 #pragma GCC diagnostic push
@@ -739,7 +739,7 @@ __STATIC_FORCEINLINE void __set_FPEXC(uint32_t fpexc)
 #define __get_CP64(cp, op1, Rt, CRm) __ASM volatile("MRRC p" # cp ", " # op1 ", %Q0, %R0, c" # CRm  : "=r" (Rt) : : "memory" )
 #define __set_CP64(cp, op1, Rt, CRm) __ASM volatile("MCRR p" # cp ", " # op1 ", %Q0, %R0, c" # CRm  : : "r" (Rt) : "memory" )
 
-#include "cmsis_cp15.h"
+#include "ca/cmsis_cp15_ca.h"
 
 /** \brief  Enable Floating Point Unit
 
@@ -813,4 +813,4 @@ __STATIC_INLINE void __FPU_Enable(void)
 
 #pragma GCC diagnostic pop
 
-#endif /* __CMSIS_GCC_H */
+#endif /* __CMSIS_GCC_CA_H */

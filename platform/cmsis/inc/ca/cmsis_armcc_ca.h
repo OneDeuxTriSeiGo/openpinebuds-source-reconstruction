@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-#ifndef __CMSIS_ARMCC_H
-#define __CMSIS_ARMCC_H
+#ifndef __CMSIS_ARMCC_CA_H
+#define __CMSIS_ARMCC_CA_H
 
 #if defined(__ARMCC_VERSION) && (__ARMCC_VERSION < 400677)
   #error "Please use Arm Compiler Toolchain V4.0.677 or later!"
@@ -471,7 +471,7 @@ __STATIC_INLINE void __set_FPEXC(uint32_t fpexc)
     __ASM volatile("MCRR p" # cp ", " # op1 ", ltmp, htmp, c" # CRm); \
   } while(0)
 
-#include "cmsis_cp15.h"
+#include "ca/cmsis_cp15_ca.h"
 
 /** \brief  Enable Floating Point Unit
 
@@ -544,4 +544,4 @@ __STATIC_INLINE __ASM void __FPU_Enable(void)
         BX      LR
 }
 
-#endif /* __CMSIS_ARMCC_H */
+#endif /* __CMSIS_ARMCC_CA_H */

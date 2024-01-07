@@ -22,12 +22,12 @@
  * limitations under the License.
  */
 
-#ifndef __CMSIS_ARMCLANG_H
-#define __CMSIS_ARMCLANG_H
+#ifndef __CMSIS_ARMCLANG_CA_H
+#define __CMSIS_ARMCLANG_CA_H
 
 #pragma clang system_header   /* treat file as system include file */
 
-#ifndef __ARM_COMPAT_H
+#ifndef __ARM_COMPAT_CA_H
 #include <arm_compat.h>    /* Compatibility header for Arm Compiler 5 intrinsics */
 #endif
 
@@ -512,7 +512,7 @@ __STATIC_FORCEINLINE void __set_FPEXC(uint32_t fpexc)
 #define __get_CP64(cp, op1, Rt, CRm)         __ASM volatile("MRRC p" # cp ", " # op1 ", %Q0, %R0, c" # CRm  : "=r" (Rt) : : "memory" )
 #define __set_CP64(cp, op1, Rt, CRm)         __ASM volatile("MCRR p" # cp ", " # op1 ", %Q0, %R0, c" # CRm  : : "r" (Rt) : "memory" )
 
-#include "cmsis_cp15.h"
+#include "ca/cmsis_cp15_ca.h"
 
 /** \brief  Enable Floating Point Unit
 
@@ -584,4 +584,4 @@ __STATIC_INLINE void __FPU_Enable(void)
   );
 }
 
-#endif /* __CMSIS_ARMCLANG_H */
+#endif /* __CMSIS_ARMCLANG_CA_H */

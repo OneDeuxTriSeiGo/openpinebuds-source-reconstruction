@@ -28,8 +28,8 @@
   #pragma clang system_header   /* treat file as system include file */
 #endif
 
-#ifndef __CMSIS_CP15_H
-#define __CMSIS_CP15_H
+#ifndef __CMSIS_CP15_CA_H
+#define __CMSIS_CP15_CA_H
 
 /** \brief  Get ACTLR
     \return               Auxiliary Control register value

@@ -27,7 +27,7 @@
 
 #include "RTE_Components.h"
 #include CMSIS_device_header
-#include "irq_ctrl.h"
+#include "ca/irq_ctrl_ca.h"
 
 #define  SYSTEM_CLOCK  12000000U
 

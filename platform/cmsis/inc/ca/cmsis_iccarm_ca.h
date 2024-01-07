@@ -24,8 +24,8 @@
 //------------------------------------------------------------------------------
 
 
-#ifndef __CMSIS_ICCARM_H__
-#define __CMSIS_ICCARM_H__
+#ifndef __CMSIS_ICCARM_CA_H__
+#define __CMSIS_ICCARM_CA_H__
 
 #ifndef __ICCARM__
   #error This file should only be compiled by ICCARM
@@ -271,7 +271,7 @@
   #define __set_CP64(cp, op1, Rt, CRm) \
     __ASM volatile("MCRR p" # cp ", " # op1 ", %Q0, %R0, c" # CRm  : : "r" (Rt) : "memory" )
 
-  #include "cmsis_cp15.h"
+  #include "ca/cmsis_cp15_ca.h"
 
   #define __NOP     __iar_builtin_no_operation
 
@@ -458,7 +458,7 @@
   #define __set_CP64(cp, op1, Rt, CRm) \
     __ASM volatile("MCRR p" # cp ", " # op1 ", %Q0, %R0, c" # CRm  : : "r" (Rt) : "memory" )
 
-  #include "cmsis_cp15.h"
+  #include "ca/cmsis_cp15_ca.h"
 
 #endif   /* __ICCARM_INTRINSICS_VERSION__ == 2 */
 
@@ -568,4 +568,4 @@ void __FPU_Enable(void)
 #pragma diag_default=Pe940
 #pragma diag_default=Pe177
 
-#endif /* __CMSIS_ICCARM_H__ */
+#endif /* __CMSIS_ICCARM_CA_H__ */

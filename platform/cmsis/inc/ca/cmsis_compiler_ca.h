@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-#ifndef __CMSIS_COMPILER_H
-#define __CMSIS_COMPILER_H
+#ifndef __CMSIS_COMPILER_CA_H
+#define __CMSIS_COMPILER_CA_H
 
 #include <stdint.h>
 
@@ -31,35 +31,35 @@
  * Arm Compiler 4/5
  */
 #if   defined ( __CC_ARM )
-  #include "cmsis_armcc.h"
+  #include "ca/cmsis_armcc_ca.h"
 
 
 /*
  * Arm Compiler 6 (armclang)
  */
 #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  #include "cmsis_armclang.h"
+  #include "ca/cmsis_armclang_ca.h"
 
 
 /*
  * GNU Compiler
  */
 #elif defined ( __GNUC__ )
-  #include "cmsis_gcc.h"
+  #include "ca/cmsis_gcc_ca.h"
 
 
 /*
  * IAR Compiler
  */
 #elif defined ( __ICCARM__ )
-  #include "cmsis_iccarm.h"
+  #include "ca/cmsis_iccarm_ca.h"
 
 
 /*
  * TI Arm Compiler
  */
 #elif defined ( __TI_ARM__ )
-  #include <cmsis_ccs.h>
+  #include <ca/cmsis_ccs_ca.h>
 
   #ifndef   __ASM
     #define __ASM                     __asm
@@ -158,7 +158,7 @@
  * COSMIC Compiler
  */
 #elif defined ( __CSMC__ )
-   #include <cmsis_csm.h>
+   #include <ca/cmsis_csm_ca.h>
 
  #ifndef   __ASM
     #define __ASM                     _asm
@@ -209,4 +209,4 @@
 #endif
 
 
-#endif /* __CMSIS_COMPILER_H */
+#endif /* __CMSIS_COMPILER_CA_H */
