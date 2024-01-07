@@ -110,16 +110,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_CHIP_CA_PATTERN(n)          (((n) & 0x7) << 3)
 #define PSRAM_ULP_MC_CHIP_CA_PATTERN_MASK        (0x7 << 3)
 #define PSRAM_ULP_MC_CHIP_CA_PATTERN_SHIFT       (3)
-#define PSRAM_ULP_MC_CHIP_SWITCH                 (1 << 6)
-#define PSRAM_ULP_MC_SQPI_MODE                   (1 << 7)
-#define PSRAM_ULP_MC_QPI_MODE                    (1 << 8)
-#define PSRAM_ULP_MC_OPI_MODE                    (1 << 9)
-#define PSRAM_ULP_MC_DTR_MODE(n)                 (((n) & 0x7) << 10)
-#define PSRAM_ULP_MC_DTR_MODE_MASK               (0x7 << 10)
-#define PSRAM_ULP_MC_DTR_MODE_SHIFT              (10)
-#define PSRAM_ULP_MC_DQS_MODE                    (1 << 13)
-#define PSRAM_ULP_MC_LATENCY_TYPE                (1 << 14)
-#define PSRAM_ULP_MC_SQPI_CMD_SEQ_DEFINE_EN      (1 << 15)
 
 // reg_04
 #define PSRAM_ULP_MC_MGR_CMD(n)                  (((n) & 0xFF) << 0)
@@ -135,7 +125,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_MGR_LEN(n)                  (((n) & 0xFF) << 0)
 #define PSRAM_ULP_MC_MGR_LEN_MASK                (0xFF << 0)
 #define PSRAM_ULP_MC_MGR_LEN_SHIFT               (0)
-#define PSRAM_ULP_MC_MGR_LEN_BYPASS              (1 << 8)
 
 // reg_10
 #define PSRAM_ULP_MC_MGR_WSTRB(n)                (((n) & 0xFF) << 0)
@@ -198,12 +187,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_PAGE_BOUNDARY(n)            (((n) & 0x3) << 4)
 #define PSRAM_ULP_MC_PAGE_BOUNDARY_MASK          (0x3 << 4)
 #define PSRAM_ULP_MC_PAGE_BOUNDARY_SHIFT         (4)
-#define PSRAM_ULP_MC_CMD_ENTER_QUAD(n)           (((n) & 0xFF) << 6)
-#define PSRAM_ULP_MC_CMD_ENTER_QUAD_MASK         (0xFF << 6)
-#define PSRAM_ULP_MC_CMD_ENTER_QUAD_SHIFT        (6)
-#define PSRAM_ULP_MC_CMD_EXIT_QUAD(n)            (((n) & 0xFF) << 14)
-#define PSRAM_ULP_MC_CMD_EXIT_QUAD_MASK          (0xFF << 14)
-#define PSRAM_ULP_MC_CMD_EXIT_QUAD_SHIFT         (14)
 
 // reg_38
 #define PSRAM_ULP_MC_BUS_WIDTH                   (1 << 0)
@@ -217,16 +200,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_CP_WRAP_EN                  (1 << 0)
 #define PSRAM_ULP_MC_AUTO_PRECHARGE              (1 << 1)
 #define PSRAM_ULP_MC_WRAP_CRT_RET_EN             (1 << 2)
-#define PSRAM_ULP_MC_CROSS_BOUNDARY_EN           (1 << 3)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_EN         (1 << 4)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_SET(n)     (((n) & 0x7) << 5)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_SET_MASK   (0x7 << 5)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_SET_SHIFT  (5)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_CMD(n)     (((n) & 0xFF) << 8)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_CMD_MASK   (0xFF << 8)
-#define PSRAM_ULP_MC_TOGGLE_BURST_LEN_CMD_SHIFT  (8)
-#define PSRAM_ULP_MC_TOGGLE_WRAP_EN              (1 << 16)
-#define PSRAM_ULP_MC_TOGGLE_WRAP_SET             (1 << 17)
 
 // reg_44
 #define PSRAM_ULP_MC_WB_DRAIN                    (1 << 0)
@@ -234,7 +207,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_RB_INVALID                  (1 << 2)
 #define PSRAM_ULP_MC_SNP_DISABLE                 (1 << 3)
 #define PSRAM_ULP_MC_BUFFERABLE_WB_EN            (1 << 4)
-#define PSRAM_ULP_MC_RD_CANCEL_EN                (1 << 5)
 
 // reg_48
 #define PSRAM_ULP_MC_FRE_RATIO(n)                (((n) & 0x3) << 0)
@@ -354,7 +326,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_NOP_DMY_CYC(n)              (((n) & 0xFF) << 1)
 #define PSRAM_ULP_MC_NOP_DMY_CYC_MASK            (0xFF << 1)
 #define PSRAM_ULP_MC_NOP_DMY_CYC_SHIFT           (1)
-#define PSRAM_ULP_MC_STOP_CLK_IN_TCPH            (1 << 9)
 
 // reg_a4
 #define PSRAM_ULP_MC_QUEUE_IDLE_CYCLE(n)         (((n) & 0xFFFFFFFF) << 0)
@@ -383,11 +354,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_NEW_CMD_OP(n)               (((n) & 0x7) << 0)
 #define PSRAM_ULP_MC_NEW_CMD_OP_MASK             (0x7 << 0)
 #define PSRAM_ULP_MC_NEW_CMD_OP_SHIFT            (0)
-
-// reg_c0
-#define PSRAM_ULP_MC_T_REF_WIN(n)                (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_T_REF_WIN_MASK              (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_T_REF_WIN_SHIFT             (0)
 
 // reg_140
 #define PSRAM_ULP_MC_CMD_TABLE_ARRAY_RD(n)       (((n) & 0xFF) << 0)
@@ -433,21 +399,6 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_CMD_TABLE_NOP(n)            (((n) & 0xFF) << 0)
 #define PSRAM_ULP_MC_CMD_TABLE_NOP_MASK          (0xFF << 0)
 #define PSRAM_ULP_MC_CMD_TABLE_NOP_SHIFT         (0)
-
-// reg_164
-#define PSRAM_ULP_MC_CMD_TABLE_ORDER(n)          (((n) & 0xFF) << 0)
-#define PSRAM_ULP_MC_CMD_TABLE_ORDER_MASK        (0xFF << 0)
-#define PSRAM_ULP_MC_CMD_TABLE_ORDER_SHIFT       (0)
-
-// reg_168
-#define PSRAM_ULP_MC_CMD_SEQ_DEFINE0(n)          (((n) & 0x3FFFFFFF) << 0)
-#define PSRAM_ULP_MC_CMD_SEQ_DEFINE0_MASK        (0x3FFFFFFF << 0)
-#define PSRAM_ULP_MC_CMD_SEQ_DEFINE0_SHIFT       (0)
-
-// reg_16c
-#define PSRAM_ULP_MC_CMD_SEQ_DEFINE1(n)          (((n) & 0x3FF) << 0)
-#define PSRAM_ULP_MC_CMD_SEQ_DEFINE1_MASK        (0x3FF << 0)
-#define PSRAM_ULP_MC_CMD_SEQ_DEFINE1_SHIFT       (0)
 
 // reg_180
 #define PSRAM_ULP_MC_CA_MAP_BIT0(n)              (((n) & 0x1F) << 0)
@@ -563,7 +514,6 @@ struct PSRAM_MC_T {
 // reg_190
 
 // reg_200
-#define PSRAM_ULP_PHY_REG_CEB_PU                 (1 << 0)
 #define PSRAM_ULP_MC_RESERVED_0(n)               (((n) & 0xFF) << 0)
 #define PSRAM_ULP_MC_RESERVED_0_MASK             (0xFF << 0)
 #define PSRAM_ULP_MC_RESERVED_0_SHIFT            (0)
@@ -649,51 +599,5 @@ struct PSRAM_MC_T {
 #define PSRAM_ULP_MC_PMU_MAX_RD_ACC_LATENCY(n)   (((n) & 0xFFFF) << 0)
 #define PSRAM_ULP_MC_PMU_MAX_RD_ACC_LATENCY_MASK (0xFFFF << 0)
 #define PSRAM_ULP_MC_PMU_MAX_RD_ACC_LATENCY_SHIFT (0)
-
-// reg_470
-#define PSRAM_ULP_MC_PMU_TOL_WR_ACC_NUM_TO_DIE(n) (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_PMU_TOL_WR_ACC_NUM_TO_DIE_MASK (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_PMU_TOL_WR_ACC_NUM_TO_DIE_SHIFT (0)
-
-// reg_474
-#define PSRAM_ULP_MC_PMU_TOL_WR_CYCS_IN_MCLK_0(n) (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_PMU_TOL_WR_CYCS_IN_MCLK_0_MASK (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_PMU_TOL_WR_CYCS_IN_MCLK_0_SHIFT (0)
-
-// reg_478
-#define PSRAM_ULP_MC_PMU_TOL_WR_CYCS_IN_MCLK_1(n) (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_PMU_TOL_WR_CYCS_IN_MCLK_1_MASK (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_PMU_TOL_WR_CYCS_IN_MCLK_1_SHIFT (0)
-
-// reg_47c
-#define PSRAM_ULP_MC_PMU_TOL_RD_ACC_NUM_TO_DIE(n) (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_PMU_TOL_RD_ACC_NUM_TO_DIE_MASK (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_PMU_TOL_RD_ACC_NUM_TO_DIE_SHIFT (0)
-
-// reg_480
-#define PSRAM_ULP_MC_PMU_TOL_RD_CYCS_IN_MCLK_0(n) (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_PMU_TOL_RD_CYCS_IN_MCLK_0_MASK (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_PMU_TOL_RD_CYCS_IN_MCLK_0_SHIFT (0)
-
-// reg_484
-#define PSRAM_ULP_MC_PMU_TOL_RD_CYCS_IN_MCLK_1(n) (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_PMU_TOL_RD_CYCS_IN_MCLK_1_MASK (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_PMU_TOL_RD_CYCS_IN_MCLK_1_SHIFT (0)
-
-// reg_4cc
-#define PSRAM_ULP_MC_DBG_RD_ADDRESS(n)           (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_DBG_RD_ADDRESS_MASK         (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_DBG_RD_ADDRESS_SHIFT        (0)
-
-// reg_4d0
-#define PSRAM_ULP_MC_DBG_RD_VALID(n)             (((n) & 0xFFFFFFFF) << 0)
-#define PSRAM_ULP_MC_DBG_RD_VALID_MASK           (0xFFFFFFFF << 0)
-#define PSRAM_ULP_MC_DBG_RD_VALID_SHIFT          (0)
-
-// reg_4d4
-#define PSRAM_ULP_MC_WRITE_UNLOCK_CLR            (1 << 0)
-
-// reg_4d8
-#define PSRAM_ULP_MC_WRITE_UNLOCK_SET            (1 << 0)
 
 #endif
