@@ -69,10 +69,6 @@ typedef uint16_t HAL_GPADC_MV_T;
 typedef void (*HAL_GPADC_EVENT_CB_T)(uint16_t raw_val, HAL_GPADC_MV_T volt);
 typedef void (*HAL_ADCKEY_EVENT_CB_T)(enum HAL_ADCKEY_IRQ_STATUS_T irq_status, uint16_t raw_val);
 
-int hal_gpadc_masked_irq_valid(uint16_t irq);
-
-uint16_t hal_gpadc_filter_out_unmasked_irq(uint16_t irq);
-
 int hal_gpadc_open(enum HAL_GPADC_CHAN_T channel, enum HAL_GPADC_ATP_T atp, HAL_GPADC_EVENT_CB_T cb);
 
 bool hal_gpadc_get_volt(enum HAL_GPADC_CHAN_T ch, HAL_GPADC_MV_T *volt);
