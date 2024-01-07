@@ -69,7 +69,7 @@ extern "C" {
                                                     v = (tmp>>shift)&mask; \
                                                 }while(0)
 
-#define BT_DRV_DEBUG  1
+#define BT_DRV_DEBUG  0
 #if BT_DRV_DEBUG
 #define BT_DRV_TRACE(n, fmt, ...) TRACE(n, fmt, ##__VA_ARGS__)
 #define BT_DRV_DUMP(s,buff,len) DUMP8(s,buff,len)
