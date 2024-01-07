@@ -161,7 +161,6 @@ struct HAL_GPIO_I2C_CONFIG_T {
 
 uint32_t hal_i2c_open(enum HAL_I2C_ID_T id, const struct HAL_I2C_CONFIG_T *cfg);
 uint32_t hal_i2c_close(enum HAL_I2C_ID_T id);
-uint32_t hal_i2c_reopen(enum HAL_I2C_ID_T id, const struct HAL_I2C_CONFIG_T *cfg);
 
 /* for master task mode */
 typedef void (*HAL_I2C_TRANSFER_HANDLER_T)(enum HAL_I2C_ID_T id, uint32_t transfer_id,
