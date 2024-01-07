@@ -18,7 +18,7 @@ obj-y := $(obj-y:.c=.o)
 ifeq ($(MCU_HIGH_PERFORMANCE_MODE),1)
 ifneq ($(FLASH_LOW_SPEED),1)
 ifneq ($(OSC_26M_X4_AUD2BB),1)
-#$(error FLASH_LOW_SPEED should be used with MCU_HIGH_PERFORMANCE_MODE when OSC_26M_X4_AUD2BB is NOT enabled on $(CHIP))
+$(error FLASH_LOW_SPEED should be used with MCU_HIGH_PERFORMANCE_MODE when OSC_26M_X4_AUD2BB is NOT enabled on $(CHIP))
 endif
 endif
 endif
