@@ -17,7 +17,6 @@
 #include "hal_cmu.h"
 #include "hal_dma.h"
 #include "hal_location.h"
-#include "hal_sleep.h"
 #include "hal_spi.h"
 #include "hal_trace.h"
 #include "reg_spi.h"
@@ -30,19 +29,6 @@
 #define SPI_ASSERT(c, ...)                  ASSERT_NODUMP(c)
 #else
 #define SPI_ASSERT(c, ...)                  ASSERT(c, ##__VA_ARGS__)
-#endif
-
-#if defined(CHIP_BEST2000) || defined(CHIP_BEST2001) || defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || defined(CHIP_BEST2300P)
-// ISPI operations are required during deep sleep (to enable/disable PLLs)
-#define ISPI_API_LOC                        BOOT_TEXT_SRAM_LOC
-#else
-#define ISPI_API_LOC
-#endif
-
-#if (CHIP_SPI_VER >= 5)
-#define ISPI_CS_QTY                         15
-#else
-#define ISPI_CS_QTY                         HAL_SPI_CS_QTY
 #endif
 
 enum HAL_SPI_ID_T {
@@ -138,11 +124,6 @@ static const struct HAL_SPI_MOD_NAME_T spi_mod[HAL_SPI_ID_QTY] = {
 #endif
 };
 
-//static BOOT_BSS_LOC struct HAL_SPI_CTRL_T ispi_ctrl;
-#ifdef CHIP_HAS_SPIPHY
-//static BOOT_BSS_LOC struct HAL_SPI_CTRL_T spiphy_ctrl;
-#endif
-
 #ifndef SPI_ROM_ONLY
 #ifdef CHIP_HAS_SPI
 static struct HAL_SPI_CTRL_T spi0_ctrl[HAL_SPI_CS_QTY];
@@ -164,10 +145,6 @@ static const enum HAL_SPI_CS_T spilcd_cs = HAL_SPI_CS_0;
 static struct HAL_SPI_CTRL_T spidpd_ctrl;
 #endif
 
-#ifdef CORE_SLEEP_POWER_DOWN
-static SRAM_BSS_LOC struct SAVED_SPI_REGS_T saved_spi_regs[HAL_SPI_ID_QTY];
-#endif
-
 static uint8_t BOOT_BSS_LOC spi_cs_map[HAL_SPI_ID_QTY];
 STATIC_ASSERT(sizeof(spi_cs_map[0]) * 8 >= HAL_SPI_CS_QTY, "spi_cs_map size too small");
 
@@ -183,11 +160,6 @@ static enum HAL_SPI_MOD_CLK_SEL_T BOOT_BSS_LOC clk_sel[HAL_SPI_ID_QTY];
 static bool BOOT_BSS_LOC spi_init_done = false;
 
 static int hal_spi_activate_cs_id(enum HAL_SPI_ID_T id, uint32_t cs);
-#endif
-
-#ifdef CHIP_HAS_SPILCD
-static enum SPI_RX_DMA_MODE_T spi_slave_recv_dma_mode[HAL_SPI_ID_QTY];
-static uint32_t spi_slave_recv_dma_size[HAL_SPI_ID_QTY];
 #endif
 
 //static const char *invalid_id = "Invalid SPI ID: %d";
@@ -288,11 +260,7 @@ int hal_spi_init_ctrl(const struct HAL_SPI_CFG_T *cfg, struct HAL_SPI_CTRL_T *ct
     }
 #endif // !SPI_ROM_ONLY
 
-#ifdef SPI_SLAVE
-    SPI_ASSERT(cfg->rate <= mod_clk*2 / (MIN_CPSDVSR * (1 + MIN_SCR)), "SPI rate too large: %u", cfg->rate);
-#else
     SPI_ASSERT(cfg->rate <= mod_clk / (MIN_CPSDVSR * (1 + MIN_SCR)), "SPI rate too large: %u", cfg->rate);
-#endif
     SPI_ASSERT(cfg->rate >= mod_clk / (MAX_CPSDVSR * (1 + MAX_SCR)), "SPI rate too small: %u", cfg->rate);
     SPI_ASSERT(cfg->tx_bits <= MAX_DATA_BITS && cfg->tx_bits >= MIN_DATA_BITS, "Invalid SPI TX bits: %d", cfg->tx_bits);
     SPI_ASSERT(cfg->rx_bits <= MAX_DATA_BITS && cfg->rx_bits >= MIN_DATA_BITS, "Invalid SPI RX bits: %d", cfg->rx_bits);
@@ -721,7 +689,6 @@ int hal_spiphy_rom_recv(const void *cmd, void *data, uint32_t len)
 
 #else // !SPI_ROM_ONLY
 
-POSSIBLY_UNUSED
 static int hal_spi_activate_cs_id(enum HAL_SPI_ID_T id, uint32_t cs)
 {
     struct HAL_SPI_CTRL_T *ctrl = NULL;
@@ -920,7 +887,7 @@ static int hal_spi_dma_send_id(enum HAL_SPI_ID_T id, const void *data, uint32_t 
     return 0;
 }
 
-static void hal_spi_stop_dma_send_id(enum HAL_SPI_ID_T id)
+void hal_spi_stop_dma_send_id(enum HAL_SPI_ID_T id)
 {
     uint32_t lock;
     uint8_t tx_chan;
@@ -983,50 +950,6 @@ static void hal_spi_rxdma_handler(uint8_t chan, uint32_t remains, uint32_t error
         spi_rxdma_handler[id](error);
     }
 }
-
-#ifdef CHIP_HAS_SPILCD
-static void hal_spi_slave_rxdma_handler(uint8_t chan, uint32_t remains, uint32_t error, struct HAL_DMA_DESC_T *lli)
-{
-    enum HAL_SPI_ID_T id;
-    uint32_t lock;
-    uint32_t xfer;
-
-    lock = int_lock();
-    for (id = HAL_SPI_ID_INTERNAL; id < HAL_SPI_ID_QTY; id++) {
-        if (spi_rxdma_chan[id] == chan) {
-            if (spi_slave_recv_dma_mode[id] == SPI_RX_DMA_MODE_NORMAL) {
-                spi_rxdma_chan[id] = HAL_DMA_CHAN_NONE;
-            }
-            break;
-        }
-    }
-    int_unlock(lock);
-
-    if (id >= HAL_SPI_ID_QTY) {
-        return;
-    }
-    if (spi_slave_recv_dma_mode[id] == SPI_RX_DMA_MODE_NORMAL) {
-        // Get remain xfer size
-        xfer = hal_gpdma_get_sg_remain_size(chan);
-        hal_gpdma_free_chan(chan);
-    } else {
-        xfer = 0;
-    }
-    if (spi_rxdma_handler[id]) {
-        if (spi_slave_recv_dma_mode[id] == SPI_RX_DMA_MODE_NORMAL) {
-            // Already get xfer size
-            if (spi_slave_recv_dma_size[id] > xfer) {
-                xfer = spi_slave_recv_dma_size[id] - xfer;
-            } else {
-                xfer = 0;
-            }
-        } else if (spi_slave_recv_dma_mode[id] == SPI_RX_DMA_MODE_PINGPANG) {
-            xfer = spi_slave_recv_dma_size[id] / 2;
-        }
-        spi_rxdma_handler[id](error);
-    }
-}
-#endif
 
 static int hal_spi_dma_recv_id(enum HAL_SPI_ID_T id, const void *cmd, void *data, uint32_t len, HAL_SPI_DMA_HANDLER_T handler)
 {
@@ -1193,222 +1116,6 @@ _exit:
         }
     }
 
-    return 0;
-}
-
-#ifdef CHIP_HAS_SPILCD
-static int spi_slave_fill_dma_desc(struct HAL_DMA_DESC_T *desc, uint32_t cnt, uint32_t cnt_mode, struct HAL_DMA_CH_CFG_T *cfg,
-                             uint32_t len, enum SPI_RX_DMA_MODE_T mode, uint32_t step)
-{
-    enum HAL_DMA_RET_T ret;
-    struct HAL_DMA_DESC_T *last_desc;
-    int tc_irq;
-    int i;
-
-    for (i = 0; i < cnt_mode - 1; i++) {
-        cfg->src_tsize = step/cnt;
-        tc_irq = 0;
-        if (mode == SPI_RX_DMA_MODE_PINGPANG) {
-            tc_irq = (i == cnt_mode / 2 - 1) ? 1 : 0;
-        } else if (mode == SPI_RX_DMA_MODE_STREAM) {
-            tc_irq = 1;
-        }
-        ret = hal_gpdma_init_desc(&desc[i], cfg, &desc[i + 1], tc_irq);
-        if (ret != HAL_DMA_OK) {
-            return 1;
-        }
-        cfg->dst += step;
-    }
-
-    cfg->src_tsize = (len - (step * i))/cnt;
-    last_desc = NULL;
-    if (mode == SPI_RX_DMA_MODE_PINGPANG || mode == SPI_RX_DMA_MODE_STREAM) {
-        last_desc = &desc[0];
-    }
-    ret = hal_gpdma_init_desc(&desc[i], cfg, last_desc, 1);
-    if (ret != HAL_DMA_OK) {
-        return 1;
-    }
-
-    return 0;
-}
-#endif
-
-int hal_spi_slave_dma_recv(void *data, uint32_t len, HAL_SPI_DMA_HANDLER_T handler,
-                              struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt,enum SPI_RX_DMA_MODE_T mode, uint32_t step)
-{
-#ifdef CHIP_HAS_SPILCD
-    uint8_t cnt;
-    uint32_t cnt_mode;
-    enum HAL_DMA_RET_T ret;
-    struct HAL_DMA_CH_CFG_T dma_cfg;
-    enum HAL_DMA_WDITH_T dma_width;
-    uint32_t lock;
-    enum HAL_DMA_PERIPH_T src_periph;
-    struct HAL_SPI_CTRL_T *ctrl = NULL;
-    struct HAL_DMA_DESC_T desc_c1;
-
-    enum HAL_SPI_ID_T id = HAL_SPI_ID_SLCD;
-    //SPI_ASSERT(id < HAL_SPI_ID_QTY, invalid_id, id);
-    SPI_ASSERT((spi[id]->SSPDMACR & (SPI_SSPDMACR_TXDMAE | SPI_SSPDMACR_RXDMAE)) ==
-        (SPI_SSPDMACR_TXDMAE | SPI_SSPDMACR_RXDMAE), "RX/TX-DMA not configured on SPI %d", id);
-
-    hal_spi_set_xfer_type_id(HAL_SPI_ID_SLCD, &spilcd_ctrl[spilcd_cs], HAL_SPI_XFER_TYPE_RECV);
-    spi_rxdma_handler[id] = handler;
-    cnt = get_frame_bytes(id);
-
-    if ((len & (cnt - 1)) != 0) {
-        return -1;
-    }
-    if (((uint32_t)data & (cnt - 1)) != 0) {
-        return -2;
-    }
-
-    if (0) {
-    } else if (mode == SPI_RX_DMA_MODE_NORMAL) {
-        cnt_mode = (len + step - 1) / step;
-    } else if (mode == SPI_RX_DMA_MODE_PINGPANG) {
-        cnt_mode = ((len / 2 + step - 1) / step) * 2;
-        step = len / cnt_mode;
-        if (len % cnt_mode != 0) {
-            return -11;
-        }
-        if (step == 0) {
-            return -12;
-        }
-    } else if (mode == SPI_RX_DMA_MODE_STREAM) {
-        cnt_mode = (len + step - 1) / step;
-        if (cnt_mode == 1) {
-            // cnt should >= 2
-            cnt_mode++;
-        }
-        step = (len + cnt_mode - 1) / cnt_mode;
-        if (step == 0) {
-            return -13;
-        }
-    } else {
-        return -10;
-    }
-
-    if (desc == NULL && desc_cnt) {
-        *desc_cnt = (cnt == 1) ? 0 : cnt;
-        return 0;
-    }
-
-    if (cnt_mode > 1) {
-        if (desc == NULL || desc_cnt == NULL) {
-            return -1;
-        }
-        if (*desc_cnt < cnt_mode) {
-            return -2;
-        }
-    } else {
-        // Use desc in current stack
-        desc = &desc_c1;
-    }
-    if (desc_cnt) {
-        *desc_cnt = (cnt_mode == 1) ? 0 : cnt_mode;
-    }
-
-    // Rx transaction should start from idle state
-    if (spi[id]->SSPSR & SPI_SSPSR_BSY) {
-        return -11;
-    }
-
-    if (id == HAL_SPI_ID_INTERNAL) {
-        src_periph = HAL_GPDMA_ISPI_RX;
-#ifdef CHIP_HAS_SPI
-    } else if (id == HAL_SPI_ID_0) {
-        src_periph = HAL_GPDMA_SPI_RX;
-#endif
-#ifdef CHIP_HAS_SPILCD
-    } else if (id == HAL_SPI_ID_SLCD) {
-        src_periph = HAL_GPDMA_SPILCD_RX;
-#endif
-    } else {
-        return -12;
-    }
-
-    lock = int_lock();
-    spi_rxdma_chan[id] = hal_gpdma_get_chan(src_periph, HAL_DMA_HIGH_PRIO);
-    if (spi_rxdma_chan[id] == HAL_DMA_CHAN_NONE) {
-        int_unlock(lock);
-        return -5;
-    }
-    int_unlock(lock);
-
-    if (cnt == 1) {
-        dma_width = HAL_DMA_WIDTH_BYTE;
-    } else if (cnt == 2) {
-        dma_width = HAL_DMA_WIDTH_HALFWORD;
-    } else {
-        dma_width = HAL_DMA_WIDTH_WORD;
-    }
-
-    memset(&dma_cfg, 0, sizeof(dma_cfg));
-    dma_cfg.ch = spi_rxdma_chan[id];
-    dma_cfg.dst = (uint32_t)data;
-    dma_cfg.dst_bsize = HAL_DMA_BSIZE_16;
-    //dma_cfg.dst_periph = HAL_GPDMA_PERIPH_QTY; // useless
-    dma_cfg.dst_width = dma_width;
-    dma_cfg.handler = handler ? hal_spi_slave_rxdma_handler : NULL;
-    dma_cfg.src = 0; // useless
-    dma_cfg.src_periph = src_periph;
-    dma_cfg.src_bsize = HAL_DMA_BSIZE_8;
-    dma_cfg.src_tsize = len;
-    dma_cfg.src_width = dma_width;
-    dma_cfg.try_burst = 0;
-    dma_cfg.type = HAL_DMA_FLOW_P2M_DMA;
-
-    // Flush the RX FIFO by reset or DMA read (CPU read is forbidden when DMA is enabled)
-    if (spi[id]->SSPSR & SPI_SSPSR_RNE) {
-        // Reset SPI MODULE might cause the increment of the FIFO pointer
-        hal_cmu_reset_pulse(spi_mod[id].mod);
-        // Reset SPI APB will reset the FIFO pointer
-        hal_cmu_reset_pulse(spi_mod[id].apb);
-        if (0) {
-#ifdef CHIP_HAS_SPI
-        } else if (id == HAL_SPI_ID_0) {
-            ctrl = &spi0_ctrl[spi0_cs];
-#endif
-#ifdef CHIP_HAS_SPILCD
-        } else if (id == HAL_SPI_ID_SLCD) {
-            ctrl = &spilcd_ctrl[spilcd_cs];
-#endif
-        }
-        if (ctrl) {
-            // hal_spi_set_xfer_type_id() is not enough, for all the registers have been reset by APB reset
-            hal_spi_enable_id(id, ctrl, HAL_SPI_XFER_TYPE_RECV);
-        }
-    }
-    spi[id]->SSPICR = ~0UL;
-
-    if (cnt_mode == 1) {
-        ret = hal_dma_init_desc(desc, &dma_cfg, NULL, 1);
-        if (ret != HAL_DMA_OK) {
-            ret = 1;
-        }
-    } else {
-        ret = spi_slave_fill_dma_desc(desc, cnt, cnt_mode, &dma_cfg, len, mode, step);
-    }
-    if (ret) {
-        return 2;
-    }
-
-    spi_slave_recv_dma_mode[id] = mode;
-    spi_slave_recv_dma_size[id] = len;
-
-    ret = hal_gpdma_sg_start(desc, &dma_cfg);
-    if (ret == HAL_DMA_OK) {
-        ret = 0;
-    } else {
-        hal_gpdma_free_chan(spi_rxdma_chan[id]);
-        spi_rxdma_chan[id] = HAL_DMA_CHAN_NONE;
-        ret = 5;
-    }
-#else
-    SPI_ASSERT(0,"Wrong case");
-#endif
     return 0;
 }
 
@@ -2017,37 +1724,5 @@ int hal_spidpd_recv(const void *cmd, void *data, uint32_t len)
     return ret;
 }
 #endif // CHIP_HAS_SPIDPD
-
-#ifdef CORE_SLEEP_POWER_DOWN
-void SRAM_TEXT_LOC hal_spi_sleep(void)
-{
-    enum HAL_SPI_ID_T id;
-
-    for (id = 0; id < HAL_SPI_ID_QTY; id++) {
-        if (spi_cs_map[id]) {
-            saved_spi_regs[id].SSPCR0   = spi[id]->SSPCR0;
-            saved_spi_regs[id].SSPCR1   = spi[id]->SSPCR1;
-            saved_spi_regs[id].SSPCPSR  = spi[id]->SSPCPSR;
-            saved_spi_regs[id].SSPDMACR = spi[id]->SSPDMACR;
-            saved_spi_regs[id].SSPRXCR  = spi[id]->SSPRXCR;
-        }
-    }
-}
-
-void SRAM_TEXT_LOC hal_spi_wakeup(void)
-{
-    enum HAL_SPI_ID_T id;
-
-    for (id = 0; id < HAL_SPI_ID_QTY; id++) {
-        if (spi_cs_map[id]) {
-            spi[id]->SSPCR0     = saved_spi_regs[id].SSPCR0;
-            spi[id]->SSPCR1     = saved_spi_regs[id].SSPCR1;
-            spi[id]->SSPCPSR    = saved_spi_regs[id].SSPCPSR;
-            spi[id]->SSPDMACR   = saved_spi_regs[id].SSPDMACR;
-            spi[id]->SSPRXCR    = saved_spi_regs[id].SSPRXCR;
-        }
-    }
-}
-#endif
 
 #endif // !SPI_ROM_ONLY
