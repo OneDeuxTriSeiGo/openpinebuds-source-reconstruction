@@ -16,40 +16,20 @@
 #define __INTERSYSHCI_H__
 
 #include "trans_adapt.h"
-#define INTERSYS_TX_SIGNAL (0x01)
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-bool BESHCI_Controller_Log_Handler(const unsigned char *p_buff, uint32_t length);
 void BESHCI_Open(void);
 void BESHCI_Close(void);
 void BESHCI_LOCK_TX(void);
 void BESHCI_UNLOCK_TX(void);
-/***************************************************************************
- *
- * BES intersys RX data API
- * Please return the length of the data read each time
- *
- ****************************************************************************/
-unsigned short bes_hci_receive_data( const uint8_t *buf, uint32_t size);
 
-/***************************************************************************
- *
- * BES intersys TX data API
- *
- ****************************************************************************/
-int bes_hci_send_data(uint8_t *buf, int size);
-
+bool BESHCI_Controller_Log_Handler(const unsigned char *p_buff, uint32_t length);
 typedef bool (*intersys_hci_cmd_filter_handler_func)(uint8_t* pbuf, uint32_t length);
 void intersys_register_hci_cmd_filter_handler_callback(intersys_hci_cmd_filter_handler_func func);
 
-typedef void (*intersys_log_report_func)(uint8_t* data);
-void intersys_register_log_report_handler_callback(intersys_log_report_func func);
-
-void bes_get_hci_rx_flowctrl_info(void);
-void bes_get_hci_tx_flowctrl_info(void);
 #if defined(__cplusplus)
 }
 #endif
