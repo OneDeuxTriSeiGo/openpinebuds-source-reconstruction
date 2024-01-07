@@ -26,13 +26,6 @@
 #define DMA_REMAP
 #endif
 
-#if (defined(CHIP_BEST1501SIMU) && !defined(__FPGA_1501P__)) || defined(CHIP_BEST1600SIMU)
-enum HAL_DMA_INST_T {
-    HAL_DMA_INST_AUDMA = 1,
-    HAL_DMA_INST_GPDMA = HAL_DMA_INST_AUDMA,
-    HAL_DMA_INST_QTY
-};
-#else
 enum HAL_DMA_INST_T {
     HAL_DMA_INST_AUDMA = 0,
 #if (CHIP_HAS_DMA == 1)
@@ -43,7 +36,6 @@ enum HAL_DMA_INST_T {
 
     HAL_DMA_INST_QTY
 };
-#endif
 
 struct HAL_DMA_FIFO_ADDR_T {
     uint32_t count;
@@ -162,17 +154,6 @@ static bool dma_opened = false;
 
 static HAL_DMA_DELAY_FUNC dma_delay = NULL;
 
-#ifdef DMA_DEBUG
-#if (CHIP_HAS_DMA > 1) && (GPDMA_CHAN_NUM > AUDMA_CHAN_NUM)
-#define MAX_CHAN_NUM_PER_INST               GPDMA_CHAN_NUM
-#else
-#define MAX_CHAN_NUM_PER_INST               AUDMA_CHAN_NUM
-#endif
-static void *chan_user[HAL_DMA_INST_QTY][MAX_CHAN_NUM_PER_INST];
-static uint32_t debug_user_map[HAL_DMA_INST_QTY];
-STATIC_ASSERT(sizeof(debug_user_map[0]) * 8 >= MAX_CHAN_NUM_PER_INST, "debug_user_map size too small");
-#endif
-
 /*****************************************************************************
  * Public types/enumerations/variables
  ****************************************************************************/
@@ -272,7 +253,7 @@ static void hal_dma_open_inst(enum HAL_DMA_INST_T inst)
 
     dma[inst]->DMACONFIG = (dma[inst]->DMACONFIG & ~(DMA_DMACONFIG_AHB1_BIGENDIAN |
         DMA_DMACONFIG_AHB2_BIGENDIAN | DMA_DMACONFIG_CLK_EN_MASK)) |
-        DMA_DMACONFIG_EN | DMA_DMACONFIG_CROSS_1KB_EN |
+        DMA_DMACONFIG_EN | 
 #ifdef CHIP_BEST3001
         DMA_DMACONFIG_TC_IRQ_EN_MASK |
 #endif
@@ -694,12 +675,6 @@ uint8_t hal_dma_get_chan(enum HAL_DMA_PERIPH_T periph, enum HAL_DMA_GET_CHAN_T p
     }
     int_unlock(lock);
 
-#ifdef DMA_DEBUG
-    if (got != HAL_DMA_CHAN_NONE) {
-        chan_user[inst][hwch] = __builtin_return_address(0);
-    }
-#endif
-
     return got;
 }
 
@@ -1072,37 +1047,4 @@ HAL_DMA_DELAY_FUNC hal_dma_set_delay_func(HAL_DMA_DELAY_FUNC new_func)
     HAL_DMA_DELAY_FUNC old_func = dma_delay;
     dma_delay = new_func;
     return old_func;
-}
-
-void hal_dma_record_busy_chan(void)
-{
-#ifdef DMA_DEBUG
-    enum HAL_DMA_INST_T inst;
-    int hwch;
-
-    for (inst = HAL_DMA_INST_AUDMA; inst < HAL_DMA_INST_QTY; inst++) {
-        debug_user_map[inst] = 0;
-        for (hwch = chan_start[inst]; hwch < chan_num[inst]; hwch++) {
-            if (hal_dma_chan_busy_inst(inst, hwch)) {
-                debug_user_map[inst] |= (1 << hwch);
-            }
-        }
-    }
-#endif
-}
-
-void hal_dma_print_busy_chan(void)
-{
-#ifdef DMA_DEBUG
-    enum HAL_DMA_INST_T inst;
-    int hwch;
-
-    for (inst = HAL_DMA_INST_AUDMA; inst < HAL_DMA_INST_QTY; inst++) {
-        for (hwch = chan_start[inst]; hwch < chan_num[inst]; hwch++) {
-            if (debug_user_map[inst] & (1 << hwch)) {
-                TRACE(0, "*** DMA CHAN BUSY: %u-%u %8X", inst, hwch, (uint32_t)chan_user[inst][hwch]);
-            }
-        }
-    }
-#endif
 }
