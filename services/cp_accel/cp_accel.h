@@ -27,7 +27,7 @@ extern "C" {
 #define HAL_MEMSC_ID_CP                    HAL_MEMSC_ID_1
 
 #define LOCK_CP_PROCESS() \
-     do {} while (hal_memsc_lock(HAL_MEMSC_ID_CP) == 0)
+     while (hal_memsc_lock(HAL_MEMSC_ID_CP) == 0){}
 
 #define UNLOCK_CP_PROCESS() \
      hal_memsc_unlock(HAL_MEMSC_ID_CP);
