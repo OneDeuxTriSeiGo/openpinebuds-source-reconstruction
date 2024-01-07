@@ -33,14 +33,6 @@ struct SPI_T
     __IO uint32_t SSPRXCR;          //0x00000088
 };
 
-struct SAVED_SPI_REGS_T {
-    uint32_t SSPCR0;
-    uint16_t SSPCR1;
-    uint16_t SSPCPSR;
-    uint16_t SSPDMACR;
-    uint16_t SSPRXCR;
-};
-
 #define MAX_SCR                     (0xFF)
 #define MIN_SCR                     (0)
 #define MAX_DATA_BITS               (32)
