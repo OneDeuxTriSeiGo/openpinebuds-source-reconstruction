@@ -583,7 +583,7 @@ enum HAL_DMA_RET_T hal_dma_start(const struct HAL_DMA_CH_CFG_T *cfg)
     return HAL_DMA_OK;
 }
 
-void hal_dma_cancel(uint8_t ch)
+uint32_t hal_dma_cancel(uint8_t ch)
 {
     enum HAL_DMA_INST_T inst;
     uint8_t hwch;
@@ -599,7 +599,7 @@ void hal_dma_cancel(uint8_t ch)
     dma[inst]->INTERRCLR = DMA_STAT_CHAN(hwch);
 }
 
-void hal_dma_stop(uint8_t ch)
+uint32_t hal_dma_stop(uint8_t ch)
 {
     enum HAL_DMA_INST_T inst;
     uint8_t hwch;
@@ -625,7 +625,7 @@ void hal_dma_stop(uint8_t ch)
     while (dma[inst]->CH[hwch].CONFIG & DMA_CONFIG_ACTIVE);
 #endif
 
-    hal_dma_cancel(ch);
+    return hal_dma_cancel(ch);
 }
 
 uint8_t hal_dma_get_chan(enum HAL_DMA_PERIPH_T periph, enum HAL_DMA_GET_CHAN_T policy)
