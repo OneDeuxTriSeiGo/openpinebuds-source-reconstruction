@@ -49,13 +49,6 @@ struct IOMUX_T {
     __IO uint32_t REG_070;
     __IO uint32_t REG_074;
     __IO uint32_t REG_078;
-    __IO uint32_t REG_07C;
-    __IO uint32_t REG_080;
-    __IO uint32_t REG_084;
-    __IO uint32_t REG_088;
-    __IO uint32_t REG_08C;
-    __IO uint32_t REG_090;
-    __IO uint32_t REG_094;
 };
 
 // reg_00
@@ -270,11 +263,8 @@ struct IOMUX_T {
 #define IOMUX_GPIO_PCM_MODE                     (1 << 2)
 #define IOMUX_BT_RXTX_SW_EN                     (1 << 3)
 #define IOMUX_I2C1_M_SEL_GPIO                   (1 << 4)
-#define IOMUX_I2C2_M_SEL_GPIO                   (1 << 5)
 #define IOMUX_SPILCD0_WM3                       (1 << 6)
 #define IOMUX_SPILCD1_WM3                       (1 << 7)
-#define IOMUX_DISPLAY_SPI_WM3                   (1 << 8)
-#define IOMUX_SPILCD1_MASTER_N                  (1 << 9)
 #define IOMUX_CFG_EN_CLK_REQIN                  (1 << 10)
 #define IOMUX_CFG_POL_CLK_REQIN                 (1 << 11)
 #define IOMUX_CFG_EN_CLK_REQOUT                 (1 << 12)
@@ -283,8 +273,6 @@ struct IOMUX_T {
 #define IOMUX_UART0_HALFN                       (1 << 15)
 #define IOMUX_UART1_HALFN                       (1 << 16)
 #define IOMUX_UART2_HALFN                       (1 << 17)
-#define IOMUX_UART3_HALFN                       (1 << 18)
-#define IOMUX_WF_UART_HALFN                     (1 << 19)
 
 // reg_54
 #define IOMUX_CFG_GPIO_OENB_P0_POL(n)           (((n) & 0xFF) << 0)
@@ -413,73 +401,5 @@ struct IOMUX_T {
 #define IOMUX_GPIO_P3_DRV7_SEL(n)               (((n) & 0x3) << 30)
 #define IOMUX_GPIO_P3_DRV7_SEL_MASK             (0x3 << 30)
 #define IOMUX_GPIO_P3_DRV7_SEL_SHIFT            (30)
-
-// reg_90
-#define IOMUX_GPIO_P00_PU                       (1 << 0)
-#define IOMUX_GPIO_P01_PU                       (1 << 1)
-#define IOMUX_GPIO_P02_PU                       (1 << 2)
-#define IOMUX_GPIO_P03_PU                       (1 << 3)
-#define IOMUX_GPIO_P04_PU                       (1 << 4)
-#define IOMUX_GPIO_P05_PU                       (1 << 5)
-#define IOMUX_GPIO_P06_PU                       (1 << 6)
-#define IOMUX_GPIO_P07_PU                       (1 << 7)
-#define IOMUX_GPIO_P00_SEL_VIO                  (1 << 8)
-#define IOMUX_GPIO_P01_SEL_VIO                  (1 << 9)
-#define IOMUX_GPIO_P02_SEL_VIO                  (1 << 10)
-#define IOMUX_GPIO_P03_SEL_VIO                  (1 << 11)
-#define IOMUX_GPIO_P04_SEL_VIO                  (1 << 12)
-#define IOMUX_GPIO_P05_SEL_VIO                  (1 << 13)
-#define IOMUX_GPIO_P06_SEL_VIO                  (1 << 14)
-#define IOMUX_GPIO_P07_SEL_VIO                  (1 << 15)
-#define IOMUX_GPIO_P10_PU                       (1 << 16)
-#define IOMUX_GPIO_P11_PU                       (1 << 17)
-#define IOMUX_GPIO_P12_PU                       (1 << 18)
-#define IOMUX_GPIO_P13_PU                       (1 << 19)
-#define IOMUX_GPIO_P14_PU                       (1 << 20)
-#define IOMUX_GPIO_P15_PU                       (1 << 21)
-#define IOMUX_GPIO_P16_PU                       (1 << 22)
-#define IOMUX_GPIO_P17_PU                       (1 << 23)
-#define IOMUX_GPIO_P10_SEL_VIO                  (1 << 24)
-#define IOMUX_GPIO_P11_SEL_VIO                  (1 << 25)
-#define IOMUX_GPIO_P12_SEL_VIO                  (1 << 26)
-#define IOMUX_GPIO_P13_SEL_VIO                  (1 << 27)
-#define IOMUX_GPIO_P14_SEL_VIO                  (1 << 28)
-#define IOMUX_GPIO_P15_SEL_VIO                  (1 << 29)
-#define IOMUX_GPIO_P16_SEL_VIO                  (1 << 30)
-#define IOMUX_GPIO_P17_SEL_VIO                  (1 << 31)
-
-// reg_94
-#define IOMUX_GPIO_P20_PU                       (1 << 0)
-#define IOMUX_GPIO_P21_PU                       (1 << 1)
-#define IOMUX_GPIO_P22_PU                       (1 << 2)
-#define IOMUX_GPIO_P23_PU                       (1 << 3)
-#define IOMUX_GPIO_P24_PU                       (1 << 4)
-#define IOMUX_GPIO_P25_PU                       (1 << 5)
-#define IOMUX_GPIO_P26_PU                       (1 << 6)
-#define IOMUX_GPIO_P27_PU                       (1 << 7)
-#define IOMUX_GPIO_P20_SEL_VIO                  (1 << 8)
-#define IOMUX_GPIO_P21_SEL_VIO                  (1 << 9)
-#define IOMUX_GPIO_P22_SEL_VIO                  (1 << 10)
-#define IOMUX_GPIO_P23_SEL_VIO                  (1 << 11)
-#define IOMUX_GPIO_P24_SEL_VIO                  (1 << 12)
-#define IOMUX_GPIO_P25_SEL_VIO                  (1 << 13)
-#define IOMUX_GPIO_P26_SEL_VIO                  (1 << 14)
-#define IOMUX_GPIO_P27_SEL_VIO                  (1 << 15)
-#define IOMUX_GPIO_P30_PU                       (1 << 16)
-#define IOMUX_GPIO_P31_PU                       (1 << 17)
-#define IOMUX_GPIO_P32_PU                       (1 << 18)
-#define IOMUX_GPIO_P33_PU                       (1 << 19)
-#define IOMUX_GPIO_P34_PU                       (1 << 20)
-#define IOMUX_GPIO_P35_PU                       (1 << 21)
-#define IOMUX_GPIO_P36_PU                       (1 << 22)
-#define IOMUX_GPIO_P37_PU                       (1 << 23)
-#define IOMUX_GPIO_P30_SEL_VIO                  (1 << 24)
-#define IOMUX_GPIO_P31_SEL_VIO                  (1 << 25)
-#define IOMUX_GPIO_P32_SEL_VIO                  (1 << 26)
-#define IOMUX_GPIO_P33_SEL_VIO                  (1 << 27)
-#define IOMUX_GPIO_P34_SEL_VIO                  (1 << 28)
-#define IOMUX_GPIO_P35_SEL_VIO                  (1 << 29)
-#define IOMUX_GPIO_P36_SEL_VIO                  (1 << 30)
-#define IOMUX_GPIO_P37_SEL_VIO                  (1 << 31)
 
 #endif /* __REG_IOMUXIP_H_ */
