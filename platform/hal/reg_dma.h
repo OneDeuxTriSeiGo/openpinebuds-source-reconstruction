@@ -110,7 +110,7 @@ struct DMA_T {
 #define DMA_DMACONFIG_EN                    (1 << 0)    // DMA Controller enable
 #define DMA_DMACONFIG_AHB1_BIGENDIAN        (1 << 1)    // AHB Master endianness configuration
 #define DMA_DMACONFIG_AHB2_BIGENDIAN        (1 << 2)    // AHB Master endianness configuration
-#define DMA_DMACONFIG_CROSS_1KB_EN          (1 << 3)
+
 #define DMA_DMACONFIG_TC_IRQ_EN(n)          (((n) & 0xFF) << 4)
 #define DMA_DMACONFIG_TC_IRQ_EN_MASK        (0xFF << 4)
 #define DMA_DMACONFIG_TC_IRQ_EN_SHIFT       (4)
