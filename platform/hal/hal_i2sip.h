@@ -217,7 +217,6 @@ static inline void i2sip_w_clk_sync_enable(uint32_t reg_base, enum HAL_I2S_SYNC_
     uint32_t val = 0;
     val = i2sip_read32(reg_base, I2SIP_EN_SEL_OFFSET);
     val = SET_BITFIELD(val, I2SIP_CLK_EN_SEL, type);
-    val |= I2SIP_TSF_EVENT_SEL;
     i2sip_write32(val, reg_base, I2SIP_EN_SEL_OFFSET);
 }
 
