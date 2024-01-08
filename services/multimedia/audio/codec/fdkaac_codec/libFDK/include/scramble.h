@@ -96,7 +96,7 @@ amm-info@iis.fraunhofer.de
 #if defined(__arm__)
 #include "arm/scramble.h"
 
-#elif defined(__mips__) && defined(__mips_dsp)	/* cppp replaced: elif */
+#elif defined(__mips__) && defined(__mips_dsp)  /* cppp replaced: elif */
 #include "mips/scramble.h"
 
 #endif

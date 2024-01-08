@@ -90,7 +90,7 @@ amm-info@iis.fraunhofer.de
 
 #if defined(__arm__)
 
-#if defined(__GNUC__) && defined(__arm__)	/* cppp replaced: elif */
+#if defined(__GNUC__) && defined(__arm__)   /* cppp replaced: elif */
 /* ARM with GNU compiler */
 
 #define FUNCTION_fixmuldiv2_DD

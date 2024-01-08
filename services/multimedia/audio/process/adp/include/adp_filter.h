@@ -32,11 +32,11 @@ extern "C" {
 
 struct adpparam
 {
-	void *fft_lookup;
-	int M;
-	float w_fft[ADPFILTER_NUM*2];
-	float w[ADPFILTER_NUM*2];
-	float u;
+    void *fft_lookup;
+    int M;
+    float w_fft[ADPFILTER_NUM*2];
+    float w[ADPFILTER_NUM*2];
+    float u;
 };
 extern void lms_block_fft(short *in, short *dest, short *out, struct adpparam *param,int upadat_flag);
 extern void *adp_filter_init(int size);

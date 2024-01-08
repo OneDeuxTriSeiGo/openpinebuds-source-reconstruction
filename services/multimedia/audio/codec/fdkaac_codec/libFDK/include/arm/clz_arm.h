@@ -90,7 +90,7 @@ amm-info@iis.fraunhofer.de
 
 #if defined(__arm__)
 
-#if defined(__GNUC__) && defined(__ARM_ARCH_5TE__)	/* cppp replaced: elif */
+#if defined(__GNUC__) && defined(__ARM_ARCH_5TE__)  /* cppp replaced: elif */
   /* ARM gcc*/
 
   #define FUNCTION_fixnormz_D

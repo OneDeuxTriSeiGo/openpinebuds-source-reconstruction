@@ -489,7 +489,7 @@ inline FIXP_DBL GetInvInt(int intValue)
 {
   FDK_ASSERT((intValue > 0) && (intValue < 80));
   FDK_ASSERT(intValue<80);
-	return invCount[intValue];
+    return invCount[intValue];
 }
 
 

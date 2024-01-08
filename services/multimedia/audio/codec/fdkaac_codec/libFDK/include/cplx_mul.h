@@ -93,7 +93,7 @@ amm-info@iis.fraunhofer.de
 #if !defined(__CPLX_Mult_H__)
 #define __CPLX_Mult_H__
 
-#if defined(__CC_ARM) || defined(__arm__) || defined(_M_ARM)	/* cppp replaced: elif */
+#if defined(__CC_ARM) || defined(__arm__) || defined(_M_ARM)    /* cppp replaced: elif */
 #include "arm/cplx_mul.h"
 
 #elif defined(__GNUC__) && defined(__mips__) && __mips_isa_rev < 6

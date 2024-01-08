@@ -89,7 +89,7 @@ amm-info@iis.fraunhofer.de
 ******************************************************************************/
 
 #if defined(FUNCTION_scramble)
-#if defined(__GNUC__)	/* cppp replaced: elif */
+#if defined(__GNUC__)   /* cppp replaced: elif */
 
 #define FUNCTION_scramble
 
@@ -124,16 +124,16 @@ inline void scramble(FIXP_DBL x [], INT n) {
       "strd    r8, [%0, r5];\n"         /* x[r5,r5+1] = r8,r9;          */
 #else
       "mov      r5, r2, lsl #3;\n"       /* m(r5) = r2*4*2               */
-      "ldr	r10, [%0, r5];\n"
+      "ldr  r10, [%0, r5];\n"
       "mov      r6, r4, lsl #3;\n"      /* j(r6) = r4*4*2              */
-      "ldr	r11, [%0, r6];\n"
+      "ldr  r11, [%0, r6];\n"
 
-      "str	r10, [%0, r6];\n"
+      "str  r10, [%0, r6];\n"
       "str      r11, [%0, r5];\n"
 
-      "add	r5, r5, #4;"
-      "ldr	r10, [%0, r5];\n"
-      "add	r6, r6, #4;"
+      "add  r5, r5, #4;"
+      "ldr  r10, [%0, r5];\n"
+      "add  r6, r6, #4;"
       "ldr      r11, [%0, r6];\n"
       "str      r10, [%0, r6];\n"
       "str      r11, [%0, r5];\n"
@@ -153,6 +153,6 @@ inline void scramble(FIXP_DBL x [], INT n) {
 #else
 /* Force C implementation if no assembler version available. */
 #undef FUNCTION_scramble
-#endif	/* Toolchain selection. */
+#endif  /* Toolchain selection. */
 
-#endif	/* defined(FUNCTION_scramble) */
+#endif  /* defined(FUNCTION_scramble) */

@@ -98,10 +98,10 @@ amm-info@iis.fraunhofer.de
   #define SCALE_INLINE inline
 
 
-#if defined(__arm__)	/* cppp replaced: elif */
+#if defined(__arm__)    /* cppp replaced: elif */
 #include "arm/scale.h"
 
-#elif defined(__mips__)	/* cppp replaced: elif */
+#elif defined(__mips__) /* cppp replaced: elif */
 #include "mips/scale.h"
 
 #endif
