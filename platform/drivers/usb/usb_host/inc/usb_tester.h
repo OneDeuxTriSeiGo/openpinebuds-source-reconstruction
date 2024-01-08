@@ -38,11 +38,11 @@ public:
         
     virtual uint64_t disk_sectors();
 
-protected:	
-	int _device;
-	u32 _blockSize;
-	u32 _blockCount;
-	
+protected:  
+    int _device;
+    u32 _blockSize;
+    u32 _blockCount;
+    
 };
 
 

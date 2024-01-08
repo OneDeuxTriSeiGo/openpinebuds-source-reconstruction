@@ -1,10 +1,10 @@
 /*******************************************************************************
-** namer：	speech_eq
-** description:	fir and iir eq manager
+** namer：  speech_eq
+** description: fir and iir eq manager
 ** version：V0.9
 ** author： Yunjie Huo
-** modify：	2016.12.26
-** todo: 	1.
+** modify： 2016.12.26
+** todo:    1.
 *******************************************************************************/
 #include "hal_timer.h"
 #include "hal_trace.h"

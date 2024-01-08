@@ -112,20 +112,20 @@ void hsp_handle_key(uint8_t hsp_key)
 
     if(hsp_key == HSP_KEY_CKPD_CONTROL)
     {
-	TRACE(0,"hsp_key = HSP_KEY_CKPD_CONTROL");
-	if(app_hs_handle_cmd(hs_channel_tmp,APP_CPKD_CMD) !=0)
+    TRACE(0,"hsp_key = HSP_KEY_CKPD_CONTROL");
+    if(app_hs_handle_cmd(hs_channel_tmp,APP_CPKD_CMD) !=0)
             TRACE(0,"app_hs_handle_cmd err");
 
     }
     else if(hsp_key == HSP_KEY_CHANGE_TO_PHONE)
     {
            TRACE(0,"hsp_key = HSP_KEY_CHANGE_TO_PHONE");
-	HS_DisconnectAudioLink(hs_channel_tmp);
+    HS_DisconnectAudioLink(hs_channel_tmp);
     }
     else if(hsp_key == HSP_KEY_ADD_TO_EARPHONE)
     {
         TRACE(0,"hsp_key = HSP_KEY_ADD_TO_EARPHONE");
-	HS_CreateAudioLink(hs_channel_tmp);
+    HS_CreateAudioLink(hs_channel_tmp);
     }
 
 
@@ -529,30 +529,30 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_OUTGOING!!!!");
         status = HFCALL_MACHINE_CURRENT_OUTGOING;
     }
-	// current AG is calling.
-	else if( (current_callSetup ==BTIF_HF_CALL_SETUP_NONE) &&
-	   current_call == BTIF_HF_CALL_ACTIVE && 
-	   current_callheld != BTIF_HF_CALL_HELD_ACTIVE)
-	{
-		TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_CALLING!!!!");
-		status = HFCALL_MACHINE_CURRENT_CALLING;
-	}
-	// current AG is 3way incomming.
-	else if( current_callSetup ==BTIF_HF_CALL_SETUP_IN &&		 
-	   current_call == BTIF_HF_CALL_ACTIVE && 
-	   current_callheld == BTIF_HF_CALL_HELD_NONE)
-	{
-		TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_3WAY_INCOMMING!!!!");
-		status = HFCALL_MACHINE_CURRENT_3WAY_INCOMMING;
-	}
-	// current AG is 3way hold calling.
-	else if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&		   
-	   current_call == BTIF_HF_CALL_ACTIVE && 
-	   current_callheld == BTIF_HF_CALL_HELD_ACTIVE)
-	{
-		TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING!!!!");
-		status = HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING;
-	}
+    // current AG is calling.
+    else if( (current_callSetup ==BTIF_HF_CALL_SETUP_NONE) &&
+       current_call == BTIF_HF_CALL_ACTIVE && 
+       current_callheld != BTIF_HF_CALL_HELD_ACTIVE)
+    {
+        TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_CALLING!!!!");
+        status = HFCALL_MACHINE_CURRENT_CALLING;
+    }
+    // current AG is 3way incomming.
+    else if( current_callSetup ==BTIF_HF_CALL_SETUP_IN &&        
+       current_call == BTIF_HF_CALL_ACTIVE && 
+       current_callheld == BTIF_HF_CALL_HELD_NONE)
+    {
+        TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_3WAY_INCOMMING!!!!");
+        status = HFCALL_MACHINE_CURRENT_3WAY_INCOMMING;
+    }
+    // current AG is 3way hold calling.
+    else if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&        
+       current_call == BTIF_HF_CALL_ACTIVE && 
+       current_callheld == BTIF_HF_CALL_HELD_ACTIVE)
+    {
+        TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING!!!!");
+        status = HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING;
+    }
     else
     {
         TRACE(0,"current hfcall machine status is not found!!!!!!");
@@ -902,7 +902,7 @@ void bt_key_handle_func_longpress(void)
 #endif
         break;           
         case HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_IDLE:
-			hfp_handle_key(HFP_KEY_HANGUP_CALL);
+            hfp_handle_key(HFP_KEY_HANGUP_CALL);
         break;           
         case HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_IDLE:
         break;            
@@ -988,7 +988,7 @@ void bt_key_handle_func_key(enum APP_KEY_EVENT_T event)
 #endif
 
     switch(event)
-    {		
+    {       
 #ifndef __BT_ONE_BRING_TWO__
         case  APP_KEY_EVENT_UP:
         case  APP_KEY_EVENT_CLICK:
@@ -1004,9 +1004,9 @@ void bt_key_handle_func_key(enum APP_KEY_EVENT_T event)
         case  APP_KEY_EVENT_UP:
         case  APP_KEY_EVENT_CLICK:
             TRACE(8,"!!!APP_KEY_EVENT_CLICK callsetup %d %d call %d %d held %d %d audio_state %d %d\n",
-				app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
+                app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
                 app_bt_device.hfchan_call[BT_DEVICE_ID_1], app_bt_device.hfchan_call[BT_DEVICE_ID_2],
-				app_bt_device.hf_callheld[BT_DEVICE_ID_1], app_bt_device.hf_callheld[BT_DEVICE_ID_2],
+                app_bt_device.hf_callheld[BT_DEVICE_ID_1], app_bt_device.hf_callheld[BT_DEVICE_ID_2],
                 app_bt_device.hf_audio_state[BT_DEVICE_ID_1], app_bt_device.hf_audio_state[BT_DEVICE_ID_2]);
 
             if((app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1] == BTIF_HF_CALL_SETUP_NONE)&&(app_bt_device.hfchan_call[BT_DEVICE_ID_1] ==  BTIF_HF_CALL_NONE)&&(app_bt_device.hf_audio_state[BT_DEVICE_ID_1] == BTIF_HF_AUDIO_DISCON)&&
@@ -1104,10 +1104,10 @@ void bt_key_handle_func_key(enum APP_KEY_EVENT_T event)
 
             break;
         case  APP_KEY_EVENT_DOUBLECLICK:
-		    TRACE(8,"!!!APP_KEY_EVENT_DOUBLECLICK callsetup %d %d call %d %d held %d %d audio_state %d %d\n",
-				app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
+            TRACE(8,"!!!APP_KEY_EVENT_DOUBLECLICK callsetup %d %d call %d %d held %d %d audio_state %d %d\n",
+                app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
                 app_bt_device.hfchan_call[BT_DEVICE_ID_1], app_bt_device.hfchan_call[BT_DEVICE_ID_2],
-				app_bt_device.hf_callheld[BT_DEVICE_ID_1], app_bt_device.hf_callheld[BT_DEVICE_ID_2],
+                app_bt_device.hf_callheld[BT_DEVICE_ID_1], app_bt_device.hf_callheld[BT_DEVICE_ID_2],
                 app_bt_device.hf_audio_state[BT_DEVICE_ID_1], app_bt_device.hf_audio_state[BT_DEVICE_ID_2]);
 
             //if(((app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1] == BTIF_HF_CALL_SETUP_NONE)&&(app_bt_device.hfchan_call[BT_DEVICE_ID_1] == BTIF_HF_CALL_NONE)&&(app_bt_device.hf_channel[BT_DEVICE_ID_2].state == HF_STATE_CLOSED))||
@@ -1170,10 +1170,10 @@ void bt_key_handle_func_key(enum APP_KEY_EVENT_T event)
 
 
 //one bring two: long press switch sco
-		    TRACE(8,"!!!APP_KEY_EVENT_LONGPRESS callsetup %d %d call %d %d held %d %d audio_state %d %d\n",
-				app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
+            TRACE(8,"!!!APP_KEY_EVENT_LONGPRESS callsetup %d %d call %d %d held %d %d audio_state %d %d\n",
+                app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
                 app_bt_device.hfchan_call[BT_DEVICE_ID_1], app_bt_device.hfchan_call[BT_DEVICE_ID_2],
-				app_bt_device.hf_callheld[BT_DEVICE_ID_1], app_bt_device.hf_callheld[BT_DEVICE_ID_2],
+                app_bt_device.hf_callheld[BT_DEVICE_ID_1], app_bt_device.hf_callheld[BT_DEVICE_ID_2],
                 app_bt_device.hf_audio_state[BT_DEVICE_ID_1], app_bt_device.hf_audio_state[BT_DEVICE_ID_2]);
 
             TRACE(6,"app_bt_device.curr_hf_channel_id=%d, g_curr=%d curr=%d another:%d scoHciHandle:%x/%x",  app_bt_device.curr_hf_channel_id,current_device_id,
@@ -1328,7 +1328,7 @@ void app_bt_volumedown()
 void bt_key_handle_up_key(enum APP_KEY_EVENT_T event)
 {
 #if defined(APP_LINEIN_A2DP_SOURCE)||defined(APP_I2S_A2DP_SOURCE)
-	struct nvrecord_env_t *nvrecord_env=NULL;
+    struct nvrecord_env_t *nvrecord_env=NULL;
 #endif
     switch(event)
     {
@@ -1340,20 +1340,20 @@ void bt_key_handle_up_key(enum APP_KEY_EVENT_T event)
             a2dp_handleKey(AVRCP_KEY_FORWARD);
             break;
 #if defined(APP_LINEIN_A2DP_SOURCE)||defined(APP_I2S_A2DP_SOURCE)
-		case  APP_KEY_EVENT_DOUBLECLICK:
-			//debug switch src mode
-			nv_record_env_get(&nvrecord_env);
-			if(app_bt_device.src_or_snk==BT_DEVICE_SRC)
-			{
-				nvrecord_env->src_snk_flag.src_snk_mode =BT_DEVICE_SNK;
-			}
-			else
-			{
-				nvrecord_env->src_snk_flag.src_snk_mode =BT_DEVICE_SRC;
-			}
-			nv_record_env_set(nvrecord_env);
-			app_reset();
-			break;
+        case  APP_KEY_EVENT_DOUBLECLICK:
+            //debug switch src mode
+            nv_record_env_get(&nvrecord_env);
+            if(app_bt_device.src_or_snk==BT_DEVICE_SRC)
+            {
+                nvrecord_env->src_snk_flag.src_snk_mode =BT_DEVICE_SNK;
+            }
+            else
+            {
+                nvrecord_env->src_snk_flag.src_snk_mode =BT_DEVICE_SRC;
+            }
+            nv_record_env_set(nvrecord_env);
+            app_reset();
+            break;
 #endif
         default:
             TRACE(1,"unregister up key event=%x",event);
@@ -1429,20 +1429,20 @@ void bt_key_handle_source_func_key(enum APP_KEY_EVENT_T event)
             app_a2dp_source_find_sink();
             break;
         case APP_KEY_EVENT_DOUBLECLICK:
-			if(app_bt_device.a2dp_state[0]==1)
-			{
-				 onaudioloop = onaudioloop?false:true;
-				if (onaudioloop)
-				{
-					app_a2dp_start_stream();
+            if(app_bt_device.a2dp_state[0]==1)
+            {
+                 onaudioloop = onaudioloop?false:true;
+                if (onaudioloop)
+                {
+                    app_a2dp_start_stream();
 
-				}
-				else
-				{
-					app_a2dp_suspend_stream();
-				}
-			}
-			break;
+                }
+                else
+                {
+                    app_a2dp_suspend_stream();
+                }
+            }
+            break;
         case APP_KEY_EVENT_TRIPLECLICK:
             app_a2dp_start_stream();
             break;
@@ -1492,15 +1492,15 @@ void bt_key_handle(void)
         {
             case BTAPP_FUNC_KEY:
 #if defined(APP_LINEIN_A2DP_SOURCE)||defined(APP_I2S_A2DP_SOURCE)
-				if(app_bt_device.src_or_snk==BT_DEVICE_SRC)
-				{
-					bt_key_handle_source_func_key((enum APP_KEY_EVENT_T)bt_key.event);
-				}
-				else
+                if(app_bt_device.src_or_snk==BT_DEVICE_SRC)
+                {
+                    bt_key_handle_source_func_key((enum APP_KEY_EVENT_T)bt_key.event);
+                }
+                else
 #endif
-				{
-					bt_key_handle_func_key((enum APP_KEY_EVENT_T)bt_key.event);
-				}
+                {
+                    bt_key_handle_func_key((enum APP_KEY_EVENT_T)bt_key.event);
+                }
                 break;
             case BTAPP_VOLUME_UP_KEY:
                 bt_key_handle_up_key((enum APP_KEY_EVENT_T)bt_key.event);

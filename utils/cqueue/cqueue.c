@@ -88,27 +88,27 @@ int EnCQueue(CQueue *Q, CQItemType *e, unsigned int len)
 
 int EnCQueue_AI(CQueue *Q, CQItemType *e, unsigned int len)
 {
-	uint32_t bytesToTheEnd = Q->size - Q->write;
-	uint32_t readBytesToTheEnd = Q->size - Q->read;
+    uint32_t bytesToTheEnd = Q->size - Q->write;
+    uint32_t readBytesToTheEnd = Q->size - Q->read;
 
     if(AvailableOfCQueue(Q) < len) {
-		if(readBytesToTheEnd > len) {
-			Q->read += len;
-		} else {
-			Q->read = len - readBytesToTheEnd;
-		}
+        if(readBytesToTheEnd > len) {
+            Q->read += len;
+        } else {
+            Q->read = len - readBytesToTheEnd;
+        }
     } else {
         Q->len += len;
     }
     
-	if (bytesToTheEnd > len) {
-		memcpy((uint8_t *)&Q->base[Q->write], (uint8_t *)e, len);
-		Q->write += len;
-	} else {
-		memcpy((uint8_t *)&Q->base[Q->write], (uint8_t *)e, bytesToTheEnd);
-		memcpy((uint8_t *)&Q->base[0], (((uint8_t *)e)+bytesToTheEnd), len-bytesToTheEnd);
-		Q->write = len-bytesToTheEnd;
-	}
+    if (bytesToTheEnd > len) {
+        memcpy((uint8_t *)&Q->base[Q->write], (uint8_t *)e, len);
+        Q->write += len;
+    } else {
+        memcpy((uint8_t *)&Q->base[Q->write], (uint8_t *)e, bytesToTheEnd);
+        memcpy((uint8_t *)&Q->base[0], (((uint8_t *)e)+bytesToTheEnd), len-bytesToTheEnd);
+        Q->write = len-bytesToTheEnd;
+    }
     
     return CQ_OK;
 }

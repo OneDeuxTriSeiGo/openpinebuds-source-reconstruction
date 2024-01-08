@@ -3492,7 +3492,7 @@ int bt_sbc_player(enum PLAYER_OPER_T on, enum APP_SYSFREQ_FREQ_T freq)
         af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
 #if defined(AUDIO_ANC_FB_MC) && defined(ANC_APP) && !defined(__AUDIO_RESAMPLE__)
 #ifdef AUDIO_ANC_FB_ADJ_MC
-		af_stream_close(ADJ_MC_STREAM_ID, AUD_STREAM_CAPTURE);
+        af_stream_close(ADJ_MC_STREAM_ID, AUD_STREAM_CAPTURE);
 #endif
 
         af_stream_close(AUD_STREAM_ID_2, AUD_STREAM_PLAYBACK);
@@ -3693,7 +3693,7 @@ int bt_sbc_player(enum PLAYER_OPER_T on, enum APP_SYSFREQ_FREQ_T freq)
         }
 #endif
 #endif
-	freq = APP_SYSFREQ_52M;
+    freq = APP_SYSFREQ_52M;
         app_sysfreq_req(APP_SYSFREQ_USER_BT_A2DP, freq);
         TRACE_AUD_STREAM_I("[A2DP_PLAYER] sysfreq %d", freq);
         TRACE_AUD_STREAM_I("[A2DP_PLAYER] sysfreq calc : %d\n", hal_sys_timer_calc_cpu_freq(5, 0));
@@ -3961,23 +3961,23 @@ int bt_sbc_player(enum PLAYER_OPER_T on, enum APP_SYSFREQ_FREQ_T freq)
         memset(delay_buf_bt,0,sizeof(delay_buf_bt));
 
         af_stream_open(AUD_STREAM_ID_2, AUD_STREAM_PLAYBACK, &stream_cfg);
-	 //ASSERT(ret == 0, "af_stream_open playback failed: %d", ret);
+     //ASSERT(ret == 0, "af_stream_open playback failed: %d", ret);
 #ifdef AUDIO_ANC_FB_ADJ_MC
         adj_mc_capture_sample_rate = sample_rate_play_bt / 3;
         adj_mc_init(ADJ_MC_FRAME_LEN);
-		memset(&stream_cfg, 0, sizeof(stream_cfg));
-		stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)ADJ_MC_CHANNEL_NUM;
-		stream_cfg.data_size = ADJ_MC_BUF_SIZE;
-		stream_cfg.sample_rate = (enum AUD_SAMPRATE_T)adj_mc_capture_sample_rate;
-		stream_cfg.bits = AUD_BITS_16;
-		stream_cfg.vol = 12;
-		stream_cfg.chan_sep_buf = true;
-		stream_cfg.device = AUD_STREAM_USE_INT_CODEC;
-		stream_cfg.io_path = AUD_INPUT_PATH_ASRMIC;
-		stream_cfg.handler = adj_mc_filter_estimate;
-		stream_cfg.data_ptr = adj_mc_buf;
-		TRACE(2,"[A2DP_PLAYER] capture sample_rate:%d, data_size:%d",stream_cfg.sample_rate,stream_cfg.data_size);
-		af_stream_open(ADJ_MC_STREAM_ID, AUD_STREAM_CAPTURE, &stream_cfg);
+        memset(&stream_cfg, 0, sizeof(stream_cfg));
+        stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)ADJ_MC_CHANNEL_NUM;
+        stream_cfg.data_size = ADJ_MC_BUF_SIZE;
+        stream_cfg.sample_rate = (enum AUD_SAMPRATE_T)adj_mc_capture_sample_rate;
+        stream_cfg.bits = AUD_BITS_16;
+        stream_cfg.vol = 12;
+        stream_cfg.chan_sep_buf = true;
+        stream_cfg.device = AUD_STREAM_USE_INT_CODEC;
+        stream_cfg.io_path = AUD_INPUT_PATH_ASRMIC;
+        stream_cfg.handler = adj_mc_filter_estimate;
+        stream_cfg.data_ptr = adj_mc_buf;
+        TRACE(2,"[A2DP_PLAYER] capture sample_rate:%d, data_size:%d",stream_cfg.sample_rate,stream_cfg.data_size);
+        af_stream_open(ADJ_MC_STREAM_ID, AUD_STREAM_CAPTURE, &stream_cfg);
 #endif
 
 #endif
@@ -4307,9 +4307,9 @@ int bt_sbc_player(enum PLAYER_OPER_T on, enum APP_SYSFREQ_FREQ_T freq)
 
 #if defined(AUDIO_ANC_FB_MC) && defined(ANC_APP) && !defined(__AUDIO_RESAMPLE__)
         af_stream_start(AUD_STREAM_ID_2, AUD_STREAM_PLAYBACK);
-		#ifdef AUDIO_ANC_FB_ADJ_MC
+        #ifdef AUDIO_ANC_FB_ADJ_MC
         af_stream_start(ADJ_MC_STREAM_ID, AUD_STREAM_CAPTURE);
-	    #endif
+        #endif
 #endif
 
 #ifdef WL_DET
@@ -5011,14 +5011,14 @@ static uint32_t bt_sco_codec_capture_data(uint8_t *buf, uint32_t len)
     int32_t *pcm_buf = (int32_t *)buf;
     uint32_t pcm_len = len / sizeof(int32_t);
 #else
-	int16_t *pcm_buf = (int16_t *)buf;
-	uint32_t pcm_len = len / sizeof(short);
+    int16_t *pcm_buf = (int16_t *)buf;
+    uint32_t pcm_len = len / sizeof(short);
 #endif
 
-	for(uint32_t i=0;i<pcm_len/sco_cap_chan_num;i++){
-		wnr_buf[2*i] = pcm_buf[sco_cap_chan_num*i];
-		wnr_buf[2*i+1] = pcm_buf[sco_cap_chan_num*i+1];
-	}
+    for(uint32_t i=0;i<pcm_len/sco_cap_chan_num;i++){
+        wnr_buf[2*i] = pcm_buf[sco_cap_chan_num*i];
+        wnr_buf[2*i+1] = pcm_buf[sco_cap_chan_num*i+1];
+    }
 
     //TRACE("sco_cap_chan_num=%d",sco_cap_chan_num);
     if (app_anc_work_status()) {
@@ -6188,17 +6188,17 @@ int bt_sco_player(bool on, enum APP_SYSFREQ_FREQ_T freq)
         TRACE_AUD_STREAM_I("[SCO_PLAYER] capture sample_rate:%d, data_size:%d",stream_cfg.sample_rate,stream_cfg.data_size);
 
 #if defined(ANC_WNR_ENABLED)
-		if(app_anc_work_status())
-		{
-			anc_wnr_close();
-			anc_wnr_ctrl(stream_cfg.sample_rate, speech_get_frame_size(stream_cfg.sample_rate, 1, SPEECH_SCO_FRAME_MS));
-			anc_release_gain();
-			anc_wnr_open(ANC_WNR_OPEN_MODE_CONFIGURE);
-		}
-		else
-		{
-			anc_wnr_ctrl(stream_cfg.sample_rate, speech_get_frame_size(stream_cfg.sample_rate, 1, SPEECH_SCO_FRAME_MS));
-		}
+        if(app_anc_work_status())
+        {
+            anc_wnr_close();
+            anc_wnr_ctrl(stream_cfg.sample_rate, speech_get_frame_size(stream_cfg.sample_rate, 1, SPEECH_SCO_FRAME_MS));
+            anc_release_gain();
+            anc_wnr_open(ANC_WNR_OPEN_MODE_CONFIGURE);
+        }
+        else
+        {
+            anc_wnr_ctrl(stream_cfg.sample_rate, speech_get_frame_size(stream_cfg.sample_rate, 1, SPEECH_SCO_FRAME_MS));
+        }
 #endif
 
 
@@ -6674,7 +6674,7 @@ int bt_sco_player(bool on, enum APP_SYSFREQ_FREQ_T freq)
 #if defined(ANC_WNR_ENABLED)
         if (app_anc_work_status()) {
             anc_wnr_close();
-			anc_release_gain();
+            anc_release_gain();
             anc_wnr_open(ANC_WNR_OPEN_MODE_STANDALONE);
         }
 #endif

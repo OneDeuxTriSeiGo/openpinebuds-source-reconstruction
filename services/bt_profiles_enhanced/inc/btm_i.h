@@ -28,23 +28,23 @@
 #define SUPPORT_FTP 0
 #define SUPPORT_SPP 1
 #define SUPPORT_AG 0
-#define SUPPORT_DUN	0
+#define SUPPORT_DUN 0
 #define SUPPORT_HSHF 0  //sdk
 #define SUPPORT_HID  0
 
 #define SUPPORT_OBEX    0
 #define SUPPORT_PBAP    0
 
-#define SUPPORT_L2CAP_ENHANCED_RETRANS	0
+#define SUPPORT_L2CAP_ENHANCED_RETRANS  0
 
 #define PROFILE_NONE    0x00
 #define PROFILE_HSHF    0x01
 #define PROFILE_SPP     0x02
 #define PROFILE_OPP     0x04
 #define PROFILE_FTP     0x08
-#define PROFILE_AG	    0x10
+#define PROFILE_AG      0x10
 #define PROFILE_AV      0x20
-#define PROFILE_DUN		0x40
+#define PROFILE_DUN     0x40
 #define PROFILE_AV_C    0x80
 
 #define ASCP_CMD_BASE          0x00
@@ -53,18 +53,18 @@
 #define OPP_CMD_BASE           0x30
 #define FTP_CMD_BASE           0x40
 #define AV_CMD_BASE           0x50
-#define	AG_CMD_BASE	0x60
-#define DUN_CMD_BASE	0x70
+#define AG_CMD_BASE 0x60
+#define DUN_CMD_BASE    0x70
 
 #define ASCP_EVNT_BASE        0x80
 #define HSHF_EVNT_BASE        0x90
 #define SPP_EVNT_BASE         0xA0
 #define OPP_EVNT_BASE         0xB0
 #define FTP_EVNT_BASE         0xC0
-#define MISC_EVNT_BASE        0xC0	//BUG 15 owen.liu
+#define MISC_EVNT_BASE        0xC0  //BUG 15 owen.liu
 #define AV_EVNT_BASE         0xD0
-#define	AG_EVNT_BASE	    0xE0
-#define	DUN_EVNT_BASE		0xF0  //share with AV_C (used in AT)
+#define AG_EVNT_BASE        0xE0
+#define DUN_EVNT_BASE       0xF0  //share with AV_C (used in AT)
 #define AV_C_EVNT_BASE      0xF0  //share with DUN(used in ascp)
 
 #define BT_ECODE_NO_ERROR                   0x00
@@ -146,26 +146,26 @@ enum conn_sco_stat_enum{
 
 enum btm_pairing_event
 {
-	PAIRING_OK,
-	PAIRING_TIMEOUT,
-	PAIRING_FAILED,
-	UNPAIR_OK
-};	// change
+    PAIRING_OK,
+    PAIRING_TIMEOUT,
+    PAIRING_FAILED,
+    UNPAIR_OK
+};  // change
 
 /* enum for inquiry events */
 enum btm_inquiry_event {
-	INQUIRY_DONE,			// inquiry is done
-	NEW_REMOTE_DEV_IND,		// found a new remote device
-	INQUIRY_CANCEL_OK,      // cancel inquiry
-	INQUIRY_CANCEL_FAIL
+    INQUIRY_DONE,           // inquiry is done
+    NEW_REMOTE_DEV_IND,     // found a new remote device
+    INQUIRY_CANCEL_OK,      // cancel inquiry
+    INQUIRY_CANCEL_FAIL
 };
 
 enum btm_name_event
 {
-	NAME_DONE,
-	NAME_FAIL,
-	NAME_CANCEL_OK,
-	NAME_CANCEL_FAIL
+    NAME_DONE,
+    NAME_FAIL,
+    NAME_CANCEL_OK,
+    NAME_CANCEL_FAIL
 };
 
 typedef void (*btm_pairing_callback_t)(enum btm_pairing_event event,void *pdata);
@@ -366,16 +366,16 @@ while it is in active mode. Then, keep resetting the sniff timer.
 
 #define BTEVENT_DEVICE_ADDED        81
 
-#define BTEVENT_DEVICE_DELETED      	82
+#define BTEVENT_DEVICE_DELETED          82
 
-#define BTEVENT_MAX_SLOT_CHANGED		83
+#define BTEVENT_MAX_SLOT_CHANGED        83
 
-#define BTEVENT_SNIFFER_CONTROL_DONE 	84
+#define BTEVENT_SNIFFER_CONTROL_DONE    84
 
-#define BTEVENT_LINK_POLICY_CHANGED		85
+#define BTEVENT_LINK_POLICY_CHANGED     85
 
 /* added for pass command status to up level */
-#define BTEVENT_COMMAND_STATUS	    	86
+#define BTEVENT_COMMAND_STATUS          86
 
 typedef uint32_t event_mask_t;
 
@@ -411,7 +411,7 @@ typedef uint32_t event_mask_t;
 #define BTM_EVTMASK_QOS_SETUP_COMPLETE           0x10000000
 #define BTM_EVTMASK_MAX_SLOT_CHANGED             0x20000000
 #define BTM_EVTMASK_SNIFFER_CONTROL_DONE         0x40000000
-#define BTM_EVTMASK_LINK_POLICY_CHANGED	         0x80000000
+#define BTM_EVTMASK_LINK_POLICY_CHANGED          0x80000000
 #define BTM_EVTMASK_ALL_EVENTS                   0xffffffff
 
 #define BTM_ACL_ST_DISCONNECTED  0x00
@@ -470,22 +470,22 @@ struct inquiry_cancel_data{
 };
 
 struct command_status_data{
-	uint8  status;
-	uint8  num_hci_cmd_packets;
-	uint16 cmd_opcode;
+    uint8  status;
+    uint8  num_hci_cmd_packets;
+    uint16 cmd_opcode;
     uint32 emask;
 };
 
 struct role_change_data{
     struct btm_conn_item_t *rem_dev;
-	uint8 new_role;
+    uint8 new_role;
     uint8 err_code;
     uint32 emask;
 };
 
 struct mode_change_data{
     struct btm_conn_item_t *rem_dev;
-	uint8 cur_mode;
+    uint8 cur_mode;
     uint16 interval;
     uint8 err_code;
     uint32 emask;
@@ -519,7 +519,7 @@ struct simple_pairing_complete_data{
 
 struct encryption_change_data{
     struct btm_conn_item_t *rem_dev;
-	uint8 mode;
+    uint8 mode;
     uint32 emask;
     uint8 err_code;
 };
@@ -591,7 +591,7 @@ int8 btm_security_askfor_authority(uint16 conn_handle, uint16 psm, struct l2cap_
 void btm_pairing_enter(uint32 pairing_timeout, btm_pairing_callback_t callback);
 
 /* for pairing that needs remote device address */
-void btm_start_pairing(	struct bdaddr_t remote_addr, btm_pairing_callback_t callback);
+void btm_start_pairing( struct bdaddr_t remote_addr, btm_pairing_callback_t callback);
 
 void btm_unpair_reomte(struct bdaddr_t remote_addr, btm_pairing_callback_t callback);
 

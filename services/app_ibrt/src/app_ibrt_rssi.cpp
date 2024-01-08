@@ -124,7 +124,7 @@ void app_ibrt_ui_rssi_process(void)
     ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
 
     if(app_tws_ibrt_tws_link_connected()){
-		rx_agc_t tws_agc = {0};
+        rx_agc_t tws_agc = {0};
         bt_drv_reg_op_read_rssi_in_dbm(p_ibrt_ctrl->tws_conhandle,&tws_agc);
         rssi_window_push(&tws_rssi_window, tws_agc.rssi);
         if(tws_rssi_window.index >= RSSI_WINDOW_SIZE){
@@ -148,11 +148,11 @@ void app_ibrt_ui_rssi_process(void)
         }
     }
 
-	bool mobile_link_flag = app_tws_ibrt_mobile_link_connected();
-	bool slave_ibrt_link_flag = app_tws_ibrt_slave_ibrt_link_connected();
+    bool mobile_link_flag = app_tws_ibrt_mobile_link_connected();
+    bool slave_ibrt_link_flag = app_tws_ibrt_slave_ibrt_link_connected();
 
     if(mobile_link_flag||slave_ibrt_link_flag){
-		rx_agc_t mobile_agc= {0};
+        rx_agc_t mobile_agc= {0};
         if(mobile_link_flag){
             bt_drv_reg_op_read_rssi_in_dbm(p_ibrt_ctrl->mobile_conhandle,&mobile_agc);
         }else if(slave_ibrt_link_flag){
@@ -207,12 +207,12 @@ bool app_ibrt_ui_tws_switch_according_rssi_needed(void)
         (p_ibrt_ctrl->raw_rssi.rssi0 >= IBRT_UI_MIN_RSSI))
     {
         int8_t rssi_d_value_diff = p_ibrt_ctrl->peer_raw_rssi.rssi0 - p_ibrt_ctrl->raw_rssi.rssi0;
-		
-		if(rssi_d_value_diff >= p_ibrt_ui->config.rssi_threshold)
-		{
+        
+        if(rssi_d_value_diff >= p_ibrt_ui->config.rssi_threshold)
+        {
             //local RSSI is stronger than peer and local role is SLAVE
             return true;
-		}
+        }
     }
     return false;
 }
@@ -295,9 +295,9 @@ void app_ibrt_get_peer_mobile_rssi_handler(uint16_t rsp_seq, uint8_t *p_buff, ui
         app_ibrt_ui_is_profile_exchanged() &&
         (p_ibrt_ctrl->tws_mode  == BTIF_BLM_ACTIVE_MODE))
     {
-	    app_ui_rssi_battery_info_t  rssi_battery_buffer;
-	    rssi_battery_buffer.battery_volt = p_ibrt_ctrl->local_battery_volt;
-	    rssi_battery_buffer.raw_rssi = p_ibrt_ctrl->raw_rssi;
+        app_ui_rssi_battery_info_t  rssi_battery_buffer;
+        rssi_battery_buffer.battery_volt = p_ibrt_ctrl->local_battery_volt;
+        rssi_battery_buffer.raw_rssi = p_ibrt_ctrl->raw_rssi;
         rssi_battery_buffer.mobile_conhandle = p_ibrt_ctrl->ibrt_conhandle;
         rssi_battery_buffer.tws_conhandle = p_ibrt_ctrl->tws_conhandle;
         rssi_battery_buffer.mobile_diff_us = p_diff_us->mobile_diff_us;
@@ -361,39 +361,39 @@ void app_ibrt_get_peer_mobile_rssi_rsp_handler(uint16_t rsp_seq, uint8_t *p_buff
         app_ibrt_ui_is_profile_exchanged() &&
         (p_ibrt_ctrl->tws_mode  == BTIF_BLM_ACTIVE_MODE))
     {
-	    if(p_ibrt_ctrl->role_switch_debonce_time == 0)
-	    {
-		    app_ibrt_ui_t *p_ibrt_ui = app_ibrt_ui_get_ctx();
-    		app_ui_rssi_battery_info_t rssi_battery_info = *(app_ui_rssi_battery_info_t *)p_buff;
-		    p_ibrt_ctrl->peer_mobile_conhandle = rssi_battery_info.mobile_conhandle;
-		    p_ibrt_ctrl->peer_tws_conhandle = rssi_battery_info.tws_conhandle;
-		    p_ibrt_ctrl->peer_battery_volt = rssi_battery_info.battery_volt;
-		    p_ibrt_ctrl->peer_raw_rssi = rssi_battery_info.raw_rssi;
+        if(p_ibrt_ctrl->role_switch_debonce_time == 0)
+        {
+            app_ibrt_ui_t *p_ibrt_ui = app_ibrt_ui_get_ctx();
+            app_ui_rssi_battery_info_t rssi_battery_info = *(app_ui_rssi_battery_info_t *)p_buff;
+            p_ibrt_ctrl->peer_mobile_conhandle = rssi_battery_info.mobile_conhandle;
+            p_ibrt_ctrl->peer_tws_conhandle = rssi_battery_info.tws_conhandle;
+            p_ibrt_ctrl->peer_battery_volt = rssi_battery_info.battery_volt;
+            p_ibrt_ctrl->peer_raw_rssi = rssi_battery_info.raw_rssi;
             p_ibrt_ctrl->mobile_diff_us = rssi_battery_info.mobile_diff_us;
             p_ibrt_ctrl->tws_diff_us = rssi_battery_info.tws_diff_us;
             p_ibrt_ctrl->cur_buf_size = rssi_battery_info.cur_buf_size;
 
             app_ibrt_print_rssi_info();
             
-	        if(p_ibrt_ui->config.tws_switch_according_to_rssi_value)
-	        {
-	            bool need_roleswitch_with_rssi = app_ibrt_ui_tws_switch_according_rssi_needed();
+            if(p_ibrt_ui->config.tws_switch_according_to_rssi_value)
+            {
+                bool need_roleswitch_with_rssi = app_ibrt_ui_tws_switch_according_rssi_needed();
 
-	            if(need_roleswitch_with_rssi != need_roleswitch_with_rssi_bak){
-	                if(need_roleswitch_with_rssi){
-	                    TRACE(2,"ibrt_ui_log:one headset far away cause tws switch used rssi %d %d",p_ibrt_ctrl->raw_rssi.rssi0,p_ibrt_ctrl->peer_raw_rssi.rssi0);
-	                    app_ibrt_ui_tws_switch();
-	                    p_ibrt_ctrl->role_switch_debonce_time = p_ibrt_ui->config.role_switch_timer_threshold;
-	                }
-	                need_roleswitch_with_rssi_bak = need_roleswitch_with_rssi;
-	            }
-	        }
-	    }
-	    else
-	    {
-	        p_ibrt_ctrl->role_switch_debonce_time--;
-	    }
-	}	
+                if(need_roleswitch_with_rssi != need_roleswitch_with_rssi_bak){
+                    if(need_roleswitch_with_rssi){
+                        TRACE(2,"ibrt_ui_log:one headset far away cause tws switch used rssi %d %d",p_ibrt_ctrl->raw_rssi.rssi0,p_ibrt_ctrl->peer_raw_rssi.rssi0);
+                        app_ibrt_ui_tws_switch();
+                        p_ibrt_ctrl->role_switch_debonce_time = p_ibrt_ui->config.role_switch_timer_threshold;
+                    }
+                    need_roleswitch_with_rssi_bak = need_roleswitch_with_rssi;
+                }
+            }
+        }
+        else
+        {
+            p_ibrt_ctrl->role_switch_debonce_time--;
+        }
+    }   
 }
 
 void app_ibrt_rssi_get_stutter(uint8_t * data,uint32_t * data_len)

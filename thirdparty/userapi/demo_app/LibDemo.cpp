@@ -9,20 +9,20 @@
 
 int demo_example_init(bool on,void *param)
 {
-	TRACE(0,"demo_example_init");
-	return 0;
+    TRACE(0,"demo_example_init");
+    return 0;
 }
 
 int demo_example_start(bool on,void *param)
 {
-	TRACE(0,"demo_example_start");
-	return 0;
+    TRACE(0,"demo_example_start");
+    return 0;
 }
 
 int demo_example_stop(bool on,void *param)
 {
-	TRACE(0,"demo_example_stop");
-	return 0;
+    TRACE(0,"demo_example_stop");
+    return 0;
 }
 
 

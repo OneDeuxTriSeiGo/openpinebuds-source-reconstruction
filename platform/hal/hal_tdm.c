@@ -50,7 +50,7 @@ static inline uint32_t _tdm_get_reg_base(enum HAL_I2S_ID_T id)
         default:
             break;
     }
-	return 0;
+    return 0;
 }
 
 static inline bool tdm_slot_cycles_in_arrays(uint8_t slot_cycles)

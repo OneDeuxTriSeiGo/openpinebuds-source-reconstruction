@@ -32,9 +32,9 @@ int lockcqueue_init(struct lockcqueue *q, uint32_t size, uint8_t *buf)
 int lockcqueue_enqueue(struct lockcqueue *q, uint8_t *buf, uint32_t size)
 {
     int ret = 0;
-	osMutexWait(q->queue_mutex_id, osWaitForever);
+    osMutexWait(q->queue_mutex_id, osWaitForever);
     ret = EnCQueue(&q->cqueue, buf, size);
-	osMutexRelease(q->queue_mutex_id);
+    osMutexRelease(q->queue_mutex_id);
 
     return ret;
 }
@@ -42,9 +42,9 @@ int lockcqueue_enqueue(struct lockcqueue *q, uint8_t *buf, uint32_t size)
 int lockcqueue_dequeue(struct lockcqueue *q, uint8_t *buf, uint32_t size)
 {
     int ret = 0;
-	osMutexWait(q->queue_mutex_id, osWaitForever);
+    osMutexWait(q->queue_mutex_id, osWaitForever);
     ret = DeCQueue(&q->cqueue, buf, size);
-	osMutexRelease(q->queue_mutex_id);
+    osMutexRelease(q->queue_mutex_id);
 
     return ret;
 }

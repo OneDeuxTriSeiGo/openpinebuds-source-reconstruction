@@ -320,7 +320,7 @@ enum gapc_features_list
     /// data packet length extension
     GAPC_EXT_DATA_LEN_MASK              = (1 << 5),
     /// LL privacy
-    GAPC_LL_PRIVACY_MASK              	= (1 << 6),
+    GAPC_LL_PRIVACY_MASK                = (1 << 6),
     /// Extended Scanner Filter Policies
     GAPC_EXT_SCANNER_FILTER_POLICIES_MASK = (1 << 7),
     

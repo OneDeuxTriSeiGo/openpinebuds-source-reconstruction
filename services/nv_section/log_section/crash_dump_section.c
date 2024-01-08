@@ -33,8 +33,8 @@ extern uint32_t __crash_dump_end[];
 
 extern const char sys_build_info[];
 
-#define DUMPED_MSP_BYTES	32
-#define DUMPED_PSP_BYTES	32
+#define DUMPED_MSP_BYTES    32
+#define DUMPED_PSP_BYTES    32
 
 // #undef CRASH_DUMP_SECTION_SIZE
 

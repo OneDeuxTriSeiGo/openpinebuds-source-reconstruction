@@ -57,24 +57,24 @@ extern uint32_t wav_file_audio_more_data(uint8_t *buf, uint32_t len);
 void test_wave_play(bool  on)
 {
     struct AF_STREAM_CONFIG_T stream_cfg;
-	uint32_t reallen;
-	uint32_t totalreadsize;
+    uint32_t reallen;
+    uint32_t totalreadsize;
     uint32_t stime, etime;
 
     char wave[] = "/sd/test_music.wav";
 
-	static bool isRun =  false;
+    static bool isRun =  false;
 
-	if (isRun==on)
-		return;
-	else
-		isRun=on;
+    if (isRun==on)
+        return;
+    else
+        isRun=on;
 
 
-	TRACE(2,"%s %d\n", __func__, on);
+    TRACE(2,"%s %d\n", __func__, on);
     memset(&stream_cfg, 0, sizeof(stream_cfg));
-	if (on){
-	    play_wav_file(wave);
+    if (on){
+        play_wav_file(wave);
 
         stream_cfg.bits = AUD_BITS_16;
         stream_cfg.channel_num = AUD_CHANNEL_NUM_2;
@@ -88,13 +88,13 @@ void test_wave_play(bool  on)
         stream_cfg.data_ptr = app_test_playback_buff;
         stream_cfg.data_size = APP_TEST_PLAYBACK_BUFF_SIZE;
 
-	    af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK, &stream_cfg);
-	    af_stream_start(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
-	}else{
-		stop_wav_file();
-		af_stream_stop(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
-		af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
-	}
+        af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK, &stream_cfg);
+        af_stream_start(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
+    }else{
+        stop_wav_file();
+        af_stream_stop(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
+        af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
+    }
 
     return;
 }
@@ -107,12 +107,12 @@ uint32_t pcm_save_more_data(uint8_t *buf, uint32_t len)
 {
 //    TRACE(2,"%s\n len:%d", __func__, len);
 
-	audio_buffer_set_stereo2mono_16bits(buf, len, 1);
-	pcm_res = f_write(&pcm_fil,(uint8_t *)buf,len>>1,&pcm_num);
-	if(pcm_res != FR_OK)
-	{
-		TRACE(2,"[%s]:error-->res = %d", __func__, pcm_res);
-	}
+    audio_buffer_set_stereo2mono_16bits(buf, len, 1);
+    pcm_res = f_write(&pcm_fil,(uint8_t *)buf,len>>1,&pcm_num);
+    if(pcm_res != FR_OK)
+    {
+        TRACE(2,"[%s]:error-->res = %d", __func__, pcm_res);
+    }
     return 0;
 }
 
@@ -128,7 +128,7 @@ void  ad_tester(bool run)
         memset(&stream_cfg, 0, sizeof(stream_cfg));
         pcm_res = f_open(&pcm_fil,"test2.bin",FA_CREATE_ALWAYS | FA_WRITE);
         if (pcm_res) {
-        	TRACE(2,"[%s]:Cannot creat test2.bin...%d",__func__, pcm_res);
+            TRACE(2,"[%s]:Cannot creat test2.bin...%d",__func__, pcm_res);
             return;
         }
 
@@ -151,7 +151,7 @@ void  ad_tester(bool run)
         af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
         osDelay(1000);
 
-       	f_close(&pcm_fil);
+        f_close(&pcm_fil);
     }
 }
 

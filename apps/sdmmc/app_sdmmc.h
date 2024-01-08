@@ -33,7 +33,7 @@ int sd_open();
 void  dump_data2sd(enum APP_SDMMC_DUMP_T opt, uint8_t *buf, uint32_t len);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif//__FMDEC_H__

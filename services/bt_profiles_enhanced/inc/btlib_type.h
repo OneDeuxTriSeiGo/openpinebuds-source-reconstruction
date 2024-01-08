@@ -135,15 +135,15 @@ typedef float          FP32;                     /* Single precision floating po
 typedef double         FP64;                     /* Double precision floating point                    */
 
 
-typedef unsigned char  		u8;  
+typedef unsigned char       u8;  
 #if 0
-typedef signed   char  		s8;  
-typedef unsigned short 		u16; 
-typedef signed   short		s16; 
-typedef unsigned int  		u32; 
-typedef signed   int  		s32; 
-typedef unsigned long long 	u64; 
-typedef signed   long long 	s64;
+typedef signed   char       s8;  
+typedef unsigned short      u16; 
+typedef signed   short      s16; 
+typedef unsigned int        u32; 
+typedef signed   int        s32; 
+typedef unsigned long long  u64; 
+typedef signed   long long  s64;
 #endif
 
 typedef uint16  CNH;
@@ -155,7 +155,7 @@ typedef   struct {
 }  __attribute__ ((packed)) BD_ADDR;
 
 typedef    struct{
-	uint8 A[10];
+    uint8 A[10];
 }  __attribute__ ((packed)) CHANMAP;
 
 

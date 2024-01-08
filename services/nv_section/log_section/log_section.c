@@ -363,7 +363,7 @@ void log_dump_notify_handler(enum HAL_TRACE_STATE_T state)
     }
     else
     {
-    	LOG_DUMP_TRACE(2,LOG_DUMP_PREFIX" crash end.");
+        LOG_DUMP_TRACE(2,LOG_DUMP_PREFIX" crash end.");
         //lock = int_lock_global();
         _log_dump_flush_remain();
         //int_unlock_global(lock);
@@ -598,31 +598,31 @@ uint8_t test_buff_r[LOG_DUMP_SECTOR_SIZE];
 
 uint32_t test_log_dump_from_flash(uint32_t addr,uint32_t size)
 {
-	//uint32_t start_addr;
-	uint32_t i;
-	//uint8_t value = 0;
-	int32_t ret = 0;
-	enum NORFLASH_API_RET_T result = HAL_NORFLASH_OK;
+    //uint32_t start_addr;
+    uint32_t i;
+    //uint8_t value = 0;
+    int32_t ret = 0;
+    enum NORFLASH_API_RET_T result = HAL_NORFLASH_OK;
 
-	LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"%s enter!!!", __func__);
+    LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"%s enter!!!", __func__);
 
-	for(i = 0; i < size/LOG_DUMP_SECTOR_SIZE; i++)
-	{
-		result = _flash_api_read((uint32_t)(addr)+ (i*LOG_DUMP_SECTOR_SIZE),
-			test_buff_r,LOG_DUMP_SECTOR_SIZE);
-		if(result != NORFLASH_API_OK)
-		{
-			ret = -1;
-			//LOG_DUMP_TRACE(2,LOG_DUMP_PREFIX"%s ret=%d", __func__, ret);
-			goto _func_end;
-		}
-		LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"%s", test_buff_r);
-	}
+    for(i = 0; i < size/LOG_DUMP_SECTOR_SIZE; i++)
+    {
+        result = _flash_api_read((uint32_t)(addr)+ (i*LOG_DUMP_SECTOR_SIZE),
+            test_buff_r,LOG_DUMP_SECTOR_SIZE);
+        if(result != NORFLASH_API_OK)
+        {
+            ret = -1;
+            //LOG_DUMP_TRACE(2,LOG_DUMP_PREFIX"%s ret=%d", __func__, ret);
+            goto _func_end;
+        }
+        LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"%s", test_buff_r);
+    }
     LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"%s end!!!", __func__);
 
 _func_end:
-	LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"_debug: flash checking end. ret = %d.",ret);
-	return ret;
+    LOG_DUMP_TRACE(1,LOG_DUMP_PREFIX"_debug: flash checking end. ret = %d.",ret);
+    return ret;
 }
 #endif
 

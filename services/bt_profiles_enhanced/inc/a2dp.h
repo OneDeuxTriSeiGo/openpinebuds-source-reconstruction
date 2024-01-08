@@ -32,7 +32,7 @@
 #define A2DP_VER_1_3 0x0103
 #define A2DP_LOCAL_VERSION A2DP_VER_1_3
 
-#define A2DP_MEDIA_TYPE_AUDIO 	    0x00
+#define A2DP_MEDIA_TYPE_AUDIO       0x00
 
 #define A2DP_CODEC_SBC              0x00
 #define A2DP_CODEC_MPEG12_AUDIO     0x01
@@ -40,26 +40,26 @@
 #define A2DP_CODEC_ATRAC            0x03
 #define A2DP_CODEC_VENDOR_SPECIFIC  0xff
 
-#define A2DP_SAMPLING_FREQ_16000	(1 << 3)
-#define A2DP_SAMPLING_FREQ_32000	(1 << 2)
-#define A2DP_SAMPLING_FREQ_44100	(1 << 1)
-#define A2DP_SAMPLING_FREQ_48000	1
+#define A2DP_SAMPLING_FREQ_16000    (1 << 3)
+#define A2DP_SAMPLING_FREQ_32000    (1 << 2)
+#define A2DP_SAMPLING_FREQ_44100    (1 << 1)
+#define A2DP_SAMPLING_FREQ_48000    1
 
-#define A2DP_CHANNEL_MODE_MONO		(1 << 3)
-#define A2DP_CHANNEL_MODE_DUAL_CHANNEL	(1 << 2)
-#define A2DP_CHANNEL_MODE_STEREO	(1 << 1)
-#define A2DP_CHANNEL_MODE_JOINT_STEREO	1
+#define A2DP_CHANNEL_MODE_MONO      (1 << 3)
+#define A2DP_CHANNEL_MODE_DUAL_CHANNEL  (1 << 2)
+#define A2DP_CHANNEL_MODE_STEREO    (1 << 1)
+#define A2DP_CHANNEL_MODE_JOINT_STEREO  1
 
-#define A2DP_BLOCK_LENGTH_4		(1 << 3)
-#define A2DP_BLOCK_LENGTH_8		(1 << 2)
-#define A2DP_BLOCK_LENGTH_12		(1 << 1)
-#define A2DP_BLOCK_LENGTH_16		1
+#define A2DP_BLOCK_LENGTH_4     (1 << 3)
+#define A2DP_BLOCK_LENGTH_8     (1 << 2)
+#define A2DP_BLOCK_LENGTH_12        (1 << 1)
+#define A2DP_BLOCK_LENGTH_16        1
 
-#define A2DP_SUBBANDS_4			(1 << 1)
-#define A2DP_SUBBANDS_8			1
+#define A2DP_SUBBANDS_4         (1 << 1)
+#define A2DP_SUBBANDS_8         1
 
-#define A2DP_ALLOCATION_SNR		(1 << 1)
-#define A2DP_ALLOCATION_LOUDNESS	1
+#define A2DP_ALLOCATION_SNR     (1 << 1)
+#define A2DP_ALLOCATION_LOUDNESS    1
 
 struct a2dp_sep {
     uint8 type;   //src or snk

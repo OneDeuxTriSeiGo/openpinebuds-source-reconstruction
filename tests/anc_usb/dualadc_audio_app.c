@@ -34,7 +34,7 @@ static void get_mic_data_max(short *buf, uint32_t len)
 {
     int max0 = -32768, min0 = 32767, diff0 = 0;
     int max1 = -32768, min1 = 32767, diff1 = 0;
-	
+    
     for(uint32_t i=0; i<len/2;i+=2)
     {
         if(buf[i+0]>max0)
@@ -88,29 +88,29 @@ TRACE(0,"play");
 #define MWSPT_NSEC 3
 //static const int NL[MWSPT_NSEC] = { 1, 3, 1 };
 static const float NUM[MWSPT_NSEC][3] = {
-	{
-		0.0002616526908, 0, 0
-	},
-	{
-		1, 2, 1
-	},
-	{
-		1, 0, 0
-	}
+    {
+        0.0002616526908, 0, 0
+    },
+    {
+        1, 2, 1
+    },
+    {
+        1, 0, 0
+    }
 };
 
 
 //static const int DL[MWSPT_NSEC] = { 1, 3, 1 };
 static const float DEN[MWSPT_NSEC][3] = {
-	{
-		1, 0, 0
-	},
-	{
-		1, -1.953727961, 0.9547745585
-	},
-	{
-		1, 0, 0
-	}
+    {
+        1, 0, 0
+    },
+    {
+        1, -1.953727961, 0.9547745585
+    },
+    {
+        1, 0, 0
+    }
 };
 
 #else 
@@ -153,146 +153,146 @@ TRACE(0,"capture");
 #if 0
     if(buf==capture_buf)
     {
-		short *BufSrcL = (short *)capture_buf;
-		short *BufSrcR = (short *)(capture_buf+2);
-		short *BufDstL = (short *)playback_buf;
-		short *BufDstR = (short *)(playback_buf+2);
+        short *BufSrcL = (short *)capture_buf;
+        short *BufSrcR = (short *)(capture_buf+2);
+        short *BufDstL = (short *)playback_buf;
+        short *BufDstR = (short *)(playback_buf+2);
 
-		for(int i=0,j=0;i<playback_size/4;i=i+2,j=j+4)
-		{
-			BufDstL[i]=BufSrcL[j];
-			BufDstR[i]=BufSrcR[j];
-			
-		}
+        for(int i=0,j=0;i<playback_size/4;i=i+2,j=j+4)
+        {
+            BufDstL[i]=BufSrcL[j];
+            BufDstR[i]=BufSrcR[j];
+            
+        }
 
     }
    else
    {
-		short *BufSrcL = (short *)(capture_buf+capture_size/2);
-		short *BufSrcR = (short *)(capture_buf+capture_size/2+2);
-		short *BufDstL = (short *)(playback_buf+playback_size/2);
-		short *BufDstR = (short *)(playback_buf+playback_size/2+2);
+        short *BufSrcL = (short *)(capture_buf+capture_size/2);
+        short *BufSrcR = (short *)(capture_buf+capture_size/2+2);
+        short *BufDstL = (short *)(playback_buf+playback_size/2);
+        short *BufDstR = (short *)(playback_buf+playback_size/2+2);
 
-		for(int i=0,j=0;i<playback_size/4;i=i+2,j=j+4)
-		{
-			BufDstL[i]=BufSrcL[j];
-			BufDstR[i]=BufSrcR[j];
-			
-		}
+        for(int i=0,j=0;i<playback_size/4;i=i+2,j=j+4)
+        {
+            BufDstL[i]=BufSrcL[j];
+            BufDstR[i]=BufSrcR[j];
+            
+        }
    
    }
 
 
 #else
 
-	short *BufSrcL;
-	short *BufSrcR;
-	short *BufDstL;
-	short *BufDstR;
+    short *BufSrcL;
+    short *BufSrcR;
+    short *BufDstL;
+    short *BufDstR;
 
 
-	int32_t PcmValue;
-	int32_t OutValue;
+    int32_t PcmValue;
+    int32_t OutValue;
 
 
-	//get_mic_data_max(buf,len);
+    //get_mic_data_max(buf,len);
 
-	    if(buf==capture_buf)
-	    {
-			BufSrcL = (short *)(capture_buf);
-			BufSrcR = (short *)(capture_buf+2);
-			BufDstL = (short *)playback_buf;
-			BufDstR = (short *)(playback_buf+2);
+        if(buf==capture_buf)
+        {
+            BufSrcL = (short *)(capture_buf);
+            BufSrcR = (short *)(capture_buf+2);
+            BufDstL = (short *)playback_buf;
+            BufDstR = (short *)(playback_buf+2);
 
-	    }
-	   else
-	   {
-			BufSrcL = (short *)(capture_buf+capture_size/2);
-			BufSrcR = (short *)(capture_buf+capture_size/2+2);
-			BufDstL = (short *)(playback_buf+playback_size/2);
-			BufDstR = (short *)(playback_buf+playback_size/2+2);
+        }
+       else
+       {
+            BufSrcL = (short *)(capture_buf+capture_size/2);
+            BufSrcR = (short *)(capture_buf+capture_size/2+2);
+            BufDstL = (short *)(playback_buf+playback_size/2);
+            BufDstR = (short *)(playback_buf+playback_size/2+2);
 
-	   
-	   }
-		
-
-
-	for(int i=0,j=0;i<capture_size/4;i=i+4,j=j+2)
-	{
-		PcmValue = BufSrcL[i];
-
-		if (PcmValue>32600)
-		{
-			OutValue = ((int)BufSrcR[i]) << 6;
-		}
-		else if (PcmValue>(32600 / 2) && PcmValue<32600)
-		{
-			if (BufSrcR[i]>512)
-			{
-				OutValue = PcmValue*(32600 - PcmValue) + (((int)BufSrcR[i]) << 6)*(PcmValue - (32600 / 2));
-				OutValue = OutValue / (32600 / 2);
-			}
-			else
-			{
-				OutValue = PcmValue;
-			}
-		}
-		else if (PcmValue<-32700)
-		{
-			OutValue = ((int)BufSrcR[i]) << 6;
-		}
-		else if (PcmValue >-32700 && PcmValue < -(32700 / 2))
-		{
-
-			if (BufSrcR[i] <-512)
-			{
-				OutValue = PcmValue*(-PcmValue - (32700 / 2)) + (((int)BufSrcR[i]) << 6)*(32700 + PcmValue);
-				OutValue= OutValue/ (32700 / 2);
-			}
-			else
-			{
-				OutValue = PcmValue;
-			}
-
-		}
-		else
-		{
-			OutValue= PcmValue;
-		}	
-
-		OutValue=OutValue>>6;
-	//	OutValue=BufSrcR[i];
+       
+       }
+        
 
 
-		{
-			static float y0 = 0, y1 = 0, y2 = 0, x0 = 0, x1 = 0, x2 = 0;
+    for(int i=0,j=0;i<capture_size/4;i=i+4,j=j+2)
+    {
+        PcmValue = BufSrcL[i];
 
-			x0 = (OutValue* NUM[0][0]);
+        if (PcmValue>32600)
+        {
+            OutValue = ((int)BufSrcR[i]) << 6;
+        }
+        else if (PcmValue>(32600 / 2) && PcmValue<32600)
+        {
+            if (BufSrcR[i]>512)
+            {
+                OutValue = PcmValue*(32600 - PcmValue) + (((int)BufSrcR[i]) << 6)*(PcmValue - (32600 / 2));
+                OutValue = OutValue / (32600 / 2);
+            }
+            else
+            {
+                OutValue = PcmValue;
+            }
+        }
+        else if (PcmValue<-32700)
+        {
+            OutValue = ((int)BufSrcR[i]) << 6;
+        }
+        else if (PcmValue >-32700 && PcmValue < -(32700 / 2))
+        {
 
-			y0 = x0*NUM[1][0] + x1*NUM[1][1] + x2*NUM[1][2] - y1*DEN[1][1] - y2*DEN[1][2];
+            if (BufSrcR[i] <-512)
+            {
+                OutValue = PcmValue*(-PcmValue - (32700 / 2)) + (((int)BufSrcR[i]) << 6)*(32700 + PcmValue);
+                OutValue= OutValue/ (32700 / 2);
+            }
+            else
+            {
+                OutValue = PcmValue;
+            }
 
-			y2 = y1;
-			y1 = y0;
-			x2 = x1;
-			x1 = x0;
+        }
+        else
+        {
+            OutValue= PcmValue;
+        }   
 
-			if (y0 > 32767.0f)
-			{
-				y0 = 32767.0f;
-			}
+        OutValue=OutValue>>6;
+    //  OutValue=BufSrcR[i];
 
-			if (y0 < -32768.0f)
-			{
-				y0 = -32768.0f;
-			}
 
-			OutValue = (short)y0;
-		}			
-		
+        {
+            static float y0 = 0, y1 = 0, y2 = 0, x0 = 0, x1 = 0, x2 = 0;
 
-		BufDstL[j]=OutValue;
-		BufDstR[j]=OutValue;
-	}		
+            x0 = (OutValue* NUM[0][0]);
+
+            y0 = x0*NUM[1][0] + x1*NUM[1][1] + x2*NUM[1][2] - y1*DEN[1][1] - y2*DEN[1][2];
+
+            y2 = y1;
+            y1 = y0;
+            x2 = x1;
+            x1 = x0;
+
+            if (y0 > 32767.0f)
+            {
+                y0 = 32767.0f;
+            }
+
+            if (y0 < -32768.0f)
+            {
+                y0 = -32768.0f;
+            }
+
+            OutValue = (short)y0;
+        }           
+        
+
+        BufDstL[j]=OutValue;
+        BufDstR[j]=OutValue;
+    }       
 
 
 #endif
@@ -362,7 +362,7 @@ void dualadc_audio_app(bool on)
         stream_cfg.data_size = playback_size;
         af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK, &stream_cfg);
 
-		
+        
         stream_cfg.bits = AUD_BITS_16;
         stream_cfg.channel_num = AUD_CHANNEL_NUM_2;
         stream_cfg.sample_rate = sample_rate_capture;

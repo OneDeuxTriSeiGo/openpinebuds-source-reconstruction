@@ -48,7 +48,7 @@ typedef struct
     int32_t     bypass;    
     float       gain;
     int32_t     num;
-	BiquardParam params[MAX_VQE_EQ_BAND];
+    BiquardParam params[MAX_VQE_EQ_BAND];
 } EqConfig;
 
 typedef struct EqState_ EqState;

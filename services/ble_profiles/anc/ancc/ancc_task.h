@@ -83,7 +83,7 @@ enum
 /// Parameters of the @ref ANCC_ENABLE_REQ message
 struct ancc_enable_req
 {
-	uint8_t conidx;
+    uint8_t conidx;
 };
 
 

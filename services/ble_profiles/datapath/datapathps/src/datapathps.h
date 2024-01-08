@@ -37,7 +37,7 @@
 #include "prf_utils.h"
 
 
-#define BLE_MAXIMUM_CHARACTERISTIC_DESCRIPTION	32
+#define BLE_MAXIMUM_CHARACTERISTIC_DESCRIPTION  32
 
 static const char custom_tx_desc[] = "Data Path TX Data";
 static const char custom_rx_desc[] = "Data Path RX Data";
@@ -49,7 +49,7 @@ static const char custom_rx_desc[] = "Data Path RX Data";
  ****************************************************************************************
  */
 
-#define DATAPATHPS_MAX_LEN            (509)	// consider the extended data length
+#define DATAPATHPS_MAX_LEN            (509) // consider the extended data length
 
 #define DATAPATHPS_MANDATORY_MASK             (0x0F)
 #define DATAPATHPS_BODY_SENSOR_LOC_MASK       (0x30)
@@ -109,7 +109,7 @@ enum
 struct datapathps_env_tag
 {
     /// profile environment
-    prf_env_t 	prf_env;
+    prf_env_t   prf_env;
     /// Service Start Handle
     uint16_t    shdl;
     /// flag to mark whether notification is enabled

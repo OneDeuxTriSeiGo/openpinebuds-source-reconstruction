@@ -30,23 +30,23 @@
 
 struct CvsdEncSt
 {
-	unsigned short CvsdEncJudgeAlpha;
-	int   CvsdEncLastData;
-	int   CvsdEncDelta;
-	int CvsdEncFirstFrameFlag;
-	int FilterState0[3];
-	int FilterState1[3];
-	int FilterState2[3];
+    unsigned short CvsdEncJudgeAlpha;
+    int   CvsdEncLastData;
+    int   CvsdEncDelta;
+    int CvsdEncFirstFrameFlag;
+    int FilterState0[3];
+    int FilterState1[3];
+    int FilterState2[3];
 };
 //decoder
 struct CvsdDecSt
 {
-	unsigned short CvsdDecJudgeAlpha;
-	int   CvsdDecLastData;
-	int   CvsdDecDelta;
-	int FilterState0[3];
-	int FilterState1[3];
-	int FilterState2[3];
+    unsigned short CvsdDecJudgeAlpha;
+    int   CvsdDecLastData;
+    int   CvsdDecDelta;
+    int FilterState0[3];
+    int FilterState1[3];
+    int FilterState2[3];
 };
 
 #ifdef __cplusplus

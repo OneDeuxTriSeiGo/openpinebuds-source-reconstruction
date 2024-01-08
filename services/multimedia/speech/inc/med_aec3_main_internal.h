@@ -38,7 +38,7 @@ typedef struct
     VOS_BOOL                            shwIsPreEmpEnable;
     VOS_BOOL                            shwIsAfEnable;
     VOS_BOOL                            shwIsNsEnable;
-	VOS_INT16                           shwFrameLength;
+    VOS_INT16                           shwFrameLength;
     VOS_INT16                           shwDelayLength;
     MED_AEC_DELAY_STRU                  stEAecDelay;
     MED_AEC_HF_AF_STRU                  stEAecHfAf;

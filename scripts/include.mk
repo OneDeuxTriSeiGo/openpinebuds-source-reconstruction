@@ -42,8 +42,8 @@ else
 CMDRMFILE	= rm -f $1
 CMDRMFILER	= find $1 $(RCS_FIND_IGNORE) \
 		   \( $(addprefix -name ,'$(firstword $2)') \
-		      $(addprefix -o -name ',$(addsuffix ',$(filter-out $(firstword $2),$2))) \) \
-		    -type f -print | xargs rm -f
+			  $(addprefix -o -name ',$(addsuffix ',$(filter-out $(firstword $2),$2))) \) \
+			-type f -print | xargs rm -f
 CMDRMDIR	= rm -fr $1
 CMDCPFILE	= cp -f $1 $2
 endif
@@ -193,10 +193,10 @@ any-prereq = $(filter-out $(PHONY),$?) $(filter-out $(PHONY) $(wildcard $^),$^)
 ifeq ($(WIN_PLAT),y)
 depfile-new = echo. > $(depfile) && \
               echo cmd_$@ := $(make-cmd) >> $(depfile) && \
-	      echo. >> $(depfile)
+		  echo. >> $(depfile)
 depfile-add = echo. >> $(depfile) && \
               echo cmd_$@ := $(make-cmd) >> $(depfile) && \
-	      echo. >> $(depfile)
+		  echo. >> $(depfile)
 else
 depfile-new = printf '\n%s\n' 'cmd_$@ := $(make-cmd)' > $(depfile)
 depfile-add = printf '\n%s\n' 'cmd_$@ := $(make-cmd)' >> $(depfile)
@@ -210,7 +210,7 @@ if_changed = $(if $(strip $(any-prereq) $(arg-check)),                       \
 
 if_changed2 = $(if $(strip $(any-prereq) $(call arg-check,$(2))),             \
 	@ ( $(call echo-cmd,$(1)) $(cmd_$(1)) && \
-	    $(call echo-cmd,$(2)) $(cmd_$(2)) ) &&                           \
+		$(call echo-cmd,$(2)) $(cmd_$(2)) ) &&                           \
 	  ( $(call depfile-new,$(2)) ))
 
 # Execute the command and also postprocess generated .d dependencies file.

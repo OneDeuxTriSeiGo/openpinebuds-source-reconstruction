@@ -90,7 +90,7 @@ amm-info@iis.fraunhofer.de
 
 #if defined(__mips__)
 
-#if (__GNUC__) && defined(__mips__)	/* cppp replaced: elif */
+#if (__GNUC__) && defined(__mips__) /* cppp replaced: elif */
 /* MIPS GCC based compiler */
 
 #define FUNCTION_fixmuldiv2_DD

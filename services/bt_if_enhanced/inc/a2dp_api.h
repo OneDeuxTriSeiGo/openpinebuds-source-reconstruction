@@ -364,7 +364,7 @@ struct btif_get_codec_cap_t
 
 typedef struct {
     btif_a2dp_event_t event;
-	uint8_t  subevt;
+    uint8_t  subevt;
     uint16_t len;
     I8 status;
     btif_a2dp_error_t error;

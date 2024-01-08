@@ -381,7 +381,7 @@ struct gapm_env_tag
 
     /// Current device Address
     bd_addr_t addr;
-	bd_addr_t connectedAddr[6];
+    bd_addr_t connectedAddr[6];
     /// Device Role
     uint8_t role;
     /// Number of BLE connection

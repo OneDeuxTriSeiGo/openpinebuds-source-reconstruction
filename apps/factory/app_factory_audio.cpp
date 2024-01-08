@@ -31,7 +31,7 @@
 
 #ifdef __FACTORY_MODE_SUPPORT__
 
-#define BT_AUDIO_FACTORMODE_BUFF_SIZE    	(1024*2)
+#define BT_AUDIO_FACTORMODE_BUFF_SIZE       (1024*2)
 static enum APP_AUDIO_CACHE_T a2dp_cache_status = APP_AUDIO_CACHE_QTY;
 static int16_t *app_audioloop_play_cache = NULL;
 

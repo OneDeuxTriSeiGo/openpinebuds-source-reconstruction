@@ -1460,7 +1460,7 @@ uint32_t BOOT_TEXT_FLASH_LOC read_hw_metal_id(void)
     pmu_rtc_save_context();
 #endif
 
-	pmu_wdt_save_context();
+    pmu_wdt_save_context();
 
     pmu_charger_save_context();
 

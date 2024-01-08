@@ -128,7 +128,7 @@ static inline uint32_t _i2s_get_reg_base(enum HAL_I2S_ID_T id)
         default:
             break;
     }
-	return 0;
+    return 0;
 }
 
 static int hal_i2s_master_stream_closed(void)
@@ -504,7 +504,7 @@ int hal_i2s_setup_stream(enum HAL_I2S_ID_T id, enum AUD_STREAM_T stream, const s
 
         sclk = cfg->sample_rate * cycles * AUD_CHANNEL_NUM_2;
 
-#define I2S_CLOCK_SOURCE 22579200	//44100*512
+#define I2S_CLOCK_SOURCE 22579200   //44100*512
         div  = I2S_CLOCK_SOURCE/sclk - 1;
 #undef I2S_CLOCK_SOURCE
 
@@ -725,7 +725,7 @@ int hal_i2s_start_transfer(void)
         return 1;
     }
 
-	hal_cmu_reset_pulse(i2s_mod[HAL_I2S_ID_0].mod);
+    hal_cmu_reset_pulse(i2s_mod[HAL_I2S_ID_0].mod);
 
     reg_base = _i2s_get_reg_base(HAL_I2S_ID_0);
 

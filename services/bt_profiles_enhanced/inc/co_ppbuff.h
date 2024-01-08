@@ -25,8 +25,8 @@
 #define PPB_GET_PROTO_TYPE(ppb) (ppb->flag & 0x0F)
 #define PPB_SET_PROTO_TYPE(ppb,type) ppb->flag |= type
 
-#define PP_BUFF_FLAG_NORMAL	0x00 /* normal buffer */
-#define PP_BUFF_FLAG_L2CAPE	0x01 /* l2cap enhanced retrans buffer */
+#define PP_BUFF_FLAG_NORMAL 0x00 /* normal buffer */
+#define PP_BUFF_FLAG_L2CAPE 0x01 /* l2cap enhanced retrans buffer */
 
 /* alloc type */
 #define PPB_GET_ALLOC_TYPE(ppb) (ppb->flag & 0xF0)

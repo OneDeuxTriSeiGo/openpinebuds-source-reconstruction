@@ -423,7 +423,7 @@ int speech_tx_init(int sample_rate, int frame_len)
 #endif
 
 #if defined(SPEECH_TX_2MIC_NS6)
-	speech_tx_2mic_ns6_st = speech_ff_2mic_ns2_create(16000,128);
+    speech_tx_2mic_ns6_st = speech_ff_2mic_ns2_create(16000,128);
 #endif
 
 #if defined(SPEECH_TX_2MIC_NS4)

@@ -50,14 +50,14 @@ enum ERR_CODE communication_cmd_handle_cmd(enum COMMUNICATION_CMD_TYPE cmd, unsi
     //uint8_t cret[5]={0x01,0x02,0x03,0x04,0x05};
 
     //cret[0] = ERR_NONE;
-	
+    
 
-	TRACE(1,"###communication_cmd_handle_cmd,len=%d",len);
+    TRACE(1,"###communication_cmd_handle_cmd,len=%d",len);
     switch (cmd) {
         case COMMUNICATION_CMD_EQ_OP: {
-#ifdef __PC_CMD_UART__	
-		//DUMP8("%02x ",param,len);
-			communication_cmd_send_reply(param,len);
+#ifdef __PC_CMD_UART__  
+        //DUMP8("%02x ",param,len);
+            communication_cmd_send_reply(param,len);
 #endif
         }
         break;

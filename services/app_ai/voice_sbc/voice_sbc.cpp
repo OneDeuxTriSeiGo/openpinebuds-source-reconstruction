@@ -17,17 +17,17 @@
 #include "voice_sbc.h"
 #include "hal_trace.h"
 
-static VOICE_SBC_CONFIG_T	voice_sbc_config =
+static VOICE_SBC_CONFIG_T   voice_sbc_config =
 {
     VOICE_SBC_CHANNEL_COUNT     ,
-    VOICE_SBC_CHANNEL_MODE 	    ,
-    VOICE_SBC_BIT_POOL	 	    ,
+    VOICE_SBC_CHANNEL_MODE      ,
+    VOICE_SBC_BIT_POOL          ,
     VOICE_SBC_SIZE_PER_SAMPLE   ,
-    VOICE_SBC_SAMPLE_RATE	    ,
-    VOICE_SBC_NUM_BLOCKS	    ,
-    VOICE_SBC_NUM_SUB_BANDS	    ,
-    VOICE_SBC_MSBC_FLAG		    ,
-    VOICE_SBC_ALLOC_METHOD	    ,
+    VOICE_SBC_SAMPLE_RATE       ,
+    VOICE_SBC_NUM_BLOCKS        ,
+    VOICE_SBC_NUM_SUB_BANDS     ,
+    VOICE_SBC_MSBC_FLAG         ,
+    VOICE_SBC_ALLOC_METHOD      ,
 };
 
 static int voice_sbc_init_encoder(void);
@@ -77,11 +77,11 @@ uint32_t voice_sbc_get_frame_len(void)
 
 uint32_t voice_sbc_encode(uint8_t *input, uint32_t inputBytes, uint32_t* purchasedBytes, uint8_t *output, uint8_t isReset)
 {
-	if (isReset)
-	{
-		voice_sbc_init_encoder();
-	}
-	
+    if (isReset)
+    {
+        voice_sbc_init_encoder();
+    }
+    
     btif_sbc_pcm_data_t PcmEncData;
     uint16_t outputSbcBytes, bytes_encoded;
     

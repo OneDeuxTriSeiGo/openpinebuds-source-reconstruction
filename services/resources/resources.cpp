@@ -27,10 +27,10 @@
 #ifdef MEDIA_PLAYER_SUPPORT
 
 typedef struct {
-	UINT32 MARK;
-	UINT16 ID;  // resource id
-	UINT16 count;  // count of resource
-	UINT32 total_size;  // size include resource header, header list and data
+    UINT32 MARK;
+    UINT16 ID;  // resource id
+    UINT16 count;  // count of resource
+    UINT32 total_size;  // size include resource header, header list and data
 } ResourceHeader_t;
 
 
@@ -75,134 +75,134 @@ AUDIO_List os_pool_audio_List_CN[MAX_RECORD_NUM];
 
 UINT8* aud_get_reouce(AUD_ID_ENUM id, UINT32* leng, UINT16* type)
 {
-	AUDIO_List * list = gpAudioList;
+    AUDIO_List * list = gpAudioList;
 
-	*leng = 0, *type = 0;
+    *leng = 0, *type = 0;
 
-	while(list)
-	{
-		if (list->record.audio_id == id)
-		{
-			*leng = list->record.size;
-			*type = list->record.type;
-			return (UINT8*) (gpAudioDataBase + list->record.offset);
-		}
-		list = list->next;
-	}
+    while(list)
+    {
+        if (list->record.audio_id == id)
+        {
+            *leng = list->record.size;
+            *type = list->record.type;
+            return (UINT8*) (gpAudioDataBase + list->record.offset);
+        }
+        list = list->next;
+    }
 
-	return 0;
+    return 0;
 }
 
 UINT8* aud_get_reouce_chinese(AUD_ID_ENUM id, UINT32* leng, UINT16* type)
 {
-	AUDIO_List * list = gpAudioList_CN;
+    AUDIO_List * list = gpAudioList_CN;
 
-	*leng = 0, *type = 0;
+    *leng = 0, *type = 0;
 
-	while(list)
-	{
-		if (list->record.audio_id == id)
-		{
-			*leng = list->record.size;
-			*type = list->record.type;
-			return (UINT8*) (gpAudioDataBase_CN + list->record.offset);
-		}
-		list = list->next;
-	}
+    while(list)
+    {
+        if (list->record.audio_id == id)
+        {
+            *leng = list->record.size;
+            *type = list->record.type;
+            return (UINT8*) (gpAudioDataBase_CN + list->record.offset);
+        }
+        list = list->next;
+    }
 
-	return 0;
+    return 0;
 }
 
 /*
 --1.Version No&Magic No.<4>
---2.CRC				<4>
---3.Reserver1			<4> total length  = 5+6+7+...
---4.Reserver2			<4>
---5.ResourceHeader_t	<8>
+--2.CRC             <4>
+--3.Reserver1           <4> total length  = 5+6+7+...
+--4.Reserver2           <4>
+--5.ResourceHeader_t    <8>
 --6.AUDIO_HEAD_LIST X count   <16 x count>
 --7.file.. gpAudioDataBase.. offset
 --.... another resource
 */
 void init_audio_resource(void* gResource)
 {
-	uint32_t crc;
-	uint32_t *pcrc;
-	uint32_t data;
+    uint32_t crc;
+    uint32_t *pcrc;
+    uint32_t data;
 
-	UINT32 res_addr;
-	ResourceHeader_t *pRes;
+    UINT32 res_addr;
+    ResourceHeader_t *pRes;
 
-	data =  *((UINT32*)gResource);
-	gVersionNO = 0xFFFF & (data>>16);
-	gReserver1 =  *((UINT32*)((uint32_t)gResource+2*sizeof(UINT32)));
+    data =  *((UINT32*)gResource);
+    gVersionNO = 0xFFFF & (data>>16);
+    gReserver1 =  *((UINT32*)((uint32_t)gResource+2*sizeof(UINT32)));
 
-	pcrc = (uint32_t *)((uint32_t)gResource+sizeof(UINT32)); /*crc*/
+    pcrc = (uint32_t *)((uint32_t)gResource+sizeof(UINT32)); /*crc*/
 
-	gpResourceBase = (ResourceHeader_t *) ((uint32_t)gResource + 4*sizeof(uint32_t));
+    gpResourceBase = (ResourceHeader_t *) ((uint32_t)gResource + 4*sizeof(uint32_t));
 /********************************************************/
-	crc = crc32(0, (uint8_t *)((uint32_t)gpResourceBase) , gReserver1);
-	TRACE(3,"%s, *pcrc: %x ,  crc: %x",__func__, *pcrc, crc);
-	if (*pcrc != crc)
-	    return;
+    crc = crc32(0, (uint8_t *)((uint32_t)gpResourceBase) , gReserver1);
+    TRACE(3,"%s, *pcrc: %x ,  crc: %x",__func__, *pcrc, crc);
+    if (*pcrc != crc)
+        return;
 
-	res_addr = (uint32_t)gpResourceBase;
-	pRes = (ResourceHeader_t *)gpResourceBase;
+    res_addr = (uint32_t)gpResourceBase;
+    pRes = (ResourceHeader_t *)gpResourceBase;
 
-	while((UINT32)pRes < (UINT32)gpResourceBase +gReserver1 && pRes->MARK == AUDIO_TOOL_RES_MARK)
-	{
-		if (pRes->ID == RES_ENGLISH_ID)
-		{
-			AUDIO_List * list;
-			memset(os_pool_audio_List, 0, sizeof(AUDIO_List)*MAX_RECORD_NUM);
-			memcpy((uint8_t *)os_pool_audio_List, (uint8_t *)((uint32_t)pRes+sizeof(ResourceHeader_t)),sizeof(AUDIO_List)* pRes->count);
+    while((UINT32)pRes < (UINT32)gpResourceBase +gReserver1 && pRes->MARK == AUDIO_TOOL_RES_MARK)
+    {
+        if (pRes->ID == RES_ENGLISH_ID)
+        {
+            AUDIO_List * list;
+            memset(os_pool_audio_List, 0, sizeof(AUDIO_List)*MAX_RECORD_NUM);
+            memcpy((uint8_t *)os_pool_audio_List, (uint8_t *)((uint32_t)pRes+sizeof(ResourceHeader_t)),sizeof(AUDIO_List)* pRes->count);
 
-			gpAudioList = (AUDIO_List *)os_pool_audio_List;
-			list = gpAudioList;
+            gpAudioList = (AUDIO_List *)os_pool_audio_List;
+            list = gpAudioList;
 
-			gpAudioDataBase = (uint8_t *)pRes + sizeof(ResourceHeader_t) + sizeof(AUDIO_List)* pRes->count;
-			TRACE(3,"%s,  english count: %d, leng: %d",__func__, pRes->count, pRes->total_size);
+            gpAudioDataBase = (uint8_t *)pRes + sizeof(ResourceHeader_t) + sizeof(AUDIO_List)* pRes->count;
+            TRACE(3,"%s,  english count: %d, leng: %d",__func__, pRes->count, pRes->total_size);
 
-			for(int i=1; i<pRes->count; i++)
-			{
-				list->next = &os_pool_audio_List[i];
+            for(int i=1; i<pRes->count; i++)
+            {
+                list->next = &os_pool_audio_List[i];
 
-				list = list->next;
-			}
+                list = list->next;
+            }
 
-			TRACE(2,"%s,  english list: %p",__func__, list);
+            TRACE(2,"%s,  english list: %p",__func__, list);
 
-		}
-		else if (pRes->ID == RES_CHINESE_ID)
-		{
+        }
+        else if (pRes->ID == RES_CHINESE_ID)
+        {
 
-			AUDIO_List * list;
-			TRACE(2,"%s, AUDIO_TOOL_RES_MARK: %d",__func__, pRes->count);
+            AUDIO_List * list;
+            TRACE(2,"%s, AUDIO_TOOL_RES_MARK: %d",__func__, pRes->count);
 
-			memset(os_pool_audio_List_CN, 0, sizeof(AUDIO_List)*MAX_RECORD_NUM);
-			memcpy((uint8_t *)os_pool_audio_List_CN, (uint8_t *)((uint32_t)pRes+sizeof(ResourceHeader_t)),sizeof(AUDIO_List)* pRes->count);
+            memset(os_pool_audio_List_CN, 0, sizeof(AUDIO_List)*MAX_RECORD_NUM);
+            memcpy((uint8_t *)os_pool_audio_List_CN, (uint8_t *)((uint32_t)pRes+sizeof(ResourceHeader_t)),sizeof(AUDIO_List)* pRes->count);
 
-			gpAudioList_CN= (AUDIO_List *)os_pool_audio_List_CN;
-			list = gpAudioList_CN;
+            gpAudioList_CN= (AUDIO_List *)os_pool_audio_List_CN;
+            list = gpAudioList_CN;
 
-			gpAudioDataBase_CN = (uint8_t *)pRes +sizeof(ResourceHeader_t) + sizeof(AUDIO_List)* pRes->count;
-			TRACE(3,"%s, chinese count: %d, leng: %d",__func__, pRes->count, pRes->total_size);
+            gpAudioDataBase_CN = (uint8_t *)pRes +sizeof(ResourceHeader_t) + sizeof(AUDIO_List)* pRes->count;
+            TRACE(3,"%s, chinese count: %d, leng: %d",__func__, pRes->count, pRes->total_size);
 
-			for(int i=1; i<pRes->count; i++)
-			{
-				list->next = &os_pool_audio_List_CN[i];
+            for(int i=1; i<pRes->count; i++)
+            {
+                list->next = &os_pool_audio_List_CN[i];
 
-				list = list->next;
-			}
-		}
+                list = list->next;
+            }
+        }
 
-		TRACE(3,"%s, %x,  pRes->total_size: %x",__func__,res_addr, pRes->total_size);
+        TRACE(3,"%s, %x,  pRes->total_size: %x",__func__,res_addr, pRes->total_size);
 
-		  res_addr += pRes->total_size;
-	        pRes = (ResourceHeader_t*)(res_addr);
+          res_addr += pRes->total_size;
+            pRes = (ResourceHeader_t*)(res_addr);
 
-	}
+    }
 
-	TRACE(2,"%s, pRes add: %p",__func__, pRes);
+    TRACE(2,"%s, pRes add: %p",__func__, pRes);
 
 }
 
@@ -303,19 +303,19 @@ UINT8 BIN_FILE[] =
 };
 void test_resource_load()
 {
-	UINT32 leng;
-	UINT16 type;
-	UINT8* data;
+    UINT32 leng;
+    UINT16 type;
+    UINT8* data;
 
-	init_audio_resource(BIN_FILE);
+    init_audio_resource(BIN_FILE);
 
-	data = aud_get_reouce(AUD_ID_BT_CALL_REFUSE, &leng, &type);
+    data = aud_get_reouce(AUD_ID_BT_CALL_REFUSE, &leng, &type);
 
-	TRACE(6,"====english_audio, leng = %d, type = %d, data[0] = %x, data[1]= %x, data[2]= %x, data[3]= %x", leng, type, data[0], data[1], data[2], data[3]);
+    TRACE(6,"====english_audio, leng = %d, type = %d, data[0] = %x, data[1]= %x, data[2]= %x, data[3]= %x", leng, type, data[0], data[1], data[2], data[3]);
 
-	data = aud_get_reouce_chinese(AUD_ID_BT_CLEAR_SUCCESS, &leng, &type);
+    data = aud_get_reouce_chinese(AUD_ID_BT_CLEAR_SUCCESS, &leng, &type);
 
-	TRACE(6,"====chinese_audio, leng = %d, type = %d, data[0] = %x, data[1]= %x, data[2]= %x, data[3]= %x", leng,type, data[0], data[1], data[2], data[3]);
+    TRACE(6,"====chinese_audio, leng = %d, type = %d, data[0] = %x, data[1]= %x, data[2]= %x, data[3]= %x", leng,type, data[0], data[1], data[2], data[3]);
 
 
 };

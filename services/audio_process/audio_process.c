@@ -188,7 +188,7 @@ typedef struct{
 #endif
 
 #ifdef USB_EQ_TUNING
-	bool eq_updated_cfg;
+    bool eq_updated_cfg;
 #endif
 
 
@@ -473,14 +473,14 @@ int SRAM_TEXT_LOC audio_process_run(uint8_t *buf, uint32_t len)
 
 #ifdef __AUDIO_DRC__
 #ifdef AUDIO_DRC_UPDATE_CFG
-	if(audio_process.drc_update)
-	{
+    if(audio_process.drc_update)
+    {
         drc_set_config(audio_process.drc_st, &audio_process.drc_cfg);
         audio_process.drc_update =false;
-	}
+    }
 #endif
 
-	drc_process(audio_process.drc_st, buf, pcm_len);
+    drc_process(audio_process.drc_st, buf, pcm_len);
 #endif
 
     //int32_t m_time = hal_fast_sys_timer_get();
@@ -649,7 +649,7 @@ int audio_process_open(enum AUD_SAMPRATE_T sample_rate, enum AUD_BITS_T sample_b
     hal_cmd_open();
 #endif
 
-	return 0;
+    return 0;
 }
 
 int audio_process_close(void)
@@ -732,7 +732,7 @@ int audio_eq_sw_iir_callback(uint8_t *buf, uint32_t  len)
                                                 (int32_t)(audio_process.sw_iir_cfg.gain1*10));
     for (uint8_t i = 0; i<audio_process.sw_iir_cfg.num; i++){
         TRACE(5,"band num:%d type %d gain:%d fc:%d q:%d", i,
-			                           (int32_t)(audio_process.sw_iir_cfg.param[i].type),
+                                       (int32_t)(audio_process.sw_iir_cfg.param[i].type),
                                                 (int32_t)(audio_process.sw_iir_cfg.param[i].gain*10),
                                                 (int32_t)(audio_process.sw_iir_cfg.param[i].fc*10),
                                                 (int32_t)(audio_process.sw_iir_cfg.param[i].Q*10));
@@ -809,7 +809,7 @@ int audio_eq_hw_fir_callback(uint8_t *buf, uint32_t  len)
 #ifdef AUDIO_DRC_UPDATE_CFG
 int audio_drc_callback(uint8_t *buf, uint32_t  len)
 {
-	TRACE(3,"[%s] len = %d, sizeof(struct) = %d", __func__, len, sizeof(DrcConfig));
+    TRACE(3,"[%s] len = %d, sizeof(struct) = %d", __func__, len, sizeof(DrcConfig));
 
     if (len != sizeof(DrcConfig))
     {
@@ -826,7 +826,7 @@ int audio_drc_callback(uint8_t *buf, uint32_t  len)
         return 2;
     }
 
-	memcpy(&audio_process.drc_cfg, buf, sizeof(DrcConfig));
+    memcpy(&audio_process.drc_cfg, buf, sizeof(DrcConfig));
     audio_process.drc_update = true;
 
     return 0;
@@ -836,7 +836,7 @@ int audio_drc_callback(uint8_t *buf, uint32_t  len)
 #ifdef AUDIO_DRC2_UPDATE_CFG
 int audio_drc2_callback(uint8_t *buf, uint32_t  len)
 {
-	TRACE(3,"[%s] len = %d, sizeof(struct) = %d", __func__, len, sizeof(LimiterConfig));
+    TRACE(3,"[%s] len = %d, sizeof(struct) = %d", __func__, len, sizeof(LimiterConfig));
 
     if (len != sizeof(LimiterConfig))
     {
@@ -853,7 +853,7 @@ int audio_drc2_callback(uint8_t *buf, uint32_t  len)
         return 2;
     }
 
-	memcpy(&audio_process.drc2_cfg, buf, sizeof(LimiterConfig));
+    memcpy(&audio_process.drc2_cfg, buf, sizeof(LimiterConfig));
     audio_process.drc2_update = true;
 
     return 0;
@@ -877,7 +877,7 @@ int audio_eq_hw_dac_iir_callback(uint8_t *buf, uint32_t  len)
                                                 (int32_t)(audio_process.hw_dac_iir_cfg.gain1*10));
     for (uint8_t i = 0; i<audio_process.hw_dac_iir_cfg.num; i++){
         TRACE(5,"band num:%d type %d gain:%d fc:%d q:%d", i,
-			                           (int32_t)(audio_process.hw_dac_iir_cfg.param[i].type),
+                                       (int32_t)(audio_process.hw_dac_iir_cfg.param[i].type),
                                                 (int32_t)(audio_process.hw_dac_iir_cfg.param[i].gain*10),
                                                 (int32_t)(audio_process.hw_dac_iir_cfg.param[i].fc*10),
                                                 (int32_t)(audio_process.hw_dac_iir_cfg.param[i].Q*10));
@@ -935,7 +935,7 @@ int audio_eq_hw_iir_callback(uint8_t *buf, uint32_t  len)
     for (uint8_t i = 0; i<audio_process.hw_iir_cfg.num; i++)
     {
         TRACE(5,"band num:%d type %d gain:%d fc:%d q:%d", i,
-			                                    (int32_t)(audio_process.hw_iir_cfg.param[i].type),
+                                                (int32_t)(audio_process.hw_iir_cfg.param[i].type),
                                                 (int32_t)(audio_process.hw_iir_cfg.param[i].gain*10),
                                                 (int32_t)(audio_process.hw_iir_cfg.param[i].fc*10),
                                                 (int32_t)(audio_process.hw_iir_cfg.param[i].Q*10));
@@ -965,92 +965,92 @@ int audio_eq_hw_iir_callback(uint8_t *buf, uint32_t  len)
 
 int audio_eq_usb_iir_callback(uint8_t *buf, uint32_t  len)
 {
-	IIR_CFG_T* cur_cfg;
+    IIR_CFG_T* cur_cfg;
 
-	TRACE(2,"usb_iir_cb: len=[%d - %d]", len, sizeof(IIR_CFG_T));
+    TRACE(2,"usb_iir_cb: len=[%d - %d]", len, sizeof(IIR_CFG_T));
 
-	if (len != sizeof(IIR_CFG_T)) {
+    if (len != sizeof(IIR_CFG_T)) {
         return 1;
     }
 
-	cur_cfg = (IIR_CFG_T*)buf;
-	TRACE(2,"-> sample_rate[%d], num[%d]", /*cur_cfg->samplerate,*/ audio_process.sample_rate, cur_cfg->num);
+    cur_cfg = (IIR_CFG_T*)buf;
+    TRACE(2,"-> sample_rate[%d], num[%d]", /*cur_cfg->samplerate,*/ audio_process.sample_rate, cur_cfg->num);
 
 #if defined(AUDIO_EQ_SW_IIR_UPDATE_CFG)
-	audio_process.sw_iir_cfg.gain0 = cur_cfg->gain0;
-	audio_process.sw_iir_cfg.gain1 = cur_cfg->gain1;
+    audio_process.sw_iir_cfg.gain0 = cur_cfg->gain0;
+    audio_process.sw_iir_cfg.gain1 = cur_cfg->gain1;
 #endif
 
 #if defined(AUDIO_EQ_HW_DAC_IIR_UPDATE_CFG)
 #if defined(AUDIO_EQ_SW_IIR_UPDATE_CFG)
-	audio_process.hw_dac_iir_cfg.gain0 = 0;
-	audio_process.hw_dac_iir_cfg.gain1 = 0;
+    audio_process.hw_dac_iir_cfg.gain0 = 0;
+    audio_process.hw_dac_iir_cfg.gain1 = 0;
 #else
     audio_process.hw_dac_iir_cfg.gain0 = cur_cfg->gain0;
-	audio_process.hw_dac_iir_cfg.gain1 = cur_cfg->gain1;
+    audio_process.hw_dac_iir_cfg.gain1 = cur_cfg->gain1;
 #endif
 #endif
 
 #if defined(AUDIO_EQ_HW_DAC_IIR_UPDATE_CFG)
-	if (cur_cfg->num > AUD_DAC_IIR_NUM_EQ) {
-		audio_process.hw_dac_iir_cfg.num = AUD_DAC_IIR_NUM_EQ;
-	} else {
-		audio_process.hw_dac_iir_cfg.num = cur_cfg->num;
-	}
+    if (cur_cfg->num > AUD_DAC_IIR_NUM_EQ) {
+        audio_process.hw_dac_iir_cfg.num = AUD_DAC_IIR_NUM_EQ;
+    } else {
+        audio_process.hw_dac_iir_cfg.num = cur_cfg->num;
+    }
     TRACE(1,"-> hw_dac_iir_num[%d]", audio_process.hw_dac_iir_cfg.num);
 #endif
 
 #if defined(AUDIO_EQ_SW_IIR_UPDATE_CFG)
-	audio_process.sw_iir_cfg.num = cur_cfg->num - audio_process.hw_dac_iir_cfg.num;
+    audio_process.sw_iir_cfg.num = cur_cfg->num - audio_process.hw_dac_iir_cfg.num;
     TRACE(1,"-> sw_iir_num[%d]", audio_process.sw_iir_cfg.num);
 #endif
-	//TRACE(2,"-> iir_num[%d - %d]", audio_process.hw_dac_iir_cfg.num, audio_process.sw_iir_cfg.num);
+    //TRACE(2,"-> iir_num[%d - %d]", audio_process.hw_dac_iir_cfg.num, audio_process.sw_iir_cfg.num);
 
 #if defined(AUDIO_EQ_HW_DAC_IIR_UPDATE_CFG)
-	if (audio_process.hw_dac_iir_cfg.num) {
-		memcpy((void*)(&audio_process.hw_dac_iir_cfg.param[0]),
-					(void*)(&cur_cfg->param[0]),
-					audio_process.hw_dac_iir_cfg.num*sizeof(IIR_PARAM_T));
-	}
+    if (audio_process.hw_dac_iir_cfg.num) {
+        memcpy((void*)(&audio_process.hw_dac_iir_cfg.param[0]),
+                    (void*)(&cur_cfg->param[0]),
+                    audio_process.hw_dac_iir_cfg.num*sizeof(IIR_PARAM_T));
+    }
 #endif
 
 #if defined(AUDIO_EQ_SW_IIR_UPDATE_CFG)
-	if (audio_process.sw_iir_cfg.num) {
+    if (audio_process.sw_iir_cfg.num) {
 
-		memcpy((void*)(&audio_process.sw_iir_cfg.param[0]),
-					(void*)(&cur_cfg->param[audio_process.hw_dac_iir_cfg.num]),
-					audio_process.sw_iir_cfg.num * sizeof(IIR_PARAM_T));
+        memcpy((void*)(&audio_process.sw_iir_cfg.param[0]),
+                    (void*)(&cur_cfg->param[audio_process.hw_dac_iir_cfg.num]),
+                    audio_process.sw_iir_cfg.num * sizeof(IIR_PARAM_T));
 
-	} else {
+    } else {
 
-		// set a default filter
-		audio_process.sw_iir_cfg.num = 1;
+        // set a default filter
+        audio_process.sw_iir_cfg.num = 1;
 
-		audio_process.sw_iir_cfg.param[0].fc = 1000.0;
-		audio_process.sw_iir_cfg.param[0].gain = 0.0;
-		audio_process.sw_iir_cfg.param[0].type = IIR_TYPE_PEAK;
-		audio_process.sw_iir_cfg.param[0].Q = 1.0;
+        audio_process.sw_iir_cfg.param[0].fc = 1000.0;
+        audio_process.sw_iir_cfg.param[0].gain = 0.0;
+        audio_process.sw_iir_cfg.param[0].type = IIR_TYPE_PEAK;
+        audio_process.sw_iir_cfg.param[0].Q = 1.0;
 
-	}
+    }
 #endif
 
-	if (audio_process.sample_rate) {
-		audio_process.update_cfg = true;
-	}
+    if (audio_process.sample_rate) {
+        audio_process.update_cfg = true;
+    }
 
-	audio_process.eq_updated_cfg = true;
+    audio_process.eq_updated_cfg = true;
 
-	return 0;
+    return 0;
 }
 
 void audio_eq_usb_eq_update (void)
 {
-	if (audio_process.update_cfg) {
+    if (audio_process.update_cfg) {
 
 #if defined(AUDIO_EQ_HW_DAC_IIR_UPDATE_CFG)
-		HW_CODEC_IIR_CFG_T *hw_iir_cfg_dac = NULL;
+        HW_CODEC_IIR_CFG_T *hw_iir_cfg_dac = NULL;
 
-		if (audio_process.hw_dac_iir_cfg.num) {
+        if (audio_process.hw_dac_iir_cfg.num) {
                     enum AUD_SAMPRATE_T sample_rate_hw_dac_iir;
 #ifdef __AUDIO_RESAMPLE__
                     int i;
@@ -1065,34 +1065,34 @@ void audio_eq_usb_eq_update (void)
 #else
                     sample_rate_hw_dac_iir = audio_process.sample_rate;
 #endif
-			hw_iir_cfg_dac = hw_codec_iir_get_cfg(sample_rate_hw_dac_iir, &audio_process.hw_dac_iir_cfg);
+            hw_iir_cfg_dac = hw_codec_iir_get_cfg(sample_rate_hw_dac_iir, &audio_process.hw_dac_iir_cfg);
 
-			hw_codec_iir_set_cfg(hw_iir_cfg_dac, sample_rate_hw_dac_iir, HW_CODEC_IIR_DAC);
-			audio_process.hw_dac_iir_enable = true;
+            hw_codec_iir_set_cfg(hw_iir_cfg_dac, sample_rate_hw_dac_iir, HW_CODEC_IIR_DAC);
+            audio_process.hw_dac_iir_enable = true;
 
-		} else {
+        } else {
 
-			audio_process.hw_dac_iir_enable = false;
-		}
+            audio_process.hw_dac_iir_enable = false;
+        }
 #endif
 
 #if defined(AUDIO_EQ_SW_IIR_UPDATE_CFG)
-		iir_set_cfg(&audio_process.sw_iir_cfg);
-		audio_process.sw_iir_enable = true;
+        iir_set_cfg(&audio_process.sw_iir_cfg);
+        audio_process.sw_iir_enable = true;
 #endif
 
-		audio_process.update_cfg = false;
+        audio_process.update_cfg = false;
 
 /*
-		TRACE(4,"USB EQ Update: en[%d-%d], num[%d-%d]",
-				audio_process.hw_dac_iir_enable, audio_process.sw_iir_enable,
-				audio_process.hw_dac_iir_cfg.num, audio_process.sw_iir_cfg.num);
+        TRACE(4,"USB EQ Update: en[%d-%d], num[%d-%d]",
+                audio_process.hw_dac_iir_enable, audio_process.sw_iir_enable,
+                audio_process.hw_dac_iir_cfg.num, audio_process.sw_iir_cfg.num);
 */
-	}
+    }
 
 }
 
-#endif	// USB_EQ_TUNING
+#endif  // USB_EQ_TUNING
 
 
 typedef struct {

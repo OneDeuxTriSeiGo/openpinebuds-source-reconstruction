@@ -58,7 +58,7 @@
  * DEFINES
  ****************************************************************************************
  */
-#define TOTA_MAX_LEN            			(509)	
+#define TOTA_MAX_LEN                        (509)   
 
 /*
  * DEFINES
@@ -98,12 +98,12 @@ enum
 struct tota_env_tag
 {
     /// profile environment
-    prf_env_t 	prf_env;
-	uint8_t		isNotificationEnabled[BLE_CONNECTION_MAX];
+    prf_env_t   prf_env;
+    uint8_t     isNotificationEnabled[BLE_CONNECTION_MAX];
     /// Service Start Handle
-    uint16_t 	shdl;
+    uint16_t    shdl;
     /// State of different task instances
-    ke_state_t 	state;
+    ke_state_t  state;
 };
 
 

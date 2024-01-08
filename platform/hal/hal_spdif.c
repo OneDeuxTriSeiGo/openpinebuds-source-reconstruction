@@ -124,7 +124,7 @@ static inline uint32_t _spdif_get_reg_base(enum HAL_SPDIF_ID_T id)
             break;
 #endif
     }
-	return 0;
+    return 0;
 }
 
 int hal_spdif_open(enum HAL_SPDIF_ID_T id, enum AUD_STREAM_T stream)

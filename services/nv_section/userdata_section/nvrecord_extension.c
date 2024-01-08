@@ -667,7 +667,7 @@ static int nv_record_extension_flush_main(bool is_async)
             }while(norflash_api_get_used_buffer_count(NORFLASH_API_MODULE_ID_USERDATA_EXT,NORFLASH_API_ALL) > 0);
 
             nv_flsh_state.state = NV_STATE_MAIN_DONE;
-        	TRACE(1,"%s: sync flush done.", __func__);
+            TRACE(1,"%s: sync flush done.", __func__);
     }
 _func_end:
     return (ret == NORFLASH_API_OK) ? 0:1;

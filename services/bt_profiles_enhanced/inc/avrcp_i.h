@@ -62,7 +62,7 @@
 #define AVRCP_OP_SEARCH                         0x80
 #define AVRCP_OP_ADD_TO_NOW_PLAYING             0x90
 #define AVRCP_OP_GENERAL_REJECT                 0xA0
-#define AVRCP_OP_CUSTOM_CMD						0xF0
+#define AVRCP_OP_CUSTOM_CMD                     0xF0
 
 enum avrcp_role_enum {
     AVRCP_MASTER,

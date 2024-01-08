@@ -204,7 +204,7 @@ static int gattc_read_ind_handler(ke_msg_id_t const msgid,
     uint8_t conidx = KE_IDX_GET(src_id);
     struct gattc_read_cfm *cfm =
         KE_MSG_ALLOC_DYN(GATTC_READ_CFM, 
-        				 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_ANCSP), conidx),
+                         KE_BUILD_ID(prf_get_task_from_id(TASK_ID_ANCSP), conidx),
                          dest_id, gattc_read_cfm, param->length);
     cfm->status = 0;  // read_ind has no status???
     cfm->handle = param->handle;
@@ -396,7 +396,7 @@ static int gattc_cmp_evt_handler(ke_msg_id_t const msgid,
         case GATTC_WRITE: {
           struct gattc_write_cfm *cfm =
               KE_MSG_ALLOC(GATTC_WRITE_CFM, 
-              			   KE_BUILD_ID(prf_get_task_from_id(TASK_ID_ANCSP), conidx),
+                           KE_BUILD_ID(prf_get_task_from_id(TASK_ID_ANCSP), conidx),
                            dest_id, gattc_write_cfm);
           cfm->handle = ancc_env->last_write_handle[conidx];
           ancc_env->last_write_handle[conidx] = ATT_INVALID_HANDLE;

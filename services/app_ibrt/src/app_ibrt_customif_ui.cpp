@@ -118,23 +118,23 @@ extern void app_ibrt_customif_test4_cmd_send(uint8_t *p_buff, uint16_t length);
 void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t evt_type, uint8_t status)
 {
     static ibrt_ctrl_t *p_ibrt_ctrl = app_ibrt_if_get_bt_ctrl_ctx();
-	static app_ibrt_ui_t *p_ui_ctrl = app_ibrt_ui_get_ctx();
-	TRACE(0,"%s,evt_type = %d,link_type = %d,status = %d",__func__,evt_type,link_type,status);
+    static app_ibrt_ui_t *p_ui_ctrl = app_ibrt_ui_get_ctx();
+    TRACE(0,"%s,evt_type = %d,link_type = %d,status = %d",__func__,evt_type,link_type,status);
     switch (evt_type)
     {
         case BTIF_BTEVENT_LINK_CONNECT_CNF:// An outgoing ACL connection is up
         //fall through
-        	if((!IsMobileLinkLossing) && (MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_NO_ERROR)||(status == BTIF_BEC_PAGE_TIMEOUT)))
-		{
-			TRACE(3,"xqd log 1 -- reconnected mobile fail\n");
-			//app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
-			startreconnectfail_delay_report(1200);
-		}
-		if((!IsTwsLinkLossing) && (TWS_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_NO_ERROR)||(status == BTIF_BEC_PAGE_TIMEOUT)))
-		{
-			TRACE(3,"xqd log 1 -- reconnected TWS fail\n");
-		}
-		break;
+            if((!IsMobileLinkLossing) && (MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_NO_ERROR)||(status == BTIF_BEC_PAGE_TIMEOUT)))
+        {
+            TRACE(3,"xqd log 1 -- reconnected mobile fail\n");
+            //app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
+            startreconnectfail_delay_report(1200);
+        }
+        if((!IsTwsLinkLossing) && (TWS_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_NO_ERROR)||(status == BTIF_BEC_PAGE_TIMEOUT)))
+        {
+            TRACE(3,"xqd log 1 -- reconnected TWS fail\n");
+        }
+        break;
         case BTIF_BTEVENT_LINK_CONNECT_IND://An incoming ACL connection is up
             if (MOBILE_LINK == link_type)
             {
@@ -146,12 +146,12 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
             }
             break;
         case BTIF_BTEVENT_LINK_DISCONNECT:
-		if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
-		{
-			TRACE(3,"xqd log 1 -- mobile linkloss\n");
-			IsMobileLinkLossing = TRUE;	
-			nv_record_flash_flush();
-		} 
+        if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
+        {
+            TRACE(3,"xqd log 1 -- mobile linkloss\n");
+            IsMobileLinkLossing = TRUE; 
+            nv_record_flash_flush();
+        } 
             if (!app_tws_ibrt_mobile_link_connected())
             {
                 app_ibrt_if_sniff_checker_reset();
@@ -172,39 +172,39 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
             break;
         case BTIF_STACK_LINK_DISCONNECT_COMPLETE:
    //       app_status_indication_set(APP_STATUS_INDICATION_DISCONNECTED);
-	    if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_USER_TERMINATED)||(status == BTIF_BEC_LOCAL_TERMINATED))){
+        if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_USER_TERMINATED)||(status == BTIF_BEC_LOCAL_TERMINATED))){
                if((app_tws_ibrt_tws_link_connected()) && (p_ibrt_ctrl->current_role == IBRT_SLAVE))
                {
-        	     TRACE(0,"4TWS connected and This is Slave!!!");
-		        }/*else{
-					once_event_case = 2;
-					startonce_delay_event_Timer_(1500);
-				 }*/
-    	    }
-		
-			if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
-			{
-				TRACE(3,"xqd log 2 -- mobile linkloss\n");
-				IsMobileLinkLossing = TRUE;
-				nv_record_flash_flush();
-				if(p_ibrt_ctrl->current_role != IBRT_SLAVE){
-					once_event_case = 4;
-					startonce_delay_event_Timer_(5000);
-				}
-			}
-			else if((TWS_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
-			{
-				TRACE(3,"xqd log 3 -- tws linkloss\n");
-				IsTwsLinkLossing = true;
-				once_event_case = 4;
-				nv_record_flash_flush();
-				startonce_delay_event_Timer_(10000);
-				TRACE(3,"MyLog: The TWS connection is lost, reset the indication!!!");
-				if (!app_device_bt_is_connected() && !IsMobileLinkLossing) {	
-					TRACE(3,"MyLog: The TWS connection is lost, reset the indication!!!");
-					//app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
-				}
-			}
+                 TRACE(0,"4TWS connected and This is Slave!!!");
+                }/*else{
+                    once_event_case = 2;
+                    startonce_delay_event_Timer_(1500);
+                 }*/
+            }
+        
+            if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
+            {
+                TRACE(3,"xqd log 2 -- mobile linkloss\n");
+                IsMobileLinkLossing = TRUE;
+                nv_record_flash_flush();
+                if(p_ibrt_ctrl->current_role != IBRT_SLAVE){
+                    once_event_case = 4;
+                    startonce_delay_event_Timer_(5000);
+                }
+            }
+            else if((TWS_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
+            {
+                TRACE(3,"xqd log 3 -- tws linkloss\n");
+                IsTwsLinkLossing = true;
+                once_event_case = 4;
+                nv_record_flash_flush();
+                startonce_delay_event_Timer_(10000);
+                TRACE(3,"MyLog: The TWS connection is lost, reset the indication!!!");
+                if (!app_device_bt_is_connected() && !IsMobileLinkLossing) {    
+                    TRACE(3,"MyLog: The TWS connection is lost, reset the indication!!!");
+                    //app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
+                }
+            }
             break;
 
         case BTIF_BTEVENT_ROLE_CHANGE:
@@ -213,23 +213,23 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
         case BTIF_BTEVENT_BES_AUD_CONNECTED:
         {
             //tws link callback when besaud connection complete
-		if(TWS_LINK == link_type){
-			/*if((p_ibrt_ctrl->current_role == IBRT_MASTER))
-			{
-				app_ibrt_customif_test4_cmd_send(&status,1);
-			}*/
-			if(latency_mode_is_open)
-				app_ibrt_customif_test3_cmd_send(&latency_mode_is_open,1);
-			if(!IsTwsLinkdiscon){
-		//startdelay_report_tone(1000,APP_STATUS_INDICATION_DUDU);
-				//app_status_indication_set(APP_STATUS_INDICATION_TWS_CONNECTED);
-			}
-			IsTwsLinkdiscon = false;
-			//app_voice_report(APP_STATUS_INDICATION_CONNECTED, 0);
-		}
+        if(TWS_LINK == link_type){
+            /*if((p_ibrt_ctrl->current_role == IBRT_MASTER))
+            {
+                app_ibrt_customif_test4_cmd_send(&status,1);
+            }*/
+            if(latency_mode_is_open)
+                app_ibrt_customif_test3_cmd_send(&latency_mode_is_open,1);
+            if(!IsTwsLinkdiscon){
+        //startdelay_report_tone(1000,APP_STATUS_INDICATION_DUDU);
+                //app_status_indication_set(APP_STATUS_INDICATION_TWS_CONNECTED);
+            }
+            IsTwsLinkdiscon = false;
+            //app_voice_report(APP_STATUS_INDICATION_CONNECTED, 0);
+        }
             if (BTIF_BEC_NO_ERROR == status)
             {
-	TRACE(3,"tjmLOG----------------------TJM!!!!!current_role = 0x%x",p_ibrt_ctrl->current_role);
+    TRACE(3,"tjmLOG----------------------TJM!!!!!current_role = 0x%x",p_ibrt_ctrl->current_role);
 #ifdef ANC_APP
                 app_anc_sync_status();
 #endif
@@ -257,12 +257,12 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
 
         case BTIF_BTEVENT_BES_AUD_DISCONNECTED:
             app_tws_if_tws_disconnected_handler();
-		if(!app_poweroff_flag && !IsTwsLinkLossing && !IsMobileLinkLossing) 
-		{
-			TRACE(3,"xqd--log: TWS is disconnected and it isn't tws link lossed.");
-		}else{
-			IsTwsLinkdiscon = true;
-		}
+        if(!app_poweroff_flag && !IsTwsLinkLossing && !IsMobileLinkLossing) 
+        {
+            TRACE(3,"xqd--log: TWS is disconnected and it isn't tws link lossed.");
+        }else{
+            IsTwsLinkdiscon = true;
+        }
             break;
 
         case BTIF_BTEVENT_ENCRYPTION_CHANGE:
@@ -649,30 +649,30 @@ static void reconnectfail_delay_reportfun(const void *);
 osTimerDef(defreconnectfail_delay_report,reconnectfail_delay_reportfun);
 void reconnectfail_delay_reportinit(void)
 {
-	reconnectfail_delay_reportid = osTimerCreate(osTimer(defreconnectfail_delay_report),osTimerOnce,(void *)0);
+    reconnectfail_delay_reportid = osTimerCreate(osTimer(defreconnectfail_delay_report),osTimerOnce,(void *)0);
 }
 
 static void reconnectfail_delay_reportfun(const void *)
 {
-	static ibrt_ctrl_t *p_ibrt_ctrl = app_ibrt_if_get_bt_ctrl_ctx();
-	TRACE(3,"\n\n!!!!!!enter %s\n\n",__func__);
-	if((p_ibrt_ctrl->access_mode == 0x3)&&(p_ibrt_ctrl->current_role != IBRT_SLAVE)){
-		app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
-		app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
-	}
+    static ibrt_ctrl_t *p_ibrt_ctrl = app_ibrt_if_get_bt_ctrl_ctx();
+    TRACE(3,"\n\n!!!!!!enter %s\n\n",__func__);
+    if((p_ibrt_ctrl->access_mode == 0x3)&&(p_ibrt_ctrl->current_role != IBRT_SLAVE)){
+        app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
+        app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
+    }
 }
 
 void startreconnectfail_delay_report(int ms)
 {
-	TRACE(3,"\n\n !!!!!!!!!!start %s\n\n",__func__);
-	osTimerStart(reconnectfail_delay_reportid,ms);
+    TRACE(3,"\n\n !!!!!!!!!!start %s\n\n",__func__);
+    osTimerStart(reconnectfail_delay_reportid,ms);
 }
 
 void stopreconnectfail_delay_report(void)
 {
 
-	TRACE(3,"\n\n!!!!!!!!!!  stop %s\n\n",__func__);
-	osTimerStop(reconnectfail_delay_reportid);
+    TRACE(3,"\n\n!!!!!!!!!!  stop %s\n\n",__func__);
+    osTimerStop(reconnectfail_delay_reportid);
 }
 
 
@@ -882,7 +882,7 @@ int app_ibrt_customif_ui_start(void)
     {
         app_ibrt_if_sniff_checker_init(config.delay_ms_exit_sniff);
     }
-	reconnectfail_delay_reportinit();
+    reconnectfail_delay_reportinit();
     return 0;
 }
 

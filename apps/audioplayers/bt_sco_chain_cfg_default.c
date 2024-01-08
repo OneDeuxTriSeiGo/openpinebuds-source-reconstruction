@@ -343,7 +343,7 @@ const SpeechConfig WEAK speech_cfg_default = {
 ****************************************************************************************************/
     .tx_3mic_ns = {
         .bypass             = 0,
-		.blend_en           = 1,
+        .blend_en           = 1,
         .authen_en          = 1,
         .delay_tapsM        = 0.65f,
         .delay_tapsS        = 2,

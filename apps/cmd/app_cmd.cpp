@@ -24,10 +24,10 @@
 #include "audio_process.h"
 
 #define APP_CMD_TRACE(s,...) TRACE(s, ##__VA_ARGS__)
-	
+    
 void cmd_event_process(hal_cmd_rx_status_t status)
 {
-	APP_CMD_TRACE(1,"%s",__func__);
+    APP_CMD_TRACE(1,"%s",__func__);
     APP_MESSAGE_BLOCK msg;
     msg.mod_id = APP_MODUAL_CMD;
     msg.msg_body.message_id = status;
@@ -38,7 +38,7 @@ void cmd_event_process(hal_cmd_rx_status_t status)
 
 static int app_cmd_handle_process(APP_MESSAGE_BODY *msg_body)
 {
-	hal_cmd_run((hal_cmd_rx_status_t)msg_body->message_id);
+    hal_cmd_run((hal_cmd_rx_status_t)msg_body->message_id);
     return 0;
 }
 
@@ -51,7 +51,7 @@ void app_cmd_open(void)
     app_cmd_flag = 1;
 
     app_set_threadhandle(APP_MODUAL_CMD, app_cmd_handle_process);
-	hal_cmd_set_callback(cmd_event_process);
+    hal_cmd_set_callback(cmd_event_process);
     hal_cmd_open();
     return;
 }

@@ -80,7 +80,7 @@ struct amsc_enable_req
 {
     /// Connection handle
     uint16_t conhdl;
-	uint8_t conidx;
+    uint8_t conidx;
 };
 
 

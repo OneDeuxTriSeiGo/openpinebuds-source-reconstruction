@@ -59,7 +59,7 @@ AUDIO_OUTPUT_MONO ?= 0
 AUDIO_OUTPUT_DIFF ?= 0
 
 #### ANC DEFINE START ######
-export ANC_APP		    ?= 0
+export ANC_APP			?= 0
 export ANC_FF_ENABLED	?= 0
 export ANC_FB_ENABLED	?= 0
 export AUDIO_ANC_FB_MC ?= 0

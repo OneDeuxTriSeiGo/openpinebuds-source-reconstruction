@@ -49,11 +49,11 @@ void app_ibrt_ui_perform_user_action(uint8_t *p_buff, uint16_t length);
 
 extern bool Is_Slave_Key_Down_Event;
 
-#define TWS_Sync_Shutdowm		1
-#define QXW_TOUCH_INEAR_DET	0
-#define BT_FACTORY_CLEAR_RECORD	0
+#define TWS_Sync_Shutdowm       1
+#define QXW_TOUCH_INEAR_DET 0
+#define BT_FACTORY_CLEAR_RECORD 0
 
-#define Auto_Shutdowm_TIME		300
+#define Auto_Shutdowm_TIME      300
 
 #if(TWS_Sync_Shutdowm)
 int app_ibrt_poweroff_notify_force(void);

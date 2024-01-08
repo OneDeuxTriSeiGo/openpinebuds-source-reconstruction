@@ -165,7 +165,7 @@ void da_output_sin1k(bool  on)
 
 void da_tester(uint8_t on)
 {
-	da_output_sin1k(on);
+    da_output_sin1k(on);
 }
 
 extern int voicecvsd_audio_init(void);

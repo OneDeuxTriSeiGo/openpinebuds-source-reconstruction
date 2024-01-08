@@ -73,7 +73,7 @@ static uint8_t ancc_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
     ancc_env->prf_env.app_task = app_task
             | (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
     ancc_env->prf_env.prf_task = env->task | 
-		(PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
+        (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
 
     // initialize environment variable
     env->id                     = TASK_ID_ANCC;

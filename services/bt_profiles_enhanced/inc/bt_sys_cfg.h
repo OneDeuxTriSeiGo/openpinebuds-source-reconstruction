@@ -80,7 +80,7 @@
 #define BTM_SYNC_CONN_AUDIO_SETTING_CVSD               0x0000   /* CVSD */
 #define BTM_SYNC_CONN_AUDIO_SETTING_ULAW               0x0001   /* u-LAW */
 #define BTM_SYNC_CONN_AUDIO_SETTING_ALAW               0x0002   /* A-LAW */
-#define BTM_SYNC_CONN_AUDIO_SETTING_TRANSPNT 	       0x0003   /* msbc */
+#define BTM_SYNC_CONN_AUDIO_SETTING_TRANSPNT           0x0003   /* msbc */
 #define BTM_SYNC_CONN_AUDIO_SETTING_MSBC               0x0060
 
 #define BTM_SYNC_CONN_AUDIO_PARAM_SCO      1
@@ -351,10 +351,10 @@ so to setup a fix buffer to alloc ppb inplace to avoid alloc ppb dynamicly failu
 #else
 #define L2CAP_CFG_MTU                                               679
 #endif
-#define L2CAP_DEFAULT_MTU 	                                        L2CAP_CFG_MTU
+#define L2CAP_DEFAULT_MTU                                           L2CAP_CFG_MTU
 #define L2CAP_MIN_MTU                                               48
 
-#define L2CAP_DEFAULT_FLUSH_TO	                                    0xFFFF
+#define L2CAP_DEFAULT_FLUSH_TO                                      0xFFFF
 
 #define L2CAP_DEFAULT_QOS_SERVICE_TYPE                              L2CAP_QOS_BEST_EFFORT 
 #define L2CAP_DEFAULT_QOS_TOKEN_RATE                                0x00000000
@@ -371,14 +371,14 @@ so to setup a fix buffer to alloc ppb inplace to avoid alloc ppb dynamicly failu
 #define L2CAP_DEFAULT_RFC_MONITOR_TIMEOUT                           1000
 #define L2CAP_DEFAULT_RFC_MPS                                       0xFFFF
 
-#define L2CAP_DEFAULT_FCS_TYPE		L2CAP_FCS_TYPE_16_BIT
+#define L2CAP_DEFAULT_FCS_TYPE      L2CAP_FCS_TYPE_16_BIT
 
 /* used for pp_buff */
 #define L2CAP_PPB_HEAD_RESERVE      4       /*len+cid+control+sdulen  2+2+2+2*/
-#define L2CAP_PPB_TAIL_RESERVE	    0        /* fcs 2 */
+#define L2CAP_PPB_TAIL_RESERVE      0        /* fcs 2 */
 #define L2CAP_PPB_RESERVE  (L2CAP_PPB_HEAD_RESERVE + L2CAP_PPB_TAIL_RESERVE)
 
-#define L2CAP_CFG_FLUSH_TO	                                         L2CAP_DEFAULT_FLUSH_TO
+#define L2CAP_CFG_FLUSH_TO                                           L2CAP_DEFAULT_FLUSH_TO
 
 #define L2CAP_CFG_QOS_SERVICE_TYPE                                   L2CAP_DEFAULT_QOS_SERVICE_TYPE 
 #define L2CAP_CFG_QOS_TOKEN_RATE                                     0x00000000

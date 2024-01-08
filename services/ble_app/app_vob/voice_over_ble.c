@@ -63,19 +63,19 @@ typedef struct
          for DST: the player will fetch data at this index from the encodedDataBuf, decode them and play */
     uint32_t    encodedDataIndexToFetch; 
 
-	uint32_t    encodedDataLength;
+    uint32_t    encodedDataLength;
 
-	uint8_t		isCachingDone;
+    uint8_t     isCachingDone;
     
 } VOB_DATA_BUF_MANAGEMENT_T;
 
 /**
  * @brief Format of the audio encoder function
  *
- * @param pcmDataPtr		Pointer of the input PCM data to be encoded
- * @param pcmDataLen		Length of the input PCM data to be encoded
- * @param encodedDataPtr	Pointer of the output encoded data	
- * @param encodedDataLen	Length of the output encoded data
+ * @param pcmDataPtr        Pointer of the input PCM data to be encoded
+ * @param pcmDataLen        Length of the input PCM data to be encoded
+ * @param encodedDataPtr    Pointer of the output encoded data  
+ * @param encodedDataLen    Length of the output encoded data
  * 
  */
 typedef void (*PCM_Encoder_Handler_t)(uint8_t* pcmDataPtr, uint32_t pcmDataLen, encodedDataPtr, encodedDataLen);
@@ -99,11 +99,11 @@ typedef void (*PCM_Encoder_Handler_t)(uint8_t* pcmDataPtr, uint32_t pcmDataLen, 
 
 /**< for SRC, the buffer is used to save the collected PCM data via the MIC 
      for DST, the buffer is used to save the decoded PCM data pending for playing back*/
-#define VOB_VOICE_PCM_DATA_CHUNK_SIZE					(2048)
-#define VOB_VOICE_PCM_DATA_CHUNK_COUNT					(8)
-#define VOB_VOICE_PCM_DATA_STORAGE_BUF_SIZE    	        (VOB_VOICE_PCM_DATA_CHUNK_SIZE*VOB_VOICE_PCM_DATA_CHUNK_SIZE)
+#define VOB_VOICE_PCM_DATA_CHUNK_SIZE                   (2048)
+#define VOB_VOICE_PCM_DATA_CHUNK_COUNT                  (8)
+#define VOB_VOICE_PCM_DATA_STORAGE_BUF_SIZE             (VOB_VOICE_PCM_DATA_CHUNK_SIZE*VOB_VOICE_PCM_DATA_CHUNK_SIZE)
 
-#define VOB_ENCODED_DATA_CACHE_SIZE						(2048)
+#define VOB_ENCODED_DATA_CACHE_SIZE                     (2048)
 
 /**< for SRC, the buffer is used to save the encoded audio data,
      for DST, the buffer is used to save the received encoded audio data via the BLE*/
@@ -113,8 +113,8 @@ typedef void (*PCM_Encoder_Handler_t)(uint8_t* pcmDataPtr, uint32_t pcmDataLen, 
 #define VOB_WAITING_RESPONSE_TIMEOUT_IN_MS      (5000)
 
 /**< connection parameter */
-#define VOB_CONNECTION_INTERVAL_IN_MS				5
-#define VOB_CONNECTION_SUPERVISION_TIMEOUT_IN_MS	5000
+#define VOB_CONNECTION_INTERVAL_IN_MS               5
+#define VOB_CONNECTION_SUPERVISION_TIMEOUT_IN_MS    5000
 
 /**< depends on the compression ratio of the codec algrithm */
 /**< now the cvsd is used, so the ratio is 50% */
@@ -150,23 +150,23 @@ osMutexId vob_env_mutex_id;
 osMutexDef(vob_env_mutex);
 
 
-#define STREAM_A2DP_SPEAKER	0
+#define STREAM_A2DP_SPEAKER 0
 
 
-#define STREAM_A2DP_PCM_DATA_BUF_SIZE		1024
-#define STREAM_A2DP_ENCODED_DATA_BUF_SIZE	1024
-static const VOB_FUNCTIONALITY_CONFIG_T	vob_func_config[] = 
+#define STREAM_A2DP_PCM_DATA_BUF_SIZE       1024
+#define STREAM_A2DP_ENCODED_DATA_BUF_SIZE   1024
+static const VOB_FUNCTIONALITY_CONFIG_T vob_func_config[] = 
 {
-	{
-		STREAM_A2DP_PCM_DATA_BUF_SIZE,
-		STREAM_A2DP_ENCODED_DATA_BUF_SIZE
+    {
+        STREAM_A2DP_PCM_DATA_BUF_SIZE,
+        STREAM_A2DP_ENCODED_DATA_BUF_SIZE
 
-	},
+    },
 };
 
-static VOB_DATA_BUF_MANAGEMENT_T 	stream_a2dp_data_management;
+static VOB_DATA_BUF_MANAGEMENT_T    stream_a2dp_data_management;
 
-#define STREAM_DATA_PROCESSING_UNIT_IN_BYTES	1024
+#define STREAM_DATA_PROCESSING_UNIT_IN_BYTES    1024
 
 struct gap_bdaddr DST_BLE_BdAddr = {{0x11, 0x22, 0x33, 0x44, 0x55, 0x66}, 0};
 
@@ -193,37 +193,37 @@ static int ble_resample_iter(uint8_t *buf, uint32_t len)
 
 uint32_t a2dp_audio_prepare_pcm_data(uint8_t *buf, uint32_t len)
 {
-	if (stream_a2dp_data_management.isCachingDone)
-	{
+    if (stream_a2dp_data_management.isCachingDone)
+    {
         // the caching stage has been done, decode the encoded data and feed the PCM
 #if defined(__AUDIO_RESAMPLE__) && defined(SW_PLAYBACK_RESAMPLE)
-	    if (allow_resample)
+        if (allow_resample)
         {
             app_playback_resample_run(ble_resample, buf, len);
-	    }
+        }
         else
 #endif
         {
-    		uint32_t acquiredPCMDataLength = decode_sbc_frame(buf, len);
-    		// the queued encoded data does't meet the PCM data requirement, 
-    		// need to cache again
-    		if (acquiredPCMDataLength < len)
-    		{
-    			TRACE(2,"Need %d PCM data, but the queue encoded data can only provide %d bytes", 
-    				len, acquiredPCMDataLength);
-    			
-    			memset(buf+acquiredPCMDataLength, 0, len-acquiredPCMDataLength);
+            uint32_t acquiredPCMDataLength = decode_sbc_frame(buf, len);
+            // the queued encoded data does't meet the PCM data requirement, 
+            // need to cache again
+            if (acquiredPCMDataLength < len)
+            {
+                TRACE(2,"Need %d PCM data, but the queue encoded data can only provide %d bytes", 
+                    len, acquiredPCMDataLength);
+                
+                memset(buf+acquiredPCMDataLength, 0, len-acquiredPCMDataLength);
 
-    			TRACE(0,"Start encoded data caching again.");
-    			stream_a2dp_data_management.isCachingDone = false;
-    		}
+                TRACE(0,"Start encoded data caching again.");
+                stream_a2dp_data_management.isCachingDone = false;
+            }
         }
-	}
-	else
-	{
-		memset(buf, 0, len);
-	}
-		
+    }
+    else
+    {
+        memset(buf, 0, len);
+    }
+        
     return len;
 }
 
@@ -232,12 +232,12 @@ static uint32_t stream_a2dp_speaker_more_pcm_data(uint8_t* buf, uint32_t len)
 #ifdef BT_XTAL_SYNC
 #ifndef __TWS__
     bt_xtal_sync(BT_XTAL_SYNC_MODE_MUSIC);
-#endif	// #ifndef __TWS__
-#endif	// #ifdef BT_XTAL_SYNC
+#endif  // #ifndef __TWS__
+#endif  // #ifdef BT_XTAL_SYNC
 
 #ifdef __TWS__
     tws_audout_pcm_more_data(buf, len);
-#else	// __TWS__
+#else   // __TWS__
 
 #if defined(__AUDIO_RESAMPLE__) && defined(SW_PLAYBACK_RESAMPLE)
     app_playback_resample_run(ble_resample, buf, len);
@@ -249,7 +249,7 @@ static uint32_t stream_a2dp_speaker_more_pcm_data(uint8_t* buf, uint32_t len)
 
 #ifdef __AUDIO_OUTPUT_MONO_MODE__
     merge_stereo_to_mono_16bits((int16_t *)buf, (int16_t *)buf, len/2);
-#endif	// #ifdef __AUDIO_OUTPUT_MONO_MODE__
+#endif  // #ifdef __AUDIO_OUTPUT_MONO_MODE__
 
 #endif  // #ifdef __TWS__
 
@@ -259,34 +259,34 @@ static uint32_t stream_a2dp_speaker_more_pcm_data(uint8_t* buf, uint32_t len)
     audio_process_run(buf, len);
 
     // app_sysfreq_req(APP_SYSFREQ_USER_APP_0, APP_SYSFREQ_52M);
-#endif	// #if defined(__SW_IIR_EQ_PROCESS__) || defined(__HW_FIR_EQ_PROCESS__) || defined(__AUDIO_DRC__)
+#endif  // #if defined(__SW_IIR_EQ_PROCESS__) || defined(__HW_FIR_EQ_PROCESS__) || defined(__AUDIO_DRC__)
 
     return len;
 }
 
 int encoded_data_received(unsigned char *buf, unsigned int len)
 {
-	int32_t ret, size;
-	LOCK_APP_AUDIO_QUEUE();
+    int32_t ret, size;
+    LOCK_APP_AUDIO_QUEUE();
 
-	// push the encoded data into the queue
-	ret = APP_AUDIO_EnCQueueByForce(&sbc_queue, buf, len);
-	size = APP_AUDIO_LengthOfCQueue(&sbc_queue);
-	UNLOCK_APP_AUDIO_QUEUE();
+    // push the encoded data into the queue
+    ret = APP_AUDIO_EnCQueueByForce(&sbc_queue, buf, len);
+    size = APP_AUDIO_LengthOfCQueue(&sbc_queue);
+    UNLOCK_APP_AUDIO_QUEUE();
 
-	// the queue is full, overwrite the oldest data
-	if (CQ_ERR == ret)
-	{
-		TRACE(0,"Encoded data cache is overflow.");
-	}
-	
-	if ((!(stream_a2dp_data_management.isCachingDone)) && 
-			(size >= stream_a2dp_data_management.initialCachedEncodedDataSize))
-	{
-		// the cached encoded data is ready, time to start decoding and feeding to the codec
-		stream_a2dp_data_management.isCachingDone = true;
-	}
-	
+    // the queue is full, overwrite the oldest data
+    if (CQ_ERR == ret)
+    {
+        TRACE(0,"Encoded data cache is overflow.");
+    }
+    
+    if ((!(stream_a2dp_data_management.isCachingDone)) && 
+            (size >= stream_a2dp_data_management.initialCachedEncodedDataSize))
+    {
+        // the cached encoded data is ready, time to start decoding and feeding to the codec
+        stream_a2dp_data_management.isCachingDone = true;
+    }
+    
     return 0;
 }
 
@@ -297,16 +297,16 @@ int encoded_data_received(unsigned char *buf, unsigned int len)
  */
 void kick_off_a2dp_speaker_stream(void)
 {
-	// clean up the data management structure
-	memset((uint8_t *)&stream_a2dp_data_management, 0, sizeof(stream_a2dp_data_management));
+    // clean up the data management structure
+    memset((uint8_t *)&stream_a2dp_data_management, 0, sizeof(stream_a2dp_data_management));
 
-	// prepare the buffer
+    // prepare the buffer
     app_audio_mempool_init();
-	
-	app_audio_mempool_get_buff(&(stream_a2dp_data_management.pcmDataBuf), 
-		vob_func_config[STREAM_A2DP_SPEAKER].pcmDataBufSize);
+    
+    app_audio_mempool_get_buff(&(stream_a2dp_data_management.pcmDataBuf), 
+        vob_func_config[STREAM_A2DP_SPEAKER].pcmDataBufSize);
     app_audio_mempool_get_buff(&(stream_a2dp_data_management.encodedDataBuf),   
-		vob_func_config[STREAM_A2DP_SPEAKER].encodedDataBufSize);
+        vob_func_config[STREAM_A2DP_SPEAKER].encodedDataBufSize);
 
 
     // acuqire the sufficient system clock
@@ -326,9 +326,9 @@ void kick_off_a2dp_speaker_stream(void)
     stream_cfg.handler      = vob_func_config[STREAM_A2DP_SPEAKER].dataCallback;
 
     stream_cfg.data_ptr     = BT_AUDIO_CACHE_2_UNCACHE(vob_data_management.pcmDataBufSize);
-	
+    
     stream_cfg.data_size    = STREAM_DATA_PROCESSING_UNIT_IN_BYTES;
-	stream_cfg.data_chunk_count = 2;
+    stream_cfg.data_chunk_count = 2;
     
     af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK, &stream_cfg);
     af_stream_start(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK);
@@ -351,7 +351,7 @@ static uint16_t negotiatedMTUSize;
 bool ble_send_data(uint8_t* ptrBuf, uint32_t length)
 {
     app_datapath_server_send_data(ptrBuf, length);
-	return true;
+    return true;
 }
 
 /**
@@ -451,7 +451,7 @@ static void vob_receiving_stop_voice_stream_handler(void)
 
     // send start voice stream command to the DST
 
-	cmd.magicCode = VOB_MAGICCODE_OF_CMD_RSP;
+    cmd.magicCode = VOB_MAGICCODE_OF_CMD_RSP;
     cmd.cmdRspCode = VOB_RSP_READY_TO_STOP_VOICE_STREAM;
 
     bool ret = ble_send_data((uint8_t *)&cmd, &(((VOB_CMD_RSP_T *)0)->lengthOfParm))
@@ -477,61 +477,61 @@ static void vob_start_advertising(void)
 /**
  * @brief Process the recevied audio data from BLE, encode them and feed them to the speaker
  *
- * @param ptrBuf 	Pointer of the PCM data buffer to feed.
- * @param length	Length of the asked PCM data.
+ * @param ptrBuf    Pointer of the PCM data buffer to feed.
+ * @param length    Length of the asked PCM data.
  *
  * @return uint32_t 0 means no error happens
  */
 static uint32_t vob_need_more_voice_data(uint8_t* ptrBuf, uint32_t length)
 {
-	if (vob_data_management.isCachingDone)
-	{
-		// caching has been done, can decoded the received encoded data to PCM and feed them to the buffer
-    	uint32_t remainingPCMBytesToFeed = length;
-    	uint32_t pcmBytesToDecode;
-    	do
-    	{
-        	pcmBytesToDecode = (remainingPCMBytesToFeed > (2*MAXNUMOFSAMPLES*src_mic_stream_env.bitNumber/AUD_BITS_8))?\
-            	(2*MAXNUMOFSAMPLES*src_mic_stream_env.bitNumber/AUD_BITS_8):remainingPCMBytesToFeed;
+    if (vob_data_management.isCachingDone)
+    {
+        // caching has been done, can decoded the received encoded data to PCM and feed them to the buffer
+        uint32_t remainingPCMBytesToFeed = length;
+        uint32_t pcmBytesToDecode;
+        do
+        {
+            pcmBytesToDecode = (remainingPCMBytesToFeed > (2*MAXNUMOFSAMPLES*src_mic_stream_env.bitNumber/AUD_BITS_8))?\
+                (2*MAXNUMOFSAMPLES*src_mic_stream_env.bitNumber/AUD_BITS_8):remainingPCMBytesToFeed;
 
-	        // cvsd's compression ratio is 50%
-	        if ((VOB_PCM_SIZE_TO_AUDIO_SIZE(pcmBytesToDecode) + vob_data_management.encodedDataIndexToFetch) > 
-	            src_mic_stream_env.encodedDataBufSize)
-	        {
-	            pcmBytesToDecode = VOB_AUDIO_SIZE_TO_PCM_SIZE(src_mic_stream_env.encodedDataBufSize - 
-	                vob_data_management.encodedDataIndexToFetch);
-	        }
+            // cvsd's compression ratio is 50%
+            if ((VOB_PCM_SIZE_TO_AUDIO_SIZE(pcmBytesToDecode) + vob_data_management.encodedDataIndexToFetch) > 
+                src_mic_stream_env.encodedDataBufSize)
+            {
+                pcmBytesToDecode = VOB_AUDIO_SIZE_TO_PCM_SIZE(src_mic_stream_env.encodedDataBufSize - 
+                    vob_data_management.encodedDataIndexToFetch);
+            }
 
-        	// decode to generate the PCM data        
-        	CvsdToPcm8k(vob_data_management.encodedDataBuf + vob_data_management.encodedDataIndexToFetch, (short *)ptrBuf, 
-            	pcmBytesToDecode / sizeof(short));
+            // decode to generate the PCM data        
+            CvsdToPcm8k(vob_data_management.encodedDataBuf + vob_data_management.encodedDataIndexToFetch, (short *)ptrBuf, 
+                pcmBytesToDecode / sizeof(short));
 
-        	// update the index
-        	ptrBuf += pcmBytesToDecode;
-        	remainingPCMBytesToFeed -= pcmBytesToDecode;
+            // update the index
+            ptrBuf += pcmBytesToDecode;
+            remainingPCMBytesToFeed -= pcmBytesToDecode;
         
-        	vob_data_management.encodedDataIndexToFetch += VOB_PCM_SIZE_TO_AUDIO_SIZE(pcmBytesToDecode);
+            vob_data_management.encodedDataIndexToFetch += VOB_PCM_SIZE_TO_AUDIO_SIZE(pcmBytesToDecode);
         
-	        if (src_mic_stream_env.encodedDataBufSize == vob_data_management.encodedDataIndexToFetch)
-	        {
-	            vob_data_management.encodedDataIndexToFetch = 0;
-	        }
+            if (src_mic_stream_env.encodedDataBufSize == vob_data_management.encodedDataIndexToFetch)
+            {
+                vob_data_management.encodedDataIndexToFetch = 0;
+            }
         
-    	} while (remainingPCMBytesToFeed > 0);
+        } while (remainingPCMBytesToFeed > 0);
 
-		osMutexWait(vob_env_mutex_id, osWaitForever);
+        osMutexWait(vob_env_mutex_id, osWaitForever);
 
-    	// update the bytes to decode and feed to codec
-    	vob_data_management.encodedDataLength -= VOB_PCM_SIZE_TO_AUDIO_SIZE(length);   
+        // update the bytes to decode and feed to codec
+        vob_data_management.encodedDataLength -= VOB_PCM_SIZE_TO_AUDIO_SIZE(length);   
 
-		osMutexRelease(vob_env_mutex_id);
-	}
-	else
-	{
-		// caching is not done yet, just fill all ZERO
-		memset(ptrBuf, 0, length);
-	}
-	    
+        osMutexRelease(vob_env_mutex_id);
+    }
+    else
+    {
+        // caching is not done yet, just fill all ZERO
+        memset(ptrBuf, 0, length);
+    }
+        
     return len;
 }
 
@@ -541,20 +541,20 @@ static uint32_t vob_need_more_voice_data(uint8_t* ptrBuf, uint32_t length)
  */
 void vob_kick_off_speaker_output_stream(void)
 {
-	// prepare the memory buffer
+    // prepare the memory buffer
     app_audio_mempool_init();
-	// PCM data buffer
-	app_audio_mempool_get_buff(&(dst_speaker_stream_env.pcmDataBuf),       
-		src_mic_stream_env.pcmDataChunkCount*dst_speaker_stream_env.pcmDataChunkSize);
-	
-	// encoded data buffer
-   	app_audio_mempool_get_buff(&(dst_speaker_stream_env.encodedDataBuf),   
-   		dst_speaker_stream_env.encodedDataBufSize);
+    // PCM data buffer
+    app_audio_mempool_get_buff(&(dst_speaker_stream_env.pcmDataBuf),       
+        src_mic_stream_env.pcmDataChunkCount*dst_speaker_stream_env.pcmDataChunkSize);
+    
+    // encoded data buffer
+    app_audio_mempool_get_buff(&(dst_speaker_stream_env.encodedDataBuf),   
+        dst_speaker_stream_env.encodedDataBufSize);
 
-	// encoded data queue
-	APP_AUDIO_InitCQueue(&(dst_speaker_stream_env.queue), dst_speaker_stream_env.encodedDataBufSize, 
-		dst_speaker_stream_env.encodedDataBuf);	
-	
+    // encoded data queue
+    APP_AUDIO_InitCQueue(&(dst_speaker_stream_env.queue), dst_speaker_stream_env.encodedDataBufSize, 
+        dst_speaker_stream_env.encodedDataBuf); 
+    
     // acuqire the sufficient system clock
     app_sysfreq_req(APP_SYSFREQ_VOICE_OVER_BLE, APP_SYSFREQ_26M);
 
@@ -562,7 +562,7 @@ void vob_kick_off_speaker_output_stream(void)
     struct AF_STREAM_CONFIG_T stream_cfg;
     
     stream_cfg.bits         = dst_speaker_stream_env.bitNumber;
-	stream_cfg.sample_rate  = dst_speaker_stream_env.sampleRate;
+    stream_cfg.sample_rate  = dst_speaker_stream_env.sampleRate;
     stream_cfg.channel_num  = dst_speaker_stream_env.channelCount;    
     stream_cfg.vol          = VOB_VOICE_VOLUME;
 
@@ -584,10 +584,10 @@ void vob_kick_off_speaker_output_stream(void)
  */
 static void vob_send_encoded_audio_data(void)
 {
-	uint32_t dataBytesToSend = 0;
-	uint32_t offsetInEncodedDatabuf = vob_data_management.indexToFetch;
-	
-	osMutexWait(vob_env_mutex_id, osWaitForever);
+    uint32_t dataBytesToSend = 0;
+    uint32_t offsetInEncodedDatabuf = vob_data_management.indexToFetch;
+    
+    osMutexWait(vob_env_mutex_id, osWaitForever);
 
     if (vob_data_management.encodedDataLength > 0)
     {
@@ -611,20 +611,20 @@ static void vob_send_encoded_audio_data(void)
         {
             vob_data_management.indexToFetch = 0;
         }        
-		else
-		{
-			vob_data_management.indexToFetch += dataBytesToSend;
-    	}
+        else
+        {
+            vob_data_management.indexToFetch += dataBytesToSend;
+        }
     }
 
-	osMutexRelease(vob_env_mutex_id);
+    osMutexRelease(vob_env_mutex_id);
 
-	if (dataBytesToSend > 0)
-	{
+    if (dataBytesToSend > 0)
+    {
         // send out the data via the BLE
         ble_send_data((vob_data_management.encodedDataBuf + offsetInEncodedDatabuf), 
-        	dataBytesToSend);
-	}
+            dataBytesToSend);
+    }
 }
 
 /**
@@ -633,7 +633,7 @@ static void vob_send_encoded_audio_data(void)
  */
 void vob_data_sent_out_handler(void)
 {
-	vob_send_encoded_audio_data();
+    vob_send_encoded_audio_data();
 }
 
 /**
@@ -642,21 +642,21 @@ void vob_data_sent_out_handler(void)
  */
 void vob_start_voice_stream_rsp_handler(BLE_CUSTOM_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen)
 {
-	
-	if (NO_ERROR == retStatus)
-	{
-		TRACE(0,"voice stream is successfully started!"
+    
+    if (NO_ERROR == retStatus)
+    {
+        TRACE(0,"voice stream is successfully started!"
 
-		// kick off the voice input stream from MIC
+        // kick off the voice input stream from MIC
         vob_kick_off_mic_input_stream();
 
         // update the state
         vob_state = VOB_STATE_VOICE_STREAM;
-	}
-	else
-	{
-		TRACE(0,"starting voice stream failed!"
-	}
+    }
+    else
+    {
+        TRACE(0,"starting voice stream failed!"
+    }
 }
 
 void vob_audio_data_reiceived_handler(uint8_t* ptrBuf, uint32_t length)
@@ -669,31 +669,31 @@ void vob_audio_data_reiceived_handler(uint8_t* ptrBuf, uint32_t length)
             "The left voice over ble buffer space is not suitable for the coming audio data.");
 
         uint32_t bytesToTheEnd = dst_speaker_stream_env.encodedDataBufSize - 
-			vob_data_management.encodedDataIndexToFill;
+            vob_data_management.encodedDataIndexToFill;
         if (length > bytesToTheEnd)
         {
             memcpy((dst_speaker_stream_env.encodedDataBuf + vob_data_management.encodedDataIndexToFill), 
-				ptrBuf, length);
+                ptrBuf, length);
         }
         else
         {            
             memcpy((dst_speaker_stream_env.encodedDataBuf + vob_data_management.encodedDataIndexToFill), 
-				ptrBuf, bytesToTheEnd);
+                ptrBuf, bytesToTheEnd);
             memcpy(dst_speaker_stream_env.encodedDataBuf, ptrBuf + bytesToTheEnd, length - bytesToTheEnd);
         }
 
-		osMutexWait(vob_env_mutex_id, osWaitForever);
-		
+        osMutexWait(vob_env_mutex_id, osWaitForever);
+        
         // update the bytes to transmit via BLE
         vob_data_management.encodedDataLength += length;    
 
-		osMutexRelease(vob_env_mutex_id);
+        osMutexRelease(vob_env_mutex_id);
 
-		if ((!vob_data_management.isCachingDone) && 
-				(vob_data_management.encodedDataLength >= src_mic_stream_env.cachedEncodedDataSize))
-		{
-			vob_data_management.isCachingDone = true;
-		}
+        if ((!vob_data_management.isCachingDone) && 
+                (vob_data_management.encodedDataLength >= src_mic_stream_env.cachedEncodedDataSize))
+        {
+            vob_data_management.isCachingDone = true;
+        }
     }
 }
 
@@ -703,28 +703,28 @@ void vob_audio_data_reiceived_handler(uint8_t* ptrBuf, uint32_t length)
  */
 void vob_start_voice_stream_cmd_handler(uint32_t funcCode, uint8_t* ptrParam, uint32_t paramLen)
 {
-	BLE_CUSTOM_CMD_RET_STATUS_E retStatus = NO_ERROR;
+    BLE_CUSTOM_CMD_RET_STATUS_E retStatus = NO_ERROR;
 
     if (VOB_STATE_CONNECTED == vob_state)
     {
-    	// update the state
-    	vob_state = VOB_STATE_VOICE_STREAM;
+        // update the state
+        vob_state = VOB_STATE_VOICE_STREAM;
 
-		// start raw data xfer
-		BLE_control_raw_data_xfer(true);
+        // start raw data xfer
+        BLE_control_raw_data_xfer(true);
 
-		// configure raw data handler
-		BLE_set_raw_data_xfer_received_callback(vob_audio_data_reiceived_handler);
+        // configure raw data handler
+        BLE_set_raw_data_xfer_received_callback(vob_audio_data_reiceived_handler);
 
-	    // kick off the speaker stream
-	    vob_kick_off_speaker_output_stream();
-	}
-	else
-	{
-		retStatus = HANDLING_FAILED;
-	}
+        // kick off the speaker stream
+        vob_kick_off_speaker_output_stream();
+    }
+    else
+    {
+        retStatus = HANDLING_FAILED;
+    }
 
-	BLE_send_response_to_command(funcCode, retStatus, NULL, TRANSMISSION_VIA_WRITE_CMD);
+    BLE_send_response_to_command(funcCode, retStatus, NULL, TRANSMISSION_VIA_WRITE_CMD);
 }
 
 /**
@@ -733,10 +733,10 @@ void vob_start_voice_stream_cmd_handler(uint32_t funcCode, uint8_t* ptrParam, ui
  */
 void vob_stop_voice_stream_rsp_handler(BLE_CUSTOM_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen)
 {
-	// stop the MIC voice input stream
+    // stop the MIC voice input stream
     vob_stop_mic_input_stream();
 
-	vob_state = VOB_STATE_CONNECTED;
+    vob_state = VOB_STATE_CONNECTED;
 }
 
 /**
@@ -745,35 +745,35 @@ void vob_stop_voice_stream_rsp_handler(BLE_CUSTOM_CMD_RET_STATUS_E retStatus, ui
  */
 void vob_stop_voice_stream_cmd_handler(uint32_t funcCode, uint8_t* ptrParam, uint32_t paramLen)
 {
-	BLE_CUSTOM_CMD_RET_STATUS_E retStatus = NO_ERROR;
+    BLE_CUSTOM_CMD_RET_STATUS_E retStatus = NO_ERROR;
 
     if (VOB_STATE_VOICE_STREAM == vob_state)
     {
-    	// update the state
-    	vob_state = VOB_STATE_CONNECTED;
+        // update the state
+        vob_state = VOB_STATE_CONNECTED;
 
-		// stop raw data xfer
-		BLE_control_raw_data_xfer(false);
+        // stop raw data xfer
+        BLE_control_raw_data_xfer(false);
 
-	    // stop the speaker output stream
+        // stop the speaker output stream
         vob_stop_speaker_output_stream();
-	}
-	else
-	{
-		retStatus = HANDLING_FAILED;
-	}
+    }
+    else
+    {
+        retStatus = HANDLING_FAILED;
+    }
 
-	BLE_send_response_to_command(funcCode, retStatus, NULL, TRANSMISSION_VIA_WRITE_CMD);
+    BLE_send_response_to_command(funcCode, retStatus, NULL, TRANSMISSION_VIA_WRITE_CMD);
 }
 
 static void vob_encoded_data_sent_done(void)
 {
-	if ((VOB_STATE_VOICE_STREAM == vob_state) && 
-			(vob_data_management.encodedDataLength > 0))
-	{	
-		// inform the ble application thread to continue sending the encoded data if any in the buffer
-		osSignalSet(ble_app_tid, BLE_SIGNAL_VOB_DATA_SENT_OUT);
-	}
+    if ((VOB_STATE_VOICE_STREAM == vob_state) && 
+            (vob_data_management.encodedDataLength > 0))
+    {   
+        // inform the ble application thread to continue sending the encoded data if any in the buffer
+        osSignalSet(ble_app_tid, BLE_SIGNAL_VOB_DATA_SENT_OUT);
+    }
 }
 
 /**
@@ -782,24 +782,24 @@ static void vob_encoded_data_sent_done(void)
  */
 void vob_connected_evt_handler(void)
 {
-	if (VOB_ROLE_SRC == vob_role)
-	{
-		l2cap_update_param(VOB_CONNECTION_INTERVAL_IN_MS, 
-			VOB_CONNECTION_INTERVAL_IN_MS, VOB_CONNECTION_SUPERVISION_TIMEOUT_IN_MS);
-		
-		vob_data_management.encodedDataIndexToFetch = 0;
-		vob_data_management.encodedDataIndexToFill = 0;
-		vob_data_management.encodedDataLength = 0;
-		
-		// register the BLE tx done callback function 
-		app_datapath_server_register_tx_done(vob_encoded_data_sent_done);
-	
-    	// delete the timer
-    	osTimerDelete(vob_connecting_supervisor_timer);
-	}
+    if (VOB_ROLE_SRC == vob_role)
+    {
+        l2cap_update_param(VOB_CONNECTION_INTERVAL_IN_MS, 
+            VOB_CONNECTION_INTERVAL_IN_MS, VOB_CONNECTION_SUPERVISION_TIMEOUT_IN_MS);
+        
+        vob_data_management.encodedDataIndexToFetch = 0;
+        vob_data_management.encodedDataIndexToFill = 0;
+        vob_data_management.encodedDataLength = 0;
+        
+        // register the BLE tx done callback function 
+        app_datapath_server_register_tx_done(vob_encoded_data_sent_done);
+    
+        // delete the timer
+        osTimerDelete(vob_connecting_supervisor_timer);
+    }
 
-	vob_data_management.isCachingDone = false;
-	
+    vob_data_management.isCachingDone = false;
+    
     // play the connected sound
     app_voice_report(APP_STATUS_INDICATION_CONNECTED, 0);
 
@@ -817,8 +817,8 @@ void vob_disconnected_evt_handler(void)
         
     vob_state = VOB_STATE_DISCONNECTED;
 
-	// stop raw data xfer
-	BLE_control_raw_data_xfer(false);
+    // stop raw data xfer
+    BLE_control_raw_data_xfer(false);
 
     // play the disconnected sound
     app_voice_report(APP_STATUS_INDICATION_DISCONNECTED, 0);
@@ -851,12 +851,12 @@ void vob_disconnected_evt_handler(void)
 /**
  * @brief BLE application thread handler
  *
- * @param argument 	Parameter imported during the thread creation.
+ * @param argument  Parameter imported during the thread creation.
  *
  */
 static void ble_app_thread(void const *argument)
 {
-	while(1) 
+    while(1) 
     {
         osEvent evt;
         // wait any signal
@@ -891,7 +891,7 @@ static void ble_app_thread(void const *argument)
                 break;
             }  
         }
-	}
+    }
 }
 
 /**
@@ -902,12 +902,12 @@ static void ble_app_thread(void const *argument)
  */
 int ble_app_init(void)
 {
-	ble_app_tid = osThreadCreate(osThread(ble_app_thread), NULL);
-	if (ble_app_tid == NULL)  {
+    ble_app_tid = osThreadCreate(osThread(ble_app_thread), NULL);
+    if (ble_app_tid == NULL)  {
         TRACE(0,"Failed to Create ble_app_thread\n");
-		return 0;
-	}
-	return 0;
+        return 0;
+    }
+    return 0;
 }
 
 /**
@@ -957,8 +957,8 @@ void vob_start_connecting(void)
 /**
  * @brief Process the collected PCM data from MIC
  *
- * @param ptrBuf 	Pointer of the PCM data buffer to access.
- * @param length	Length of the PCM data in the buffer in bytes.
+ * @param ptrBuf    Pointer of the PCM data buffer to access.
+ * @param length    Length of the PCM data in the buffer in bytes.
  *
  * @return uint32_t 0 means no error happens
  */
@@ -997,21 +997,21 @@ static uint32_t vob_voice_data_come(uint8_t* ptrBuf, uint32_t length)
         
     } while (remainingBytesToEncode > 0);
 
-	osMutexWait(vob_env_mutex_id, osWaitForever);
+    osMutexWait(vob_env_mutex_id, osWaitForever);
 
     // update the bytes to transmit via BLE
     vob_data_management.encodedDataLength += VOB_PCM_SIZE_TO_AUDIO_SIZE(length);   
 
-	osMutexRelease(vob_env_mutex_id);
+    osMutexRelease(vob_env_mutex_id);
 
-	if ((!vob_data_management.isCachingDone) && 
-		(vob_data_management.encodedDataLength >= src_mic_stream_env.cachedEncodedDataSize))
-	{
-		vob_data_management.isCachingDone = true;
-		
-		// inform the ble application thread to send out the encoded data
-		osSignalSet(ble_app_tid, BLE_SIGNAL_VOB_GET_ENCODED_AUDIO_DATA)
-	}
+    if ((!vob_data_management.isCachingDone) && 
+        (vob_data_management.encodedDataLength >= src_mic_stream_env.cachedEncodedDataSize))
+    {
+        vob_data_management.isCachingDone = true;
+        
+        // inform the ble application thread to send out the encoded data
+        osSignalSet(ble_app_tid, BLE_SIGNAL_VOB_GET_ENCODED_AUDIO_DATA)
+    }
     return 0;
 }
 
@@ -1021,23 +1021,23 @@ static uint32_t vob_voice_data_come(uint8_t* ptrBuf, uint32_t length)
  */
 static void vob_init_audio_streams(void)
 {
-	src_mic_stream_env.bitNumber 					= VOB_VOICE_BIT_NUMBER;
-	src_mic_stream_env.sampleRate 					= VOB_VOICE_SAMPLE_RATE;
-	src_mic_stream_env.channelCount 				= AUD_CHANNEL_NUM_1;
-	src_mic_stream_env.morePcmHandler 				= vob_voice_data_come;
-	src_mic_stream_env.pcmDataChunkCount 			= VOB_VOICE_PCM_DATA_CHUNK_COUNT;
-	src_mic_stream_env.pcmDataChunkSize 			= VOB_VOICE_PCM_DATA_CHUNK_SIZE;
-	src_mic_stream_env.cachedEncodedDataSize 		= VOB_ENCODED_DATA_CACHE_SIZE;
-	src_mic_stream_env.encodedDataBufSize 			= VOB_ENCODED_DATA_STORAGE_BUF_SIZE;
+    src_mic_stream_env.bitNumber                    = VOB_VOICE_BIT_NUMBER;
+    src_mic_stream_env.sampleRate                   = VOB_VOICE_SAMPLE_RATE;
+    src_mic_stream_env.channelCount                 = AUD_CHANNEL_NUM_1;
+    src_mic_stream_env.morePcmHandler               = vob_voice_data_come;
+    src_mic_stream_env.pcmDataChunkCount            = VOB_VOICE_PCM_DATA_CHUNK_COUNT;
+    src_mic_stream_env.pcmDataChunkSize             = VOB_VOICE_PCM_DATA_CHUNK_SIZE;
+    src_mic_stream_env.cachedEncodedDataSize        = VOB_ENCODED_DATA_CACHE_SIZE;
+    src_mic_stream_env.encodedDataBufSize           = VOB_ENCODED_DATA_STORAGE_BUF_SIZE;
 
-	dst_speaker_stream_env.bitNumber 				= VOB_VOICE_BIT_NUMBER;
-	dst_speaker_stream_env.sampleRate 				= VOB_VOICE_SAMPLE_RATE;
-	dst_speaker_stream_env.channelCount 			= AUD_CHANNEL_NUM_2;
-	dst_speaker_stream_env.morePcmHandler 			= vob_need_more_voice_data;
-	dst_speaker_stream_env.pcmDataChunkCount 		= VOB_VOICE_PCM_DATA_CHUNK_COUNT;
-	dst_speaker_stream_env.pcmDataChunkSize 		= VOB_VOICE_PCM_DATA_CHUNK_SIZE;
-	dst_speaker_stream_env.cachedEncodedDataSize 	= VOB_ENCODED_DATA_CACHE_SIZE;
-	dst_speaker_stream_env.encodedDataBufSize 		= VOB_ENCODED_DATA_STORAGE_BUF_SIZE;
+    dst_speaker_stream_env.bitNumber                = VOB_VOICE_BIT_NUMBER;
+    dst_speaker_stream_env.sampleRate               = VOB_VOICE_SAMPLE_RATE;
+    dst_speaker_stream_env.channelCount             = AUD_CHANNEL_NUM_2;
+    dst_speaker_stream_env.morePcmHandler           = vob_need_more_voice_data;
+    dst_speaker_stream_env.pcmDataChunkCount        = VOB_VOICE_PCM_DATA_CHUNK_COUNT;
+    dst_speaker_stream_env.pcmDataChunkSize         = VOB_VOICE_PCM_DATA_CHUNK_SIZE;
+    dst_speaker_stream_env.cachedEncodedDataSize    = VOB_ENCODED_DATA_CACHE_SIZE;
+    dst_speaker_stream_env.encodedDataBufSize       = VOB_ENCODED_DATA_STORAGE_BUF_SIZE;
 }
 
 /**
@@ -1046,20 +1046,20 @@ static void vob_init_audio_streams(void)
  */
 void vob_kick_off_mic_input_stream(void)
 {
-	// prepare the memory buffer
+    // prepare the memory buffer
     app_audio_mempool_init();
-	// PCM data buffer
-	app_audio_mempool_get_buff(&(src_mic_stream_env.pcmDataBuf),       
-		src_mic_stream_env.pcmDataChunkCount*src_mic_stream_env.pcmDataChunkSize);
-	
-	// encoded data buffer
-   	app_audio_mempool_get_buff(&(src_mic_stream_env.encodedDataBuf),   
-   		src_mic_stream_env.encodedDataBufSize);
+    // PCM data buffer
+    app_audio_mempool_get_buff(&(src_mic_stream_env.pcmDataBuf),       
+        src_mic_stream_env.pcmDataChunkCount*src_mic_stream_env.pcmDataChunkSize);
+    
+    // encoded data buffer
+    app_audio_mempool_get_buff(&(src_mic_stream_env.encodedDataBuf),   
+        src_mic_stream_env.encodedDataBufSize);
 
-	// encoded data queue
-	APP_AUDIO_InitCQueue(&(src_mic_stream_env.queue), src_mic_stream_env.encodedDataBufSize, 
-		src_mic_stream_env.encodedDataBuf);	
-	
+    // encoded data queue
+    APP_AUDIO_InitCQueue(&(src_mic_stream_env.queue), src_mic_stream_env.encodedDataBufSize, 
+        src_mic_stream_env.encodedDataBuf); 
+    
     // acuqire the sufficient system clock
     app_sysfreq_req(APP_SYSFREQ_VOICE_OVER_BLE, APP_SYSFREQ_26M);
 
@@ -1067,7 +1067,7 @@ void vob_kick_off_mic_input_stream(void)
     struct AF_STREAM_CONFIG_T stream_cfg;
     
     stream_cfg.bits         = src_mic_stream_env.bitNumber;
-	stream_cfg.sample_rate  = src_mic_stream_env.sampleRate;
+    stream_cfg.sample_rate  = src_mic_stream_env.sampleRate;
     stream_cfg.channel_num  = src_mic_stream_env.channelCount;    
     stream_cfg.vol          = VOB_VOICE_VOLUME;
 
@@ -1089,7 +1089,7 @@ void vob_kick_off_mic_input_stream(void)
  */
 static void vob_start_voice_stream(void)
 {
-	BLE_send_custom_command(OP_VOB_CMD_START_VOICE_STREAM, NULL, 0);
+    BLE_send_custom_command(OP_VOB_CMD_START_VOICE_STREAM, NULL, 0);
 }
 
 /**
@@ -1098,18 +1098,18 @@ static void vob_start_voice_stream(void)
  */
 static void vob_ble_activity_stopped(void)
 {
-	if (VOB_STATE_STOPPING_ADV == vob_state)
-	{
-		vob_state = VOB_STATE_ADV_STOPPED;
+    if (VOB_STATE_STOPPING_ADV == vob_state)
+    {
+        vob_state = VOB_STATE_ADV_STOPPED;
 
-		// should switch to connecting state
-		vob_switch_state_handler();
-	}
-	else if (VOB_STATE_STOPPING_CONNECTING == vob_state)
-	{
-		// start advertising
-		vob_start_advertising();
-	}
+        // should switch to connecting state
+        vob_switch_state_handler();
+    }
+    else if (VOB_STATE_STOPPING_CONNECTING == vob_state)
+    {
+        // start advertising
+        vob_start_advertising();
+    }
 }
 
 /**
@@ -1153,15 +1153,15 @@ static int voice_over_ble_handler(APP_MESSAGE_BODY *msg_body)
     switch (msg_body->message_id)
     {
         case VOB_START_AS_SRC:
-			// change role
+            // change role
             vob_role = VOB_ROLE_SRC;
             // stop advertising, and start connecting when adv is stopped
             appm_stop_advertising();
-			// change state
-			vob_state = VOB_STATE_STOPPING_ADV;
+            // change state
+            vob_state = VOB_STATE_STOPPING_ADV;
             break;
         case VOB_SWITCH_STATE:
-	        vob_switch_state_handler();
+            vob_switch_state_handler();
             break;           
         default:
             break;
@@ -1173,7 +1173,7 @@ static int voice_over_ble_handler(APP_MESSAGE_BODY *msg_body)
  * @brief Notify VOB that it should switch to the next state:
  *        VOB_IDLE -> VOB_CONNECTED -> VOB_VOICE_STREAM -> VOB_CONNECTED
  *
- * @param ptrParam 	Pointer of the parameter
+ * @param ptrParam  Pointer of the parameter
  * @param paramLen  Length of the parameter in bytes
  *
  */
@@ -1198,12 +1198,12 @@ void notify_vob(VOB_MESSAGE_ID_E message, uint8_t* ptrParam, uint32_t paramLen)
  */
 void voice_over_ble_init(void)
 {
-	// create the mutext
-	vob_env_mutex_id = osMutexCreate((osMutex(vob_env_mutex)));
+    // create the mutext
+    vob_env_mutex_id = osMutexCreate((osMutex(vob_env_mutex)));
 
-	// initialize the audio streams
-	vob_init_audio_streams();
-	
+    // initialize the audio streams
+    vob_init_audio_streams();
+    
     // initialize the state machine
     vob_state = VOB_STATE_IDLE;
 
@@ -1211,7 +1211,7 @@ void voice_over_ble_init(void)
     vob_ThreadId = osThreadGetId();
         
     // add the voice over ble handler into the application thread
-    app_set_threadhandle(APP_MODUAL_VOB, voice_over_ble_handler);	
+    app_set_threadhandle(APP_MODUAL_VOB, voice_over_ble_handler);   
     
     // initialize the cvsd library
     Pcm8k_CvsdInit();
@@ -1219,8 +1219,8 @@ void voice_over_ble_init(void)
     // default role is DST 
     vob_role = VOB_ROLE_DST;
 
-	// register the BLE adv and connecting activity stopped callback function
-	app_datapath_server_register_activity_stopped_cb(vob_ble_activity_stopped);
+    // register the BLE adv and connecting activity stopped callback function
+    app_datapath_server_register_activity_stopped_cb(vob_ble_activity_stopped);
     
     // start advertising if DST
     vob_start_advertising();    

@@ -110,8 +110,8 @@ enum hshf_callsetup {
 };
 
 enum hshf_call {
-	CALL_NONE = 0,
-	CALL_ESTABLISHED
+    CALL_NONE = 0,
+    CALL_ESTABLISHED
 };
 
 enum hshf_profile {
@@ -149,14 +149,14 @@ enum hshf_pb_action {
 };
 
 enum hfp_indicator {
-	HFP_INDICATOR_SERVICE = 0,
-	HFP_INDICATOR_CALL,
-	HFP_INDICATOR_CALLSETUP,
-	HFP_INDICATOR_CALLHELD,
-	HFP_INDICATOR_SIGNAL,
-	HFP_INDICATOR_ROAM,
-	HFP_INDICATOR_BATTCHG,
-	HFP_INDICATOR_LAST
+    HFP_INDICATOR_SERVICE = 0,
+    HFP_INDICATOR_CALL,
+    HFP_INDICATOR_CALLSETUP,
+    HFP_INDICATOR_CALLHELD,
+    HFP_INDICATOR_SIGNAL,
+    HFP_INDICATOR_ROAM,
+    HFP_INDICATOR_BATTCHG,
+    HFP_INDICATOR_LAST
 };
 
 typedef void (*ciev_func_t)(struct hshf_control *chan, uint8_t val);
@@ -200,9 +200,9 @@ struct hf_indicator {
 #define CODEC_ID_CVSD 0x01
 #define CODEC_ID_MSBC 0x02
 struct hfp_codec {
-	uint8_t type;
-	bool local_supported;
-	bool remote_supported;
+    uint8_t type;
+    bool local_supported;
+    bool remote_supported;
 };
 
 #if defined(HFP_MOBILE_AG_ROLE)
@@ -253,7 +253,7 @@ struct hshf_control {
     uint8 listen_channel;
     uint8 disc_reason;
     uint8 audio_up;
-	struct coqueue *cmd_queue;
+    struct coqueue *cmd_queue;
 
 #if HFP_CMD_FLOW_CONTROL_ENABLE==1
     unsigned int tx_time;
@@ -261,22 +261,22 @@ struct hshf_control {
     enum hshf_tx_status tx_status;
 #endif
 
-	struct coqueue *event_handlers;
-	uint8_t negotiated_codec;
+    struct coqueue *event_handlers;
+    uint8_t negotiated_codec;
 
-	struct hfp_codec codecs[2];
+    struct hfp_codec codecs[2];
 
-	struct indicator ag_ind[HFP_INDICATOR_LAST];
+    struct indicator ag_ind[HFP_INDICATOR_LAST];
 
     struct hf_indicator hf_ind;
 
-	uint32_t chld_features;
+    uint32_t chld_features;
 
     uint8 bsir_enable;
     uint8 status_call;             /* Phone status info - call */
     uint8 status_service;          /* Phone status info - service */
-    uint8 status_callsetup;		  /* Phone status info - callsetup*/
-    uint8 status_callheld;		  /* Phone status info - callheld*/
+    uint8 status_callsetup;       /* Phone status info - callsetup*/
+    uint8 status_callheld;        /* Phone status info - callheld*/
 
 #if defined(HFP_MOBILE_AG_ROLE)
     uint32_t slc_completed: 1;

@@ -166,9 +166,9 @@ extern const unsigned char a2dp_codec_elements[];
 #endif
 
 //hsp
-#define HSP_KEY_CKPD_CONTROL     	21
-#define HSP_KEY_ADD_TO_EARPHONE 	22
-#define HSP_KEY_CHANGE_TO_PHONE	23
+#define HSP_KEY_CKPD_CONTROL        21
+#define HSP_KEY_ADD_TO_EARPHONE     22
+#define HSP_KEY_CHANGE_TO_PHONE 23
 
 typedef enum
 {
@@ -204,10 +204,10 @@ typedef enum
 void hsp_callback(HsChannel *Chan, HsCallbackParms *Info);
 #endif
 
-#define APP_REPORT_SPEAKER_VOL_CMD 	0x01
-#define APP_CPKD_CMD				0x02
-#define SPP_MAX_TX_PACKET_NUM	5
-#define AVRCP_PDU_PARAM_MAX_LEN	40
+#define APP_REPORT_SPEAKER_VOL_CMD  0x01
+#define APP_CPKD_CMD                0x02
+#define SPP_MAX_TX_PACKET_NUM   5
+#define AVRCP_PDU_PARAM_MAX_LEN 40
 
 
 enum BT_DEVICE_ID_T{
@@ -220,8 +220,8 @@ enum BT_DEVICE_ID_T{
 
 #if defined(APP_LINEIN_A2DP_SOURCE)||defined(APP_I2S_A2DP_SOURCE)
 enum BT_DEVICE_SRC_SNK_T{
-	BT_DEVICE_SNK=0,
-	BT_DEVICE_SRC
+    BT_DEVICE_SNK=0,
+    BT_DEVICE_SRC
 };
 #if defined(APP_LINEIN_A2DP_SOURCE)||defined(APP_I2S_A2DP_SOURCE)
 #define APP_BD_ADDR_SIZE    6
@@ -245,10 +245,10 @@ struct BT_DEVICE_T{
      btif_a2dp_stream_t* a2dp_scalable_stream[BT_DEVICE_NUM];
 
 #if defined(APP_LINEIN_A2DP_SOURCE)||defined(APP_I2S_A2DP_SOURCE)
-	uint8_t src_or_snk;//src or snk fkag
-	uint8_t input_onoff;
-	APP_BT_BD_ADDR         inquried_snk_bdAddr;           /* Device Address */
-	//BT_BD_ADDR         rmt_bdAddr;           /* Device Address */
+    uint8_t src_or_snk;//src or snk fkag
+    uint8_t input_onoff;
+    APP_BT_BD_ADDR         inquried_snk_bdAddr;           /* Device Address */
+    //BT_BD_ADDR         rmt_bdAddr;           /* Device Address */
 #endif
 
     a2dp_stream_t * a2dp_connected_stream[BT_DEVICE_NUM];
@@ -261,10 +261,10 @@ struct BT_DEVICE_T{
     uint8_t a2dp_state[BT_DEVICE_NUM];
     uint8_t a2dp_streamming[BT_DEVICE_NUM];
     uint8_t a2dp_play_pause_flag;
-    uint8_t	avrcpPendingKey;
-	uint8_t latestPausedDevId;
-    uint8_t	avrcpPressedKey;
-    uint8_t	avrcpVolumeSync;
+    uint8_t avrcpPendingKey;
+    uint8_t latestPausedDevId;
+    uint8_t avrcpPressedKey;
+    uint8_t avrcpVolumeSync;
     btif_avdtp_codec_type_t codec_type[BT_DEVICE_NUM];
 
     uint8_t sample_rate[BT_DEVICE_NUM];
@@ -338,18 +338,18 @@ void hsp_handle_key(uint8_t hsp_key);
 void btapp_a2dp_report_speak_gain(void);
 
 #ifdef __POWERKEY_CTRL_ONOFF_ONLY__
-#define   BTAPP_FUNC_KEY			APP_KEY_CODE_FN1
-#define   BTAPP_VOLUME_UP_KEY		APP_KEY_CODE_FN2
-#define   BTAPP_VOLUME_DOWN_KEY		APP_KEY_CODE_FN3
+#define   BTAPP_FUNC_KEY            APP_KEY_CODE_FN1
+#define   BTAPP_VOLUME_UP_KEY       APP_KEY_CODE_FN2
+#define   BTAPP_VOLUME_DOWN_KEY     APP_KEY_CODE_FN3
 #ifdef SUPPORT_SIRI
-#define   BTAPP_RELEASE_KEY			APP_KEY_CODE_NONE
+#define   BTAPP_RELEASE_KEY         APP_KEY_CODE_NONE
 #endif
 #else
-#define   BTAPP_FUNC_KEY			APP_KEY_CODE_PWR
-#define   BTAPP_VOLUME_UP_KEY		APP_KEY_CODE_FN1
-#define   BTAPP_VOLUME_DOWN_KEY		APP_KEY_CODE_FN2
+#define   BTAPP_FUNC_KEY            APP_KEY_CODE_PWR
+#define   BTAPP_VOLUME_UP_KEY       APP_KEY_CODE_FN1
+#define   BTAPP_VOLUME_DOWN_KEY     APP_KEY_CODE_FN2
 #ifdef SUPPORT_SIRI
-#define   BTAPP_RELEASE_KEY			APP_KEY_CODE_NONE
+#define   BTAPP_RELEASE_KEY         APP_KEY_CODE_NONE
 #endif
 #endif
 void bt_key_init(void);

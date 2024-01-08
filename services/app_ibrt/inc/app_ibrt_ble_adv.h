@@ -33,21 +33,21 @@ typedef struct
 } SLAVE_BLE_MODE_T;
 
 typedef struct  {
-	// le_adv_param
-	uint16_t advInterval_Ms;
-	uint8_t adv_type;
+    // le_adv_param
+    uint16_t advInterval_Ms;
+    uint8_t adv_type;
     bt_bdaddr_t bd_addr;
     uint8_t own_addr_type;
     uint8_t peer_addr_type;
     uint8_t adv_chanmap;
     uint8_t adv_filter_policy;
-	// adv data
-	uint8_t adv_data_len;
-	uint8_t adv_data[31];
-	
-	// scan response data	
-	uint8_t scan_rsp_data_len;
-	uint8_t scan_rsp_data[31];	
+    // adv data
+    uint8_t adv_data_len;
+    uint8_t adv_data[31];
+    
+    // scan response data   
+    uint8_t scan_rsp_data_len;
+    uint8_t scan_rsp_data[31];  
 }app_ble_adv_para_data_t;
 typedef struct
 {

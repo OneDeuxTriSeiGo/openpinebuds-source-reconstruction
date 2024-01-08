@@ -131,7 +131,7 @@ void anc_assist_open(ANC_ASSIST_MODE_T mode){
 #endif
 
 #if defined(ANC_ASSIST_NOISE_ADAPTIVE_ENABLED)
-	NoiseClassify_st = classify_create(_SAMPLE_RATE, _FRAME_LEN);
+    NoiseClassify_st = classify_create(_SAMPLE_RATE, _FRAME_LEN);
 #endif
 
     // audio_dump_init(160,sizeof(short),3);
@@ -170,7 +170,7 @@ void anc_assist_close(){
 #endif
 
 #if defined(ANC_ASSIST_NOISE_ADAPTIVE_ENABLED)
-	classify_destroy(NoiseClassify_st);
+    classify_destroy(NoiseClassify_st);
 #endif
 
     // ext_heap_deinit();
@@ -199,7 +199,7 @@ void anc_assist_process(uint8_t * buf, int len){
 
 
     int32_t frame_len = len / SAMPLE_BYTES / MIC_NUM;
-	ASSERT(frame_len == _FRAME_LEN, "[%s] frame len(%d) is invalid.", __func__, frame_len);
+    ASSERT(frame_len == _FRAME_LEN, "[%s] frame len(%d) is invalid.", __func__, frame_len);
     ASSIST_PCM_T *pcm_buf = (ASSIST_PCM_T *)buf;
 
     ASSIST_PCM_T *mic1 = (ASSIST_PCM_T *)af_stream_mic1;
@@ -226,8 +226,8 @@ void anc_assist_process(uint8_t * buf, int len){
 #endif
 
 #if defined(ANC_ASSIST_NOISE_ADAPTIVE_ENABLED)
-		static int last_classify_res = -1;
-		classify_process(NoiseClassify_st, mic1, last_classify_res);
+        static int last_classify_res = -1;
+        classify_process(NoiseClassify_st, mic1, last_classify_res);
 #endif
 
     if(g_anc_assist_mode == ANC_ASSIST_PHONE_16K){
@@ -269,17 +269,17 @@ void anc_assist_process(uint8_t * buf, int len){
 
 static uint32_t anc_assist_callback(uint8_t *buf, uint32_t len){
 #ifdef TEST_MIPS
-		start_ticks = hal_fast_sys_timer_get();
+        start_ticks = hal_fast_sys_timer_get();
 #endif
         anc_assist_process(buf,len);
 
 #ifdef TEST_MIPS
-		end_ticks = hal_fast_sys_timer_get();
-		used_mips = (end_ticks - start_ticks) * 1000 / (start_ticks - pre_ticks);
-		TRACE(2,"[%s] Usage: %d in a thousand (MIPS).", __func__, used_mips);
-		//wnr_ticks = start_ticks;
-		//TRACE(2,"[%s] WNR frame takes %d ms.", __func__, FAST_TICKS_TO_MS((start_ticks - pre_ticks)*100));
-		pre_ticks = start_ticks;
+        end_ticks = hal_fast_sys_timer_get();
+        used_mips = (end_ticks - start_ticks) * 1000 / (start_ticks - pre_ticks);
+        TRACE(2,"[%s] Usage: %d in a thousand (MIPS).", __func__, used_mips);
+        //wnr_ticks = start_ticks;
+        //TRACE(2,"[%s] WNR frame takes %d ms.", __func__, FAST_TICKS_TO_MS((start_ticks - pre_ticks)*100));
+        pre_ticks = start_ticks;
 #endif
     return 0;
 }
@@ -380,7 +380,7 @@ static void _open_mic_anc_assist(void)
     MIC_MAP = AUD_INPUT_PATH_AF_ANC;
     struct AF_STREAM_CONFIG_T stream_cfg;
     TRACE(1,"[%s] ...", __func__);
-	
+    
     memset(&stream_cfg, 0, sizeof(stream_cfg));
     stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)MIC_NUM;
     stream_cfg.sample_rate = (enum AUD_SAMPRATE_T)_SAMPLE_RATE;
@@ -392,7 +392,7 @@ static void _open_mic_anc_assist(void)
     stream_cfg.handler      = anc_assist_callback;
     stream_cfg.data_size    = _FRAME_LEN * SAMPLE_BYTES  * 2 * MIC_NUM;
     stream_cfg.data_ptr     = af_stream_buff;
-	ASSERT(stream_cfg.channel_num == MIC_NUM, "[%s] channel number(%d) is invalid.", __func__, stream_cfg.channel_num);
+    ASSERT(stream_cfg.channel_num == MIC_NUM, "[%s] channel number(%d) is invalid.", __func__, stream_cfg.channel_num);
     TRACE(2,"[%s] sample_rate:%d, data_size:%d", __func__, stream_cfg.sample_rate, stream_cfg.data_size);
     TRACE(2,"[%s] af_stream_buff = %p", __func__, af_stream_buff);
 
@@ -403,7 +403,7 @@ static void _open_mic_anc_assist(void)
 #if defined(ANC_ASSIST_PILOT_ENABLED)
     // struct AF_STREAM_CONFIG_T stream_cfg;
     TRACE(1,"[%s] set play ...", __func__);
-	
+    
     memset(&stream_cfg, 0, sizeof(stream_cfg));
 
 

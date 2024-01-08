@@ -81,7 +81,7 @@ void app_ibrt_search_ui_handle_key(APP_KEY_STATUS *status, void *param)
             case APP_KEY_EVENT_LONGPRESS:
                 // dont use this key for customer release due to
                 // it is auto triggered by circuit of 3s high-level voltage.
-                	bt_key_handle_func_longpress();
+                    bt_key_handle_func_longpress();
 #if 0
                 app_ibrt_ui_judge_scan_type(IBRT_FREEMAN_PAIR_TRIGGER,NO_LINK_TYPE, IBRT_UI_NO_ERROR);
                 app_ibrt_ui_set_freeman_enable();
@@ -100,7 +100,7 @@ void app_ibrt_search_ui_handle_key(APP_KEY_STATUS *status, void *param)
                 break;
 
             case APP_KEY_EVENT_TRIPLECLICK:
-				//bt_key_handle_func_tripleclick();
+                //bt_key_handle_func_tripleclick();
             /*#ifdef TILE_DATAPATH
                 app_tile_key_handler(status,NULL);
             #else
@@ -109,39 +109,39 @@ void app_ibrt_search_ui_handle_key(APP_KEY_STATUS *status, void *param)
                 break;
             case HAL_KEY_EVENT_LONGLONGPRESS:
                 TRACE(0,"long long press");
-				//if(qxw_dut_mode_enable){
-				//	qxw_dut_mode_enable = false;
-                	app_bt_power_off_customize();
-					
-				///}
+                //if(qxw_dut_mode_enable){
+                //  qxw_dut_mode_enable = false;
+                    app_bt_power_off_customize();
+                    
+                ///}
                 break;
 
             case APP_KEY_EVENT_ULTRACLICK:
                 TRACE(0,"ultra kill");
-				if(IBRT_UNKNOW==p_ibrt_ctrl->nv_role){
-					app_bt_enter_mono_pairing_mode();				
-				}
+                if(IBRT_UNKNOW==p_ibrt_ctrl->nv_role){
+                    app_bt_enter_mono_pairing_mode();               
+                }
                 break;
 
             case APP_KEY_EVENT_RAMPAGECLICK:
-                TRACE(0,"rampage kill!you are crazy!");	
-				if(!app_device_bt_is_connected()&&(!app_tws_ibrt_tws_link_connected())){
-					app_nvrecord_rebuild();
-					osDelay(200);
-					hal_cmu_sys_reboot();
-				}
+                TRACE(0,"rampage kill!you are crazy!"); 
+                if(!app_device_bt_is_connected()&&(!app_tws_ibrt_tws_link_connected())){
+                    app_nvrecord_rebuild();
+                    osDelay(200);
+                    hal_cmu_sys_reboot();
+                }
                 break;
-			case APP_KEY_EVENT_SIXTHCLICK:
-				if(!app_device_bt_is_connected()&&(!app_tws_ibrt_tws_link_connected())){
-					qxw_dut_mode_enable = true;
-					app_factorymode_bt_signalingtest(NULL,NULL);
-				}
-				break;
-			case APP_KEY_EVENT_EIGHTHCLICK:
-				if(!app_device_bt_is_connected()){
-					app_otaMode_enter(NULL,NULL);
-				}
-				break;
+            case APP_KEY_EVENT_SIXTHCLICK:
+                if(!app_device_bt_is_connected()&&(!app_tws_ibrt_tws_link_connected())){
+                    qxw_dut_mode_enable = true;
+                    app_factorymode_bt_signalingtest(NULL,NULL);
+                }
+                break;
+            case APP_KEY_EVENT_EIGHTHCLICK:
+                if(!app_device_bt_is_connected()){
+                    app_otaMode_enter(NULL,NULL);
+                }
+                break;
             case APP_KEY_EVENT_UP:
                 break;
         }
@@ -221,10 +221,10 @@ int app_ibrt_if_keyboard_notify(APP_KEY_STATUS *status, void *param)
 int app_ibrt_poweroff_notify_force(void)
 {   
     APP_KEY_STATUS status[] = {APP_KEY_CODE_FN2,HAL_KEY_EVENT_LONGLONGPRESS};
-	
+    
     if (app_tws_ibrt_tws_link_connected())
     {
-    	app_ibrt_customif_test1_cmd_send((uint8_t *)status, sizeof(APP_KEY_STATUS));
+        app_ibrt_customif_test1_cmd_send((uint8_t *)status, sizeof(APP_KEY_STATUS));
     }
     return 0;
 }
@@ -232,10 +232,10 @@ int app_ibrt_poweroff_notify_force(void)
 int app_ibrt_reboot_notify_force(void)
 {   
     APP_KEY_STATUS status[] = {APP_KEY_CODE_FN1,HAL_KEY_EVENT_LONGLONGPRESS};
-	
+    
     if (app_tws_ibrt_tws_link_connected())
     {
-    	app_ibrt_customif_test1_cmd_send((uint8_t *)status, sizeof(APP_KEY_STATUS));
+        app_ibrt_customif_test1_cmd_send((uint8_t *)status, sizeof(APP_KEY_STATUS));
     }
     return 0;
 }
@@ -259,7 +259,7 @@ void app_ibrt_keyboard_request_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16
     if (app_tws_ibrt_mobile_link_connected())
     {
 #ifdef IBRT_SEARCH_UI
-	Is_Slave_Key_Down_Event = true;
+    Is_Slave_Key_Down_Event = true;
         if(key_status->code==APP_KEY_CODE_PWR)
         {
             app_ibrt_search_ui_handle_key(key_status, NULL);

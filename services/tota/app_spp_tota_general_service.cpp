@@ -147,21 +147,21 @@ static const U8 TotaGenClassId[] = {
    SDP_ATTRIB_HEADER_8BIT(17),
    DETD_UUID + DESD_16BYTES,
     0x8a,
-	0x48,\
-	0x2a,\
-	0x08,\
-	0x55,\
-	0x07,\
-	0x42,\
-	0xac,\
-	0xb6,\
-	0x73,\
-	0xa8,\
-	0x8d,\
-	0xf4,\
-	0x8b,\
-	0x3f,\
-	0xc7,
+    0x48,\
+    0x2a,\
+    0x08,\
+    0x55,\
+    0x07,\
+    0x42,\
+    0xac,\
+    0xb6,\
+    0x73,\
+    0xa8,\
+    0x8d,\
+    0xf4,\
+    0x8b,\
+    0x3f,\
+    0xc7,
 };
 
 #endif
@@ -267,14 +267,14 @@ static int tota_general_spp_handle_data_event_func(void *pDev, uint8_t process, 
 #if 0
 static void tota_spp_general_read_thread(const void *arg)
 {
-	uint8_t buffer[TOTA_SPP_MAX_PACKET_SIZE];
-	U16 maxBytes;
+    uint8_t buffer[TOTA_SPP_MAX_PACKET_SIZE];
+    U16 maxBytes;
     
     while (1)
-	{
-		maxBytes = TOTA_SPP_MAX_PACKET_SIZE;
-		
-		btif_spp_read(tota_spp_gen_dev, (char *)buffer, &maxBytes);
+    {
+        maxBytes = TOTA_SPP_MAX_PACKET_SIZE;
+        
+        btif_spp_read(tota_spp_gen_dev, (char *)buffer, &maxBytes);
         TOTA_LOG_DBG(2,"[%s]general data receive length = %d",__func__,maxBytes);
         TOTA_LOG_DUMP("[0x%x]",buffer,maxBytes);
 
@@ -302,26 +302,26 @@ static void app_spp_tota_gen_close_read_thread(void)
 static void spp_tota_gen_callback(struct spp_device *locDev, struct spp_callback_parms *Info)
 {
     TOTA_LOG_DBG(1,"%s",__func__);
-	if (BTIF_SPP_EVENT_REMDEV_CONNECTED == Info->event)
-	{
-		TOTA_LOG_DBG(1,"::SPP_GENERAL_EVENT_REMDEV_CONNECTED %d\n", Info->event);
+    if (BTIF_SPP_EVENT_REMDEV_CONNECTED == Info->event)
+    {
+        TOTA_LOG_DBG(1,"::SPP_GENERAL_EVENT_REMDEV_CONNECTED %d\n", Info->event);
         isTotaSppGeneralConnected = true;
 //        app_spp_tota_gen_create_read_thread();
         app_tota_general_connected(APP_TOTA_CONNECTED);
         app_tota_update_datapath(APP_TOTA_GEN_VIA_SPP);
         //conn_stop_connecting_mobile_supervising();
-	}
-	else if (BTIF_SPP_EVENT_REMDEV_DISCONNECTED == Info->event)
-	{
-		TOTA_LOG_DBG(1,"::SPP_GENERAL_EVENT_REMDEV_DISCONNECTED %d\n", Info->event);
+    }
+    else if (BTIF_SPP_EVENT_REMDEV_DISCONNECTED == Info->event)
+    {
+        TOTA_LOG_DBG(1,"::SPP_GENERAL_EVENT_REMDEV_DISCONNECTED %d\n", Info->event);
         isTotaSppGeneralConnected = false;
 //        app_spp_tota_gen_close_read_thread();
         app_tota_disconnected(APP_TOTA_DISCONNECTED);
         app_tota_update_datapath(APP_TOTA_PATH_IDLE);
 
         app_spp_tota_gen_tx_done_func = NULL;
-	}
-	else if (BTIF_SPP_EVENT_DATA_SENT == Info->event)
+    }
+    else if (BTIF_SPP_EVENT_DATA_SENT == Info->event)
     {
         //app_spp_tota_gen_free_tx_buf(Info->tx_buf, Info->tx_data_len);
         struct spp_tx_done *pTxDone = (struct spp_tx_done *)(Info->p.other);
@@ -329,7 +329,7 @@ static void spp_tota_gen_callback(struct spp_device *locDev, struct spp_callback
         if (app_spp_tota_gen_tx_done_func)
         {
             app_spp_tota_gen_tx_done_func();
-        }		
+        }       
     }
     else
     {
@@ -406,8 +406,8 @@ void app_spp_tota_gen_init(void)
     totaSppGenService->numPorts = 0;
     btif_spp_service_setup(tota_spp_gen_dev, totaSppGenService, tota_sdp_gen_record);
 
-	tota_spp_gen_dev->portType = BTIF_SPP_SERVER_PORT;
-	tota_spp_gen_dev->app_id = BTIF_APP_SPP_SERVER_TOTA_GENERAL_ID;
+    tota_spp_gen_dev->portType = BTIF_SPP_SERVER_PORT;
+    tota_spp_gen_dev->app_id = BTIF_APP_SPP_SERVER_TOTA_GENERAL_ID;
     tota_spp_gen_dev->spp_handle_data_event_func = tota_general_spp_handle_data_event_func;
 
     btif_spp_init_device(tota_spp_gen_dev, 5, mid);

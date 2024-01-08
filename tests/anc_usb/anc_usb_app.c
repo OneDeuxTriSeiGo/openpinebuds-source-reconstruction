@@ -416,7 +416,7 @@ static void anc_key_proc_open(bool from_key)
         TRACE(2,"[ANC KEY PROC] updata coefs ff %d: ret=%d", cur_coef_index, ret);
 #endif
 #ifdef ANC_FB_ENABLED
-	 ret = anc_select_coef(anc_sample_rate[AUD_STREAM_PLAYBACK],cur_coef_index,ANC_FEEDBACK,ANC_GAIN_NO_DELAY);
+     ret = anc_select_coef(anc_sample_rate[AUD_STREAM_PLAYBACK],cur_coef_index,ANC_FEEDBACK,ANC_GAIN_NO_DELAY);
         TRACE(2,"[ANC KEY PROC] updata coefs fb %d: ret=%d", cur_coef_index, ret);
 #endif
 #if defined(AUDIO_ANC_FB_MC_HW)
@@ -443,7 +443,7 @@ static void anc_key_proc_open(bool from_key)
         TRACE(2,"[ANC KEY PROC] anc_select_coef ff %d: ret=%d", cur_coef_index, ret);
 #endif
 #ifdef ANC_FB_ENABLED
-	 ret = anc_select_coef(anc_sample_rate[AUD_STREAM_PLAYBACK],cur_coef_index,ANC_FEEDBACK,ANC_GAIN_DELAY);
+     ret = anc_select_coef(anc_sample_rate[AUD_STREAM_PLAYBACK],cur_coef_index,ANC_FEEDBACK,ANC_GAIN_DELAY);
         TRACE(2,"[ANC KEY PROC] anc_select_coef fb %d: ret=%d", cur_coef_index, ret);
 #endif
 #if defined(AUDIO_ANC_FB_MC_HW)
@@ -460,25 +460,25 @@ static void anc_key_proc_open(bool from_key)
         fadein_cnt = 0;
         anc_status = ANC_STATUS_FADEIN;
 #else
-		{
-			int32_t gain_ch_l, gain_ch_r;
+        {
+            int32_t gain_ch_l, gain_ch_r;
 #if defined(AUDIO_ANC_TT_HW)
-			anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_TALKTHRU);
-			anc_set_gain(gain_ch_l,gain_ch_r,ANC_TALKTHRU);
+            anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_TALKTHRU);
+            anc_set_gain(gain_ch_l,gain_ch_r,ANC_TALKTHRU);
 #endif
 #ifdef ANC_FF_ENABLED
-			anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_FEEDFORWARD);
-			anc_set_gain(gain_ch_l,gain_ch_r,ANC_FEEDFORWARD);
+            anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_FEEDFORWARD);
+            anc_set_gain(gain_ch_l,gain_ch_r,ANC_FEEDFORWARD);
 #endif
 #ifdef ANC_FB_ENABLED
-			anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_FEEDBACK);
-			anc_set_gain(gain_ch_l,gain_ch_r,ANC_FEEDBACK);
+            anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_FEEDBACK);
+            anc_set_gain(gain_ch_l,gain_ch_r,ANC_FEEDBACK);
 #endif
 #ifdef AUDIO_ANC_FB_MC_HW
-			anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_MUSICCANCLE);
-			anc_set_gain(gain_ch_l,gain_ch_r,ANC_MUSICCANCLE);
+            anc_get_cfg_gain(&gain_ch_l, &gain_ch_r,ANC_MUSICCANCLE);
+            anc_set_gain(gain_ch_l,gain_ch_r,ANC_MUSICCANCLE);
 #endif
-		}
+        }
         anc_status = ANC_STATUS_ENABLE;
 #endif
     }
@@ -743,7 +743,7 @@ void anc_state_transition(void)
                 res_ff = anc_usb_app_fadeout(ANC_FEEDFORWARD);
 #endif
 #ifdef ANC_FB_ENABLED
-		  res_fb = anc_usb_app_fadeout(ANC_FEEDBACK);
+          res_fb = anc_usb_app_fadeout(ANC_FEEDBACK);
 #endif
 #ifdef AUDIO_ANC_FB_MC_HW
                 res_mc = anc_usb_app_fadein(ANC_MUSICCANCLE);
@@ -984,8 +984,8 @@ static void anc_full_close(void)
 #if defined(AUDIO_ANC_FB_MC_HW)
        anc_close(ANC_MUSICCANCLE);
 #endif
-	anc_close(ANC_FEEDBACK);
-	af_anc_close(ANC_FEEDBACK);
+    anc_close(ANC_FEEDBACK);
+    af_anc_close(ANC_FEEDBACK);
 #endif
 
     pmu_anc_config(0);

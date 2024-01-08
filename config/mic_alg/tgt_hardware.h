@@ -43,9 +43,9 @@ extern "C" {
 #define CFG_HW_PLW_NUM (2)
 #endif
 #endif
-	
+    
 extern const struct HAL_IOMUX_PIN_FUNCTION_MAP cfg_hw_pinmux_pwl[CFG_HW_PLW_NUM];
-#ifdef __APP_USE_LED_INDICATE_IBRT_STATUS__	
+#ifdef __APP_USE_LED_INDICATE_IBRT_STATUS__ 
 extern const struct HAL_IOMUX_PIN_FUNCTION_MAP cfg_ibrt_indication_pinmux_pwl[3];
 #endif
 
@@ -138,7 +138,7 @@ extern const struct HAL_IOMUX_PIN_FUNCTION_MAP app_battery_ext_charger_indicator
 extern const struct HAL_IOMUX_PIN_FUNCTION_MAP MuteOutPwl;
 extern const struct HAL_IOMUX_PIN_FUNCTION_MAP cfg_hw_tws_channel_cfg;
 //extern const struct HAL_IOMUX_PIN_FUNCTION_MAP TOUCH_INT;
-	
+    
 extern bool tgt_tws_get_channel_is_right(void);
 
 extern const struct HAL_IOMUX_PIN_FUNCTION_MAP TOUCH_I2C_SDA;

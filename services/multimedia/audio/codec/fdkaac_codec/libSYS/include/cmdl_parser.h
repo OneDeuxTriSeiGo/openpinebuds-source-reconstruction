@@ -184,13 +184,13 @@ extern "C"
    int nFoundArgs = IIS_ScanCmdl(argc, argv, ARG_PARAM, ARG_VALUE);
    \endcode
    wheras the wild-cards (\%d, \%1, ..) define the data type of the argument:
-	- \%1 boolean (e. g. -x)
-	- \%d integer (e. g. -x 23)
-	- \%f float (e. g. -x 3.4)
-	- \%y double (e. g. -x 31415926535897932384626433832795028841971693993751)
-	- \%s string (e. g. -x "file.dat")
-	- \%u unsigned character (e. g. -x 3)
-	- \%c signed character (e. g. -x -3)
+    - \%1 boolean (e. g. -x)
+    - \%d integer (e. g. -x 23)
+    - \%f float (e. g. -x 3.4)
+    - \%y double (e. g. -x 31415926535897932384626433832795028841971693993751)
+    - \%s string (e. g. -x "file.dat")
+    - \%u unsigned character (e. g. -x 3)
+    - \%c signed character (e. g. -x -3)
     More examples on how to use it are located in every (encoder/decoder) example framework.
 
  * \param argc      Number of arguments.

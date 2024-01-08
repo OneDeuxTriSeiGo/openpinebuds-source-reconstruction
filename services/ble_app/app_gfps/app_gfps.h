@@ -149,7 +149,7 @@ struct app_gfps_env_tag
     uint8_t pendingLastResponse[16];
     uint8_t isLastResponsePending;
     uint8_t isWaitingForFpToConnect;
-    uint8_t isPendingForWritingNameReq;	
+    uint8_t isPendingForWritingNameReq; 
     uint8_t isBatteryInfoIncluded;
     gfps_get_battery_info_handler get_battery_info_handler;  
     GFPS_BATTERY_DATA_TYPE_E batteryDataType;

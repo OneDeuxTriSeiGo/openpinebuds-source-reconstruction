@@ -462,7 +462,7 @@ struct sdmmcip_host {
     int dev_id;
     int buswidth;
     uint32_t fifoth_val;
-	bool detect_enb;
+    bool detect_enb;
     struct mmc *mmc;
     void *priv;
 
@@ -901,8 +901,8 @@ static int sdmmcip_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd,
     ctrl = sdmmcip_readl(host, SDMMCIP_REG_CTRL);
     ctrl |= SDMMCIP_REG_CTRL_DMA_RESET;
     sdmmcip_wait_reset(host, ctrl);
-	if (data) {
-    	hal_gpdma_free_chan(host->dma_ch);
+    if (data) {
+        hal_gpdma_free_chan(host->dma_ch);
 #if 0
         if (data->flags & MMC_DATA_READ) {
             for (int ccc = 0; ccc < 400; ++ccc) {
@@ -1050,14 +1050,14 @@ static int sdmmcip_init(struct mmc *mmc)
     /* Enumerate at 400KHz */
     sdmmcip_setup_bus(host, mmc->cfg->f_min);
 
-	if (host->detect_enb){
-		sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, SDMMCIP_REG_INTMSK_ALL&(~SDMMCIP_REG_INTMSK_CD));
-		sdmmcip_writel(host, SDMMCIP_REG_INTMASK, SDMMCIP_REG_INTMSK_CD);
-		sdmmcip_writel(host, SDMMCIP_REG_CTRL, SDMMCIP_REG_INT_EN);
-	}else{
-		sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, SDMMCIP_REG_INTMSK_ALL);
-    	sdmmcip_writel(host, SDMMCIP_REG_INTMASK, ~SDMMCIP_REG_INTMSK_ALL);
-	}
+    if (host->detect_enb){
+        sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, SDMMCIP_REG_INTMSK_ALL&(~SDMMCIP_REG_INTMSK_CD));
+        sdmmcip_writel(host, SDMMCIP_REG_INTMASK, SDMMCIP_REG_INTMSK_CD);
+        sdmmcip_writel(host, SDMMCIP_REG_CTRL, SDMMCIP_REG_INT_EN);
+    }else{
+        sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, SDMMCIP_REG_INTMSK_ALL);
+        sdmmcip_writel(host, SDMMCIP_REG_INTMASK, ~SDMMCIP_REG_INTMSK_ALL);
+    }
 
     sdmmcip_writel(host, SDMMCIP_REG_TMOUT, 0xFFFFFFFF);
 
@@ -2548,68 +2548,68 @@ static int mmc_complete_init(struct mmc *mmc)
 
 void hal_sdmmc_irq_handler(void)
 {
-	uint32_t cdetect,mask;
-	struct sdmmcip_host *host = &sdmmc_host[HAL_SDMMC_ID_0];
+    uint32_t cdetect,mask;
+    struct sdmmcip_host *host = &sdmmc_host[HAL_SDMMC_ID_0];
     mask = sdmmcip_readl(host, SDMMCIP_REG_RINTSTS);
 
-	if (mask & SDMMCIP_REG_INTMSK_CD){
-		sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, SDMMCIP_REG_INTMSK_CD);
-		cdetect = sdmmcip_readl(host, SDMMCIP_REG_CDETECT);
-		HAL_SDMMC_TRACE(3,"%s cdetect:%d mask:%x\n", __func__, cdetect, mask);
-		if (sdmmc_detected_callback)
-			sdmmc_detected_callback(cdetect&0x01 ? 0 : 1);
-	}
+    if (mask & SDMMCIP_REG_INTMSK_CD){
+        sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, SDMMCIP_REG_INTMSK_CD);
+        cdetect = sdmmcip_readl(host, SDMMCIP_REG_CDETECT);
+        HAL_SDMMC_TRACE(3,"%s cdetect:%d mask:%x\n", __func__, cdetect, mask);
+        if (sdmmc_detected_callback)
+            sdmmc_detected_callback(cdetect&0x01 ? 0 : 1);
+    }
 }
 
 int hal_sdmmc_enable_detecter(enum HAL_SDMMC_ID_T id,void (* cb)(uint8_t))
 {
-	uint32_t ctrl;
+    uint32_t ctrl;
     struct sdmmcip_host *host = NULL;
-	HAL_SDMMC_TRACE(1,"%s\n", __func__);
+    HAL_SDMMC_TRACE(1,"%s\n", __func__);
 
-	sdmmc_detected_callback = cb;
+    sdmmc_detected_callback = cb;
 
     host = &sdmmc_host[id];
     host->ioaddr = (void *)sdmmc_ip_base[id];
 
-	if (!sdmmcip_wait_reset(host, SDMMCIP_REG_RESET_ALL)) {
-		HAL_SDMMC_TRACE(2,"%s[%d] Fail-reset!!\n", __func__, __LINE__);
-		return -1;
-	}
+    if (!sdmmcip_wait_reset(host, SDMMCIP_REG_RESET_ALL)) {
+        HAL_SDMMC_TRACE(2,"%s[%d] Fail-reset!!\n", __func__, __LINE__);
+        return -1;
+    }
 
-	host->detect_enb = true;
+    host->detect_enb = true;
 
-	sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, 0xFFFFFFFF);
-	sdmmcip_writel(host, SDMMCIP_REG_INTMASK, SDMMCIP_REG_INTMSK_CD);
+    sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, 0xFFFFFFFF);
+    sdmmcip_writel(host, SDMMCIP_REG_INTMASK, SDMMCIP_REG_INTMSK_CD);
 
     ctrl = SDMMCIP_REG_INT_EN;
     sdmmcip_writel(host, SDMMCIP_REG_CTRL, ctrl);
 
-	NVIC_SetVector(SDMMC_IRQn, (uint32_t)hal_sdmmc_irq_handler);
-	NVIC_SetPriority(SDMMC_IRQn, IRQ_PRIORITY_NORMAL);
+    NVIC_SetVector(SDMMC_IRQn, (uint32_t)hal_sdmmc_irq_handler);
+    NVIC_SetPriority(SDMMC_IRQn, IRQ_PRIORITY_NORMAL);
     NVIC_ClearPendingIRQ(SDMMC_IRQn);
-	NVIC_EnableIRQ(SDMMC_IRQn);
-	return 0;
+    NVIC_EnableIRQ(SDMMC_IRQn);
+    return 0;
 }
 
 void hal_sdmmc_disable_detecter(enum HAL_SDMMC_ID_T id)
 {
-	uint32_t ctrl = 0;
+    uint32_t ctrl = 0;
     struct sdmmcip_host *host = NULL;
     host = &sdmmc_host[id];
 
-	NVIC_DisableIRQ(SDMMC_IRQn);
-	NVIC_SetVector(SDMMC_IRQn, (uint32_t)NULL);
+    NVIC_DisableIRQ(SDMMC_IRQn);
+    NVIC_SetVector(SDMMC_IRQn, (uint32_t)NULL);
 
     sdmmcip_writel(host, SDMMCIP_REG_RINTSTS, 0xFFFFFFFF);
     sdmmcip_writel(host, SDMMCIP_REG_INTMASK, ~SDMMCIP_REG_INTMSK_ALL);
 
-	ctrl = sdmmcip_readl(host, SDMMCIP_REG_CTRL);
-	ctrl |= (SDMMCIP_REG_DMA_EN);
+    ctrl = sdmmcip_readl(host, SDMMCIP_REG_CTRL);
+    ctrl |= (SDMMCIP_REG_DMA_EN);
     sdmmcip_writel(host, SDMMCIP_REG_CTRL, ctrl);
 
-	host->detect_enb = false;
-	sdmmc_detected_callback = NULL;
+    host->detect_enb = false;
+    sdmmc_detected_callback = NULL;
 }
 
 int mmc_init(struct mmc *mmc)
@@ -2738,17 +2738,17 @@ uint32_t hal_sdmmc_write_blocks(enum HAL_SDMMC_ID_T id, uint32_t start_block, ui
 
 void hal_sdmmc_close(enum HAL_SDMMC_ID_T id)
 {
-	struct sdmmcip_host *host = NULL;
+    struct sdmmcip_host *host = NULL;
 
-	HAL_SDMMC_ASSERT(id < HAL_SDMMC_ID_NUM, invalid_id, id);
+    HAL_SDMMC_ASSERT(id < HAL_SDMMC_ID_NUM, invalid_id, id);
 
-	HAL_SDMMC_TRACE(1,"%s\n", __func__);
+    HAL_SDMMC_TRACE(1,"%s\n", __func__);
 
-	host = &sdmmc_host[id];
-	while(host->mmc->init_in_progress)
-		hal_sdmmc_delay(1);
+    host = &sdmmc_host[id];
+    while(host->mmc->init_in_progress)
+        hal_sdmmc_delay(1);
 
-	host->mmc->has_init = 0;
+    host->mmc->has_init = 0;
 
     hal_cmu_reset_set(HAL_CMU_MOD_H_SDMMC);
     hal_cmu_reset_set(HAL_CMU_MOD_O_SDMMC);

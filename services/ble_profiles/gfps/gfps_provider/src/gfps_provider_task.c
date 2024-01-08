@@ -170,7 +170,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 
                 ind->isNotificationEnabled = value;
                 ke_msg_send(ind);
-            	break;  
+                break;  
             }
             case GFPSP_IDX_PASSKEY_VAL:
             {

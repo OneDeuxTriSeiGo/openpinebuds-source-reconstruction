@@ -48,7 +48,7 @@
 #endif
 
 #ifdef WL_NSX
-#define WEBRTC_NSX_BUFF_SIZE    	(14000)
+#define WEBRTC_NSX_BUFF_SIZE        (14000)
 #endif
 
 
@@ -76,15 +76,15 @@
 #endif
 
 static inline float clampf(float v, float min, float max){
-	return v < min ? min : (v > max ? max : v);
+    return v < min ? min : (v > max ? max : v);
 }
 
 
 
 #ifdef WL_NSX_5MS
-#define BT_AUDIO_FACTORMODE_BUFF_SIZE    	(160*2)
+#define BT_AUDIO_FACTORMODE_BUFF_SIZE       (160*2)
 #else
-#define BT_AUDIO_FACTORMODE_BUFF_SIZE    	(6*320*16)
+#define BT_AUDIO_FACTORMODE_BUFF_SIZE       (6*320*16)
 #endif
 
 
@@ -209,7 +209,7 @@ static uint32_t app_mic_alg_data_come(uint8_t *buf, uint32_t len)
     if(false == (nsx_cnt & 0x3F))
     {
         stime = hal_sys_timer_get();
-	    //TRACE("aecm  echo time: lens:%d  g_time_cnt:%d ",len, g_time_cnt);
+        //TRACE("aecm  echo time: lens:%d  g_time_cnt:%d ",len, g_time_cnt);
     }
 
 #ifdef WL_DET

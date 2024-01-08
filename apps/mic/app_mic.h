@@ -33,13 +33,13 @@ extern "C" {
 #include "plat_types.h"
 
 typedef enum {
-	MIC_APP_NONE,
-	MIC_APP_SOC_CALL,
-	MIC_APP_SPEECH_RECO,
-	MIC_APP_CSPOTTER,
-	MIC_APP_MICRECORD,
-	MIC_APP_OTHER,
-	MIC_APP_MAX,
+    MIC_APP_NONE,
+    MIC_APP_SOC_CALL,
+    MIC_APP_SPEECH_RECO,
+    MIC_APP_CSPOTTER,
+    MIC_APP_MICRECORD,
+    MIC_APP_OTHER,
+    MIC_APP_MAX,
 }MIC_APP_TYPE;
 
 void app_mic_init();

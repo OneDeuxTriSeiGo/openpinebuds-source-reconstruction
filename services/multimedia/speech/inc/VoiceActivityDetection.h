@@ -22,7 +22,7 @@ extern "C" {
 
 typedef struct {
     float     snrthd;
-	float     energythd;
+    float     energythd;
 } VADConfig;
 
 struct VADState_;

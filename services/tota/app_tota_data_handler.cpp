@@ -36,13 +36,13 @@
 
 typedef struct
 {
-    uint8_t		isDataXferInProgress; 	
-	uint8_t		isCrcCheckEnabled;
-	uint32_t	wholeDataXferLen;
-	uint32_t	dataXferLenUntilLastSegVerification;
-	uint32_t	currentWholeCrc32;
-	uint32_t 	wholeCrc32UntilLastSeg;
-	uint32_t	crc32OfCurrentSeg;											
+    uint8_t     isDataXferInProgress;   
+    uint8_t     isCrcCheckEnabled;
+    uint32_t    wholeDataXferLen;
+    uint32_t    dataXferLenUntilLastSegVerification;
+    uint32_t    currentWholeCrc32;
+    uint32_t    wholeCrc32UntilLastSeg;
+    uint32_t    crc32OfCurrentSeg;                                          
 } APP_TOTA_DATA_HANDLER_ENV_T;
 
 #define APP_TOTA_TX_BUF_SIZE 2046
@@ -65,8 +65,8 @@ __attribute__((weak)) void app_tota_data_received_callback(uint8_t* ptrData, uin
 /**
  * @brief Receive the data from the peer device and parse them
  *
- * @param ptrData 		Pointer of the received data
- * @param dataLength	Length of the received data
+ * @param ptrData       Pointer of the received data
+ * @param dataLength    Length of the received data
  * 
  * @return APP_TOTA_CMD_RET_STATUS_E
  */
@@ -82,7 +82,7 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_data_received(uint8_t* ptrData, uint32_t data
 
 
     APP_TOTA_DATA_ACK_T tAck = {0};
-    app_tota_send_command(OP_TOTA_SPP_DATA_ACK, (uint8_t *)&tAck, sizeof(tAck), dataPath);	
+    app_tota_send_command(OP_TOTA_SPP_DATA_ACK, (uint8_t *)&tAck, sizeof(tAck), dataPath);  
     return TOTA_NO_ERROR;
 }
 
@@ -110,17 +110,17 @@ void app_tota_send_data(APP_TOTA_TRANSMISSION_PATH_E path, uint8_t* ptrData, uin
 #if defined(APP_ANC_TEST)
 void app_anc_tota_send_data(APP_TOTA_TRANSMISSION_PATH_E path, uint8_t* ptrData, uint32_t dataLength)
 {
-	if (path < APP_TOTA_TRANSMISSION_PATH_COUNT)
-	{
-		switch (path)
-		{
-			case APP_TOTA_VIA_SPP:
+    if (path < APP_TOTA_TRANSMISSION_PATH_COUNT)
+    {
+        switch (path)
+        {
+            case APP_TOTA_VIA_SPP:
                 app_tota_send_data_via_spp(ptrData, dataLength);
-				break;
-			default:
-				break;
-		}
-	}
+                break;
+            default:
+                break;
+        }
+    }
 }
 #endif
 

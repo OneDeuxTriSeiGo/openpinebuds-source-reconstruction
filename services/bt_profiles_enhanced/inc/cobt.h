@@ -56,28 +56,28 @@
 #define PACKET_TYPE_2_DH5_FLAG    0x1000
 #define PACKET_TYPE_3_DH5_FLAG    0x2000
 #define EDR_2M_PACKET_TYPE_MASK (PACKET_TYPE_2_DH1_FLAG|\
-	PACKET_TYPE_2_DH3_FLAG|\
-	PACKET_TYPE_2_DH5_FLAG)
+    PACKET_TYPE_2_DH3_FLAG|\
+    PACKET_TYPE_2_DH5_FLAG)
 
                               
 #define EDR_3M_PACKET_TYPE_MASK (PACKET_TYPE_3_DH1_FLAG|\
-	PACKET_TYPE_3_DH3_FLAG|\
-	PACKET_TYPE_3_DH5_FLAG)  
+    PACKET_TYPE_3_DH3_FLAG|\
+    PACKET_TYPE_3_DH5_FLAG)  
 #define ALL_ACL_PACKET_MASK  (PACKET_TYPE_DH5_FLAG|\
-							 PACKET_TYPE_DM5_FLAG|\
-							 PACKET_TYPE_DH3_FLAG|\
-							 PACKET_TYPE_DM3_FLAG|\
-							 PACKET_TYPE_DH1_FLAG|\
-							 PACKET_TYPE_DM1_FLAG|\
-							 EDR_2M_PACKET_TYPE_MASK |\
-							 EDR_3M_PACKET_TYPE_MASK)
-							
+                             PACKET_TYPE_DM5_FLAG|\
+                             PACKET_TYPE_DH3_FLAG|\
+                             PACKET_TYPE_DM3_FLAG|\
+                             PACKET_TYPE_DH1_FLAG|\
+                             PACKET_TYPE_DM1_FLAG|\
+                             EDR_2M_PACKET_TYPE_MASK |\
+                             EDR_3M_PACKET_TYPE_MASK)
+                            
 #define ACL_1M_PACKET_MASK  (PACKET_TYPE_DH5_FLAG|\
-							 PACKET_TYPE_DM5_FLAG|\
-							 PACKET_TYPE_DH3_FLAG|\
-							 PACKET_TYPE_DM3_FLAG|\
-							 PACKET_TYPE_DH1_FLAG|\
-							 PACKET_TYPE_DM1_FLAG)
+                             PACKET_TYPE_DM5_FLAG|\
+                             PACKET_TYPE_DH3_FLAG|\
+                             PACKET_TYPE_DM3_FLAG|\
+                             PACKET_TYPE_DH1_FLAG|\
+                             PACKET_TYPE_DM1_FLAG)
                                 
 #define ACL_1SLOT_PACKET_MASK  (PACKET_TYPE_DH1_FLAG|\
                                 PACKET_TYPE_DM1_FLAG|\
@@ -90,22 +90,22 @@
 #define PACKET_TYPE_3_EV5_FLAG    0x0200
 #endif
 /* add for spec 1.2  HCI 7.1.26 */
-#define PACKET_TYPE_HV1			0x0001
-#define PACKET_TYPE_HV2			0x0002
-#define PACKET_TYPE_HV3			0x0004
-#define PACKET_TYPE_EV3			0x0008
-#define PACKET_TYPE_EV4			0x0010
-#define PACKET_TYPE_EV5			0x0020
+#define PACKET_TYPE_HV1         0x0001
+#define PACKET_TYPE_HV2         0x0002
+#define PACKET_TYPE_HV3         0x0004
+#define PACKET_TYPE_EV3         0x0008
+#define PACKET_TYPE_EV4         0x0010
+#define PACKET_TYPE_EV5         0x0020
 #define PACKET_TYPE_NO_2_EV3    0x0040
 #define PACKET_TYPE_NO_3_EV3    0x0080
 #define PACKET_TYPE_NO_2_EV5    0x0100
 #define PACKET_TYPE_NO_3_EV5    0x0200
 
 #ifdef BLUETOOTH_20//used in set up synchronous link
-#define PACKET_TYPE_2_EV3			0x0040
-#define PACKET_TYPE_3_EV3			0x0080
-#define PACKET_TYPE_2_EV5			0x0100
-#define PACKET_TYPE_3_EV5			0x0200
+#define PACKET_TYPE_2_EV3           0x0040
+#define PACKET_TYPE_3_EV3           0x0080
+#define PACKET_TYPE_2_EV5           0x0100
+#define PACKET_TYPE_3_EV5           0x0200
 #endif
 
 /* Packet Boundary Flag   HCI:4.4.3                                                     */
@@ -141,39 +141,39 @@
 #define ULAW_FEATURE            0x40
 #define ALAW_FEATURE            0x80
 
-//#define EV3_FEATURE			0x20
+//#define EV3_FEATURE           0x20
 
 
 #define CVSD_FEATURE            0x01
 #define PAGING_FEATURE          0x02
 #define POWER_FEATURE           0x04
-#define TRANSPARENT_FEATURE		0x08
-#define FLOWLEAST_FEATURE		0x10
-#define FLOWMID_FEATURE			0x20
-#define FLOWMOST_FEATURE		0x40
-#define BCENCRYPT_FEATURE		0x80
+#define TRANSPARENT_FEATURE     0x08
+#define FLOWLEAST_FEATURE       0x10
+#define FLOWMID_FEATURE         0x20
+#define FLOWMOST_FEATURE        0x40
+#define BCENCRYPT_FEATURE       0x80
 
 #define ACL_2M_FEATURE           0x02
 #define ACL_3M_FEATURE           0x04
 
-#define ENHANCEINQSCAN_FEATURE	0x08
-#define INTERINQSCAN_FEATURE	0x10
-#define INTERPGSCAN_FEATURE  	0x20
-#define RSSIINQ_FEATURE		 	0x40
-#define EV3_FEATURE			    0x80
+#define ENHANCEINQSCAN_FEATURE  0x08
+#define INTERINQSCAN_FEATURE    0x10
+#define INTERPGSCAN_FEATURE     0x20
+#define RSSIINQ_FEATURE         0x40
+#define EV3_FEATURE             0x80
 
-#define EV4_FEATURE				0x01
-#define EV5_FEATURE				0x02
-#define AFHCAPSL_FEATURE		0x08
-#define AFHCLASSSL_FEATURE		0x10
+#define EV4_FEATURE             0x01
+#define EV5_FEATURE             0x02
+#define AFHCAPSL_FEATURE        0x08
+#define AFHCLASSSL_FEATURE      0x10
 #define ACL_3SLOTS_FEATURE      0x80
 
 
 #define ACL_5SLOTS_FEATURE      0x01
-#define SNIFF_SUBRATING_FEATURE	0x02
+#define SNIFF_SUBRATING_FEATURE 0x02
 #define PAUSE_ENCRYPTION_FEATURE    0x04
-#define AFHCAPMS_FEATURE		0x08
-#define AFHCLASSMS_FEATURE		0x10
+#define AFHCAPMS_FEATURE        0x08
+#define AFHCLASSMS_FEATURE      0x10
 #ifdef BLUETOOTH_20
 #define ESCO_2M_FEATURE         0x20
 #define ESCO_3M_FEATURE         0x40
@@ -208,12 +208,12 @@
 #define EV5_PACKET_SIZE         180
 
 #ifdef BLUETOOTH_20
-#define DH1_2_PACKET_SIZE	  54
-#define DH1_3_PACKET_SIZE	  83
-#define DH3_2_PACKET_SIZE	  367
-#define DH3_3_PACKET_SIZE	  552
-#define DH5_2_PACKET_SIZE	  679
-#define DH5_3_PACKET_SIZE	  1021
+#define DH1_2_PACKET_SIZE     54
+#define DH1_3_PACKET_SIZE     83
+#define DH3_2_PACKET_SIZE     367
+#define DH3_3_PACKET_SIZE     552
+#define DH5_2_PACKET_SIZE     679
+#define DH5_3_PACKET_SIZE     1021
 
 #define EV3_2_PACKET_SIZE         60
 #define EV3_3_PACKET_SIZE         90
@@ -230,7 +230,7 @@
 #define ESCO_PACKET_EV3          0x07
 #define ESCO_PACKET_EV4          0x0C
 #define ESCO_PACKET_EV5          0x0D
-#define ESCO_PACKET_2EV3			0x26
+#define ESCO_PACKET_2EV3            0x26
 #define ESCO_PACKET_3EV3          0x37
 #define ESCO_PACKET_2EV5          0x2C
 #define ESCO_PACKET_3EV5          0x3D
@@ -293,7 +293,7 @@
 #define MU_LAW_MODE             0
 #define A_LAW_MODE              1
 #define CVSD_MODE               2
-#define TRANSPARENT_MODE		3
+#define TRANSPARENT_MODE        3
 
 /* Timing Control Flags  LMP:5.1                                                        */
 #define TIM_CHANGE_FLAG         0x01

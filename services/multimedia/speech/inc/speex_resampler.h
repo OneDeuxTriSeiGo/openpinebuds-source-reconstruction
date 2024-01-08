@@ -78,11 +78,11 @@ enum {
 
 
 enum {
-	RESAMPLER_MODE_CAL = 0,
-	RESAMPLER_MODE_8KTO64K = 1,
-	RESAMPLER_MODE_64KTO8K = 2,
-	
-	RESAMPLER_MODE_ERROR
+    RESAMPLER_MODE_CAL = 0,
+    RESAMPLER_MODE_8KTO64K = 1,
+    RESAMPLER_MODE_64KTO8K = 2,
+    
+    RESAMPLER_MODE_ERROR
 };
 
 
@@ -102,43 +102,43 @@ typedef struct SpeexResamplerState_ SpeexResamplerState;
 typedef int(*resampler_basic_func)(SpeexResamplerState *, spx_uint32_t, const spx_word16_t *, spx_uint32_t *, spx_word16_t *, spx_uint32_t *);
 
 struct SpeexResamplerState_ {
-	spx_uint32_t in_rate;
-	spx_uint32_t out_rate;
-	spx_uint32_t num_rate;
-	spx_uint32_t den_rate;
+    spx_uint32_t in_rate;
+    spx_uint32_t out_rate;
+    spx_uint32_t num_rate;
+    spx_uint32_t den_rate;
 
-	int    quality;
-	spx_uint32_t nb_channels;
-	spx_uint32_t filt_len;
-	spx_uint32_t mem_alloc_size;
-	spx_uint32_t buffer_size;
-	int          int_advance;
-	int          frac_advance;
-	float  cutoff;
-	spx_uint32_t oversample;
-	int          initialised;
-	int          started;
+    int    quality;
+    spx_uint32_t nb_channels;
+    spx_uint32_t filt_len;
+    spx_uint32_t mem_alloc_size;
+    spx_uint32_t buffer_size;
+    int          int_advance;
+    int          frac_advance;
+    float  cutoff;
+    spx_uint32_t oversample;
+    int          initialised;
+    int          started;
 
-	/* These are per-channel */
-	spx_int32_t  last_sample[RESAMPLE_MAXCHANNEL];
-	spx_uint32_t samp_frac_num[RESAMPLE_MAXCHANNEL];
-	spx_uint32_t magic_samples[RESAMPLE_MAXCHANNEL];
+    /* These are per-channel */
+    spx_int32_t  last_sample[RESAMPLE_MAXCHANNEL];
+    spx_uint32_t samp_frac_num[RESAMPLE_MAXCHANNEL];
+    spx_uint32_t magic_samples[RESAMPLE_MAXCHANNEL];
 
-	spx_word16_t mem[RESAMPLE_MAXMEMBUF];
-	//spx_word16_t *mem;
+    spx_word16_t mem[RESAMPLE_MAXMEMBUF];
+    //spx_word16_t *mem;
 
 #ifdef RESAMPLE_CAL
-	spx_word16_t sinc_table[RESAMPLE_MAXSINCBUF];
+    spx_word16_t sinc_table[RESAMPLE_MAXSINCBUF];
 #else
-	const spx_word16_t *sinc_table;
+    const spx_word16_t *sinc_table;
 #endif
-	spx_uint32_t sinc_table_length;
-	resampler_basic_func resampler_ptr;
+    spx_uint32_t sinc_table_length;
+    resampler_basic_func resampler_ptr;
 
-	int    in_stride;
-	int    out_stride;
+    int    in_stride;
+    int    out_stride;
 
-	int    mode;
+    int    mode;
 
 
 };
@@ -157,11 +157,11 @@ struct SpeexResamplerState_ {
  * @retval NULL Error: not enough memory
  */
 void speex_resampler_init(SpeexResamplerState *st,
-						  spx_uint32_t nb_channels, 
+                          spx_uint32_t nb_channels, 
                           spx_uint32_t in_rate, 
                           spx_uint32_t out_rate, 
                           int quality,
-						  int mode,
+                          int mode,
                           int *err);
 
 /** Create a new resampler with fractional input/output rates. The sampling 
@@ -178,13 +178,13 @@ void speex_resampler_init(SpeexResamplerState *st,
  * @retval NULL Error: not enough memory
  */
 void speex_resampler_init_frac(SpeexResamplerState *st, 
-							   spx_uint32_t nb_channels,
+                               spx_uint32_t nb_channels,
                                spx_uint32_t ratio_num, 
                                spx_uint32_t ratio_den, 
                                spx_uint32_t in_rate, 
                                spx_uint32_t out_rate, 
                                int quality,
-							   int mode,
+                               int mode,
                                int *err);
 
 

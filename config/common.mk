@@ -959,7 +959,7 @@ ifeq ($(DEBUG),1)
 KBUILD_CPPFLAGS	+= -DDEBUG
 
 ifneq ($(NOSTD),1)
-KBUILD_CFLAGS  	+= -fstack-protector-strong
+KBUILD_CFLAGS	+= -fstack-protector-strong
 endif
 
 else
@@ -2161,7 +2161,7 @@ KBUILD_CPPFLAGS += -DWL_UI
 endif
 
 
-export SPEECH_PROCESS_FRAME_MS 	?= 16
+export SPEECH_PROCESS_FRAME_MS	?= 16
 ifeq ($(SPEECH_CODEC_CAPTURE_CHANNEL_NUM),1)
 export SPEECH_PROCESS_FRAME_MS = 15
 endif
@@ -2172,7 +2172,7 @@ ifeq ($(SPEECH_TX_THIRDPARTY),1)
 export SPEECH_PROCESS_FRAME_MS = 15
 endif
 
-export SPEECH_SCO_FRAME_MS 		?= 15
+export SPEECH_SCO_FRAME_MS		?= 15
 
 export SPEECH_SIDETONE ?= 0
 ifeq ($(SPEECH_SIDETONE),1)

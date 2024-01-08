@@ -813,15 +813,15 @@ void at_sleep_clean(uint32_t param0,uint32_t param1)
 
     //AT_TRACE(0,"_debug: I am at_sleep_clean");
 
-	for(i = 0; i < sizeof(g_at_cmd_resp)/sizeof(AT_CMD_RESP); i++)
-	{
-		if(AT_CMD_ID_SLEEP_CLEAN == g_at_cmd_resp[i].cmd_id)
-		{
-			g_at_cmd_resp[i].count = 0;
-			break;
-		}
-	}
-	AUTO_TEST_SEND(AT_CMD_RESP_SLEEP_CLEAN);
+    for(i = 0; i < sizeof(g_at_cmd_resp)/sizeof(AT_CMD_RESP); i++)
+    {
+        if(AT_CMD_ID_SLEEP_CLEAN == g_at_cmd_resp[i].cmd_id)
+        {
+            g_at_cmd_resp[i].count = 0;
+            break;
+        }
+    }
+    AUTO_TEST_SEND(AT_CMD_RESP_SLEEP_CLEAN);
 }
 
 void at_wakeup(uint32_t param0,uint32_t param1)
@@ -2243,29 +2243,29 @@ static const uint8_t hci_cmd_nonsig_tx_dh1_pn9[] =
 
 void BleFrequencyTestStop()
 {
-	btdrv_SendData(hci_cmd_nonsig_ble_stop_pn9, sizeof(hci_cmd_nonsig_ble_stop_pn9));
+    btdrv_SendData(hci_cmd_nonsig_ble_stop_pn9, sizeof(hci_cmd_nonsig_ble_stop_pn9));
 }
 void BtFrequencyTestStop()
 {
-	btdrv_SendData(hci_cmd_stop_bt_no_signaling_test_configuration, sizeof(hci_cmd_stop_bt_no_signaling_test_configuration));
+    btdrv_SendData(hci_cmd_stop_bt_no_signaling_test_configuration, sizeof(hci_cmd_stop_bt_no_signaling_test_configuration));
 }
 
 void BleFrequencyTestStart(uint8_t index)
 {
-	TRACE(2,"[%s] index is %d", __func__, index);
+    TRACE(2,"[%s] index is %d", __func__, index);
 
     btdrv_SendData(hci_cmd_ble_no_signaling_test_configuration[index], sizeof(hci_cmd_ble_no_signaling_test_configuration[0]));
 }
 void BleFrequencyTestStartRx(uint8_t index)
 {
-	TRACE(2,"[%s] index is %d", __func__, index);
+    TRACE(2,"[%s] index is %d", __func__, index);
 
     btdrv_SendData(hci_cmd_ble_rx_no_signaling_test_configuration[index], sizeof(hci_cmd_ble_rx_no_signaling_test_configuration[0]));
 }
 void BtFrequencyTestStart(uint8_t index)
 {
 
-	TRACE(2,"[%s] index is %d", __func__, index);
+    TRACE(2,"[%s] index is %d", __func__, index);
     if (index < sizeof(hci_cmd_bt_no_signaling_test_configuration)/sizeof(hci_cmd_bt_no_signaling_test_configuration[0]))
     {
         btdrv_SendData(hci_cmd_bt_no_signaling_test_configuration[index], sizeof(hci_cmd_bt_no_signaling_test_configuration[0]));
@@ -2283,49 +2283,49 @@ void at_no_signaling_ble_test(uint32_t param0,uint32_t param1)
     char *p;
     p = (char*)param0;
 
-	switch(*p)
-	{
-		case RF_CHANNEL_BLE_STOP:
-		{
-			BleFrequencyTestStop();
-			break;
-		}
+    switch(*p)
+    {
+        case RF_CHANNEL_BLE_STOP:
+        {
+            BleFrequencyTestStop();
+            break;
+        }
         case  RF_FREQUENCY_2402:
-	   	{
-			BleFrequencyTestStart(0);
-			break;
-		}
-	    case RF_FREQUENCY_2440:
-		{
-			BleFrequencyTestStart(1);
-			break;
-		}
-		case RF_FREQUENCY_2480:
-		{
-			BleFrequencyTestStart(2);
-			break;
-		}
-		case RF_FREQUENCY_2402_RX:
-		{
-			BleFrequencyTestStartRx(0);
-			break;
-		}
-		case RF_FREQUENCY_2440_RX:
-		{
-			BleFrequencyTestStartRx(1);
-			break;
-		}
-		case RF_FREQUENCY_2480_RX:
-		{
-			BleFrequencyTestStartRx(2);
-			break;
-		}
-		default:
-			break;
+        {
+            BleFrequencyTestStart(0);
+            break;
+        }
+        case RF_FREQUENCY_2440:
+        {
+            BleFrequencyTestStart(1);
+            break;
+        }
+        case RF_FREQUENCY_2480:
+        {
+            BleFrequencyTestStart(2);
+            break;
+        }
+        case RF_FREQUENCY_2402_RX:
+        {
+            BleFrequencyTestStartRx(0);
+            break;
+        }
+        case RF_FREQUENCY_2440_RX:
+        {
+            BleFrequencyTestStartRx(1);
+            break;
+        }
+        case RF_FREQUENCY_2480_RX:
+        {
+            BleFrequencyTestStartRx(2);
+            break;
+        }
+        default:
+            break;
 
-	}
+    }
 
-	return;
+    return;
 }
 
 void at_no_signaling_bt_test(uint32_t param0,uint32_t param1)
@@ -2337,9 +2337,9 @@ void at_no_signaling_bt_test(uint32_t param0,uint32_t param1)
 
     p = (char*)param0;
     idex = atoi(p);
-	BtFrequencyTestStart(idex);
+    BtFrequencyTestStart(idex);
 
-	return;
+    return;
 }
 
 void at_get_battery(uint32_t param0,uint32_t param1)

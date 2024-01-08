@@ -51,8 +51,8 @@
 #define AVRCP_OP_NEXT_GROUP  0x017E
 #define AVRCP_OP_PREV_GROUP  0x027E
 
-#define AVRCP_BTN_PUSHED	0x00
-#define AVRCP_BTN_RELEASED	0x80
+#define AVRCP_BTN_PUSHED    0x00
+#define AVRCP_BTN_RELEASED  0x80
 int avrcp_notify_callback(struct avctp_control_t *avctp_ctl, uint8 event, uint32 handle, void *pdata);
 void avrcp_datarecv_callback(struct avctp_control_t *avctp_ctl, uint32 handle, struct pp_buff *ppb);
 

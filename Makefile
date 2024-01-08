@@ -850,30 +850,30 @@ LDFLAGS_IMAGE += --verbose
 endif
 
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
-	      $(CFLAGS_IMAGE) \
-	      -Wl,$(subst $(space),$(comma),$(strip \
-	      $(LDFLAGS) $(LDFLAGS_IMAGE) \
-	      --scatter=$(LDS_TARGET) \
-	      --list=$(IMAGE_MAP) \
-	      --info=summarysizes --info=summarystack --info=totals --info=unused \
-	      --map --load_addr_map_info \
-	      --remove --no_autoat \
-	      --emit_debug_overlay_relocs --emit_debug_overlay_section \
-	      --diag_style=gnu --diag_suppress=L6314 --diag_suppress=L6329)) \
-	      $(IMAGE_ENTRY) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
-	      $(LIB_LDFLAGS) $(LIB_LDFLAGS)
+		  $(CFLAGS_IMAGE) \
+		  -Wl,$(subst $(space),$(comma),$(strip \
+		  $(LDFLAGS) $(LDFLAGS_IMAGE) \
+		  --scatter=$(LDS_TARGET) \
+		  --list=$(IMAGE_MAP) \
+		  --info=summarysizes --info=summarystack --info=totals --info=unused \
+		  --map --load_addr_map_info \
+		  --remove --no_autoat \
+		  --emit_debug_overlay_relocs --emit_debug_overlay_section \
+		  --diag_style=gnu --diag_suppress=L6314 --diag_suppress=L6329)) \
+		  $(IMAGE_ENTRY) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
+		  $(LIB_LDFLAGS) $(LIB_LDFLAGS)
 else
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
 		  $(LD_USE_PATCH_SYMBOL) \
-	      -T $(LDS_TARGET) \
-	      $(CFLAGS_IMAGE) \
-	      -Wl,$(subst $(space),$(comma),$(strip \
-	      $(LDFLAGS) $(LDFLAGS_IMAGE) \
-	      -Map=$(IMAGE_MAP) \
-	      --gc-sections \
-	      --whole-archive)) \
-	      $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
-	      -Wl,--no-whole-archive $(LIB_LDFLAGS) $(LIB_LDFLAGS)
+		  -T $(LDS_TARGET) \
+		  $(CFLAGS_IMAGE) \
+		  -Wl,$(subst $(space),$(comma),$(strip \
+		  $(LDFLAGS) $(LDFLAGS_IMAGE) \
+		  -Map=$(IMAGE_MAP) \
+		  --gc-sections \
+		  --whole-archive)) \
+		  $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
+		  -Wl,--no-whole-archive $(LIB_LDFLAGS) $(LIB_LDFLAGS)
 		  
 endif
 quiet_cmd_link-IMAGE_FILE = LINK    $@

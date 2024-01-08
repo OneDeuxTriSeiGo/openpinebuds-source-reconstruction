@@ -60,9 +60,9 @@ extern int a2dp_volume_2_level_convert(uint8_t vol);
 extern bool mic_is_already_on;
 
 typedef enum {
-	MIC_EVENT_START,
-	MIC_EVENT_STOP,
-	MIC_EVENT_CHECK,
+    MIC_EVENT_START,
+    MIC_EVENT_STOP,
+    MIC_EVENT_CHECK,
 }MIC_EVENT_TYPE;
 
 static MIC_APP_TYPE current_mictype = MIC_APP_NONE;
@@ -87,13 +87,13 @@ static int internal_mic_start(MIC_APP_TYPE new_mictype)
         if (btapp_hfp_get_call_state() || app_hfp_siri_is_active())
         {
             TRACE(2,"[%s] tws_mic_start_telephone_call: %d", __func__, mic_config[new_mictype].sample_rate);
-        	if (mic_config[new_mictype].data_ptr != NULL)
+            if (mic_config[new_mictype].data_ptr != NULL)
             {
             }
             else
-        	{
+            {
                 TRACE(1,"[%s] Warning sco play not started",__func__);
-        	}
+            }
             current_mictype = MIC_APP_SOC_CALL;
         }
     }

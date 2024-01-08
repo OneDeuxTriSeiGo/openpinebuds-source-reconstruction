@@ -156,20 +156,20 @@ typedef enum
 /**
  * @brief Format of the tota command handler function, called when the command is received
  *
- * @param cmdCode	Custom command code
- * @param ptrParam 	Pointer of the received parameter
- * @param paramLen 	Length of the recevied parameter
+ * @param cmdCode   Custom command code
+ * @param ptrParam  Pointer of the received parameter
+ * @param paramLen  Length of the recevied parameter
  * 
  */
 typedef void (*app_tota_cmd_handler_t)(APP_TOTA_CMD_CODE_E cmdCode, uint8_t* ptrParam, uint32_t paramLen);
 
 /**
  * @brief Format of the tota command response handler function, 
- *	called when the response to formerly sent command is received
+ *  called when the response to formerly sent command is received
  *
- * @param retStatus	Handling return status of the command
- * @param ptrParam 	Pointer of the received parameter
- * @param paramLen 	Length of the recevied parameter
+ * @param retStatus Handling return status of the command
+ * @param ptrParam  Pointer of the received parameter
+ * @param paramLen  Length of the recevied parameter
  * 
  */
 typedef void (*app_tota_cmd_response_handler_t)(APP_TOTA_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
@@ -184,19 +184,19 @@ typedef struct
     app_tota_cmd_handler_t  cmdHandler;             /**< command handler function */
     uint16_t                isNeedResponse;         /**< true if needs the response from the peer device */
     uint16_t                timeoutWaitingRspInMs;  /**< time-out of waiting for response in milli-seconds */
-    app_tota_cmd_response_handler_t	cmdRspHandler;  /**< command response handler function */
+    app_tota_cmd_response_handler_t cmdRspHandler;  /**< command response handler function */
 } APP_TOTA_CMD_INSTANCE_T;
 
 
-#define TOTA_COMMAND_TO_ADD(cmdCode, cmdHandler, isNeedResponse, timeoutWaitingRspInMs, cmdRspHandler)	\
-	static const APP_TOTA_CMD_INSTANCE_T cmdCode##_entry __attribute__((used, section(".tota_handler_table"))) = 	\
-		{(cmdCode), (cmdHandler), (isNeedResponse), (timeoutWaitingRspInMs), (cmdRspHandler)};
+#define TOTA_COMMAND_TO_ADD(cmdCode, cmdHandler, isNeedResponse, timeoutWaitingRspInMs, cmdRspHandler)  \
+    static const APP_TOTA_CMD_INSTANCE_T cmdCode##_entry __attribute__((used, section(".tota_handler_table"))) =    \
+        {(cmdCode), (cmdHandler), (isNeedResponse), (timeoutWaitingRspInMs), (cmdRspHandler)};
 
-#define TOTA_COMMAND_PTR_FROM_ENTRY_INDEX(index)	\
-	((APP_TOTA_CMD_INSTANCE_T *)((uint32_t)__tota_handler_table_start + (index)*sizeof(APP_TOTA_CMD_INSTANCE_T)))
+#define TOTA_COMMAND_PTR_FROM_ENTRY_INDEX(index)    \
+    ((APP_TOTA_CMD_INSTANCE_T *)((uint32_t)__tota_handler_table_start + (index)*sizeof(APP_TOTA_CMD_INSTANCE_T)))
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 

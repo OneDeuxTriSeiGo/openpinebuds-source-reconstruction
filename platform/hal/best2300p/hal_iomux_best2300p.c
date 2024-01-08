@@ -304,11 +304,11 @@ uint32_t hal_iomux_init(const struct HAL_IOMUX_PIN_FUNCTION_MAP *map, uint32_t c
         if (ret) {
             return (i << 8) + 1;
         }
-		ret = hal_iomux_set_io_voltage_domains(map[i].pin, map[i].volt);
+        ret = hal_iomux_set_io_voltage_domains(map[i].pin, map[i].volt);
         if (ret) {
             return (i << 8) + 2;
         }
-		ret = hal_iomux_set_io_pull_select(map[i].pin, map[i].pull_sel);
+        ret = hal_iomux_set_io_pull_select(map[i].pin, map[i].pull_sel);
         if (ret) {
             return (i << 8) + 3;
         }

@@ -51,9 +51,9 @@
 
 #if defined (__HSP_ENABLE__)
 
-#define MODIFY_HS_CALL_SETUP_IN  	HF_CALL_SETUP_IN
-#define MODIFY_HS_CALL_ACTIVE 		HF_CALL_ACTIVE
-#define MODIFY_HS_CALL_NONE		HF_CALL_NONE
+#define MODIFY_HS_CALL_SETUP_IN     HF_CALL_SETUP_IN
+#define MODIFY_HS_CALL_ACTIVE       HF_CALL_ACTIVE
+#define MODIFY_HS_CALL_NONE     HF_CALL_NONE
 
 
 extern struct BT_DEVICE_ID_DIFF chan_id_flag;
@@ -188,8 +188,8 @@ void app_hsp_init(void)
 /*
 Differ with HFP in HF_EVENT_RING_IND:
     Because hsp lack of some state, like         HF_EVENT_CALL_IND
-    								    HF_EVENT_CALLSETUP_IND
-    								    (DONE)
+                                        HF_EVENT_CALLSETUP_IND
+                                        (DONE)
     And for the least code modify purpose, meanwhile  keep the state runs ok.
     i put all the state setting in HF_EVENT_RING_IND case
 */
@@ -203,7 +203,7 @@ void hsp_callback(HsChannel *Chan, HsCallbackParms *Info)
     chan_id_flag.id = BT_DEVICE_ID_1;
 #endif
 
-	TRACE(2,"[%s] event = %d",__func__,Info->event);
+    TRACE(2,"[%s] event = %d",__func__,Info->event);
 
     switch(Info->event)
     {
@@ -229,7 +229,7 @@ void hsp_callback(HsChannel *Chan, HsCallbackParms *Info)
 #endif
         break;
     case HS_EVENT_AUDIO_DATA:
-	TRACE(0,"HF_EVENT_AUDIO_DATA");
+    TRACE(0,"HF_EVENT_AUDIO_DATA");
     {
 
 #ifndef _SCO_BTPCM_CHANNEL_
@@ -294,17 +294,17 @@ void hsp_callback(HsChannel *Chan, HsCallbackParms *Info)
     case HS_EVENT_AUDIO_CONNECTED:
 
         if(Info->status == BT_STATUS_SUCCESS){
-		 TRACE(1,"::HS_EVENT_AUDIO_CONNECTED  chan_id:%d\n", chan_id_flag.id);
+         TRACE(1,"::HS_EVENT_AUDIO_CONNECTED  chan_id:%d\n", chan_id_flag.id);
                    if((Chan->state == HF_STATE_OPEN) && (app_bt_device.hs_conn_flag[chan_id_flag.id] == 1)){
-		    app_bt_device.hschan_call[BT_DEVICE_ID_1] = MODIFY_HS_CALL_ACTIVE;
+            app_bt_device.hschan_call[BT_DEVICE_ID_1] = MODIFY_HS_CALL_ACTIVE;
                     }
 
-		 app_bt_device.curr_hs_channel_id = chan_id_flag.id;
+         app_bt_device.curr_hs_channel_id = chan_id_flag.id;
 
-	        app_bt_device.phone_earphone_mark = 0;
-	        app_bt_device.hs_mute_flag = 0;
+            app_bt_device.phone_earphone_mark = 0;
+            app_bt_device.hs_mute_flag = 0;
 
-	        app_bt_device.hs_audio_state[chan_id_flag.id] = HF_AUDIO_CON;
+            app_bt_device.hs_audio_state[chan_id_flag.id] = HF_AUDIO_CON;
 
 #if defined(__FORCE_REPORTVOLUME_SOCON__)
 
@@ -318,7 +318,7 @@ void hsp_callback(HsChannel *Chan, HsCallbackParms *Info)
             }
             else
             {
-	            app_hfp_start_voice_media(BT_DEVICE_ID_1);
+                app_hfp_start_voice_media(BT_DEVICE_ID_1);
             }
 
         }

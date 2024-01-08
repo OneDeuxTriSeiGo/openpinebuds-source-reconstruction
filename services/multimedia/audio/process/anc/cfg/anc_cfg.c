@@ -69,8 +69,8 @@ static enum AUD_SAMPRATE_T cur_coef_samprate;
 #define AUD_IIR_NUM   (8)
 
 typedef struct {
-   	aud_item anc_cfg_mc_l;
-  	aud_item anc_cfg_mc_r;
+    aud_item anc_cfg_mc_l;
+    aud_item anc_cfg_mc_r;
     float mc_history_l[AUD_IIR_NUM][4];
     float mc_history_r[AUD_IIR_NUM][4];
 } IIR_MC_CFG_T;
@@ -93,205 +93,205 @@ int anc_load_cfg(void)
 #ifdef __AUDIO_RESAMPLE__
     res = anccfg_loadfrom_audsec(anc_coef_list_50p7k, anc_coef_list_48k, ANC_COEF_LIST_NUM);
     list = anc_coef_list_50p7k;
-	TRACE(0,"50.7k!!!!");
+    TRACE(0,"50.7k!!!!");
 
-	if(res) {
-		TRACE(2,"[%s] WARNING(%d): Can not load anc coefficient from audio section!!!", __func__, res);
-	} else {
-		TRACE(1,"[%s] Load anc coefficient from audio section.", __func__);
+    if(res) {
+        TRACE(2,"[%s] WARNING(%d): Can not load anc coefficient from audio section!!!", __func__, res);
+    } else {
+        TRACE(1,"[%s] Load anc coefficient from audio section.", __func__);
 #if (AUD_SECTION_STRUCT_VERSION == 1)
-		TRACE(5,"[%s] L: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_l.total_gain, list[0]->anc_cfg_ff_l.fir_len, list[0]->anc_cfg_ff_l.dac_gain_offset, list[0]->anc_cfg_ff_l.adc_gain_offset);
-		TRACE(5,"[%s] R: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_r.total_gain, list[0]->anc_cfg_ff_r.fir_len, list[0]->anc_cfg_ff_r.dac_gain_offset, list[0]->anc_cfg_ff_r.adc_gain_offset);
+        TRACE(5,"[%s] L: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_l.total_gain, list[0]->anc_cfg_ff_l.fir_len, list[0]->anc_cfg_ff_l.dac_gain_offset, list[0]->anc_cfg_ff_l.adc_gain_offset);
+        TRACE(5,"[%s] R: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_r.total_gain, list[0]->anc_cfg_ff_r.fir_len, list[0]->anc_cfg_ff_r.dac_gain_offset, list[0]->anc_cfg_ff_r.adc_gain_offset);
 #elif  (AUD_SECTION_STRUCT_VERSION == 2)
-		for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
-			TRACE(3,"appmode%d,FEEDFORWARD,L:gain %d,R:gain %d",i, list[i]->anc_cfg_ff_l.total_gain, list[i]->anc_cfg_ff_r.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
-			}
+        for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
+            TRACE(3,"appmode%d,FEEDFORWARD,L:gain %d,R:gain %d",i, list[i]->anc_cfg_ff_l.total_gain, list[i]->anc_cfg_ff_r.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
+            }
 
-			TRACE(3,"appmode%d,FEEDBACK,L:gain %d,R:gain %d",i, list[i]->anc_cfg_fb_l.total_gain, list[i]->anc_cfg_fb_r.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
-			}
-		}
+            TRACE(3,"appmode%d,FEEDBACK,L:gain %d,R:gain %d",i, list[i]->anc_cfg_fb_l.total_gain, list[i]->anc_cfg_fb_r.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
+            }
+        }
 #elif  (AUD_SECTION_STRUCT_VERSION == 3)
-		for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
-			TRACE(2,"appmode%d,FEEDFORWARD,L:gain %d",i, list[i]->anc_cfg_ff_l.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
-			}
+        for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
+            TRACE(2,"appmode%d,FEEDFORWARD,L:gain %d",i, list[i]->anc_cfg_ff_l.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
+            }
 
-			TRACE(2,"appmode%d,FEEDBACK,L:gain %d",i, list[i]->anc_cfg_fb_l.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
-			}
-		}
+            TRACE(2,"appmode%d,FEEDBACK,L:gain %d",i, list[i]->anc_cfg_fb_l.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
+            }
+        }
 #endif
-	}
+    }
 
 #else
     res = anccfg_loadfrom_audsec(anc_coef_list_48k, anc_coef_list_44p1k, ANC_COEF_LIST_NUM);
     list = anc_coef_list_44p1k;
-	TRACE(0,"44.1k!!!!");
+    TRACE(0,"44.1k!!!!");
 
-	if(res) {
-		TRACE(2,"[%s] WARNING(%d): Can not load anc coefficient from audio section!!!", __func__, res);
-	} else {
-		TRACE(1,"[%s] Load anc coefficient from audio section.", __func__);
+    if(res) {
+        TRACE(2,"[%s] WARNING(%d): Can not load anc coefficient from audio section!!!", __func__, res);
+    } else {
+        TRACE(1,"[%s] Load anc coefficient from audio section.", __func__);
 #if (AUD_SECTION_STRUCT_VERSION == 1)
-		TRACE(5,"[%s] L: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_l.total_gain, list[0]->anc_cfg_ff_l.fir_len, list[0]->anc_cfg_ff_l.dac_gain_offset, list[0]->anc_cfg_ff_l.adc_gain_offset);
-		TRACE(5,"[%s] R: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_r.total_gain, list[0]->anc_cfg_ff_r.fir_len, list[0]->anc_cfg_ff_r.dac_gain_offset, list[0]->anc_cfg_ff_r.adc_gain_offset);
+        TRACE(5,"[%s] L: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_l.total_gain, list[0]->anc_cfg_ff_l.fir_len, list[0]->anc_cfg_ff_l.dac_gain_offset, list[0]->anc_cfg_ff_l.adc_gain_offset);
+        TRACE(5,"[%s] R: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_r.total_gain, list[0]->anc_cfg_ff_r.fir_len, list[0]->anc_cfg_ff_r.dac_gain_offset, list[0]->anc_cfg_ff_r.adc_gain_offset);
 #elif  (AUD_SECTION_STRUCT_VERSION == 2)
-		for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
-			TRACE(3,"appmode%d,FEEDFORWARD,L:gain %d,R:gain %d",i, list[i]->anc_cfg_ff_l.total_gain, list[i]->anc_cfg_ff_r.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
-			}
+        for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
+            TRACE(3,"appmode%d,FEEDFORWARD,L:gain %d,R:gain %d",i, list[i]->anc_cfg_ff_l.total_gain, list[i]->anc_cfg_ff_r.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
+            }
 
-			TRACE(3,"appmode%d,FEEDBACK,L:gain %d,R:gain %d",i, list[i]->anc_cfg_fb_l.total_gain, list[i]->anc_cfg_fb_r.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
-			}
-		}
+            TRACE(3,"appmode%d,FEEDBACK,L:gain %d,R:gain %d",i, list[i]->anc_cfg_fb_l.total_gain, list[i]->anc_cfg_fb_r.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
+            }
+        }
 #elif  (AUD_SECTION_STRUCT_VERSION == 3)
-		for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
-			TRACE(2,"appmode%d,FEEDFORWARD,L:gain %d",i, list[i]->anc_cfg_ff_l.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
-			}
+        for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
+            TRACE(2,"appmode%d,FEEDFORWARD,L:gain %d",i, list[i]->anc_cfg_ff_l.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
+            }
 
-			TRACE(2,"appmode%d,FEEDBACK,L:gain %d",i, list[i]->anc_cfg_fb_l.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
-			}
-		}
+            TRACE(2,"appmode%d,FEEDBACK,L:gain %d",i, list[i]->anc_cfg_fb_l.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
+            }
+        }
 
 #endif
-	}
+    }
 
     res = anccfg_loadfrom_audsec(anc_coef_list_48k, anc_coef_list_44p1k, ANC_COEF_LIST_NUM);
     list = anc_coef_list_48k;
-	TRACE(0,"48k!!!!");
+    TRACE(0,"48k!!!!");
 
-	if(res) {
-		TRACE(2,"[%s] WARNING(%d): Can not load anc coefficient from audio section!!!", __func__, res);
-	} else {
-		TRACE(1,"[%s] Load anc coefficient from audio section.", __func__);
+    if(res) {
+        TRACE(2,"[%s] WARNING(%d): Can not load anc coefficient from audio section!!!", __func__, res);
+    } else {
+        TRACE(1,"[%s] Load anc coefficient from audio section.", __func__);
 #if (AUD_SECTION_STRUCT_VERSION == 1)
-		TRACE(5,"[%s] L: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_l.total_gain, list[0]->anc_cfg_ff_l.fir_len, list[0]->anc_cfg_ff_l.dac_gain_offset, list[0]->anc_cfg_ff_l.adc_gain_offset);
-		TRACE(5,"[%s] R: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_r.total_gain, list[0]->anc_cfg_ff_r.fir_len, list[0]->anc_cfg_ff_r.dac_gain_offset, list[0]->anc_cfg_ff_r.adc_gain_offset);
+        TRACE(5,"[%s] L: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_l.total_gain, list[0]->anc_cfg_ff_l.fir_len, list[0]->anc_cfg_ff_l.dac_gain_offset, list[0]->anc_cfg_ff_l.adc_gain_offset);
+        TRACE(5,"[%s] R: gain = %d, len = %d, dac = %d, adc = %d", __func__, list[0]->anc_cfg_ff_r.total_gain, list[0]->anc_cfg_ff_r.fir_len, list[0]->anc_cfg_ff_r.dac_gain_offset, list[0]->anc_cfg_ff_r.adc_gain_offset);
 #elif  (AUD_SECTION_STRUCT_VERSION == 2)
-		for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
-			TRACE(3,"appmode%d,FEEDFORWARD,L:gain %d,R:gain %d",i, list[i]->anc_cfg_ff_l.total_gain, list[i]->anc_cfg_ff_r.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
-			}
+        for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
+            TRACE(3,"appmode%d,FEEDFORWARD,L:gain %d,R:gain %d",i, list[i]->anc_cfg_ff_l.total_gain, list[i]->anc_cfg_ff_r.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
+            }
 
-			TRACE(3,"appmode%d,FEEDBACK,L:gain %d,R:gain %d",i, list[i]->anc_cfg_fb_l.total_gain, list[i]->anc_cfg_fb_r.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
-			}
-		}
+            TRACE(3,"appmode%d,FEEDBACK,L:gain %d,R:gain %d",i, list[i]->anc_cfg_fb_l.total_gain, list[i]->anc_cfg_fb_r.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
+            }
+        }
 #elif  (AUD_SECTION_STRUCT_VERSION == 3)
-		for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
-			TRACE(2,"appmode%d,FEEDFORWARD,L:gain %d",i, list[i]->anc_cfg_ff_l.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
-			}
+        for(int i = 0; i < ANC_COEF_LIST_NUM; i++) {
+            TRACE(2,"appmode%d,FEEDFORWARD,L:gain %d",i, list[i]->anc_cfg_ff_l.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef ff 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_ff_l.iir_coef[j].coef_a[2]);
+            }
 
-			TRACE(2,"appmode%d,FEEDBACK,L:gain %d",i, list[i]->anc_cfg_fb_l.total_gain);
-			for(int j = 0; j <AUD_IIR_NUM; j++)
-			{
-				TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
-				list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
-			}
-		}
+            TRACE(2,"appmode%d,FEEDBACK,L:gain %d",i, list[i]->anc_cfg_fb_l.total_gain);
+            for(int j = 0; j <AUD_IIR_NUM; j++)
+            {
+                TRACE(7,"appmode%d,iir coef fb 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x", i, \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_b[2], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[0], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[1], \
+                list[i]->anc_cfg_fb_l.iir_coef[j].coef_a[2]);
+            }
+        }
 #endif
-	}
+    }
 #endif
-	return res;
+    return res;
 }
 
 

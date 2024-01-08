@@ -604,8 +604,8 @@ int IQ_GAIN_Mismatch_Correction(IQMismatchPreprocessState *st,int phase_mis_base
             tmp = 0;
             iters = iters+1;
         }
-		if(iters>8)
-			break;
+        if(iters>8)
+            break;
         if((gain_mis_base - tmp>60)||(gain_mis_base - tmp<-60))
             tmp = 0;
         //BT_DRV_TRACE(2,"IQ gain correct gain_mis = %d ,gain_adj = %d",gain_mis_base,tmp);
@@ -699,8 +699,8 @@ int IQ_Phase_Mismatch_Correction(IQMismatchPreprocessState *st,int gain_mis_base
             tmp = 0;
             iters = iters + 1;
         }
-	    if(iters>8)
-			break;
+        if(iters>8)
+            break;
         if((phase_mis_base - tmp>60)||(phase_mis_base - tmp<-60))
             tmp = 0;
         // BT_DRV_TRACE(2,"IQ phase correct phase_mis = %d ,phase_adj = %d",phase_mis_base,tmp);
@@ -803,16 +803,16 @@ void bt_IQ_DC_Mismatch_Correction_Release()
     int fftsize;
     uint32_t addr = 0xd0310000;
     int chs = 27;
-	IQMismatchPreprocessState *st;
-	syspool_init();
+    IQMismatchPreprocessState *st;
+    syspool_init();
     syspool_get_buff(&g_medMemPool, MED_MEM_POOL_SIZE);
     med_heap_init(&g_medMemPool[0], MED_MEM_POOL_SIZE);
     //config gpadc 26m
     READ_REG(0xd0310000,0x0);
     #ifdef DCCalib
-	int dc_i_base,dc_q_base;
+    int dc_i_base,dc_q_base;
     fftsize = 1024;
-	st = IQMismatchPreprocessState_init(fftsize);
+    st = IQMismatchPreprocessState_init(fftsize);
     Tblgen(st->Table0,st->Table1,st->Table2,fftsize);
     DC_correction(st,&dc_i_base,&dc_q_base,fftsize);
     bt_Txdc_cal_set(0,dc_i_base); //set cal DC I
@@ -861,7 +861,7 @@ void bt_IQ_DC_Mismatch_Correction_Release()
 // BT_DRV_TRACE(1,"use time: %d ticks", (hal_sys_timer_get()-time_start));
 // BT_DRV_TRACE(3,"dc cal done!!!    dc_i = %d ,dc_q = %d,Energy1 = %d",dc_i_base,dc_q_base,Energy1);
     fftsize = 1024;
-	st = IQMismatchPreprocessState_init(fftsize);
+    st = IQMismatchPreprocessState_init(fftsize);
     Tblgen_iq(st->Table0,st->Table1,st->Table2,fftsize);
     BT_DRV_TRACE(1,"use time: %d ms", __TICKS_TO_MS(hal_sys_timer_get()-time_start));
     for (int k = 0; k<3; k++)

@@ -121,13 +121,13 @@ struct l2cap_sig_cfg_rsp {
     uint16 result;
 }__attribute__ ((packed));
     
-#define L2CAP_CFG_TYPE_MTU		0x01
-#define L2CAP_CFG_TYPEF_FLUSH_TO	0x02
-#define L2CAP_CFG_TYPE_QOS		0x03
-#define L2CAP_CFG_TYPE_RFC		0x04	//retransmission and flow control
-#define L2CAP_CFG_TYPE_FCS		0x05
-#define L2CAP_CFG_TYPE_EFS		0x05	//extended flow specification
-#define L2CAP_CFG_TYPE_EWS		0x06	//extended window size
+#define L2CAP_CFG_TYPE_MTU      0x01
+#define L2CAP_CFG_TYPEF_FLUSH_TO    0x02
+#define L2CAP_CFG_TYPE_QOS      0x03
+#define L2CAP_CFG_TYPE_RFC      0x04    //retransmission and flow control
+#define L2CAP_CFG_TYPE_FCS      0x05
+#define L2CAP_CFG_TYPE_EFS      0x05    //extended flow specification
+#define L2CAP_CFG_TYPE_EWS      0x06    //extended window size
 struct l2cap_sig_cfg_opt_hdr{
     byte type;
     byte len;
@@ -142,12 +142,12 @@ struct l2cap_sig_cfg_opt_flushto {
     uint16 flushto;
 }__attribute__ ((packed));
 
-#define L2CAP_QOS_NO_TRAFFIC		0x00
-#define L2CAP_QOS_BEST_EFFORT		0x01
-#define L2CAP_QOS_GUARANTEED		0x02    
+#define L2CAP_QOS_NO_TRAFFIC        0x00
+#define L2CAP_QOS_BEST_EFFORT       0x01
+#define L2CAP_QOS_GUARANTEED        0x02    
 struct l2cap_sig_cfg_opt_qos {
    
-    byte	 flags;
+    byte     flags;
     byte     service_type;
     uint32  token_rate;
     uint32  token_size;
@@ -159,8 +159,8 @@ struct l2cap_sig_cfg_opt_qos {
 #define L2CAP_MODE_BASE 0
 #define L2CAP_MODE_RETRANSMISSION 1
 #define L2CAP_MODE_FLOWCONTROL  2   
-#define L2CAP_MODE_ENHANCED_RETRANSMISSION	3
-#define L2CAP_MODE_STREAMING	4
+#define L2CAP_MODE_ENHANCED_RETRANSMISSION  3
+#define L2CAP_MODE_STREAMING    4
 struct l2cap_sig_cfg_opt_rfc {
 
     byte     mode;
@@ -171,10 +171,10 @@ struct l2cap_sig_cfg_opt_rfc {
     uint16   mps;
 }__attribute__ ((packed));
 
-#define L2CAP_FCS_TYPE_NONE		0x00
-#define L2CAP_FCS_TYPE_16_BIT		0x01
+#define L2CAP_FCS_TYPE_NONE     0x00
+#define L2CAP_FCS_TYPE_16_BIT       0x01
 struct l2cap_sig_cfg_opt_fcs {
-	byte type;
+    byte type;
 }__attribute__ ((packed));
 
 struct l2cap_sig_disconn_req {

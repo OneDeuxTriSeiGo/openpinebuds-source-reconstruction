@@ -96,9 +96,9 @@ enum amsc_descs
 /// Pointer to the connection clean-up function
 #define AMSC_CLEANUP_FNCT        (amsc_cleanup)
 
-#define AMSC_INVALID_STATE		0xA0
-#define AMSC_INVALID_COMMAND	0xA1
-#define AMSC_ABSENT_ATTRIBUTE	0xA2
+#define AMSC_INVALID_STATE      0xA0
+#define AMSC_INVALID_COMMAND    0xA1
+#define AMSC_ABSENT_ATTRIBUTE   0xA2
 
 /*
  * STRUCTURES

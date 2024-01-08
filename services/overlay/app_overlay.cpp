@@ -49,28 +49,28 @@ void app_overlay_select(enum APP_OVERLAY_ID_T id)
 
 void app_overlay_unloadall(void)
 {
-	osMutexWait(app_overlay_mutex_id, osWaitForever);
-	if (app_overlay_id != APP_OVERLAY_ID_QTY){
-		app_overlay_unload(app_overlay_id);
-	}
-	app_overlay_id = APP_OVERLAY_ID_QTY;
-	osMutexRelease(app_overlay_mutex_id);
+    osMutexWait(app_overlay_mutex_id, osWaitForever);
+    if (app_overlay_id != APP_OVERLAY_ID_QTY){
+        app_overlay_unload(app_overlay_id);
+    }
+    app_overlay_id = APP_OVERLAY_ID_QTY;
+    osMutexRelease(app_overlay_mutex_id);
 }
 
 void app_overlay_open(void)
 {
-	if (app_overlay_mutex_id == NULL) {
-		app_overlay_mutex_id = osMutexCreate(osMutex(app_overlay_mutex));
-	}
+    if (app_overlay_mutex_id == NULL) {
+        app_overlay_mutex_id = osMutexCreate(osMutex(app_overlay_mutex));
+    }
 }
 
 void app_overlay_close(void)
 {
-	app_overlay_unloadall();
-	if (app_overlay_mutex_id != NULL){
-		osMutexDelete(app_overlay_mutex_id);
-		app_overlay_mutex_id = NULL;
-	}
+    app_overlay_unloadall();
+    if (app_overlay_mutex_id != NULL){
+        osMutexDelete(app_overlay_mutex_id);
+        app_overlay_mutex_id = NULL;
+    }
 }
 
 

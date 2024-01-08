@@ -25,7 +25,7 @@ static uint32_t send_timeout = MS_TO_TICKS(500);
 static const struct HAL_UART_CFG_T uart_cfg = {
     HAL_UART_PARITY_NONE,
 #ifdef __KNOWLES
-	HAL_UART_STOP_BITS_2,
+    HAL_UART_STOP_BITS_2,
 #else
     HAL_UART_STOP_BITS_1,
 #endif
@@ -110,7 +110,7 @@ extern osThreadId knowles_uart_audio_tid;
 
 static void app_uart_flow_control_timeout_timer_cb(void const *n);
 osTimerDef (APP_UART_FLOW_CONTROL_TIMEOUT, app_uart_flow_control_timeout_timer_cb);
-osTimerId	app_uart_flow_control_timeout_timer_id = NULL;
+osTimerId   app_uart_flow_control_timeout_timer_id = NULL;
 
 
 
@@ -182,14 +182,14 @@ uint32_t ama_uart_get_fifo_data(uint8_t *buf)
 
 uint32_t avil_len_of_the_fifo()
 {
-	return LengthOfCQueue(&ama_uart_queue);
+    return LengthOfCQueue(&ama_uart_queue);
 }
 
 extern "C" void OS_NotifyEvm(void);
 
 void send_message()
 {
-	OS_NotifyEvm();
+    OS_NotifyEvm();
 }
 #endif
 #endif
@@ -261,15 +261,15 @@ void init_transport(void)
     union HAL_UART_IRQ_T mask;
     struct HAL_UART_CFG_T comm_uart_cfg;
 #ifdef KNOWLES_UART_DATA
-	//audio_dump_init(320, 1);
-	ama_uart_stream_fifo_init();
+    //audio_dump_init(320, 1);
+    ama_uart_stream_fifo_init();
 #endif
     if (!uart_opened) {
 #ifdef __PC_CMD_UART__
-		hal_iomux_set_uart0();
+        hal_iomux_set_uart0();
 #else
 #ifdef CHIP_BEST2300P
-		hal_iomux_init(cfg_pinmux_uart, ARRAY_SIZE(cfg_pinmux_uart));
+        hal_iomux_init(cfg_pinmux_uart, ARRAY_SIZE(cfg_pinmux_uart));
 #else
         hal_iomux_set_uart1();
 #endif
@@ -307,7 +307,7 @@ void deinit_transport(void)
 
     mask.reg = 0;
 
-	//audio_dump_clear_up(); //added by punith
+    //audio_dump_clear_up(); //added by punith
 
     hal_uart_stop_dma_recv(comm_uart);//punith
     uart_dma_rx_state = UART_DMA_IDLE;
@@ -316,11 +316,11 @@ void deinit_transport(void)
     hal_uart_close(comm_uart);
 
 
-	hal_uart_flush(comm_uart,0);
+    hal_uart_flush(comm_uart,0);
     uart_opened = false;
-	cancel_xfer = true;
+    cancel_xfer = true;
 
-	osTimerStop(app_uart_flow_control_timeout_timer_id);
+    osTimerStop(app_uart_flow_control_timeout_timer_id);
     if (osTimerDelete(app_uart_flow_control_timeout_timer_id) != osOK)
     {
         TRACE(0,"app_uart_flow_control_timeout_timer_id Failed !!!!");
@@ -422,9 +422,9 @@ static int uart_recv_data_dma(unsigned char *buf, unsigned int len, unsigned int
     uart_dma_rx_size = 0;
 
 #ifdef KNOWLES_UART_DATA
-	ret = hal_uart_dma_recv_pingpang(comm_uart, buf, expect, &dma_desc[0], &desc_cnt);
+    ret = hal_uart_dma_recv_pingpang(comm_uart, buf, expect, &dma_desc[0], &desc_cnt);
 #else
-	ret = hal_uart_dma_recv(comm_uart, buf, expect, &dma_desc[0], &desc_cnt);
+    ret = hal_uart_dma_recv(comm_uart, buf, expect, &dma_desc[0], &desc_cnt);
 #endif
 
     if (ret) {
@@ -450,7 +450,7 @@ err_exit:
 
 int recv_data(unsigned char *buf, unsigned int len)
 {
-	TRACE(3,"%s %d %d",__func__, cancel_xfer, len);
+    TRACE(3,"%s %d %d",__func__, cancel_xfer, len);
     if (cancel_xfer) {
         return -1;
     }

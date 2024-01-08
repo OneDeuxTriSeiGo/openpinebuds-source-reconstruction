@@ -41,7 +41,7 @@ int audio_buffer_set_stereo2mono_16bits(uint8_t *buff, uint16_t len, uint8_t chn
 int audio_buffer_get_mono2stereo_16bits(uint8_t *buff, uint16_t len);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif//__FMDEC_H__

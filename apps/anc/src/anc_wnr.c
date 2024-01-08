@@ -57,33 +57,33 @@ typedef short   WNR_PCM_T;
 #define _FRAME_LEN_MAX      (128)
 #define _SAMPLE_BITS_MAX    (32)
 #define WINDINDICATOR_SIZE  (10)
-#define _LOOP_CNT 			(3)
+#define _LOOP_CNT           (3)
 
 //ff gain coefficient tunning
-#define _NO_WIND_FF_GAIN_COEF    			(1.0)
-#define _SMALL_WIND_FF_GAIN_COEF 			(0.5)
-#define _STRONG_WIND_FF_GAIN_COEF 			(0.0)
+#define _NO_WIND_FF_GAIN_COEF               (1.0)
+#define _SMALL_WIND_FF_GAIN_COEF            (0.5)
+#define _STRONG_WIND_FF_GAIN_COEF           (0.0)
 #define _STRONG2SMALL_WIND_FF_MID_GAIN_COEF (0.25)
-#define _SMALL2NO_WIND_FF_MID_GAIN_COEF 	(0.75)
+#define _SMALL2NO_WIND_FF_MID_GAIN_COEF     (0.75)
 
 //wind indictor threshold
-#define _NO_WIND_THD 						(0.75)
-#define _SMALL_WIND_THD 					(0.55)
-#define _STRONG_WIND_THD 					(0.45)
+#define _NO_WIND_THD                        (0.75)
+#define _SMALL_WIND_THD                     (0.55)
+#define _STRONG_WIND_THD                    (0.45)
 
 //energy threshold
-#define _POWER_THD 		(0.1)
+#define _POWER_THD      (0.1)
 
 //ff close time
-#define _PERIOD 	   (12)
+#define _PERIOD        (12)
 #define _TARGET_TIME   (4)
 
 //#define TEST_MIPS 
 #ifdef TEST_MIPS
     static uint32_t pre_ticks = 0;
-	static uint32_t start_ticks = 0;
-	static uint32_t end_ticks = 0;
-	static uint32_t used_mips = 0;
+    static uint32_t start_ticks = 0;
+    static uint32_t end_ticks = 0;
+    static uint32_t used_mips = 0;
 #endif
 
 WindDetection2MicState *wind_st = NULL;
@@ -175,7 +175,7 @@ float windthd[3]={_NO_WIND_THD,_SMALL_WIND_THD,_STRONG_WIND_THD};//{0.75,0.35,0.
 #ifndef HW_SUPPORT_SMOOOTHING_GAIN
 #define ANC_TCTRL_NUM         2
 #define ANC_TIMER_PERIOD_GAIN 50
-#define TIMER_CNT			  20
+#define TIMER_CNT             20
 
 struct anc_tuning_ctrl {
     uint8_t timer_init;
@@ -204,45 +204,45 @@ static int32_t delta_ff_gain_l, delta_ff_gain_r;
 void anc_gain_tuning_init(void)
 {
     timer_cnt = 0;
-	ff_smoothing_flag = false;
+    ff_smoothing_flag = false;
 
 }
 
 static void anc_tuning_ff_gain_timer_timeout(void *param)
-{	
-	timer_cnt++;
-	int32_t ff_gain_l=0;
-	int32_t ff_gain_r=0;
-	if((timer_cnt<delta_ff_gain_l)||(timer_cnt<delta_ff_gain_r)){
-		if(pre_ff_gain_l<tgt_ff_gain_l){
-			pre_ff_gain_l = pre_ff_gain_l + 1;
-			ff_gain_l = pre_ff_gain_l;
-		}
-		else if(pre_ff_gain_l>tgt_ff_gain_l){
-			pre_ff_gain_l = pre_ff_gain_l - 1;
-			ff_gain_l = pre_ff_gain_l;
-		}
-			
-		
-		if(pre_ff_gain_r<tgt_ff_gain_r){
-			pre_ff_gain_r = pre_ff_gain_r + 1;
-			ff_gain_r = pre_ff_gain_r;
-		}
-		else if(pre_ff_gain_r>tgt_ff_gain_r){
-			pre_ff_gain_r = pre_ff_gain_r - 1;
-			ff_gain_r = pre_ff_gain_r;
-		}
+{   
+    timer_cnt++;
+    int32_t ff_gain_l=0;
+    int32_t ff_gain_r=0;
+    if((timer_cnt<delta_ff_gain_l)||(timer_cnt<delta_ff_gain_r)){
+        if(pre_ff_gain_l<tgt_ff_gain_l){
+            pre_ff_gain_l = pre_ff_gain_l + 1;
+            ff_gain_l = pre_ff_gain_l;
+        }
+        else if(pre_ff_gain_l>tgt_ff_gain_l){
+            pre_ff_gain_l = pre_ff_gain_l - 1;
+            ff_gain_l = pre_ff_gain_l;
+        }
+            
+        
+        if(pre_ff_gain_r<tgt_ff_gain_r){
+            pre_ff_gain_r = pre_ff_gain_r + 1;
+            ff_gain_r = pre_ff_gain_r;
+        }
+        else if(pre_ff_gain_r>tgt_ff_gain_r){
+            pre_ff_gain_r = pre_ff_gain_r - 1;
+            ff_gain_r = pre_ff_gain_r;
+        }
 
-		anc_set_gain(ff_gain_l, ff_gain_r, ANC_FEEDFORWARD);
-		TRACE(3,"[%s] ff_gain_l = %d, ff_gain_r = %d", __func__, ff_gain_l, ff_gain_r);
+        anc_set_gain(ff_gain_l, ff_gain_r, ANC_FEEDFORWARD);
+        TRACE(3,"[%s] ff_gain_l = %d, ff_gain_r = %d", __func__, ff_gain_l, ff_gain_r);
 
-		struct anc_tuning_ctrl *c = (struct anc_tuning_ctrl *)param;
-		hwtimer_start(c->timer_ff_gain_id, US_TO_TICKS(ANC_TIMER_PERIOD_GAIN));
-		ff_smoothing_flag = 1;
-	} else {
-		anc_set_gain(tgt_ff_gain_l, tgt_ff_gain_r, ANC_FEEDFORWARD);
-		ff_smoothing_flag = 0;
-	}
+        struct anc_tuning_ctrl *c = (struct anc_tuning_ctrl *)param;
+        hwtimer_start(c->timer_ff_gain_id, US_TO_TICKS(ANC_TIMER_PERIOD_GAIN));
+        ff_smoothing_flag = 1;
+    } else {
+        anc_set_gain(tgt_ff_gain_l, tgt_ff_gain_r, ANC_FEEDFORWARD);
+        ff_smoothing_flag = 0;
+    }
 
 }
 #endif
@@ -251,16 +251,16 @@ static void _set_anc_ff_gain(bool update_anc_gain, float gain_coef, enum ANC_TYP
 {
 
 #ifdef HW_SUPPORT_SMOOOTHING_GAIN
-	if(update_anc_gain){
-		anc_get_gain(&pre_ff_gain_l, &pre_ff_gain_r, ANC_FEEDFORWARD);
-		anc_ff_gain_l = pre_ff_gain_l;
-		anc_ff_gain_r = pre_ff_gain_r;
-		TRACE(3, "[%s] Update anc_gain_l = %d, anc_gain_r = %d.", __func__, anc_ff_gain_l, anc_ff_gain_r);
-	}
-	tgt_ff_gain_l = (int32_t)(anc_ff_gain_l * gain_coef);
-	tgt_ff_gain_r = (int32_t)(anc_ff_gain_r * gain_coef);
-	TRACE(3, "[%s] tgt_ff_gain_l = %d, tgt_ff_gain_r = %d.", __func__, tgt_ff_gain_l, tgt_ff_gain_r);
-	anc_set_gain(tgt_ff_gain_l, tgt_ff_gain_r, ANC_FEEDFORWARD);
+    if(update_anc_gain){
+        anc_get_gain(&pre_ff_gain_l, &pre_ff_gain_r, ANC_FEEDFORWARD);
+        anc_ff_gain_l = pre_ff_gain_l;
+        anc_ff_gain_r = pre_ff_gain_r;
+        TRACE(3, "[%s] Update anc_gain_l = %d, anc_gain_r = %d.", __func__, anc_ff_gain_l, anc_ff_gain_r);
+    }
+    tgt_ff_gain_l = (int32_t)(anc_ff_gain_l * gain_coef);
+    tgt_ff_gain_r = (int32_t)(anc_ff_gain_r * gain_coef);
+    TRACE(3, "[%s] tgt_ff_gain_l = %d, tgt_ff_gain_r = %d.", __func__, tgt_ff_gain_l, tgt_ff_gain_r);
+    anc_set_gain(tgt_ff_gain_l, tgt_ff_gain_r, ANC_FEEDFORWARD);
 #else
     struct anc_tuning_ctrl *c = &anc_tctrl;
     //uint32_t cur_time = TICKS_TO_MS(hal_sys_timer_get());
@@ -269,21 +269,21 @@ static void _set_anc_ff_gain(bool update_anc_gain, float gain_coef, enum ANC_TYP
     if (c->timer_ff_gain_run) {
         hwtimer_stop(c->timer_ff_gain_id);
     }
-	anc_get_gain(&pre_ff_gain_l, &pre_ff_gain_r, ANC_FEEDFORWARD);
-	TRACE(3,"[%s] pre_ff_gain_l = %d, pre_ff_gain_r = %d.", __func__, pre_ff_gain_l, pre_ff_gain_r);
-	if(update_anc_gain && !ff_smoothing_flag){
-		anc_ff_gain_l = pre_ff_gain_l;
-		anc_ff_gain_r = pre_ff_gain_r;
-		TRACE(3,"[%s] Update anc_gain_l = %d, anc_gain_r = %d.", __func__, anc_ff_gain_l, anc_ff_gain_r);
-	}
-	tgt_ff_gain_l = (int32_t)(anc_ff_gain_l * gain_coef);
-	tgt_ff_gain_r = (int32_t)(anc_ff_gain_r * gain_coef);
-	delta_ff_gain_l = abs(tgt_ff_gain_l-pre_ff_gain_l);
-	delta_ff_gain_r = abs(tgt_ff_gain_r-pre_ff_gain_r);
-	TRACE(3,"[%s] tgt_ff_gain_l = %d, tgt_ff_gain_r = %d.", __func__, tgt_ff_gain_l, tgt_ff_gain_r);
-	
-	timer_cnt=0;
-		
+    anc_get_gain(&pre_ff_gain_l, &pre_ff_gain_r, ANC_FEEDFORWARD);
+    TRACE(3,"[%s] pre_ff_gain_l = %d, pre_ff_gain_r = %d.", __func__, pre_ff_gain_l, pre_ff_gain_r);
+    if(update_anc_gain && !ff_smoothing_flag){
+        anc_ff_gain_l = pre_ff_gain_l;
+        anc_ff_gain_r = pre_ff_gain_r;
+        TRACE(3,"[%s] Update anc_gain_l = %d, anc_gain_r = %d.", __func__, anc_ff_gain_l, anc_ff_gain_r);
+    }
+    tgt_ff_gain_l = (int32_t)(anc_ff_gain_l * gain_coef);
+    tgt_ff_gain_r = (int32_t)(anc_ff_gain_r * gain_coef);
+    delta_ff_gain_l = abs(tgt_ff_gain_l-pre_ff_gain_l);
+    delta_ff_gain_r = abs(tgt_ff_gain_r-pre_ff_gain_r);
+    TRACE(3,"[%s] tgt_ff_gain_l = %d, tgt_ff_gain_r = %d.", __func__, tgt_ff_gain_l, tgt_ff_gain_r);
+    
+    timer_cnt=0;
+        
     //timer restart
     hwtimer_start(c->timer_ff_gain_id, MS_TO_TICKS(ANC_TIMER_PERIOD_GAIN));
     c->timer_ff_gain_run = 1;
@@ -904,11 +904,11 @@ void app_wnr_cmd_receive_process(uint8_t *p_buff, uint16_t length)
 static bool wnr_open_flg = 0;
 int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
 {
-	if(wnr_open_flg == 1){
-		return 0;
-	}
+    if(wnr_open_flg == 1){
+        return 0;
+    }
     TRACE(4,"[%s] mode = %d, g_sample_rate = %d, g_frame_len = %d", __func__, mode, g_sample_rate, g_frame_len);
-	
+    
     hal_sysfreq_req(APP_SYSFREQ_USER_ANC_WNR, HAL_CMU_FREQ_26M);
     TRACE(2,"[%s] Sys freq: %d", __func__, hal_sys_timer_calc_cpu_freq(5, 0));
     
@@ -945,8 +945,8 @@ int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
 
         _open_mic();
 
-		//audio_dump_init(_FRAME_LEN, sizeof(short), 2);
-		
+        //audio_dump_init(_FRAME_LEN, sizeof(short), 2);
+        
     } else if (mode == ANC_WNR_OPEN_MODE_CONFIGURE) {
         g_wnr_open_mode = ANC_WNR_OPEN_MODE_CONFIGURE;//sco mode...
         wnr_sync_counter_for_sco = 0;
@@ -956,45 +956,45 @@ int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
         
         wind_st = WindDetection2Mic_create(_SAMPLE_RATE,_SAMPLE_BITS, g_frame_len, &wind_cfg);
 
-		//audio_dump_init(g_frame_len, sizeof(int), 2);
+        //audio_dump_init(g_frame_len, sizeof(int), 2);
 
     } else {
         ASSERT(0, "[%s] mode(%d) is invalid.", __func__, mode);
     }
-	
+    
 #ifndef HW_SUPPORT_SMOOOTHING_GAIN
-	anc_gain_tuning_init();
+    anc_gain_tuning_init();
 
-	struct anc_tuning_ctrl *c = &anc_tctrl;
+    struct anc_tuning_ctrl *c = &anc_tctrl;
    
     if (!c->timer_init) {
-    	c->timer_ff_gain_id = hwtimer_alloc(anc_tuning_ff_gain_timer_timeout, (void *)c);
+        c->timer_ff_gain_id = hwtimer_alloc(anc_tuning_ff_gain_timer_timeout, (void *)c);
         c->timer_ff_gain_run = 0;
         c->timer_init = 1;
     }
 #endif
-	
+    
     g_open_mode = mode;
-	
+    
 
     TRACE(1,"[%s] End...", __func__);
-	wnr_open_flg = 1;
+    wnr_open_flg = 1;
     return 0;
 }
 
 int32_t anc_wnr_close(void)
 {
     TRACE(1,"[%s] ...", __func__);
-	
+    
 #ifndef HW_SUPPORT_SMOOOTHING_GAIN
-	struct anc_tuning_ctrl *c = &anc_tctrl;
-	if (c->timer_ff_gain_run) {
-    	hwtimer_stop(c->timer_ff_gain_id);
+    struct anc_tuning_ctrl *c = &anc_tctrl;
+    if (c->timer_ff_gain_run) {
+        hwtimer_stop(c->timer_ff_gain_id);
     }
-	hwtimer_free(c->timer_ff_gain_id);
-	c->timer_init = 0;
+    hwtimer_free(c->timer_ff_gain_id);
+    c->timer_init = 0;
 #endif
-	
+    
     if (g_open_mode == ANC_WNR_OPEN_MODE_STANDALONE) {
         _close_mic();
         g_open_mode = ANC_WNR_OPEN_MODE_QTY;
@@ -1034,7 +1034,7 @@ int32_t anc_wnr_close(void)
     app_wnr_share_module_info();
 
     hal_sysfreq_req(APP_SYSFREQ_USER_ANC_WNR, HAL_CMU_FREQ_32K);
-	wnr_open_flg = 0;
+    wnr_open_flg = 0;
     return 0;
 }
 
@@ -1042,51 +1042,51 @@ int32_t anc_wnr_close(void)
 static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t frame_len)
 {
     //static short mutetimer = 0;
-	//short targettimer = _TARGET_TIME;
-	float windictor = 0.0;
-	float wind_power;
-	
-	ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
-	
-	if(cnt<=_PERIOD)
-	{
+    //short targettimer = _TARGET_TIME;
+    float windictor = 0.0;
+    float wind_power;
+    
+    ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
+    
+    if(cnt<=_PERIOD)
+    {
 #if _SAMPLE_BITS==16
-	  	windictor = WindDetection2Mic_process_16bit(wind_st, inF, inR, frame_len, &wind_power);
+        windictor = WindDetection2Mic_process_16bit(wind_st, inF, inR, frame_len, &wind_power);
 #else
-	  	windictor = WindDetection2Mic_process_24bit(wind_st, inF, inR, frame_len, &wind_power);
+        windictor = WindDetection2Mic_process_24bit(wind_st, inF, inR, frame_len, &wind_power);
 #endif
 
-	 //TRACE(2,"[%s] wind_power = %d.", __func__, (int)(wind_power*10000));
-	  windsum = windsum + windictor;
-	  cnt = cnt + 1;
-	  //TRACE(2,"[%s] cnt = %d, windsum = %d.", __func__, cnt, (int)windsum);
-	}
-	if(cnt==period)
-	{
-	     cnt = 0;
+     //TRACE(2,"[%s] wind_power = %d.", __func__, (int)(wind_power*10000));
+      windsum = windsum + windictor;
+      cnt = cnt + 1;
+      //TRACE(2,"[%s] cnt = %d, windsum = %d.", __func__, cnt, (int)windsum);
+    }
+    if(cnt==period)
+    {
+         cnt = 0;
          wind_indictor = 0.8 * wind_indictor + 0.2 * windsum/period; 
          windsum = 0.0;
-		 
-		//TRACE(2,"[%s] wind_indictor = %d.", __func__, (int)(wind_indictor*1000));
-      	   
-	   //float gain_coef;
+         
+        //TRACE(2,"[%s] wind_indictor = %d.", __func__, (int)(wind_indictor*1000));
+           
+       //float gain_coef;
 
-	   static uint8_t Windstate = 0;
-	   //Windstate = wind_state_detect(g_wind_st, wind_indictor);
-	   //TRACE(2,"[%s] windstate = %d.", __func__, Windstate);
-	   //mutetimer = mutetimer + 1;
-	  wind_state_detect(g_wind_st, wind_indictor, windindicator, windthd, &Windstate);
+       static uint8_t Windstate = 0;
+       //Windstate = wind_state_detect(g_wind_st, wind_indictor);
+       //TRACE(2,"[%s] windstate = %d.", __func__, Windstate);
+       //mutetimer = mutetimer + 1;
+      wind_state_detect(g_wind_st, wind_indictor, windindicator, windthd, &Windstate);
 
-	  for(int i = WINDINDICATOR_SIZE-1;i>0;i--)
+      for(int i = WINDINDICATOR_SIZE-1;i>0;i--)
       {
-		windindicator[i] = windindicator[i-1];
+        windindicator[i] = windindicator[i-1];
       }
-	  windindicator[0] = wind_indictor;
+      windindicator[0] = wind_indictor;
 
 
-	  //TRACE(2,"[%s] windstate = %d.", __func__, Windstate);
-	  
-	       app_wnr_push_state_to_queue(g_wnr_open_mode, Windstate);
+      //TRACE(2,"[%s] windstate = %d.", __func__, Windstate);
+      
+           app_wnr_push_state_to_queue(g_wnr_open_mode, Windstate);
 
             if(g_wnr_open_mode == ANC_WNR_OPEN_MODE_STANDALONE)
             {
@@ -1216,7 +1216,7 @@ static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t fr
             }
         }
         return 0;
-	}
+    }
 
 static void inline stereo_resample_16k(WNR_PCM_T *pcm_buf, uint32_t pcm_len, WNR_PCM_T *mic1, WNR_PCM_T *mic2)
 {
@@ -1259,15 +1259,15 @@ static void inline stereo_resample_16k(WNR_PCM_T *pcm_buf, uint32_t pcm_len, WNR
 
 int32_t anc_wnr_process(void *pcm_buf, uint32_t pcm_len)
 {
-	if(wnr_open_flg == 0){
-		TRACE(2,"[%s] WARNING: wnr_open_flg = %d", __func__, wnr_open_flg);
+    if(wnr_open_flg == 0){
+        TRACE(2,"[%s] WARNING: wnr_open_flg = %d", __func__, wnr_open_flg);
         return 0;
-	}
+    }
     TRACE(2,"[%s] pcm_len = %d", __func__, pcm_len);
 
-	//audio_dump_clear_up();
-	
-	WNR_PCM_T *tmp_buf= (WNR_PCM_T *)pcm_buf;
+    //audio_dump_clear_up();
+    
+    WNR_PCM_T *tmp_buf= (WNR_PCM_T *)pcm_buf;
     if (g_open_mode != ANC_WNR_OPEN_MODE_CONFIGURE) {
         return 1;
     }
@@ -1275,12 +1275,12 @@ int32_t anc_wnr_process(void *pcm_buf, uint32_t pcm_len)
     // resample 16k-->8k
     if (g_sample_rate == 16000) {
         stereo_resample_16k(tmp_buf, pcm_len, (WNR_PCM_T *)af_stream_mic1, (WNR_PCM_T *)af_stream_mic2);
-		// 2ch --> 1ch, 16k --> 8k
-    	pcm_len = pcm_len / _CHANNEL_NUM / 2;	
+        // 2ch --> 1ch, 16k --> 8k
+        pcm_len = pcm_len / _CHANNEL_NUM / 2;   
     }
-	else{
-		
-		WNR_PCM_T *mic1 = (WNR_PCM_T *)af_stream_mic1;
+    else{
+        
+        WNR_PCM_T *mic1 = (WNR_PCM_T *)af_stream_mic1;
         WNR_PCM_T *mic2 = (WNR_PCM_T *)af_stream_mic2;
         pcm_len = pcm_len / _CHANNEL_NUM;
        for (uint32_t i=0; i<pcm_len; i++) {
@@ -1288,8 +1288,8 @@ int32_t anc_wnr_process(void *pcm_buf, uint32_t pcm_len)
             mic2[i] = tmp_buf[2*i + 1];
        }
 
-	}
-	
+    }
+    
     //TRACE(2,"[%s] new pcm_len = %d", __func__, pcm_len);
 
     anc_wnr_process_frame((WNR_PCM_T *)af_stream_mic1, (WNR_PCM_T *)af_stream_mic2, pcm_len);
@@ -1303,36 +1303,36 @@ static uint32_t anc_wnr_callback(uint8_t *buf, uint32_t len)
 {
 
     //TRACE(2,"[%s] len = %d", __func__, len);
-	//audio_dump_clear_up();
+    //audio_dump_clear_up();
 #ifdef TEST_MIPS
-		start_ticks = hal_fast_sys_timer_get();
+        start_ticks = hal_fast_sys_timer_get();
 #endif
     int32_t frame_len = len / SAMPLE_BYTES / _CHANNEL_NUM/ _LOOP_CNT;
-	ASSERT(frame_len == _FRAME_LEN, "[%s] frame len(%d) is invalid.", __func__, frame_len);
+    ASSERT(frame_len == _FRAME_LEN, "[%s] frame len(%d) is invalid.", __func__, frame_len);
     WNR_PCM_T *pcm_buf = (WNR_PCM_T *)buf;
 
     WNR_PCM_T *mic1 = (WNR_PCM_T *)af_stream_mic1;
     WNR_PCM_T *mic2 = (WNR_PCM_T *)af_stream_mic2;
-	
-	for(int32_t j=0; j<_LOOP_CNT; j++){
-		for (int32_t i=0; i<frame_len; i++) {
-			mic1[i] = pcm_buf[_CHANNEL_NUM*i + 0];
-			mic2[i] = pcm_buf[_CHANNEL_NUM*i + 1];
-			}
-		
-		anc_wnr_process_frame((WNR_PCM_T *)mic1, (WNR_PCM_T *)mic2, frame_len);
-		pcm_buf +=  _FRAME_LEN *  _CHANNEL_NUM;
-	}
+    
+    for(int32_t j=0; j<_LOOP_CNT; j++){
+        for (int32_t i=0; i<frame_len; i++) {
+            mic1[i] = pcm_buf[_CHANNEL_NUM*i + 0];
+            mic2[i] = pcm_buf[_CHANNEL_NUM*i + 1];
+            }
+        
+        anc_wnr_process_frame((WNR_PCM_T *)mic1, (WNR_PCM_T *)mic2, frame_len);
+        pcm_buf +=  _FRAME_LEN *  _CHANNEL_NUM;
+    }
     
 #ifdef TEST_MIPS
-		end_ticks = hal_fast_sys_timer_get();
-		used_mips = (end_ticks - start_ticks) * 1000 / (start_ticks - pre_ticks);
-		TRACE(2,"[%s] Usage: %d in a thousand (MIPS).", __func__, used_mips);
-		//wnr_ticks = start_ticks;
-		//TRACE(2,"[%s] WNR frame takes %d ms.", __func__, FAST_TICKS_TO_MS((start_ticks - pre_ticks)*100));
-		pre_ticks = start_ticks;
+        end_ticks = hal_fast_sys_timer_get();
+        used_mips = (end_ticks - start_ticks) * 1000 / (start_ticks - pre_ticks);
+        TRACE(2,"[%s] Usage: %d in a thousand (MIPS).", __func__, used_mips);
+        //wnr_ticks = start_ticks;
+        //TRACE(2,"[%s] WNR frame takes %d ms.", __func__, FAST_TICKS_TO_MS((start_ticks - pre_ticks)*100));
+        pre_ticks = start_ticks;
 #endif
-	
+    
 
     return len;
 }
@@ -1342,7 +1342,7 @@ static void _open_mic(void)
     struct AF_STREAM_CONFIG_T stream_cfg;
 
     TRACE(1,"[%s] ...", __func__);
-	
+    
     memset(&stream_cfg, 0, sizeof(stream_cfg));
     stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)_CHANNEL_NUM;
     stream_cfg.sample_rate = (enum AUD_SAMPRATE_T)_SAMPLE_RATE;
@@ -1354,7 +1354,7 @@ static void _open_mic(void)
     stream_cfg.handler      = anc_wnr_callback;
     stream_cfg.data_size    = sizeof(af_stream_buff);
     stream_cfg.data_ptr     = af_stream_buff;
-	ASSERT(stream_cfg.channel_num == 2, "[%s] channel number(%d) is invalid.", __func__, stream_cfg.channel_num);
+    ASSERT(stream_cfg.channel_num == 2, "[%s] channel number(%d) is invalid.", __func__, stream_cfg.channel_num);
     TRACE(3,"[%s] sample_rate:%d, data_size:%d", __func__, stream_cfg.sample_rate, stream_cfg.data_size);
     TRACE(2,"[%s] af_stream_buff = %p", __func__, af_stream_buff);
 

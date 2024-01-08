@@ -76,14 +76,14 @@ extern uint8_t bt_sco_mode;
  */
 static int nt_demo_init(bool, const void *)
 {
-	static bool done;
+    static bool done;
 
-	NT_TRACE(0,"Initialize kws_demo");
-	if (done) return 0;
+    NT_TRACE(0,"Initialize kws_demo");
+    if (done) return 0;
 
-	done = true;
+    done = true;
 
-	return 0;
+    return 0;
 }
 
 /**
@@ -95,15 +95,15 @@ static int nt_demo_init(bool, const void *)
  */
 static void filter_iir_dc_block(short *inout, int in_len, int stride)
 {
-	static int z = 0;
-	int tmp;
+    static int z = 0;
+    int tmp;
 
-	for (int i = 0; i < in_len; i += stride)
-	{
-		z = (15 * z + inout[i]) >> 4;
-		tmp = inout[i] - z;
-		inout[i] = speech_ssat_int16(tmp);
-	}
+    for (int i = 0; i < in_len; i += stride)
+    {
+        z = (15 * z + inout[i]) >> 4;
+        tmp = inout[i] - z;
+        inout[i] = speech_ssat_int16(tmp);
+    }
 }
 
 
@@ -120,13 +120,13 @@ static uint32_t nt_demo_stream_handler(uint8_t *buf, uint32_t length)
 {
     ASSERT(length == FRAME_LEN * CAPTURE_CHANNEL_NUM * sizeof(int16_t), "stream length not matched");
 
-	short *pcm_buf = (short*)buf;
+    short *pcm_buf = (short*)buf;
     uint32_t pcm_len = length / 2;
 
-	filter_iir_dc_block(pcm_buf, pcm_len, ANC_NOISE_TRACKER_CHANNEL_NUM);
-	NT_ENGINE_FEED(pcm_buf, pcm_len);
+    filter_iir_dc_block(pcm_buf, pcm_len, ANC_NOISE_TRACKER_CHANNEL_NUM);
+    NT_ENGINE_FEED(pcm_buf, pcm_len);
 
-	return 0;
+    return 0;
 }
 
 
@@ -141,55 +141,55 @@ static int nt_demo_stream_start(bool do_stream, const void *)
 {
     struct AF_STREAM_CONFIG_T stream_cfg;
 
-	NT_TRACE(3,"Is running:%d enable:%d, bt_sco_mode:%d",
-	          nt_demo_is_streaming, do_stream, bt_sco_mode);
+    NT_TRACE(3,"Is running:%d enable:%d, bt_sco_mode:%d",
+              nt_demo_is_streaming, do_stream, bt_sco_mode);
 
-	if (bt_sco_mode)
-		return 0;
+    if (bt_sco_mode)
+        return 0;
 
-	if (nt_demo_is_streaming == do_stream)
-		return 0;
-	nt_demo_is_streaming = do_stream;
+    if (nt_demo_is_streaming == do_stream)
+        return 0;
+    nt_demo_is_streaming = do_stream;
 
-	if (do_stream) {
-		// Request sufficient system clock
-		app_sysfreq_req(APP_SYSFREQ_USER_APP_NT, NT_ENGINE_SYSFREQ);
-		NT_TRACE(1,"sys freq calc: %d Hz", hal_sys_timer_calc_cpu_freq(5, 0));
+    if (do_stream) {
+        // Request sufficient system clock
+        app_sysfreq_req(APP_SYSFREQ_USER_APP_NT, NT_ENGINE_SYSFREQ);
+        NT_TRACE(1,"sys freq calc: %d Hz", hal_sys_timer_calc_cpu_freq(5, 0));
 
-		nt_demo_init(true, NULL);
+        nt_demo_init(true, NULL);
 
-		// Initialize the NT ENGINE and install word-callback
-		NT_ENGINE_INIT(nt_demo_words_cb, ANC_NOISE_TRACKER_CHANNEL_NUM, -20);
+        // Initialize the NT ENGINE and install word-callback
+        NT_ENGINE_INIT(nt_demo_words_cb, ANC_NOISE_TRACKER_CHANNEL_NUM, -20);
 
-		memset(&stream_cfg, 0, sizeof(stream_cfg));
-		stream_cfg.sample_rate = (AUD_SAMPRATE_T)NT_MIC_SAMPLE_RATE;
-		stream_cfg.bits        = NT_MIC_BITS_PER_SAMPLE;
-		stream_cfg.vol         = NT_MIC_VOLUME;
-		stream_cfg.device      = AUD_STREAM_USE_INT_CODEC;
-		stream_cfg.io_path     = AUD_INPUT_PATH_NTMIC;
-		stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)ANC_NOISE_TRACKER_CHANNEL_NUM;
-		stream_cfg.handler     = nt_demo_stream_handler;
-		stream_cfg.data_ptr    = codec_capture_buf;
-		stream_cfg.data_size   = CAPTURE_BUF_SIZE;
+        memset(&stream_cfg, 0, sizeof(stream_cfg));
+        stream_cfg.sample_rate = (AUD_SAMPRATE_T)NT_MIC_SAMPLE_RATE;
+        stream_cfg.bits        = NT_MIC_BITS_PER_SAMPLE;
+        stream_cfg.vol         = NT_MIC_VOLUME;
+        stream_cfg.device      = AUD_STREAM_USE_INT_CODEC;
+        stream_cfg.io_path     = AUD_INPUT_PATH_NTMIC;
+        stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)ANC_NOISE_TRACKER_CHANNEL_NUM;
+        stream_cfg.handler     = nt_demo_stream_handler;
+        stream_cfg.data_ptr    = codec_capture_buf;
+        stream_cfg.data_size   = CAPTURE_BUF_SIZE;
 
-		af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE, &stream_cfg);
-		af_stream_start(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
+        af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE, &stream_cfg);
+        af_stream_start(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
 
-		NT_TRACE(0,"audio capture ON");
+        NT_TRACE(0,"audio capture ON");
 
 
-	}
-	else {
-		af_stream_stop(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
-		af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
+    }
+    else {
+        af_stream_stop(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
+        af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
 
-		app_sysfreq_req(APP_SYSFREQ_USER_APP_NT, APP_SYSFREQ_32K);
-		TRACE(1,"sys freq calc:(32K) %d Hz", hal_sys_timer_calc_cpu_freq(5, 0));
+        app_sysfreq_req(APP_SYSFREQ_USER_APP_NT, APP_SYSFREQ_32K);
+        TRACE(1,"sys freq calc:(32K) %d Hz", hal_sys_timer_calc_cpu_freq(5, 0));
 
-		NT_TRACE(0,"audio capture OFF");
-	}
+        NT_TRACE(0,"audio capture OFF");
+    }
 
-	return 0;
+    return 0;
 }
 
 
@@ -200,9 +200,9 @@ static int nt_demo_stream_start(bool do_stream, const void *)
 
 THIRDPARTY_HANDLER_TAB(NOISE_TRACKER_LIB_NAME)
 {
-//	{TP_EVENT(INIT,        nt_demo_init),           true,   NULL},
-	{TP_EVENT(START,       nt_demo_stream_start),   true,   NULL},
-	{TP_EVENT(STOP,        nt_demo_stream_start),   false,  NULL},
+//  {TP_EVENT(INIT,        nt_demo_init),           true,   NULL},
+    {TP_EVENT(START,       nt_demo_stream_start),   true,   NULL},
+    {TP_EVENT(STOP,        nt_demo_stream_start),   false,  NULL},
 };
 
 THIRDPARTY_HANDLER_TAB_SIZE(NOISE_TRACKER_LIB_NAME)

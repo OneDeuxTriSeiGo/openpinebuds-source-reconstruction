@@ -82,7 +82,7 @@ int factory_section_open(void)
         return -1;
     }
     if ((factory_section_p->head.version < nvrec_mini_version) ||
-    	(factory_section_p->head.version > nvrec_current_version))
+        (factory_section_p->head.version > nvrec_current_version))
     {
         factory_section_p = NULL;
         return -1;
@@ -90,42 +90,42 @@ int factory_section_open(void)
 
     nv_record_dev_rev = factory_section_p->head.version;
 
-	if (1 == nv_record_dev_rev)
-	{
-	    if (factory_section_p->head.crc !=
-	    	crc32(0,(unsigned char *)(&(factory_section_p->head.reserved0)),
-	    	sizeof(factory_section_t)-2-2-4-(5+63+2+2+2+1+8)*sizeof(int))){
-	        factory_section_p = NULL;
-	        return -1;
-	    }
+    if (1 == nv_record_dev_rev)
+    {
+        if (factory_section_p->head.crc !=
+            crc32(0,(unsigned char *)(&(factory_section_p->head.reserved0)),
+            sizeof(factory_section_t)-2-2-4-(5+63+2+2+2+1+8)*sizeof(int))){
+            factory_section_p = NULL;
+            return -1;
+        }
 
-		memcpy(bt_addr, factory_section_p->data.bt_address, BTIF_BD_ADDR_SIZE);
-		memcpy(ble_addr, factory_section_p->data.ble_address, BTIF_BD_ADDR_SIZE);
-		TRACE(2,"%s sucess btname:%s", __func__, factory_section_p->data.device_name);
+        memcpy(bt_addr, factory_section_p->data.bt_address, BTIF_BD_ADDR_SIZE);
+        memcpy(ble_addr, factory_section_p->data.ble_address, BTIF_BD_ADDR_SIZE);
+        TRACE(2,"%s sucess btname:%s", __func__, factory_section_p->data.device_name);
     }
     else
-	{
-		// check the data length
-		if (((uint32_t)(&((factory_section_t *)0)->data.rev2_reserved0)+
-			factory_section_p->data.rev2_data_len) > 4096)
-		{
-			TRACE(1,"nv rec dev data len %d has exceeds the facory sector size!.",
-				factory_section_p->data.rev2_data_len);
-			return -1;
-		}
+    {
+        // check the data length
+        if (((uint32_t)(&((factory_section_t *)0)->data.rev2_reserved0)+
+            factory_section_p->data.rev2_data_len) > 4096)
+        {
+            TRACE(1,"nv rec dev data len %d has exceeds the facory sector size!.",
+                factory_section_p->data.rev2_data_len);
+            return -1;
+        }
 
-		if (factory_section_p->data.rev2_crc !=
-			crc32(0,(unsigned char *)(&(factory_section_p->data.rev2_reserved0)),
-			factory_section_p->data.rev2_data_len)){
-	        factory_section_p = NULL;
-	        return -1;
-	    }
+        if (factory_section_p->data.rev2_crc !=
+            crc32(0,(unsigned char *)(&(factory_section_p->data.rev2_reserved0)),
+            factory_section_p->data.rev2_data_len)){
+            factory_section_p = NULL;
+            return -1;
+        }
 
 
-		memcpy(bt_addr, factory_section_p->data.rev2_bt_addr, BTIF_BD_ADDR_SIZE);
-		memcpy(ble_addr, factory_section_p->data.rev2_ble_addr, BTIF_BD_ADDR_SIZE);
-		TRACE(2,"%s sucess btname:%s", __func__, (char *)factory_section_p->data.rev2_bt_name);
-	}
+        memcpy(bt_addr, factory_section_p->data.rev2_bt_addr, BTIF_BD_ADDR_SIZE);
+        memcpy(ble_addr, factory_section_p->data.rev2_ble_addr, BTIF_BD_ADDR_SIZE);
+        TRACE(2,"%s sucess btname:%s", __func__, (char *)factory_section_p->data.rev2_bt_name);
+    }
 
     DUMP8("%02x ", bt_addr, 6);
     DUMP8("%02x ", ble_addr, 6);
@@ -134,81 +134,81 @@ int factory_section_open(void)
 
 uint8_t* factory_section_get_bt_address(void)
 {
-	if (factory_section_p)
-	{
-		if (1 == nv_record_dev_rev)
-		{
-			return (uint8_t *)&(factory_section_p->data.bt_address);
-		}
-		else
-		{
-			return (uint8_t *)&(factory_section_p->data.rev2_bt_addr);
-		}
-	}
-	else
-	{
-		return NULL;
-	}
+    if (factory_section_p)
+    {
+        if (1 == nv_record_dev_rev)
+        {
+            return (uint8_t *)&(factory_section_p->data.bt_address);
+        }
+        else
+        {
+            return (uint8_t *)&(factory_section_p->data.rev2_bt_addr);
+        }
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 uint8_t* factory_section_get_bt_name(void)
 {
-	if (factory_section_p)
-	{
-		if (1 == nv_record_dev_rev)
-		{
-			return (uint8_t *)&(factory_section_p->data.device_name);
-		}
-		else
-		{
-			return (uint8_t *)&(factory_section_p->data.rev2_bt_name);
-		}
-	}
-	else
-	{
-		return (uint8_t *)BT_LOCAL_NAME;
-	}
+    if (factory_section_p)
+    {
+        if (1 == nv_record_dev_rev)
+        {
+            return (uint8_t *)&(factory_section_p->data.device_name);
+        }
+        else
+        {
+            return (uint8_t *)&(factory_section_p->data.rev2_bt_name);
+        }
+    }
+    else
+    {
+        return (uint8_t *)BT_LOCAL_NAME;
+    }
 }
 
 uint8_t* factory_section_get_ble_name(void)
 {
-	if (factory_section_p)
-	{
-		if (1 == nv_record_dev_rev)
-		{
-			return (uint8_t *)BLE_DEFAULT_NAME;
-		}
-		else
-		{
-			return (uint8_t *)&(factory_section_p->data.rev2_ble_name);
-		}
-	}
-	else
-	{
-		return (uint8_t *)BLE_DEFAULT_NAME;
-	}
+    if (factory_section_p)
+    {
+        if (1 == nv_record_dev_rev)
+        {
+            return (uint8_t *)BLE_DEFAULT_NAME;
+        }
+        else
+        {
+            return (uint8_t *)&(factory_section_p->data.rev2_ble_name);
+        }
+    }
+    else
+    {
+        return (uint8_t *)BLE_DEFAULT_NAME;
+    }
 }
 
 uint32_t factory_section_get_version(void)
 {
-	if (factory_section_p)
-	{
-		return nv_record_dev_rev;
-	}
+    if (factory_section_p)
+    {
+        return nv_record_dev_rev;
+    }
 
-	return 0;
+    return 0;
 }
 
 int factory_section_xtal_fcap_get(unsigned int *xtal_fcap)
 {
     if (factory_section_p){
-    	if (1 == nv_record_dev_rev)
-    	{
-        	*xtal_fcap = factory_section_p->data.xtal_fcap;
+        if (1 == nv_record_dev_rev)
+        {
+            *xtal_fcap = factory_section_p->data.xtal_fcap;
         }
         else
         {
-        	*xtal_fcap = factory_section_p->data.rev2_xtal_fcap;
+            *xtal_fcap = factory_section_p->data.rev2_xtal_fcap;
         }
         return 0;
     }else{
@@ -229,16 +229,16 @@ int factory_section_xtal_fcap_set(unsigned int xtal_fcap)
         memcpy(mempool, factory_section_p, 0x1000);
         if (1 == nv_record_dev_rev)
         {
-        	((factory_section_t *)mempool)->data.xtal_fcap = xtal_fcap;
-        	((factory_section_t *)mempool)->head.crc = crc32(0,(unsigned char *)(&(((factory_section_t *)mempool)->head.reserved0)),sizeof(factory_section_t)-2-2-4);
-		}
-		else
-		{
-        	((factory_section_t *)mempool)->data.rev2_xtal_fcap = xtal_fcap;
-        	((factory_section_t *)mempool)->data.rev2_crc =
-        		crc32(0,(unsigned char *)(&(factory_section_p->data.rev2_reserved0)),
-				factory_section_p->data.rev2_data_len);
-		}
+            ((factory_section_t *)mempool)->data.xtal_fcap = xtal_fcap;
+            ((factory_section_t *)mempool)->head.crc = crc32(0,(unsigned char *)(&(((factory_section_t *)mempool)->head.reserved0)),sizeof(factory_section_t)-2-2-4);
+        }
+        else
+        {
+            ((factory_section_t *)mempool)->data.rev2_xtal_fcap = xtal_fcap;
+            ((factory_section_t *)mempool)->data.rev2_crc =
+                crc32(0,(unsigned char *)(&(factory_section_p->data.rev2_reserved0)),
+                factory_section_p->data.rev2_data_len);
+        }
         lock = int_lock_global();
 
         ret = norflash_api_erase(NORFLASH_API_MODULE_ID_FACTORY,(uint32_t)(__factory_start)&0x00FFFFFF,0x1000,false);
@@ -260,11 +260,11 @@ void factory_section_original_btaddr_get(uint8_t *btAddr)
         TRACE(0,"get factory_section_p");
         if (1 == nv_record_dev_rev)
         {
-        	memcpy(btAddr, factory_section_p->data.bt_address, BTIF_BD_ADDR_SIZE);
+            memcpy(btAddr, factory_section_p->data.bt_address, BTIF_BD_ADDR_SIZE);
         }
         else
         {
-        	memcpy(btAddr, factory_section_p->data.rev2_bt_addr, BTIF_BD_ADDR_SIZE);
+            memcpy(btAddr, factory_section_p->data.rev2_bt_addr, BTIF_BD_ADDR_SIZE);
         }
     }else{
         TRACE(0,"get bt_addr");

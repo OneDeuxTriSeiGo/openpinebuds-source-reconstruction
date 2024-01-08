@@ -862,36 +862,36 @@ enum dbg_swdiag
     DBG_SWDIAG_LECON_TX_ISR_OFFSET                = 7,
     DBG_SWDIAG_LECON_TX_ISR_MASK                  = 0x80,
 
-	/**
-	******************************************************************************************
-	* @brief BANK 34 : LE DATA
-	******************************************************************************************
-	*/
-	DBG_SWDIAG_LEDATA                             = 34,
+    /**
+    ******************************************************************************************
+    * @brief BANK 34 : LE DATA
+    ******************************************************************************************
+    */
+    DBG_SWDIAG_LEDATA                             = 34,
 
-	DBG_SWDIAG_LEDATA_LLCP_TX_OFFSET              = 0,
-	DBG_SWDIAG_LEDATA_LLCP_TX_MASK                = 0x01,
+    DBG_SWDIAG_LEDATA_LLCP_TX_OFFSET              = 0,
+    DBG_SWDIAG_LEDATA_LLCP_TX_MASK                = 0x01,
 
-	DBG_SWDIAG_LEDATA_ACL_TX_OFFSET               = 1,
-	DBG_SWDIAG_LEDATA_ACL_TX_MASK                 = 0x02,
+    DBG_SWDIAG_LEDATA_ACL_TX_OFFSET               = 1,
+    DBG_SWDIAG_LEDATA_ACL_TX_MASK                 = 0x02,
 
-	DBG_SWDIAG_LEDATA_LLCP_RX_OFFSET              = 2,
-	DBG_SWDIAG_LEDATA_LLCP_RX_MASK                = 0x04,
+    DBG_SWDIAG_LEDATA_LLCP_RX_OFFSET              = 2,
+    DBG_SWDIAG_LEDATA_LLCP_RX_MASK                = 0x04,
 
-	DBG_SWDIAG_LEDATA_ACL_RX_OFFSET               = 3,
-	DBG_SWDIAG_LEDATA_ACL_RX_MASK                 = 0x08,
+    DBG_SWDIAG_LEDATA_ACL_RX_OFFSET               = 3,
+    DBG_SWDIAG_LEDATA_ACL_RX_MASK                 = 0x08,
 
-	DBG_SWDIAG_LEDATA_LLCP_ACK_OFFSET             = 4,
-	DBG_SWDIAG_LEDATA_LLCP_ACK_MASK               = 0x10,
+    DBG_SWDIAG_LEDATA_LLCP_ACK_OFFSET             = 4,
+    DBG_SWDIAG_LEDATA_LLCP_ACK_MASK               = 0x10,
 
-	DBG_SWDIAG_LEDATA_ACL_ACK_OFFSET              = 5,
-	DBG_SWDIAG_LEDATA_ACL_ACK_MASK                = 0x20,
+    DBG_SWDIAG_LEDATA_ACL_ACK_OFFSET              = 5,
+    DBG_SWDIAG_LEDATA_ACL_ACK_MASK                = 0x20,
 
-	/**
-	******************************************************************************************
-	* @brief BANK 35 : LETX
-	******************************************************************************************
-	*/
+    /**
+    ******************************************************************************************
+    * @brief BANK 35 : LETX
+    ******************************************************************************************
+    */
     DBG_SWDIAG_LETX                               = 35,
 
     DBG_SWDIAG_LETX_LLCP_TX_OFFSET                = 0,

@@ -512,7 +512,7 @@ enum hci_opcode
 #endif // (BLE_EMB_PRESENT)
 
     #if (RW_DEBUG && BT_EMB_PRESENT)
-	HCI_DBG_BT_DISCARD_LMP_EN_CMD_OPCODE      	= 0xFC44,
+    HCI_DBG_BT_DISCARD_LMP_EN_CMD_OPCODE        = 0xFC44,
     #endif //RW_DEBUG && BT_EMB_PRESENT
 
     HCI_DBG_MWS_COEX_CMD_OPCODE                 = 0xFC45,
@@ -2536,8 +2536,8 @@ enum tci_evt_subcode
 };
 
 /// LMP direction
-#define TCI_LMP_DIR_TX	0
-#define TCI_LMP_DIR_RX	1
+#define TCI_LMP_DIR_TX  0
+#define TCI_LMP_DIR_RX  1
 
 /// HCI tci lmp exchange event structure
 struct hci_tci_lmp_evt

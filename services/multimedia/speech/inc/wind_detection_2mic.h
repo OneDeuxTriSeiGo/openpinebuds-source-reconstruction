@@ -24,7 +24,7 @@ extern "C" {
 
 typedef struct {
     int32_t     bypass;
-	float		power_thd;
+    float       power_thd;
 } WindDetection2MicConfig;
 
 struct WindDetection2MicState_;

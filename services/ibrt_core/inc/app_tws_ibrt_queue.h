@@ -29,5 +29,5 @@ void app_tws_ibrt_queue_pop(ibrt_queue* ptrQueue, uint8_t *ptrBuf, uint32_t len)
 int app_tws_ibrt_dequeue(ibrt_queue *ptrQueue, void *e, unsigned int len);
 int app_tws_ibrt_length_queue(ibrt_queue *ptrQueue);
 
-#endif	// __APP_BT_QUEUE_H__
+#endif  // __APP_BT_QUEUE_H__
 

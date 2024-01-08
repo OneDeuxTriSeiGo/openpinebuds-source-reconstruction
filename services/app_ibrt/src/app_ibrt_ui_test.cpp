@@ -379,7 +379,7 @@ void app_ibrt_key6(APP_KEY_STATUS *status, void *param)
 void app_bt_sleep(APP_KEY_STATUS *status, void *param)
 {
     TRACE(3,"%s %d,%d",__func__, status->code, status->event);
-	//app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);
+    //app_ibrt_ui_event_entry(IBRT_CLOSE_BOX_EVENT);
     bt_key_handle_func_click();
 }
 
@@ -388,15 +388,15 @@ void app_bt_sleep(APP_KEY_STATUS *status, void *param)
 void app_wakeup_sleep(APP_KEY_STATUS *status, void *param)
 {
     TRACE(3,"%s %d,%d",__func__, status->code, status->event);
-	//app_ibrt_ui_event_entry(IBRT_FETCH_OUT_EVENT);
-	a2dp_handleKey(AVRCP_KEY_PLAY);
+    //app_ibrt_ui_event_entry(IBRT_FETCH_OUT_EVENT);
+    a2dp_handleKey(AVRCP_KEY_PLAY);
 }
 
 void app_test_key(APP_KEY_STATUS *status, void *param)
 {
     TRACE(3,"%s %d,%d",__func__, status->code, status->event);
-	//app_ibrt_ui_event_entry(IBRT_FETCH_OUT_EVENT);
-	a2dp_handleKey(AVRCP_KEY_PLAY);
+    //app_ibrt_ui_event_entry(IBRT_FETCH_OUT_EVENT);
+    a2dp_handleKey(AVRCP_KEY_PLAY);
 }
 
 #if defined(__BT_DEBUG_TPORTS__) && !defined(TPORTS_KEY_COEXIST)
@@ -426,25 +426,25 @@ void app_ibrt_ui_test_key(APP_KEY_STATUS *status, void *param)
     TRACE(3,"%s %d,%d",__func__, status->code, status->event);
 
 #if 0//def IBRT_OTA
-	if ((status->code == HAL_KEY_CODE_PWR)&&\
+    if ((status->code == HAL_KEY_CODE_PWR)&&\
         (status->event == APP_KEY_EVENT_CLICK)&&\
         (app_check_user_can_role_switch_in_ota()))
-	{
-	    TRACE(0, "[OTA] role switch in progress!");
+    {
+        TRACE(0, "[OTA] role switch in progress!");
         return ;
-	}
+    }
 #endif
 
 if (IBRT_SLAVE == p_ibrt_ctrl->current_role && status->event != shutdown_key)
     {
  /*       if(((status->code == HAL_KEY_CODE_PWR)&&(status->event == APP_KEY_EVENT_CLICK)) &&\
-		   ((p_ibrt_ctrl->master_tws_switch_pending != false) || \
-		    (p_ibrt_ctrl->slave_tws_switch_pending != false) ||  \
-		    (ota_role_switch_flag != 0)||\
-		    (avoid_even_packets_protect_flag != 0)))
+           ((p_ibrt_ctrl->master_tws_switch_pending != false) || \
+            (p_ibrt_ctrl->slave_tws_switch_pending != false) ||  \
+            (ota_role_switch_flag != 0)||\
+            (avoid_even_packets_protect_flag != 0)))
         {
             TRACE(0, "[OTA] role switch in progress!");
-			return ;
+            return ;
         }
 */
         app_ibrt_if_keyboard_notify(status,param);
@@ -682,58 +682,58 @@ ibrt_pairing_info_t g_ibrt_pairing_info[] =
 // osTimerDef(defpwrkey_det,pwrkey_detfun);
 // void pwrkey_detinit(void)
 // {
-// 	TRACE(3,"%s",__func__);
-// 	pwrkey_detid = osTimerCreate(osTimer(defpwrkey_det),osTimerOnce,(void *)0);
+//  TRACE(3,"%s",__func__);
+//  pwrkey_detid = osTimerCreate(osTimer(defpwrkey_det),osTimerOnce,(void *)0);
 // }
 
 // extern void app_ibrt_customif_test1_cmd_send(uint8_t *p_buff, uint16_t length);
 // static void pwrkey_detfun(const void *)
 // {
-	
-// 	static ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
-// 	static bool last_pwrkey = false;
-// 	bool curr_pwrkey_sta;
-// 	curr_pwrkey_sta = hal_pwrkey_pressed();
-// 	APP_KEY_STATUS inear_status[] = {APP_KEY_CODE_FN3,HAL_KEY_EVENT_CLICK};
-// 	APP_KEY_STATUS outear_status[] = {APP_KEY_CODE_FN4,HAL_KEY_EVENT_CLICK};
-// 	//TRACE(3,"pwrkey = %d",curr_pwrkey_sta);
-// 	if(curr_pwrkey_sta != last_pwrkey){
-// 		if(curr_pwrkey_sta == true){
-// 			//app_wakeup_sleep(NULL,NULL);
-// 		    	TRACE(3,"%s PLAY",__func__);
-//                 	app_bt_accessmode_set(BTIF_BT_DEFAULT_ACCESS_MODE_PAIR);
-// 					app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
+    
+//  static ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
+//  static bool last_pwrkey = false;
+//  bool curr_pwrkey_sta;
+//  curr_pwrkey_sta = hal_pwrkey_pressed();
+//  APP_KEY_STATUS inear_status[] = {APP_KEY_CODE_FN3,HAL_KEY_EVENT_CLICK};
+//  APP_KEY_STATUS outear_status[] = {APP_KEY_CODE_FN4,HAL_KEY_EVENT_CLICK};
+//  //TRACE(3,"pwrkey = %d",curr_pwrkey_sta);
+//  if(curr_pwrkey_sta != last_pwrkey){
+//      if(curr_pwrkey_sta == true){
+//          //app_wakeup_sleep(NULL,NULL);
+//              TRACE(3,"%s PLAY",__func__);
+//                  app_bt_accessmode_set(BTIF_BT_DEFAULT_ACCESS_MODE_PAIR);
+//                  app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
 
-// 			if (IBRT_SLAVE == p_ibrt_ctrl->current_role){
-// 				app_ibrt_customif_test1_cmd_send((uint8_t *)inear_status, sizeof(APP_KEY_STATUS));
-// 			}else{
-// 				a2dp_handleKey(AVRCP_KEY_PLAY);
-// 			}
-// 		}else{
-// 			//app_bt_sleep(NULL,NULL);
-// 			TRACE(3,"%s PAUSE",__func__);
-// 			//a2dp_handleKey(AVRCP_KEY_PAUSE);
-// 			if (IBRT_SLAVE == p_ibrt_ctrl->current_role){
-// 				app_ibrt_customif_test1_cmd_send((uint8_t *)outear_status, sizeof(APP_KEY_STATUS));
-// 			}else{
-// 				a2dp_handleKey(AVRCP_KEY_PAUSE);
-// 			}
-// 		}
-// 		last_pwrkey = curr_pwrkey_sta;
-// 	}
-// 	startpwrkey_det(200);
+//          if (IBRT_SLAVE == p_ibrt_ctrl->current_role){
+//              app_ibrt_customif_test1_cmd_send((uint8_t *)inear_status, sizeof(APP_KEY_STATUS));
+//          }else{
+//              a2dp_handleKey(AVRCP_KEY_PLAY);
+//          }
+//      }else{
+//          //app_bt_sleep(NULL,NULL);
+//          TRACE(3,"%s PAUSE",__func__);
+//          //a2dp_handleKey(AVRCP_KEY_PAUSE);
+//          if (IBRT_SLAVE == p_ibrt_ctrl->current_role){
+//              app_ibrt_customif_test1_cmd_send((uint8_t *)outear_status, sizeof(APP_KEY_STATUS));
+//          }else{
+//              a2dp_handleKey(AVRCP_KEY_PAUSE);
+//          }
+//      }
+//      last_pwrkey = curr_pwrkey_sta;
+//  }
+//  startpwrkey_det(200);
 // }
 
 // void startpwrkey_det(int ms)
 // {
-// 	//TRACE(3,"\n\n !!!!!!!!!!start %s\n\n",__func__);
-// 	osTimerStart(pwrkey_detid,ms);
+//  //TRACE(3,"\n\n !!!!!!!!!!start %s\n\n",__func__);
+//  osTimerStart(pwrkey_detid,ms);
 // }
 
 // void stoppwrkey_det(void)
 // {
-// 	//TRACE("\n\n!!!!!!!!!!  stop %s\n\n",__func__);
-// 	osTimerStop(pwrkey_detid);
+//  //TRACE("\n\n!!!!!!!!!!  stop %s\n\n",__func__);
+//  osTimerStop(pwrkey_detid);
 // }
 
 

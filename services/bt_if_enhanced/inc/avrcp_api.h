@@ -373,7 +373,7 @@ typedef U8 btif_avrcp_operation_t;
 
 #define BTIF_AVRCP_OP_GENERAL_REJECT                 0xA0
 
-#define BTIF_AVRCP_OP_CUSTOM_CMD						0xF0
+#define BTIF_AVRCP_OP_CUSTOM_CMD                        0xF0
 
 typedef uint8_t avrcp_error_code_t;
 
@@ -1646,8 +1646,8 @@ extern "C" {
 
     void btif_avrcp_set_control_rsp_cmd(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId,
                                         uint8_t type);
-	
-	void btif_avrcp_set_control_rsp_cmd_witherror(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId, uint8_t type, uint8_t error);
+    
+    void btif_avrcp_set_control_rsp_cmd_witherror(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId, uint8_t type, uint8_t error);
 
     bt_status_t btif_avrcp_ct_get_capabilities_rsp(btif_avrcp_channel_t * channel,
                                                    avrcp_advanced_pdu_t * cmd_pdu,
@@ -1661,8 +1661,8 @@ extern "C" {
 
     void btif_avrcp_set_notify_rsp_cmd(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId,
                                        uint8_t type);
-	
-	void btif_avrcp_set_notify_rsp_cmd_witherror(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId, uint8_t type, uint8_t error);
+    
+    void btif_avrcp_set_notify_rsp_cmd_witherror(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId, uint8_t type, uint8_t error);
 
     void btif_avrcp_recheck_vol_ctrl_flag(uint8_t * flag);
     
@@ -1690,7 +1690,7 @@ extern "C" {
 
     bt_status_t btif_avrcp_tg_send_general_rsp(btif_avrcp_channel_t * channel, avrcp_advanced_pdu_t * cmd_pdu, uint8_t op, uint8_t error_code);
 
-   	bt_status_t btif_avrcp_ct_invalid_volume_rsp(btif_avrcp_channel_t * channel, avrcp_advanced_pdu_t * cmd_pdu);
+    bt_status_t btif_avrcp_ct_invalid_volume_rsp(btif_avrcp_channel_t * channel, avrcp_advanced_pdu_t * cmd_pdu);
 
 #if defined(IBRT)
     uint32_t btif_avrcp_profile_save_ctxs(btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);

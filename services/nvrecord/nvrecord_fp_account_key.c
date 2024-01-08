@@ -70,7 +70,7 @@ void nv_record_fp_account_key_init(void)
         
         nvrec_config_set_int(nv_record_config.config, section_name_fp_account_key,
             (const char *)NV_RECORD_ACCOUNT_KEY, (int)nvrecord_fp_account_key_p);
-    }	
+    }   
 }
 
 void nv_record_fp_account_key_add(NV_FP_ACCOUNT_KEY_ENTRY_T* param_rec)

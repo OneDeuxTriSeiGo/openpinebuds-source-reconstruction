@@ -61,31 +61,31 @@ static app_tota_tx_done_t tota_data_tx_done_callback = NULL;
  ****************************************************************************************
  */
 void app_tota_connected_evt_handler(uint8_t conidx)
-{	
+{   
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
-	app_tota_env.connectionIndex = conidx;
+    app_tota_env.connectionIndex = conidx;
     app_tota_update_datapath(APP_TOTA_VIA_NOTIFICATION);
-	//tota_register_transmitter(app_tota_send_notification);
+    //tota_register_transmitter(app_tota_send_notification);
 }
 
 void app_tota_disconnected_evt_handler(uint8_t conidx)
 {
     TOTA_LOG_DBG(3,"[%s], condix = %d Index = %d",__func__, conidx, app_tota_env.connectionIndex);
-	if (conidx == app_tota_env.connectionIndex)
-	{
-		app_tota_env.connectionIndex = BLE_INVALID_CONNECTION_INDEX;
-		app_tota_env.isNotificationEnabled = false;
-		app_tota_env.mtu[conidx] = 0;
+    if (conidx == app_tota_env.connectionIndex)
+    {
+        app_tota_env.connectionIndex = BLE_INVALID_CONNECTION_INDEX;
+        app_tota_env.isNotificationEnabled = false;
+        app_tota_env.mtu[conidx] = 0;
         app_tota_update_datapath(APP_TOTA_PATH_IDLE);
-		//tota_disconnection_handler();
-	}
+        //tota_disconnection_handler();
+    }
 }
 
 void app_tota_ble_init(void)
 {
-	app_tota_env.connectionIndex =  BLE_INVALID_CONNECTION_INDEX;
-	app_tota_env.isNotificationEnabled = false;
-	memset((uint8_t *)&(app_tota_env.mtu), 0, sizeof(app_tota_env.mtu));	
+    app_tota_env.connectionIndex =  BLE_INVALID_CONNECTION_INDEX;
+    app_tota_env.isNotificationEnabled = false;
+    memset((uint8_t *)&(app_tota_env.mtu), 0, sizeof(app_tota_env.mtu));    
 }
 
 void app_tota_add_tota(void)
@@ -97,9 +97,9 @@ void app_tota_add_tota(void)
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
-	req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
+    req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
-	req->sec_lvl = PERM(SVC_AUTH, ENABLE);
+    req->sec_lvl = PERM(SVC_AUTH, ENABLE);
 #endif  
 
     req->prf_task_id = TASK_ID_TOTA;
@@ -113,32 +113,32 @@ void app_tota_add_tota(void)
 void app_tota_send_notification(uint8_t* ptrData, uint32_t length)
 {
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
-	
-	struct ble_tota_send_data_req_t * req = KE_MSG_ALLOC_DYN(TOTA_SEND_NOTIFICATION,
+    
+    struct ble_tota_send_data_req_t * req = KE_MSG_ALLOC_DYN(TOTA_SEND_NOTIFICATION,
                                                 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_TOTA), app_tota_env.connectionIndex),
                                                 TASK_APP,
                                                 ble_tota_send_data_req_t,
                                                 length);
-	req->connecionIndex = app_tota_env.connectionIndex;
-	req->length = length;
-	memcpy(req->value, ptrData, length);
+    req->connecionIndex = app_tota_env.connectionIndex;
+    req->length = length;
+    memcpy(req->value, ptrData, length);
 
-	ke_msg_send(req);
+    ke_msg_send(req);
 }
 
 void app_tota_send_indication(uint8_t* ptrData, uint32_t length)
 {
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
-	struct ble_tota_send_data_req_t * req = KE_MSG_ALLOC_DYN(TOTA_SEND_INDICATION,
+    struct ble_tota_send_data_req_t * req = KE_MSG_ALLOC_DYN(TOTA_SEND_INDICATION,
                                                 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_TOTA), app_tota_env.connectionIndex),
                                                 TASK_APP,
                                                 ble_tota_send_data_req_t,
                                                 length);
-	req->connecionIndex = app_tota_env.connectionIndex;
-	req->length = length;
-	memcpy(req->value, ptrData, length);
+    req->connecionIndex = app_tota_env.connectionIndex;
+    req->length = length;
+    memcpy(req->value, ptrData, length);
 
-	ke_msg_send(req);
+    ke_msg_send(req);
 }
 
 static int app_tota_msg_handler(ke_msg_id_t const msgid,
@@ -163,28 +163,28 @@ static int app_tota_ccc_changed_handler(ke_msg_id_t const msgid,
                               ke_task_id_t const dest_id,
                               ke_task_id_t const src_id)
 {
-	TOTA_LOG_DBG(1,"tota data ccc changed to %d", param->isNotificationEnabled);
+    TOTA_LOG_DBG(1,"tota data ccc changed to %d", param->isNotificationEnabled);
     app_tota_env.isNotificationEnabled = param->isNotificationEnabled;
 
-	if (app_tota_env.isNotificationEnabled)
-	{
-		if (BLE_INVALID_CONNECTION_INDEX == app_tota_env.connectionIndex)
-		{
-			uint8_t conidx = KE_IDX_GET(src_id);
-			app_tota_connected_evt_handler(conidx);
+    if (app_tota_env.isNotificationEnabled)
+    {
+        if (BLE_INVALID_CONNECTION_INDEX == app_tota_env.connectionIndex)
+        {
+            uint8_t conidx = KE_IDX_GET(src_id);
+            app_tota_connected_evt_handler(conidx);
 
-			if (app_tota_env.mtu[conidx])
-			{
-				// tota_update_MTU(app_tota_env.mtu[conidx]);
-			}
-		}
-	}
+            if (app_tota_env.mtu[conidx])
+            {
+                // tota_update_MTU(app_tota_env.mtu[conidx]);
+            }
+        }
+    }
     else
     {
         app_tota_update_datapath(APP_TOTA_VIA_INDICATION);
     }
     
-	
+    
     return (KE_MSG_CONSUMED);
 }
 
@@ -195,10 +195,10 @@ static int app_tota_tx_data_sent_handler(ke_msg_id_t const msgid,
 {
     if (NULL != tota_data_tx_done_callback)
     {
-		tota_data_tx_done_callback();
+        tota_data_tx_done_callback();
     }
 
-	//tota_data_transmission_done_callback();
+    //tota_data_transmission_done_callback();
 
     return (KE_MSG_CONSUMED);
 }
@@ -208,25 +208,25 @@ static int app_tota_data_received_handler(ke_msg_id_t const msgid,
                               ke_task_id_t const dest_id,
                               ke_task_id_t const src_id)
 {
-	app_ble_push_rx_data(BLE_RX_DATA_SELF_TOTA, app_tota_env.connectionIndex, param->data, param->length);
+    app_ble_push_rx_data(BLE_RX_DATA_SELF_TOTA, app_tota_env.connectionIndex, param->data, param->length);
     return (KE_MSG_CONSUMED);
 }
 
 void app_tota_register_tx_done(app_tota_tx_done_t callback)
 {
-	tota_data_tx_done_callback = callback;
+    tota_data_tx_done_callback = callback;
 }
 
 void app_tota_mtu_exchanged_handler(uint8_t conidx, uint16_t MTU)
 {
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
-	if (conidx == app_tota_env.connectionIndex)
-	{
-		tota_update_MTU(MTU);
-	}
-	else
+    if (conidx == app_tota_env.connectionIndex)
     {
-	    app_tota_env.mtu[conidx] = MTU;
+        tota_update_MTU(MTU);
+    }
+    else
+    {
+        app_tota_env.mtu[conidx] = MTU;
     }
 }
 
@@ -241,9 +241,9 @@ const struct ke_msg_handler app_tota_msg_handler_list[] =
     // Note: first message is latest message checked by kernel so default is put on top.
     {KE_MSG_DEFAULT_HANDLER,    (ke_msg_func_t)app_tota_msg_handler},
 
-    {TOTA_CCC_CHANGED,     		(ke_msg_func_t)app_tota_ccc_changed_handler},
-    {TOTA_TX_DATA_SENT,    		(ke_msg_func_t)app_tota_tx_data_sent_handler},
-    {TOTA_DATA_RECEIVED, 		(ke_msg_func_t)app_tota_data_received_handler},
+    {TOTA_CCC_CHANGED,          (ke_msg_func_t)app_tota_ccc_changed_handler},
+    {TOTA_TX_DATA_SENT,         (ke_msg_func_t)app_tota_tx_data_sent_handler},
+    {TOTA_DATA_RECEIVED,        (ke_msg_func_t)app_tota_data_received_handler},
 };
 
 const struct ke_state_handler app_tota_table_handler =

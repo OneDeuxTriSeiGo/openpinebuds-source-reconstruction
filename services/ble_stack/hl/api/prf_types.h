@@ -63,8 +63,8 @@ enum prf_con_type
 
 enum prf_svc_type
 {
-	PRF_PRIMARY_SERVICE = 0x00,
-	PRF_SECONDARY_SERVICE = 0x01
+    PRF_PRIMARY_SERVICE = 0x00,
+    PRF_SECONDARY_SERVICE = 0x01
 };
 
 /*

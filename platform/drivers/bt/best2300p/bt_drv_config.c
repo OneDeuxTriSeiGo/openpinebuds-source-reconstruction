@@ -108,7 +108,7 @@ const int8_t btdrv_rf_env_2300p[]=
     0x7f,0x7f,0x7f,  //rx hwgain tbl ptr
 
 //zhangzhd agc config use default 1216
-	50,0,-80,
+    50,0,-80,
     42,0,-80,
     38,0,-80,
     32,0,-80,
@@ -816,7 +816,7 @@ void btdrv_digital_config_init_2300p_t2(void)
 #endif //__FASTACK_ECC_ENABLE__
 
 #ifdef __FA_RX_GAIN_CTRL__
-	BTDIGITAL_REG(0xd0220080) &= 0xff00ffff;
+    BTDIGITAL_REG(0xd0220080) &= 0xff00ffff;
     BTDIGITAL_REG(0xd0220080) |= 0x00770000;//trx pwrup/dn
     BTDIGITAL_REG(0xd02201e8)|=1;//second rf spi en
     BTDIGITAL_REG(0xd0220480) = (BTDIGITAL_REG(0xd0220480)&(~0xff))|0xbf;

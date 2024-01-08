@@ -41,10 +41,10 @@ CQueue voicemsbc_queue;
 static uint32_t ok_to_decode = 0;
 
 #define LOCK_VOICEMSBC_QUEUE() \
-	osMutexWait(g_voicemsbc_queue_mutex_id, osWaitForever)
+    osMutexWait(g_voicemsbc_queue_mutex_id, osWaitForever)
 
 #define UNLOCK_VOICEMSBC_QUEUE() \
-	osMutexRelease(g_voicemsbc_queue_mutex_id)
+    osMutexRelease(g_voicemsbc_queue_mutex_id)
 
 static void dump_buffer_to_psram(char *buf, unsigned int len)
 {
@@ -62,25 +62,25 @@ static void copy_one_trace_to_two_track_16bits(uint16_t *src_buf, uint16_t *dst_
 
 int store_voicemsbc_buffer(unsigned char *buf, unsigned int len)
 {
-	LOCK_VOICEMSBC_QUEUE();
-	EnCQueue(&voicemsbc_queue, buf, len);
+    LOCK_VOICEMSBC_QUEUE();
+    EnCQueue(&voicemsbc_queue, buf, len);
     dump_buffer_to_psram((char *)buf, len);
     TRACE(1,"%d\n", LengthOfCQueue(&voicemsbc_queue));
     if (LengthOfCQueue(&voicemsbc_queue) > VOICEMSBC_TEMP_BUFFER_SIZE*20) {
         ok_to_decode = 1;
     }
-	UNLOCK_VOICEMSBC_QUEUE();
+    UNLOCK_VOICEMSBC_QUEUE();
 
-	return 0;
+    return 0;
 }
 
 static short tmp_decode_buf[VOICEMSBC_TEMP_BUFFER_SIZE*2];
 int decode_msbc_frame(unsigned char *pcm_buffer, unsigned int pcm_len)
 {
-	int r = 0;
+    int r = 0;
     uint32_t decode_len = 0;
-	unsigned char *e1 = NULL, *e2 = NULL;
-	unsigned int len1 = 0, len2 = 0;
+    unsigned char *e1 = NULL, *e2 = NULL;
+    unsigned int len1 = 0, len2 = 0;
 
     while (decode_len < pcm_len) {
 get_again:
@@ -144,9 +144,9 @@ int voicemsbc_audio_init(void)
     Pcm8k_CvsdInit();
 
     g_voicemsbc_queue_mutex_id = osMutexCreate((osMutex(g_voicemsbc_queue_mutex)));
-	/* msbc queue*/
-	InitCQueue(&voicemsbc_queue, VOICEMSBC_QUEUE_SIZE, (unsigned char *)&voicemsbc_queue_buf);
+    /* msbc queue*/
+    InitCQueue(&voicemsbc_queue, VOICEMSBC_QUEUE_SIZE, (unsigned char *)&voicemsbc_queue_buf);
 
-	return 0;
+    return 0;
 }
 #endif

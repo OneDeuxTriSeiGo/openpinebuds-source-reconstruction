@@ -47,7 +47,7 @@ static osMutexId _rb_media_buf_queue_mutex_id = NULL;
 static osMutexDef(_rb_media_buf_queue_mutex);
 
 #define LOCK_MEDIA_BUF_QUEUE() \
-    if(osErrorISR == osMutexWait(_rb_media_buf_queue_mutex_id, osWaitForever))	{\
+    if(osErrorISR == osMutexWait(_rb_media_buf_queue_mutex_id, osWaitForever))  {\
         error("%s LOCK_MEDIA_BUF_QUEUE from IRQ!!!!!!!\n",__func__);\
     }\
 

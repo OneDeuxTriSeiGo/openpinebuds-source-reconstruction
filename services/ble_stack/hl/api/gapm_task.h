@@ -789,7 +789,7 @@ struct gapm_adv_host
     /// Peer address
     struct gap_bdaddr peer_addr;
 
-	uint8_t 			flags;
+    uint8_t             flags;
 };
 
 /// Air operation default parameters - DEPRECATED
@@ -809,7 +809,7 @@ struct gapm_air_operation
     /// Dummy data use to retrieve internal operation state (should be set to 0).
     uint16_t state;
 
-	uint16_t randomAddrRenewIntervalInSecond;
+    uint16_t randomAddrRenewIntervalInSecond;
 };
 
 /// Set advertising mode Command - DEPRECATED

@@ -52,7 +52,7 @@ typedef struct
     // APP_AUDIO_STATUS
     uint16_t aud_type;
     uint16_t aud_id;
-    char phb_number[MAX_PHB_NUMBER];	
+    char phb_number[MAX_PHB_NUMBER];    
 }msg_num_ptr;
 
 typedef struct

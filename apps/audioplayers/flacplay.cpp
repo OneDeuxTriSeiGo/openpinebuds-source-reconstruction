@@ -39,10 +39,10 @@ CQueue flac_queue;
 static uint32_t ok_to_decode = 0;
 
 #define LOCK_FLAC_QUEUE() \
-	osMutexWait(g_flac_queue_mutex_id, osWaitForever)
+    osMutexWait(g_flac_queue_mutex_id, osWaitForever)
 
 #define UNLOCK_FLAC_QUEUE() \
-	osMutexRelease(g_flac_queue_mutex_id)
+    osMutexRelease(g_flac_queue_mutex_id)
 
 static void copy_one_trace_to_two_track_16bits(uint16_t *src_buf, uint16_t *dst_buf, uint32_t src_len)
 {
@@ -54,30 +54,30 @@ static void copy_one_trace_to_two_track_16bits(uint16_t *src_buf, uint16_t *dst_
 
 int store_flac_buffer(unsigned char *buf, unsigned int len)
 {
-	LOCK_FLAC_QUEUE();
-	EnCQueue(&flac_queue, buf, len);
+    LOCK_FLAC_QUEUE();
+    EnCQueue(&flac_queue, buf, len);
     if (LengthOfCQueue(&flac_queue) > FLAC_TEMP_BUFFER_SIZE*2) {
         ok_to_decode = 1;
     }
-	UNLOCK_FLAC_QUEUE();
+    UNLOCK_FLAC_QUEUE();
 
-	return 0;
+    return 0;
 }
 
 int decode_flac_frame(unsigned char *pcm_buffer, unsigned int pcm_len)
 {
-	uint32_t r = 0, got_len = 0;
-	unsigned char *e1 = NULL, *e2 = NULL;
-	unsigned int len1 = 0, len2 = 0;
+    uint32_t r = 0, got_len = 0;
+    unsigned char *e1 = NULL, *e2 = NULL;
+    unsigned int len1 = 0, len2 = 0;
 get_again:
-	LOCK_FLAC_QUEUE();
-	r = PeekCQueue(&flac_queue, (pcm_len - got_len)/2, &e1, &len1, &e2, &len2);
-	UNLOCK_FLAC_QUEUE();
+    LOCK_FLAC_QUEUE();
+    r = PeekCQueue(&flac_queue, (pcm_len - got_len)/2, &e1, &len1, &e2, &len2);
+    UNLOCK_FLAC_QUEUE();
 
-	if(r == CQ_ERR || len1 == 0) {
-		osDelay(2);
-		goto get_again;
-	}
+    if(r == CQ_ERR || len1 == 0) {
+        osDelay(2);
+        goto get_again;
+    }
 
     //memcpy(pcm_buffer + got_len, e1, len1);
     copy_one_trace_to_two_track_16bits((uint16_t *)e1, (uint16_t *)(pcm_buffer + got_len), len1/2);
@@ -131,8 +131,8 @@ uint32_t flac_audio_more_data(uint8_t *buf, uint32_t len)
 int flac_audio_init(void)
 {
     g_flac_queue_mutex_id = osMutexCreate((osMutex(g_flac_queue_mutex)));
-	/* flac queue*/
-	InitCQueue(&flac_queue, FLAC_QUEUE_SIZE, (unsigned char *)&flac_queue_buf);
+    /* flac queue*/
+    InitCQueue(&flac_queue, FLAC_QUEUE_SIZE, (unsigned char *)&flac_queue_buf);
 
-	return 0;
+    return 0;
 }

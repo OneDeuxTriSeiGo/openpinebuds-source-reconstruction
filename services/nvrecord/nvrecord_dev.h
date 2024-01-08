@@ -24,7 +24,7 @@ typedef struct
     unsigned char *btd_addr;
     unsigned char *ble_addr;
     const char *localname;
-	const char *ble_name;
+    const char *ble_name;
 }dev_addr_name;
 
 bool nvrec_dev_data_open(void);

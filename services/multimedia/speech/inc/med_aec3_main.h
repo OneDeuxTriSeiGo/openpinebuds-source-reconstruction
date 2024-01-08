@@ -39,7 +39,7 @@ typedef struct
     VOS_BOOL                            enHpfEnable;                            /* HPF: 高通滤波开关 */
     VOS_BOOL                            enAfEnable;                             /* AF : 自适应滤波开关 */
     VOS_BOOL                            enNsEnable;                             /* NS : 噪声抑制开关 */
-	VOS_INT16                           shwDelayLength;                         /* DELAY: 固定延时 */
+    VOS_INT16                           shwDelayLength;                         /* DELAY: 固定延时 */
 } MED_AEC3_NV_STRU;
 
 /*****************************************************************************
@@ -54,15 +54,15 @@ typedef struct
   8 函数声明
 *****************************************************************************/
 extern VOS_UINT32  MED_AEC3_Main(
-	                   VOS_VOID               *pAecInstance,
+                       VOS_VOID               *pAecInstance,
                        VOS_INT16              *pshwMicIn,
-					   VOS_INT16              *pshwSpkIn,
+                       VOS_INT16              *pshwSpkIn,
                        VOS_INT16              *pshwLineOut);
 extern VOS_VOID* MED_AEC3_Create(void);
 extern VOS_UINT32  MED_AEC3_Destroy(VOS_VOID  **ppAecObj);
 extern VOS_UINT32 MED_AEC3_SetPara (
                        VOS_VOID                        *pAecInstance,
-					   MED_AEC3_NV_STRU                 *pstNv,
+                       MED_AEC3_NV_STRU                 *pstNv,
                        VOS_INT32                       enSampleRate);
 extern VOS_UINT32  MED_AEC3_SetExtenalNsHandle(
                        VOS_VOID               *pAecInstance,

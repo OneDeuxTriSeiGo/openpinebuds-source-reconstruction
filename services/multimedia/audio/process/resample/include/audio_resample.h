@@ -30,9 +30,9 @@ enum audio_resample_status_t{
 };
 
 enum resample_id_t{
-	RESAMPLE_ID_8TO8P4 = 0,
-	RESAMPLE_ID_8P4TO8,
-	RESAMPLE_ID_NUM
+    RESAMPLE_ID_8TO8P4 = 0,
+    RESAMPLE_ID_8P4TO8,
+    RESAMPLE_ID_NUM
 };
 
 #define RESAMPLE_TYPE_DOWN_STEREO 0x1

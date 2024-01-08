@@ -53,7 +53,7 @@ multi-used-y := $(sort $(foreach m,$(obj-y), $(if $(strip $($(m:.o=-objs)) $($(m
 # Build list of the parts of our composite objects, our composite
 # objects depend on those (obviously)
 multi-objs-y := $(foreach m, $(multi-used-y), $($(m:.o=-objs)) $($(m:.o=-y)))
-multi-objs-subdir 	:= $(patsubst %/,%,$(filter %/, $(multi-objs-y)))
+multi-objs-subdir	:= $(patsubst %/,%,$(filter %/, $(multi-objs-y)))
 multi-objs-archive	:= $(filter %.a, $(multi-objs-y))
 multi-objs-y := $(patsubst %/, %/built-in$(built_in_suffix), $(multi-objs-y))
 multi-objs   := $(multi-objs-y)
@@ -207,7 +207,7 @@ endef
 
 quiet_cmd_ld = LD      $@
 cmd_ld = $(LD) $(LDFLAGS) $(ldflags-y) $(LDFLAGS_$(@F)) \
-	       $(filter-out FORCE,$^) -o $@
+		   $(filter-out FORCE,$^) -o $@
 
 # Objcopy
 # ---------------------------------------------------------------------------

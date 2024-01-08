@@ -49,13 +49,13 @@
 extern "C" {
 #endif
 
-#define TOTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS		25
-#define TOTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS		30
-#define TOTA_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS	5000
+#define TOTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS       25
+#define TOTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS       30
+#define TOTA_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS 5000
 
-#define TOTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS			400
-#define TOTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS			500
-#define TOTA_LOW_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS	5000
+#define TOTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS            400
+#define TOTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS            500
+#define TOTA_LOW_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS  5000
 
 
 extern struct app_env_tag app_env;
@@ -64,8 +64,8 @@ extern struct app_env_tag app_env;
 struct app_tota_env_tag
 {
     uint8_t connectionIndex;
-	uint8_t	isNotificationEnabled;
-	uint16_t mtu[BLE_CONNECTION_MAX];
+    uint8_t isNotificationEnabled;
+    uint16_t mtu[BLE_CONNECTION_MAX];
 };
 
 typedef void(*app_tota_tx_done_t)(void);
@@ -107,7 +107,7 @@ void app_tota_register_tx_done(app_tota_tx_done_t callback);
 void app_tota_mtu_exchanged_handler(uint8_t conidx, uint16_t MTU);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 

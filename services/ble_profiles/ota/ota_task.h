@@ -44,21 +44,21 @@
  * DEFINES
  ****************************************************************************************
  */
-#define OTA_CONTENT_TYPE_COMMAND		0 
-#define OTA_CONTENT_TYPE_DATA		1
+#define OTA_CONTENT_TYPE_COMMAND        0 
+#define OTA_CONTENT_TYPE_DATA       1
 
 /// Messages for OTA Profile 
 enum ota_msg_id
 {
-	OTA_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_OTA),
+    OTA_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_OTA),
 
-	OTA_TX_DATA_SENT,
-	
-	OTA_DATA_RECEIVED,
+    OTA_TX_DATA_SENT,
+    
+    OTA_DATA_RECEIVED,
 
-	OTA_SEND_NOTIFICATION,
+    OTA_SEND_NOTIFICATION,
 
-	OTA_SEND_INDICATION,
+    OTA_SEND_INDICATION,
 };
 
 /*
@@ -68,25 +68,25 @@ enum ota_msg_id
 
 struct ble_ota_tx_notif_config_t
 {
-	bool 		isNotificationEnabled;
+    bool        isNotificationEnabled;
 };
 
 struct ble_ota_rx_data_ind_t
 {
-	uint16_t	length;
-	uint8_t		data[0];
+    uint16_t    length;
+    uint8_t     data[0];
 };
 
 struct ble_ota_tx_sent_ind_t
 {
-	uint8_t 	status;
+    uint8_t     status;
 };
 
 struct ble_ota_send_data_req_t
 {
-	uint8_t 	connecionIndex;
-	uint32_t 	length;
-	uint8_t  	value[__ARRAY_EMPTY];
+    uint8_t     connecionIndex;
+    uint32_t    length;
+    uint8_t     value[__ARRAY_EMPTY];
 };
 
 

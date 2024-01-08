@@ -27,11 +27,11 @@ extern "C" {
 #define A2DP_SCALABLE_CODEC_ID                    0x0103
 
 //To indicate bits per sample.
-#define A2DP_SCALABLE_HQ	                      0x08
+#define A2DP_SCALABLE_HQ                          0x08
 #define A2DP_SCALABLE_ADD_INFO1                   0x00
 #define A2DP_SCALABLE_ADD_INFO2                   0x00
 #define A2DP_SCALABLE_ADD_INFO3                   0x00
-#define A2DP_SCALABLE_INFO(X)                 	  (X & (A2DP_SCALABLE_HQ | A2DP_SCALABLE_ADD_INFO1 | A2DP_SCALABLE_ADD_INFO2 | A2DP_SCALABLE_ADD_INFO3))
+#define A2DP_SCALABLE_INFO(X)                     (X & (A2DP_SCALABLE_HQ | A2DP_SCALABLE_ADD_INFO1 | A2DP_SCALABLE_ADD_INFO2 | A2DP_SCALABLE_ADD_INFO3))
 
 //To indicate Sampling Rate.
 #define A2DP_SCALABLE_SR_96000                    0x80

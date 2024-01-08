@@ -167,8 +167,8 @@
 #define BT_DEFAULT_ACCESS_MODE_2C                   BAM_NOT_ACCESSIBLE
 
 #define BT_HCI_NUM_INIT_RETRIES                     0x80
-#define BT_DEFAULT_PAGE_TIMEOUT						0x2000 //0x2000=5.12s
-#define BT_DEFAULT_PAGE_TIMEOUT_IN_MS				5000
+#define BT_DEFAULT_PAGE_TIMEOUT                     0x2000 //0x2000=5.12s
+#define BT_DEFAULT_PAGE_TIMEOUT_IN_MS               5000
 #define BT_PACKET_HEADER_LEN                        25
 #define NUM_KNOWN_DEVICES                           10
 #define DS_NUM_SERVICES                             8
@@ -640,13 +640,13 @@
 #define HS_MEMORY_EXTERNAL                  XA_DISABLED
 #define HS_REMOTE_AUDIO_VOLUME_CONTROL      TRUE
  
-#define HS_SNIFF_ATTEMPT	0x0160
-#define HS_SNIFF_TIMEOUT	0x0160
-#define HS_SNIFF_MAX_INTERVAL	0x0800
-#define HS_SNIFF_MIN_INTERVAL	0x0040 
-	
-#define HS_RECV_BUFFER_SIZE		HCI_ACL_DATA_SIZE
-#define HS_TX_BUFFER_SIZE		128
+#define HS_SNIFF_ATTEMPT    0x0160
+#define HS_SNIFF_TIMEOUT    0x0160
+#define HS_SNIFF_MAX_INTERVAL   0x0800
+#define HS_SNIFF_MIN_INTERVAL   0x0040 
+    
+#define HS_RECV_BUFFER_SIZE     HCI_ACL_DATA_SIZE
+#define HS_TX_BUFFER_SIZE       128
 
 
 /**********************************************************************************
@@ -685,7 +685,7 @@
 #define DEVICE_ID_NUM_SDP_ATTRIBUTES        7
 #define HID_DEVICE_RELEASE                  0x0100
 #define HID_PARSER_VERSION                  0x0111
-#define HID_DEVICE_SUBCLASS					((U8)(COD_MINOR_PERIPH_KEYBOARD))
+#define HID_DEVICE_SUBCLASS                 ((U8)(COD_MINOR_PERIPH_KEYBOARD))
 #define HID_COUNTRY_CODE                    0x21
 #define HID_VIRTUAL_CABLE                   TRUE
 #define HID_RECONNECT_INITIATE              TRUE

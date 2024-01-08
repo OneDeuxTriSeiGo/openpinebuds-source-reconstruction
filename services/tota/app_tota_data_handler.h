@@ -26,14 +26,14 @@ typedef struct
 {
     uint8_t        isHasCrcCheck     :  1;
     uint8_t        reserved          :  7;
-    uint8_t        reservedBytes[7];	
+    uint8_t        reservedBytes[7];    
 } APP_TOTA_START_DATA_XFER_T;
 
 typedef struct
 {
     uint8_t     isHasWholeCrcCheck  :   1;
     uint8_t     reserved            :   7;
-    uint8_t     reservedBytes1[3];	
+    uint8_t     reservedBytes1[3];  
     uint32_t    wholeDataLenToCheck;
     uint32_t    crc32OfWholeData;
 } APP_TOTA_STOP_DATA_XFER_T;
@@ -90,7 +90,7 @@ void app_anc_tota_send_data(APP_TOTA_TRANSMISSION_PATH_E path, uint8_t* ptrData,
 #endif
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif // #ifndef __APP_TOTA_DATA_HANDLER_H__

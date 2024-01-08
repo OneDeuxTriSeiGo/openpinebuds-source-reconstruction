@@ -571,7 +571,7 @@ KE_MSG_HANDLER_TAB(htpt)
 
 void htpt_task_init(struct ke_task_desc *task_desc)
 {
-	BLE_PRF_HP_FUNC_ENTER();
+    BLE_PRF_HP_FUNC_ENTER();
 
     // Get the address of the environment
     struct htpt_env_tag *htpt_env = PRF_ENV_GET(HTPT, htpt);
@@ -581,7 +581,7 @@ void htpt_task_init(struct ke_task_desc *task_desc)
     task_desc->state           = htpt_env->state;
     task_desc->idx_max         = HTPT_IDX_MAX;
 
-	BLE_PRF_HP_FUNC_LEAVE();
+    BLE_PRF_HP_FUNC_LEAVE();
 }
 
 #endif //BLE_HT_THERMOM

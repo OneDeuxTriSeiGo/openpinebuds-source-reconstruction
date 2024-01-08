@@ -337,7 +337,7 @@ typedef struct {
     bool isLeft;
 } LHDC_FRAME_HDR;
 
-#define LHDC_READBUF_SIZE	1024 * 4	/* pick something big enough to hold a bunch of frames */
+#define LHDC_READBUF_SIZE   1024 * 4    /* pick something big enough to hold a bunch of frames */
 uint8_t lhdcTempBuf[LHDC_READBUF_SIZE];
 uint8_t lhdc_input_mid_buf[LHDC_READBUF_SIZE];
 #define L2CAP_MTU                           672
@@ -428,23 +428,23 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
 #if defined(A2DP_LDAC_ON)
     uint16_t frame_length_index = 0;
 #endif
-	uint32_t now_t = TICKS_TO_MS(hal_sys_timer_get());
-	ssb_err = now_t - old_t;
-	old_t = now_t;
+    uint32_t now_t = TICKS_TO_MS(hal_sys_timer_get());
+    ssb_err = now_t - old_t;
+    old_t = now_t;
 
-	if(ssb_err < 500){
-		if(ssb_err_max < ssb_err)
-			ssb_err_max = ssb_err;
-		if(ssb_err_min > ssb_err)
-			ssb_err_min = ssb_err;
-	}
+    if(ssb_err < 500){
+        if(ssb_err_max < ssb_err)
+            ssb_err_max = ssb_err;
+        if(ssb_err_min > ssb_err)
+            ssb_err_min = ssb_err;
+    }
 
     if (!a2dp_audio_isrunning(A2DPPLAY_STRTEAM_PUT, true)){
         TRACE(3,"%s not ready:%d cache_status:%d",__func__, len, a2dp_cache_status);
     }
-	uint8_t overlay_id = app_get_current_overlay();
+    uint8_t overlay_id = app_get_current_overlay();
 
-	if(overlay_id == APP_OVERLAY_A2DP)
+    if(overlay_id == APP_OVERLAY_A2DP)
     {
         //TRACE(8,"sbc %d %x %x %x %x mtu_count:%d sbcqueue:%d,sbc_frame_rev_len=%d", len, buf[0],
         //    buf[1],buf[2],buf[3],mtu_count,APP_AUDIO_LengthOfCQueue(&sbc_queue),sbc_frame_rev_len);
@@ -471,7 +471,7 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
         {
 #if defined(A2DP_LHDC_ON)
             newLen = 0;
-			if(overlay_id == APP_OVERLAY_A2DP_LHDC){
+            if(overlay_id == APP_OVERLAY_A2DP_LHDC){
                 uint32_t lSize = 0, rSize = 0;
                 uint8_t *lPTR = NULL, *rPTR = NULL;
                 //TRACE(2,"%s:APP_AUDIO_CACHE_CACHEING Enter len = %d",__func__, len);
@@ -488,27 +488,27 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
                     nRet = 0;
                 }
 
-			}
+            }
 #endif
 
             LOCK_APP_AUDIO_QUEUE();
 #if defined(A2DP_LHDC_ON)
-			if(overlay_id == APP_OVERLAY_A2DP_LHDC){
-	            nRet = APP_AUDIO_EnCQueue(&sbc_queue, lhdcTempBuf, newLen);
+            if(overlay_id == APP_OVERLAY_A2DP_LHDC){
+                nRet = APP_AUDIO_EnCQueue(&sbc_queue, lhdcTempBuf, newLen);
                 size = APP_AUDIO_LengthOfCQueue(&sbc_queue);
-			}else
+            }else
 #endif
 
 #if defined(A2DP_LDAC_ON)
-			if(overlay_id == APP_OVERLAY_A2DP_LDAC){
-			//if(bt_sbc_player_get_codec_type() == BTIF_AVDTP_CODEC_TYPE_NON_A2DP){
-	            nRet = APP_AUDIO_EnCQueue(&sbc_queue, buf, len);
-				 size = APP_AUDIO_LengthOfCQueue(&sbc_queue);
-			}else
+            if(overlay_id == APP_OVERLAY_A2DP_LDAC){
+            //if(bt_sbc_player_get_codec_type() == BTIF_AVDTP_CODEC_TYPE_NON_A2DP){
+                nRet = APP_AUDIO_EnCQueue(&sbc_queue, buf, len);
+                 size = APP_AUDIO_LengthOfCQueue(&sbc_queue);
+            }else
 #endif
 
 #if defined(A2DP_AAC_ON)
-			if(overlay_id == APP_OVERLAY_A2DP_AAC){
+            if(overlay_id == APP_OVERLAY_A2DP_AAC){
                 nRet = AvailableOfCQueue(&sbc_queue);
                 if (nRet >= (int)(len + 2))
                 {
@@ -520,12 +520,12 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
             }else
 #endif
 
-			{
-	            nRet = APP_AUDIO_EnCQueue(&sbc_queue, buf, len);
-			}
+            {
+                nRet = APP_AUDIO_EnCQueue(&sbc_queue, buf, len);
+            }
             size = APP_AUDIO_LengthOfCQueue(&sbc_queue);
 #if defined(A2DP_LHDC_ON)
-			if(overlay_id == APP_OVERLAY_A2DP_LHDC){
+            if(overlay_id == APP_OVERLAY_A2DP_LHDC){
                 if (mtu_plus) {
                     if (delay_mtu_count == 0)
                         mtu_count = 0;
@@ -540,44 +540,44 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
                     || overlay_id == APP_OVERLAY_A2DP_LDAC
 #endif
                 ){
-	                if (delay_mtu_count == 0)
-	                    mtu_count = 0;
-	                delay_mtu_count += sbc_frame_num;
-	                mtu_count += sbc_frame_num;
-//					TRACE(1,"+mtu_count = %d",mtu_count);
-				}else{
-	                if (delay_mtu_count == 0)
-	                    mtu_count = 0;
-	                delay_mtu_count++;
-	                mtu_count++;
-				}
+                    if (delay_mtu_count == 0)
+                        mtu_count = 0;
+                    delay_mtu_count += sbc_frame_num;
+                    mtu_count += sbc_frame_num;
+//                  TRACE(1,"+mtu_count = %d",mtu_count);
+                }else{
+                    if (delay_mtu_count == 0)
+                        mtu_count = 0;
+                    delay_mtu_count++;
+                    mtu_count++;
+                }
 #if defined(A2DP_LHDC_ON)
-			}
+            }
 #endif
             UNLOCK_APP_AUDIO_QUEUE();
-			bool flag = 0;
+            bool flag = 0;
 #if defined(A2DP_AAC_ON)
             if(overlay_id == APP_OVERLAY_A2DP_AAC)
-				flag = 1;
+                flag = 1;
 #endif
 #if defined(A2DP_SCALABLE_ON)
             if(overlay_id == APP_OVERLAY_A2DP_SCALABLE)
-				flag = 1;
+                flag = 1;
 #endif
 #if defined(A2DP_LHDC_ON)
             if(overlay_id == APP_OVERLAY_A2DP_LHDC)
-				flag = 1;
+                flag = 1;
 #endif
 #if defined(A2DP_LDAC_ON)
-			if(overlay_id == APP_OVERLAY_A2DP_LDAC)
-			{
-				flag = 1;
-				TRACE(0,"y# ldac cache");
-			}
+            if(overlay_id == APP_OVERLAY_A2DP_LDAC)
+            {
+                flag = 1;
+                TRACE(0,"y# ldac cache");
+            }
 #endif
 
-			if(flag)
-			{
+            if(flag)
+            {
 #ifdef __A2DP_PLAYER_USE_BT_TRIGGER__
                 if(app_bt_stream_trigger_onprocess()&&mtu_count){
                     TRACE(0,"cache ok use dma trigger\n");
@@ -610,27 +610,27 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
 #endif
             }
 
-			if(nRet == CQ_ERR){
-				TRACE(0,"cache add overflow\n");
-				a2dp_cache_status = APP_AUDIO_CACHE_OK;
-			}
-			if (a2dp_cache_status == APP_AUDIO_CACHE_OK){
-				old_t = 0;
-				ssb_err = 0;
-				ssb_err_max = 0;
-				ssb_err_min = 0xffffffff;
-				lagest_mtu_in1s = 0;
-    			least_mtu_in1s = 0xffffffff;
-    			check_interval = 50;
+            if(nRet == CQ_ERR){
+                TRACE(0,"cache add overflow\n");
+                a2dp_cache_status = APP_AUDIO_CACHE_OK;
+            }
+            if (a2dp_cache_status == APP_AUDIO_CACHE_OK){
+                old_t = 0;
+                ssb_err = 0;
+                ssb_err_max = 0;
+                ssb_err_min = 0xffffffff;
+                lagest_mtu_in1s = 0;
+                least_mtu_in1s = 0xffffffff;
+                check_interval = 50;
 #ifdef __LOCK_AUDIO_THREAD__
-				af_unlock_thread();
+                af_unlock_thread();
 #endif
-				A2DP_SYNC_WITH_GET_MUTUX_ALLOC();
-				A2DP_SYNC_WITH_GET_MUTUX_WAIT();
+                A2DP_SYNC_WITH_GET_MUTUX_ALLOC();
+                A2DP_SYNC_WITH_GET_MUTUX_WAIT();
 #ifdef __LOCK_AUDIO_THREAD__
-				af_lock_thread();
+                af_lock_thread();
 #endif
-			}
+            }
             break;
         }
         case APP_AUDIO_CACHE_OK:
@@ -638,7 +638,7 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
             delay_mtu_count = 0;
 #if defined(A2DP_LHDC_ON)
             newLen = 0;
-			if(overlay_id == APP_OVERLAY_A2DP_LHDC){
+            if(overlay_id == APP_OVERLAY_A2DP_LHDC){
                 uint32_t lSize = 0, rSize = 0;
                 uint8_t *lPTR = NULL, *rPTR = NULL;
                 //TRACE(2,"%s: input len(%d)",__func__, len);
@@ -652,17 +652,17 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
                     }
                 }
 
-			}
+            }
 #endif
             do{
                 LOCK_APP_AUDIO_QUEUE();
 #if defined(A2DP_LHDC_ON)
-				if(overlay_id == APP_OVERLAY_A2DP_LHDC){
-                	nRet = APP_AUDIO_EnCQueue(&sbc_queue, lhdcTempBuf, newLen);
-				}else
+                if(overlay_id == APP_OVERLAY_A2DP_LHDC){
+                    nRet = APP_AUDIO_EnCQueue(&sbc_queue, lhdcTempBuf, newLen);
+                }else
 #endif
 #if defined(A2DP_AAC_ON)
-				if(overlay_id == APP_OVERLAY_A2DP_AAC){
+                if(overlay_id == APP_OVERLAY_A2DP_AAC){
                     nRet = AvailableOfCQueue(&sbc_queue);
                     if (nRet >= (int)(len + 2))
                     {
@@ -674,12 +674,12 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
                 }else
 #endif
 
-    			{
-                	nRet = APP_AUDIO_EnCQueue(&sbc_queue, buf, len);
-    			}
+                {
+                    nRet = APP_AUDIO_EnCQueue(&sbc_queue, buf, len);
+                }
                 if (CQ_OK == nRet){
 #if defined(A2DP_LHDC_ON)
-					if(overlay_id == APP_OVERLAY_A2DP_LHDC){
+                    if(overlay_id == APP_OVERLAY_A2DP_LHDC){
                         if (mtu_plus) {
                             mtu_count++;
                             mtu_plus = false;
@@ -691,11 +691,11 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
                          || overlay_id == APP_OVERLAY_A2DP_LDAC
 #endif
                          ){
-							mtu_count += sbc_frame_num;
-//							TRACE(1,"+mtu_count = %d",mtu_count);
-						}else{
-							mtu_count++;
-						}
+                            mtu_count += sbc_frame_num;
+//                          TRACE(1,"+mtu_count = %d",mtu_count);
+                        }else{
+                            mtu_count++;
+                        }
 #if defined(A2DP_LHDC_ON)
                     }
 #endif
@@ -741,7 +741,7 @@ int store_sbc_buffer(unsigned char *buf, unsigned int len)
 
 #if defined(A2DP_LDAC_ON)
 
-#define LDAC_READBUF_SIZE	1024	/* pick something big enough to hold a bunch of frames */
+#define LDAC_READBUF_SIZE   1024    /* pick something big enough to hold a bunch of frames */
 uint8_t ldac_input_mid_buf[LDAC_READBUF_SIZE+2];
 
 /*
@@ -817,8 +817,8 @@ int ldac_dec_deinit(void)
 TEXT_LDAC_LOC
 int ldac_seek_header(uint32_t n_read_bytes, uint32_t *p_parse_bytes)
 {
-	int channel_mode = 0;
-	int sample_rate = 0;
+    int channel_mode = 0;
+    int sample_rate = 0;
 
     if (p_parse_bytes) {
         *p_parse_bytes = 0;
@@ -887,7 +887,7 @@ int load_ldac_frame(uint8_t **p_data, uint32_t *p_len)
 #if 1
     uint8_t retry = 0;
     int len;
- 	int result = 0;
+    int result = 0;
 
     if(hLdacData == NULL){
         return 1;
@@ -920,8 +920,8 @@ int load_ldac_frame(uint8_t **p_data, uint32_t *p_len)
         break;
     }
 
-	if(skip_ldac_frame > 0){
-		skip_ldac_frame--;
+    if(skip_ldac_frame > 0){
+        skip_ldac_frame--;
     }
 #endif
 
@@ -932,7 +932,7 @@ TEXT_LDAC_LOC
 int decode_ldac_frame(uint8_t *out, uint32_t out_max, uint32_t *p_out_len, const uint8_t *in, uint32_t in_len, uint32_t *p_consume_len)
 {
     int result;
-	int n_read_bytes, used_bytes, wrote_bytes;
+    int n_read_bytes, used_bytes, wrote_bytes;
 
     n_read_bytes = LDAC_READBUF_SIZE;
 
@@ -1076,7 +1076,7 @@ static int pcm_buffer_read_no_protction(CQueue *queue, uint8_t *buff, uint16_t l
 TEXT_AAC_LOC
 int load_aac_frame(uint8_t **p_data, uint32_t *p_len)
 {
-	//uint32_t lock;
+    //uint32_t lock;
     unsigned short aac_len =0 ;
     int status;
 
@@ -1232,9 +1232,9 @@ uint8_t ss_dump[484*10];
 uint32_t ss_dump_index = 0;
 #endif
 extern "C" int ssc_decoder_init(
-	void *s,
-	int channels,
-	int Fs
+    void *s,
+    int channels,
+    int Fs
 );
 
 TEXT_SSC_LOC
@@ -1263,11 +1263,11 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
     int r = 0;
     unsigned char *e1 = NULL, *e2 = NULL;
     unsigned int len1 = 0, len2 = 0;
-	int sampling_rate = 44100;
-	int extends_flag;
+    int sampling_rate = 44100;
+    int extends_flag;
 
     TRACE(0,"##decode_scalable_frame");
-	uint8_t head[4];
+    uint8_t head[4];
 
     LOCK_APP_AUDIO_QUEUE();
     len1 = len2 = 0;
@@ -1278,10 +1278,10 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
         //osDelay(2);
         TRACE(2,"no data head xxx %d/%d" , LengthOfCQueue(&sbc_queue),AvailableOfCQueue(&sbc_queue));
         //goto get_scalable_head_again;
-		LOCK_APP_AUDIO_QUEUE();
-		DeCQueue(&sbc_queue, head, 4);
-		UNLOCK_APP_AUDIO_QUEUE();
-		hal_trace_dump("sss %01x",1,4,head);
+        LOCK_APP_AUDIO_QUEUE();
+        DeCQueue(&sbc_queue, head, 4);
+        UNLOCK_APP_AUDIO_QUEUE();
+        hal_trace_dump("sss %01x",1,4,head);
         return 1;
     }
     else {
@@ -1300,7 +1300,7 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
 
     scalable_uhq_flag = 0;
 
-	extends_flag = ((scalable_input_mid_buf[3]>>3)&1);
+    extends_flag = ((scalable_input_mid_buf[3]>>3)&1);
     switch ((scalable_input_mid_buf[3]&0xf7)) {
         case 0xF0:
             bitrate_bps = 88000;
@@ -1314,11 +1314,11 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
         case 0xF3:
             bitrate_bps = 192000;
             break;
-		case 0xF5:
-			scalable_uhq_flag = 1;
-			bitrate_bps = 328000;
-			sampling_rate = 96000;
-			break;
+        case 0xF5:
+            scalable_uhq_flag = 1;
+            bitrate_bps = 328000;
+            sampling_rate = 96000;
+            break;
         default:
             bitrate_bps = 88000;
             break;
@@ -1327,15 +1327,15 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
     frame_size = SCALABLE_FRAME_SIZE;
 
     len = bitrate_bps*frame_size/sampling_rate/8;
-	if(scalable_uhq_flag == 0)
-	{
-		hw_tmp = (len*3)>>7;
-		len = hw_tmp+len;
-		len = len+((len & 1)^1);
-	}
- 	else{
+    if(scalable_uhq_flag == 0)
+    {
+        hw_tmp = (len*3)>>7;
+        len = hw_tmp+len;
+        len = len+((len & 1)^1);
+    }
+    else{
         len=369;//744/2-4+1
- 	}
+    }
     TRACE(4,"len %d,uhq:%d ext:%d extbitrate_bps %d", len,scalable_uhq_flag, extends_flag,bitrate_bps);
 
     LOCK_APP_AUDIO_QUEUE();
@@ -1345,7 +1345,7 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
     if(r == CQ_ERR) {
         //osDelay(2);
         TRACE(0,"no data ");
-		UNLOCK_APP_AUDIO_QUEUE();
+        UNLOCK_APP_AUDIO_QUEUE();
         return 2;
     }
     else {
@@ -1357,7 +1357,7 @@ int load_scalable_frame(uint8_t **p_data, uint32_t *p_len)
             memcpy(scalable_input_mid_buf+4+len1, e2, len2);
         }
     }
-//	UNLOCK_APP_AUDIO_QUEUE();
+//  UNLOCK_APP_AUDIO_QUEUE();
 
  //   LOCK_APP_AUDIO_QUEUE();
     DeCQueue(&sbc_queue, 0, len-1);
@@ -1388,7 +1388,7 @@ int decode_scalable_frame(uint8_t *out, uint32_t out_max, uint32_t *p_out_len, c
         hSSDecoder = (void *)scalable_decoder_place;
         //err = ssc_decoder_create(44100, 2, hSSDecoder);
         decoder_size = ssc_decoder_get_size(2,96000);
-		err = ssc_decoder_init(hSSDecoder,2,96000);
+        err = ssc_decoder_init(hSSDecoder,2,96000);
         TRACE(2,"decoder_size %d init ret %d\n", decoder_size,err);
     }
 
@@ -1441,7 +1441,7 @@ int load_sbc_frame(uint8_t **p_data, uint32_t *p_len)
     }
 
     if (need_init_decoder) {
-		sbc_next_frame_size = sbc_frame_size;
+        sbc_next_frame_size = sbc_frame_size;
     }
 
 get_again:
@@ -1512,11 +1512,11 @@ TEXT_SBC_LOC
 int decode_sbc_frame(uint8_t *out, uint32_t out_max, uint32_t *p_out_len, const uint8_t *in, uint32_t in_len, uint32_t *p_consume_len)
 {
     uint16_t parse_len;
-	static uint16_t parse_len_total_frame = 0;
+    static uint16_t parse_len_total_frame = 0;
     bt_status_t ret;
 
     if(need_init_decoder) {
-		parse_len_total_frame = 0;
+        parse_len_total_frame = 0;
         btif_sbc_init_decoder(sbc_decoder);
     }
 
@@ -1536,12 +1536,12 @@ int decode_sbc_frame(uint8_t *out, uint32_t out_max, uint32_t *p_out_len, const 
                                 out_max,
                                 sbc_eq_band_gain);
     int_unlock(lock);
-	parse_len_total_frame += parse_len;
-	if(parse_len_total_frame >= sbc_frame_size){
-		mtu_count --;
-	//		TRACE(1,"-mtu_count = %d",mtu_count);
-		parse_len_total_frame -= sbc_frame_size;
-	}
+    parse_len_total_frame += parse_len;
+    if(parse_len_total_frame >= sbc_frame_size){
+        mtu_count --;
+    //      TRACE(1,"-mtu_count = %d",mtu_count);
+        parse_len_total_frame -= sbc_frame_size;
+    }
     if (ret == BT_STS_SUCCESS) {
         sbc_next_frame_size = sbc_frame_size;
     } else {
@@ -1756,15 +1756,15 @@ int get_lhdc_data(unsigned char * frame, unsigned int len)
 
 
 int assemble_lhdc_packet(uint8_t * input, uint32_t input_len, uint8_t** pLout, uint32_t * pLlen, uint8_t** pRout, uint32_t * pRlen){
-	uint8_t hdr = 0, seqno = 0xff;
-	int ret = -1;
+    uint8_t hdr = 0, seqno = 0xff;
+    int ret = -1;
     uint32_t status = 0;
 
-	hdr = (*input);
+    hdr = (*input);
     input++;
-	seqno = (*input);
+    seqno = (*input);
     input++;
-	input_len -= 2;
+    input_len -= 2;
 
     status = hdr & A2DP_LHDC_HDR_LATENCY_MASK;
     if (latencyUpdated != (uint8_t)status) {
@@ -1773,21 +1773,21 @@ int assemble_lhdc_packet(uint8_t * input, uint32_t input_len, uint8_t** pLout, u
     }
 
     if( is_synced)
-	{
-		if( seqno != serial_no )
-		{
-			reset_lhdc_assmeble_packet();
-			if( (hdr & A2DP_LHDC_HDR_FLAG_MSK) == 0 ||
-				(hdr & A2DP_LHDC_HDR_S_MSK) != 0 )
-			{
-				goto lhdc_start;
-			}
-			else
-			TRACE(1,"drop packet No. %u", seqno);
-			return 0;
-		}
-		serial_no = seqno + 1;
-	}
+    {
+        if( seqno != serial_no )
+        {
+            reset_lhdc_assmeble_packet();
+            if( (hdr & A2DP_LHDC_HDR_FLAG_MSK) == 0 ||
+                (hdr & A2DP_LHDC_HDR_S_MSK) != 0 )
+            {
+                goto lhdc_start;
+            }
+            else
+            TRACE(1,"drop packet No. %u", seqno);
+            return 0;
+        }
+        serial_no = seqno + 1;
+    }
 
 lhdc_start:
     switch (asm_pkt_st) {
@@ -1868,7 +1868,7 @@ lhdc_start:
         break;
 
     }
-	return ret;
+    return ret;
 }
 /**
  * Decode LHDC data...
@@ -2265,7 +2265,7 @@ int cp_load_sbc_frame(uint8_t **p_data, uint32_t *p_len)
     }
 
     if (need_init_decoder) {
-		sbc_next_frame_size = sbc_frame_size;
+        sbc_next_frame_size = sbc_frame_size;
     }
 
     in_wpos = cp_in_wpos;
@@ -2990,38 +2990,38 @@ void static attempt_slow_samplerate(uint8_t overlay_type)
 
     if (check_interval == 0)
     {
-    	int32_t delay_ms = 0;
-    	if(overlay_type == APP_OVERLAY_A2DP){
-	        delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*128*1000/a2dp_sample_rate;
-    	}else
+        int32_t delay_ms = 0;
+        if(overlay_type == APP_OVERLAY_A2DP){
+            delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*128*1000/a2dp_sample_rate;
+        }else
 #if defined(A2DP_AAC_ON)
-		if(overlay_type == APP_OVERLAY_A2DP_AAC){
-	        delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*1024*1000/a2dp_sample_rate;
-    	}else
+        if(overlay_type == APP_OVERLAY_A2DP_AAC){
+            delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*1024*1000/a2dp_sample_rate;
+        }else
 #endif
 #if defined(A2DP_SCALABLE_ON)
-		if(overlay_type == APP_OVERLAY_A2DP_SCALABLE){
-	        delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*864*1000/a2dp_sample_rate;
-    	}else
+        if(overlay_type == APP_OVERLAY_A2DP_SCALABLE){
+            delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*864*1000/a2dp_sample_rate;
+        }else
 #endif
 #if defined(A2DP_LHDC_ON)
-		if(overlay_type == APP_OVERLAY_A2DP_LHDC){
-	        delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*512*1000/a2dp_sample_rate;
-    	}else
+        if(overlay_type == APP_OVERLAY_A2DP_LHDC){
+            delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*512*1000/a2dp_sample_rate;
+        }else
 #endif
 #if defined(A2DP_LDAC_ON)
         if(overlay_type == APP_OVERLAY_A2DP_LDAC){
             delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*256*1000/a2dp_sample_rate;
         }else
 #endif
-		{
-			delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*assumed_mtu_interval;
-    	}
+        {
+            delay_ms = (delay_mtu_limit-(int)lagest_mtu_in1s)*assumed_mtu_interval;
+        }
         TRACE(6,"store_interval=%d,lagest_mtu_in1s=%d,least_mtu_in1s=%d,delay_ms=%d,frame_len=%d,mtu_count=%d",ssb_err_max,lagest_mtu_in1s,least_mtu_in1s,delay_ms,sbc_frame_rev_len,mtu_count);
         process_delay(delay_ms);
         check_interval = 50;
         lagest_mtu_in1s = 0;
-		least_mtu_in1s = 0xffffffff;
+        least_mtu_in1s = 0xffffffff;
     }
 }
 
@@ -3067,7 +3067,7 @@ uint32_t a2dp_audio_more_data(uint8_t overlay_type, uint8_t *buf, uint32_t len)
                     TRACE(0,"set to APP_AUDIO_CACHE_CACHEING");
                 }
             } else {
-    			//TRACE(2,"a2dp_audio_more_data decode success %d/%d", l, len);
+                //TRACE(2,"a2dp_audio_more_data decode success %d/%d", l, len);
             }
         }
         if (a2dp_cache_status == APP_AUDIO_CACHE_OK) {
@@ -3242,7 +3242,7 @@ int a2dp_audio_init(void)
 
     if (0) {
 #if defined(A2DP_AAC_ON)
-	} else if (overlay_type == APP_OVERLAY_A2DP_AAC) {
+    } else if (overlay_type == APP_OVERLAY_A2DP_AAC) {
         iter_len = AAC_RESAMPLE_ITER_LEN;
 #endif
     } else if (overlay_type == APP_OVERLAY_A2DP) {
@@ -3281,7 +3281,7 @@ int a2dp_audio_init(void)
 
     A2DP_SYNC_WITH_GET_MUTUX_FREE();
     A2DP_SYNC_WITH_PUT_MUTUX_FREE();
-	if(overlay_type == APP_OVERLAY_A2DP){
+    if(overlay_type == APP_OVERLAY_A2DP){
         app_audio_mempool_get_buff((uint8_t **)&sbc_decoder, sizeof(btif_sbc_decoder_t));
     }
 
@@ -3295,7 +3295,7 @@ int a2dp_audio_init(void)
 #endif
 
 #if defined(A2DP_SCALABLE_ON)
-	if(overlay_type == APP_OVERLAY_A2DP_SCALABLE){
+    if(overlay_type == APP_OVERLAY_A2DP_SCALABLE){
         app_audio_mempool_get_buff((uint8_t **)&scalable_input_mid_buf, SCALABLE_READBUF_SIZE);
         app_audio_mempool_get_buff((uint8_t **)&scalable_decoder_place, SCALABLE_DECODER_SIZE);
         app_audio_mempool_get_buff((uint8_t **)&scalable_decoder_temp_buf, SCALABLE_FRAME_SIZE * 16);
@@ -3304,7 +3304,7 @@ int a2dp_audio_init(void)
 #endif
 
 #if defined(A2DP_LHDC_ON)
-	if(overlay_type == APP_OVERLAY_A2DP_LHDC){
+    if(overlay_type == APP_OVERLAY_A2DP_LHDC){
         uint8_t bits_depth = bt_sbc_player_get_bitsDepth();
         AUD_SAMPRATE_T sample_rate = bt_get_sbc_sample_rate();
         TRACE(2,"a2dp_audio_init sample Rate=%d, bits_depth = %d\n", sample_rate, bits_depth);
@@ -3329,7 +3329,7 @@ int a2dp_audio_init(void)
 #ifdef SBC_QUEUE_SIZE
     if (0) {
 #if defined(A2DP_AAC_ON) || defined(A2DP_SCALABLE_ON) || defined(A2DP_LHDC_ON)
-	} else if(overlay_type == APP_OVERLAY_A2DP_AAC){
+    } else if(overlay_type == APP_OVERLAY_A2DP_AAC){
     #if defined(MIX_MIC_DURING_MUSIC)
         g_sbc_queue_size = app_audio_mempool_free_buff_size() - 4096;
     #else
@@ -3337,7 +3337,7 @@ int a2dp_audio_init(void)
     #endif
 #endif
 #if defined(A2DP_SCALABLE_ON)
-	} else if(overlay_type == APP_OVERLAY_A2DP_SCALABLE){
+    } else if(overlay_type == APP_OVERLAY_A2DP_SCALABLE){
     #if defined(MIX_MIC_DURING_MUSIC)
         g_sbc_queue_size = app_audio_mempool_free_buff_size() - 4096;
     #else
@@ -3345,7 +3345,7 @@ int a2dp_audio_init(void)
     #endif
 #endif
 #if defined(A2DP_LHDC_ON)
-	} else if(overlay_type == APP_OVERLAY_A2DP_LHDC){
+    } else if(overlay_type == APP_OVERLAY_A2DP_LHDC){
     #if defined(MIX_MIC_DURING_MUSIC)
         g_sbc_queue_size = app_audio_mempool_free_buff_size() - 4096;
     #else
@@ -3360,14 +3360,14 @@ int a2dp_audio_init(void)
 #endif
 
 #if defined(A2DP_LDAC_ON)
-	if(overlay_type == APP_OVERLAY_A2DP_LDAC)
-	{
-	//if((bt_sbc_player_get_codec_type() == BTIF_AVDTP_CODEC_TYPE_NON_A2DP)){
-		//app_audio_mempool_get_buff(&g_medMemHeap, MED_MEM_HEAP_SIZE);
-		//speech_heap_init((uint8_t *)(&g_medMemHeap[0]), MED_MEM_HEAP_SIZE);
-		g_sbc_queue_size = app_audio_mempool_free_buff_size() - MED_MEM_HEAP_SIZE;
-		TRACE(1,"A2DP_LDAC_ON  g_sbc_queue_size %d\n", g_sbc_queue_size);
-	}
+    if(overlay_type == APP_OVERLAY_A2DP_LDAC)
+    {
+    //if((bt_sbc_player_get_codec_type() == BTIF_AVDTP_CODEC_TYPE_NON_A2DP)){
+        //app_audio_mempool_get_buff(&g_medMemHeap, MED_MEM_HEAP_SIZE);
+        //speech_heap_init((uint8_t *)(&g_medMemHeap[0]), MED_MEM_HEAP_SIZE);
+        g_sbc_queue_size = app_audio_mempool_free_buff_size() - MED_MEM_HEAP_SIZE;
+        TRACE(1,"A2DP_LDAC_ON  g_sbc_queue_size %d\n", g_sbc_queue_size);
+    }
 #endif
 
     app_audio_mempool_get_buff(&buff, g_sbc_queue_size);
@@ -3382,10 +3382,10 @@ int a2dp_audio_init(void)
 
 #if defined(A2DP_LDAC_ON)
     if(overlay_type == APP_OVERLAY_A2DP_LDAC){
-		ldac_buffer_used = app_audio_mempool_total_buf() - app_audio_mempool_free_buff_size();
+        ldac_buffer_used = app_audio_mempool_total_buf() - app_audio_mempool_free_buff_size();
         ldac_recovery = false;
         ldac_dec_init();
-	}
+    }
 #endif
 
 #ifdef A2DP_AUDIO_SYNC_WITH_LOCAL
@@ -3431,13 +3431,13 @@ int a2dp_audio_deinit(void)
 #endif
 
 #if defined(A2DP_LDAC_ON)
-	if(overlay_type == APP_OVERLAY_A2DP_LDAC){
+    if(overlay_type == APP_OVERLAY_A2DP_LDAC){
         ldac_dec_deinit();
-	}
+    }
 #endif
 
 #if defined(A2DP_LHDC_ON)
-	if(overlay_type == APP_OVERLAY_A2DP_LHDC){
+    if(overlay_type == APP_OVERLAY_A2DP_LHDC){
         lhdcDestroy();
     }
 #endif

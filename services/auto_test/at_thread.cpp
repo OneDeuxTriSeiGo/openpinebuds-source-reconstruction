@@ -27,19 +27,19 @@ static uint8_t at_mailbox_cnt = 0;
 static int at_mailbox_init(void)
 {
     AT_DEBUG("%s,%d",__func__,__LINE__);
-	at_mailbox = osMailCreate(osMailQ(at_mailbox), NULL);
-	if (at_mailbox == NULL)  {
+    at_mailbox = osMailCreate(osMailQ(at_mailbox), NULL);
+    if (at_mailbox == NULL)  {
         AT_DEBUG("Failed to Create at_mailbox\n");
-		return -1;
-	}
-	at_mailbox_cnt = 0;
-	return 0;
+        return -1;
+    }
+    at_mailbox_cnt = 0;
+    return 0;
 }
 
 static int at_mailbox_put(AT_MESSAGE* msg_src)
 {
-	osStatus status;
-	AT_MESSAGE *msg_p = NULL;
+    osStatus status;
+    AT_MESSAGE *msg_p = NULL;
 
     AT_DEBUG("%s,%d",__func__,__LINE__);
     if(at_mailbox_cnt >= 1)
@@ -48,41 +48,41 @@ static int at_mailbox_put(AT_MESSAGE* msg_src)
               __func__,__LINE__,at_mailbox_cnt);
         return 0;
     }
-	msg_p = (AT_MESSAGE*)osMailAlloc(at_mailbox, 0);
-	ASSERT(msg_p, "osMailAlloc error");
-	msg_p->id = msg_src->id;
-	msg_p->ptr = msg_src->ptr;
-	msg_p->param0 = msg_src->param0;
-	msg_p->param1 = msg_src->param1;
+    msg_p = (AT_MESSAGE*)osMailAlloc(at_mailbox, 0);
+    ASSERT(msg_p, "osMailAlloc error");
+    msg_p->id = msg_src->id;
+    msg_p->ptr = msg_src->ptr;
+    msg_p->param0 = msg_src->param0;
+    msg_p->param1 = msg_src->param1;
 
-	status = osMailPut(at_mailbox, msg_p);
-	if (osOK == status)
-		at_mailbox_cnt++;
+    status = osMailPut(at_mailbox, msg_p);
+    if (osOK == status)
+        at_mailbox_cnt++;
     AT_DEBUG("%s,%d,at_mailbox_cnt = %d.",__func__,__LINE__,at_mailbox_cnt);
-	return (int)status;
+    return (int)status;
 }
 
 static int at_mailbox_free(AT_MESSAGE* msg_p)
 {
-	osStatus status;
+    osStatus status;
 
     AT_DEBUG("%s,%d",__func__,__LINE__);
-	status = osMailFree(at_mailbox, msg_p);
-	if (osOK == status)
-		at_mailbox_cnt--;
+    status = osMailFree(at_mailbox, msg_p);
+    if (osOK == status)
+        at_mailbox_cnt--;
     AT_DEBUG("%s,%d,at_mailbox_cnt = %d.",__func__,__LINE__,at_mailbox_cnt);
-	return (int)status;
+    return (int)status;
 }
 
 static int at_mailbox_get(AT_MESSAGE **msg_p)
 {
-	osEvent evt;
-	evt = osMailGet(at_mailbox, osWaitForever);
-	if (evt.status == osEventMail) {
-		*msg_p = (AT_MESSAGE*)evt.value.p;
-		return 0;
-	}
-	return -1;
+    osEvent evt;
+    evt = osMailGet(at_mailbox, osWaitForever);
+    if (evt.status == osEventMail) {
+        *msg_p = (AT_MESSAGE*)evt.value.p;
+        return 0;
+    }
+    return -1;
 }
 
 static void at_thread(void const *argument)
@@ -90,17 +90,17 @@ static void at_thread(void const *argument)
     AT_FUNC_T pfunc;
     // USB_FUNC_T usb_funcp;
     AT_DEBUG("%s,%d",__func__,__LINE__);
-	while(1){
-		AT_MESSAGE *msg_p = NULL;
-		if (!at_mailbox_get(&msg_p)) {
+    while(1){
+        AT_MESSAGE *msg_p = NULL;
+        if (!at_mailbox_get(&msg_p)) {
             AT_DEBUG("_debug: %s,%d",__func__,__LINE__);
             AT_DEBUG("at_thread: id = 0x%x, ptr = 0x%x,param0 = 0x%x,param1 = 0x%x.",
                 msg_p->id,msg_p->ptr,msg_p->param0,msg_p->param1);
             pfunc = (AT_FUNC_T)msg_p->ptr;
             pfunc(msg_p->param0,msg_p->param1);
             at_mailbox_free(msg_p);
-		}
-	}
+        }
+    }
 }
 
 int at_os_init(void)
@@ -108,16 +108,16 @@ int at_os_init(void)
     osThreadId at_tid;
 
     AT_DEBUG("%s,%d",__func__,__LINE__);
-	if (at_mailbox_init())	{
+    if (at_mailbox_init())  {
         AT_DEBUG("_debug: %s,%d",__func__,__LINE__);
-		return -1;
-	}
-	at_tid = osThreadCreate(osThread(at_thread), NULL);
-	if (at_tid == NULL)  {
+        return -1;
+    }
+    at_tid = osThreadCreate(osThread(at_thread), NULL);
+    if (at_tid == NULL)  {
         AT_DEBUG("Failed to Create at_thread\n");
-		return -2;
-	}
-	return 0;
+        return -2;
+    }
+    return 0;
 }
 
 int at_enqueue_cmd(uint32_t cmd_id, uint32_t param,uint32_t pfunc)

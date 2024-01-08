@@ -88,7 +88,7 @@ amm-info@iis.fraunhofer.de
 
 ******************************************************************************/
 
-#if defined(__arm__) && defined(__GNUC__)	/* cppp replaced: elif */
+#if defined(__arm__) && defined(__GNUC__)   /* cppp replaced: elif */
 
 #if defined(__ARM_ARCH_5TE__) || defined(__ARM_ARCH_6__)
   #define FUNCTION_cplxMultDiv2_32x16

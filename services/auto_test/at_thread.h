@@ -23,10 +23,10 @@ extern "C" {
 #define AT_MAILBOX_MAX (20)
 
 typedef struct {
-	uint32_t id;
-	uint32_t ptr;
-	uint32_t param0;
-	uint32_t param1;
+    uint32_t id;
+    uint32_t ptr;
+    uint32_t param0;
+    uint32_t param1;
 } AT_MESSAGE;
 
 #define AT_MESSAGE_ID_CMD    0
@@ -38,7 +38,7 @@ typedef void (*AT_THREAD)(void*);
 int at_os_init(void);
 int at_enqueue_cmd(uint32_t cmd_id, uint32_t param,uint32_t pfunc);
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif // __AT_THREAD_H__

@@ -31,17 +31,17 @@
 
 #define OTA_SPP_RECV_BUFFER_SIZE   L2CAP_MTU
 
-#define OTA_SPP_TX_BUF_SIZE	    (OTA_SPP_MAX_PACKET_SIZE*OTA_SPP_MAX_PACKET_NUM)
+#define OTA_SPP_TX_BUF_SIZE     (OTA_SPP_MAX_PACKET_SIZE*OTA_SPP_MAX_PACKET_NUM)
 
-#define APP_OTA_DATA_CMD_TIME_OUT_IN_MS	5000
+#define APP_OTA_DATA_CMD_TIME_OUT_IN_MS 5000
 
 typedef struct {
-	uint8_t otaSppTxBuf[OTA_SPP_TX_BUF_SIZE];
-	uint8_t otaSppRxBuf[OTA_SPP_RECV_BUFFER_SIZE];
-	btif_sdp_record_t *ota_sdp_record;
-	spp_service  *otaSppService;
-	spp_device  *ota_spp_dev;
-	bool permissionToApply;
+    uint8_t otaSppTxBuf[OTA_SPP_TX_BUF_SIZE];
+    uint8_t otaSppRxBuf[OTA_SPP_RECV_BUFFER_SIZE];
+    btif_sdp_record_t *ota_sdp_record;
+    spp_service  *otaSppService;
+    spp_device  *ota_spp_dev;
+    bool permissionToApply;
 } OtaContext;
 
 typedef void(*app_spp_ota_tx_done_t)(void);

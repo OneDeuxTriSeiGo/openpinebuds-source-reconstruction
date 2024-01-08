@@ -162,7 +162,7 @@ amm-info@iis.fraunhofer.de
 #else /* __LP64__ */
   typedef signed long LONG;
   typedef unsigned long ULONG;
-#endif	/* __LP64__ */
+#endif  /* __LP64__ */
   typedef signed short SHORT;
   typedef unsigned short USHORT;
   typedef signed char SCHAR;
@@ -224,7 +224,7 @@ amm-info@iis.fraunhofer.de
 * \def    ALIGNMENT_DEFAULT
 *         Default alignment in bytes.
 */
-#if defined(__GNUC__)	/* cppp replaced: elif */
+#if defined(__GNUC__)   /* cppp replaced: elif */
   #define ALIGNMENT_DEFAULT 8
   #define RAM_ALIGN __attribute__((aligned(ALIGNMENT_DEFAULT)))
 #else
@@ -292,7 +292,7 @@ amm-info@iis.fraunhofer.de
 #define FORCEINLINE
 #else
 #ifndef FORCEINLINE
-  #if defined(__GNUC__)	/* cppp replaced: elif */
+  #if defined(__GNUC__) /* cppp replaced: elif */
     #define FORCEINLINE inline __attribute((always_inline))
   #else
     #define FORCEINLINE

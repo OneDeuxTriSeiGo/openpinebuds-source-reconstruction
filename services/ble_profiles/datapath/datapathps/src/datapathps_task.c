@@ -29,12 +29,12 @@
  ****************************************************************************************
  */
 static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
-									  struct gapc_disconnect_ind const *param,
-									  ke_task_id_t const dest_id,
-									  ke_task_id_t const src_id)
+                                      struct gapc_disconnect_ind const *param,
+                                      ke_task_id_t const dest_id,
+                                      ke_task_id_t const src_id)
 {
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
-	uint8_t conidx = KE_IDX_GET(src_id);
+    uint8_t conidx = KE_IDX_GET(src_id);
     datapathps_env->isNotificationEnabled[conidx] = false;
     return KE_MSG_CONSUMED;
 }
@@ -54,15 +54,15 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{	
+{   
     // Get the address of the environment
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
     uint8_t conidx = KE_IDX_GET(src_id);
 
     uint8_t status = GAP_ERR_NO_ERROR;
 
-	BLE_GATT_DBG("gattc_write_req_ind_handler datapathps_env 0x%x write handle %d shdl %d", 
-		datapathps_env, param->handle, datapathps_env->shdl);
+    BLE_GATT_DBG("gattc_write_req_ind_handler datapathps_env 0x%x write handle %d shdl %d", 
+        datapathps_env, param->handle, datapathps_env->shdl);
 
 
     if (datapathps_env != NULL)
@@ -70,8 +70,8 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         // TX ccc
         if (param->handle == (datapathps_env->shdl + DATAPATHPS_IDX_TX_NTF_CFG))
         {
-			uint16_t value = 0x0000;
-			
+            uint16_t value = 0x0000;
+            
             //Extract value before check
             memcpy(&value, &(param->value), sizeof(uint16_t));
 
@@ -98,22 +98,22 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         // RX data
         else if (param->handle == (datapathps_env->shdl + DATAPATHPS_IDX_RX_VAL))
         {
-			//inform APP of data
+            //inform APP of data
             struct ble_datapath_rx_data_ind_t * ind = KE_MSG_ALLOC_DYN(DATAPATHPS_RX_DATA_RECEIVED,
                     prf_dst_task_get(&datapathps_env->prf_env, conidx),
                     prf_src_task_get(&datapathps_env->prf_env, conidx),
                     ble_datapath_rx_data_ind_t,
                     param->length);
 
-			ind->length = param->length;
-			memcpy((uint8_t *)(ind->data), &(param->value), param->length);
+            ind->length = param->length;
+            memcpy((uint8_t *)(ind->data), &(param->value), param->length);
 
             ke_msg_send(ind);
         }
-		else
-		{
-			status = PRF_APP_ERROR;
-		}
+        else
+        {
+            status = PRF_APP_ERROR;
+        }
     }
 
     //Send write response
@@ -141,28 +141,28 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_evt const *param,
                                  ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	// Get the address of the environment
+    // Get the address of the environment
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
 
-	uint8_t conidx = KE_IDX_GET(dest_id);
-		
-	// notification has been sent out
+    uint8_t conidx = KE_IDX_GET(dest_id);
+        
+    // notification has been sent out
     if ((GATTC_NOTIFY == param->operation) || (GATTC_WRITE_NO_RESPONSE == param->operation))
     {
-		
+        
         struct ble_datapath_tx_sent_ind_t * ind = KE_MSG_ALLOC(DATAPATHPS_TX_DATA_SENT,
                 prf_dst_task_get(&datapathps_env->prf_env, conidx),
                 prf_src_task_get(&datapathps_env->prf_env, conidx),
                 ble_datapath_tx_sent_ind_t);
 
-		ind->status = param->status;
+        ind->status = param->status;
 
         ke_msg_send(ind);
 
     }
 
-	ke_state_set(dest_id, DATAPATHPS_IDLE);
-	
+    ke_state_set(dest_id, DATAPATHPS_IDLE);
+    
     return (KE_MSG_CONSUMED);
 }
 
@@ -181,17 +181,17 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_read_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{	
+{   
     // Get the address of the environment
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
 
-	struct gattc_read_cfm* cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id, 
-		gattc_read_cfm, BLE_MAXIMUM_CHARACTERISTIC_DESCRIPTION);
+    struct gattc_read_cfm* cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id, 
+        gattc_read_cfm, BLE_MAXIMUM_CHARACTERISTIC_DESCRIPTION);
 
-	uint8_t conidx = KE_IDX_GET(src_id);
+    uint8_t conidx = KE_IDX_GET(src_id);
     uint8_t status = GAP_ERR_NO_ERROR;
 
-	BLE_GATT_DBG("gattc_read_req_ind_handler read handle %d shdl %d", param->handle, datapathps_env->shdl);
+    BLE_GATT_DBG("gattc_read_req_ind_handler read handle %d shdl %d", param->handle, datapathps_env->shdl);
 
     if (param->handle == (datapathps_env->shdl + DATAPATHPS_IDX_TX_DESC)) {
         cfm->length = sizeof(custom_tx_desc);
@@ -215,13 +215,13 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
         status = ATT_ERR_REQUEST_NOT_SUPPORTED;
     }
 
-	cfm->handle = param->handle;
+    cfm->handle = param->handle;
 
-	cfm->status = status;
+    cfm->status = status;
 
-	ke_msg_send(cfm);
+    ke_msg_send(cfm);
 
-	ke_state_set(dest_id, DATAPATHPS_IDLE);
+    ke_state_set(dest_id, DATAPATHPS_IDLE);
 
     return (KE_MSG_CONSUMED);
 }
@@ -274,7 +274,7 @@ static void send_indication(uint8_t conidx, const uint8_t* ptrData, uint32_t len
         memcpy(report_ntf->value, ptrData, length);
         // send notification to peer device
         ke_msg_send(report_ntf);
-	}
+    }
 }
 
 __STATIC int send_data_via_indication_handler(ke_msg_id_t const msgid,
@@ -282,8 +282,8 @@ __STATIC int send_data_via_indication_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-	send_indication(param->connecionIndex, param->value, param->length);
-	return (KE_MSG_CONSUMED);
+    send_indication(param->connecionIndex, param->value, param->length);
+    return (KE_MSG_CONSUMED);
 }
 
 __STATIC int send_data_via_write_command_handler(ke_msg_id_t const msgid,
@@ -291,13 +291,13 @@ __STATIC int send_data_via_write_command_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-	struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
+    struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
 
-	prf_gatt_write(&(datapathps_env->prf_env), KE_IDX_GET(dest_id), datapathps_env->shdl + DATAPATHPS_IDX_RX_VAL,
+    prf_gatt_write(&(datapathps_env->prf_env), KE_IDX_GET(dest_id), datapathps_env->shdl + DATAPATHPS_IDX_RX_VAL,
                                    (uint8_t *)&param->value, param->length, GATTC_WRITE_NO_RESPONSE);
 
-	ke_state_set(dest_id, DATAPATHPS_BUSY);
-	return (KE_MSG_CONSUMED);
+    ke_state_set(dest_id, DATAPATHPS_BUSY);
+    return (KE_MSG_CONSUMED);
 }
 
 __STATIC int send_data_via_write_request_handler(ke_msg_id_t const msgid,
@@ -305,13 +305,13 @@ __STATIC int send_data_via_write_request_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-	struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
+    struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
 
-	prf_gatt_write(&(datapathps_env->prf_env), KE_IDX_GET(dest_id), datapathps_env->shdl + DATAPATHPS_IDX_RX_VAL,
+    prf_gatt_write(&(datapathps_env->prf_env), KE_IDX_GET(dest_id), datapathps_env->shdl + DATAPATHPS_IDX_RX_VAL,
                                    (uint8_t *)&param->value, param->length, GATTC_WRITE);
 
-	ke_state_set(dest_id, DATAPATHPS_BUSY);
-	return (KE_MSG_CONSUMED);
+    ke_state_set(dest_id, DATAPATHPS_BUSY);
+    return (KE_MSG_CONSUMED);
 }
 
 __STATIC int gattc_event_ind_handler(ke_msg_id_t const msgid,
@@ -338,17 +338,17 @@ __STATIC int gattc_event_ind_handler(ke_msg_id_t const msgid,
         {
             if (param->handle == datapathps_env->shdl + DATAPATHPS_IDX_TX_VAL)
             {
-				//inform APP of data
-				struct ble_datapath_rx_data_ind_t * ind = KE_MSG_ALLOC_DYN(DATAPATHPS_NOTIFICATION_RECEIVED,
-						prf_dst_task_get(&datapathps_env->prf_env, conidx),
-						prf_src_task_get(&datapathps_env->prf_env, conidx),
-						ble_datapath_rx_data_ind_t,
-						param->length);
-				
-				ind->length = param->length;
-				memcpy((uint8_t *)(ind->data), &(param->value), param->length);
-				
-				ke_msg_send(ind);
+                //inform APP of data
+                struct ble_datapath_rx_data_ind_t * ind = KE_MSG_ALLOC_DYN(DATAPATHPS_NOTIFICATION_RECEIVED,
+                        prf_dst_task_get(&datapathps_env->prf_env, conidx),
+                        prf_src_task_get(&datapathps_env->prf_env, conidx),
+                        ble_datapath_rx_data_ind_t,
+                        param->length);
+                
+                ind->length = param->length;
+                memcpy((uint8_t *)(ind->data), &(param->value), param->length);
+                
+                ke_msg_send(ind);
 
             }
         } break;
@@ -365,18 +365,18 @@ __STATIC int control_notification_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-	struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
-	uint16_t ccc_write_val = 0;
-	if (param->isEnable)
-	{
-		ccc_write_val = 1;
-	}
+    struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
+    uint16_t ccc_write_val = 0;
+    if (param->isEnable)
+    {
+        ccc_write_val = 1;
+    }
 
-	prf_gatt_write(&(datapathps_env->prf_env), param->connecionIndex, datapathps_env->shdl + DATAPATHPS_IDX_TX_NTF_CFG,
+    prf_gatt_write(&(datapathps_env->prf_env), param->connecionIndex, datapathps_env->shdl + DATAPATHPS_IDX_TX_NTF_CFG,
                                    (uint8_t *)&ccc_write_val, sizeof(ccc_write_val), GATTC_WRITE);
 
-	ke_state_set(dest_id, DATAPATHPS_BUSY);
-	return (KE_MSG_CONSUMED);
+    ke_state_set(dest_id, DATAPATHPS_BUSY);
+    return (KE_MSG_CONSUMED);
 }
 
 /**
@@ -402,7 +402,7 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
     cfm = KE_MSG_ALLOC(GATTC_ATT_INFO_CFM, src_id, dest_id, gattc_att_info_cfm);
     cfm->handle = param->handle;
 
-	struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
+    struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
     // check if it's a client configuration char
     if (param->handle == datapathps_env->shdl + DATAPATHPS_IDX_TX_NTF_CFG)
     {
@@ -436,18 +436,18 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
 /* Default State handlers definition. */
 KE_MSG_HANDLER_TAB(datapathps)
 {
-	{GAPC_DISCONNECT_IND,		(ke_msg_func_t) gapc_disconnect_ind_handler},
-    {GATTC_WRITE_REQ_IND,    	(ke_msg_func_t) gattc_write_req_ind_handler},
-    {GATTC_CMP_EVT,          	(ke_msg_func_t) gattc_cmp_evt_handler},
-    {GATTC_READ_REQ_IND,     	(ke_msg_func_t) gattc_read_req_ind_handler},
-    {DATAPATHPS_SEND_DATA_VIA_NOTIFICATION,   	(ke_msg_func_t) send_data_via_notification_handler},
-	{DATAPATHPS_SEND_DATA_VIA_INDICATION,   	(ke_msg_func_t) send_data_via_indication_handler},
-	{DATAPATHPS_SEND_DATA_VIA_WRITE_COMMAND,    (ke_msg_func_t) send_data_via_write_command_handler},
-	{DATAPATHPS_SEND_DATA_VIA_WRITE_REQUEST,    (ke_msg_func_t) send_data_via_write_request_handler},
-	{GATTC_EVENT_IND,               			(ke_msg_func_t) gattc_event_ind_handler},
-	{DATAPATHPS_CONTROL_NOTIFICATION,			(ke_msg_func_t) control_notification_handler},
-	{GATTC_ATT_INFO_REQ_IND,                    (ke_msg_func_t) gattc_att_info_req_ind_handler },
-	
+    {GAPC_DISCONNECT_IND,       (ke_msg_func_t) gapc_disconnect_ind_handler},
+    {GATTC_WRITE_REQ_IND,       (ke_msg_func_t) gattc_write_req_ind_handler},
+    {GATTC_CMP_EVT,             (ke_msg_func_t) gattc_cmp_evt_handler},
+    {GATTC_READ_REQ_IND,        (ke_msg_func_t) gattc_read_req_ind_handler},
+    {DATAPATHPS_SEND_DATA_VIA_NOTIFICATION,     (ke_msg_func_t) send_data_via_notification_handler},
+    {DATAPATHPS_SEND_DATA_VIA_INDICATION,       (ke_msg_func_t) send_data_via_indication_handler},
+    {DATAPATHPS_SEND_DATA_VIA_WRITE_COMMAND,    (ke_msg_func_t) send_data_via_write_command_handler},
+    {DATAPATHPS_SEND_DATA_VIA_WRITE_REQUEST,    (ke_msg_func_t) send_data_via_write_request_handler},
+    {GATTC_EVENT_IND,                           (ke_msg_func_t) gattc_event_ind_handler},
+    {DATAPATHPS_CONTROL_NOTIFICATION,           (ke_msg_func_t) control_notification_handler},
+    {GATTC_ATT_INFO_REQ_IND,                    (ke_msg_func_t) gattc_att_info_req_ind_handler },
+    
 };
 
 void datapathps_task_init(struct ke_task_desc *task_desc)

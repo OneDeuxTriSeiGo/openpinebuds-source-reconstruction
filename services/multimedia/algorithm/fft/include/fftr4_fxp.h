@@ -32,13 +32,13 @@
 #define FFTR4_OUTPUT_FORMAT     (FFTR4_OUTPUT_FORMAT_X+FFTR4_OUTPUT_FORMAT_Y)
 
 typedef struct {
-	int re;
-	int im;
+    int re;
+    int im;
 } FftData_t;
 
 typedef struct {
-	int re;
-	int im;
+    int re;
+    int im;
 } FftTwiddle_t;
 
 typedef enum 

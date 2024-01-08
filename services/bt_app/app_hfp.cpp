@@ -1029,11 +1029,11 @@ static void hfp_callsetup_ind_handler(hf_chan_handle_t chan, struct hfp_context 
 #endif
 
     TRACE(2,"::HF_EVENT_CALLSETUP_IND chan_id:%d, callSetup =%d\n", chan_id_flag.id, ctx->call_setup);
-	if(ctx->call_setup == 0x03)
-	{
-		once_event_case = 8;
-		startonce_delay_event_Timer_(1000);
-	}
+    if(ctx->call_setup == 0x03)
+    {
+        once_event_case = 8;
+        startonce_delay_event_Timer_(1000);
+    }
         if((ctx->call_setup & 0x03) != 0){
             hfp_call_setup_running_on_set(1);
         }

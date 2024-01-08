@@ -355,31 +355,31 @@ void a2dp_source_notify_send(void)
 static int A2dpSourceEnCQueue(CQueue *Q, CQItemType *e, unsigned int len)
 {
     int status=CQ_OK;
-	if (AvailableOfCQueue(Q) < (int)len) {
-		Q->write=0;
-		Q->len=0;
-		Q->read=0;
-		status=CQ_ERR;
-	}
-	else
+    if (AvailableOfCQueue(Q) < (int)len) {
+        Q->write=0;
+        Q->len=0;
+        Q->read=0;
+        status=CQ_ERR;
+    }
+    else
     {
-		status=CQ_OK;
-	}
+        status=CQ_OK;
+    }
 
-	Q->len += len;
+    Q->len += len;
 
-	while(len > 0) {
-		Q->base[Q->write] = *e;
+    while(len > 0) {
+        Q->base[Q->write] = *e;
 
-		++Q->write;
-		++e;
-		--len;
+        ++Q->write;
+        ++e;
+        --len;
 
-		if(Q->write >= Q->size)
-			Q->write = 0;
-	}
+        if(Q->write >= Q->size)
+            Q->write = 0;
+    }
 
-	//TRACE(1,"Q->len:%d ", Q->len);
+    //TRACE(1,"Q->len:%d ", Q->len);
 
     return status;
 }
@@ -410,7 +410,7 @@ static int a2dp_source_pcm_buffer_read(uint8_t *buff, uint16_t len)
         memcpy(buff+len1,e2,len2);
         DeCQueue(&(a2dp_source.pcm_queue), 0, len);
     }else{
-		//SOURCE_DBLOG("memset buffer");
+        //SOURCE_DBLOG("memset buffer");
         memset(buff, 0x00, len);
         status = -1;
     }
@@ -438,12 +438,12 @@ status = a2dp_source_pcm_buffer_write(pcm_buf,len);
 //DUMP8("%02x ",pcm_buf, 10);
 if(status !=CQ_OK)
 {
-	SOURCE_DBLOG("linin buff overflow!");
+    SOURCE_DBLOG("linin buff overflow!");
 }
 if(((app_bt_device.input_onoff==1)&&(a2dp_source.pcm_queue.len >10*1024))||(app_bt_device.input_onoff==2))
 {
-	a2dp_source_put_data();
-	app_bt_device.input_onoff=2;
+    a2dp_source_put_data();
+    app_bt_device.input_onoff=2;
 }
 
 return len;
@@ -459,7 +459,7 @@ static uint8_t app_a2dp_source_find_process=0;
 void app_a2dp_source_stop_find(void)
 {
     app_a2dp_source_find_process=0;
-	//ME_UnregisterGlobalHandler(&a2dp_source_handler);
+    //ME_UnregisterGlobalHandler(&a2dp_source_handler);
 }
 
 #if 0
@@ -467,7 +467,7 @@ static void bt_a2dp_source_call_back(const BtEvent* event)
 {
     switch (event->eType) {
         case BTEVENT_HCI_COMMAND_SENT:
-		case BTEVENT_ACL_DATA_NOT_ACTIVE:
+        case BTEVENT_ACL_DATA_NOT_ACTIVE:
             return;
         case BTEVENT_ACL_DATA_ACTIVE:
             CmgrHandler    *cmgrHandler;
@@ -494,8 +494,8 @@ static void bt_a2dp_source_call_back(const BtEvent* event)
             if(event->p.inqResult.classOfDevice & COD_MAJOR_AUDIO)
             //if((event->p.inqResult.classOfDevice & COD_MAJOR_AUDIO)&&(!memcmp(event->p.inqResult.bdAddr.addr,"\x36\x35\x34",3)))
             {
-            	memcpy(app_bt_device.inquried_snk_bdAddr.addr,event->p.inqResult.bdAddr.addr,sizeof(event->p.inqResult.bdAddr.addr));
-				DUMP8("%02x ",app_bt_device.inquried_snk_bdAddr.addr, 6);
+                memcpy(app_bt_device.inquried_snk_bdAddr.addr,event->p.inqResult.bdAddr.addr,sizeof(event->p.inqResult.bdAddr.addr));
+                DUMP8("%02x ",app_bt_device.inquried_snk_bdAddr.addr, 6);
                 ME_CancelInquiry();
                 app_a2dp_source_stop_find();
             }
@@ -508,29 +508,29 @@ static void bt_a2dp_source_call_back(const BtEvent* event)
             /** The Inquiry process is canceled. */
         case BTEVENT_INQUIRY_CANCELED:
             SOURCE_DBLOG("\n%s %d BTEVENT_INQUIRY_CANCELED\n",__FUNCTION__,__LINE__);
-			SOURCE_DBLOG("start to connect peer device");
+            SOURCE_DBLOG("start to connect peer device");
             A2DP_OpenStream(&app_bt_device.a2dp_stream[BT_DEVICE_ID_1], (BT_BD_ADDR *)&app_bt_device.inquried_snk_bdAddr);
             break;
         case BTEVENT_LINK_CONNECT_CNF:
         case BTEVENT_LINK_CONNECT_IND:
-			SOURCE_DBLOG("CONNECT_IND/CNF evt:%d errCode:0x%0x newRole:%d activeCons:%d",event->eType, event->errCode, event->p.remDev->role, MEC(activeCons));
+            SOURCE_DBLOG("CONNECT_IND/CNF evt:%d errCode:0x%0x newRole:%d activeCons:%d",event->eType, event->errCode, event->p.remDev->role, MEC(activeCons));
 #if defined(__BTIF_EARPHONE__) && defined(__BTIF_AUTOPOWEROFF__)  && !defined(FPGA)
-			if (MEC(activeCons) == 0){
-			    app_start_10_second_timer(APP_POWEROFF_TIMER_ID);
-			}else{
-			    app_stop_10_second_timer(APP_POWEROFF_TIMER_ID);
-			}
+            if (MEC(activeCons) == 0){
+                app_start_10_second_timer(APP_POWEROFF_TIMER_ID);
+            }else{
+                app_stop_10_second_timer(APP_POWEROFF_TIMER_ID);
+            }
 #endif
-			if (MEC(activeCons) > 1){
-			    app_bt_MeDisconnectLink(event->p.remDev);
-			}
+            if (MEC(activeCons) > 1){
+                app_bt_MeDisconnectLink(event->p.remDev);
+            }
         default:
             //SOURCE_DBLOG("\n%s %d etype:%d\n",__FUNCTION__,__LINE__,event->eType);
             break;
 
     }
 
-	app_bt_role_manager_process(event);
+    app_bt_role_manager_process(event);
     app_bt_accessible_manager_process(event);
     app_bt_sniff_manager_process(event);
     app_bt_golbal_handle_hook(event);
@@ -552,7 +552,7 @@ static void bt_a2dp_source_call_back(const btif_event_t* Event)
 
     switch (etype) {
         case BTIF_BTEVENT_HCI_COMMAND_SENT:
-		case BTIF_BTEVENT_ACL_DATA_NOT_ACTIVE:
+        case BTIF_BTEVENT_ACL_DATA_NOT_ACTIVE:
             return;
         case BTIF_BTEVENT_ACL_DATA_ACTIVE:
 
@@ -582,8 +582,8 @@ static void bt_a2dp_source_call_back(const btif_event_t* Event)
             if((btif_me_get_callback_event_inq_result_classofdevice(Event) & BTIF_COD_MAJOR_AUDIO) && \
                 (!memcmp(btif_me_get_callback_event_inq_result_bd_addr_addr(Event),source_bt_addr,6)))
             {
-            	memcpy(app_bt_device.inquried_snk_bdAddr.addr,btif_me_get_callback_event_inq_result_bd_addr_addr(Event),6);
-				DUMP8("%02x ",app_bt_device.inquried_snk_bdAddr.addr, 6);
+                memcpy(app_bt_device.inquried_snk_bdAddr.addr,btif_me_get_callback_event_inq_result_bd_addr_addr(Event),6);
+                DUMP8("%02x ",app_bt_device.inquried_snk_bdAddr.addr, 6);
                 btif_me_cancel_inquiry();
                 app_a2dp_source_stop_find();
             }
@@ -596,30 +596,30 @@ static void bt_a2dp_source_call_back(const btif_event_t* Event)
             /** The Inquiry process is canceled. */
         case BTIF_BTEVENT_INQUIRY_CANCELED:
             SOURCE_DBLOG("\n%s %d BTEVENT_INQUIRY_CANCELED\n",__FUNCTION__,__LINE__);
-			SOURCE_DBLOG("start to connect peer device");
+            SOURCE_DBLOG("start to connect peer device");
             btif_a2dp_open_stream(app_bt_device.a2dp_stream[BT_DEVICE_ID_1]->a2dp_stream, (bt_bdaddr_t *)&app_bt_device.inquried_snk_bdAddr);
             break;
         case BTIF_BTEVENT_LINK_CONNECT_CNF:
         case BTIF_BTEVENT_LINK_CONNECT_IND:
-			SOURCE_DBLOG("CONNECT_IND/CNF evt:%d errCode:0x%0x newRole:%d activeCons:%d",etype,btif_me_get_callback_event_err_code(Event),btif_me_get_remote_device_role(btif_me_get_callback_event_rem_dev(Event)),btif_me_get_activeCons());
+            SOURCE_DBLOG("CONNECT_IND/CNF evt:%d errCode:0x%0x newRole:%d activeCons:%d",etype,btif_me_get_callback_event_err_code(Event),btif_me_get_remote_device_role(btif_me_get_callback_event_rem_dev(Event)),btif_me_get_activeCons());
 #if defined(__BTIF_EARPHONE__) && defined(__BTIF_AUTOPOWEROFF__)  && !defined(FPGA)
-			if (btif_me_get_activeCons() == 0){
-			    app_start_10_second_timer(APP_POWEROFF_TIMER_ID);
-			}else{
-			    app_stop_10_second_timer(APP_POWEROFF_TIMER_ID);
-			}
+            if (btif_me_get_activeCons() == 0){
+                app_start_10_second_timer(APP_POWEROFF_TIMER_ID);
+            }else{
+                app_stop_10_second_timer(APP_POWEROFF_TIMER_ID);
+            }
 #endif
-			if (btif_me_get_activeCons() > 1){
+            if (btif_me_get_activeCons() > 1){
                 remDev=btif_me_get_callback_event_rem_dev(Event);
-			    app_bt_MeDisconnectLink(remDev);
-			}
+                app_bt_MeDisconnectLink(remDev);
+            }
         default:
             //SOURCE_DBLOG("\n%s %d etype:%d\n",__FUNCTION__,__LINE__,event->eType);
             break;
 
     }
 
-	app_bt_role_manager_process(Event);
+    app_bt_role_manager_process(Event);
     app_bt_accessible_manager_process(Event);
     app_bt_sniff_manager_process(Event);
 
@@ -727,7 +727,7 @@ static void a2dp_source_send_sbc_packet(void)
 
         btif_sbc_pcm_data_t PcmEncData;
 
-    	if(need_init_encoder) {
+        if(need_init_encoder) {
             btif_sbc_init_encoder(&sbc_encoder);
             sbc_encoder.streamInfo.numChannels = 2;
             sbc_encoder.streamInfo.channelMode = BTIF_SBC_CHNL_MODE_JOINT_STEREO;
@@ -756,8 +756,8 @@ static void a2dp_source_send_sbc_packet(void)
 }
 #endif
 
-//#define BT_A2DP_SOURCE_LINEIN_BUFF_SIZE    	(512*5*2*2)
-#define BT_A2DP_SOURCE_LINEIN_BUFF_SIZE    	(A2DP_TRANS_SIZE*2)
+//#define BT_A2DP_SOURCE_LINEIN_BUFF_SIZE       (512*5*2*2)
+#define BT_A2DP_SOURCE_LINEIN_BUFF_SIZE     (A2DP_TRANS_SIZE*2)
 
 
 #if defined(APP_LINEIN_A2DP_SOURCE)
@@ -805,10 +805,10 @@ int app_a2dp_source_linein_on(bool on)
         af_stream_stop(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
         af_stream_close(AUD_STREAM_ID_0, AUD_STREAM_CAPTURE);
         SOURCE_DBLOG("app_source_linein_on off");
-		//clear buffer data
-		a2dp_source.pcm_queue.write=0;
-		a2dp_source.pcm_queue.len=0;
-		a2dp_source.pcm_queue.read=0;
+        //clear buffer data
+        a2dp_source.pcm_queue.write=0;
+        a2dp_source.pcm_queue.len=0;
+        a2dp_source.pcm_queue.read=0;
         app_sysfreq_req(APP_SYSFREQ_USER_APP_0, APP_SYSFREQ_32K);
     }
 
@@ -831,7 +831,7 @@ static void send_thread(const void *arg)
         a2dp_source_wait_pcm_data();
         while(a2dp_source_pcm_buffer_read((uint8_t *)a2dp_transmit_buffer,A2DP_TRANS_SIZE)==0)
         {
-        	a2dp_source_send_sbc_packet();
+            a2dp_source_send_sbc_packet();
         }
     }
 }
@@ -849,7 +849,7 @@ void app_a2dp_source_init(void)
 {
     a2dp_source_lock_t *lock;
     //get heap from app_audio_buffer
-	app_audio_mempool_get_buff(&a2dp_linein_buff, A2DP_LINEIN_SIZE);
+    app_audio_mempool_get_buff(&a2dp_linein_buff, A2DP_LINEIN_SIZE);
     InitCQueue(&a2dp_source.pcm_queue, A2DP_LINEIN_SIZE, ( CQItemType *)a2dp_linein_buff);
     if(a2dp_source_mutex_id == NULL)
     {

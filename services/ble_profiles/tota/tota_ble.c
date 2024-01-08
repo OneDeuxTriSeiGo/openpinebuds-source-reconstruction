@@ -38,26 +38,26 @@
  * TOTA CMD PROFILE ATTRIBUTES
  ****************************************************************************************
  */
-#define tota_service_uuid_128_content  			{0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86 }
-#define tota_val_char_val_uuid_128_content  		{0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97 }	
+#define tota_service_uuid_128_content           {0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86 }
+#define tota_val_char_val_uuid_128_content          {0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97 }   
 
-#define ATT_DECL_PRIMARY_SERVICE_UUID		{ 0x00, 0x28 }
-#define ATT_DECL_CHARACTERISTIC_UUID		{ 0x03, 0x28 }
-#define ATT_DESC_CLIENT_CHAR_CFG_UUID		{ 0x02, 0x29 }
+#define ATT_DECL_PRIMARY_SERVICE_UUID       { 0x00, 0x28 }
+#define ATT_DECL_CHARACTERISTIC_UUID        { 0x03, 0x28 }
+#define ATT_DESC_CLIENT_CHAR_CFG_UUID       { 0x02, 0x29 }
 
-static const uint8_t TOTA_SERVICE_UUID_128[ATT_UUID_128_LEN]	= tota_service_uuid_128_content;  
+static const uint8_t TOTA_SERVICE_UUID_128[ATT_UUID_128_LEN]    = tota_service_uuid_128_content;  
 
 /// Full OTA SERVER Database Description - Used to add attributes into the database
 const struct attm_desc_128 tota_att_db[TOTA_IDX_NB] =
 {
     // TOTA Service Declaration
-    [TOTA_IDX_SVC] 	=   {ATT_DECL_PRIMARY_SERVICE_UUID, PERM(RD, ENABLE), 0, 0},
-	// TOTA Characteristic Declaration
-	[TOTA_IDX_CHAR]    =  {ATT_DECL_CHARACTERISTIC_UUID, PERM(RD, ENABLE), 0, 0},
-	// TOTA service
+    [TOTA_IDX_SVC]  =   {ATT_DECL_PRIMARY_SERVICE_UUID, PERM(RD, ENABLE), 0, 0},
+    // TOTA Characteristic Declaration
+    [TOTA_IDX_CHAR]    =  {ATT_DECL_CHARACTERISTIC_UUID, PERM(RD, ENABLE), 0, 0},
+    // TOTA service
     [TOTA_IDX_VAL]     =  {tota_val_char_val_uuid_128_content, PERM(WRITE_REQ, ENABLE) | PERM(NTF, ENABLE), PERM(RI, ENABLE) | PERM_VAL(UUID_LEN, PERM_UUID_128), TOTA_MAX_LEN},
-	// TOTA Characteristic
-	[TOTA_IDX_NTF_CFG]	=   {ATT_DESC_CLIENT_CHAR_CFG_UUID, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), 0, 0},
+    // TOTA Characteristic
+    [TOTA_IDX_NTF_CFG]  =   {ATT_DESC_CLIENT_CHAR_CFG_UUID, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), 0, 0},
 
 };
 
@@ -83,9 +83,9 @@ const struct attm_desc_128 tota_att_db[TOTA_IDX_NB] =
  ****************************************************************************************
  */
 static uint8_t tota_init(struct prf_task_env* env, uint16_t* start_hdl, 
-	uint16_t app_task, uint8_t sec_lvl, void* params)
+    uint16_t app_task, uint8_t sec_lvl, void* params)
 {
-	uint8_t status;
+    uint8_t status;
     //Add Service Into Database
     status = attm_svc_create_db_128(start_hdl, TOTA_SERVICE_UUID_128, NULL,
             TOTA_IDX_NB, NULL, env->task, &tota_att_db[0],
@@ -93,7 +93,7 @@ static uint8_t tota_init(struct prf_task_env* env, uint16_t* start_hdl,
             | PERM_VAL(SVC_UUID_LEN, PERM_UUID_128));
 
 
-	BLE_GATT_DBG("attm_svc_create_db_128 returns %d start handle is %d", status, *start_hdl);
+    BLE_GATT_DBG("attm_svc_create_db_128 returns %d start handle is %d", status, *start_hdl);
 
     //-------------------- allocate memory required for the profile  ---------------------
     if (status == ATT_ERR_NO_ERROR)
@@ -110,7 +110,7 @@ static uint8_t tota_init(struct prf_task_env* env, uint16_t* start_hdl,
                 | (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
         // Mono Instantiated task
         tota_env->prf_env.prf_task    = env->task | 
-        	(PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
+            (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
 
         // initialize environment variable
         env->id                     = TASK_ID_TOTA;
@@ -151,8 +151,8 @@ static void tota_destroy(struct prf_task_env* env)
  */
 static void tota_create(struct prf_task_env* env, uint8_t conidx)
 {
-	struct tota_env_tag* tota_env = (struct tota_env_tag*) env->env;
-	struct prf_svc tota_tota_svc = {tota_env->shdl, tota_env->shdl + TOTA_IDX_NB};
+    struct tota_env_tag* tota_env = (struct tota_env_tag*) env->env;
+    struct prf_svc tota_tota_svc = {tota_env->shdl, tota_env->shdl + TOTA_IDX_NB};
     prf_register_atthdl2gatt(env->env, conidx, &tota_tota_svc);
 
 }

@@ -72,7 +72,7 @@ static inline uint32_t _btpcm_get_reg_base(enum HAL_BTPCM_ID_T id)
             return BTPCM_BASE;
             break;
     }
-	return 0;
+    return 0;
 }
 
 int hal_btpcm_open(enum HAL_BTPCM_ID_T id, enum AUD_STREAM_T stream)

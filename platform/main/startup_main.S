@@ -43,7 +43,7 @@ Boot_Loader:
     ldr   r3, =0x4000008c
     ldr   r0, [r3]
     bic.w r0, r0, #0x03f80000
-    orr.w r0, r0, #0x00f80000	/*0x1f<<19*/
+    orr.w r0, r0, #0x00f80000   /*0x1f<<19*/
     str   r0, [r3]
 #endif
 

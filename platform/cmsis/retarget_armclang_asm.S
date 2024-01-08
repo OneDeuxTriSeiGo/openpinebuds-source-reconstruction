@@ -18,26 +18,26 @@
 #include "plat_addr_map.h"
 #include "link_sym_armclang.h"
 
-	.syntax  unified
+    .syntax  unified
 
-	.text
+    .text
 
-	.macro def_sym, name:req, val:req
-	.global \name
-	.set \name, \val
-	.endm
+    .macro def_sym, name:req, val:req
+    .global \name
+    .set \name, \val
+    .endm
 
-	def_sym __export_fn_rom, (ROM_BASE + ROM_SIZE - ROM_BUILD_INFO_SECTION_SIZE - ROM_EXPORT_FN_SECTION_SIZE)
+    def_sym __export_fn_rom, (ROM_BASE + ROM_SIZE - ROM_BUILD_INFO_SECTION_SIZE - ROM_EXPORT_FN_SECTION_SIZE)
 
-	.section .code_start_addr, "a", %progbits
-	.word BUILD_INFO_MAGIC
+    .section .code_start_addr, "a", %progbits
+    .word BUILD_INFO_MAGIC
 #ifdef PROGRAMMER
-	.word __exec_struct_start
+    .word __exec_struct_start
 #else
-	.word __flash_start
+    .word __flash_start
 #endif
 
-	.end
+    .end
 
 #endif // __ARMCC_VERSION
 

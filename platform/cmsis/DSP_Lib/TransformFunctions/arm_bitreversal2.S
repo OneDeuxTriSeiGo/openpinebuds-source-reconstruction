@@ -37,14 +37,14 @@
     #define LABEL
     #define ENDP
     #define EXPORT PUBLIC
-#elif defined ( __CSMC__ )	   /* Cosmic */
-	#define	CODESECT	switch .text
-	#define THUMB
-	#define EXPORT	xdef
-	#define PROC	:
-	#define LABEL	:
-	#define ENDP
-	#define arm_bitreversal_32 _arm_bitreversal_32
+#elif defined ( __CSMC__ )     /* Cosmic */
+    #define CODESECT    switch .text
+    #define THUMB
+    #define EXPORT  xdef
+    #define PROC    :
+    #define LABEL   :
+    #define ENDP
+    #define arm_bitreversal_32 _arm_bitreversal_32
 #elif defined ( __TI_ARM__ )   /* TI ARM */
     #define THUMB    .thumb
     #define CODESECT .text
@@ -65,8 +65,8 @@
     .syntax unified
 #endif
 
-	CODESECT
-	THUMB
+    CODESECT
+    THUMB
 
 ;/**
 ;  @brief         In-place bit reversal function.
@@ -75,142 +75,142 @@
 ;  @param[in]     pBitRevTab  points to bit reversal table
 ;  @return        none
 ; */
-	EXPORT arm_bitreversal_32
-	EXPORT arm_bitreversal_16
+    EXPORT arm_bitreversal_32
+    EXPORT arm_bitreversal_16
 
 #if   defined ( __CC_ARM )     /* Keil */
 #elif defined ( __IASMARM__ )  /* IAR */
-#elif defined ( __CSMC__ )	   /* Cosmic */
+#elif defined ( __CSMC__ )     /* Cosmic */
 #elif defined ( __TI_ARM__ )   /* TI ARM */
 #elif defined ( __GNUC__ )     /* GCC */
-	.type   arm_bitreversal_16, %function
-	.type   arm_bitreversal_32, %function
+    .type   arm_bitreversal_16, %function
+    .type   arm_bitreversal_32, %function
 #endif
 
 #if defined (ARM_MATH_CM0_FAMILY)
 
 arm_bitreversal_32 PROC
-	ADDS     r3,r1,#1
-	PUSH     {r4-r6}
-	ADDS     r1,r2,#0
-	LSRS     r3,r3,#1
+    ADDS     r3,r1,#1
+    PUSH     {r4-r6}
+    ADDS     r1,r2,#0
+    LSRS     r3,r3,#1
 arm_bitreversal_32_0 LABEL
-	LDRH     r2,[r1,#2]
-	LDRH     r6,[r1,#0]
-	ADD      r2,r0,r2
-	ADD      r6,r0,r6
-	LDR      r5,[r2,#0]
-	LDR      r4,[r6,#0]
-	STR      r5,[r6,#0]
-	STR      r4,[r2,#0]
-	LDR      r5,[r2,#4]
-	LDR      r4,[r6,#4]
-	STR      r5,[r6,#4]
-	STR      r4,[r2,#4]
-	ADDS     r1,r1,#4
-	SUBS     r3,r3,#1
-	BNE      arm_bitreversal_32_0
-	POP      {r4-r6}
-	BX       lr
-	ENDP
+    LDRH     r2,[r1,#2]
+    LDRH     r6,[r1,#0]
+    ADD      r2,r0,r2
+    ADD      r6,r0,r6
+    LDR      r5,[r2,#0]
+    LDR      r4,[r6,#0]
+    STR      r5,[r6,#0]
+    STR      r4,[r2,#0]
+    LDR      r5,[r2,#4]
+    LDR      r4,[r6,#4]
+    STR      r5,[r6,#4]
+    STR      r4,[r2,#4]
+    ADDS     r1,r1,#4
+    SUBS     r3,r3,#1
+    BNE      arm_bitreversal_32_0
+    POP      {r4-r6}
+    BX       lr
+    ENDP
 
 arm_bitreversal_16 PROC
-	ADDS     r3,r1,#1
-	PUSH     {r4-r6}
-	ADDS     r1,r2,#0
-	LSRS     r3,r3,#1
+    ADDS     r3,r1,#1
+    PUSH     {r4-r6}
+    ADDS     r1,r2,#0
+    LSRS     r3,r3,#1
 arm_bitreversal_16_0 LABEL
-	LDRH     r2,[r1,#2]
-	LDRH     r6,[r1,#0]
+    LDRH     r2,[r1,#2]
+    LDRH     r6,[r1,#0]
     LSRS     r2,r2,#1
     LSRS     r6,r6,#1
-	ADD      r2,r0,r2
-	ADD      r6,r0,r6
-	LDR      r5,[r2,#0]
-	LDR      r4,[r6,#0]
-	STR      r5,[r6,#0]
-	STR      r4,[r2,#0]
-	ADDS     r1,r1,#4
-	SUBS     r3,r3,#1
-	BNE      arm_bitreversal_16_0
-	POP      {r4-r6}
-	BX       lr
-	ENDP
+    ADD      r2,r0,r2
+    ADD      r6,r0,r6
+    LDR      r5,[r2,#0]
+    LDR      r4,[r6,#0]
+    STR      r5,[r6,#0]
+    STR      r4,[r2,#0]
+    ADDS     r1,r1,#4
+    SUBS     r3,r3,#1
+    BNE      arm_bitreversal_16_0
+    POP      {r4-r6}
+    BX       lr
+    ENDP
 
 #else
 
 arm_bitreversal_32 PROC
-	ADDS     r3,r1,#1
-	CMP      r3,#1
-	IT       LS
-	BXLS     lr
-	PUSH     {r4-r9}
-	ADDS     r1,r2,#2
-	LSRS     r3,r3,#2
+    ADDS     r3,r1,#1
+    CMP      r3,#1
+    IT       LS
+    BXLS     lr
+    PUSH     {r4-r9}
+    ADDS     r1,r2,#2
+    LSRS     r3,r3,#2
 arm_bitreversal_32_0 LABEL       ;/* loop unrolled by 2 */
-	LDRH     r8,[r1,#4]
-	LDRH     r9,[r1,#2]
-	LDRH     r2,[r1,#0]
-	LDRH     r12,[r1,#-2]
-	ADD      r8,r0,r8
-	ADD      r9,r0,r9
-	ADD      r2,r0,r2
-	ADD      r12,r0,r12
-	LDR      r7,[r9,#0]
-	LDR      r6,[r8,#0]
-	LDR      r5,[r2,#0]
-	LDR      r4,[r12,#0]
-	STR      r6,[r9,#0]
-	STR      r7,[r8,#0]
-	STR      r5,[r12,#0]
-	STR      r4,[r2,#0]
-	LDR      r7,[r9,#4]
-	LDR      r6,[r8,#4]
-	LDR      r5,[r2,#4]
-	LDR      r4,[r12,#4]
-	STR      r6,[r9,#4]
-	STR      r7,[r8,#4]
-	STR      r5,[r12,#4]
-	STR      r4,[r2,#4]
-	ADDS     r1,r1,#8
-	SUBS     r3,r3,#1
-	BNE      arm_bitreversal_32_0
-	POP      {r4-r9}
-	BX       lr
-	ENDP
+    LDRH     r8,[r1,#4]
+    LDRH     r9,[r1,#2]
+    LDRH     r2,[r1,#0]
+    LDRH     r12,[r1,#-2]
+    ADD      r8,r0,r8
+    ADD      r9,r0,r9
+    ADD      r2,r0,r2
+    ADD      r12,r0,r12
+    LDR      r7,[r9,#0]
+    LDR      r6,[r8,#0]
+    LDR      r5,[r2,#0]
+    LDR      r4,[r12,#0]
+    STR      r6,[r9,#0]
+    STR      r7,[r8,#0]
+    STR      r5,[r12,#0]
+    STR      r4,[r2,#0]
+    LDR      r7,[r9,#4]
+    LDR      r6,[r8,#4]
+    LDR      r5,[r2,#4]
+    LDR      r4,[r12,#4]
+    STR      r6,[r9,#4]
+    STR      r7,[r8,#4]
+    STR      r5,[r12,#4]
+    STR      r4,[r2,#4]
+    ADDS     r1,r1,#8
+    SUBS     r3,r3,#1
+    BNE      arm_bitreversal_32_0
+    POP      {r4-r9}
+    BX       lr
+    ENDP
 
 arm_bitreversal_16 PROC
-	ADDS     r3,r1,#1
-	CMP      r3,#1
-	IT       LS
-	BXLS     lr
-	PUSH     {r4-r9}
-	ADDS     r1,r2,#2
-	LSRS     r3,r3,#2
+    ADDS     r3,r1,#1
+    CMP      r3,#1
+    IT       LS
+    BXLS     lr
+    PUSH     {r4-r9}
+    ADDS     r1,r2,#2
+    LSRS     r3,r3,#2
 arm_bitreversal_16_0 LABEL       ;/* loop unrolled by 2 */
-	LDRH     r8,[r1,#4]
-	LDRH     r9,[r1,#2]
-	LDRH     r2,[r1,#0]
-	LDRH     r12,[r1,#-2]
-	ADD      r8,r0,r8,LSR #1
-	ADD      r9,r0,r9,LSR #1
-	ADD      r2,r0,r2,LSR #1
-	ADD      r12,r0,r12,LSR #1
-	LDR      r7,[r9,#0]
-	LDR      r6,[r8,#0]
-	LDR      r5,[r2,#0]
-	LDR      r4,[r12,#0]
-	STR      r6,[r9,#0]
-	STR      r7,[r8,#0]
-	STR      r5,[r12,#0]
-	STR      r4,[r2,#0]
-	ADDS     r1,r1,#8
-	SUBS     r3,r3,#1
-	BNE      arm_bitreversal_16_0
-	POP      {r4-r9}
-	BX       lr
-	ENDP
+    LDRH     r8,[r1,#4]
+    LDRH     r9,[r1,#2]
+    LDRH     r2,[r1,#0]
+    LDRH     r12,[r1,#-2]
+    ADD      r8,r0,r8,LSR #1
+    ADD      r9,r0,r9,LSR #1
+    ADD      r2,r0,r2,LSR #1
+    ADD      r12,r0,r12,LSR #1
+    LDR      r7,[r9,#0]
+    LDR      r6,[r8,#0]
+    LDR      r5,[r2,#0]
+    LDR      r4,[r12,#0]
+    STR      r6,[r9,#0]
+    STR      r7,[r8,#0]
+    STR      r5,[r12,#0]
+    STR      r4,[r2,#0]
+    ADDS     r1,r1,#8
+    SUBS     r3,r3,#1
+    BNE      arm_bitreversal_16_0
+    POP      {r4-r9}
+    BX       lr
+    ENDP
 
 #endif
 
-	END
+    END

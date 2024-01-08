@@ -1,11 +1,11 @@
 
 cur_dir := $(dir $(lastword $(MAKEFILE_LIST)))
 
-obj_s 	:= $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)*.s))
-obj_c 	:= $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)*.c))
+obj_s	:= $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)*.s))
+obj_c	:= $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)*.c))
 obj_cpp := $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)*.cpp))
 
-obj_c 	+= $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)src/*.c))
+obj_c	+= $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)src/*.c))
 obj_cpp += $(patsubst $(cur_dir)%,%,$(wildcard $(cur_dir)src/*.cpp))
 
 ifeq ($(HW_FILTER_CODEC_IIR),1)

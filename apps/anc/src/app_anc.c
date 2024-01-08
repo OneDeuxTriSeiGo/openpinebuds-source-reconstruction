@@ -430,7 +430,7 @@ int __anc_usb_app_fadeout(enum ANC_TYPE_T type)
         return 0;
     }
 
-	return 1;
+    return 1;
 }
 
 #if defined(ANC_FF_ENABLED) && defined(ANC_FB_ENABLED)
@@ -444,9 +444,9 @@ int __anc_usb_app_fadein_ff_fb(void)
 
 
     anc_get_gain(&gain0_curr, &gain1_curr, ANC_FEEDFORWARD);
-	anc_get_gain(&gain2_curr, &gain3_curr, ANC_FEEDBACK);
+    anc_get_gain(&gain2_curr, &gain3_curr, ANC_FEEDBACK);
     anc_get_cfg_gain(&gain0_tg, &gain1_tg, ANC_FEEDFORWARD);
-	anc_get_cfg_gain(&gain2_tg, &gain3_tg, ANC_FEEDBACK);
+    anc_get_cfg_gain(&gain2_tg, &gain3_tg, ANC_FEEDBACK);
 
     uint32_t random_factor = rand();
     random_factor %= 5;
@@ -458,134 +458,134 @@ int __anc_usb_app_fadein_ff_fb(void)
 
     random_factor_inverse =1;
 
-	if(is_sbc_mode() || is_sco_mode()){
-	    if (gain0_tg > 0)
-	    {
-	        if (gain0_curr < gain0_tg)
-	        {
-	            gain0_curr = MIN(gain0_curr+random_factor_inverse, gain0_tg);
-	        }
-	    }
-	    else
-	    {
-	        if (gain0_curr > gain0_tg)
-	        {
-				gain0_curr = MAX(gain0_curr-random_factor_inverse, gain0_tg);
-	        }
-	    }
+    if(is_sbc_mode() || is_sco_mode()){
+        if (gain0_tg > 0)
+        {
+            if (gain0_curr < gain0_tg)
+            {
+                gain0_curr = MIN(gain0_curr+random_factor_inverse, gain0_tg);
+            }
+        }
+        else
+        {
+            if (gain0_curr > gain0_tg)
+            {
+                gain0_curr = MAX(gain0_curr-random_factor_inverse, gain0_tg);
+            }
+        }
 
-	    if (gain1_tg > 0)
-	    {
-	        if (gain1_curr < gain1_tg)
-	        {
-	            gain1_curr = MIN(gain1_curr+random_factor_inverse, gain1_tg);
-	        }
-	    }
-	    else
-	    {
-	        if (gain1_curr > gain1_tg)
-	        {
-	            gain1_curr = MAX(gain1_curr-random_factor_inverse, gain1_tg);
-	        }
-	    }
+        if (gain1_tg > 0)
+        {
+            if (gain1_curr < gain1_tg)
+            {
+                gain1_curr = MIN(gain1_curr+random_factor_inverse, gain1_tg);
+            }
+        }
+        else
+        {
+            if (gain1_curr > gain1_tg)
+            {
+                gain1_curr = MAX(gain1_curr-random_factor_inverse, gain1_tg);
+            }
+        }
 
-		if (gain2_tg > 0)
-		{
-			if (gain2_curr < gain2_tg)
-			{
-				gain2_curr = MIN(gain2_curr+random_factor_inverse, gain2_tg);
-			}
-		}
-		else
-		{
-			if (gain2_curr > gain2_tg)
-			{
-	            gain2_curr = MAX(gain2_curr-random_factor_inverse, gain2_tg);
-			}
-		}
+        if (gain2_tg > 0)
+        {
+            if (gain2_curr < gain2_tg)
+            {
+                gain2_curr = MIN(gain2_curr+random_factor_inverse, gain2_tg);
+            }
+        }
+        else
+        {
+            if (gain2_curr > gain2_tg)
+            {
+                gain2_curr = MAX(gain2_curr-random_factor_inverse, gain2_tg);
+            }
+        }
 
-		if (gain3_tg > 0)
-		{
-			if (gain3_curr < gain3_tg)
-			{
-				gain3_curr = MIN(gain3_curr+random_factor_inverse, gain3_tg);
-			}
-		}
-		else
-		{
-			if (gain3_curr > gain3_tg)
-			{
-	            gain3_curr = MAX(gain3_curr-random_factor_inverse, gain3_tg);
-			}
-		}
-	}else{
-	    if (gain0_tg > 0)
-	    {
-	        if (gain0_curr < gain0_tg)
-	        {
-	            gain0_curr = MIN(gain0_curr+random_factor_inverse, gain0_tg);
-	        }
-	    }
-	    else
-	    {
-	        if (gain0_curr > gain0_tg)
-	        {
-				gain0_curr = MAX(gain0_curr-random_factor_inverse, gain0_tg);
-	        }
-	    }
+        if (gain3_tg > 0)
+        {
+            if (gain3_curr < gain3_tg)
+            {
+                gain3_curr = MIN(gain3_curr+random_factor_inverse, gain3_tg);
+            }
+        }
+        else
+        {
+            if (gain3_curr > gain3_tg)
+            {
+                gain3_curr = MAX(gain3_curr-random_factor_inverse, gain3_tg);
+            }
+        }
+    }else{
+        if (gain0_tg > 0)
+        {
+            if (gain0_curr < gain0_tg)
+            {
+                gain0_curr = MIN(gain0_curr+random_factor_inverse, gain0_tg);
+            }
+        }
+        else
+        {
+            if (gain0_curr > gain0_tg)
+            {
+                gain0_curr = MAX(gain0_curr-random_factor_inverse, gain0_tg);
+            }
+        }
 
-	    if (gain1_tg > 0)
-	    {
-	        if (gain1_curr < gain1_tg)
-	        {
-	            gain1_curr = MIN(gain1_curr+random_factor_inverse, gain1_tg);
-	        }
-	    }
-	    else
-	    {
-	        if (gain1_curr > gain1_tg)
-	        {
-	            gain1_curr = MAX(gain1_curr-random_factor_inverse, gain1_tg);
-	        }
-	    }
+        if (gain1_tg > 0)
+        {
+            if (gain1_curr < gain1_tg)
+            {
+                gain1_curr = MIN(gain1_curr+random_factor_inverse, gain1_tg);
+            }
+        }
+        else
+        {
+            if (gain1_curr > gain1_tg)
+            {
+                gain1_curr = MAX(gain1_curr-random_factor_inverse, gain1_tg);
+            }
+        }
 
-		if (gain2_tg > 0)
-		{
-			if (gain2_curr < gain2_tg)
-			{
-				gain2_curr = MIN(gain2_curr+random_factor_inverse, gain2_tg);
-			}
-		}
-		else
-		{
-			if (gain2_curr > gain2_tg)
-			{
-	            gain2_curr = MAX(gain2_curr-random_factor_inverse, gain2_tg);
-			}
-		}
+        if (gain2_tg > 0)
+        {
+            if (gain2_curr < gain2_tg)
+            {
+                gain2_curr = MIN(gain2_curr+random_factor_inverse, gain2_tg);
+            }
+        }
+        else
+        {
+            if (gain2_curr > gain2_tg)
+            {
+                gain2_curr = MAX(gain2_curr-random_factor_inverse, gain2_tg);
+            }
+        }
 
-		if (gain3_tg > 0)
-		{
-			if (gain3_curr < gain3_tg)
-			{
-				gain3_curr = MIN(gain3_curr+random_factor_inverse, gain3_tg);
-			}
-		}
-		else
-		{
-			if (gain3_curr > gain3_tg)
-			{
-	            gain3_curr = MAX(gain3_curr-random_factor_inverse, gain3_tg);
-			}
-		}
-	}
+        if (gain3_tg > 0)
+        {
+            if (gain3_curr < gain3_tg)
+            {
+                gain3_curr = MIN(gain3_curr+random_factor_inverse, gain3_tg);
+            }
+        }
+        else
+        {
+            if (gain3_curr > gain3_tg)
+            {
+                gain3_curr = MAX(gain3_curr-random_factor_inverse, gain3_tg);
+            }
+        }
+    }
 
 
     anc_set_gain(gain0_curr, gain1_curr, ANC_FEEDFORWARD);
-	anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
+    anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
 
 
-	//TRACE(5,"[%s] cur gain: %d %d %d %d", __func__, gain0_curr, gain1_curr, gain2_curr, gain3_curr);
+    //TRACE(5,"[%s] cur gain: %d %d %d %d", __func__, gain0_curr, gain1_curr, gain2_curr, gain3_curr);
 
         //osDelay(random_factor);
 
@@ -600,7 +600,7 @@ int __anc_usb_app_fadein_ff_fb(void)
         anc_disable_gain_updated_when_pass0(1);
 
         anc_set_gain(gain0_curr, gain1_curr, ANC_FEEDFORWARD);
-	    anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
+        anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
         TRACE(5,"[%s] end cur gain: %d, %d, %d, %d", __func__, gain0_curr, gain1_curr,gain2_curr,gain3_curr);
         return 0;
     }
@@ -610,9 +610,9 @@ int __anc_usb_app_fadein_ff_fb(void)
 int __anc_usb_app_fadeout_ff_fb(void)
 {
     int32_t gain0_curr, gain1_curr;
-	int32_t gain2_curr, gain3_curr;
+    int32_t gain2_curr, gain3_curr;
     anc_get_gain(&gain0_curr, &gain1_curr, ANC_FEEDFORWARD);
-	anc_get_gain(&gain2_curr, &gain3_curr, ANC_FEEDBACK);
+    anc_get_gain(&gain2_curr, &gain3_curr, ANC_FEEDBACK);
 
     uint32_t random_factor = rand();
     random_factor = random_factor%5;
@@ -624,88 +624,88 @@ int __anc_usb_app_fadeout_ff_fb(void)
     random_factor_inverse =1;
 
 
-	if(is_sbc_mode() || is_sco_mode()){
-	    if (gain0_curr > 0)
-	    {
-			gain0_curr = MAX(gain0_curr-random_factor_inverse,0);
-	    }
-	    else if (gain0_curr < 0)
-	    {
-			gain0_curr = MIN(gain0_curr+random_factor_inverse,0);
-	    }
+    if(is_sbc_mode() || is_sco_mode()){
+        if (gain0_curr > 0)
+        {
+            gain0_curr = MAX(gain0_curr-random_factor_inverse,0);
+        }
+        else if (gain0_curr < 0)
+        {
+            gain0_curr = MIN(gain0_curr+random_factor_inverse,0);
+        }
 
-	    if (gain1_curr > 0)
-	    {
-			gain1_curr = MAX(gain1_curr-random_factor_inverse,0);
-	    }
-	    else if (gain1_curr < 0)
-	    {
-			gain1_curr = MIN(gain1_curr+random_factor_inverse,0);
-	    }
+        if (gain1_curr > 0)
+        {
+            gain1_curr = MAX(gain1_curr-random_factor_inverse,0);
+        }
+        else if (gain1_curr < 0)
+        {
+            gain1_curr = MIN(gain1_curr+random_factor_inverse,0);
+        }
 
-	    if (gain2_curr > 0)
-	    {
-			gain2_curr = MAX(gain2_curr-random_factor_inverse,0);
-	    }
-	    else if (gain2_curr < 0)
-	    {
-			gain2_curr = MIN(gain2_curr+random_factor_inverse,0);
-	    }
+        if (gain2_curr > 0)
+        {
+            gain2_curr = MAX(gain2_curr-random_factor_inverse,0);
+        }
+        else if (gain2_curr < 0)
+        {
+            gain2_curr = MIN(gain2_curr+random_factor_inverse,0);
+        }
 
-	    if (gain3_curr > 0)
-	    {
-			gain3_curr = MAX(gain3_curr-random_factor_inverse,0);
-	    }
-	    else if (gain3_curr < 0)
-	    {
-			gain3_curr = MIN(gain3_curr+random_factor_inverse,0);
-	    }
-	}else{
-	    if (gain0_curr > 0)
-	    {
-			gain0_curr = MAX(gain0_curr-random_factor_inverse,0);
-	    }
-	    else if (gain0_curr < 0)
-	    {
-			gain0_curr = MIN(gain0_curr+random_factor_inverse,0);
-	    }
+        if (gain3_curr > 0)
+        {
+            gain3_curr = MAX(gain3_curr-random_factor_inverse,0);
+        }
+        else if (gain3_curr < 0)
+        {
+            gain3_curr = MIN(gain3_curr+random_factor_inverse,0);
+        }
+    }else{
+        if (gain0_curr > 0)
+        {
+            gain0_curr = MAX(gain0_curr-random_factor_inverse,0);
+        }
+        else if (gain0_curr < 0)
+        {
+            gain0_curr = MIN(gain0_curr+random_factor_inverse,0);
+        }
 
-	    if (gain1_curr > 0)
-	    {
-			gain1_curr = MAX(gain1_curr-random_factor_inverse,0);
-	    }
-	    else if (gain1_curr < 0)
-	    {
-			gain1_curr = MIN(gain1_curr+random_factor_inverse,0);
-	    }
+        if (gain1_curr > 0)
+        {
+            gain1_curr = MAX(gain1_curr-random_factor_inverse,0);
+        }
+        else if (gain1_curr < 0)
+        {
+            gain1_curr = MIN(gain1_curr+random_factor_inverse,0);
+        }
 
-	    if (gain2_curr > 0)
-	    {
-			gain2_curr = MAX(gain2_curr-random_factor_inverse,0);
-	    }
-	    else if (gain2_curr < 0)
-	    {
-			gain2_curr = MIN(gain2_curr+random_factor_inverse,0);
-	    }
+        if (gain2_curr > 0)
+        {
+            gain2_curr = MAX(gain2_curr-random_factor_inverse,0);
+        }
+        else if (gain2_curr < 0)
+        {
+            gain2_curr = MIN(gain2_curr+random_factor_inverse,0);
+        }
 
-	    if (gain3_curr > 0)
-	    {
-			gain3_curr = MAX(gain3_curr-random_factor_inverse,0);
-	    }
-	    else if (gain3_curr < 0)
-	    {
-			gain3_curr = MIN(gain3_curr+random_factor_inverse,0);
-	    }
+        if (gain3_curr > 0)
+        {
+            gain3_curr = MAX(gain3_curr-random_factor_inverse,0);
+        }
+        else if (gain3_curr < 0)
+        {
+            gain3_curr = MIN(gain3_curr+random_factor_inverse,0);
+        }
 
-	}
+    }
 
 
     anc_set_gain(gain0_curr, gain1_curr, ANC_FEEDFORWARD);
-	anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
+    anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
     //TRACE(5,"[%s] cur gain: %d %d %d %d", __func__, gain0_curr, gain1_curr, gain2_curr, gain3_curr);
 
 
-	//osDelay(random_factor);
+    //osDelay(random_factor);
 
        hal_sys_timer_delay_us(40);
        if(gain0_curr%40==0)
@@ -718,7 +718,7 @@ int __anc_usb_app_fadeout_ff_fb(void)
         anc_disable_gain_updated_when_pass0(1);
 
         anc_set_gain(gain0_curr, gain1_curr, ANC_FEEDFORWARD);
-	    anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
+        anc_set_gain(gain2_curr, gain3_curr, ANC_FEEDBACK);
         TRACE(5,"[%s] end cur gain: %d, %d, %d, %d", __func__, gain0_curr, gain1_curr,gain2_curr,gain3_curr);
         return 0;
     }
@@ -1424,14 +1424,14 @@ static int app_anc_handle_process(APP_MESSAGE_BODY *msg_body)
             {
                 anc_work_status = ANC_STATUS_ON;
                 //recommand to play "ANC ON" prompt here...
-			    app_voice_report(APP_STATUS_INDICATION_ALEXA_START,0);//close latlatency mode
+                app_voice_report(APP_STATUS_INDICATION_ALEXA_START,0);//close latlatency mode
 
             }
             if (evt == ANC_EVENT_FADE_OUT)
             {
                 anc_work_status = ANC_STATUS_INIT_ON;
                 //recommand to play "ANC OFF" prompt here...
-			    app_voice_report(APP_STATUS_INDICATION_ALEXA_STOP,0);//close latlatency mode
+                app_voice_report(APP_STATUS_INDICATION_ALEXA_STOP,0);//close latlatency mode
 
             }
             break;

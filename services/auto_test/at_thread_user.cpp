@@ -66,8 +66,8 @@ AT_TREAD_INFO at_thread_info[THREAD_USER_COUNT] =
 
 static int at_mailbox_user_put(enum THREAD_USER_ID user_id,AT_MESSAGE* msg_src)
 {
-	osStatus status;
-	AT_MESSAGE *msg_p = NULL;
+    osStatus status;
+    AT_MESSAGE *msg_p = NULL;
 
     AT_THREAD_TRACE(3,"%s,%d,user_id = %d.",__func__,__LINE__,user_id);
     if(at_thread_info[user_id].mail_count >= 1)
@@ -76,41 +76,41 @@ static int at_mailbox_user_put(enum THREAD_USER_ID user_id,AT_MESSAGE* msg_src)
               __func__,__LINE__,at_thread_info[user_id].mail_count);
         return 0;
     }
-	msg_p = (AT_MESSAGE*)osMailAlloc(at_thread_info[user_id].mid, 0);
-	ASSERT(msg_p, "osMailAlloc error");
-	msg_p->id = msg_src->id;
-	msg_p->ptr = msg_src->ptr;
-	msg_p->param0 = msg_src->param0;
-	msg_p->param1 = msg_src->param1;
+    msg_p = (AT_MESSAGE*)osMailAlloc(at_thread_info[user_id].mid, 0);
+    ASSERT(msg_p, "osMailAlloc error");
+    msg_p->id = msg_src->id;
+    msg_p->ptr = msg_src->ptr;
+    msg_p->param0 = msg_src->param0;
+    msg_p->param1 = msg_src->param1;
 
-	status = osMailPut(at_thread_info[user_id].mid, msg_p);
-	if (osOK == status)
-		at_thread_info[user_id].mail_count ++;
+    status = osMailPut(at_thread_info[user_id].mid, msg_p);
+    if (osOK == status)
+        at_thread_info[user_id].mail_count ++;
     AT_THREAD_TRACE(3,"%s,%d,at_mailbox_cnt = %d.",__func__,__LINE__,at_thread_info[user_id].mail_count);
-	return (int)status;
+    return (int)status;
 }
 
 static int at_mailbox_user_free(enum THREAD_USER_ID user_id,AT_MESSAGE* msg_p)
 {
-	osStatus status;
+    osStatus status;
 
     AT_THREAD_TRACE(3,"%s,%d,user_id = %d.",__func__,__LINE__,user_id);
-	status = osMailFree(at_thread_info[user_id].mid, msg_p);
-	if (osOK == status)
-		at_thread_info[user_id].mail_count --;
+    status = osMailFree(at_thread_info[user_id].mid, msg_p);
+    if (osOK == status)
+        at_thread_info[user_id].mail_count --;
     AT_THREAD_TRACE(3,"%s,%d,at_mailbox_cnt = %d.",__func__,__LINE__,at_thread_info[user_id].mail_count);
-	return (int)status;
+    return (int)status;
 }
 
 static int at_mailbox_user_get(enum THREAD_USER_ID user_id,AT_MESSAGE **msg_p)
 {
-	osEvent evt;
-	evt = osMailGet(at_thread_info[user_id].mid, osWaitForever);
-	if (evt.status == osEventMail) {
-		*msg_p = (AT_MESSAGE*)evt.value.p;
-		return 0;
-	}
-	return -1;
+    osEvent evt;
+    evt = osMailGet(at_thread_info[user_id].mid, osWaitForever);
+    if (evt.status == osEventMail) {
+        *msg_p = (AT_MESSAGE*)evt.value.p;
+        return 0;
+    }
+    return -1;
 }
 
 static void at_thread_user0(const void *argument)
@@ -123,19 +123,19 @@ static void at_thread_user0(const void *argument)
     //arg = (uint32_t)argument;
 
     //AT_THREAD_TRACE(3,"%s,%d,user_id = %d.",__func__,__LINE__,user_id);
-	while(1){
-	    AT_THREAD_TRACE(2,"%s,%d.",__func__,__LINE__);
-		AT_MESSAGE *msg_p = NULL;
-		if (!at_mailbox_user_get(THREAD_USER0,&msg_p)) {
+    while(1){
+        AT_THREAD_TRACE(2,"%s,%d.",__func__,__LINE__);
+        AT_MESSAGE *msg_p = NULL;
+        if (!at_mailbox_user_get(THREAD_USER0,&msg_p)) {
             AT_THREAD_TRACE(2,"_debug: %s,%d",__func__,__LINE__);
             AT_THREAD_TRACE(4,"at_thread_user1: id = 0x%x, ptr = 0x%x,param0 = 0x%x,param1 = 0x%x.",
                 msg_p->id,msg_p->ptr,msg_p->param0,msg_p->param1);
             pfunc = (AT_FUNC_T)msg_p->ptr;
             pfunc(msg_p->param0,msg_p->param1);
             at_mailbox_user_free(THREAD_USER0,msg_p);
-		}
-		AT_THREAD_TRACE(2,"%s,%d.",__func__,__LINE__);
-	}
+        }
+        AT_THREAD_TRACE(2,"%s,%d.",__func__,__LINE__);
+    }
 }
 
 static void at_thread_user1(void const *argument)
@@ -143,67 +143,67 @@ static void at_thread_user1(void const *argument)
     AT_FUNC_T pfunc;
 
     AT_THREAD_TRACE(2,"%s,%d",__func__,__LINE__);
-	while(1){
-		AT_MESSAGE *msg_p = NULL;
-		if (!at_mailbox_user_get(THREAD_USER1,&msg_p)) {
+    while(1){
+        AT_MESSAGE *msg_p = NULL;
+        if (!at_mailbox_user_get(THREAD_USER1,&msg_p)) {
             AT_THREAD_TRACE(2,"_debug: %s,%d",__func__,__LINE__);
             AT_THREAD_TRACE(4,"at_thread_user1: id = 0x%x, ptr = 0x%x,param0 = 0x%x,param1 = 0x%x.",
                 msg_p->id,msg_p->ptr,msg_p->param0,msg_p->param1);
             pfunc = (AT_FUNC_T)msg_p->ptr;
             pfunc(msg_p->param0,msg_p->param1);
             at_mailbox_user_free(THREAD_USER1,msg_p);
-		}
-	}
+        }
+    }
 }
 #if 1
 static void at_thread_user2(void const *argument)
 {
     AT_FUNC_T pfunc;
     AT_THREAD_TRACE(2,"%s,%d",__func__,__LINE__);
-	while(1){
-		AT_MESSAGE *msg_p = NULL;
-		if (!at_mailbox_user_get(THREAD_USER2,&msg_p)) {
+    while(1){
+        AT_MESSAGE *msg_p = NULL;
+        if (!at_mailbox_user_get(THREAD_USER2,&msg_p)) {
             AT_THREAD_TRACE(2,"_debug: %s,%d",__func__,__LINE__);
             AT_THREAD_TRACE(4,"at_thread_user1: id = 0x%x, ptr = 0x%x,param0 = 0x%x,param1 = 0x%x.",
                 msg_p->id,msg_p->ptr,msg_p->param0,msg_p->param1);
             pfunc = (AT_FUNC_T)msg_p->ptr;
             pfunc(msg_p->param0,msg_p->param1);
             at_mailbox_user_free(THREAD_USER2,msg_p);
-		}
-	}
+        }
+    }
 }
 static void at_thread_user3(void const *argument)
 {
     AT_FUNC_T pfunc;
     AT_THREAD_TRACE(2,"%s,%d",__func__,__LINE__);
-	while(1){
-		AT_MESSAGE *msg_p = NULL;
-		if (!at_mailbox_user_get(THREAD_USER3,&msg_p)) {
+    while(1){
+        AT_MESSAGE *msg_p = NULL;
+        if (!at_mailbox_user_get(THREAD_USER3,&msg_p)) {
             AT_THREAD_TRACE(2,"_debug: %s,%d",__func__,__LINE__);
             AT_THREAD_TRACE(4,"at_thread_user1: id = 0x%x, ptr = 0x%x,param0 = 0x%x,param1 = 0x%x.",
                 msg_p->id,msg_p->ptr,msg_p->param0,msg_p->param1);
             pfunc = (AT_FUNC_T)msg_p->ptr;
             pfunc(msg_p->param0,msg_p->param1);
             at_mailbox_user_free(THREAD_USER3,msg_p);
-		}
-	}
+        }
+    }
 }
 
 static void at_thread_user4(void const *argument)
 {
     AT_FUNC_T pfunc;
     AT_THREAD_TRACE(2,"%s,%d",__func__,__LINE__);
-	while(1){
-		AT_MESSAGE *msg_p = NULL;
-		if (!at_mailbox_user_get(THREAD_USER4,&msg_p)) {
+    while(1){
+        AT_MESSAGE *msg_p = NULL;
+        if (!at_mailbox_user_get(THREAD_USER4,&msg_p)) {
             AT_THREAD_TRACE(2,"_debug: %s,%d",__func__,__LINE__);
             AT_THREAD_TRACE(4,"at_thread_user1: id = 0x%x, ptr = 0x%x,param0 = 0x%x,param1 = 0x%x.",
                 msg_p->id,msg_p->ptr,msg_p->param0,msg_p->param1);
             pfunc = (AT_FUNC_T)msg_p->ptr;
             pfunc(msg_p->param0,msg_p->param1);
             at_mailbox_user_free(THREAD_USER4,msg_p);
-		}
-	}
+        }
+    }
 }
 #endif
 
@@ -211,44 +211,44 @@ int at_thread_user_init(enum THREAD_USER_ID user_id)
 {
     AT_THREAD_TRACE(3,"%s,%d,user_id = %d.",__func__,__LINE__,user_id);
 
-	if(user_id == THREAD_USER0)
-	{
-	    at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user0), NULL);
-	    at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user0), (void*)user_id);
-	}
-	if(user_id == THREAD_USER1)
-	{
-	    at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user1), NULL);
-	    at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user1), (void*)user_id);
-	}
+    if(user_id == THREAD_USER0)
+    {
+        at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user0), NULL);
+        at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user0), (void*)user_id);
+    }
+    if(user_id == THREAD_USER1)
+    {
+        at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user1), NULL);
+        at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user1), (void*)user_id);
+    }
 
-	if(user_id == THREAD_USER2)
-	{
-	    at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user2), NULL);
-	    at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user2), (void*)user_id);
-	}
-	if(user_id == THREAD_USER3)
-	{
-	    at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user3), NULL);
-	    at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user3), (void*)user_id);
-	}
-	if(user_id == THREAD_USER4)
-	{
-	    at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user4), NULL);
-	    at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user4), (void*)user_id);
-	}
+    if(user_id == THREAD_USER2)
+    {
+        at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user2), NULL);
+        at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user2), (void*)user_id);
+    }
+    if(user_id == THREAD_USER3)
+    {
+        at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user3), NULL);
+        at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user3), (void*)user_id);
+    }
+    if(user_id == THREAD_USER4)
+    {
+        at_thread_info[user_id].mid = osMailCreate(osMailQ(at_mailbox_user4), NULL);
+        at_thread_info[user_id].til = osThreadCreate(osThread(at_thread_user4), (void*)user_id);
+    }
 
-	if (at_thread_info[user_id].mid == NULL)  {
+    if (at_thread_info[user_id].mid == NULL)  {
         AT_THREAD_TRACE(1,"Failed to Create mailbox, user_id = %d.",user_id);
-		return -1;
-	}
-	if (at_thread_info[user_id].til == NULL)  {
+        return -1;
+    }
+    if (at_thread_info[user_id].til == NULL)  {
         AT_THREAD_TRACE(1,"Failed to Create thread for user. user_id = %d",user_id);
-		return -2;
-	}
+        return -2;
+    }
     at_thread_info[user_id].mail_count = 0;
-	at_thread_info[user_id].is_inited = true;
-	return 0;
+    at_thread_info[user_id].is_inited = true;
+    return 0;
 }
 
 bool at_thread_user_is_inited(enum THREAD_USER_ID user_id)

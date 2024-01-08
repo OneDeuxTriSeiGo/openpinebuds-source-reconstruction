@@ -2287,26 +2287,26 @@ uint32_t hal_gpio_i2c_simple_recv(uint32_t device_addr, const uint8_t *tx_buf, u
     return 0;
 }
 
-#define touch_ic_device_addr	0x60
+#define touch_ic_device_addr    0x60
 unsigned char I2C_WriteByte(unsigned char reg, unsigned char data)
 {
-	unsigned char result;
-	unsigned char buff[2];
+    unsigned char result;
+    unsigned char buff[2];
 
-	buff[0] = reg;
-	buff[1] = data;
-	
-	result = hal_gpio_i2c_simple_send((unsigned char)touch_ic_device_addr,buff,2);
-	return result;
+    buff[0] = reg;
+    buff[1] = data;
+    
+    result = hal_gpio_i2c_simple_send((unsigned char)touch_ic_device_addr,buff,2);
+    return result;
 }
 
 unsigned char I2C_ReadByte(unsigned char reg, unsigned char* data)
 {
-	unsigned char result;
-	
-	result = hal_gpio_i2c_simple_recv((unsigned char)touch_ic_device_addr,&reg,1,data,1);
+    unsigned char result;
+    
+    result = hal_gpio_i2c_simple_recv((unsigned char)touch_ic_device_addr,&reg,1,data,1);
 
-	return result;
+    return result;
 }
 
 
@@ -2362,12 +2362,12 @@ uint32_t hal_gpio_i2c_recv(uint32_t device_addr, uint8_t *buf, uint32_t reg_len,
 
 int app_i2c_demo_init(void)
 {
-	static struct HAL_GPIO_I2C_CONFIG_T i2c_cfg={
-		HAL_GPIO_PIN_P2_0,
-		HAL_GPIO_PIN_P2_1,
-		0,
-	};
-	hal_gpio_i2c_open(&i2c_cfg);
+    static struct HAL_GPIO_I2C_CONFIG_T i2c_cfg={
+        HAL_GPIO_PIN_P2_0,
+        HAL_GPIO_PIN_P2_1,
+        0,
+    };
+    hal_gpio_i2c_open(&i2c_cfg);
  
     return 0;
 }

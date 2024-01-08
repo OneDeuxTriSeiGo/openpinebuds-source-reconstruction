@@ -504,8 +504,8 @@ void app_start_tws_serching_direactly()
     //if ((BTIF_DEFAULT_ACCESS_MODE_PAIR==mode)||(BTIF_BAM_LIMITED_ACCESSIBLE==mode))
     if(BTIF_BAM_LIMITED_ACCESSIBLE==mode)
     {
-		if(NULL==app_tws_delay_connect_timer)
-			app_tws_delay_connect_timer=osTimerCreate(osTimer(APP_TWS_DELAY_CONNECT),osTimerOnce,NULL );
+        if(NULL==app_tws_delay_connect_timer)
+            app_tws_delay_connect_timer=osTimerCreate(osTimer(APP_TWS_DELAY_CONNECT),osTimerOnce,NULL );
         if (is_find_tws_peer_device_onprocess())
         {
             find_tws_peer_device_stop();
@@ -732,24 +732,24 @@ void app_bt_enter_mono_pairing_mode(void)
     app_ibrt_ui_t *p_ibrt_ui = app_ibrt_ui_get_ctx();
 
     p_ibrt_ui->box_state = IBRT_OUT_BOX;
-	
+    
     TRACE(0,"ibrt_ui_log:app_bt_enter_mono_pairing_mode");
 
-	if(!app_device_bt_is_connected())
-	{
-		if(p_ibrt_ctrl->nv_role == IBRT_UNKNOW)
-		{
-			app_ibrt_ui_judge_scan_type(IBRT_FREEMAN_PAIR_TRIGGER,NO_LINK_TYPE, IBRT_UI_NO_ERROR);
-            		app_ibrt_ui_set_freeman_enable();
-		}
-		else
-		{
-    			//app_tws_ibrt_set_access_mode(BTIF_BAM_GENERAL_ACCESSIBLE);
-			app_ibrt_ui_set_enter_pairing_mode(IBRT_CONNECT_MOBILE_FAILED);
-			app_ibrt_ui_judge_scan_type(IBRT_CONNECTE_TRIGGER,MOBILE_LINK, 0);
-		}
-	}
-			
+    if(!app_device_bt_is_connected())
+    {
+        if(p_ibrt_ctrl->nv_role == IBRT_UNKNOW)
+        {
+            app_ibrt_ui_judge_scan_type(IBRT_FREEMAN_PAIR_TRIGGER,NO_LINK_TYPE, IBRT_UI_NO_ERROR);
+                    app_ibrt_ui_set_freeman_enable();
+        }
+        else
+        {
+                //app_tws_ibrt_set_access_mode(BTIF_BAM_GENERAL_ACCESSIBLE);
+            app_ibrt_ui_set_enter_pairing_mode(IBRT_CONNECT_MOBILE_FAILED);
+            app_ibrt_ui_judge_scan_type(IBRT_CONNECTE_TRIGGER,MOBILE_LINK, 0);
+        }
+    }
+            
 }
 void app_ibrt_enter_limited_mode(void)
 {

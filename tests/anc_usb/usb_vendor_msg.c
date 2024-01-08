@@ -24,19 +24,19 @@
 
 #define SYS_CHECK_VAL   "1.1"
 
-#define FACT_SEC_VER		2
-#define FACT_SEC_MAGIC		0xba80
+#define FACT_SEC_VER        2
+#define FACT_SEC_MAGIC      0xba80
 
 typedef enum {
-	FACT_SEC_VER_MAGIC,
-	FACT_SEC_CRC,
-	
-	FACT_SEC_DATA_START,
-	FACT_SEC_SEQ = FACT_SEC_DATA_START,
-	FACT_SEC_PROD_SN,
-	FACT_SEC_END = FACT_SEC_PROD_SN + 8,
-	
-	FACT_SEC_NUM = 256
+    FACT_SEC_VER_MAGIC,
+    FACT_SEC_CRC,
+    
+    FACT_SEC_DATA_START,
+    FACT_SEC_SEQ = FACT_SEC_DATA_START,
+    FACT_SEC_PROD_SN,
+    FACT_SEC_END = FACT_SEC_PROD_SN + 8,
+    
+    FACT_SEC_NUM = 256
 } FACT_SEC_E;
 
 typedef enum {
@@ -55,7 +55,7 @@ typedef enum {
 #endif
 #ifdef USB_ANC_MC_EQ_TUNING    
     PC_TOOL_CMD_ANC_MC_EQ_TUNING,
-#endif	
+#endif  
     PC_TOOL_CMD_NUM,
 }PC_TOOL_CMD_E;
 
@@ -75,7 +75,7 @@ static char* s_pc_cmd_lst[PC_TOOL_CMD_NUM] = {
 #endif
 #ifdef USB_ANC_MC_EQ_TUNING
     "ANC_MC_EQ",
-#endif	
+#endif  
 };
 
 static PC_TOOL_CMD_E s_cur_cmd = PC_TOOL_CMD_IDLE;
@@ -129,7 +129,7 @@ static void pc_usb_cmd_set (struct USB_AUDIO_VENDOR_MSG_T* msg)
 
     if (cmd_id > (PC_TOOL_CMD_NUM-1)) {
         return;
-	}
+    }
 
     s_cur_cmd = cmd_id;
     //TRACE(3,"%s: cmd[%s], id[%d]", __func__, s_pc_cmd_lst[cmd_id], s_cur_cmd);
@@ -140,16 +140,16 @@ static void pc_usb_cmd_set (struct USB_AUDIO_VENDOR_MSG_T* msg)
 
     switch (s_cur_cmd) {
 #ifdef USB_EQ_TUNING
-	case PC_TOOL_CMD_EQ_TUNING:
-		hal_cmd_list_process(msg->data);
-		break;
+    case PC_TOOL_CMD_EQ_TUNING:
+        hal_cmd_list_process(msg->data);
+        break;
 #endif
 
 #ifdef USB_ANC_MC_EQ_TUNING
-	case PC_TOOL_CMD_ANC_MC_EQ_TUNING:
+    case PC_TOOL_CMD_ANC_MC_EQ_TUNING:
         //TRACE(1,"recev len:%d",msg->length);
         /*
-      	       TRACE(0,"***********recev test*************");
+               TRACE(0,"***********recev test*************");
                for(int i=0;i<msg->length;i++)
                {
                      TRACE(2,"msg->data[%d]:0x%x",i,msg->data[i]);
@@ -157,7 +157,7 @@ static void pc_usb_cmd_set (struct USB_AUDIO_VENDOR_MSG_T* msg)
                TRACE(0,"***********recev test*************");
                */
                anc_cmd_receve_process(msg->data,msg->length);
-		break;
+        break;
 #endif
       default:
              break;
@@ -179,10 +179,10 @@ static void pc_usb_cmd_exec (struct USB_AUDIO_VENDOR_MSG_T* msg)
             msg->length = strlen((char*)s_fw_ver_ptr);
             break;
 
-		case PC_TOOL_CMD_GET_PROD_SN:
-			msg->data = s_sn_ptr;
-			msg->length = strlen((char*)s_sn_ptr);
-			break;
+        case PC_TOOL_CMD_GET_PROD_SN:
+            msg->data = s_sn_ptr;
+            msg->length = strlen((char*)s_sn_ptr);
+            break;
 
         case PC_TOOL_CMD_SYS_REBOOT:
             //TRACE(0,"-> cmd_exec: reboot.....");
@@ -205,11 +205,11 @@ static void pc_usb_cmd_exec (struct USB_AUDIO_VENDOR_MSG_T* msg)
             break;
 
         case PC_TOOL_CMD_FW_UPDATE:
-            hal_sw_bootmode_clear(1<<8);	// to clear HAL_SW_BOOTMODE_FORCE_UART_DLD
-            hal_sw_bootmode_set(1<<7);	// to set HAL_SW_BOOTMODE_FORCE_USB_DLD
+            hal_sw_bootmode_clear(1<<8);    // to clear HAL_SW_BOOTMODE_FORCE_UART_DLD
+            hal_sw_bootmode_set(1<<7);  // to set HAL_SW_BOOTMODE_FORCE_USB_DLD
 #ifdef TGT_PLL_FREQ
-			extern void pll_config_update (uint32_t);
-			pll_config_update(960000000);
+            extern void pll_config_update (uint32_t);
+            pll_config_update(960000000);
 #endif
             analog_aud_codec_mute();
             msg->data = (uint8_t*)s_str_ret1;
@@ -217,21 +217,21 @@ static void pc_usb_cmd_exec (struct USB_AUDIO_VENDOR_MSG_T* msg)
             break;
 
 #ifdef USB_EQ_TUNING
-	case PC_TOOL_CMD_EQ_TUNING:
-		hal_cmd_tx_process(&msg->data, &msg->length);
-		if (!msg->length) {
-			msg->data = (uint8_t*)s_str_ret0;
+    case PC_TOOL_CMD_EQ_TUNING:
+        hal_cmd_tx_process(&msg->data, &msg->length);
+        if (!msg->length) {
+            msg->data = (uint8_t*)s_str_ret0;
             msg->length = (uint32_t)strlen(s_str_ret0);
-		}
+        }
         break;
 #endif
 
 #ifdef USB_ANC_MC_EQ_TUNING    
-	case PC_TOOL_CMD_ANC_MC_EQ_TUNING:
+    case PC_TOOL_CMD_ANC_MC_EQ_TUNING:
                anc_cmd_send_process(&msg->data, &msg->length);
                TRACE(1,"sned len:%d",msg->length);
 
-/*      	       TRACE(0,"***********send test*************");
+/*                 TRACE(0,"***********send test*************");
                for(int i=0;i<msg->length;i++)
                {
                     TRACE(2,"msg->data[%d]:0x%x",i,msg->data[i]);

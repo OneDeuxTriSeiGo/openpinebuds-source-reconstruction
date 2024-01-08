@@ -391,8 +391,8 @@ static int voice_detector_vad_stop(struct voice_detector_dev *pdev)
     /* get vad buf info after stopping it */
     af_vad_get_data_info(&(pdev->vad_buf_info));
     TRACE(4,"vad_buf base_addr:0x%x, buf_size:0x%x, data_count:%d, addr_count:%d", 
-		pdev->vad_buf_info.base_addr, pdev->vad_buf_info.buf_size, 
-		pdev->vad_buf_info.data_count, pdev->vad_buf_info.addr_count);
+        pdev->vad_buf_info.base_addr, pdev->vad_buf_info.buf_size, 
+        pdev->vad_buf_info.data_count, pdev->vad_buf_info.addr_count);
 #if defined(CHIP_BEST2300)
     vad_buf_len = pdev->vad_buf_info.data_count/2;
 #else
@@ -403,7 +403,7 @@ static int voice_detector_vad_stop(struct voice_detector_dev *pdev)
 }
 
 void voice_detector_get_vad_data_info(enum voice_detector_id id, 
-	                                                                   struct CODEC_VAD_BUF_INFO_T* vad_buf_info)
+                                                                       struct CODEC_VAD_BUF_INFO_T* vad_buf_info)
 {
 
     struct voice_detector_dev *pdev;
@@ -657,14 +657,14 @@ static void print_vad_raw_data(uint8_t *buf, uint32_t len)
 static int State_M_1 = 0;
 void dc_filter_f(short *in, int len, float left_gain, float right_gain)
 {
-	int tmp1;
-	for (int i = 0; i<len; i+=1)
-	{
-		State_M_1 = (15 * State_M_1 + in[i]) >> 4;
-		tmp1 = in[i];
-		tmp1 -= State_M_1;
-		in[i] = speech_ssat_int16(tmp1);
-	}
+    int tmp1;
+    for (int i = 0; i<len; i+=1)
+    {
+        State_M_1 = (15 * State_M_1 + in[i]) >> 4;
+        tmp1 = in[i];
+        tmp1 -= State_M_1;
+        in[i] = speech_ssat_int16(tmp1);
+    }
 }
 
 

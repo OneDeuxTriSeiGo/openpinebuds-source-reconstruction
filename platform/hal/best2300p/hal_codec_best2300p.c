@@ -1082,7 +1082,7 @@ void hal_codec_capture_enable_delay(void)
 
 void hal_codec_capture_enable(void)
 {
-	codec->REG_080 |= CODEC_CODEC_ADC_EN;
+    codec->REG_080 |= CODEC_CODEC_ADC_EN;
 }
 #endif
 

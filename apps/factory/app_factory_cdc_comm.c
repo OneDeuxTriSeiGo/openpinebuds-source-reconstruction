@@ -153,7 +153,7 @@ static enum ERR_CODE handle_data(unsigned char **buf, size_t *len, int *extra)
 {
     enum ERR_CODE errcode = ERR_NONE;
 #if 0
-	uint32_t rlen = 0;
+    uint32_t rlen = 0;
 #endif
     *extra = 0;
 

@@ -36,19 +36,19 @@ void app_hrps_init(void)
     // Reset the environment
     memset(&app_hrps_env, 0x00, sizeof(app_hrps_env));
 
-	app_hrps_env.connectionIndex =  INVALID_CONNECTION_INDEX;
-	app_hrps_env.isNotificationEnabled = false;
+    app_hrps_env.connectionIndex =  INVALID_CONNECTION_INDEX;
+    app_hrps_env.isNotificationEnabled = false;
 }
 
 void app_hrps_connected_evt_handler(uint8_t conidx)
 {
-	app_hrps_env.connectionIndex = conidx;
+    app_hrps_env.connectionIndex = conidx;
 }
 
 void app_hrps_disconnected_evt_handler(void)
 {
-	app_hrps_env.connectionIndex =  INVALID_CONNECTION_INDEX;
-	app_hrps_env.isNotificationEnabled = false;
+    app_hrps_env.connectionIndex =  INVALID_CONNECTION_INDEX;
+    app_hrps_env.isNotificationEnabled = false;
 }
 
 
@@ -68,7 +68,7 @@ void app_hrps_send_measument_via_notification(void)
 
 void app_hrps_add_profile(void)
 {
-	TRACE(0,"app_hrps_add_profile");
+    TRACE(0,"app_hrps_add_profile");
     struct hrps_db_cfg* db_cfg;
 
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
@@ -79,9 +79,9 @@ void app_hrps_add_profile(void)
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
-	req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
+    req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
-	req->sec_lvl = PERM(SVC_AUTH, ENABLE);
+    req->sec_lvl = PERM(SVC_AUTH, ENABLE);
 #endif  
 
     req->prf_task_id = TASK_ID_HRPS;
@@ -145,7 +145,7 @@ const struct ke_msg_handler hrps_msg_handler_list[] =
     {KE_MSG_DEFAULT_HANDLER,        (ke_msg_func_t)app_hrps_msg_handler},
 
     {HRPS_CFG_INDNTF_IND,     (ke_msg_func_t)app_hrps_measurement_ccc_changed_handler},
-    {HRP_MEASUREMENT_DATA_SENT,    	(ke_msg_func_t)app_hrps_measurement_sent_handler},
+    {HRP_MEASUREMENT_DATA_SENT,     (ke_msg_func_t)app_hrps_measurement_sent_handler},
     {HRPS_ENERGY_EXP_RESET_IND,   (ke_msg_func_t)app_hrps_ctrl_point_received_handler},
 
 };

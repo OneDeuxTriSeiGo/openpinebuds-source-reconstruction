@@ -22,6 +22,6 @@
 .balign 4
 
 __slave_code_start:
-	.incbin TO_STRING(SLAVE_BIN_NAME)
+    .incbin TO_STRING(SLAVE_BIN_NAME)
 __slave_code_end:
 

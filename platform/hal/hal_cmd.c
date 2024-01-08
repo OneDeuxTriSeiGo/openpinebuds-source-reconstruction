@@ -155,10 +155,10 @@ void hal_cmd_break_irq_handler (void)
 
 void hal_cmd_dma_rx_irq_handler (uint32_t xfer_size, int dma_error, union HAL_UART_IRQ_T status)
 {
-    //	uint8_t prefix	= gpElUartCtx->rx_buf[EL_PREFIX_OFFSET];
-    //	uint8_t type	= gpElUartCtx->rx_buf[EL_TYPE_OFFSET];
-    //	uint8_t len		= gpElUartCtx->rx_buf[EL_LEN_OFFSET];
-    //	uint8_t cmd	= gpElUartCtx->rx_buf[EL_CMD_OFFSET];
+    //  uint8_t prefix  = gpElUartCtx->rx_buf[EL_PREFIX_OFFSET];
+    //  uint8_t type    = gpElUartCtx->rx_buf[EL_TYPE_OFFSET];
+    //  uint8_t len     = gpElUartCtx->rx_buf[EL_LEN_OFFSET];
+    //  uint8_t cmd = gpElUartCtx->rx_buf[EL_CMD_OFFSET];
     HAL_CMD_TRACE(5,"%s: xfer_size[%d], dma_error[%x], status[%x], rx_status[%d]",
             __func__, xfer_size, dma_error, status.reg, hal_cmd.rx_status);
 
@@ -182,7 +182,7 @@ void hal_cmd_dma_rx_irq_handler (uint32_t xfer_size, int dma_error, union HAL_UA
         // mask.RT = 1
         hal_cmd.rx_len = xfer_size;
         hal_cmd.rx_status = HAL_CMD_RX_DONE;
-		hal_cmd_callback(hal_cmd.rx_status);
+        hal_cmd_callback(hal_cmd.rx_status);
     }
 }
 #endif
@@ -239,7 +239,7 @@ int hal_cmd_open (void)
 
     hal_cmd.uart_work = 1;
     hal_cmd.rx_status = HAL_CMD_RX_STOP;
-	hal_cmd_callback(hal_cmd.rx_status);
+    hal_cmd_callback(hal_cmd.rx_status);
 #endif
 
     return 0;
@@ -303,7 +303,7 @@ static int hal_cmd_rx_start (void)
     ASSERT(!ret, "!!%s: UART recv failed (%d)!!", __func__, ret);
 
     hal_cmd.rx_status = HAL_CMD_RX_START;
-	hal_cmd_callback(hal_cmd.rx_status);
+    hal_cmd_callback(hal_cmd.rx_status);
     return ret;
 }
 
@@ -316,7 +316,7 @@ static int hal_cmd_rx_process (void)
     ret = hal_cmd_list_process(hal_cmd.rx_buf);
 
     hal_cmd.rx_status = HAL_CMD_RX_STOP;
-	hal_cmd_callback(hal_cmd.rx_status);
+    hal_cmd_callback(hal_cmd.rx_status);
     return ret;
 }
 #endif
@@ -370,7 +370,7 @@ static int hal_cmd_tx_process (void)
 
 void hal_cmd_tx_process (uint8_t** ppbuf, uint16_t* plen)
 {
-	hal_cmd.tx_len = sizeof(hal_cmd.res);
+    hal_cmd.tx_len = sizeof(hal_cmd.res);
 
     memcpy(hal_cmd.tx_buf, &hal_cmd.res, hal_cmd.tx_len);
 
@@ -384,8 +384,8 @@ void hal_cmd_tx_process (uint8_t** ppbuf, uint16_t* plen)
         memset(&hal_cmd.res_payload, 0, sizeof(hal_cmd.res_payload));
     }
 
-	*ppbuf = hal_cmd.tx_buf;
-	*plen = hal_cmd.tx_len;
+    *ppbuf = hal_cmd.tx_buf;
+    *plen = hal_cmd.tx_len;
 }
 
 #endif

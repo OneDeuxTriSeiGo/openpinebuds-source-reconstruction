@@ -21,26 +21,26 @@ extern "C" {
 #endif
 
 // Could be customized
-#define CUSTOMPARAM_MAGIC_CODE	0x54534542
-#define CUSTOMPARAM_VERSION		1
+#define CUSTOMPARAM_MAGIC_CODE  0x54534542
+#define CUSTOMPARAM_VERSION     1
 
-#define CUSTOMPARAM_SECTION_SIZE	4096	// one flash page
+#define CUSTOMPARAM_SECTION_SIZE    4096    // one flash page
 
 typedef struct 
 {
-	uint32_t 	magic_code;	// fixed value as CUSTOMPARAM_MAGIC_CODE
-	uint16_t	version;
-	uint16_t	length;		// length in bytes of the following data in the section
-	uint16_t	entryCount;
-	// following are parameter entries
-	
+    uint32_t    magic_code; // fixed value as CUSTOMPARAM_MAGIC_CODE
+    uint16_t    version;
+    uint16_t    length;     // length in bytes of the following data in the section
+    uint16_t    entryCount;
+    // following are parameter entries
+    
 } __attribute__((packed)) CUSTOM_PARAM_SECTION_HEADER_T;
 
 typedef struct
 {
-	uint16_t	paramIndex;
-	uint16_t	paramLen;
-	// following are the parameter content with length paramLen
+    uint16_t    paramIndex;
+    uint16_t    paramLen;
+    // following are the parameter content with length paramLen
 } __attribute__((packed)) CUSTOM_PARAM_ENTRY_HEADER_T;
 
 #define CUSTOM_PARAM_Mode_ID_INDEX      0
@@ -59,7 +59,7 @@ typedef struct
 
 void nv_custom_parameter_section_init(void);
 bool nv_custom_parameter_section_get_entry(
-	uint16_t paramIndex, uint8_t* pParamVal, uint32_t* pParamLen);
+    uint16_t paramIndex, uint8_t* pParamVal, uint32_t* pParamLen);
 uint32_t Get_ModelId(void);
 
 #ifdef __cplusplus

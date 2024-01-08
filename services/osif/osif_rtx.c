@@ -187,9 +187,9 @@ void osif_cancel_timer(void)
 
 uint8_t osif_lock_is_exist(void)
 {
-	if(NULL == __mutex_wrapper_id)
-		return 0;
-	else
-		return 1;
+    if(NULL == __mutex_wrapper_id)
+        return 0;
+    else
+        return 1;
 }
 

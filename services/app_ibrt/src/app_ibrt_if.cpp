@@ -273,7 +273,7 @@ bool app_ibrt_if_tws_switch_prepare_needed(uint32_t *wait_ms)
     if (app_get_bes_ota_state())
     {
         p_ibrt_ctrl->ibrt_role_switch_handle_user |= (1 << IBRT_ROLE_SWITCH_USER_OTA);
-		*wait_ms = 800;
+        *wait_ms = 800;
     }
 #endif
 

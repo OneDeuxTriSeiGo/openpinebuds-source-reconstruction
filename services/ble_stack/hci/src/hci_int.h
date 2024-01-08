@@ -114,7 +114,7 @@ enum HCI_MSG_DEST_LL
     BT_MNG,
     BT_CTRL_CONHDL,
     BT_CTRL_BD_ADDR,
-	BT_BCST,
+    BT_BCST,
     DBG,
     LL_UNDEF,
 };

@@ -207,10 +207,10 @@ static int gattc_read_ind_handler(ke_msg_id_t const msgid,
   uint8_t conidx = KE_IDX_GET(src_id);
 
   if (amsc_env != NULL) {
-  	amsc_last_read_handle = BTIF_INVALID_HCI_HANDLE;
+    amsc_last_read_handle = BTIF_INVALID_HCI_HANDLE;
     struct gattc_read_cfm *cfm =
         KE_MSG_ALLOC_DYN(GATTC_READ_CFM, 
-        				 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSP), conidx),
+                         KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSP), conidx),
                          dest_id, gattc_read_cfm, param->length);
     cfm->status = 0;  // read_ind has no status???
     cfm->handle = param->handle;
@@ -371,7 +371,7 @@ static int amsc_gattc_cmp_evt_handler(ke_msg_id_t const msgid,
       amsc_enable_rsp_send(amsc_env, conidx, status);
 #if (ANCS_PROXY_ENABLE)
       TRACE(4,"AMSC %s rmtChar=0x%4.4x, rmtVal=0x%4.4x, rmtCfg=0x%4.4x",
-   		    __func__,
+            __func__,
             amsc_env->env[conidx]->ams.chars[AMSC_REMOTE_COMMAND_CHAR].char_hdl,
             amsc_env->env[conidx]->ams.chars[AMSC_REMOTE_COMMAND_CHAR].val_hdl,
             amsc_env->env[conidx]
@@ -424,7 +424,7 @@ static int amsc_gattc_cmp_evt_handler(ke_msg_id_t const msgid,
         case GATTC_WRITE: {
           struct gattc_write_cfm *cfm =
               KE_MSG_ALLOC(GATTC_WRITE_CFM, 
-              			   KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSP), conidx),
+                           KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSP), conidx),
                            dest_id, gattc_write_cfm);
           cfm->handle = amsc_env->last_write_handle[conidx];
           amsc_env->last_write_handle[conidx] = ATT_INVALID_HANDLE;
@@ -475,7 +475,7 @@ static int gattc_event_ind_handler(ke_msg_id_t const msgid,
   
   struct gattc_send_evt_cmd *cmd;
   cmd = KE_MSG_ALLOC_DYN(AMS_PROXY_IND_EVT, 
-  	    				 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSP), conidx),
+                         KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSP), conidx),
                          dest_id, gattc_send_evt_cmd, param->length);
   cmd->handle = param->handle;
   cmd->operation = GATTC_NOTIFY;

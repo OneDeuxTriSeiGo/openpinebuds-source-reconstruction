@@ -83,88 +83,88 @@
 
 typedef struct
 {
-	U8 version; /* RTP Version */
+    U8 version; /* RTP Version */
 
-	U8 padding; /* If the padding bit is set, the packet contains 
+    U8 padding; /* If the padding bit is set, the packet contains 
                          * one or more additional padding octets at the end, 
                          * which are not parts of the payload.  The last 
                          * octet of the padding contains a count of how many 
                          * padding octets should be ignored.  
                          */
 
-	U8 marker; /* Profile dependent.  Used to mark significant 
+    U8 marker; /* Profile dependent.  Used to mark significant 
                          * events such as frame boundaries in the packet 
                          * stream.  
                          */
 
-	U8 payloadType; /* Profile dependent.  Identifies the RTP payload 
+    U8 payloadType; /* Profile dependent.  Identifies the RTP payload 
                          * type.  
                          */
 
-	U16 sequenceNumber; /* Incremented by one for each packet sent */
+    U16 sequenceNumber; /* Incremented by one for each packet sent */
 
-	U32 timestamp; /* Time stamp of the sample */
+    U32 timestamp; /* Time stamp of the sample */
 
-	U32 ssrc; /* Synchronization source */
+    U32 ssrc; /* Synchronization source */
 
-	U8 csrcCount; /* The number of CSRC (Contributing Source) 
+    U8 csrcCount; /* The number of CSRC (Contributing Source) 
                          * identifiers that follow the fixed header.  
                          */
 
-	U32 csrcList[15]; /* List of CSRC identifiers */
+    U32 csrcList[15]; /* List of CSRC identifiers */
 
 } avdtp_media_header_t;
 
 struct avdtp_header
 {
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
-	//	uint32 unused:16;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
+    //  uint32 unused:16;
 } __attribute__((packed));
 
 struct seid_req
 {
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
-	uint32 rfa1 : 2;
-	uint32 acp_seid : 6;
-	uint8 param[0];
-	//	uint32 unused:8;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
+    uint32 rfa1 : 2;
+    uint32 acp_seid : 6;
+    uint8 param[0];
+    //  uint32 unused:8;
 } __attribute__((packed));
 
 struct discover_resp
 {
-	//	struct avdtp_header header;
-	//	struct seid_info *seps;
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
+    //  struct avdtp_header header;
+    //  struct seid_info *seps;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
 
-	uint32 rfa1 : 1;
-	uint32 inuse : 1;
-	uint32 seid : 6;
-	uint32 rfa2 : 3;
-	uint32 type : 1;
-	uint32 media_type : 4;
+    uint32 rfa1 : 1;
+    uint32 inuse : 1;
+    uint32 seid : 6;
+    uint32 rfa2 : 3;
+    uint32 type : 1;
+    uint32 media_type : 4;
 } __attribute__((packed));
 
 struct discover_rej
 {
-	//	struct avdtp_header header;
-	//	struct seid_info *seps;
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
+    //  struct avdtp_header header;
+    //  struct seid_info *seps;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
     uint8  error_code;
 } __attribute__((packed));
 
@@ -172,28 +172,28 @@ struct discover_rej
 
 struct security_control_req
 {
-	//avdtp hrader
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
-	uint32 rfa2 : 2;
-	uint32 acp_seid : 6;
-	//Content Protection Method Dependent Data
-	uint8 *data;
+    //avdtp hrader
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
+    uint32 rfa2 : 2;
+    uint32 acp_seid : 6;
+    //Content Protection Method Dependent Data
+    uint8 *data;
 } __attribute__((packed));
 
 struct security_control_resp
 {
-	struct avdtp_header header;
-	uint8 *data;
+    struct avdtp_header header;
+    uint8 *data;
 } __attribute__((packed));
 
 struct getcap_resp
 {
-	struct avdtp_header header;
-	uint8 *caps;
+    struct avdtp_header header;
+    uint8 *caps;
 } __attribute__((packed));
 
 struct getcap_req
@@ -210,99 +210,99 @@ struct getcap_req
 
 struct start_req
 {
-	struct avdtp_header header;
+    struct avdtp_header header;
 
-	uint8 first_seid;
-	uint8 *other_seids;
+    uint8 first_seid;
+    uint8 *other_seids;
 } __attribute__((packed));
 
 struct suspend_req
 {
-	struct avdtp_header header;
+    struct avdtp_header header;
 
-	uint8 first_seid;
-	uint8 *other_seids;
+    uint8 first_seid;
+    uint8 *other_seids;
 } __attribute__((packed));
 
 struct setconf_req
 {
-	//	struct avdtp_header header;
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
+    //  struct avdtp_header header;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
 
-	uint32 rfa2 : 2;
-	uint32 acp_seid : 6;
-	uint32 rfa1 : 2;
-	uint32 int_seid : 6;
+    uint32 rfa2 : 2;
+    uint32 acp_seid : 6;
+    uint32 rfa1 : 2;
+    uint32 int_seid : 6;
 
-	uint8 *caps;
+    uint8 *caps;
 } __attribute__((packed));
 
 struct reconf_req
 {
-	//	struct avdtp_header header;
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
+    //  struct avdtp_header header;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
 
-	uint32 rfa2 : 2;
-	uint32 acp_seid : 6;
+    uint32 rfa2 : 2;
+    uint32 acp_seid : 6;
 
-	uint8 *caps;
+    uint8 *caps;
 } __attribute__((packed));
 struct general_rej
 {
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	//uint32 rfa0:8;
-	uint32 signal_id : 6; //modified by owen.liu, for support version 1.3
-	uint32 rfa0 : 2;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    //uint32 rfa0:8;
+    uint32 signal_id : 6; //modified by owen.liu, for support version 1.3
+    uint32 rfa0 : 2;
 } __attribute__((packed));
 
 struct seid_rej
 {
-	//	struct avdtp_header header;
-	uint32 message_type : 2;
-	uint32 packet_type : 2;
-	uint32 transaction : 4;
-	uint32 signal_id : 6;
-	uint32 rfa0 : 2;
+    //  struct avdtp_header header;
+    uint32 message_type : 2;
+    uint32 packet_type : 2;
+    uint32 transaction : 4;
+    uint32 signal_id : 6;
+    uint32 rfa0 : 2;
 
-	uint32 error : 8;
-	uint32 unused : 8;
+    uint32 error : 8;
+    uint32 unused : 8;
 } __attribute__((packed));
 
 struct conf_rej
 {
-	struct avdtp_header header;
-	uint8 category;
-	uint8 error;
+    struct avdtp_header header;
+    uint8 category;
+    uint8 error;
 } __attribute__((packed));
 
 struct stream_rej
 {
-	struct avdtp_header header;
-	uint8 acp_seid;
-	uint8 error;
+    struct avdtp_header header;
+    uint8 acp_seid;
+    uint8 error;
 } __attribute__((packed));
 
 struct avdtp_session
 {
-	uint32 l2cap_handle;
-	uint8 state;
+    uint32 l2cap_handle;
+    uint8 state;
 } __attribute__((packed));
 
 enum avdtp_session_state_enum
 {
-	AVDTP_SESSION_CLOSE,	 /* l2cap connection closed, wait for openning, and then can send out sabm request */
-	AVDTP_SESSION_CONNECTED, /* l2cap channel created */
-	AVDTP_SESSION_OPEN		 /* avdtp session open, ready for start stream */
+    AVDTP_SESSION_CLOSE,     /* l2cap connection closed, wait for openning, and then can send out sabm request */
+    AVDTP_SESSION_CONNECTED, /* l2cap channel created */
+    AVDTP_SESSION_OPEN       /* avdtp session open, ready for start stream */
 };
 
 

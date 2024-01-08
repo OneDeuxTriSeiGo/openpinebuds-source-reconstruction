@@ -23,10 +23,10 @@ extern "C" {
 #define USB_MAILBOX_MAX (20)
 
 typedef struct {
-	uint32_t id;
-	uint32_t ptr;
-	uint32_t param0;
-	uint32_t param1;
+    uint32_t id;
+    uint32_t ptr;
+    uint32_t param0;
+    uint32_t param1;
 } USB_MESSAGE;
 
 
@@ -42,7 +42,7 @@ int usb_mailbox_get(USB_MESSAGE** msg_p);
 int usb_os_init(void);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif // __USB_THREAD_H__

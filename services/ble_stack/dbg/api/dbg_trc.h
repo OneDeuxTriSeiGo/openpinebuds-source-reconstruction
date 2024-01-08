@@ -459,7 +459,7 @@ void dbg_trc_req_sw_ass(uint8_t const ass_trc_type,  char const *filename, uint1
 void dbg_trc_req_et_prog(uint8_t const elt_idx);
 
 #define TRC_REQ_ET_PROG(elt_idx) \
-		dbg_trc_req_et_prog(elt_idx);
+        dbg_trc_req_et_prog(elt_idx);
 
 /**
  ****************************************************************************************
@@ -476,7 +476,7 @@ void dbg_trc_req_et_prog(uint8_t const elt_idx);
  */
 void dbg_trc_req_evt_cnt(uint16_t const conhdl, uint16_t const value);
 #define TRC_REQ_EVT_CNT(conhdl, value) \
-		dbg_trc_req_evt_cnt(conhdl, value);
+        dbg_trc_req_evt_cnt(conhdl, value);
 /**
  ****************************************************************************************
  * @brief Trace request API for frame completion
@@ -494,7 +494,7 @@ void dbg_trc_req_evt_cnt(uint16_t const conhdl, uint16_t const value);
 void dbg_trc_req_frm_cmp(uint32_t const timestamp, uint8_t const frm_id, uint32_t const frm_cbk);
 
 #define TRC_REQ_FRM_CMP(timestamp, frm_id, frm_cbk) \
-		dbg_trc_req_frm_cmp(timestamp, frm_id, frm_cbk);
+        dbg_trc_req_frm_cmp(timestamp, frm_id, frm_cbk);
 
 #else /*(TRACER_PRESENT && TRC_PROG)*/
 #define TRC_REQ_ET_PROG(elt_idx)
@@ -518,8 +518,8 @@ void dbg_trc_req_frm_cmp(uint32_t const timestamp, uint8_t const frm_id, uint32_
 void dbg_trc_req_cs_ble(uint16_t const cs_addr);
 
 #define TRC_REQ_CS_BLE(cs_addr) \
-		dbg_trc_req_cs_ble(cs_addr);
-		
+        dbg_trc_req_cs_ble(cs_addr);
+        
 #else /*(TRACER_PRESENT && TRC_CS_BLE)*/
 #define TRC_REQ_CS_BLE(cs_addr)
 #endif /*(TRACER_PRESENT && TRC_CS_BLE)*/
@@ -540,7 +540,7 @@ void dbg_trc_req_cs_ble(uint16_t const cs_addr);
 void dbg_trc_req_cs_bt(uint16_t const cs_addr);
 
 #define TRC_REQ_CS_BT(cs_addr) \
-		dbg_trc_req_cs_bt(cs_addr);
+        dbg_trc_req_cs_bt(cs_addr);
 #else /*(TRACER_PRESENT && TRC_CS_BT)*/
 #define TRC_REQ_CS_BT(cs_addr)
 #endif /*(TRACER_PRESENT && TRC_CS_BT)*/
@@ -563,7 +563,7 @@ void dbg_trc_req_cs_bt(uint16_t const cs_addr);
 void dbg_trc_req_rx_desc(uint8_t const drv_type, uint8_t const act_id, uint16_t const rx_desc_add);
 
 #define TRC_REQ_RX_DESC(drv_type, act_id, rx_desc_add) \
-		dbg_trc_req_rx_desc(drv_type, act_id, rx_desc_add);
+        dbg_trc_req_rx_desc(drv_type, act_id, rx_desc_add);
 
 #else /*(TRACER_PRESENT && TRC_RX_DESC)*/
 #define TRC_REQ_RX_DESC(drv_type, act_id, rx_desc_add)
@@ -733,7 +733,7 @@ void dbg_trc_req_ea(uint8_t const ea_trc_type,const struct ea_elt_tag *ea_elt);
 void dbg_trc_req_ea_shift(const struct ea_elt_tag *ea_elt);
 
 #define TRC_REQ_EA_SHIFT(ea_elt)                \
-		dbg_trc_req_ea_shift(ea_elt);
+        dbg_trc_req_ea_shift(ea_elt);
 /**
  ****************************************************************************************
  * @brief Trace request API for pushing of event in the waiting queue
@@ -748,8 +748,8 @@ void dbg_trc_req_ea_shift(const struct ea_elt_tag *ea_elt);
  */
 void dbg_trc_req_ea_insert(uint32_t const target_time, uint8_t const status, const struct ea_elt_tag *ea_elt);
 
-#define TRC_REQ_EA_INSERT(target_time, status, ea_elt)		\
-		dbg_trc_req_ea_insert(target_time, status, ea_elt);
+#define TRC_REQ_EA_INSERT(target_time, status, ea_elt)      \
+        dbg_trc_req_ea_insert(target_time, status, ea_elt);
 
 #else /*(TRACER_PRESENT && TRC_EA)*/
 #define TRC_REQ_EA_CANC(ea_elt)
@@ -777,8 +777,8 @@ void dbg_trc_req_ea_insert(uint32_t const target_time, uint8_t const status, con
  */
 void dbg_trc_req_lc_state_trans(uint16_t const conhdl, uint8_t const proc_type, uint8_t const prev_state, uint8_t const curr_state);
 
-#define TRC_REQ_LC_STATE_TRANS(conhdl, proc_type, prev_state, curr_state)		\
-		dbg_trc_req_lc_state_trans(conhdl, proc_type, prev_state, curr_state);
+#define TRC_REQ_LC_STATE_TRANS(conhdl, proc_type, prev_state, curr_state)       \
+        dbg_trc_req_lc_state_trans(conhdl, proc_type, prev_state, curr_state);
 
 #else /*(TRACER_PRESENT && TRC_LC_STATE_TRANS)*/
 #define TRC_REQ_LC_STATE_TRANS(conhdl, proc_type, prev_state, curr_state)
@@ -802,8 +802,8 @@ void dbg_trc_req_lc_state_trans(uint16_t const conhdl, uint8_t const proc_type, 
  */
 void dbg_trc_req_llc_state_trans(uint16_t const conhdl, uint8_t const proc_type, uint8_t const prev_state, uint8_t const curr_state);
 
-#define TRC_REQ_LLC_STATE_TRANS(conhdl, proc_type, prev_state, curr_state)		\
-		dbg_trc_req_llc_state_trans(conhdl, proc_type, prev_state, curr_state);
+#define TRC_REQ_LLC_STATE_TRANS(conhdl, proc_type, prev_state, curr_state)      \
+        dbg_trc_req_llc_state_trans(conhdl, proc_type, prev_state, curr_state);
 
 #else /*(TRACER_PRESENT && TRC_LLC_STATE_TRANS)*/
 #define TRC_REQ_LLC_STATE_TRANS(conhdl, proc_type, prev_state, curr_state)

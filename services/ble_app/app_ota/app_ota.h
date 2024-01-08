@@ -49,13 +49,13 @@
 extern "C" {
 #endif
 
-#define OTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS		25
-#define OTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS		30
-#define OTA_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS	5000
+#define OTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS        25
+#define OTA_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS        30
+#define OTA_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS  5000
 
-#define OTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS			400
-#define OTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS			500
-#define OTA_LOW_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS	5000
+#define OTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS         400
+#define OTA_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS         500
+#define OTA_LOW_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS   5000
 
 
 extern struct app_env_tag app_env;
@@ -64,8 +64,8 @@ extern struct app_env_tag app_env;
 struct app_ota_env_tag
 {
     uint8_t connectionIndex;
-	uint8_t	isNotificationEnabled;
-	uint16_t mtu[BLE_CONNECTION_MAX];
+    uint8_t isNotificationEnabled;
+    uint16_t mtu[BLE_CONNECTION_MAX];
 };
 
 typedef void(*app_ota_tx_done_t)(void);
@@ -109,7 +109,7 @@ void app_ota_mtu_exchanged_handler(uint8_t conidx, uint16_t MTU);
 uint8_t app_ota_get_conidx(void);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 

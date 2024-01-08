@@ -412,7 +412,7 @@ void app_tws_if_tws_disconnected_handler(void)
 #endif
     }
 #ifdef __GMA_VOICE__
-	app_gma_ota_exception_reboot();  // shuailong
+    app_gma_ota_exception_reboot();  // shuailong
 #endif
 #endif
 }

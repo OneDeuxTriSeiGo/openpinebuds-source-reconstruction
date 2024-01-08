@@ -344,8 +344,8 @@ int app_battery_handle_process_normal(uint32_t status,  union APP_BATTERY_MSG_PR
 #endif
 #endif
             }else{
-			app_reset();
-		}
+            app_reset();
+        }
             break;
         case APP_BATTERY_STATUS_INVALID:
         default:

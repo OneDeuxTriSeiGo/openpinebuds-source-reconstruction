@@ -88,7 +88,7 @@ amm-info@iis.fraunhofer.de
 
 ******************************************************************************/
 
-#if defined(__GNUC__) /* GCC Compiler */	/* cppp replaced: elif */
+#if defined(__GNUC__) /* GCC Compiler */    /* cppp replaced: elif */
 
 #if defined(__ARM_ARCH_6__)
 

@@ -117,7 +117,7 @@ int rb_thread_post_msg(RB_MODULE_EVT evt,uint32_t arg );
 
 static rb_ctl_status rb_ctl_get_status(void)
 {
-	return rb_ctl_context.status;
+    return rb_ctl_context.status;
 }
 
 bool rb_ctl_parse_file(const char* file_path)
@@ -204,7 +204,7 @@ void rb_ctl_stop_play(void )
 //close file
     _LOG_DBG(0," af  stream stop \n");
     af_stream_stop(AUD_STREAM_ID_0,AUD_STREAM_PLAYBACK);
-    _LOG_DBG(0," af	stream close \n");
+    _LOG_DBG(0," af stream close \n");
     af_stream_close(AUD_STREAM_ID_0,AUD_STREAM_PLAYBACK);
     _LOG_DBG(0," close file \n");
     if(rb_ctl_context.file_handle != -1)
@@ -241,7 +241,7 @@ void rb_ctl_pause_playing(void )
         //osThreadYield();
     //    osDelay(1);
    // }
-	
+    
     _LOG_DBG(1,"%s sucessed ",__func__);
 }
 
@@ -292,7 +292,7 @@ static int rb_ctl_handle_event(RBCTL_MSG_BLOCK *msg_body)
                     _LOG_DBG(2,"%s  st  %d not in idle \n",__func__,rb_ctl_context.status);
                 break;
             }
-			_LOG_DBG(3," %s start %d/%d ",__func__, rb_ctl_context.curr_song_idx ,sd_playlist.total_songs);
+            _LOG_DBG(3," %s start %d/%d ",__func__, rb_ctl_context.curr_song_idx ,sd_playlist.total_songs);
             if(sd_playlist.total_songs > 0 ) {
                 playlist_item *it;
 
@@ -313,11 +313,11 @@ static int rb_ctl_handle_event(RBCTL_MSG_BLOCK *msg_body)
                     _LOG_DBG(1,"%s  start run\n",__func__);
                     rb_play_codec_run();
                     rb_ctl_context.status = RB_CTL_PLAYING;
-					app_rbcodec_ctl_set_play_status(true);
+                    app_rbcodec_ctl_set_play_status(true);
                     break;
                 } else {
                     _LOG_DBG(2,"%s  evt  %d parse fail,find next\n",__func__,msg_body->evt);
-					rb_thread_post_msg(RB_MODULE_EVT_PLAY_NEXT,true);
+                    rb_thread_post_msg(RB_MODULE_EVT_PLAY_NEXT,true);
                 }
 
             } else {
@@ -330,13 +330,13 @@ static int rb_ctl_handle_event(RBCTL_MSG_BLOCK *msg_body)
                 break;
             }
             if(rb_ctl_context.status == RB_CTL_SUSPEND) {
-				//osDelay(100);
-				rb_ctl_resume_playing();
-				rb_ctl_context.status = RB_CTL_PLAYING;
+                //osDelay(100);
+                rb_ctl_resume_playing();
+                rb_ctl_context.status = RB_CTL_PLAYING;
             }
             rb_ctl_sync_stop_play();
             rb_ctl_context.status = RB_CTL_IDLE;
-			app_rbcodec_ctl_set_play_status(false);
+            app_rbcodec_ctl_set_play_status(false);
             break;
         case RB_MODULE_EVT_SUSPEND:
             if (rb_ctl_context.status != RB_CTL_PLAYING) {
@@ -389,7 +389,7 @@ static int rb_ctl_handle_event(RBCTL_MSG_BLOCK *msg_body)
             rb_ctl_set_vol(arg);
             break;
         case RB_MODULE_EVT_CHANGE_IDLE:
-			rb_ctl_stop_play();
+            rb_ctl_stop_play();
             rb_ctl_context.status = RB_CTL_IDLE;        
             break;
         case RB_MODULE_EVT_PLAY_IDX:
@@ -433,21 +433,21 @@ static int rb_ctl_handle_event(RBCTL_MSG_BLOCK *msg_body)
             rb_restore_dual_play(arg);
         break;
 #endif
-		case RB_MODULE_EVT_DEL_FILE:
-			static rb_ctl_status prev_status = rb_ctl_context.status;
+        case RB_MODULE_EVT_DEL_FILE:
+            static rb_ctl_status prev_status = rb_ctl_context.status;
             if( rb_ctl_context.status == RB_CTL_PLAYING) {
                 rb_thread_post_msg(RB_MODULE_EVT_STOP,0 );
-				rb_thread_post_msg(RB_MODULE_EVT_DEL_FILE,arg);
+                rb_thread_post_msg(RB_MODULE_EVT_DEL_FILE,arg);
             } else if( rb_ctl_context.status == RB_CTL_SUSPEND) {
                 rb_thread_post_msg(RB_MODULE_EVT_STOP,0 );
-				rb_thread_post_msg(RB_MODULE_EVT_DEL_FILE,arg);
+                rb_thread_post_msg(RB_MODULE_EVT_DEL_FILE,arg);
             } else {
-				app_ctl_remove_file(arg);
-				if(prev_status == RB_CTL_PLAYING) {
-					rb_thread_post_msg(RB_MODULE_EVT_PLAY,0 );
-				}
+                app_ctl_remove_file(arg);
+                if(prev_status == RB_CTL_PLAYING) {
+                    rb_thread_post_msg(RB_MODULE_EVT_PLAY,0 );
+                }
             }
-	
+    
         break;
 #if defined(TWS_LINEIN_PLAYER)        
         case RB_MODULE_EVT_LINEIN_START:
@@ -465,35 +465,35 @@ static int rb_ctl_handle_event(RBCTL_MSG_BLOCK *msg_body)
 #endif            
 #ifdef SBC_RECORD_TEST
 
-		case SBC_RECORD_ACTION_START:
-		{
-			rb_ctl_context.sbc_record_on = true;
-			app_rbplay_set_store_flag(true);
-			app_rbplay_open_sbc_file();
+        case SBC_RECORD_ACTION_START:
+        {
+            rb_ctl_context.sbc_record_on = true;
+            app_rbplay_set_store_flag(true);
+            app_rbplay_open_sbc_file();
 
-		}
-		break;
-			
-		case SBC_RECORD_ACTION_DATA_IND:
-		{
-			if(rb_ctl_context.sbc_record_on) {
-				app_rbplay_process_sbc_data();
-			}
-		}
-		break;
-				
-		case SBC_RECORD_ACTION_STOP:
-		{
-			rb_ctl_context.sbc_record_on = false;
-			app_rbplay_set_store_flag(false);
-			app_rbplay_close_sbc_file();
-		}
-		break;
-#endif					
+        }
+        break;
+            
+        case SBC_RECORD_ACTION_DATA_IND:
+        {
+            if(rb_ctl_context.sbc_record_on) {
+                app_rbplay_process_sbc_data();
+            }
+        }
+        break;
+                
+        case SBC_RECORD_ACTION_STOP:
+        {
+            rb_ctl_context.sbc_record_on = false;
+            app_rbplay_set_store_flag(false);
+            app_rbplay_close_sbc_file();
+        }
+        break;
+#endif                  
         default:
             break;
     }
-	if(SBC_RECORD_ACTION_DATA_IND !=msg_body->evt)
+    if(SBC_RECORD_ACTION_DATA_IND !=msg_body->evt)
     _LOG_DBG(3,"%s  rbcodec evt  %d  ,st %d ended\n",__func__,msg_body->evt,rb_ctl_context.status);
     return 0;
 }
@@ -503,8 +503,8 @@ int rb_thread_post_msg(RB_MODULE_EVT evt,uint32_t arg )
     int ret;
     RBCTL_MSG_BLOCK msg;
 
-	if(!rb_ctl_tid)
-		return 0;
+    if(!rb_ctl_tid)
+        return 0;
     /* APIs */
     msg.evt = (uint32_t)evt;
     msg.arg = (uint32_t)arg;
@@ -522,18 +522,18 @@ void app_wait_player_stoped(void )
 
 void app_wait_player_suspend(void )
 {
-	if(rb_ctl_context.status == RB_CTL_IDLE)
-		return;
-		
+    if(rb_ctl_context.status == RB_CTL_IDLE)
+        return;
+        
     while(rb_ctl_context.status != RB_CTL_SUSPEND)
         osThreadYield();
 }
 
 void app_wait_player_resumed(void )
 {
-	if(rb_ctl_context.status == RB_CTL_IDLE)
-		return;
-		
+    if(rb_ctl_context.status == RB_CTL_IDLE)
+        return;
+        
     while(rb_ctl_context.status != RB_CTL_PLAYING)
         osThreadYield();
 }
@@ -548,8 +548,8 @@ void rb_thread_send_stop(void )
 {
     _LOG_DBG(1," %s ",__FUNCTION__);
     rb_thread_post_msg(RB_MODULE_EVT_STOP, (uint32_t)osThreadGetId());
-	
-	osDelay(200);
+    
+    osDelay(200);
     app_wait_player_stoped();
 }
 
@@ -559,7 +559,7 @@ void rb_thread_send_pause(void)
 
     rb_thread_post_msg(RB_MODULE_EVT_SUSPEND,(uint32_t)osThreadGetId());
     app_wait_player_suspend();
-	
+    
     _LOG_DBG(1," %s end",__FUNCTION__);
 }
 
@@ -568,7 +568,7 @@ void rb_thread_send_resume(void)
     _LOG_DBG(1," %s ",__FUNCTION__);
 
     rb_thread_post_msg(RB_MODULE_EVT_RESUME,(uint32_t)osThreadGetId());
-	
+    
     _LOG_DBG(1," %s end",__FUNCTION__);
 }
 
@@ -658,8 +658,8 @@ void rb_thread_send_sbc_record_start(void )
 
 void rb_thread_send_sbc_record_data_ind(void )
 {
-	if(!rb_ctl_context.sbc_record_on)
-		return ;
+    if(!rb_ctl_context.sbc_record_on)
+        return ;
   //  _LOG_DBG(1," %s , ",__FUNCTION__);
     rb_thread_post_msg(SBC_RECORD_ACTION_DATA_IND,(uint32_t)osThreadGetId());
 }
@@ -676,45 +676,45 @@ void rb_thread_send_sbc_record_stop(void )
 static bool user_key_pause_stream = false;
 void app_rbplay_audio_reset_pause_status(void)
 {
-	user_key_pause_stream = false;
+    user_key_pause_stream = false;
 }
 
 int app_rbplay_audio_onoff(bool onoff, uint16_t aud_id)
 {
     _LOG_DBG(3," %s onoff %d, get status:%d",__FUNCTION__,onoff, rb_ctl_get_status());
 
-	if(app_rbcodec_check_hfp_active()&& !onoff) {
+    if(app_rbcodec_check_hfp_active()&& !onoff) {
         if( RB_CTL_PLAYING == rb_ctl_get_status()) {
             rb_thread_send_pause();
         } 
-	} else if ( !onoff) {
-		//rb_thread_send_stop();
-		rb_thread_send_pause();
-	} else {
-		if(!user_key_pause_stream) {
-			if( RB_CTL_SUSPEND == rb_ctl_get_status()) {
-				rb_thread_send_resume();
-				app_wait_player_resumed();
-			} else {
-    	rb_thread_send_play();
+    } else if ( !onoff) {
+        //rb_thread_send_stop();
+        rb_thread_send_pause();
+    } else {
+        if(!user_key_pause_stream) {
+            if( RB_CTL_SUSPEND == rb_ctl_get_status()) {
+                rb_thread_send_resume();
+                app_wait_player_resumed();
+            } else {
+        rb_thread_send_play();
     }
-		}
-	}
-	
+        }
+    }
+    
     return 0;
 }
 
 void app_rbplay_pause_resume(void)
 {
     _LOG_DBG(2," %s get status:%d",__func__, rb_ctl_get_status());
-	
-	user_key_pause_stream = true;
+    
+    user_key_pause_stream = true;
     if( RB_CTL_SUSPEND == rb_ctl_get_status()) {
-		user_key_pause_stream = false;
+        user_key_pause_stream = false;
         rb_thread_send_resume();
     }
     if( RB_CTL_PLAYING == rb_ctl_get_status()) {
-		user_key_pause_stream = true;
+        user_key_pause_stream = true;
         rb_thread_send_pause();
     }
 }
@@ -824,9 +824,9 @@ static void rb_ctl_thread(void const *argument)
     //load playlist here
 
     //voiceCocah_init();
-	
-	rb_ctl_context.init_done = true;
-	
+    
+    rb_ctl_context.init_done = true;
+    
     while(1) {
         RBCTL_MSG_BLOCK *msg_p = NULL;
 
@@ -847,22 +847,22 @@ int rb_ctl_init(void)
 {
     _LOG_DBG(1,"%s \n",__func__);
 
-	rb_ctl_context.init_done = false;
-	rb_ctl_context.sbc_record_on = false;
-	
-	app_rbplay_open();
+    rb_ctl_context.init_done = false;
+    rb_ctl_context.sbc_record_on = false;
+    
+    app_rbplay_open();
 
-	rb_ctl_mailbox_init();
+    rb_ctl_mailbox_init();
 
-	rb_ctl_tid = osThreadCreate(osThread(rb_ctl_thread), NULL);
+    rb_ctl_tid = osThreadCreate(osThread(rb_ctl_thread), NULL);
     rb_ctl_default_priority = osPriorityAboveNormal;
 
-	if (rb_ctl_tid == NULL)  {
-		TRACE(0,"Failed to Create rb_ctl_thread\n");
-		return 0;
-	}
-	_LOG_DBG(1,"Leave %s \n",__func__);
-	return 0;
+    if (rb_ctl_tid == NULL)  {
+        TRACE(0,"Failed to Create rb_ctl_thread\n");
+        return 0;
+    }
+    _LOG_DBG(1,"Leave %s \n",__func__);
+    return 0;
 }
 
 uint8_t rb_ctl_get_vol(void)
@@ -872,16 +872,16 @@ uint8_t rb_ctl_get_vol(void)
 
 bool rb_ctl_is_init_done(void)
 {
-	return rb_ctl_context.init_done;
+    return rb_ctl_context.init_done;
 }
 
 bool rb_ctl_is_paused(void)
 {
-	return ( RB_CTL_SUSPEND == rb_ctl_get_status());
+    return ( RB_CTL_SUSPEND == rb_ctl_get_status());
 }
 
 uint16_t rb_ctl_songs_count(void)
 {
-	return sd_playlist.total_songs;
+    return sd_playlist.total_songs;
 }
 

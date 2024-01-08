@@ -101,7 +101,7 @@ static void app_gfps_init_env(void)
     memset(( uint8_t * )&app_gfps_env, 0, sizeof(struct app_gfps_env_tag));
     app_gfps_env.connectionIndex = BLE_INVALID_CONNECTION_INDEX;
     app_gfps_env.batteryDataType = HIDE_UI_INDICATION;
-    app_gfps_env.advRandSalt = GFPS_INITIAL_ADV_RAND_SALT;	
+    app_gfps_env.advRandSalt = GFPS_INITIAL_ADV_RAND_SALT;  
     app_ble_register_data_fill_handle(USER_GFPS, ( BLE_DATA_FILL_FUNC_T )gfps_ble_data_fill_handler, false);
 }
 

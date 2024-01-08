@@ -102,7 +102,7 @@ static const app_tws_cmd_instance_t g_ibrt_custom_cmd_handler_table[]=
         app_ibrt_customif_test3_cmd_send_handler,               0,
         app_ibrt_custom_cmd_rsp_timeout_handler_null,           app_ibrt_custom_cmd_rsp_handler_null
     },
-	{
+    {
         APP_IBRT_CUSTOM_CMD_TEST4,                              "TWS_CMD_TEST4",
         app_ibrt_customif_test4_cmd_send,
         app_ibrt_customif_test4_cmd_send_handler,               0,
@@ -161,8 +161,8 @@ void app_ibrt_customif_test1_cmd_send(uint8_t *p_buff, uint16_t length)
 
 static void app_ibrt_customif_test1_cmd_send_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t length)
 {
-	TRACE(1,"%s", __func__);
-	app_ibrt_search_ui_handle_key((APP_KEY_STATUS *)p_buff, NULL);
+    TRACE(1,"%s", __func__);
+    app_ibrt_search_ui_handle_key((APP_KEY_STATUS *)p_buff, NULL);
 }
 
 static void app_ibrt_customif_test2_cmd_send(uint8_t *p_buff, uint16_t length)
@@ -197,25 +197,25 @@ void app_ibrt_customif_test3_cmd_send(uint8_t *p_buff, uint16_t length)
 extern void app_ibrt_ui_test_mtu_change_sync_notify(void);
 static void app_ibrt_customif_test3_cmd_send_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t length)
 {
-	/*TRACE(3,"%s,latency_mode_is_open = %d", __func__,latency_mode_is_open);
-	if(*p_buff == latency_mode_is_open)return;
-	if(*p_buff == 0)
-		latency_mode_is_open = 1;
-	else if(*p_buff == 1)
-		latency_mode_is_open = 0;
-	app_ibrt_ui_test_mtu_change_sync_notify();*/
+    /*TRACE(3,"%s,latency_mode_is_open = %d", __func__,latency_mode_is_open);
+    if(*p_buff == latency_mode_is_open)return;
+    if(*p_buff == 0)
+        latency_mode_is_open = 1;
+    else if(*p_buff == 1)
+        latency_mode_is_open = 0;
+    app_ibrt_ui_test_mtu_change_sync_notify();*/
 }
 
 void app_ibrt_customif_test4_cmd_send(uint8_t *p_buff, uint16_t length)
 {
-	TRACE(3,"%s", __func__);
-	app_ibrt_send_cmd_without_rsp(APP_IBRT_CUSTOM_CMD_TEST4, p_buff, length);
+    TRACE(3,"%s", __func__);
+    app_ibrt_send_cmd_without_rsp(APP_IBRT_CUSTOM_CMD_TEST4, p_buff, length);
 }
 extern void app_ibrt_sync_volume_info();
 static void app_ibrt_customif_test4_cmd_send_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t length)
 {
-	TRACE(3,"!!!!app_ibrt_customif_test4_cmd_send_handler");
-	app_ibrt_sync_volume_info();
+    TRACE(3,"!!!!app_ibrt_customif_test4_cmd_send_handler");
+    app_ibrt_sync_volume_info();
 }
 
 #ifdef CUSTOM_BITRATE

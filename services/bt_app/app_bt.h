@@ -44,7 +44,7 @@ typedef void (*APP_APPTHREAD_REQ_CUSTOMER_CALL_FN_T)(void *, void *);
 typedef enum
 {
     APP_BT_IDLE_STATE = 0,
-    APP_BT_IN_CONNECTING_PROFILES_STATE	// acl link is created and in the process of connecting profiles
+    APP_BT_IN_CONNECTING_PROFILES_STATE // acl link is created and in the process of connecting profiles
 } APP_BT_CONNECTING_STATE_E;
 
 typedef enum

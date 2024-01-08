@@ -2987,11 +2987,11 @@ static ibrt_ctrl_t *p_ibrt_ctrl = app_ibrt_if_get_bt_ctrl_ctx();
 #endif
                 break;
             case BTIF_HF_EVENT_SERVICE_DISCONNECTED:
-		if(((ctx->disc_reason == 0)||(ctx->disc_reason == 19))&&(p_ibrt_ctrl->current_role != IBRT_SLAVE))
-		{
-			once_event_case = 2;
-			startonce_delay_event_Timer_(1000);
-		}
+        if(((ctx->disc_reason == 0)||(ctx->disc_reason == 19))&&(p_ibrt_ctrl->current_role != IBRT_SLAVE))
+        {
+            once_event_case = 2;
+            startonce_delay_event_Timer_(1000);
+        }
                 //TRACE(3,"%s HF_EVENT_SERVICE_DISCONNECTED discReason:%d/%d",__func__, Info->p.remDev->discReason, Info->p.remDev->discReason_saved);
                 TRACE(3,"%s HF_EVENT_SERVICE_DISCONNECTED discReason:%d/%d",__func__, ctx->disc_reason, ctx->disc_reason_saved);
                 bt_profile_manager[id].hfp_connect = bt_profile_connect_status_failure;
@@ -3216,14 +3216,14 @@ static ibrt_ctrl_t *p_ibrt_ctrl = app_ibrt_if_get_bt_ctrl_ctx();
 
         bt_profile_manager[id].has_connected = true;
         TRACE(0,"BT connected!!!");
-	once_event_case = 1;
-	/*if(IsMobileLinkLossing){
+    once_event_case = 1;
+    /*if(IsMobileLinkLossing){
             startonce_delay_event_Timer_(3000);
-	}
+    }
         else{
             startonce_delay_event_Timer_(1500);
         }*/
-		app_voice_report(APP_STATUS_INDICATION_CONNECTED,0);
+        app_voice_report(APP_STATUS_INDICATION_CONNECTED,0);
         IsMobileLinkLossing = FALSE;
 #ifndef IBRT
         btif_me_get_remote_device_name(&(ctx->remote_dev_bdaddr), app_bt_global_handle);
@@ -3630,7 +3630,7 @@ void app_bt_profile_connect_manager_a2dp(enum BT_DEVICE_ID_T id, a2dp_stream_t *
 
         bt_profile_manager[id].has_connected = true;
         TRACE(0,"BT connected!!!");
-	IsMobileLinkLossing = FALSE;
+    IsMobileLinkLossing = FALSE;
 #ifndef IBRT
         btif_me_get_remote_device_name(&(bt_profile_manager[id].rmt_addr), app_bt_global_handle);
 #endif

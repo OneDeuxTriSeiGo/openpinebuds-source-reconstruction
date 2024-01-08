@@ -24,14 +24,14 @@ extern "C" {
 
 typedef struct {
     int32_t     bypass;
-	int32_t     blend_en;
-	int32_t     authen_en;
-    float     	delay_tapsM;            // MIC L/R delay samples. 0: 适用于麦克距离为<2cm; 1: 适用于麦克距离为2cm左右; 2: 适用于麦克距离为4cm左右
+    int32_t     blend_en;
+    int32_t     authen_en;
+    float       delay_tapsM;            // MIC L/R delay samples. 0: 适用于麦克距离为<2cm; 1: 适用于麦克距离为2cm左右; 2: 适用于麦克距离为4cm左右
     int32_t     delay_tapsS;
-	float       denoise_dB;
+    float       denoise_dB;
     // float       coefH[2][5];            // {{a0,a1,a2,a3,a4},{b0,b1,b2,b3,b4}}
     // float       coefL[2][5];            // {{a0,a1,a2,a3,a4},{b0,b1,b2,b3,b4}}
-	int32_t     crossover_freq;
+    int32_t     crossover_freq;
     int32_t     freq_smooth_enable;     // 1: 频域滤波打开; 0: 频域滤波关闭; 默认打开
     int32_t     wnr_enable;             // wind noise reduction enable
 } Speech3MicNsConfig;

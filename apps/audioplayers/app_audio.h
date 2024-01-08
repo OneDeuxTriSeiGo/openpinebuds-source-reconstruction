@@ -125,9 +125,9 @@ extern "C" {
 
 #if defined(A2DP_SCALABLE_ON)
 #define SCALABLE_FRAME_SIZE (864)
-#define SCALABLE_HEAD_SIZE	(4)	/* pick something big enough to hold a bunch of frames */
-#define SCALABLE_READBUF_SIZE	(500)	/* pick something big enough to hold a bunch of frames */
-#define SCALABLE_DECODER_SIZE (17456)	/* pick something big enough to hold a bunch of frames */
+#define SCALABLE_HEAD_SIZE  (4) /* pick something big enough to hold a bunch of frames */
+#define SCALABLE_READBUF_SIZE   (500)   /* pick something big enough to hold a bunch of frames */
+#define SCALABLE_DECODER_SIZE (17456)   /* pick something big enough to hold a bunch of frames */
 #define SBM_FAST_SPEED 67380 // 840 2.76%
 #define SBM_SLOW_SPEED 63730 // 888 2.76%
 #define SBM_NUM_NORMAL 100

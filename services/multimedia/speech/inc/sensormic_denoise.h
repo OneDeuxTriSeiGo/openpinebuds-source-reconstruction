@@ -24,7 +24,7 @@ extern "C" {
 
 typedef struct {
     int32_t     bypass;
-	int32_t     blend_en;
+    int32_t     blend_en;
     // float       left_gain;              // MIC Left增益补偿
     // float       right_gain;             // MIC Right增益补偿
     int32_t     delay_tapsM;            // MIC L/R delay samples. 0: 适用于麦克距离为<2cm; 1: 适用于麦克距离为2cm左右; 2: 适用于麦克距离为4cm左右

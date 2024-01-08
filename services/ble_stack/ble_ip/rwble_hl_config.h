@@ -6,9 +6,9 @@
 
 #define CFG_PRF
 #define CFG_NB_PRF (BLE_APP_OTA + BLE_APP_GFPS  + BLE_VOICEPATH + BLE_BMS + \
-	BLE_ANC_CLIENT + BLE_AMS_CLIENT + (ANCS_PROXY_ENABLE ? 2 : 0) + \
-	BLE_APP_DATAPATH_SERVER + BLE_AI_VOICE + BLE_APP_TOTA + BLE_APP_TILE)
-	
+    BLE_ANC_CLIENT + BLE_AMS_CLIENT + (ANCS_PROXY_ENABLE ? 2 : 0) + \
+    BLE_APP_DATAPATH_SERVER + BLE_AI_VOICE + BLE_APP_TOTA + BLE_APP_TILE)
+    
 /**
  ****************************************************************************************
  * @addtogroup ROOT

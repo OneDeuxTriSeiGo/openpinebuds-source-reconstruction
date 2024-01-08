@@ -82,7 +82,7 @@ list_node_t *list_next(const list_node_t *node);
 void *list_node(const list_node_t *node);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif//__FMDEC_H__

@@ -58,8 +58,8 @@ typedef uint16 BesaudEvent;
 typedef struct
 {
     struct list_node node;
-	uint8* 		pBuf;
-	uint16		pDataLength;
+    uint8*      pBuf;
+    uint16      pDataLength;
 } BesaudPacket;
 
 struct _BesaudCallbackParms{

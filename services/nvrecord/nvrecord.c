@@ -902,8 +902,8 @@ int nv_record_enum_latest_two_paired_dev(btif_device_record_t* record1,btif_devi
 
 int nv_record_touch_cause_flush(void)
 {
-	nv_record_update_runtime_userdata();
-	return 0;
+    nv_record_update_runtime_userdata();
+    return 0;
 }
 
 void nv_record_all_ddbrec_print(void)
@@ -966,33 +966,33 @@ void nv_record_sector_clear(void)
                           sizeof(usrdata_ddblist_pool),
                           false);
     nvrec_init = false;
-	nvrec_mempool_init = false;
+    nvrec_mempool_init = false;
     int_unlock_global(lock);
     ASSERT(ret == NORFLASH_API_OK,"nv_record_sector_clear: erase main sector failed! ret = %d.",ret);
     ASSERT(ret1 == NORFLASH_API_OK,"nv_record_sector_clear: erase bak sector failed! ret1 = %d.",ret1);
 }
 
-#define DISABLE_NV_RECORD_CRC_CHECK_BEFORE_FLUSH	1
+#define DISABLE_NV_RECORD_CRC_CHECK_BEFORE_FLUSH    1
 void nv_record_update_runtime_userdata(void)
 {
     uint32_t lock;
 
-	if (NULL == nv_record_config.config)
-	{
-		return;
-	}
-	lock = int_lock();
-	nv_record_config.is_update = true;
+    if (NULL == nv_record_config.config)
+    {
+        return;
+    }
+    lock = int_lock();
+    nv_record_config.is_update = true;
 
 #if !DISABLE_NV_RECORD_CRC_CHECK_BEFORE_FLUSH
-	buffer_alloc_ctx* heapctx = memory_buffer_heap_getaddr();
+    buffer_alloc_ctx* heapctx = memory_buffer_heap_getaddr();
     memcpy((void *)(&usrdata_ddblist_pool[pos_heap_contents]),heapctx,sizeof(buffer_alloc_ctx));
     uint32_t crc = crc32(0,(uint8_t *)(&usrdata_ddblist_pool[pos_heap_contents]),(sizeof(usrdata_ddblist_pool)-(pos_heap_contents*sizeof(uint32_t))));
 
     usrdata_ddblist_pool[pos_crc] = crc;
 #endif
 
-	int_unlock(lock);
+    int_unlock(lock);
 }
 
 
@@ -1630,15 +1630,15 @@ int nvrec_clear_rand(void)
 
 int nvrec_dev_get_sn(char *sn)
 {
-	unsigned int sn_addr;
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
+    unsigned int sn_addr;
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
         return -1;
-	}
-	else
-	{
-		sn_addr = (unsigned int)(__factory_start + rev2_dev_prod_sn);
-	}
+    }
+    else
+    {
+        sn_addr = (unsigned int)(__factory_start + rev2_dev_prod_sn);
+    }
 
     if(false == dev_sector_valid)
         return -1;
@@ -1660,58 +1660,58 @@ bool nvrec_dev_data_open(void)
 
     vermagic = __factory_start[dev_version_and_magic];
     nvrec_trace(2,"%s,vermagic=0x%x",__func__,vermagic);
-	if ((nvrec_dev_magic != (vermagic&0xFFFF)) ||
-		((vermagic >> 16) > NVREC_DEV_NEWEST_REV))
+    if ((nvrec_dev_magic != (vermagic&0xFFFF)) ||
+        ((vermagic >> 16) > NVREC_DEV_NEWEST_REV))
     {
         dev_sector_valid = false;
         nvrec_trace(1,"%s,dev sector invalid.",__func__);
         return dev_sector_valid;
     }
 
-	// following the nv rec version number programmed by the downloader tool,
-	// to be backward compatible
-	nv_record_dev_rev = vermagic >> 16;
-	nvrec_trace(1,"Nv record dev version %d", nv_record_dev_rev);
+    // following the nv rec version number programmed by the downloader tool,
+    // to be backward compatible
+    nv_record_dev_rev = vermagic >> 16;
+    nvrec_trace(1,"Nv record dev version %d", nv_record_dev_rev);
 
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-    	dev_zone_flsh_crc = __factory_start[dev_crc];
-    	dev_zone_crc = crc32(0,(uint8_t *)(&__factory_start[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
-	}
-	else
-	{
-		// check the data length
-		if ((rev2_dev_section_start_reserved*sizeof(uint32_t)) + __factory_start[rev2_dev_data_len]
-			> 4096)
-		{
-			nvrec_trace(1,"nv rec dev data len %d has exceeds the facory sector size!.",
-				__factory_start[rev2_dev_data_len]);
-			dev_sector_valid = false;
-			return false;
-		}
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        dev_zone_flsh_crc = __factory_start[dev_crc];
+        dev_zone_crc = crc32(0,(uint8_t *)(&__factory_start[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
+    }
+    else
+    {
+        // check the data length
+        if ((rev2_dev_section_start_reserved*sizeof(uint32_t)) + __factory_start[rev2_dev_data_len]
+            > 4096)
+        {
+            nvrec_trace(1,"nv rec dev data len %d has exceeds the facory sector size!.",
+                __factory_start[rev2_dev_data_len]);
+            dev_sector_valid = false;
+            return false;
+        }
 
-		// assure that in future, if the nv dev data structure is extended, the former tool
-		// and former bin can still be workable
-    	dev_zone_flsh_crc = __factory_start[rev2_dev_crc];
-    	dev_zone_crc = crc32(0,(uint8_t *)(&__factory_start[rev2_dev_section_start_reserved]),
-			__factory_start[rev2_dev_data_len]);
-	}
+        // assure that in future, if the nv dev data structure is extended, the former tool
+        // and former bin can still be workable
+        dev_zone_flsh_crc = __factory_start[rev2_dev_crc];
+        dev_zone_crc = crc32(0,(uint8_t *)(&__factory_start[rev2_dev_section_start_reserved]),
+            __factory_start[rev2_dev_data_len]);
+    }
 
-	nvrec_trace(4,"%s: data len 0x%x,dev_zone_flsh_crc=0x%x,dev_zone_crc=0x%x",__func__,
-		__factory_start[rev2_dev_data_len],dev_zone_flsh_crc,dev_zone_crc);
+    nvrec_trace(4,"%s: data len 0x%x,dev_zone_flsh_crc=0x%x,dev_zone_crc=0x%x",__func__,
+        __factory_start[rev2_dev_data_len],dev_zone_flsh_crc,dev_zone_crc);
     if (dev_zone_flsh_crc == dev_zone_crc)
     {
         dev_sector_valid = true;
     }
 
-	if (dev_sector_valid)
-	{
-		nvrec_trace(1,"%s: nv rec dev is valid.", __func__);
-	}
-	else
-	{
-		nvrec_trace(1,"%s: nv rec dev is invalid.", __func__);
-	}
+    if (dev_sector_valid)
+    {
+        nvrec_trace(1,"%s: nv rec dev is valid.", __func__);
+    }
+    else
+    {
+        nvrec_trace(1,"%s: nv rec dev is invalid.", __func__);
+    }
     return dev_sector_valid;
 }
 
@@ -1775,74 +1775,74 @@ static void nvrec_dev_data_fill_xtal_fcap(uint32_t *mem_pool,uint32_t val)
     uint8_t *bleaddr = NULL;
 
     assert(0 != mem_pool);
-	if (!dev_sector_valid)
-	{
-		mem_pool[dev_version_and_magic] = ((nv_record_dev_rev<<16)|nvrec_dev_magic);
-	}
+    if (!dev_sector_valid)
+    {
+        mem_pool[dev_version_and_magic] = ((nv_record_dev_rev<<16)|nvrec_dev_magic);
+    }
 
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-	    if(dev_sector_valid)
-	    {
-	        memcpy((void *)mem_pool,(void *)__factory_start,0x1000);
-        	mem_pool[dev_xtal_fcap] = val;
-        	mem_pool[dev_crc] = crc32(0,(uint8_t *)(&mem_pool[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
-    	}
-    	else
-	    {
-	        const char *localname = bt_get_local_name();
-	        unsigned int namelen = strlen(localname);
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        if(dev_sector_valid)
+        {
+            memcpy((void *)mem_pool,(void *)__factory_start,0x1000);
+            mem_pool[dev_xtal_fcap] = val;
+            mem_pool[dev_crc] = crc32(0,(uint8_t *)(&mem_pool[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
+        }
+        else
+        {
+            const char *localname = bt_get_local_name();
+            unsigned int namelen = strlen(localname);
 
-	        btaddr = bt_get_local_address();
-	        bleaddr = bt_get_ble_local_address();
+            btaddr = bt_get_local_address();
+            bleaddr = bt_get_ble_local_address();
 
-	        mem_pool[dev_reserv1] = 0;
-	        mem_pool[dev_reserv2] = 0;
-	        memcpy((void *)&mem_pool[dev_name],(void *)localname,(size_t)namelen);
-	        nvrec_dev_rand_btaddr_gen(btaddr);
-	        nvrec_dev_rand_btaddr_gen(bleaddr);
-	        memcpy((void *)&mem_pool[dev_bt_addr],(void *)btaddr,BTIF_BD_ADDR_SIZE);
-	        memcpy((void *)&mem_pool[dev_ble_addr],(void *)bleaddr,BTIF_BD_ADDR_SIZE);
-	        memset((void *)&mem_pool[dev_dongle_addr],0x0,BTIF_BD_ADDR_SIZE);
-	        mem_pool[dev_xtal_fcap] = val;
-	        mem_pool[dev_crc] = crc32(0,(uint8_t *)(&mem_pool[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
-	        nvrec_trace(2,"%s: mem_pool[dev_crc]=%x.\n",__func__,mem_pool[dev_crc]);
-	    }
-	}
-	else
-	{
-		if(dev_sector_valid)
-	    {
-	        memcpy((void *)mem_pool,(void *)__factory_start,0x1000);
-	        mem_pool[rev2_dev_xtal_fcap] = val;
-	        mem_pool[rev2_dev_crc] = crc32(0,
-				(uint8_t *)(&mem_pool[rev2_dev_section_start_reserved]),mem_pool[rev2_dev_data_len]);
-		}
-	    else
-	    {
-	        const char *localname = bt_get_local_name();
-	        unsigned int namelen = strlen(localname);
+            mem_pool[dev_reserv1] = 0;
+            mem_pool[dev_reserv2] = 0;
+            memcpy((void *)&mem_pool[dev_name],(void *)localname,(size_t)namelen);
+            nvrec_dev_rand_btaddr_gen(btaddr);
+            nvrec_dev_rand_btaddr_gen(bleaddr);
+            memcpy((void *)&mem_pool[dev_bt_addr],(void *)btaddr,BTIF_BD_ADDR_SIZE);
+            memcpy((void *)&mem_pool[dev_ble_addr],(void *)bleaddr,BTIF_BD_ADDR_SIZE);
+            memset((void *)&mem_pool[dev_dongle_addr],0x0,BTIF_BD_ADDR_SIZE);
+            mem_pool[dev_xtal_fcap] = val;
+            mem_pool[dev_crc] = crc32(0,(uint8_t *)(&mem_pool[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
+            nvrec_trace(2,"%s: mem_pool[dev_crc]=%x.\n",__func__,mem_pool[dev_crc]);
+        }
+    }
+    else
+    {
+        if(dev_sector_valid)
+        {
+            memcpy((void *)mem_pool,(void *)__factory_start,0x1000);
+            mem_pool[rev2_dev_xtal_fcap] = val;
+            mem_pool[rev2_dev_crc] = crc32(0,
+                (uint8_t *)(&mem_pool[rev2_dev_section_start_reserved]),mem_pool[rev2_dev_data_len]);
+        }
+        else
+        {
+            const char *localname = bt_get_local_name();
+            unsigned int namelen = strlen(localname);
 
-	        btaddr = bt_get_local_address();
-	        bleaddr = bt_get_ble_local_address();
-	        mem_pool[rev2_dev_section_start_reserved] = 0;
-	        mem_pool[rev2_dev_reserv2] = 0;
-	        memcpy((void *)&mem_pool[rev2_dev_name],(void *)localname,(size_t)namelen);
-			memcpy((void *)&mem_pool[rev2_dev_ble_name], (void *)bt_get_ble_local_name(), BLE_NAME_LEN_IN_NV);
-	        nvrec_dev_rand_btaddr_gen(btaddr);
-	        nvrec_dev_rand_btaddr_gen(bleaddr);
-	        memcpy((void *)&mem_pool[rev2_dev_bt_addr],(void *)btaddr,BTIF_BD_ADDR_SIZE);
-	        memcpy((void *)&mem_pool[rev2_dev_ble_addr],(void *)bleaddr,BTIF_BD_ADDR_SIZE);
-	        memset((void *)&mem_pool[rev2_dev_dongle_addr],0x0,BTIF_BD_ADDR_SIZE);
-	        mem_pool[rev2_dev_xtal_fcap] = val;
-			mem_pool[rev2_dev_data_len] = (rev2_dev_section_end-rev2_dev_section_start_reserved)*sizeof(uint32_t);
-	        mem_pool[rev2_dev_crc] = crc32(0,
-				(uint8_t *)(&mem_pool[rev2_dev_section_start_reserved]),
-				mem_pool[rev2_dev_data_len]);
-			nvrec_trace(2,"%s: mem_pool[rev2_dev_crc] = 0x%x.\n",
-				__func__,mem_pool[rev2_dev_crc]);
-	    }
-	}
+            btaddr = bt_get_local_address();
+            bleaddr = bt_get_ble_local_address();
+            mem_pool[rev2_dev_section_start_reserved] = 0;
+            mem_pool[rev2_dev_reserv2] = 0;
+            memcpy((void *)&mem_pool[rev2_dev_name],(void *)localname,(size_t)namelen);
+            memcpy((void *)&mem_pool[rev2_dev_ble_name], (void *)bt_get_ble_local_name(), BLE_NAME_LEN_IN_NV);
+            nvrec_dev_rand_btaddr_gen(btaddr);
+            nvrec_dev_rand_btaddr_gen(bleaddr);
+            memcpy((void *)&mem_pool[rev2_dev_bt_addr],(void *)btaddr,BTIF_BD_ADDR_SIZE);
+            memcpy((void *)&mem_pool[rev2_dev_ble_addr],(void *)bleaddr,BTIF_BD_ADDR_SIZE);
+            memset((void *)&mem_pool[rev2_dev_dongle_addr],0x0,BTIF_BD_ADDR_SIZE);
+            mem_pool[rev2_dev_xtal_fcap] = val;
+            mem_pool[rev2_dev_data_len] = (rev2_dev_section_end-rev2_dev_section_start_reserved)*sizeof(uint32_t);
+            mem_pool[rev2_dev_crc] = crc32(0,
+                (uint8_t *)(&mem_pool[rev2_dev_section_start_reserved]),
+                mem_pool[rev2_dev_data_len]);
+            nvrec_trace(2,"%s: mem_pool[rev2_dev_crc] = 0x%x.\n",
+                __func__,mem_pool[rev2_dev_crc]);
+        }
+    }
 }
 
 void nvrec_dev_flash_flush(unsigned char *mempool)
@@ -1865,15 +1865,15 @@ void nvrec_dev_flash_flush(unsigned char *mempool)
     int_unlock_global(lock);
 
 #ifdef nv_record_debug
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-	    memset(devdata,0x0,dev_data_len*sizeof(uint32_t));
-	    memcpy(devdata,__factory_start,dev_data_len*sizeof(uint32_t));
-	    recrc = crc32(0,(uint8_t *)(&devdata[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
-	    nvrec_trace(3,"%s: devdata[dev_crc]=%x.recrc=%x\n", __func__,devdata[dev_crc],recrc);
-	    if(devdata[dev_crc] != recrc)
-	        assert(0);
-	}
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        memset(devdata,0x0,dev_data_len*sizeof(uint32_t));
+        memcpy(devdata,__factory_start,dev_data_len*sizeof(uint32_t));
+        recrc = crc32(0,(uint8_t *)(&devdata[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
+        nvrec_trace(3,"%s: devdata[dev_crc]=%x.recrc=%x\n", __func__,devdata[dev_crc],recrc);
+        if(devdata[dev_crc] != recrc)
+            assert(0);
+    }
 #endif
 }
 
@@ -1917,30 +1917,30 @@ void nvrec_dev_set_xtal_fcap(unsigned int xtal_fcap)
     pmu_flash_read_config();
     int_unlock_global(lock);
 #ifdef nv_record_debug
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-	    memset(devdata,0x0,dev_data_len*sizeof(uint32_t));
-	    memcpy(devdata,__factory_start,dev_data_len*sizeof(uint32_t));
-	    nvrec_trace(2,"%s: xtal fcap = %d", __func__, devdata[dev_xtal_fcap]);
-	    recrc = crc32(0,(uint8_t *)(&devdata[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
-	    nvrec_trace(2,"devdata[dev_crc]=%x.recrc=%x\n", devdata[dev_crc], recrc);
-	    if(devdata[dev_crc] != recrc)
-	        assert(0);
-	}
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        memset(devdata,0x0,dev_data_len*sizeof(uint32_t));
+        memcpy(devdata,__factory_start,dev_data_len*sizeof(uint32_t));
+        nvrec_trace(2,"%s: xtal fcap = %d", __func__, devdata[dev_xtal_fcap]);
+        recrc = crc32(0,(uint8_t *)(&devdata[dev_reserv1]),(dev_data_len-dev_reserv1)*sizeof(uint32_t));
+        nvrec_trace(2,"devdata[dev_crc]=%x.recrc=%x\n", devdata[dev_crc], recrc);
+        if(devdata[dev_crc] != recrc)
+            assert(0);
+    }
 #endif
 }
 
 int nvrec_dev_get_xtal_fcap(unsigned int *xtal_fcap)
 {
-	unsigned int xtal_fcap_addr;
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-    	xtal_fcap_addr = (unsigned int)(__factory_start + dev_xtal_fcap);
-	}
-	else
-	{
-		xtal_fcap_addr = (unsigned int)(__factory_start + rev2_dev_xtal_fcap);
-	}
+    unsigned int xtal_fcap_addr;
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        xtal_fcap_addr = (unsigned int)(__factory_start + dev_xtal_fcap);
+    }
+    else
+    {
+        xtal_fcap_addr = (unsigned int)(__factory_start + rev2_dev_xtal_fcap);
+    }
 
     unsigned int tmpval[1] = {0,};
 
@@ -1955,15 +1955,15 @@ int nvrec_dev_get_xtal_fcap(unsigned int *xtal_fcap)
 
 int nvrec_dev_get_dongleaddr(bt_bdaddr_t *dongleaddr)
 {
-	unsigned int dongle_addr_pos;
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-    	dongle_addr_pos = (unsigned int)(__factory_start + dev_dongle_addr);
-	}
-	else
-	{
-		dongle_addr_pos = (unsigned int)(__factory_start + rev2_dev_dongle_addr);
-	}
+    unsigned int dongle_addr_pos;
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        dongle_addr_pos = (unsigned int)(__factory_start + dev_dongle_addr);
+    }
+    else
+    {
+        dongle_addr_pos = (unsigned int)(__factory_start + rev2_dev_dongle_addr);
+    }
 
     if(false == dev_sector_valid)
         return -1;
@@ -1975,15 +1975,15 @@ int nvrec_dev_get_dongleaddr(bt_bdaddr_t *dongleaddr)
 
 int nvrec_dev_get_btaddr(char *btaddr)
 {
-	unsigned int bt_addr_pos;
-	if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
-	{
-    	bt_addr_pos = (unsigned int)(__factory_start + dev_bt_addr);
-	}
-	else
-	{
-		bt_addr_pos = (unsigned int)(__factory_start + rev2_dev_bt_addr);
-	}
+    unsigned int bt_addr_pos;
+    if (NVREC_DEV_VERSION_1 == nv_record_dev_rev)
+    {
+        bt_addr_pos = (unsigned int)(__factory_start + dev_bt_addr);
+    }
+    else
+    {
+        bt_addr_pos = (unsigned int)(__factory_start + rev2_dev_bt_addr);
+    }
 
     if(false == dev_sector_valid)
         return 0;
@@ -1995,19 +1995,19 @@ int nvrec_dev_get_btaddr(char *btaddr)
 
 char* nvrec_dev_get_bt_name(void)
 {
-	return classics_bt_name;
+    return classics_bt_name;
 }
 
 const char* nvrec_dev_get_ble_name(void)
 {
-	if ((NVREC_DEV_VERSION_1 == nv_record_dev_rev) || (!dev_sector_valid))
-	{
-		return BLE_DEFAULT_NAME;
-	}
-	else
-	{
+    if ((NVREC_DEV_VERSION_1 == nv_record_dev_rev) || (!dev_sector_valid))
+    {
+        return BLE_DEFAULT_NAME;
+    }
+    else
+    {
 
-		return (const char *)(&__factory_start[rev2_dev_ble_name]);
-	}
+        return (const char *)(&__factory_start[rev2_dev_ble_name]);
+    }
 }
 

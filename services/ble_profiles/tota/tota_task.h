@@ -45,21 +45,21 @@
  * DEFINES
  ****************************************************************************************
  */
-#define TOTA_CONTENT_TYPE_COMMAND		0 
-#define TOTA_CONTENT_TYPE_DATA		1
+#define TOTA_CONTENT_TYPE_COMMAND       0 
+#define TOTA_CONTENT_TYPE_DATA      1
 
 /// Messages for TOTA Profile 
 enum tota_msg_id
 {
-	TOTA_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_TOTA),
+    TOTA_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_TOTA),
 
-	TOTA_TX_DATA_SENT,
-	
-	TOTA_DATA_RECEIVED,
+    TOTA_TX_DATA_SENT,
+    
+    TOTA_DATA_RECEIVED,
 
-	TOTA_SEND_NOTIFICATION,
+    TOTA_SEND_NOTIFICATION,
 
-	TOTA_SEND_INDICATION,
+    TOTA_SEND_INDICATION,
 };
 
 /*
@@ -69,25 +69,25 @@ enum tota_msg_id
 
 struct ble_tota_tx_notif_config_t
 {
-	bool 		isNotificationEnabled;
+    bool        isNotificationEnabled;
 };
 
 struct ble_tota_rx_data_ind_t
 {
-	uint16_t	length;
-	uint8_t		data[0];
+    uint16_t    length;
+    uint8_t     data[0];
 };
 
 struct ble_tota_tx_sent_ind_t
 {
-	uint8_t 	status;
+    uint8_t     status;
 };
 
 struct ble_tota_send_data_req_t
 {
-	uint8_t 	connecionIndex;
-	uint32_t 	length;
-	uint8_t  	value[__ARRAY_EMPTY];
+    uint8_t     connecionIndex;
+    uint32_t    length;
+    uint8_t     value[__ARRAY_EMPTY];
 };
 
 

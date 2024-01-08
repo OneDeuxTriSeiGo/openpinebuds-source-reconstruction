@@ -34,7 +34,7 @@ subdir-ccflags-y += \
 	-Iservices/multimedia/audio/process/anc/include\
 	-Iservices/nv_section/aud_section \
 	-Iservices/nv_section/userdata_section \
-  	-Iservices/nv_section/include   \
+	-Iservices/nv_section/include   \
 	-Iservices/voicepath/$(VOICE_DATAPATH_TYPE) \
 	-Iservices/voicepath/gsound \
 	-Iplatform/drivers/uarthci \

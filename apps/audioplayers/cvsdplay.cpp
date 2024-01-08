@@ -259,6 +259,6 @@ int voicecvsd_audio_init(void)
         g_voicecvsd_queue_mutex_id = osMutexCreate((osMutex(g_voicecvsd_queue_mutex)));
     }
 
-	voicecvsd_cache_status = APP_AUDIO_CACHE_CACHEING;
+    voicecvsd_cache_status = APP_AUDIO_CACHE_CACHEING;
 }
 #endif

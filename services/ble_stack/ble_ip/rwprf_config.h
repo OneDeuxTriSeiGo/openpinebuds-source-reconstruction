@@ -368,21 +368,21 @@
 #endif // defined(CFG_PRF_UDSC)
 
 #if defined(CFG_VOICEPATH)
-#define BLE_VOICEPATH			1
+#define BLE_VOICEPATH           1
 #else
-#define BLE_VOICEPATH			0
-#endif	// defined(CFG_VOICEPATH)
+#define BLE_VOICEPATH           0
+#endif  // defined(CFG_VOICEPATH)
 
 #if defined(CFG_TILE)
-#define BLE_TILE			1
+#define BLE_TILE            1
 #else
-#define BLE_TILE			0
-#endif	// 
+#define BLE_TILE            0
+#endif  // 
 
 #if defined(CFG_AI_VOICE)
-#define BLE_AI_VOICE			1
+#define BLE_AI_VOICE            1
 #else
-#define BLE_AI_VOICE			0
+#define BLE_AI_VOICE            0
 #endif
 
 /// Data Path Service Server Role
@@ -393,16 +393,16 @@
 #endif // defined(CFG_PRF_DATAPATH_SERVER)
 
 #if defined(CFG_OTA)
-#define BLE_OTA			1
+#define BLE_OTA         1
 #else
-#define BLE_OTA			0
-#endif	// defined(CFG_OTA)
+#define BLE_OTA         0
+#endif  // defined(CFG_OTA)
 
 #if defined(CFG_TOTA)
-#define BLE_TOTA			1
+#define BLE_TOTA            1
 #else
-#define BLE_TOTA			0
-#endif	// defined(CFG_TOTA)
+#define BLE_TOTA            0
+#endif  // defined(CFG_TOTA)
 
 #if defined(CFG_BMS)
 #define BLE_BMS     1

@@ -162,9 +162,9 @@ void app_dis_add_dis(void)
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
-	req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
+    req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
-	req->sec_lvl = PERM(SVC_AUTH, ENABLE);
+    req->sec_lvl = PERM(SVC_AUTH, ENABLE);
 #endif
 
     req->prf_task_id = TASK_ID_DISS;

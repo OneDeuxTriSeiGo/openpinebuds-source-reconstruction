@@ -65,8 +65,8 @@ usage:
 #define DEBUGPRINT2(num,...)       TRACE(num,__VA_ARGS__)
 
 #define CO_DEBUG_PRINTF(num,level,...)  do{ \
-										DEBUGPRINT2(num,__VA_ARGS__);\
-									}while(0);
+                                        DEBUGPRINT2(num,__VA_ARGS__);\
+                                    }while(0);
 
 
 
@@ -92,21 +92,21 @@ usage:
 
 #if 0
 #define DEBUG_ASSERT(expr)  do{\
-							 if (expr)\
-							 	{ ; }\
-							 else \
-							 	{CO_DEBUG_PRINTF("ASSERT","%s",#expr)}\
-							 }while(0);
+                             if (expr)\
+                                { ; }\
+                             else \
+                                {CO_DEBUG_PRINTF("ASSERT","%s",#expr)}\
+                             }while(0);
 #endif
 
 /*only dump at info level*/
 #if ( CONCAT(MOUDLE, _LEVEL) >= INFO_LEVEL )
 void _debug_print_dump_data(char *mem, int mem_size);
 #define DEBUG_DUMP_DATA(memaddr, memlen) do{ \
-											DEBUGPRINT2(2,"\r\n"  WHERESTR , WHEREARG);\
-											DEBUGPRINT2(0,"\r\n");\
-											Plt_DUMP8("%02x ", (char *)memaddr,memlen);\
-										   }while(0);
+                                            DEBUGPRINT2(2,"\r\n"  WHERESTR , WHEREARG);\
+                                            DEBUGPRINT2(0,"\r\n");\
+                                            Plt_DUMP8("%02x ", (char *)memaddr,memlen);\
+                                           }while(0);
 
 #else
 #define DEBUG_DUMP_DATA(...) 

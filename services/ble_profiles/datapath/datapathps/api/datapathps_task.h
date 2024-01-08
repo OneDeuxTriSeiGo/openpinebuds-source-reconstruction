@@ -29,23 +29,23 @@
 /// Messages for Data Path Server Profile 
 enum datapathps_msg_id
 {
-	DATAPATHPS_TX_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_DATAPATHPS),
+    DATAPATHPS_TX_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_DATAPATHPS),
 
-	DATAPATHPS_TX_DATA_SENT,
-	
-	DATAPATHPS_RX_DATA_RECEIVED,
+    DATAPATHPS_TX_DATA_SENT,
+    
+    DATAPATHPS_RX_DATA_RECEIVED,
 
-	DATAPATHPS_NOTIFICATION_RECEIVED,
+    DATAPATHPS_NOTIFICATION_RECEIVED,
 
-	DATAPATHPS_SEND_DATA_VIA_NOTIFICATION,
+    DATAPATHPS_SEND_DATA_VIA_NOTIFICATION,
 
-	DATAPATHPS_SEND_DATA_VIA_INDICATION,
+    DATAPATHPS_SEND_DATA_VIA_INDICATION,
 
-	DATAPATHPS_SEND_DATA_VIA_WRITE_COMMAND,
+    DATAPATHPS_SEND_DATA_VIA_WRITE_COMMAND,
 
-	DATAPATHPS_SEND_DATA_VIA_WRITE_REQUEST,
+    DATAPATHPS_SEND_DATA_VIA_WRITE_REQUEST,
 
-	DATAPATHPS_CONTROL_NOTIFICATION,
+    DATAPATHPS_CONTROL_NOTIFICATION,
 
 };
 
@@ -56,30 +56,30 @@ enum datapathps_msg_id
 
 struct ble_datapath_tx_notif_config_t
 {
-	bool 		isNotificationEnabled;
+    bool        isNotificationEnabled;
 };
 
 struct ble_datapath_rx_data_ind_t
 {
-	uint16_t	length;
-	uint8_t		data[0];
+    uint16_t    length;
+    uint8_t     data[0];
 };
 
 struct ble_datapath_tx_sent_ind_t
 {
-	uint8_t 	status;
+    uint8_t     status;
 };
 
 struct ble_datapath_send_data_req_t
 {
-	uint8_t 	connecionIndex;
-	uint32_t 	length;
-	uint8_t  	value[__ARRAY_EMPTY];
+    uint8_t     connecionIndex;
+    uint32_t    length;
+    uint8_t     value[__ARRAY_EMPTY];
 };
 
 struct ble_datapath_control_notification_t
 {
-	bool 		isEnable;
+    bool        isEnable;
     uint8_t     connecionIndex;
 };
 

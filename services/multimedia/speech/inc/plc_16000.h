@@ -32,9 +32,9 @@ File: sbcplc.h
 /* PLC State Information */
 struct PLC_State
 {
-	short hist[LHIST + OLAL + FS + SBCRT + OLAL];
-	short bestlag;
-	int nbf;
+    short hist[LHIST + OLAL + FS + SBCRT + OLAL];
+    short bestlag;
+    int nbf;
 };
 extern unsigned char indices0[57];
 /* Prototypes */

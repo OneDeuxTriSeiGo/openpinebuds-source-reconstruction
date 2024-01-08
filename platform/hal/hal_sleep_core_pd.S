@@ -16,13 +16,13 @@
 
 /*
 =========================================================================
-	Core Sleep Power Down and Wakeup Power Up Helper Functions
+    Core Sleep Power Down and Wakeup Power Up Helper Functions
 =========================================================================
 */
 
-	#include "cmsis.h"
+    #include "cmsis.h"
 
-    .syntax	unified
+    .syntax unified
 
 #ifdef CORE_SLEEP_POWER_DOWN
 
@@ -54,16 +54,16 @@ hal_sleep_core_power_down:
     push {r0,r1}
 #endif
 #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
-	ldr     r1, =0xE000EF34
-	ldr     r0, [r1]				/* Load FPCCR */
-	bic     r0, #1                  /* Clear LSPACT (Lazy state) */
-	str     r0, [r1]                /* Store FPCCR */
+    ldr     r1, =0xE000EF34
+    ldr     r0, [r1]                /* Load FPCCR */
+    bic     r0, #1                  /* Clear LSPACT (Lazy state) */
+    str     r0, [r1]                /* Store FPCCR */
 #endif
     /* TODO: Save FPU registers? */
     str sp, [r3]
-	bl hal_psc_core_auto_power_down
+    bl hal_psc_core_auto_power_down
 .pd_loop:
-	b .pd_loop
+    b .pd_loop
 
     .pool
     .size    hal_sleep_core_power_down, . - hal_sleep_core_power_down
@@ -86,8 +86,8 @@ hal_sleep_core_power_up:
     isb
     /* TODO: Restore FPU registers? */
 #ifdef __ARM_ARCH_8M_MAIN__
-	pop {r0,r1}
-	msr msplim, r0
+    pop {r0,r1}
+    msr msplim, r0
 #endif
     pop {r4-r12,lr}
     bx lr

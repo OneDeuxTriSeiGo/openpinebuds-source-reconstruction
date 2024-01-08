@@ -40,7 +40,7 @@
 #define BTIF_LLC_ECHO_RSP        0x09
 #define BTIF_LLC_INFO_REQ        0x0A
 #define BTIF_LLC_INFO_RSP        0x0B
-#define  BTIF_LLC_TWS_DATA_XFER	0xFE
+#define  BTIF_LLC_TWS_DATA_XFER 0xFE
 
 typedef U16 btif_l2cap_psm_value_t;
 
@@ -94,7 +94,7 @@ extern "C" {
     bool btif_l2cap_is_profile_channel_connected(uint8_t psm_context_mask);
 #endif
     void btif_l2cap_register_sdp_disconnect_callback(btif_callback cb);
-	void btif_btm_register_get_ibrt_role_callback(btif_callback_ext cb);
+    void btif_btm_register_get_ibrt_role_callback(btif_callback_ext cb);
      void btif_btm_register_get_tss_state_callback(btif_callback_ext cb);
     btif_l2cap_channel_t *btif_l2cap_alloc_channel_instance(uint16_t index);
     btif_l2cap_channel_t *btif_l2cap_get_l2cap_channel_instance(uint16_t index);

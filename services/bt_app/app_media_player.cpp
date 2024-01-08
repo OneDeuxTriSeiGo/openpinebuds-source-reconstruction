@@ -633,11 +633,11 @@ void media_runtime_audio_prompt_update(uint16_t id, uint8_t** ptr, uint32_t* len
             g_app_audio_length = (g_language==MEDIA_DEFAULT_LANGUAGE)?sizeof(EN_BT_FINDME): sizeof(CN_BT_FINDME);
             break;
 #endif
-	case AUDIO_ID_BT_DUDU:
+    case AUDIO_ID_BT_DUDU:
             g_app_audio_data = (U8*)EN_BT_DUDU;
             g_app_audio_length =  sizeof(EN_BT_DUDU);
             break;
-		case AUDIO_ID_BT_DU:
+        case AUDIO_ID_BT_DU:
             g_app_audio_data = (U8*)EN_BT_DUDU;
             g_app_audio_length =  sizeof(EN_BT_DUDU);
             break;

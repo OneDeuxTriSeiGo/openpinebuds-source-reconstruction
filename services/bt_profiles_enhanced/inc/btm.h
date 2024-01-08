@@ -176,9 +176,9 @@ struct btm_conn_item_t
     uint8 state;
     uint8 mode;
     uint8 authState;
-	uint8 io_cap;
-	uint8 oob_present;
-	uint8 authen_requirement;
+    uint8 io_cap;
+    uint8 oob_present;
+    uint8 authen_requirement;
     uint8 conn_dev_idx;
     uint16 rx_complete_count; /* Host HCI RX packets complete number, controller to host flow control */
     uint8 remote_version[5];

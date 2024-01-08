@@ -2797,7 +2797,7 @@ int hal_trace_rx_reopen()
 {
     hal_uart_reopen(trace_uart, &uart_rx_enable_cfg);
     hal_trace_rx_open();
-	
-	return 0;
+    
+    return 0;
 }
 #endif

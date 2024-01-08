@@ -16,11 +16,11 @@
 
 /*
 =========================================================================
-	MCU Sleep Power Down and Wakeup Power Up Helper Functions
+    MCU Sleep Power Down and Wakeup Power Up Helper Functions
 =========================================================================
 */
 
-    .syntax	unified
+    .syntax unified
 
 #ifdef MCU_SLEEP_POWER_DOWN
 
@@ -49,9 +49,9 @@ hal_sleep_mcu_power_down:
     push {r4-r12,lr}
     /* TODO: Save FPU registers? */
     str sp, [r3]
-	bl hal_psc_mcu_auto_power_down
+    bl hal_psc_mcu_auto_power_down
 .pd_loop:
-	b .pd_loop
+    b .pd_loop
 
     .pool
     .size    hal_sleep_mcu_power_down, . - hal_sleep_mcu_power_down

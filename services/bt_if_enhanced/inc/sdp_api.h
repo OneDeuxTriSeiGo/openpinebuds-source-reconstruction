@@ -14,8 +14,8 @@
  *
  ****************************************************************************/
 
-#ifndef	__SDP_API_H__
-#define	__SDP_API_H__
+#ifndef __SDP_API_H__
+#define __SDP_API_H__
 
 #include "me_api.h"
 

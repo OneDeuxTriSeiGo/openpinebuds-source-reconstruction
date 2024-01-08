@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 
-#define TRACE_BLE_TX_BUFFER_USAGE	0
+#define TRACE_BLE_TX_BUFFER_USAGE   0
 
 /*
  * DEFINES
@@ -50,8 +50,8 @@ struct l2cm_env_tag
     /// Number of available Lower Layer buffers
     uint16_t    nb_buffer_avail;
 
-	uint16_t    usedBufferNumber[BLE_CONNECTION_MAX];
-	
+    uint16_t    usedBufferNumber[BLE_CONNECTION_MAX];
+    
  };
 
 /*
@@ -71,11 +71,11 @@ extern struct l2cm_env_tag l2cm_env;
  */
 static __INLINE void l2cm_buffer_acquire(uint8_t conidx)
 {
-    l2cm_env.nb_buffer_avail--;	
-	l2cm_env.usedBufferNumber[conidx]++;
-#if TRACE_BLE_TX_BUFFER_USAGE	
-	TRACE(3, "ble nb -- to %d coidx %d use buf ++ to %d", l2cm_env.nb_buffer_avail,
-		conidx, l2cm_env.usedBufferNumber[conidx]);
+    l2cm_env.nb_buffer_avail--; 
+    l2cm_env.usedBufferNumber[conidx]++;
+#if TRACE_BLE_TX_BUFFER_USAGE   
+    TRACE(3, "ble nb -- to %d coidx %d use buf ++ to %d", l2cm_env.nb_buffer_avail,
+        conidx, l2cm_env.usedBufferNumber[conidx]);
 #endif
 }
 
@@ -88,17 +88,17 @@ static __INLINE void l2cm_buffer_acquire(uint8_t conidx)
  */
 static __INLINE void l2cm_buffer_release(uint8_t conidx, uint16_t nb)
 {
-	if (l2cm_env.usedBufferNumber[conidx] < nb)
-	{
-		l2cm_env.nb_buffer_avail += l2cm_env.usedBufferNumber[conidx];
-		l2cm_env.usedBufferNumber[conidx] = 0;
-	}
-	else
-	{
-		l2cm_env.nb_buffer_avail += nb;
-		l2cm_env.usedBufferNumber[conidx] -= nb;
-	}
-#if TRACE_BLE_TX_BUFFER_USAGE	
+    if (l2cm_env.usedBufferNumber[conidx] < nb)
+    {
+        l2cm_env.nb_buffer_avail += l2cm_env.usedBufferNumber[conidx];
+        l2cm_env.usedBufferNumber[conidx] = 0;
+    }
+    else
+    {
+        l2cm_env.nb_buffer_avail += nb;
+        l2cm_env.usedBufferNumber[conidx] -= nb;
+    }
+#if TRACE_BLE_TX_BUFFER_USAGE   
     TRACE(4, "post ble nb ++ %d to %d coidx %d use buf -- to %d", nb, l2cm_env.nb_buffer_avail,
         conidx, l2cm_env.usedBufferNumber[conidx]);
 #endif
@@ -107,16 +107,16 @@ static __INLINE void l2cm_buffer_release(uint8_t conidx, uint16_t nb)
 static __INLINE void l2cm_buffer_reset(uint8_t conidx)
 {
 #if TRACE_BLE_TX_BUFFER_USAGE
-	TRACE(2, "pre ble nb %d use buf %d", l2cm_env.nb_buffer_avail,
-		     l2cm_env.usedBufferNumber[conidx]);
+    TRACE(2, "pre ble nb %d use buf %d", l2cm_env.nb_buffer_avail,
+             l2cm_env.usedBufferNumber[conidx]);
 #endif
 
-	l2cm_env.nb_buffer_avail += l2cm_env.usedBufferNumber[conidx];
-	l2cm_env.usedBufferNumber[conidx] = 0;
+    l2cm_env.nb_buffer_avail += l2cm_env.usedBufferNumber[conidx];
+    l2cm_env.usedBufferNumber[conidx] = 0;
 
-#if TRACE_BLE_TX_BUFFER_USAGE	
-	TRACE(3, "post ble reset to %d conidx %d use buf to %d", l2cm_env.nb_buffer_avail,
-		conidx, l2cm_env.usedBufferNumber[conidx]);	
+#if TRACE_BLE_TX_BUFFER_USAGE   
+    TRACE(3, "post ble reset to %d conidx %d use buf to %d", l2cm_env.nb_buffer_avail,
+        conidx, l2cm_env.usedBufferNumber[conidx]); 
 #endif
 }
 

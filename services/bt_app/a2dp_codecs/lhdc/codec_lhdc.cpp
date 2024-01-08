@@ -129,14 +129,14 @@ uint8_t a2dp_lhdc_get_sample_rate(uint8_t * elements)
 
     uint8_t config = elements[6];
     if (vendor_id == A2DP_LHDC_VENDOR_ID && codec_id == A2DP_LHDC_CODEC_ID) {
-	switch (A2DP_LHDC_SR_DATA(config)) {
-	case A2DP_LHDC_SR_96000:
-	    return A2D_SBC_IE_SAMP_FREQ_96;
-	case A2DP_LHDC_SR_48000:
-	    return A2D_SBC_IE_SAMP_FREQ_48;
-	case A2DP_LHDC_SR_44100:
-	    return A2D_SBC_IE_SAMP_FREQ_44;
-	}
+    switch (A2DP_LHDC_SR_DATA(config)) {
+    case A2DP_LHDC_SR_96000:
+        return A2D_SBC_IE_SAMP_FREQ_96;
+    case A2DP_LHDC_SR_48000:
+        return A2D_SBC_IE_SAMP_FREQ_48;
+    case A2DP_LHDC_SR_44100:
+        return A2D_SBC_IE_SAMP_FREQ_44;
+    }
     }
     return 0;
 }
