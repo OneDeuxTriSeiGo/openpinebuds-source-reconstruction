@@ -235,4 +235,3 @@ int speex_resampler_set_quality(SpeexResamplerState *st,
 
 
 #endif
-

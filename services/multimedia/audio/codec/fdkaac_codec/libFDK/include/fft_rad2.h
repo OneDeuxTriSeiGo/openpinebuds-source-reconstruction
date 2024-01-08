@@ -131,4 +131,3 @@ void dit_ifft(FIXP_DBL *x, const INT ldn, const FIXP_STP *trigdata, const INT tr
 #define SCALEFACTOR2           1
 
 #endif /* _FFT_RAD2_H */
-

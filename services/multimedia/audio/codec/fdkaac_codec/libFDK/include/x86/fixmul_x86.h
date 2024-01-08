@@ -175,4 +175,3 @@ inline INT fixmuldiv2_DD (INT a, const INT b)
 #endif /* (defined(__GNUC__)||defined(__gnu_linux__)) && defined(__x86__) */
 
 #endif /* __x86__ */
-

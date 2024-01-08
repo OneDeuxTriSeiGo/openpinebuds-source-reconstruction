@@ -115,4 +115,3 @@ amm-info@iis.fraunhofer.de
 #endif
 
 #endif /* __mips__ */
-

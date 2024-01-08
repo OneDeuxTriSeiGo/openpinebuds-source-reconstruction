@@ -110,4 +110,3 @@ inline INT fixmuldiv2_DD (const INT a, const INT b)
 #endif /* defined(__GNUC__) */
 
 #endif /* __aarch64__ */
-

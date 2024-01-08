@@ -133,4 +133,3 @@ uint32_t BOOT_TEXT_SRAM_DEF(get_cpu_id) (void)
 {
     return __get_MPIDR() & 3;
 }
-
