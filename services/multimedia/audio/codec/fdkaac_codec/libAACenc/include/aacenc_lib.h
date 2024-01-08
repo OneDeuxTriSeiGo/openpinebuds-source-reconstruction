@@ -957,7 +957,7 @@ typedef enum
                                                   - 1 to fs/2: Frequency bandwidth in Hertz. (Experts only, better do not
                                                                touch this value to avoid degraded audio quality) */
 
-  AACENC_PEAK_BITRATE             = 0x0207,  /*!< Peak bitrate configuration parameter to adjust maximum bits per audio frame. Bitrate is in bits/second. 
+  AACENC_PEAK_BITRATE             = 0x0207,  /*!< Peak bitrate configuration parameter to adjust maximum bits per audio frame. Bitrate is in bits/second.
                                                   The peak bitrate will internally be limited to the chosen bitrate ::AACENC_BITRATE as lower limit
                                                   and the number_of_effective_channels*6144 bit as upper limit.
 

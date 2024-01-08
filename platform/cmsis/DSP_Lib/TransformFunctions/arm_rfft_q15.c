@@ -131,7 +131,7 @@ void arm_split_rfft_q15(
   const q15_t * pBTable,
         q15_t * pDst,
         uint32_t modifier)
-{       
+{
         uint32_t i;                                    /* Loop Counter */
         q31_t outR, outI;                              /* Temporary variables for output */
   const q15_t *pCoefA, *pCoefB;                        /* Temporary pointers for twiddle factors */

@@ -244,7 +244,7 @@ typedef struct {
     CSEldSpecificConfig   m_eldSpecificConfig;      /**< ELD specific configuration.                   */
 #endif /* TP_ELD_ENABLE */
   } m_sc;
-  
+
   /* Common ASC parameters */
 #ifdef TP_PCE_ENABLE
   CProgramConfig        m_progrConfigElement;     /**< Program configuration.                          */
@@ -256,7 +256,7 @@ typedef struct {
   UINT                  m_directMapping;          /**< Document this please !!                         */
 
   AUDIO_OBJECT_TYPE     m_extensionAudioObjectType;        /**< Audio object type                      */
-  UINT                  m_extensionSamplingFrequency;      /**< Samplerate                             */  
+  UINT                  m_extensionSamplingFrequency;      /**< Samplerate                             */
 
   SCHAR                 m_channelConfiguration;   /**< Channel configuration index                     */
 
@@ -301,7 +301,7 @@ typedef struct  {
   void *cbSbrData;                 /*!< User data pointer for SBR header parser callback. */
 } CSTpCallBacks;
 
-static const UINT SamplingRateTable[] = 
+static const UINT SamplingRateTable[] =
 { 96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350, 0, 0,
   0
 };

@@ -72,7 +72,7 @@ typedef enum
 {
     /* Crash Catcher should loop around and try dumping again incase user missed it previous time. */
     CRASH_CATCHER_TRY_AGAIN = 0,
-    /* Crash Catcher should exit and return to caller.  This is used during unit testing or if the crash cause was 
+    /* Crash Catcher should exit and return to caller.  This is used during unit testing or if the crash cause was
        actually a hardcoded breakpoint that should be logged and then execution continued. */
     CRASH_CATCHER_EXIT
 } CrashCatcherReturnCodes;
