@@ -287,7 +287,7 @@ SBR_ERROR sbrDecoder_Parse (
 
 /**
  * \brief  This function decodes the given SBR bitstreams and applies SBR to the given time data.
- * 
+ *
  * SBR-processing works InPlace. I.e. the calling function has to provide
  * a time domain buffer timeData which can hold the completely decoded
  * result.
@@ -330,7 +330,7 @@ SBR_ERROR sbrDecoder_Close ( HANDLE_SBRDECODER *self );
  * \param info  Pointer to a LIB_INFO struct, where library information is written to.
  * \return      0 on success, -1 if invalid handle or if no free element is available to write information to.
  */
-INT sbrDecoder_GetLibInfo( LIB_INFO *info );    
+INT sbrDecoder_GetLibInfo( LIB_INFO *info );
 
 /**
  * \brief       Determine the modules output signal delay in samples.

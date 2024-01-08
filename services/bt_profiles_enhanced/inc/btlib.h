@@ -27,10 +27,10 @@ extern "C" {
 
 int8 btlib_send_hci_cmd(uint16 opcode, uint8 *param_data_ptr, uint8 param_len);
 int8 btlib_send_acl_data( uint16 conn_handle, uint8 *data_ptr, uint16 data_len, uint8 *priv);
-int8 btlib_hcicmd_acl_connect(struct bdaddr_t *bdaddr, 
-                              uint16 pkt_type, 
-                              uint8 page_scan_repetition_mode, 
-                              uint16 clk_off, 
+int8 btlib_hcicmd_acl_connect(struct bdaddr_t *bdaddr,
+                              uint16 pkt_type,
+                              uint8 page_scan_repetition_mode,
+                              uint16 clk_off,
                               uint8 allow_role_switch);
 int8 btlib_hcicmd_addsyc_conn(struct btm_conn_item_t *conn);
 int8 btlib_hcicmd_addsco_conn(struct btm_conn_item_t *conn, uint16 pkt_type);
@@ -88,10 +88,10 @@ int8 btlib_hcicmd_set_bdaddr (uint8 *address);
 int8 btlib_hcicmd_set_ble_bdaddr (const uint8 *address);
 int8 btlib_hcicmd_write_memory(uint32 addr, uint32 value, uint8 bytelen);
 
-int8 btlib_hcicmd_sniff_mode(uint16 conn_handle, 
-                            uint16 sniff_max_interval, 
-                            uint16 sniff_min_interval, 
-                            uint16 sniff_attempt, 
+int8 btlib_hcicmd_sniff_mode(uint16 conn_handle,
+                            uint16 sniff_max_interval,
+                            uint16 sniff_min_interval,
+                            uint16 sniff_attempt,
                             uint16 sniff_timeout);
 
 int8 btlib_hcicmd_exit_sniff_mode(uint16 conn_handle);

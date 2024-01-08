@@ -29,10 +29,10 @@
 
 #ifndef __MEI_API__H__
 #define __MEI_API__H__
- 
+
 /*---------------------------------------------------------------------------
  *
- * Authenticate State of a Remote Device (BtAuthState). The typedef is in 
+ * Authenticate State of a Remote Device (BtAuthState). The typedef is in
  * mei_api.h
  */
 #define BTIF_BAS_NOT_AUTHENTICATED  0x00
@@ -44,10 +44,10 @@
 #define  BTIF_BAS_WAITING_FOR_KEY    0x06
 #define  BTIF_BAS_WAITING_FOR_KEY_R  0x07
 #define  BTIF_BAS_AUTHENTICATED      0x08
-    
+
 #define BTIF_DBG_SNIFFER_SCO_STOP  0
 #define BTIF_DBG_SNIFFER_SCO_START  1
 #define BTIF_DBG_SNIFFER_ACL_SWOTCH  2
 #define BTIF_DBG_SEND_MAX_SLOT_REQ  3
-    
+
 #endif /* __ME_H */

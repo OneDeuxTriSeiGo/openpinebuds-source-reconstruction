@@ -10,4 +10,4 @@ ccflags-y := \
 	-I$(obj)/../../nv_section/customparam_section \
 	-I$(obj)/../../nv_section/include \
 	-I$(obj)/../platform/cmsis/inc	\
-	-Iutils/crc32 
+	-Iutils/crc32

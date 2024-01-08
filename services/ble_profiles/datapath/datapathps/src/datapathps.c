@@ -115,7 +115,7 @@ const struct attm_desc datapathps_att_db[DATAPATHPS_IDX_NB] =
  * @return status code to know if profile initialization succeed or not.
  ****************************************************************************************
  */
-static uint8_t datapathps_init(struct prf_task_env* env, uint16_t* start_hdl, 
+static uint8_t datapathps_init(struct prf_task_env* env, uint16_t* start_hdl,
     uint16_t app_task, uint8_t sec_lvl, void* params)
 {
     uint8_t status;

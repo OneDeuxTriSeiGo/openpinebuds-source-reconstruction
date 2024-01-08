@@ -75,9 +75,9 @@ subdir-ccflags-y += \
 	-Iservices/ai_voice/transport  \
 	-Iservices/ai_voice/manager	\
 	-Iservices/ai_voice/protocol/dual_mic_recording/voice_manager \
-	-Iapps/anc/inc 
+	-Iapps/anc/inc
 
-	
+
 ifeq ($(IBRT),1)
 subdir-ccflags-y += \
 	-Iservices/ibrt_core/inc \

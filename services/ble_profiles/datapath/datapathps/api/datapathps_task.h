@@ -26,13 +26,13 @@
  * DEFINES
  ****************************************************************************************
  */
-/// Messages for Data Path Server Profile 
+/// Messages for Data Path Server Profile
 enum datapathps_msg_id
 {
     DATAPATHPS_TX_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_DATAPATHPS),
 
     DATAPATHPS_TX_DATA_SENT,
-    
+
     DATAPATHPS_RX_DATA_RECEIVED,
 
     DATAPATHPS_NOTIFICATION_RECEIVED,

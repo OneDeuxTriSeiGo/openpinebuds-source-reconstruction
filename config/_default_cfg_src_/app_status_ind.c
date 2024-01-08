@@ -57,9 +57,9 @@ const char *app_status_indication_str[] =
     "[TESTMODE]",
     "[TESTMODE1]",
     "[RING_WARNING]",
-#ifdef __INTERACTION__  
+#ifdef __INTERACTION__
     "[FINDME]",
-#endif  
+#endif
     "[MY_BUDS_FIND]",
     "[TILE_FIND]",
 };

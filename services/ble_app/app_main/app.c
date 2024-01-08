@@ -497,7 +497,7 @@ void appm_init()
     #if (BLE_APP_TILE)
     app_ble_tile_init();
     #endif
-    
+
     #if (BLE_APP_DATAPATH_SERVER)
     // Data Path Server Module
     app_datapath_server_init();
@@ -524,8 +524,8 @@ void appm_init()
 
     #if (BLE_APP_TILE)
     app_tile_init();
-     #endif 
-    
+     #endif
+
     BLE_APP_FUNC_LEAVE();
 }
 
@@ -1163,7 +1163,7 @@ uint8_t* appm_get_current_ble_addr(void)
 uint8_t* appm_get_local_identity_ble_addr(void)
 {
 #if defined(BLE_USE_RPA)&&defined(IS_WORKAROUND_SAME_BT_BLE_ADDR_FOR_RPA_CASE)
-    return (uint8_t *)gapm_get_bdaddr(); 
+    return (uint8_t *)gapm_get_bdaddr();
 #else
     return ble_addr;
 #endif
@@ -1186,7 +1186,7 @@ static BLE_CONN_PARAM_CONFIG_T ble_conn_param_config[] =
     {BLE_CONN_PARAM_MODE_OTA, BLE_CONN_PARAM_PRIORITY_HIGH, 12},
 
     {BLE_CONN_PARAM_MODE_OTA_SLOWER, BLE_CONN_PARAM_PRIORITY_HIGH, 20},
-        
+
     {BLE_CONN_PARAM_MODE_SNOOP_EXCHANGE, BLE_CONN_PARAM_PRIORITY_HIGH, 8},
 
     // TODO: add mode cases if needed
@@ -1202,7 +1202,7 @@ void app_ble_reset_conn_param_mode(uint8_t conidx)
 void app_ble_update_conn_param_mode(BLE_CONN_PARAM_MODE_E mode, bool isEnable)
 {
     for (uint8_t index = 0;index < BLE_CONNECTION_MAX;index++)
-    {        
+    {
         if (BLE_CONNECTED == app_env.context[index].connectStatus)
         {
             app_ble_update_conn_param_mode_of_specific_connection(
@@ -1275,7 +1275,7 @@ void app_ble_update_conn_param_mode_of_specific_connection(uint8_t conidx,
             }
             else
             {
-                // update the bit-mask 
+                // update the bit-mask
                 existingBleConnParamModes[conidx] |= (1 << mode);
 
                 // not existing yet, need to go throuth the existing params to see whether
@@ -1309,7 +1309,7 @@ void app_ble_update_conn_param_mode_of_specific_connection(uint8_t conidx,
             int_unlock_global(lock);
             return;
         }
-        else 
+        else
         {
             // doesn't exist, directly return
             if (!(existingBleConnParamModes[conidx]&(1 << mode)))
@@ -1319,7 +1319,7 @@ void app_ble_update_conn_param_mode_of_specific_connection(uint8_t conidx,
             }
             else
             {
-                // update the bit-mask 
+                // update the bit-mask
                 existingBleConnParamModes[conidx] &= (~(1 << mode));
 
                 if (0 == existingBleConnParamModes[conidx])
@@ -1368,11 +1368,11 @@ void app_ble_update_conn_param_mode_of_specific_connection(uint8_t conidx,
                             pConfig->conn_param_interval*10/8,
                             BLE_CONN_PARAM_SUPERVISE_TIMEOUT_MS,
                             BLE_CONN_PARAM_SLAVE_LATENCY_CNT);
-                            
+
         LOG_I("try to update conn interval to %d", pConfig->conn_param_interval);
     }
 
-    LOG_I("conn param mode of conidx %d switched to:0x%x", 
+    LOG_I("conn param mode of conidx %d switched to:0x%x",
         conidx, existingBleConnParamModes[conidx]);
 
 }

@@ -12,7 +12,7 @@
  * BES. which is protected by copyright, trade secret,
  * trademark and other intellectual property rights.
  *
- ****************************************************************************/ 
+ ****************************************************************************/
 #ifdef __INTERACTION__
 #if defined(IBRT)
 #include "cmsis_os.h"
@@ -98,7 +98,7 @@ void app_ibrt_view_update_sector(void)
         }else{
             TRACE(7,"%d 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x",i,__ota_upgrade_log_start[i],__ota_upgrade_log_start[i+1],__ota_upgrade_log_start[i+2],__ota_upgrade_log_start[i+3],__ota_upgrade_log_start[i+4],__ota_upgrade_log_start[i+5]);
         }
-    }    
+    }
     TRACE(0,"view_update_sector end: =====================");
 }
 
@@ -220,9 +220,9 @@ void app_ibrt_ota_update_now_rsp_handler(uint16_t rsp_seq, uint8_t *p_buff, uint
 /*===============================================================================*/
 void app_ibrt_ota_check_update_info(void)
 {
-    ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();    
+    ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
     reset_error_list();
-    if (p_ibrt_ctrl->nv_role == IBRT_MASTER)        
+    if (p_ibrt_ctrl->nv_role == IBRT_MASTER)
         tws_ctrl_send_cmd(APP_TWS_CMD_CHECK_UPDATE_INFO, NULL, 0);
 }
 
@@ -282,7 +282,7 @@ void app_ibrt_sync_breakpoint(uint8_t *p_buff, uint16_t length)
 {
     ibrt_ota_sync_breakpoint_cmd_t cmd;
     cmd.local_point = breakPoint_local = get_upgradeSize_log();
-    cmd.remote_point = breakPoint_remote = get_error_list(); 
+    cmd.remote_point = breakPoint_remote = get_error_list();
     app_ibrt_send_cmd_with_rsp(APP_TWS_CMD_SYNC_BREAKPIONT, (uint8_t*)&cmd, sizeof(ibrt_ota_check_cmd_t));
 }
 
@@ -364,7 +364,7 @@ void app_ibrt_ota_force_update(void)
         }else{
             TRACE(0,"ibrt_ui_log:app_ibrt_ota_force_update completed!!!!!!\n");
             app_ibrt_ota_update_immediately();
-        }                
+        }
     }
 }
 
@@ -395,7 +395,7 @@ void app_ibrt_update_section_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t
     ibrt_ota_update_cmd_t cmd = {0};
     cmd.number = p_ibrt_ota_update_cmd->number;
     cmd.point = p_ibrt_ota_update_cmd->point;
-/*    
+/*
     if(p_ibrt_ota_update_cmd->number == FLASH_SECTOR_SIZE_IN_BYTES/APP_TWS_CTRL_BUFFER_LEN-1){
         TRACE(0,"Calculate the crc32 of the segment.");
         uint32_t startFlashAddr = p_ibrt_ota_update_cmd->address - FLASH_SECTOR_SIZE_IN_BYTES + APP_TWS_CTRL_BUFFER_LEN;
@@ -403,7 +403,7 @@ void app_ibrt_update_section_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t
         TRACE(1,"CRC32 of the segement is 0x%x", cmd.crc);
         TRACE(2,"startFlashAddr is 0x%x, length is %d",startFlashAddr,FLASH_SECTOR_SIZE_IN_BYTES);
     }
-*/    
+*/
     tws_ctrl_send_rsp(APP_TWS_CMD_UPDATE_SECTION, rsp_seq, (uint8_t*)&cmd, sizeof(ibrt_ota_update_cmd_t));
 }
 
@@ -414,7 +414,7 @@ void app_ibrt_update_section_rsp_timeout_handler(uint16_t rsp_seq, uint8_t *p_bu
 
 void app_ibrt_update_section_rsp_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t length)
 {
-    ibrt_ota_update_cmd_t *p_ibrt_ota_update_rsp = (ibrt_ota_update_cmd_t *)p_buff;    
+    ibrt_ota_update_cmd_t *p_ibrt_ota_update_rsp = (ibrt_ota_update_cmd_t *)p_buff;
     TRACE(3,"ibrt_ui_log:app_ibrt_update_section_rsp_handler addr:0x%08x length:%d no:%d\n", p_ibrt_ota_update_rsp->address, p_ibrt_ota_update_rsp->length, p_ibrt_ota_update_rsp->number);
     if(p_ibrt_ota_update_rsp->number == FLASH_SECTOR_SIZE_IN_BYTES/APP_TWS_CTRL_BUFFER_LEN-1){
         TRACE(1,"CRC32 of the update is 0x%08x",p_ibrt_ota_update_rsp->crc);

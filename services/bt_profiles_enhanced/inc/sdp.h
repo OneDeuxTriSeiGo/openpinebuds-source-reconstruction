@@ -168,7 +168,7 @@ enum sdp_event {
     SDP_EVT_UNKNOWN_ERROR,
 };
 
-/* 
+/*
     @brief SDP callback params
 */
 struct sdp_callback_params {
@@ -196,7 +196,7 @@ struct sdp_callback_params {
     } response;
 };
 
-/* 
+/*
     @brief SDP connection role
 */
 enum sdp_connection_role {
@@ -205,7 +205,7 @@ enum sdp_connection_role {
 };
 
 /*
-    @brief SDP connection state 
+    @brief SDP connection state
 */
 enum sdp_connection_state {
     SDP_ST_STANDBY = 0,
@@ -216,7 +216,7 @@ enum sdp_connection_state {
 };
 
 /*
-    @brief SDP tx state 
+    @brief SDP tx state
 */
 enum sdp_tx_state {
     SDP_TX_IDLE = 0,
@@ -293,7 +293,7 @@ struct sdp_control_t
     uint32 max_attr_bytes_count;
     uint16 response_trans_id;
 #if defined(SDP_PRIVATE_RECORD_LIST)
-    struct list_node record_list; 
+    struct list_node record_list;
 #endif
     uint16 refer_count;
     uint8 response_pdu_header[SDP_PACKET_HEADER_LEN];
@@ -308,12 +308,12 @@ struct sdp_control_t
     struct data_link response_data_list;
     struct data_link response_head;
     struct data_link response_data;
-    struct data_link response_cont;    
+    struct data_link response_cont;
 
     // for client
-    struct list_node request_list; 
-    struct sdp_request *curr_request; 
-    struct sdp_request *pending_request; 
+    struct list_node request_list;
+    struct sdp_request *curr_request;
+    struct sdp_request *pending_request;
 
     uint16 request_trans_id;
     uint8 request_cont_data_len;
@@ -390,7 +390,7 @@ struct sdp_control_t
 #define SERV_UUID_AV_REMOTE_CONTROL_TARGET 0x11,0x0C
 #define SERV_UUID_AV_REMOTE_CONTROL_CONTROLLER 0x11,0x0F
 
-/* 
+/*
     @brief Service Record defination helper macros
 */
 #define _U8VALUE(v) ((v)&0xFF)
@@ -536,7 +536,7 @@ struct sdp_control_t
     @param in_ctl - control instance
 
     @return error code - 0 for no error
-*/ 
+*/
 int32 sdp_init(struct sdp_control_t *in_ctl);
 
 /*
@@ -546,7 +546,7 @@ int32 sdp_init(struct sdp_control_t *in_ctl);
     @param out_record - output record
 
     @return error code - 0 for no error
-*/ 
+*/
 int32 sdp_init_server_record(struct sdp_server_record_attr *in_attr_list, uint32 in_attr_list_len, struct sdp_server_record *out_record);
 
 /*
@@ -559,7 +559,7 @@ int32 sdp_init_server_record(struct sdp_server_record_attr *in_attr_list, uint32
 
     @return error code - 0 for no error
 */
-int32 sdp_parse_data_element(uint8 *in_buff, uint32 in_len, 
+int32 sdp_parse_data_element(uint8 *in_buff, uint32 in_len,
             enum data_element_type *out_type, uint32 *out_header_len, uint32 *out_data_len);
 
 /*
@@ -588,7 +588,7 @@ int32 sdp_gether_global_service_uuids(uint8 in_uuid_size, uint8 *out_buff, uint3
 
     @return error code - 0 for no error
 */
-int32 sdp_get_attribute_from_attribute_list(uint8 *in_buff, uint32 in_len, 
+int32 sdp_get_attribute_from_attribute_list(uint8 *in_buff, uint32 in_len,
             uint8 *in_attr_id, uint8 in_attr_id_len, uint32 *out_attr, uint32 *out_attr_len, uint32 in_out_attr_count, uint32 *out_attr_count);
 
 /*
@@ -685,7 +685,7 @@ int32 sdp_walk_data_element_list(uint8 *buff, uint32 buff_len, T_sdp_walk_data_e
     @param in_request - request to send
 
     @return error code - 0 for no error
-*/ 
+*/
 int32 sdp_client_request(struct sdp_request *in_request);
 
 /*
@@ -693,7 +693,7 @@ int32 sdp_client_request(struct sdp_request *in_request);
     @param in_ctl - control instance
 
     @return error code - 0 for no error
-*/ 
+*/
 int32 sdp_close(struct sdp_control_t *in_ctl);
 
 /*

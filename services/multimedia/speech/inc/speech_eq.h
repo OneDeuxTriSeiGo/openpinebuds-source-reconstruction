@@ -45,7 +45,7 @@ typedef struct
 
 typedef struct
 {
-    int32_t     bypass;    
+    int32_t     bypass;
     float       gain;
     int32_t     num;
     BiquardParam params[MAX_VQE_EQ_BAND];

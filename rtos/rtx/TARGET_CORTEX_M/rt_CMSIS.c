@@ -568,7 +568,7 @@ osThreadId svcThreadCreate (osThreadDef_t *thread_def, void *argument) {
   os_active_TCB[tsk-1] = task_context;
   task_context->task_id = tsk;
   /* Pass parameter 'argv' to 'rt_init_context' */
-  task_context->msg = argument;  
+  task_context->msg = argument;
 #if __RTX_CPU_STATISTICS__
   task_context->name = (U8 *)thread_def->name_str;
 #endif

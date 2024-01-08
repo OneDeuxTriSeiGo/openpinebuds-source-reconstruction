@@ -19,16 +19,16 @@
 #define AUDIO_ANALYSIS_INTERVAL (25)
 #define AUDIO_ANALYSIS_CHECKER_INTERVEL_INVALID (1000)
 
-typedef struct {    
+typedef struct {
     uint32_t timestamp;
     uint16_t sequenceNumber;
     uint16_t curSubSequenceNumber;
     uint16_t totalSubSequenceNumber;
     uint16_t frame_samples;
-    uint32_t decoded_frames;    
+    uint32_t decoded_frames;
     uint8_t undecode_frames;
     uint8_t undecode_min_frames;
-    uint8_t undecode_max_frames;    
+    uint8_t undecode_max_frames;
     uint8_t average_frames;
     uint32_t sample_rate;
 #if A2DP_DECODER_CHECKER
@@ -43,7 +43,7 @@ typedef struct {
     uint32_t bt_clk;
     uint32_t mobile_clk;
     uint32_t handler_cnt;
-    int8_t  compensate_cnt;    
+    int8_t  compensate_cnt;
     bool updated;
 } APP_TWS_IBRT_AUDIO_ANALYSIS_INFO_T;
 

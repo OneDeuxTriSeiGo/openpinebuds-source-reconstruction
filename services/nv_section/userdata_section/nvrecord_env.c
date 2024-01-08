@@ -26,7 +26,7 @@ static struct nvrecord_env_t localSystemInfo;
 void nvrecord_rebuild_system_env(struct nvrecord_env_t* pSystemEnv)
 {
     memset((uint8_t *)pSystemEnv, 0, sizeof(struct nvrecord_env_t));
-    
+
     pSystemEnv->media_language.language = NVRAM_ENV_MEDIA_LANGUAGE_DEFAULT;
     pSystemEnv->ibrt_mode.mode = NVRAM_ENV_TWS_MODE_DEFAULT;
     pSystemEnv->ibrt_mode.tws_connect_success = 0;
@@ -48,7 +48,7 @@ int nv_record_env_get(struct nvrecord_env_t **nvrecord_env)
     }
 
     if (NULL == nvrecord_extension_p)
-    {   
+    {
         return -1;
     }
 
@@ -61,25 +61,25 @@ int nv_record_env_get(struct nvrecord_env_t **nvrecord_env)
 int nv_record_env_set(struct nvrecord_env_t *nvrecord_env)
 {
     if (NULL == nvrecord_extension_p)
-    {   
+    {
         return -1;
     }
 
     uint32_t lock = nv_record_pre_write_operation();
     nvrecord_extension_p->system_info = *nvrecord_env;
-    
+
     nv_record_update_runtime_userdata();
-    nv_record_post_write_operation(lock); 
+    nv_record_post_write_operation(lock);
     return 0;
 }
 
 void nv_record_update_ibrt_info(uint32_t newMode, bt_bdaddr_t *ibrtPeerAddr)
 {
     if (NULL == nvrecord_extension_p)
-    {   
+    {
         return;
     }
-    
+
     uint32_t lock = nv_record_pre_write_operation();
 
     TRACE(2,"##%s,%d",__func__,newMode);
@@ -88,14 +88,14 @@ void nv_record_update_ibrt_info(uint32_t newMode, bt_bdaddr_t *ibrtPeerAddr)
         ibrtPeerAddr->address, BTIF_BD_ADDR_SIZE);
 
     nv_record_update_runtime_userdata();
-    nv_record_post_write_operation(lock);    
+    nv_record_post_write_operation(lock);
 }
 
 
 void nv_record_update_factory_tester_status(uint32_t status)
 {
     if (NULL == nvrecord_extension_p)
-    {   
+    {
         return;
     }
 
@@ -104,7 +104,7 @@ void nv_record_update_factory_tester_status(uint32_t status)
     nvrecord_extension_p->system_info.factory_tester_status.status = status;
 
     nv_record_update_runtime_userdata();
-    nv_record_post_write_operation(lock);   
+    nv_record_post_write_operation(lock);
 }
 
 int nv_record_env_init(void)

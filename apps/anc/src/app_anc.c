@@ -156,7 +156,7 @@ uint32_t app_fb_check_delay_time=((MS_TO_TICKS(5000)));
 #ifdef ANC_FB_CHECK
 uint32_t app_fb_check_threshold_vale=0x4000000;
 enum ANC_TYPE_T app_anc_check_type=ANC_FEEDFORWARD;
-uint32_t app_fb_check_decrease_resume_delay_time = (MS_TO_TICKS(400)); 
+uint32_t app_fb_check_decrease_resume_delay_time = (MS_TO_TICKS(400));
 uint8_t app_fb_check_decrease_value = 18;
 uint32_t app_fb_check_delay_time = (MS_TO_TICKS(3000));
 uint8_t app_fb_check_delay_time_flag = 0;
@@ -190,7 +190,7 @@ bool app_anc_is_on(void)
 
 uint32_t app_anc_get_sample_rate(void)
 {
-    return (uint32_t)anc_sample_rate[AUD_STREAM_CAPTURE]; 
+    return (uint32_t)anc_sample_rate[AUD_STREAM_CAPTURE];
 }
 
 void app_anc_set_coef_idx(uint8_t idx)
@@ -762,7 +762,7 @@ void anc_fade_thread(void const *argument)
     while(1)
     {
         evt = osSignalWait(0,osWaitForever);
-        
+
         singles = evt.value.signals;
         TRACE(2,"anc_fade_thread. %d",singles);
 
@@ -811,7 +811,7 @@ void anc_fade_thread(void const *argument)
                     hal_codec_anc_fb_check_set_irq_handler(anc_fb_check_irq_handler);
 
                     anc_fb_check_param();
-#endif 
+#endif
                     break;
                  case CHANGE_FROM_ANC_TO_TT_DIRECTLY:
 #if defined(ANC_FF_ENABLED) && defined(ANC_FB_ENABLED)
@@ -819,11 +819,11 @@ void anc_fade_thread(void const *argument)
                     while(__anc_usb_app_fadeout_ff_fb());
 #else
 #ifdef ANC_FF_ENABLED
-                    while (__anc_usb_app_fadeout(ANC_FEEDFORWARD));              
+                    while (__anc_usb_app_fadeout(ANC_FEEDFORWARD));
 #endif
 
 #ifdef ANC_FB_ENABLED
-                    while (__anc_usb_app_fadeout(ANC_FEEDBACK));             
+                    while (__anc_usb_app_fadeout(ANC_FEEDBACK));
 #endif
 #endif
 
@@ -837,7 +837,7 @@ void anc_fade_thread(void const *argument)
 #ifdef ANC_FF_ENABLED
                     anc_select_coef(anc_sample_rate[AUD_STREAM_PLAYBACK],anc_coef_idx,ANC_FEEDFORWARD,ANC_GAIN_DELAY);
 #endif
-     
+
 #ifdef ANC_FB_ENABLED
                     anc_select_coef(anc_sample_rate[AUD_STREAM_PLAYBACK],anc_coef_idx,ANC_FEEDBACK,ANC_GAIN_DELAY);
 #endif
@@ -850,7 +850,7 @@ void anc_fade_thread(void const *argument)
 #ifdef ANC_FF_ENABLED
                     while (__anc_usb_app_fadein(ANC_FEEDFORWARD));
 #endif
-     
+
 #ifdef ANC_FB_ENABLED
                     while (__anc_usb_app_fadein(ANC_FEEDBACK));
 #endif
@@ -859,7 +859,7 @@ void anc_fade_thread(void const *argument)
                     app_anc_fade_status = APP_ANC_IDLE;
 
                     //recommand to play "ANC SWITCH" prompt here...
-                    
+
                     break;
                 default:
                     break;
@@ -1511,7 +1511,7 @@ static int app_anc_handle_process(APP_MESSAGE_BODY *msg_body)
             {
                 arg0 = 0;
             }
-            
+
             uint8_t buf[3] = {0};
             buf[0] = (uint8_t)arg0;
             buf[1] = (uint8_t)anc_coef_idx;
@@ -1561,7 +1561,7 @@ static int app_anc_handle_process(APP_MESSAGE_BODY *msg_body)
             break;
         default:break;
     }
-    
+
     return 0;
 }
 
@@ -1624,7 +1624,7 @@ void app_anc_timer_close(void)
     {
         return;
     }
-    
+
     anc_timer_request = ANC_EVENT_NONE;
     hwtimer_stop(anc_timerid);
 }
@@ -1660,7 +1660,7 @@ static void app_anc_notify_master_to_exchange_coef(uint8_t arg0, uint8_t arg1)
     buf[0] = IBRT_ACTION_ANC_NOTIRY_MASTER_EXCHANGE_COEF;
     buf[1] = arg0;
     buf[2] = arg1;
-    
+
     app_ibrt_ui_send_user_action(buf, 3);
 }
 #endif
@@ -1933,7 +1933,7 @@ void app_anc_sync_status(void)
     uint8_t buf[3] = {0};
 
     bool flag = app_anc_work_status();
-    
+
     buf[0] = (uint8_t)flag;
 
     if(flag == true)
@@ -1946,9 +1946,9 @@ void app_anc_sync_status(void)
     }
 
     buf[2] = true;//set peer anc_status_sync_flag = true
-    
+
     anc_peer_coef_idx = 0;
-    
+
     TRACE(4,"%s anc_work_status:%d, anc_coef_idx:%d, anc_sync_status_flag:%d", __func__, buf[0], buf[1], buf[2]);
     ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
 

@@ -462,7 +462,7 @@ int a2dp_audio_sbc_mcu_decode_frame(uint8_t *buffer, uint32_t buffer_bytes)
                                         buffer_bytes,
                                         sbc_subbands_gain);
             int_unlock(lock);
-            TRACE_A2DP_DECODER_D("[MCU][SBC] seq:%d/%d/%d len:%d ret:%d used:%d", 
+            TRACE_A2DP_DECODER_D("[MCU][SBC] seq:%d/%d/%d len:%d ret:%d used:%d",
                                                                         sbc_decoder_frame->curSubSequenceNumber,
                                                                         sbc_decoder_frame->totalSubSequenceNumber,
                                                                         sbc_decoder_frame->sequenceNumber,
@@ -680,7 +680,7 @@ int a2dp_audio_sbc_store_packet(btif_media_header_t * header, uint8_t *buffer, u
     uint32_t frame_num = 0;
     uint32_t frame_len = 0;
     uint8_t *parser_p = buffer;
-    list_t *list = a2dp_audio_context_p->audio_datapath.input_raw_packet_list;    
+    list_t *list = a2dp_audio_context_p->audio_datapath.input_raw_packet_list;
     uint16_t bytes_parsed = 0;
     a2dp_audio_sbc_decoder_frame_t *frame_list[FRAME_LIST_MAX] = {0,};
     uint8_t frame_list_idx = 0;

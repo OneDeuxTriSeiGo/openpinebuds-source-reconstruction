@@ -41,7 +41,7 @@ struct SpeechAecState_;
 typedef struct SpeechAecState_ SpeechAecState;
 
 // Creat a instance from speech_aec module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SpeechAecState *speech_aec_create(int32_t sample_rate, int32_t frame_size, const SpeechAecConfig *cfg);
 
 // Destory a speech aec instance

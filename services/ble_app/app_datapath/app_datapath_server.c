@@ -33,7 +33,7 @@
 #include "app_datapath_server.h"                  // Data Path Application Definitions
 #include "app.h"                     // Application Definitions
 #include "app_task.h"                // application task definitions
-#include "datapathps_task.h"              
+#include "datapathps_task.h"
 #include "co_bt.h"
 #include "prf_types.h"
 #include "prf_utils.h"
@@ -68,7 +68,7 @@ void app_datapath_server_mtu_exchanged_handler(uint8_t conidx, uint16_t mtu)
 }
 
 void app_datapath_server_connected_evt_handler(uint8_t conidx)
-{       
+{
     TRACE(0,"app datapath server connected.");
     app_datapath_server_env.connectionIndex = conidx;
 #ifdef IBRT
@@ -104,7 +104,7 @@ void app_datapath_add_datapathps(void)
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
                                                   TASK_GAPM, TASK_APP,
                                                   gapm_profile_task_add_cmd, 0);
-    
+
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
@@ -211,7 +211,7 @@ static int app_datapath_server_tx_ccc_changed_handler(ke_msg_id_t const msgid,
 {
     app_datapath_server_env.isNotificationEnabled = param->isNotificationEnabled;
 
-    if (app_datapath_server_env.isNotificationEnabled) 
+    if (app_datapath_server_env.isNotificationEnabled)
     {
         // the app datapath server is connected when receiving the first enable CCC request
         if (BLE_INVALID_CONNECTION_INDEX == app_datapath_server_env.connectionIndex)
@@ -243,17 +243,17 @@ static int app_datapath_server_rx_data_received_handler(ke_msg_id_t const msgid,
                               ke_task_id_t const dest_id,
                               ke_task_id_t const src_id)
 {
-    
+
     // loop back the received data
     // app_datapath_server_send_data(param->data, param->length);
 
     TRACE(2,"%s length %d", __func__, param->length);
     //DUMP8("%02x ", (param->data+i), len);
-    
+
 #ifndef __INTERCONNECTION__
     BLE_custom_command_receive_data(param->data, param->length);
 #endif
-    
+
 #ifdef IBRT
     if (app_ibrt_ui_get_snoop_via_ble_enable())
     {

@@ -3,14 +3,14 @@
  * @author BES AI team
  * @version 0.1
  * @date 2020-04-17
- * 
+ *
  * @copyright Copyright (c) 2015-2020 BES Technic.
  * All rights reserved. All unpublished rights reserved.
- * 
+ *
  * No part of this work may be used or reproduced in any form or by any
  * means, or stored in a database or retrieval system, without prior written
  * permission of BES.
- * 
+ *
  * Use of this work is governed by a license granted by BES.
  * This work contains confidential and proprietary information of
  * BES. which is protected by copyright, trade secret,
@@ -31,20 +31,20 @@ extern "C"{
 /******************************macro defination*****************************/
 /**
  * @brief Flash base address.
- * 
+ *
  */
 #define OTA_FLASH_LOGIC_ADDR (FLASH_NC_BASE)
 
 /**
  * @brief max version string length supported by ota common layer.
- * 
+ *
  */
 #define MAX_VERSION_LEN 20
 
 
 /**
  * @brief boot up flag
- * 
+ *
  */
 #ifndef NORMAL_BOOT
 #define NORMAL_BOOT 0xBE57EC1C
@@ -53,7 +53,7 @@ extern "C"{
 /**
  * @brief This flag is used to inform OTA bin to copy the new image to APP
  * image section.
- * 
+ *
  */
 #ifndef COPY_NEW_IMAGE
 #define COPY_NEW_IMAGE 0x5A5A5A5A
@@ -62,7 +62,7 @@ extern "C"{
 
 /**
  * @brief offset in flash to write the new image.
- * 
+ *
  */
 #ifndef NEW_IMAGE_FLASH_OFFSET
 #define NEW_IMAGE_FLASH_OFFSET    0x180000
@@ -71,9 +71,9 @@ extern "C"{
 
 /**
  * @brief flash sector size
- * 
+ *
  * 4K is the page size of flash
- * 
+ *
  */
 #ifndef FLASH_SECTOR_SIZE_IN_BYTES
 #define FLASH_SECTOR_SIZE_IN_BYTES 4096
@@ -82,7 +82,7 @@ extern "C"{
 
 /**
  * @brief cache buffer size for OTA data.
- * 
+ *
  */
 #ifndef OTA_DATA_CACHE_BUFFER_SIZE
 #define OTA_DATA_CACHE_BUFFER_SIZE FLASH_SECTOR_SIZE_IN_BYTES
@@ -91,19 +91,19 @@ extern "C"{
 
 /**
  * @brief this value is used for configure the norflash write buffer.
- * 
+ *
  */
 #define OTA_NORFLASH_BUFFER_LEN (OTA_DATA_CACHE_BUFFER_SIZE * 2)
 
 
 /**
  * @brief this flag is used to mark if platform support automatic OTA.
- * 
+ *
  * If Target indicates the device supports Automatic OTA, then the new firmware
  * image does not have to be applied immediately after firmware transfer has
  * completed. Instead the device can choose an opportune moment to perform the
  * Apply.
- * 
+ *
  */
 #define SUPPORT_AUTOMATIC_OTA false
 
@@ -146,7 +146,7 @@ extern "C"{
 /******************************type defination******************************/
 /**
  * @brief Boot up info structure.
- * 
+ *
  */
 typedef struct
 {
@@ -157,7 +157,7 @@ typedef struct
 
 /**
  * @brief enum for OTA command.
- * 
+ *
  */
 typedef enum
 {
@@ -174,7 +174,7 @@ typedef enum
 
 /**
  * @brief enum for OTA user.
- * 
+ *
  */
 typedef enum
 {
@@ -190,7 +190,7 @@ typedef enum
 
 /**
  * @brief enum for OTA path.
- * 
+ *
  */
 typedef enum
 {
@@ -201,7 +201,7 @@ typedef enum
 
 /**
  * @brief enum for OTA device.
- * 
+ *
  */
 typedef enum
 {
@@ -214,7 +214,7 @@ typedef enum
 
 /**
  * @brief enum for OTA status
- * 
+ *
  */
 typedef enum
 {
@@ -229,7 +229,7 @@ typedef enum
 
 /**
  * @brief enum for OTA stage
- * 
+ *
  */
 typedef enum
 {
@@ -246,12 +246,12 @@ typedef void(*CUSTOM_INITIALIZER_T)(void);
 
 /**
  * @brief the data structure of OTA_BEGIN command.
- * 
+ *
  * common used information for OTA_BEGIN command in OTA common layer
  * the param 'customize' is used to pass the user-specific info which
  * will be handled in the function registored with
  * @see ota_common_registor_command_handler.
- * 
+ *
  */
 typedef struct
 {
@@ -270,12 +270,12 @@ typedef struct
 
 /**
  * @brief the data structure of OTA_DATA command.
- * 
+ *
  * common used information for OTA_DATA command in OTA common layer
  * the param 'customize' is used to pass the user-specific info which
  * will be handled in the function registored with
  * @see ota_common_registor_command_handler.
- * 
+ *
  */
 typedef struct
 {
@@ -288,12 +288,12 @@ typedef struct
 
 /**
  * @brief the data structure of OTA_APPLY command.
- * 
+ *
  * common used information for OTA_APPLY command in OTA common layer
  * the param 'customize' is used to pass the user-specific info which
  * will be handled in the function registored with
  * @see ota_common_registor_command_handler.
- * 
+ *
  */
 typedef struct
 {
@@ -304,12 +304,12 @@ typedef struct
 
 /**
  * @brief the data structure of OTA_ABORT command.
- * 
+ *
  * common used information for OTA_ABORT command in OTA common layer
  * the param 'customize' is used to pass the user-specific info which
  * will be handled in the function registored with
  * @see ota_common_registor_command_handler.
- * 
+ *
  */
 typedef struct
 {
@@ -319,9 +319,9 @@ typedef struct
 
 /**
  * @brief the data structure of OTA_RESPONSE command.
- * 
+ *
  * common used information for OTA_RESPONSE command in OTA common layer
- * 
+ *
  */
 typedef struct
 {
@@ -332,7 +332,7 @@ typedef struct
 #ifdef OTA_NVRAM
 typedef struct
 {
-    uint32_t lengthOfFollowingData; //!< 
+    uint32_t lengthOfFollowingData; //!<
     uint32_t newImageOffsetInFlash; //!< the offset of the flash to start writing the image
 
     uint32_t clearUserData  : 1; //!< flag to mark if need to clear the user data section
@@ -354,7 +354,7 @@ typedef struct
 #ifdef IBRT
 /**
  * @brief OTA relay packet type
- * 
+ *
  */
 typedef enum
 {
@@ -369,7 +369,7 @@ typedef enum
 
 /**
  * @brief OTA relay packet data structure.
- * 
+ *
  */
 typedef struct
 {
@@ -381,13 +381,13 @@ typedef struct
 
 /**
  * @brief Used for customer to determain if relay command/data needed.
- * 
+ *
  */
 typedef bool(*CUSTOM_RELAY_NEEDED_FUNC_T)(void);
 
 /**
  * @brief Used for peer command handling
- * 
+ *
  */
 typedef OTA_STATUS_E (*PEER_CMD_RECEIVED_HANDLER_T)(OTA_COMMAND_E cmdType,
                                                     const uint8_t *data,
@@ -404,7 +404,7 @@ typedef struct
 
     /// used to mark if device currently in OTA state
     bool isInOtaState;
-    
+
     /// used to cache OTA data
     uint8_t dataCacheBuffer[OTA_DATA_CACHE_BUFFER_SIZE];
 
@@ -504,20 +504,20 @@ typedef struct
 /****************************function declearation**************************/
 /**
  * @brief Initialize the common used OTA context.
- * 
+ *
  */
 void ota_common_init_handler(void);
 
 /**
  * @brief Enable/disable the sanity check.
- * 
+ *
  * @param enable        switch on/off
  */
 void ota_common_enable_sanity_check(bool enable);
 
 /**
  * @brief Init OTA used flash module.
- * 
+ *
  * @param module        flash module,
  *                      @see NORFLASH_API_MODULE_ID_T to get more details
  * @param baseAddr      base address of flash module
@@ -531,20 +531,20 @@ void ota_common_init_flash(uint8_t module,
 
 /**
  * @brief Get the pointer of otaEnv.
- * 
+ *
  * This function is used to pass the pointer of otaEnv to up-layer OTA applications
  * to use the common OTA info.
- * 
+ *
  * @return OTA_COMMON_ENV_T* pointer of the otaEnv.
  */
 OTA_COMMON_ENV_T* ota_common_get_env(void);
 
 /**
  * @brief Judge if currently OTA is in progress.
- * 
+ *
  * This function is used to judge if OTA progress is ongoing or not.
  * NOTE: this function will return true if current OTA stage is not OTA_STAGE_IDLE
- * 
+ *
  * @return true         OTA in progress
  * @return false        OTA not in progress
  */
@@ -552,11 +552,11 @@ bool ota_common_is_in_progress(void);
 
 /**
  * @brief Registor customized OTA command handler.
- * 
+ *
  * Registor OTA uer-specific OTA command handlers, these functions are used to
  * mainten the status of specific OTA user layer and handle the user-specific
  * configurations.
- * 
+ *
  * @param cmdType       command type received,
  *                      @see OTA_COMMAND_E to get more details
  * @param cmdHandler    handler to registor,
@@ -567,9 +567,9 @@ void ota_common_registor_command_handler(OTA_COMMAND_E cmdType,
 
 /**
  * @brief Handler of received OTA command.
- * 
+ *
  * Handle the received OTA command and informations.
- * 
+ *
  * @param cmdType       receive command type
  * @param cmdInfo       pointer of received command information
  * @param cmdLen        length of received command information
@@ -582,26 +582,26 @@ OTA_STATUS_E ota_common_command_received_handler(OTA_COMMAND_E cmdType,
 #ifdef IBRT
 /**
  * @brief Registor customized relay needed handler.
- * 
+ *
  * Relay needed is set to true by default, so the customized relay needed check
  * handler only need to return false when relay is not needed. And the customized
  * check function should in type of @see CUSTOM_RELAY_NEEDED_FUNC_T
- * 
+ *
  * @param handler       customized function handler
- * 
+ *
  */
 void ota_common_registor_relay_needed_handler(void *handler);
 
 /**
  * @brief Registor customized peer command recevied handler.
- * 
+ *
  * @param handler       customized function handler for received peer command
  */
 void ota_common_registor_peer_cmd_received_handler(void *handler);
 
 /**
  * @brief Relay data to peer handler.
- * 
+ *
  * @param cmdType       OTA command to relay, @see OTA_COMMAND_E to get more info
  * @param data          pointer of OTA data to relay
  * @param len           length of OTA data to realy
@@ -613,17 +613,17 @@ OTA_STATUS_E ota_common_relay_data_to_peer(OTA_COMMAND_E cmdType,
 
 /**
  * @brief Receive the OTA relay response.
- * 
+ *
  * NOTE: This function will block the current thread until response from peer
  * received or timeout.
- * 
+ *
  * @return OTA_STATUS_E OTA relay receive result.
  */
 OTA_STATUS_E ota_common_receive_peer_rsp(void);
 
 /**
  * @brief Write the received firmware data into flash.
- * 
+ *
  * @param data          pointer of received firmware data
  * @param len           lenght of received firmware data
  * @return OTA_STATUS_E Operation excution result
@@ -632,13 +632,13 @@ OTA_STATUS_E ota_common_fw_data_write(const uint8_t *data, uint16_t len);
 
 /**
  * @brief Apply current firmware handler.
- * 
+ *
  */
 void ota_common_apply_current_fw(void);
 
 /**
  * @brief Get the result of peer response to tws relay data.
- * 
+ *
  * @return OTA_STATUS_E response of peer to the relay data,
  *                      @see OTA_STATUS_E to get more details
  */
@@ -646,11 +646,11 @@ OTA_STATUS_E ota_common_get_peer_result(void);
 
 /**
  * @brief OTA realy data received handler.
- * 
+ *
  * This function is used to handle received tws relay OTA data, transmit could be:
  * 1. master->slave: relay OTA commands
  * 2. slave->master: response to master
- * 
+ *
  * @param ptrParam      pointer of received data
  * @param paramLen      length of received data
  */
@@ -658,7 +658,7 @@ void ota_common_on_relay_data_received(uint8_t *ptrParam, uint32_t paramLen);
 
 /**
  * @brief OTA sync tws info initializer.
- * 
+ *
  */
 void ota_common_tws_sync_init(void);
 #endif

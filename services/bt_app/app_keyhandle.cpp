@@ -509,7 +509,7 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
 #ifndef __BT_ONE_BRING_TWO__
     // current AG is idle.
     if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&
-        current_call == BTIF_HF_CALL_NONE && 
+        current_call == BTIF_HF_CALL_NONE &&
         current_audioState == BTIF_HF_AUDIO_DISCON )
     {
         TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_IDLE!!!!");
@@ -531,23 +531,23 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
     }
     // current AG is calling.
     else if( (current_callSetup ==BTIF_HF_CALL_SETUP_NONE) &&
-       current_call == BTIF_HF_CALL_ACTIVE && 
+       current_call == BTIF_HF_CALL_ACTIVE &&
        current_callheld != BTIF_HF_CALL_HELD_ACTIVE)
     {
         TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_CALLING!!!!");
         status = HFCALL_MACHINE_CURRENT_CALLING;
     }
     // current AG is 3way incomming.
-    else if( current_callSetup ==BTIF_HF_CALL_SETUP_IN &&        
-       current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup ==BTIF_HF_CALL_SETUP_IN &&
+       current_call == BTIF_HF_CALL_ACTIVE &&
        current_callheld == BTIF_HF_CALL_HELD_NONE)
     {
         TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_3WAY_INCOMMING!!!!");
         status = HFCALL_MACHINE_CURRENT_3WAY_INCOMMING;
     }
     // current AG is 3way hold calling.
-    else if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&        
-       current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&
+       current_call == BTIF_HF_CALL_ACTIVE &&
        current_callheld == BTIF_HF_CALL_HELD_ACTIVE)
     {
         TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING!!!!");
@@ -560,8 +560,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
 #else
     // current AG is idle , another AG is idle.
     if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&
-        current_call == BTIF_HF_CALL_NONE && 
-        current_audioState == BTIF_HF_AUDIO_DISCON && 
+        current_call == BTIF_HF_CALL_NONE &&
+        current_audioState == BTIF_HF_AUDIO_DISCON &&
         another_callSetup==BTIF_HF_CALL_SETUP_NONE &&
         another_call == BTIF_HF_CALL_NONE &&
         another_audioState == BTIF_HF_AUDIO_DISCON )
@@ -570,8 +570,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_IDLE_ANOTHER_IDLE;
     }
     // current AG is on incomming , another AG is idle.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_IN &&         
-             current_call == BTIF_HF_CALL_NONE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_IN &&
+             current_call == BTIF_HF_CALL_NONE &&
              another_callSetup==BTIF_HF_CALL_SETUP_NONE &&
              another_call == BTIF_HF_CALL_NONE &&
              another_audioState == BTIF_HF_AUDIO_DISCON  )
@@ -580,8 +580,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_IDLE;
     }
     // current AG is on outgoing , another AG is idle.
-    else if( current_callSetup >= BTIF_HF_CALL_SETUP_OUT &&         
-            current_call == BTIF_HF_CALL_NONE && 
+    else if( current_callSetup >= BTIF_HF_CALL_SETUP_OUT &&
+            current_call == BTIF_HF_CALL_NONE &&
             another_callSetup == BTIF_HF_CALL_SETUP_NONE &&
             another_call == BTIF_HF_CALL_NONE &&
             another_audioState == BTIF_HF_AUDIO_DISCON  )
@@ -590,8 +590,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_IDLE;
     }
     // current AG is on calling , another AG is idle.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&         
-            current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&
+            current_call == BTIF_HF_CALL_ACTIVE &&
             current_callheld != BTIF_HF_CALL_HELD_ACTIVE&&
             another_callSetup == BTIF_HF_CALL_SETUP_NONE &&
             another_call == BTIF_HF_CALL_NONE &&
@@ -601,8 +601,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_IDLE;
     }
     // current AG is 3way incomming , another AG is idle.
-    else if( current_callSetup ==BTIF_HF_CALL_SETUP_IN &&         
-            current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup ==BTIF_HF_CALL_SETUP_IN &&
+            current_call == BTIF_HF_CALL_ACTIVE &&
             current_callheld == BTIF_HF_CALL_HELD_NONE&&
             another_callSetup == BTIF_HF_CALL_SETUP_NONE &&
             another_call == BTIF_HF_CALL_NONE &&
@@ -612,8 +612,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_3WAY_INCOMMING_ANOTHER_IDLE;
     }
     // current AG is 3way hold calling , another AG is without connecting.
-    else if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&         
-            current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup ==BTIF_HF_CALL_SETUP_NONE &&
+            current_call == BTIF_HF_CALL_ACTIVE &&
             current_callheld == BTIF_HF_CALL_HELD_ACTIVE&&
             another_callSetup == BTIF_HF_CALL_SETUP_NONE &&
             another_call == BTIF_HF_CALL_NONE &&
@@ -623,8 +623,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING_ANOTHER_IDLE;
     }
     // current AG is incomming , another AG is incomming too.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_IN &&         
-            current_call == BTIF_HF_CALL_NONE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_IN &&
+            current_call == BTIF_HF_CALL_NONE &&
             current_callheld == BTIF_HF_CALL_HELD_NONE&&
             another_callSetup == BTIF_HF_CALL_SETUP_IN &&
             another_call == BTIF_HF_CALL_NONE &&
@@ -634,8 +634,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_INCOMMING;
     }
     // current AG is outgoing , another AG is incomming too.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_OUT &&         
-            current_call == BTIF_HF_CALL_NONE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_OUT &&
+            current_call == BTIF_HF_CALL_NONE &&
             current_callheld == BTIF_HF_CALL_HELD_NONE&&
             another_callSetup == BTIF_HF_CALL_SETUP_IN &&
             another_call == BTIF_HF_CALL_NONE &&
@@ -645,8 +645,8 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_INCOMMING;
     }
     // current AG is calling , another AG is incomming.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&         
-            current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&
+            current_call == BTIF_HF_CALL_ACTIVE &&
             current_callheld == BTIF_HF_CALL_HELD_NONE&&
             another_callSetup == BTIF_HF_CALL_SETUP_IN &&
             another_call == BTIF_HF_CALL_NONE &&
@@ -656,11 +656,11 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_INCOMMING;
     }
     // current AG is on calling , another AG calling changed to phone.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&         
-            current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&
+            current_call == BTIF_HF_CALL_ACTIVE &&
             current_callheld == BTIF_HF_CALL_HELD_NONE&&
-            another_callSetup == BTIF_HF_CALL_SETUP_NONE &&         
-            another_call == BTIF_HF_CALL_ACTIVE && 
+            another_callSetup == BTIF_HF_CALL_SETUP_NONE &&
+            another_call == BTIF_HF_CALL_ACTIVE &&
             another_callheld == BTIF_HF_CALL_HELD_NONE&&
             another_audioState == BTIF_HF_AUDIO_DISCON)
     {
@@ -668,11 +668,11 @@ HFCALL_MACHINE_ENUM app_get_hfcall_machine(void)
         status = HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_CHANGETOPHONE;
     }
     // current AG is on calling , another AG calling is hold.
-    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&         
-            current_call == BTIF_HF_CALL_ACTIVE && 
+    else if( current_callSetup == BTIF_HF_CALL_SETUP_NONE &&
+            current_call == BTIF_HF_CALL_ACTIVE &&
             current_callheld == BTIF_HF_CALL_HELD_NONE&&
-            another_callSetup == BTIF_HF_CALL_SETUP_NONE &&         
-            another_call == BTIF_HF_CALL_ACTIVE && 
+            another_callSetup == BTIF_HF_CALL_SETUP_NONE &&
+            another_call == BTIF_HF_CALL_ACTIVE &&
             another_callheld == BTIF_HF_CALL_HELD_ACTIVE)
     {
         TRACE(0,"current hfcall machine status is HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_HOLD!!!!");
@@ -702,23 +702,23 @@ void bt_key_handle_func_click(void)
                 a2dp_handleKey(AVRCP_KEY_PAUSE);
             }
         }
-        break;                          
+        break;
         case HFCALL_MACHINE_CURRENT_INCOMMING:
            hfp_handle_key(HFP_KEY_ANSWER_CALL);
-        break;                    
+        break;
         case HFCALL_MACHINE_CURRENT_OUTGOING:
             hfp_handle_key(HFP_KEY_HANGUP_CALL);
-        break;                  
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING:
             hfp_handle_key(HFP_KEY_HANGUP_CALL);
-        break;                  
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_INCOMMING:
             hfp_handle_key(HFP_KEY_THREEWAY_HANGUP_AND_ANSWER);
-        break;                  
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING:
             hfp_handle_key(HFP_KEY_THREEWAY_HOLD_AND_ANSWER);
-        break;   
-#ifdef __BT_ONE_BRING_TWO__              
+        break;
+#ifdef __BT_ONE_BRING_TWO__
         case HFCALL_MACHINE_CURRENT_IDLE_ANOTHER_IDLE:
         {
             if(app_bt_device.a2dp_play_pause_flag == 0){
@@ -727,19 +727,19 @@ void bt_key_handle_func_click(void)
                 a2dp_handleKey(AVRCP_KEY_PAUSE);
             }
         }
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_ANSWER_CALL);
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_HANGUP_CALL);
-        break;            
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_HANGUP_CALL);
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_INCOMMING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_THREEWAY_HANGUP_AND_ANSWER);
-        break;      
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_THREEWAY_HOLD_AND_ANSWER);
         break;
@@ -749,7 +749,7 @@ void bt_key_handle_func_click(void)
         break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_INCOMMING:
             hfp_handle_key(HFP_KEY_DUAL_HF_HANGUP_CURR_ANSWER_ANOTHER);
-        break;      
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_CHANGETOPHONE:
             hfp_handle_key(HFP_KEY_DUAL_HF_HANGUP_ANOTHER_ADDTOEARPHONE);
         break;
@@ -762,7 +762,7 @@ void bt_key_handle_func_click(void)
     }
 #if defined (__HSP_ENABLE__)
     //now we know it is HSP active !
-    if(app_bt_device.hs_conn_flag[app_bt_device.curr_hs_channel_id]  == 1){         
+    if(app_bt_device.hs_conn_flag[app_bt_device.curr_hs_channel_id]  == 1){
             hsp_handle_key(HSP_KEY_CKPD_CONTROL);
     }
 #endif
@@ -776,7 +776,7 @@ void bt_key_handle_func_doubleclick(void)
     TRACE(0,"%s enter",__func__);
 
     HFCALL_MACHINE_ENUM hfcall_machine = app_get_hfcall_machine();
-    
+
 #ifdef SUPPORT_SIRI
     open_siri_flag=0;
 #endif
@@ -789,11 +789,11 @@ void bt_key_handle_func_doubleclick(void)
 #else
             hfp_handle_key(HFP_KEY_REDIAL_LAST_CALL);
 #endif
-        break;                          
+        break;
         case HFCALL_MACHINE_CURRENT_INCOMMING:
-        break;                    
+        break;
         case HFCALL_MACHINE_CURRENT_OUTGOING:
-        break;                    
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING:
             if(app_bt_device.hf_mute_flag == 0){
                 hfp_handle_key(HFP_KEY_MUTE);
@@ -802,34 +802,34 @@ void bt_key_handle_func_doubleclick(void)
                 hfp_handle_key(HFP_KEY_CLEAR_MUTE);
                 app_bt_device.hf_mute_flag = 0;
             }
-        break;                      
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_INCOMMING:
             hfp_handle_key(HFP_KEY_THREEWAY_HOLD_REL_INCOMING);
-        break;                  
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING:
-        break;         
-#ifdef __BT_ONE_BRING_TWO__      
+        break;
+#ifdef __BT_ONE_BRING_TWO__
         case HFCALL_MACHINE_CURRENT_IDLE_ANOTHER_IDLE:
 #ifdef BTIF_HID_DEVICE
             app_bt_hid_send_capture(app_bt_device.hid_channel[BT_DEVICE_ID_1]);
 #else
             hfp_handle_key(HFP_KEY_REDIAL_LAST_CALL);
 #endif
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_IDLE:
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_IDLE:
-        break;            
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_IDLE:
             if(app_bt_device.hf_mute_flag == 0){
                 hfp_handle_key(HFP_KEY_MUTE);
             }else{
                 hfp_handle_key(HFP_KEY_CLEAR_MUTE);
             }
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_INCOMMING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_THREEWAY_HOLD_REL_INCOMING);
-        break;      
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING_ANOTHER_IDLE:
         break;
         case HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_INCOMMING:
@@ -838,7 +838,7 @@ void bt_key_handle_func_doubleclick(void)
         break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_INCOMMING:
             hfp_handle_key(HFP_KEY_DUAL_HF_HANGUP_ANOTHER);
-        break;      
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_CHANGETOPHONE:
         break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_HOLD:
@@ -872,9 +872,9 @@ void bt_key_handle_func_longpress(void)
         break;
         case HFCALL_MACHINE_CURRENT_INCOMMING:
             hfp_handle_key(HFP_KEY_HANGUP_CALL);
-        break;                    
+        break;
         case HFCALL_MACHINE_CURRENT_OUTGOING:
-        break;                      
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING:
         {
             if(app_bt_device.phone_earphone_mark == 0){
@@ -891,21 +891,21 @@ void bt_key_handle_func_longpress(void)
             app_voice_report(APP_STATUS_INDICATION_WARNING, 0);
             hfp_handle_key(HFP_KEY_THREEWAY_HOLD_AND_ANSWER);
         }
-        break;                  
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING:
             hfp_handle_key(HFP_KEY_THREEWAY_HANGUP_AND_ANSWER);
-        break;               
+        break;
 #ifdef __BT_ONE_BRING_TWO__
-        case HFCALL_MACHINE_CURRENT_IDLE_ANOTHER_IDLE:            
+        case HFCALL_MACHINE_CURRENT_IDLE_ANOTHER_IDLE:
 #ifdef BTIF_HID_DEVICE
             Hid_Send_capture(&app_bt_device.hid_channel[BT_DEVICE_ID_1]);
 #endif
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_INCOMMING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_HANGUP_CALL);
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_IDLE:
-        break;            
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_IDLE:
         {
             if(app_bt_device.phone_earphone_mark == 0){
@@ -916,10 +916,10 @@ void bt_key_handle_func_longpress(void)
                 hfp_handle_key(HFP_KEY_ADD_TO_EARPHONE);
             }
         }
-        break;           
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_INCOMMING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_THREEWAY_HOLD_AND_ANSWER);
-        break;      
+        break;
         case HFCALL_MACHINE_CURRENT_3WAY_HOLD_CALLING_ANOTHER_IDLE:
             hfp_handle_key(HFP_KEY_THREEWAY_HANGUP_AND_ANSWER);
         break;
@@ -928,11 +928,11 @@ void bt_key_handle_func_longpress(void)
         case HFCALL_MACHINE_CURRENT_OUTGOING_ANOTHER_INCOMMING:
         break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_INCOMMING:
-            hfp_handle_key(HFP_KEY_DUAL_HF_CHANGETOPHONE_ANSWER_ANOTHER); 
-            //hfp_handle_key(HFP_KEY_DUAL_HF_HOLD_CURR_ANSWER_ANOTHER); 
-        break;      
+            hfp_handle_key(HFP_KEY_DUAL_HF_CHANGETOPHONE_ANSWER_ANOTHER);
+            //hfp_handle_key(HFP_KEY_DUAL_HF_HOLD_CURR_ANSWER_ANOTHER);
+        break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_CHANGETOPHONE:
-            hfp_handle_key(HFP_KEY_DUAL_HF_CHANGETOPHONE_ANOTHER_ADDTOEARPHONE); 
+            hfp_handle_key(HFP_KEY_DUAL_HF_CHANGETOPHONE_ANOTHER_ADDTOEARPHONE);
         break;
         case HFCALL_MACHINE_CURRENT_CALLING_ANOTHER_HOLD:
             hfp_handle_key(HFP_KEY_DUAL_HF_HANGUP_CURR_ANSWER_ANOTHER);
@@ -988,7 +988,7 @@ void bt_key_handle_func_key(enum APP_KEY_EVENT_T event)
 #endif
 
     switch(event)
-    {       
+    {
 #ifndef __BT_ONE_BRING_TWO__
         case  APP_KEY_EVENT_UP:
         case  APP_KEY_EVENT_CLICK:
@@ -1147,7 +1147,7 @@ void bt_key_handle_func_key(enum APP_KEY_EVENT_T event)
             }
 
             break;
-            
+
         case  APP_KEY_EVENT_TRIPLECLICK:
             TRACE(5,"!!!APP_KEY_EVENT_TRIPLECLICK callsetup %d %d call %d %d,phone_earphone_mark %d\n",
                 app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1], app_bt_device.hfchan_callSetup[BT_DEVICE_ID_2],
@@ -1476,7 +1476,7 @@ void bt_key_send(APP_KEY_STATUS *status)
     if (!isKeyBusy)
     {
         app_bt_start_custom_function_in_bt_thread(
-            (uint32_t)status->code, 
+            (uint32_t)status->code,
             (uint32_t)status->event,
             (uint32_t)bt_update_key_event);
     }

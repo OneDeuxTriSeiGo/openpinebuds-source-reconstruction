@@ -127,7 +127,7 @@ typedef signed   int   int32;                   /* Signed   32 bit quantity     
 typedef unsigned char  BOOLEAN;
 typedef unsigned char  INT8U;                    /* Unsigned  8 bit quantity                           */
 typedef signed   char  INT8S;                    /* Signed    8 bit quantity                           */
-typedef unsigned short INT16U;                   /* Unsigned 16 bit quantity                           */                                                                                                  
+typedef unsigned short INT16U;                   /* Unsigned 16 bit quantity                           */
 typedef signed   short INT16S;                   /* Signed   16 bit quantity                           */
 typedef unsigned int   INT32U;                   /* Unsigned 32 bit quantity                           */
 typedef signed   int   INT32S;                   /* Signed   32 bit quantity                           */
@@ -135,14 +135,14 @@ typedef float          FP32;                     /* Single precision floating po
 typedef double         FP64;                     /* Double precision floating point                    */
 
 
-typedef unsigned char       u8;  
+typedef unsigned char       u8;
 #if 0
-typedef signed   char       s8;  
-typedef unsigned short      u16; 
-typedef signed   short      s16; 
-typedef unsigned int        u32; 
-typedef signed   int        s32; 
-typedef unsigned long long  u64; 
+typedef signed   char       s8;
+typedef unsigned short      u16;
+typedef signed   short      s16;
+typedef unsigned int        u32;
+typedef signed   int        s32;
+typedef unsigned long long  u64;
 typedef signed   long long  s64;
 #endif
 
@@ -222,12 +222,12 @@ struct bdaddr_t {
                               (((U8*)buff)[1] = (U8) (num)) )
 
 #define BEtoHost16(ptr)  (U16)( ((U16) *((U8*)(ptr)) << 8) | \
-                                ((U16) *((U8*)(ptr)+1)) )                              
+                                ((U16) *((U8*)(ptr)+1)) )
 
 #define BEtoHost32(ptr)  (U32)( ((U32) *((U8*)(ptr)) << 24)   | \
                                 ((U32) *((U8*)(ptr)+1) << 16) | \
                                 ((U32) *((U8*)(ptr)+2) << 8)  | \
-                                ((U32) *((U8*)(ptr)+3)) )                                
+                                ((U32) *((U8*)(ptr)+3)) )
 
 /* Store value into a buffer in Little Endian format */
 #define StoreLE16(buff,num) ( ((buff)[1] = (U8) ((num)>>8)),    \
@@ -249,7 +249,7 @@ struct bdaddr_t {
 
 
 #define LEtoHost16(ptr)  (U16)(((U16) *((U8*)(ptr)+1) << 8) | \
-        (U16) *((U8*)(ptr)))                                
+        (U16) *((U8*)(ptr)))
 
 #define BDADDR_ANY   (&(bdaddr_t) {{0, 0, 0, 0, 0, 0}})
 #define BDADDR_ALL   (&(bdaddr_t) {{0xff, 0xff, 0xff, 0xff, 0xff, 0xff}})

@@ -357,7 +357,7 @@ bool rwip_pca_clock_dragging_only(void);
 /**
  ****************************************************************************************
  * @brief Enable/Disable the MWS coexistence interface.
- * 
+ *
  * @param[in]   CoexSetting     Coexistence value
  *
  ****************************************************************************************
@@ -369,7 +369,7 @@ bool rwip_pca_clock_dragging_only(void);
 /**
  ****************************************************************************************
  * @brief Enable/Disable the Wireless LAN coexistence interface.
- * 
+ *
  * @param[in]   CoexSetting     Coexistence value
  *
  ****************************************************************************************

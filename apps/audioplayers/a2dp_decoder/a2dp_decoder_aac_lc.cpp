@@ -442,7 +442,7 @@ static int a2dp_audio_aac_lc_list_checker(void)
 }
 
 int a2dp_audio_aac_lc_channel_select(A2DP_AUDIO_CHANNEL_SELECT_E chnl_sel)
-{   
+{
     AAC_DECODER_CHANNEL_SELECT_E aac_decoder_channel_select = AAC_DECODER_CHANNEL_SELECT_SELECT_STEREO;
     switch(chnl_sel)
     {
@@ -458,7 +458,7 @@ int a2dp_audio_aac_lc_channel_select(A2DP_AUDIO_CHANNEL_SELECT_E chnl_sel)
         case A2DP_AUDIO_CHANNEL_SELECT_RCHNL:
             aac_decoder_channel_select = AAC_DECODER_CHANNEL_SELECT_RCHNL;
         default:
-            break;        
+            break;
     }
     aacDecoder_DecodeFrame_Config(aac_decoder_channel_select);
 
@@ -667,7 +667,7 @@ int a2dp_audio_aac_lc_reorder_deinit(void)
     return A2DP_DECODER_NO_ERROR;
 }
 
-int a2dp_audio_aac_lc_reorder_store_packet(a2dp_audio_aac_decoder_frame_t *aac_decoder_frame_p, 
+int a2dp_audio_aac_lc_reorder_store_packet(a2dp_audio_aac_decoder_frame_t *aac_decoder_frame_p,
                                                               btif_media_header_t * header, uint8_t *buffer, uint32_t buffer_bytes)
 {
     aac_decoder_frame_p->sequenceNumber = header->sequenceNumber;
@@ -677,7 +677,7 @@ int a2dp_audio_aac_lc_reorder_store_packet(a2dp_audio_aac_decoder_frame_t *aac_d
     return A2DP_DECODER_NO_ERROR;
 }
 
-int a2dp_audio_aac_lc_reorder_proc(a2dp_audio_aac_decoder_frame_t *aac_decoder_frame_p, 
+int a2dp_audio_aac_lc_reorder_proc(a2dp_audio_aac_decoder_frame_t *aac_decoder_frame_p,
                                                         btif_media_header_t * header, uint8_t *buffer, uint32_t buffer_bytes)
 {
     uint8_t *dest_buf = NULL;
@@ -715,7 +715,7 @@ int a2dp_audio_aac_lc_packet_recover_find_missing(a2dp_audio_aac_decoder_frame_t
 
     diff_seq = a2dp_audio_get_passed(aac_decoder_frame->sequenceNumber, aac_decoder_last_valid_frame.sequenceNumber, UINT16_MAX);
     diff_timestamp = a2dp_audio_get_passed(aac_decoder_frame->timestamp, aac_decoder_last_valid_frame.timestamp, UINT32_MAX);
-    
+
     if (diff_seq > 1){
         TRACE_A2DP_DECODER_W("[AAC][INPUT][PLC] seq:%d/%d stmp:%d/%d", aac_decoder_frame->sequenceNumber, aac_decoder_last_valid_frame.sequenceNumber,
                                                                                   aac_decoder_frame->timestamp, aac_decoder_last_valid_frame.timestamp);

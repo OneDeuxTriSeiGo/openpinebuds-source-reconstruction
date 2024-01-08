@@ -13,7 +13,7 @@ extern "C" {
 #define LDACBT_API
 #endif /* LDACBT_API  */
 
-/* This file contains the definitions, declarations and macros for an implimentation of 
+/* This file contains the definitions, declarations and macros for an implimentation of
 #ifdef _ENCODE_ONLY
  * LDAC encode processing.
 #endif
@@ -85,7 +85,7 @@ extern "C" {
  *     processing must be carried out as error processing described above.
  *     Note that the encoded output for a few frames will not be present just after initialization
  *     as above.
-#endif 
+#endif
 #ifndef _ENCODE_ONLY
  * Resuming of the decode processing from an interruption
  *     In case of resuming of the decode processing from interruption (such as changing
@@ -93,7 +93,7 @@ extern "C" {
  *     processing must be carried out as error processing described above.
  *     Note that the first decoded out PCM signal will not be present just after initialization
  *     as above.
-#endif 
+#endif
  *
  *
  * Glossary
@@ -182,7 +182,7 @@ enum {
  *    | LDACBT_EQMID_MQ |   303kbps  |   330kbps  |
  *     -------------------------------------------
  */
-#endif 
+#endif
 
 /* Maximum size of the "ldac_transport_frame" sequence at transportation. */
 #define LDACBT_MAX_NBYTES 1024 /* byte */
@@ -295,7 +295,7 @@ LDACBT_API int  ldacBT_get_bitrate( HANDLE_LDAC_BT hLdacBt );
  * "cm" is configured to channel_mode in LDAC, which is determined by SRC and SNK devices in
  * Bluetooth transmission.
  * "fmt" is configured to input pcm audio format.
- * When the configuration of "mtu", "cm", or "sf" changed, the re-initialization is required. 
+ * When the configuration of "mtu", "cm", or "sf" changed, the re-initialization is required.
  *
  *  Format
  *      int  ldacBT_init_handle_encode( HANDLE_LDAC_BT hLdacBt, int mtu, int eqmid, int cm,

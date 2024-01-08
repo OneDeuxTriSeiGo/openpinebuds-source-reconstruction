@@ -323,7 +323,7 @@ enum gapc_features_list
     GAPC_LL_PRIVACY_MASK                = (1 << 6),
     /// Extended Scanner Filter Policies
     GAPC_EXT_SCANNER_FILTER_POLICIES_MASK = (1 << 7),
-    
+
 };
 
 /*
@@ -718,7 +718,7 @@ struct gapc_bond_req_ind
         ///  - GAP_TK_DISPLAY:   TK generated and shall be displayed by local device
         ///  - GAP_TK_KEY_ENTRY: TK shall be entered by user using device keyboard
         uint8_t tk_type;
-        
+
         /// Addition OOB Data for the OOB Conf and Rand values
         struct gapc_oob  oob_data;
         /// Numeric Comparison Data

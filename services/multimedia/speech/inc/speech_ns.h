@@ -35,7 +35,7 @@ struct SpeechNsState_;
 typedef struct SpeechNsState_ SpeechNsState;
 
 // Creat a instance from speech_ns module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SpeechNsState *speech_ns_create(int32_t sample_rate, int32_t frame_size, const SpeechNsConfig *cfg);
 
 // Destory a speech ns instance

@@ -2522,7 +2522,7 @@ struct hci_wr_sp_dbg_mode_cmd
 
 
 /// * TCI Event subcodes
-enum tci_evt_subcode 
+enum tci_evt_subcode
 {
      TCI_LMP_TX_EVENT    = 0x22,
      TCI_LMP_RX_EVENT    = 0x23,
@@ -2715,7 +2715,7 @@ struct hci_le_set_ext_scan_param_cmd
 struct hci_le_set_ext_scan_en_cmd
 {
     ///Scan enable - 0=disabled, 1=enabled
-    uint8_t             scan_en; 
+    uint8_t             scan_en;
     ///Filter duplicates - 0=disabled, 1=enabled, 2=enabled & reset each scan period
     uint8_t             filter_duplic_en;
     ///Scan duration (Time=N*10ms)

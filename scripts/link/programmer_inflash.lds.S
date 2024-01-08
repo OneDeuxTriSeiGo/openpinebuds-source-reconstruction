@@ -227,7 +227,7 @@ SECTIONS
     __boot_sram_end__ = .;
 
     __boot_sram_end_flash__ = LOADADDR(.data) + SIZEOF(.data);
-    
+
     .build_info (LOADADDR(.data) + SIZEOF(.data)) : AT (LOADADDR(.data) + SIZEOF(.data))
     {
         KEEP(*(.build_info))
@@ -244,9 +244,9 @@ SECTIONS
         LONG(BUILD_INFO_MAGIC);
         LONG(ABSOLUTE(__flash_start));
     } > FLASH
-    
+
     __flash_end = .;
-    
+
     .bss (ADDR(.data)+SIZEOF(.data)) (NOLOAD) :
     {
         . = ALIGN(4);
@@ -296,5 +296,5 @@ SECTIONS
     __sram_bss_end__ = .;
     __fast_sram_text_data_start_flash__ = .;
     __fast_sram_text_data_end_flash__ = .;
-    __fast_sram_text_data_start__ = .;  
+    __fast_sram_text_data_start__ = .;
 }

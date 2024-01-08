@@ -179,7 +179,7 @@ void app_tws_if_role_switch_started_handler(void)
     TRACE(1,"[%s]+++", __func__);
     if (NULL == app_post_roleswitch_handling_timer_id)
     {
-        app_post_roleswitch_handling_timer_id = 
+        app_post_roleswitch_handling_timer_id =
             osTimerCreate(osTimer(APP_POST_ROLESWITCH_HANDLING_TIMER), osTimerOnce, NULL);
     }
 
@@ -203,7 +203,7 @@ static void app_tws_if_post_roleswitch_handler(void)
 {
     if (NULL == app_post_roleswitch_handling_timer_id)
     {
-        app_post_roleswitch_handling_timer_id = 
+        app_post_roleswitch_handling_timer_id =
             osTimerCreate(osTimer(APP_POST_ROLESWITCH_HANDLING_TIMER), osTimerOnce, NULL);
     }
 
@@ -549,7 +549,7 @@ void app_tws_if_ai_rev_peer_cmd_with_rsp_hanlder(uint16_t rsp_seq, uint8_t *p_bu
 void app_tws_if_ai_rev_cmd_rsp_from_peer_hanlder(uint16_t rsp_seq, uint8_t *p_buff, uint16_t length)
 {
     TRACE(1,"[%s]", __func__);
-    
+
 #ifdef __AI_VOICE__
     app_ai_tws_rev_cmd_rsp_from_peer_hanlder(rsp_seq, p_buff, length);
 #endif

@@ -59,10 +59,10 @@
     PACKET_TYPE_2_DH3_FLAG|\
     PACKET_TYPE_2_DH5_FLAG)
 
-                              
+
 #define EDR_3M_PACKET_TYPE_MASK (PACKET_TYPE_3_DH1_FLAG|\
     PACKET_TYPE_3_DH3_FLAG|\
-    PACKET_TYPE_3_DH5_FLAG)  
+    PACKET_TYPE_3_DH5_FLAG)
 #define ALL_ACL_PACKET_MASK  (PACKET_TYPE_DH5_FLAG|\
                              PACKET_TYPE_DM5_FLAG|\
                              PACKET_TYPE_DH3_FLAG|\
@@ -71,14 +71,14 @@
                              PACKET_TYPE_DM1_FLAG|\
                              EDR_2M_PACKET_TYPE_MASK |\
                              EDR_3M_PACKET_TYPE_MASK)
-                            
+
 #define ACL_1M_PACKET_MASK  (PACKET_TYPE_DH5_FLAG|\
                              PACKET_TYPE_DM5_FLAG|\
                              PACKET_TYPE_DH3_FLAG|\
                              PACKET_TYPE_DM3_FLAG|\
                              PACKET_TYPE_DH1_FLAG|\
                              PACKET_TYPE_DM1_FLAG)
-                                
+
 #define ACL_1SLOT_PACKET_MASK  (PACKET_TYPE_DH1_FLAG|\
                                 PACKET_TYPE_DM1_FLAG|\
                                 PACKET_TYPE_2_DH1_FLAG|\
@@ -258,7 +258,7 @@
 #define TSCO_HV3                6
 
 //add by yfwen for BT1.2 eSco packet
-#define TESCO_EV3                6 // 
+#define TESCO_EV3                6 //
 #define TESCO_EV4                16
 #define TESCO_EV5                16
 

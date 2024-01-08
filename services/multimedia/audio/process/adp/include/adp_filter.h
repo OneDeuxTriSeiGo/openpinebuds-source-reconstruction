@@ -18,7 +18,7 @@
    @file adp_filter.h
    @brief Discrete Rotational Fourier Transform (DRFT)
 */
- 
+
 #ifndef _ADP_FILTER_H_
 #define _ADP_FILTER_H_
 

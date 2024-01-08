@@ -18,7 +18,7 @@
 #include "hal_timer.h"
 #include "apps.h"
 #include "stdbool.h"
-#include "app_tota.h" 
+#include "app_tota.h"
 #include "app_tota_cmd_code.h"
 #include "app_tota_cmd_handler.h"
 #include "app_tota_data_handler.h"
@@ -36,13 +36,13 @@
 
 typedef struct
 {
-    uint8_t     isDataXferInProgress;   
+    uint8_t     isDataXferInProgress;
     uint8_t     isCrcCheckEnabled;
     uint32_t    wholeDataXferLen;
     uint32_t    dataXferLenUntilLastSegVerification;
     uint32_t    currentWholeCrc32;
     uint32_t    wholeCrc32UntilLastSeg;
-    uint32_t    crc32OfCurrentSeg;                                          
+    uint32_t    crc32OfCurrentSeg;
 } APP_TOTA_DATA_HANDLER_ENV_T;
 
 #define APP_TOTA_TX_BUF_SIZE 2046
@@ -67,13 +67,13 @@ __attribute__((weak)) void app_tota_data_received_callback(uint8_t* ptrData, uin
  *
  * @param ptrData       Pointer of the received data
  * @param dataLength    Length of the received data
- * 
+ *
  * @return APP_TOTA_CMD_RET_STATUS_E
  */
 APP_TOTA_CMD_RET_STATUS_E app_tota_data_received(uint8_t* ptrData, uint32_t dataLength)
 {
     TOTA_LOG_DBG(0, ">>> app_tota_data_received");
-    if ((OP_TOTA_STREAM_DATA != (APP_TOTA_CMD_CODE_E)(((uint16_t *)ptrData)[0])) || 
+    if ((OP_TOTA_STREAM_DATA != (APP_TOTA_CMD_CODE_E)(((uint16_t *)ptrData)[0])) ||
         (dataLength < TOTA_CMD_CODE_SIZE))
     {
         return TOTA_INVALID_DATA_PACKET;
@@ -82,7 +82,7 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_data_received(uint8_t* ptrData, uint32_t data
 
 
     APP_TOTA_DATA_ACK_T tAck = {0};
-    app_tota_send_command(OP_TOTA_SPP_DATA_ACK, (uint8_t *)&tAck, sizeof(tAck), dataPath);  
+    app_tota_send_command(OP_TOTA_SPP_DATA_ACK, (uint8_t *)&tAck, sizeof(tAck), dataPath);
     return TOTA_NO_ERROR;
 }
 
@@ -130,7 +130,7 @@ void app_tota_handle_received_data(uint8_t* buffer, uint16_t maxBytes)
     TOTA_LOG_DBG(2,"[%s]data receive data length = %d",__func__,maxBytes);
     uint8_t * _buf      = buffer;
     uint32_t  _bufLen   = maxBytes;
-    
+
     if (OP_TOTA_STREAM_DATA == *(uint16_t *)buffer)
     {
         TOTA_LOG_DBG(0,"APP TOTA DATA RECEIVED");
@@ -169,8 +169,8 @@ void app_tota_handle_received_data(uint8_t* buffer, uint16_t maxBytes)
             app_tota_cmd_received(_buf, _bufLen);
 #endif
         }
-        
+
     }
-    
+
 }
 

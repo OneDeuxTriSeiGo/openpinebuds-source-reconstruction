@@ -37,7 +37,7 @@ struct SpeechDcFilterState_;
 typedef struct SpeechDcFilterState_ SpeechDcFilterState;
 
 // Creat a instance from speech_dc_filter module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SpeechDcFilterState *speech_dc_filter_create(int32_t sample_rate, const SpeechDcFilterConfig *cfg);
 
 // Destory a speech dc_filter instance

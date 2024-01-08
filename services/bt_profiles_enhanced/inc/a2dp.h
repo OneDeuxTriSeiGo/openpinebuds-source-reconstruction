@@ -68,7 +68,7 @@ struct a2dp_sep {
 
 struct get_codec_cap_t {
     uint8 ** cap;
-    uint16 * cap_len; 
+    uint16 * cap_len;
     bool     done;
 };
 

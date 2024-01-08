@@ -100,7 +100,7 @@ int EnCQueue_AI(CQueue *Q, CQItemType *e, unsigned int len)
     } else {
         Q->len += len;
     }
-    
+
     if (bytesToTheEnd > len) {
         memcpy((uint8_t *)&Q->base[Q->write], (uint8_t *)e, len);
         Q->write += len;
@@ -109,7 +109,7 @@ int EnCQueue_AI(CQueue *Q, CQItemType *e, unsigned int len)
         memcpy((uint8_t *)&Q->base[0], (((uint8_t *)e)+bytesToTheEnd), len-bytesToTheEnd);
         Q->write = len-bytesToTheEnd;
     }
-    
+
     return CQ_OK;
 }
 
@@ -347,7 +347,7 @@ int PeekCQueueToBuf(CQueue *Q, CQItemType *e, unsigned int len)
     int status = CQ_OK;
     unsigned char *e1 = NULL, *e2 = NULL;
     unsigned int len1 = 0, len2 = 0;
-    
+
     status = PeekCQueue(Q, len, &e1, &len1, &e2, &len2);
 
     if(status == CQ_OK) {
@@ -367,7 +367,7 @@ int PullCQueue(CQueue *Q, CQItemType *e, unsigned int len)
     int status = CQ_OK;
     unsigned char *e1 = NULL, *e2 = NULL;
     unsigned int len1 = 0, len2 = 0;
-    
+
     status = PeekCQueue(Q, len, &e1, &len1, &e2, &len2);
 
     if(status == CQ_OK){

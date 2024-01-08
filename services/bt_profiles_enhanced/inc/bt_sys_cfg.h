@@ -267,7 +267,7 @@ so to setup a fix buffer to alloc ppb inplace to avoid alloc ppb dynamicly failu
 #define HCI_CFG_SNIFF_TIMEOUT                0x00
 
 #define HCI_CFG_LINK_POLICY_LOWPOWER         HCI_LP_ENABLE_ROLE_SWITCH_MASK \
-                                             |HCI_LP_ENABLE_SNIFF_MODE_MASK 
+                                             |HCI_LP_ENABLE_SNIFF_MODE_MASK
 
 
 /* 10*1.28 seconds */
@@ -356,7 +356,7 @@ so to setup a fix buffer to alloc ppb inplace to avoid alloc ppb dynamicly failu
 
 #define L2CAP_DEFAULT_FLUSH_TO                                      0xFFFF
 
-#define L2CAP_DEFAULT_QOS_SERVICE_TYPE                              L2CAP_QOS_BEST_EFFORT 
+#define L2CAP_DEFAULT_QOS_SERVICE_TYPE                              L2CAP_QOS_BEST_EFFORT
 #define L2CAP_DEFAULT_QOS_TOKEN_RATE                                0x00000000
 #define L2CAP_DEFAULT_QOS_TOKEN_BUCKET_SIZE                         0x00000000
 #define L2CAP_DEFAULT_QOS_PEEK_BANDWIDTH                            0x00000000
@@ -364,7 +364,7 @@ so to setup a fix buffer to alloc ppb inplace to avoid alloc ppb dynamicly failu
 #define L2CAP_DEFAULT_QOS_DELAY_VARIATION                           0xffffffff
 
 
-#define L2CAP_DEFAULT_RFC_MODE                                      L2CAP_MODE_BASE                  
+#define L2CAP_DEFAULT_RFC_MODE                                      L2CAP_MODE_BASE
 #define L2CAP_DEFAULT_RFC_TXWINDOW                                  32      /*1 to 32*/
 #define L2CAP_DEFAULT_RFC_MAXTRANSMIT                               32
 #define L2CAP_DEFAULT_RFC_RETRANSMISSION_TIMEOUT                    1000
@@ -380,7 +380,7 @@ so to setup a fix buffer to alloc ppb inplace to avoid alloc ppb dynamicly failu
 
 #define L2CAP_CFG_FLUSH_TO                                           L2CAP_DEFAULT_FLUSH_TO
 
-#define L2CAP_CFG_QOS_SERVICE_TYPE                                   L2CAP_DEFAULT_QOS_SERVICE_TYPE 
+#define L2CAP_CFG_QOS_SERVICE_TYPE                                   L2CAP_DEFAULT_QOS_SERVICE_TYPE
 #define L2CAP_CFG_QOS_TOKEN_RATE                                     0x00000000
 #define L2CAP_CFG_QOS_TOKEN_BUCKET_SIZE                              0x00000000
 #define L2CAP_CFG_QOS_PEEK_BANDWIDTH                                 0x00000000

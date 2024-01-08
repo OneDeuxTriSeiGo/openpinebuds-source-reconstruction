@@ -61,7 +61,7 @@ int store_audio_cfg_into_audio_section(AUDIO_CFG_T *cfg)
     }
     else
     {
-        TRACE(1,"[%s] Store audio cfg into audio section!!!", __func__); 
+        TRACE(1,"[%s] Store audio cfg into audio section!!!", __func__);
     }
 
     return res;
@@ -80,7 +80,7 @@ void *load_audio_cfg_from_audio_section(enum AUDIO_PROCESS_TYPE_T type)
     if (res)
     {
         TRACE(2,"[%s] ERROR: res = %d", __func__, res);
-        res_ptr = NULL;  
+        res_ptr = NULL;
     }
     else
     {
@@ -99,10 +99,10 @@ void *load_audio_cfg_from_audio_section(enum AUDIO_PROCESS_TYPE_T type)
             TRACE(1,"[%s] Load limiter from audio section!!!", __func__);
             res_ptr = (void *)&audio_section_audio_cfg.cfg.limiter;
         }
-        else 
+        else
         {
             TRACE(2,"[%s] ERROR: Invalid type(%d)", __func__, type);
-            res_ptr = NULL;    
+            res_ptr = NULL;
         }
     }
 

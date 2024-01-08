@@ -27,7 +27,7 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
- 
+
 #include "rwip_config.h"
 
 #if (BLE_AMS_CLIENT)
@@ -172,7 +172,7 @@ const struct prf_task_cbs* amsc_prf_itf_get(void)
 void amsc_enable_rsp_send(struct amsc_env_tag *amsc_env, uint8_t conidx, uint8_t status)
 {
     BLE_FUNC_ENTER();
-    
+
     //ASSERT(status == GAP_ERR_NO_ERROR, "%s error %d", __func__, status);
     if (status == GAP_ERR_NO_ERROR)
     {

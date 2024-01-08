@@ -32,7 +32,7 @@ enum
     DISS_SET_VALUE_REQ = TASK_FIRST_MSG(TASK_ID_DISS),
     ///Set the value of an attribute - Response
     DISS_SET_VALUE_RSP,
-    
+
     /// Peer device request to get profile attribute value
     DISS_VALUE_REQ_IND,
     /// Peer device confirm value of requested attribute

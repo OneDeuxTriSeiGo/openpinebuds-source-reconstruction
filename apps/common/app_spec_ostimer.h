@@ -22,7 +22,7 @@ typedef struct{
     os_timer_type type;
     os_ptimer ptimer;
     uint32_t interval;
-    uint32_t ctx;    
+    uint32_t ctx;
     void *argument;
 }SPEC_TIMER_CTX_T;
 

@@ -54,8 +54,8 @@ typedef struct  {
     uint8_t num_channels;
     uint8_t bits_depth;
     uint8_t curr_bits;
-    uint32_t frame_samples;    
-    float factor_reference;     
+    uint32_t frame_samples;
+    float factor_reference;
 } A2DP_AUDIO_OUTPUT_CONFIG_T;
 
 typedef enum {
@@ -73,7 +73,7 @@ typedef struct {
     uint32_t frame_samples;
     uint32_t list_samples;
     uint32_t decoded_frames;
-    uint32_t undecode_frames;    
+    uint32_t undecode_frames;
     uint32_t undecode_min_frames;
     uint32_t undecode_max_frames;
     uint32_t average_frames;
@@ -88,10 +88,10 @@ typedef struct {
     uint16_t totalSubSequenceNumber;
 } A2DP_AUDIO_HEADFRAME_INFO_T;
 
-typedef struct{          
-    float proportiongain;     
-    float integralgain;       
-    float derivativegain;  
+typedef struct{
+    float proportiongain;
+    float integralgain;
+    float derivativegain;
     float error[3];
     float result;
 }A2DP_AUDIO_SYNC_PID_T;
@@ -113,7 +113,7 @@ int a2dp_audio_sync_direct_tune_sample_rate(double ratio);
 int a2dp_audio_sync_tune_cancel(void);
 int a2dp_audio_sysfreq_boost_start(uint32_t boost_cnt);
 int a2dp_audio_sysfreq_boost_running(void);
-int a2dp_audio_init(uint32_t sysfreq, A2DP_AUDIO_CODEC_TYPE codec_type, A2DP_AUDIO_OUTPUT_CONFIG_T *config, 
+int a2dp_audio_init(uint32_t sysfreq, A2DP_AUDIO_CODEC_TYPE codec_type, A2DP_AUDIO_OUTPUT_CONFIG_T *config,
                            A2DP_AUDIO_CHANNEL_SELECT_E chnl_sel, uint16_t dest_packet_mut);
 int a2dp_audio_deinit(void);
 int a2dp_audio_start(void);
@@ -143,7 +143,7 @@ int a2dp_audio_latency_factor_set(float factor);
 int a2dp_audio_frame_delay_get(void);
 int a2dp_audio_dest_packet_mut_get(void);
 int a2dp_audio_latency_factor_status_get(A2DP_AUDIO_LATENCY_STATUS_E *latency_status, float *more_latency_factor);
-#if A2DP_DECODER_HISTORY_SEQ_SAVE    
+#if A2DP_DECODER_HISTORY_SEQ_SAVE
 int a2dp_audio_show_history_seq(void);
 #endif
 int a2dp_audio_set_channel_select(A2DP_AUDIO_CHANNEL_SELECT_E chnl_sel);

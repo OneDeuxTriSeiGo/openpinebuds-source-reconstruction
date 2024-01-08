@@ -5,4 +5,4 @@ obj-y := $(obj-y:.c=.o)
 obj-y := $(obj-y:.cpp=.o)
 obj-y := $(obj-y:.S=.o)
 
-subdir-ccflags-y += -Iutils/list 
+subdir-ccflags-y += -Iutils/list

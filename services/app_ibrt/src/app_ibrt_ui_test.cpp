@@ -671,7 +671,7 @@ ibrt_pairing_info_t g_ibrt_pairing_info[] =
     {{0xae, 0x28, 0x00, 0xe9, 0xc6, 0x5c},{0xd8, 0x29, 0x00, 0xe9, 0xc6, 0x5c}}, /*lsk*/
     {{0x07, 0x13, 0x66, 0x22, 0x11, 0x11},{0x06, 0x13, 0x66, 0x22, 0x11, 0x11}}, /*yangguo*/
     {{0x02, 0x15, 0x66, 0x22, 0x11, 0x11},{0x01, 0x15, 0x66, 0x22, 0x11, 0x11}}, /*mql fpga*/
-    
+
 };
 
 // /******************************pwrkey_det_timer*********************************************************/
@@ -689,7 +689,7 @@ ibrt_pairing_info_t g_ibrt_pairing_info[] =
 // extern void app_ibrt_customif_test1_cmd_send(uint8_t *p_buff, uint16_t length);
 // static void pwrkey_detfun(const void *)
 // {
-    
+
 //  static ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
 //  static bool last_pwrkey = false;
 //  bool curr_pwrkey_sta;

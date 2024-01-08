@@ -284,7 +284,7 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
         analog_wakeup();
     }
     bt_drv_wakeup();
-    
+
     hal_gpadc_wakeup();
     // Modules (except for psram and flash) wakeup
 

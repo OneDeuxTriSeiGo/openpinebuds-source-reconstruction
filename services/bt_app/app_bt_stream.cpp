@@ -3217,7 +3217,7 @@ int app_bt_stream_ibrt_audio_master_detect_next_packet_cb(btif_media_header_t * 
             {
                 sync_trigger.audio_info.sequenceNumber = lastframe_info.sequenceNumber + APP_BT_STREAM_IBRT_AUTO_SYNCHRONIZE_INITSYNC_SKIP_FRAME_LHDC;
                 if (lastframe_info.totalSubSequenceNumber){
-                    sync_trigger.audio_info.timestamp = lastframe_info.timestamp + 
+                    sync_trigger.audio_info.timestamp = lastframe_info.timestamp +
                                                         (lastframe_info.totalSubSequenceNumber * lastframe_info.frame_samples) *
                                                         APP_BT_STREAM_IBRT_AUTO_SYNCHRONIZE_INITSYNC_SKIP_FRAME_LHDC;
                 }else{
@@ -3228,7 +3228,7 @@ int app_bt_stream_ibrt_audio_master_detect_next_packet_cb(btif_media_header_t * 
             {
                 sync_trigger.audio_info.sequenceNumber = lastframe_info.sequenceNumber + APP_BT_STREAM_IBRT_AUTO_SYNCHRONIZE_INITSYNC_SKIP_FRAME;
                 if (lastframe_info.totalSubSequenceNumber){
-                    sync_trigger.audio_info.timestamp = lastframe_info.timestamp + 
+                    sync_trigger.audio_info.timestamp = lastframe_info.timestamp +
                                                         (lastframe_info.totalSubSequenceNumber * lastframe_info.frame_samples) *
                                                         APP_BT_STREAM_IBRT_AUTO_SYNCHRONIZE_INITSYNC_SKIP_FRAME;
                 }else{
@@ -3670,7 +3670,7 @@ int bt_sbc_player(enum PLAYER_OPER_T on, enum APP_SYSFREQ_FREQ_T freq)
         if (codec_type == BTIF_AVDTP_CODEC_TYPE_NON_A2DP){
             freq = APP_SYSFREQ_52M;
         }
-        
+
         if (a2dp_sample_rate==AUD_SAMPRATE_96000)
         {
             freq = APP_SYSFREQ_104M;

@@ -41,7 +41,7 @@ typedef struct {
     int im;
 } FftTwiddle_t;
 
-typedef enum 
+typedef enum
 {
     FFT_MODE = 0,
     IFFT_MODE

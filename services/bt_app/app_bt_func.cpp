@@ -418,7 +418,7 @@ static inline int app_bt_mail_process(APP_BT_MAIL* mail_p)
         case BT_Set_Adv_Mode_Test:
 #if defined(IBRT)
         app_start_ble_adv_for_test();
-#endif            
+#endif
             break;
         case Write_Controller_Memory_Test:
         {
@@ -434,7 +434,7 @@ static inline int app_bt_mail_process(APP_BT_MAIL* mail_p)
                                                      mail_p->param.Me_readcontrollermem_param.type);
             break;
         }
-#endif        
+#endif
         case BT_Custom_Func_req:
             if (mail_p->param.CustomFunc_param.func_ptr){
                 TRACE(3,"func:0x%08x,param0:0x%08x, param1:0x%08x",

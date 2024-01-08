@@ -37,7 +37,7 @@ void app_voicepath_disconnected_evt_handler(uint8_t conidx);
 void app_voicepath_mtu_exchanged_handler(uint8_t conidx, uint16_t MTU);
 
 void app_voicepath_ble_conn_parameter_updated(uint8_t conidx,
-                                              uint16_t connInterval, 
+                                              uint16_t connInterval,
                                               uint16_t connSlavelatency);
 
 #endif

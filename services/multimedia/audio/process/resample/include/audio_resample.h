@@ -39,7 +39,7 @@ enum resample_id_t{
 #define RESAMPLE_TYPE_UP_MONO   0x2
 #define RESAMPLE_TYPE_DOWN_MONO 0x4
 
-enum audio_resample_status_t audio_resample_open(int type, enum resample_id_t resample_id_up, 
+enum audio_resample_status_t audio_resample_open(int type, enum resample_id_t resample_id_up,
         enum resample_id_t resample_id_down, uint8_t *up_buf, uint8_t *down_buf, void* (* alloc_ext)(int));
 enum audio_resample_status_t audio_resample_cfg(int type, short *OutBuf, int OutLen);
 enum audio_resample_status_t audio_resample_run(int type, short *InBuf, int InLen);

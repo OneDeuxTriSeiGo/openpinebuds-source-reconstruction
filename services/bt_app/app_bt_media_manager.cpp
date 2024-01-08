@@ -160,7 +160,7 @@ static const char *handleId2str(uint8_t id)
 {
 #define CASE_M(s) \
          case APP_BT_STREAM_MANAGER_## s : return "["#s"]";
-         
+
     switch(id)
     {
             CASE_M(START)
@@ -541,13 +541,13 @@ void  bt_media_start(uint16_t stream_type,enum BT_DEVICE_ID_T device_id, uint16_
                     TRACE_AUD_MGR_I("[HANDLE_START]there is a thirdparty voice stream exist ,do nothing");
                     return;
                 }
-    
+
                 if (bt_media_is_media_active_by_type(BT_STREAM_VOICE))
                 {
                     TRACE_AUD_MGR_I("[HANDLE_START]there is a SCO stream exist ,do nothing");
                     goto exit;
                 }
-    
+
                 if (!bt_media_thirdparty_voice_start_process(BT_STREAM_THIRDPARTY_VOICE, device_id, ( AUD_ID_ENUM )media_id, ( uint32_t )NULL, ( uint32_t )NULL))
                     goto exit;
                 break;
@@ -677,7 +677,7 @@ void  bt_media_start(uint16_t stream_type,enum BT_DEVICE_ID_T device_id, uint16_
 
             if(
 #ifdef MIX_AUDIO_PROMPT_WITH_A2DP_MEDIA_ENABLED
-                audio_prompt_is_playing_ongoing() || 
+                audio_prompt_is_playing_ongoing() ||
 #endif
                 app_audio_list_playback_exist())
             {
@@ -1206,9 +1206,9 @@ void bt_media_stop(uint16_t stream_type,enum BT_DEVICE_ID_T device_id)
 #endif
 
     if (!bt_media_is_media_active_by_device(stream_type, device_id)&&
-        !(bt_media_get_current_media()&stream_type))    
-    {        
-        return;    
+        !(bt_media_get_current_media()&stream_type))
+    {
+        return;
     }
 
     switch(stream_type)

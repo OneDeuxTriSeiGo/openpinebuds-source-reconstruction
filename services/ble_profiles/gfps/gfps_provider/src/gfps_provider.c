@@ -60,8 +60,8 @@ static const uint8_t ATT_SVC_GOOGLE_FAST_PAIR_PROVIDER[ATT_UUID_16_LEN] = {0x2C,
 /*
  * DIS ATTRIBUTES
  ****************************************************************************************
- */ 
- 
+ */
+
 const struct attm_desc_128 gfpsp_att_db[GFPSP_IDX_NB] =
 {
     // Google fast pair service provider Declaration
@@ -70,12 +70,12 @@ const struct attm_desc_128 gfpsp_att_db[GFPSP_IDX_NB] =
     [GFPSP_IDX_KEY_BASED_PAIRING_CHAR]          =   {ATT_DECL_CHARACTERISTIC_UUID, PERM(RD, ENABLE), 0, 0},
     [GFPSP_IDX_KEY_BASED_PAIRING_VAL]           =   {ATT_CHAR_KEY_BASED_PAIRING, PERM(NTF, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE) | PERM_VAL(UUID_LEN, PERM_UUID_128), GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_KEY_BASED_PAIRING_NTF_CFG]       =   {ATT_DESC_CLIENT_CHAR_CFG_UUID, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), sizeof(uint16_t)},
-    
-    
+
+
     [GFPSP_IDX_PASSKEY_CHAR]                    =   {ATT_DECL_CHARACTERISTIC_UUID, PERM(RD, ENABLE), 0, 0},
     [GFPSP_IDX_PASSKEY_VAL]                     =   {ATT_CHAR_PASSKEY, PERM(NTF, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE) | PERM_VAL(UUID_LEN, PERM_UUID_128), GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_PASSKEY_NTF_CFG]                 =   {ATT_DESC_CLIENT_CHAR_CFG_UUID, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), sizeof(uint16_t)},
-    
+
     [GFPSP_IDX_ACCOUNT_KEY_CHAR]                =   {ATT_DECL_CHARACTERISTIC_UUID, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_ACCOUNT_KEY_VAL]                 =   {ATT_CHAR_ACCOUNTKEY,   PERM(NTF, ENABLE) |PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE) | PERM_VAL(UUID_LEN, PERM_UUID_128), GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_ACCOUNT_KEY_CFG]                 =   {ATT_DESC_CLIENT_CHAR_CFG_UUID, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), GFPSP_VAL_MAX_LEN},
@@ -89,7 +89,7 @@ const struct attm_desc_128 gfpsp_att_db[GFPSP_IDX_NB] =
 enum {
 
 /*----------------- SERVICES ---------------------*/
-/// 
+///
 ATT_SVC_GOOGLE_FAST_PAIR_PROVIDER                      = ATT_UUID_16(0xFE2C),
 /*------------------- UNITS ---------------------*/
 
@@ -104,8 +104,8 @@ ATT_CHAR_NAME                 = ATT_UUID_16(0x1237),
 /*
  * DIS ATTRIBUTES
  ****************************************************************************************
- */ 
- 
+ */
+
 const struct attm_desc gfpsp_att_db[GFPSP_IDX_NB] =
 {
     // Google fast pair service provider Declaration
@@ -114,12 +114,12 @@ const struct attm_desc gfpsp_att_db[GFPSP_IDX_NB] =
     [GFPSP_IDX_KEY_BASED_PAIRING_CHAR]          =   {ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), 0, 0},
     [GFPSP_IDX_KEY_BASED_PAIRING_VAL]           =   {ATT_CHAR_KEY_BASED_PAIRING, PERM(NTF, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_KEY_BASED_PAIRING_NTF_CFG]       =   {ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), sizeof(uint16_t)},
-    
-    
+
+
     [GFPSP_IDX_PASSKEY_CHAR]                    =   {ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), 0, 0},
     [GFPSP_IDX_PASSKEY_VAL]                     =   {ATT_CHAR_PASSKEY, PERM(NTF, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_PASSKEY_NTF_CFG]                 =   {ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), sizeof(uint16_t)},
-    
+
     [GFPSP_IDX_ACCOUNT_KEY_CHAR]                =   {ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_ACCOUNT_KEY_VAL]                 =   {ATT_CHAR_ACCOUNTKEY,   PERM(NTF, ENABLE) |PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), GFPSP_VAL_MAX_LEN},
     [GFPSP_IDX_ACCOUNT_KEY_CFG]                 =   {ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), GFPSP_VAL_MAX_LEN},
@@ -191,7 +191,7 @@ static uint8_t gfpsp_init (struct prf_task_env* env, uint16_t* start_hdl, uint16
         gfpsp_env->features  = params->features;
         gfpsp_env->prf_env.app_task = app_task
                 | (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
-        gfpsp_env->prf_env.prf_task = env->task | 
+        gfpsp_env->prf_env.prf_task = env->task |
             (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
 
         // initialize environment variable

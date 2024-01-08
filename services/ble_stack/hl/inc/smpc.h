@@ -151,7 +151,7 @@ struct smp_f5
 };
 
 
-struct smp_f6 
+struct smp_f6
 {
     uint8_t W[16];
     uint8_t M[65];

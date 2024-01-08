@@ -31,11 +31,11 @@ extern "C" {
 #endif
 
 FrameResizeState *frame_resize_create(int codec_frame_size,
-                                    int codec_capture_channel, 
+                                    int codec_capture_channel,
                                     int vqe_frame_size,
                                     int capture_sample_size,
                                     int playback_sample_size,
-                                    int aec_enable, 
+                                    int aec_enable,
                                     const CAPTURE_HANDLER_T capture_handler,
                                     const PLAYBACK_HANDLER_T playback_handler);
 

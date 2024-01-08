@@ -112,7 +112,7 @@ subdir-ccflags-y += \
 	-Iservices/app_ibrt/inc \
 	-Iservices/bt_app
 endif
-		
+
 ifneq ($(OTA_CODE_OFFSET),0)
 CFLAGS_ota_control.o += -DOTA_CODE_OFFSET=$(OTA_CODE_OFFSET)
-endif			
+endif

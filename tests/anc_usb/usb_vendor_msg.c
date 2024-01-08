@@ -30,12 +30,12 @@
 typedef enum {
     FACT_SEC_VER_MAGIC,
     FACT_SEC_CRC,
-    
+
     FACT_SEC_DATA_START,
     FACT_SEC_SEQ = FACT_SEC_DATA_START,
     FACT_SEC_PROD_SN,
     FACT_SEC_END = FACT_SEC_PROD_SN + 8,
-    
+
     FACT_SEC_NUM = 256
 } FACT_SEC_E;
 
@@ -50,12 +50,12 @@ typedef enum {
     PC_TOOL_CMD_PING,
     PC_TOOL_CMD_CHECK,
     PC_TOOL_CMD_FW_UPDATE,
-#ifdef USB_EQ_TUNING    
+#ifdef USB_EQ_TUNING
     PC_TOOL_CMD_EQ_TUNING,
 #endif
-#ifdef USB_ANC_MC_EQ_TUNING    
+#ifdef USB_ANC_MC_EQ_TUNING
     PC_TOOL_CMD_ANC_MC_EQ_TUNING,
-#endif  
+#endif
     PC_TOOL_CMD_NUM,
 }PC_TOOL_CMD_E;
 
@@ -75,7 +75,7 @@ static char* s_pc_cmd_lst[PC_TOOL_CMD_NUM] = {
 #endif
 #ifdef USB_ANC_MC_EQ_TUNING
     "ANC_MC_EQ",
-#endif  
+#endif
 };
 
 static PC_TOOL_CMD_E s_cur_cmd = PC_TOOL_CMD_IDLE;
@@ -118,7 +118,7 @@ static void pc_usb_cmd_set (struct USB_AUDIO_VENDOR_MSG_T* msg)
 {
     size_t ret;
     uint8_t cmd_id = 0;
-    
+
     if (0 == msg->length)
         return;
 
@@ -134,7 +134,7 @@ static void pc_usb_cmd_set (struct USB_AUDIO_VENDOR_MSG_T* msg)
     s_cur_cmd = cmd_id;
     //TRACE(3,"%s: cmd[%s], id[%d]", __func__, s_pc_cmd_lst[cmd_id], s_cur_cmd);
     msg->data += strlen((char*)s_pc_cmd_lst[cmd_id]);
-#ifdef USB_ANC_MC_EQ_TUNING    
+#ifdef USB_ANC_MC_EQ_TUNING
     msg->length -=strlen((char*)s_pc_cmd_lst[cmd_id]);
 #endif
 
@@ -226,7 +226,7 @@ static void pc_usb_cmd_exec (struct USB_AUDIO_VENDOR_MSG_T* msg)
         break;
 #endif
 
-#ifdef USB_ANC_MC_EQ_TUNING    
+#ifdef USB_ANC_MC_EQ_TUNING
     case PC_TOOL_CMD_ANC_MC_EQ_TUNING:
                anc_cmd_send_process(&msg->data, &msg->length);
                TRACE(1,"sned len:%d",msg->length);

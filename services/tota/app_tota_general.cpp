@@ -207,7 +207,7 @@ static void __get_general_info()
 
     /* factory_section_xtal_fcap_get */
     factory_section_xtal_fcap_get(&general_info.xtal_fcap);
-    
+
     /* get battery info (volt level)*/
     app_battery_get_info(&general_info.battery_volt,&general_info.battery_level,&general_info.battery_status);
 

@@ -41,13 +41,13 @@
 #include "gsound_custom_actions.h"
 #include "gsound_custom_bt.h"
 #include "gsound_custom_ble.h"
-    
+
 #endif
 #ifdef __IAG_BLE_INCLUDE__
 #include "app.h"
 #include "app_ble_mode_switch.h"
 #endif
-    
+
 #ifdef BES_OTA
 #include "ota_control.h"
 #endif

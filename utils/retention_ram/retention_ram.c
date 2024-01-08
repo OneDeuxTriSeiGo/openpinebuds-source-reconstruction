@@ -20,7 +20,7 @@
 
 #define OTA_RANDOM_BLE_BD_ADDR_MAGIC_CODE   0x51544F55
 #define BLE_BD_ADDR_LEN                     6
-typedef struct 
+typedef struct
 {
     uint32_t magicCode; // 0x51544F55: "UOTA" means the OTA firmware should use the BD address
                         // in this structure, otherwise it will generate a random BD address
@@ -64,7 +64,7 @@ void otaConfigureBleBdAddr(void)
     {
         // generate the random BD static address
         int randomData;
-        
+
         for (uint32_t index = 0;index < BLE_BD_ADDR_LEN/2;index++)
         {
             set_rand_seed(hal_sys_timer_get());

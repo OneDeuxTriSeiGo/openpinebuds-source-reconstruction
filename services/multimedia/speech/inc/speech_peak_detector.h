@@ -35,7 +35,7 @@ typedef struct {
 typedef void *SPEECH_PEAK_DETECTOR_STATE_T;
 
 // Creat a instance from speech_peak_detector module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SPEECH_PEAK_DETECTOR_STATE_T *speech_peak_detector_create(SPEECH_PEAK_DETECTOR_CFG_T *cfg, int frame_size, int sample_rate);
 
 // Destory a speech peak_detector instance

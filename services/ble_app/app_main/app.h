@@ -145,7 +145,7 @@ struct app_env_tag
     APP_BLE_CONN_CONTEXT_T context[BLE_CONNECTION_MAX];
 };
 
-// TODO: 
+// TODO:
 typedef struct
 {
    uint8_t role                         :2;

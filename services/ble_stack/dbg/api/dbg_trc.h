@@ -263,7 +263,7 @@ void dbg_trc_req_ke_msg_send(struct ke_msg const *msg);
 /// Macro used to send trace request API for kernel message send
 #define TRC_REQ_KE_MSG_SEND(msg) \
         dbg_trc_req_ke_msg_send(msg);
-        
+
 /**
  ****************************************************************************************
  * @brief Trace request API for kernel message handled
@@ -519,7 +519,7 @@ void dbg_trc_req_cs_ble(uint16_t const cs_addr);
 
 #define TRC_REQ_CS_BLE(cs_addr) \
         dbg_trc_req_cs_ble(cs_addr);
-        
+
 #else /*(TRACER_PRESENT && TRC_CS_BLE)*/
 #define TRC_REQ_CS_BLE(cs_addr)
 #endif /*(TRACER_PRESENT && TRC_CS_BLE)*/
@@ -834,7 +834,7 @@ void dbg_trc_req_hci(uint8_t const hci_msg_type, uint16_t const opcode, uint16_t
 /// Macro used to send trace request API when an HCI event is sent
 #define TRC_REQ_HCI_EVT(opcode, par_len, params)    \
     dbg_trc_req_hci(HCI_EVT, opcode, par_len, params);
-    
+
 #else /*(TRACER_PRESENT && TRC_HCI)*/
 #define TRC_REQ_HCI_CMD(opcode, par_len, params)
 #define TRC_REQ_HCI_EVT(opcode, par_len, params)

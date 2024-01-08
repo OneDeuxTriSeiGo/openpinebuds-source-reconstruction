@@ -247,7 +247,7 @@ void app_hid_add_hids(void)
     req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-#endif  
+#endif
 
     req->prf_task_id = TASK_ID_HOGPD;
     req->app_task    = TASK_APP;
@@ -536,13 +536,13 @@ static int hogpd_ctnl_pt_ind_handler(ke_msg_id_t const msgid,
         /// HIDS Instance
         req->report.hid_idx = app_hid_env.conidx; ///???
         /// type of report (@see enum hogpd_report_type)
-        req->report.type = -1;//outside 
+        req->report.type = -1;//outside
         /// Report Length (uint8_t)
         req->report.length = 0;
         /// Report Instance - 0 for boot reports and report map
         req->report.idx = 0;
         /// Report data
-        
+
 
         // Send the message
         ke_msg_send(req);
@@ -641,7 +641,7 @@ static int hogpd_report_req_ind_handler(ke_msg_id_t const msgid,
             /// HIDS Instance
             req->report.hid_idx = app_hid_env.conidx; ///???
             /// type of report (@see enum hogpd_report_type)
-            req->report.type = param->report.type;//-1;//outside 
+            req->report.type = param->report.type;//-1;//outside
             /// Report Length (uint8_t)
             req->report.length = 0; //param->report.length;
             /// Report Instance - 0 for boot reports and report map
@@ -670,7 +670,7 @@ static int hogpd_report_req_ind_handler(ke_msg_id_t const msgid,
             /// HIDS Instance
             req->report.hid_idx = app_hid_env.conidx; ///???
             /// type of report (@see enum hogpd_report_type)
-            req->report.type = param->report.type;//-1;//outside 
+            req->report.type = param->report.type;//-1;//outside
             /// Report Length (uint8_t)
             req->report.length = 8; //param->report.length;
             /// Report Instance - 0 for boot reports and report map
@@ -703,7 +703,7 @@ static int hogpd_report_req_ind_handler(ke_msg_id_t const msgid,
             /// HIDS Instance
             req->report.hid_idx = app_hid_env.conidx; ///???
             /// type of report (@see enum hogpd_report_type)
-            req->report.type = param->report.type;//-1;//outside 
+            req->report.type = param->report.type;//-1;//outside
             /// Report Length (uint8_t)
             req->report.length = 8; //param->report.length;
             /// Report Instance - 0 for boot reports and report map
@@ -739,14 +739,14 @@ static int hogpd_proto_mode_req_ind_handler(ke_msg_id_t const msgid,
                                                         hogpd_proto_mode_cfm,
                                                         0);
         /// Connection Index
-        req->conidx = app_hid_env.conidx; 
+        req->conidx = app_hid_env.conidx;
         /// Status of the request
         req->status = GAP_ERR_NO_ERROR;
         /// HIDS Instance
         req->hid_idx = app_hid_env.conidx;
         /// New Protocol Mode Characteristic Value
         req->proto_mode = param->proto_mode;
-        
+
 
         // Send the message
         ke_msg_send(req);
@@ -767,7 +767,7 @@ static int hogpd_proto_mode_req_ind_handler(ke_msg_id_t const msgid,
         req->hid_idx = app_hid_env.conidx;
         /// New Protocol Mode Characteristic Value
         req->proto_mode = param->proto_mode;
-        
+
         // Send the message
         ke_msg_send(req);
     }

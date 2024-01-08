@@ -25,7 +25,7 @@ MEMORY
   ROM    (rx)  : ORIGIN = ROM_BASE,    LENGTH = ROM_SIZE
   RAM    (rwx) : ORIGIN = RAM_BASE,    LENGTH = RAM_SIZE
   RAMX   (rwx) : ORIGIN = RAMX_BASE,   LENGTH = RAM_SIZE
-  FRAMX  (rwx) : ORIGIN = RAM_BASE + RAM_SIZE - FAST_XRAM_SECTION_SIZE, LENGTH = FAST_XRAM_SECTION_SIZE  
+  FRAMX  (rwx) : ORIGIN = RAM_BASE + RAM_SIZE - FAST_XRAM_SECTION_SIZE, LENGTH = FAST_XRAM_SECTION_SIZE
 }
 
 /* Library configurations */
@@ -253,7 +253,7 @@ SECTIONS
         *(.scratch_buf)
         . = ALIGN(4);
     } > RAM
-    
+
     .rodata (.) (NOLOAD) :
     {
         . = ALIGN(4);

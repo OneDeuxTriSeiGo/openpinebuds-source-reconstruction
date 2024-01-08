@@ -199,7 +199,7 @@ int hal_cmd_init (void)
     {
         hal_iomux_set_uart1();
     }
-    
+
 #endif
 
 #ifdef USB_AUDIO_APP

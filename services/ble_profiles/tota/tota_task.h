@@ -45,16 +45,16 @@
  * DEFINES
  ****************************************************************************************
  */
-#define TOTA_CONTENT_TYPE_COMMAND       0 
+#define TOTA_CONTENT_TYPE_COMMAND       0
 #define TOTA_CONTENT_TYPE_DATA      1
 
-/// Messages for TOTA Profile 
+/// Messages for TOTA Profile
 enum tota_msg_id
 {
     TOTA_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_TOTA),
 
     TOTA_TX_DATA_SENT,
-    
+
     TOTA_DATA_RECEIVED,
 
     TOTA_SEND_NOTIFICATION,

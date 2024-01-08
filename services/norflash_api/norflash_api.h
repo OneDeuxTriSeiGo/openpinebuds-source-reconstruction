@@ -212,7 +212,7 @@ void app_flush_pending_flash_op(enum NORFLASH_API_MODULE_ID_T module,
 
 void app_flash_page_erase(enum NORFLASH_API_MODULE_ID_T module, uint32_t flashOffset);
 
-void app_flash_page_program(enum NORFLASH_API_MODULE_ID_T module, 
+void app_flash_page_program(enum NORFLASH_API_MODULE_ID_T module,
                              uint32_t flashOffset,
                              uint8_t *ptr,
                              uint32_t len,

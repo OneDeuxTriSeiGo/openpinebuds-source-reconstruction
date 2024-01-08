@@ -33,7 +33,7 @@ typedef struct {
     //     {b10, b11, b12, a11, a12},
     //     {b20, b21, b22, a21, a22},
     //     ...
-    // }    
+    // }
     // const float   (*pCoeffs)[SPEECH_IIR_COEFF_LEN];
     SPEECH_RX_EQ_PCOEFFS_T *pCoeffs;
 } SPEECH_IIR_CFG_T;
@@ -47,7 +47,7 @@ int speech_iir_init(void);
 int speech_iir_deinit(void);
 
 // Creat a instance from speech_iir module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SPEECH_IIR_STATE_T *speech_iir_create(const SPEECH_IIR_CFG_T *cfg);
 
 // Destory a speech iir instance

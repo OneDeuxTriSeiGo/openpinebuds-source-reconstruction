@@ -111,7 +111,7 @@ obj-y += app_tws/
 endif
 
 ifeq ($(RSA_SHA),1)
-obj-y +=../utils/sha256/ ../utils/rsa2048/ 
+obj-y +=../utils/sha256/ ../utils/rsa2048/
 endif
 
 ifeq ($(AES256_FOR_BIN),1)

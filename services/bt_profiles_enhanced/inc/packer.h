@@ -31,5 +31,5 @@
 #define READ_INT16(offset, p)                             \
   (INT16U )(READ_INT8(offset, p) +                        \
          (READ_INT8(offset+1, p) << 8))
-         
+
 #endif /* __PACKER_H__ */

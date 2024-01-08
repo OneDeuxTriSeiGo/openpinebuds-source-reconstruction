@@ -146,7 +146,7 @@ static int voice_start(bool on)
         TRACE(3, "[%s] codec playback sample_rate: %d, data_size: %d", __func__, stream_cfg.sample_rate, stream_cfg.data_size);
         af_stream_open(CODEC_STREAM_ID, AUD_STREAM_PLAYBACK, &stream_cfg);
         ASSERT(ret == 0, "codec playback failed: %d", ret);
-        
+
         audio_dump_init(TX_FRAME_LEN, sizeof(VOICE_PCM_T), 1);
 
         // Start
@@ -156,7 +156,7 @@ static int voice_start(bool on)
     else
     {
         // Close stream
-        af_stream_stop(CODEC_STREAM_ID, AUD_STREAM_PLAYBACK);  
+        af_stream_stop(CODEC_STREAM_ID, AUD_STREAM_PLAYBACK);
         af_stream_stop(CODEC_STREAM_ID, AUD_STREAM_CAPTURE);
 
         audio_dump_deinit();
@@ -172,7 +172,7 @@ static int voice_start(bool on)
     }
 
     isRun=on;
-    return 0;   
+    return 0;
 }
 
 static bool voice_test_status = true;

@@ -162,20 +162,20 @@ void dump_data2sd(enum APP_SDMMC_DUMP_T opt, uint8_t *buf, uint32_t len)
     static FIL sd_fil;
     FRESULT res;
 
-    
+
     ASSERT(opt < APP_SDMMC_DUMP_NUM, "[%s] opt(%d) >= APP_SDMMC_DUMP_NUM", __func__, opt);
-    
+
     if(opt == APP_SDMMC_DUMP_OPEN)
     {
 //        res = f_open(&sd_fil,"dump.bin",FA_CREATE_ALWAYS | FA_WRITE);
         res = f_open(&sd_fil,"test.txt",FA_READ);
-        
+
 //        ASSERT(pcm_res == FR_OK,"[%s]:Cannot creat dump.bin, res = %d",__func__, pcm_res);
     }
     if(opt == APP_SDMMC_DUMP_READ)
     {
         res = f_read(&sd_fil, buf, len, &pcm_num);
-        
+
 //        ASSERT(pcm_res == FR_OK,"[%s]:Cannot creat dump.bin, res = %d",__func__, pcm_res);
     }
     else if(opt == APP_SDMMC_DUMP_WRITE)
@@ -186,7 +186,7 @@ void dump_data2sd(enum APP_SDMMC_DUMP_T opt, uint8_t *buf, uint32_t len)
     }
     else if(opt == APP_SDMMC_DUMP_CLOSE)
     {
-        res = f_close(&sd_fil);  
+        res = f_close(&sd_fil);
     }
 
     if(res == FR_OK)

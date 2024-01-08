@@ -61,8 +61,8 @@ int ancc_anc_enable_rsp_handler(ke_msg_id_t const msgid,
                                  ke_task_id_t const dest_id,
                                  ke_task_id_t const src_id)
 {
-    
-    
+
+
     return (KE_MSG_CONSUMED);
 }
 

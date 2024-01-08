@@ -42,7 +42,7 @@ void app_hrps_connected_evt_handler(uint8_t conidx);
 
 void app_hrps_disconnected_evt_handler(void);
 
-/// Messages for HRP Server Profile 
+/// Messages for HRP Server Profile
 enum hrp_msg_id
 {
     HRP_MEASUREMENT_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_HRPS),
@@ -50,7 +50,7 @@ enum hrp_msg_id
     HRP_MEASUREMENT_DATA_SENT,
 
     HRP_CTRL_POINT_RECEIVED,
-    
+
 };
 
 struct ble_hrp_measurement_notif_config_t

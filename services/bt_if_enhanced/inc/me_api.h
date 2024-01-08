@@ -53,7 +53,7 @@ typedef uint8_t btif_event_type_t;
 
 #define BTIF_BTEVENT_ROLE_CHANGE         14
 
-#define BTIF_BTEVENT_SCO_DISCONNECT      15   
+#define BTIF_BTEVENT_SCO_DISCONNECT      15
 
 #define BTIF_BTEVENT_SCO_CONNECT_CNF     16
 

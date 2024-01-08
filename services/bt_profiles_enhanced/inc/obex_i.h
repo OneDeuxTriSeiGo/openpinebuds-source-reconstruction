@@ -50,13 +50,13 @@ enum obex_state_enum{
 struct obex_client{
     uint8 flags;
     obex_opcode opcode;
-    
+
     void (*indicate_cb)(enum obex_event_t event);
     void (*data_cb)(uint8 *data, uint16 len);
 
     uint8 *tx_buffer;
     uint16 tx_length;
-    
+
     uint8 rfcomm_handle;
 };
 

@@ -125,7 +125,7 @@ typedef enum
 typedef enum
 {
     BATTERY_NOT_CHARGING = 0,
-    BATTERY_CHARGING = 1,    
+    BATTERY_CHARGING = 1,
 } GFPS_BATTERY_STATUS_E;
 
 #define GFPS_BATTERY_VALUE_MAX_COUNT    3
@@ -149,9 +149,9 @@ struct app_gfps_env_tag
     uint8_t pendingLastResponse[16];
     uint8_t isLastResponsePending;
     uint8_t isWaitingForFpToConnect;
-    uint8_t isPendingForWritingNameReq; 
+    uint8_t isPendingForWritingNameReq;
     uint8_t isBatteryInfoIncluded;
-    gfps_get_battery_info_handler get_battery_info_handler;  
+    gfps_get_battery_info_handler get_battery_info_handler;
     GFPS_BATTERY_DATA_TYPE_E batteryDataType;
     uint8_t advRandSalt;
     uint8_t isInFastPairing;

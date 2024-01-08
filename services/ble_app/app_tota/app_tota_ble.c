@@ -40,7 +40,7 @@
 #include "app.h"                     // Application Definitions
 #include "app_task.h"                // application task definitions
 #include "app_ble_rx_handler.h"
-#include "tota_task.h"              
+#include "tota_task.h"
 #include "app_tota_ble.h"                  // TOTA Application Definitions
 #include "app_tota_data_handler.h"
 #include "app_tota_cmd_handler.h"
@@ -61,7 +61,7 @@ static app_tota_tx_done_t tota_data_tx_done_callback = NULL;
  ****************************************************************************************
  */
 void app_tota_connected_evt_handler(uint8_t conidx)
-{   
+{
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
     app_tota_env.connectionIndex = conidx;
     app_tota_update_datapath(APP_TOTA_VIA_NOTIFICATION);
@@ -85,7 +85,7 @@ void app_tota_ble_init(void)
 {
     app_tota_env.connectionIndex =  BLE_INVALID_CONNECTION_INDEX;
     app_tota_env.isNotificationEnabled = false;
-    memset((uint8_t *)&(app_tota_env.mtu), 0, sizeof(app_tota_env.mtu));    
+    memset((uint8_t *)&(app_tota_env.mtu), 0, sizeof(app_tota_env.mtu));
 }
 
 void app_tota_add_tota(void)
@@ -93,14 +93,14 @@ void app_tota_add_tota(void)
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
                                                   TASK_GAPM, TASK_APP,
                                                   gapm_profile_task_add_cmd, 0);
-    
+
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
     req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-#endif  
+#endif
 
     req->prf_task_id = TASK_ID_TOTA;
     req->app_task = TASK_APP;
@@ -113,7 +113,7 @@ void app_tota_add_tota(void)
 void app_tota_send_notification(uint8_t* ptrData, uint32_t length)
 {
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
-    
+
     struct ble_tota_send_data_req_t * req = KE_MSG_ALLOC_DYN(TOTA_SEND_NOTIFICATION,
                                                 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_TOTA), app_tota_env.connectionIndex),
                                                 TASK_APP,
@@ -183,8 +183,8 @@ static int app_tota_ccc_changed_handler(ke_msg_id_t const msgid,
     {
         app_tota_update_datapath(APP_TOTA_VIA_INDICATION);
     }
-    
-    
+
+
     return (KE_MSG_CONSUMED);
 }
 

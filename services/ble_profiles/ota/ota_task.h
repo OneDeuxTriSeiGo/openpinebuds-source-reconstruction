@@ -44,16 +44,16 @@
  * DEFINES
  ****************************************************************************************
  */
-#define OTA_CONTENT_TYPE_COMMAND        0 
+#define OTA_CONTENT_TYPE_COMMAND        0
 #define OTA_CONTENT_TYPE_DATA       1
 
-/// Messages for OTA Profile 
+/// Messages for OTA Profile
 enum ota_msg_id
 {
     OTA_CCC_CHANGED = TASK_FIRST_MSG(TASK_ID_OTA),
 
     OTA_TX_DATA_SENT,
-    
+
     OTA_DATA_RECEIVED,
 
     OTA_SEND_NOTIFICATION,

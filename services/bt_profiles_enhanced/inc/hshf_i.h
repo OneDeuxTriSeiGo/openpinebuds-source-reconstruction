@@ -70,7 +70,7 @@ enum hshf_event_t {
     /* internal event */
     HSHF_EVNT_BEGIN,     //28
     HSHF_RFCOMM_OPENED, //29
-    HSHF_CONN_OPENED, 
+    HSHF_CONN_OPENED,
     HSHF_CONN_CLOSED,
     HSHF_CONN_REQ_FAIL,
     HF_AG_SUPPORTED_FEATURE_IND,

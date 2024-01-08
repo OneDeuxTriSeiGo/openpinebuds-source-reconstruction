@@ -46,6 +46,6 @@ uint8_t *nv_record_tws_get_peer_ble_addr(void);
 }
 #endif
 
-#endif 
+#endif
 #endif // #if defined(NEW_NV_RECORD_ENABLED)
 

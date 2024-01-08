@@ -96,7 +96,7 @@ void tota_callback_module_set(APP_TOTA_MODULE_E module)
     {
         s_module = module;
         s_module_func = it->second;
-        
+
         TOTA_LOG_DBG(1, "set %d module success", module);
     }
     else
@@ -168,30 +168,30 @@ extern "C" APP_TOTA_CMD_RET_STATUS_E app_tota_cmd_received(uint8_t* ptrData, uin
 
 /*---------------------------------------------------------------------------
  *
- * ServiceClassIDList 
+ * ServiceClassIDList
  */
 static const U8 TotaSppClassId[] = {
-    SDP_ATTRIB_HEADER_8BIT(3),        /* Data Element Sequence, 6 bytes */ 
-    SDP_UUID_16BIT(SC_SERIAL_PORT),     /* Hands-Free UUID in Big Endian */ 
+    SDP_ATTRIB_HEADER_8BIT(3),        /* Data Element Sequence, 6 bytes */
+    SDP_UUID_16BIT(SC_SERIAL_PORT),     /* Hands-Free UUID in Big Endian */
 };
 
 static const U8 TotaSppProtoDescList[] = {
-    SDP_ATTRIB_HEADER_8BIT(12),  /* Data element sequence, 12 bytes */ 
+    SDP_ATTRIB_HEADER_8BIT(12),  /* Data element sequence, 12 bytes */
 
-    /* Each element of the list is a Protocol descriptor which is a 
-     * data element sequence. The first element is L2CAP which only 
-     * has a UUID element.  
-     */ 
-    SDP_ATTRIB_HEADER_8BIT(3),   /* Data element sequence for L2CAP, 3 
-                                  * bytes 
-                                  */ 
+    /* Each element of the list is a Protocol descriptor which is a
+     * data element sequence. The first element is L2CAP which only
+     * has a UUID element.
+     */
+    SDP_ATTRIB_HEADER_8BIT(3),   /* Data element sequence for L2CAP, 3
+                                  * bytes
+                                  */
 
-    SDP_UUID_16BIT(PROT_L2CAP),  /* Uuid16 L2CAP */ 
+    SDP_UUID_16BIT(PROT_L2CAP),  /* Uuid16 L2CAP */
 
-    /* Next protocol descriptor in the list is RFCOMM. It contains two 
-     * elements which are the UUID and the channel. Ultimately this 
-     * channel will need to filled in with value returned by RFCOMM.  
-     */ 
+    /* Next protocol descriptor in the list is RFCOMM. It contains two
+     * elements which are the UUID and the channel. Ultimately this
+     * channel will need to filled in with value returned by RFCOMM.
+     */
 
     /* Data element sequence for RFCOMM, 5 bytes */
     SDP_ATTRIB_HEADER_8BIT(5),
@@ -212,19 +212,19 @@ static const U8 TotaSppProfileDescList[] = {
     SDP_ATTRIB_HEADER_8BIT(6),
 
     SDP_UUID_16BIT(SC_SERIAL_PORT),   /* Uuid16 SPP */
-    SDP_UINT_16BIT(0x0102)            /* As per errata 2239 */ 
+    SDP_UINT_16BIT(0x0102)            /* As per errata 2239 */
 };
 
 /*
  * * OPTIONAL *  ServiceName
  */
 static const U8 TotaSppServiceName1[] = {
-    SDP_TEXT_8BIT(5),          /* Null terminated text string */ 
+    SDP_TEXT_8BIT(5),          /* Null terminated text string */
     'S', 'p', 'p', '1', '\0'
 };
 
 static const U8 TotaSppServiceName2[] = {
-    SDP_TEXT_8BIT(5),          /* Null terminated text string */ 
+    SDP_TEXT_8BIT(5),          /* Null terminated text string */
     'S', 'p', 'p', '2', '\0'
 };
 
@@ -236,7 +236,7 @@ static const U8 TotaSppServiceName2[] = {
 //static const SdpAttribute TotaSppSdpAttributes1[] = {
 static sdp_attribute_t TotaSppSdpAttributes1[] = {
 
-    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaSppClassId), 
+    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaSppClassId),
 
     SDP_ATTRIBUTE(AID_PROTOCOL_DESC_LIST, TotaSppProtoDescList),
 
@@ -249,13 +249,13 @@ static sdp_attribute_t TotaSppSdpAttributes1[] = {
 /*
 static sdp_attribute_t TotaSppSdpAttributes2[] = {
 
-    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaSppClassId), 
+    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaSppClassId),
 
     SDP_ATTRIBUTE(AID_PROTOCOL_DESC_LIST, TotaSppProtoDescList),
 
     SDP_ATTRIBUTE(AID_BT_PROFILE_DESC_LIST, TotaSppProfileDescList),
 
-    
+
     SDP_ATTRIBUTE((AID_SERVICE_NAME + 0x0100), TotaSppServiceName2),
 };
 */
@@ -264,7 +264,7 @@ int tota_spp_handle_data_event_func(void *pDev, uint8_t process, uint8_t *pData,
 {
     TOTA_LOG_DBG(2,"[%s]data receive length = %d", __func__, dataLen);
     TOTA_LOG_DUMP("[0x%x]", pData, dataLen);
-    
+
     if ( s_module_func.tota_spp_data_receive_hanle != NULL )
         s_module_func.tota_spp_data_receive_hanle(pData, (uint32_t)dataLen);
 
@@ -333,7 +333,7 @@ void app_spp_tota_init(void)
         rx_buf = &spp_rx_buf[0];
         tx_buf = &totaSppTxBuf[0];
     }
-    
+
     tota_spp_dev->rx_buffer = rx_buf;
 
     app_spp_tota_init_tx_buf(tx_buf);

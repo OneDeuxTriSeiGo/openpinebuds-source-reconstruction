@@ -139,7 +139,7 @@ struct amsc_cnx_env
     uint8_t nb_svc;
 
     /// AMS Characteristics
-    struct amsc_ams_content ams;    
+    struct amsc_ams_content ams;
 };
 
 /// AMS Client environment variable

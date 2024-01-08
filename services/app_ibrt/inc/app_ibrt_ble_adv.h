@@ -44,10 +44,10 @@ typedef struct  {
     // adv data
     uint8_t adv_data_len;
     uint8_t adv_data[31];
-    
-    // scan response data   
+
+    // scan response data
     uint8_t scan_rsp_data_len;
-    uint8_t scan_rsp_data[31];  
+    uint8_t scan_rsp_data[31];
 }app_ble_adv_para_data_t;
 typedef struct
 {

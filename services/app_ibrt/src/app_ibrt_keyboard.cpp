@@ -112,19 +112,19 @@ void app_ibrt_search_ui_handle_key(APP_KEY_STATUS *status, void *param)
                 //if(qxw_dut_mode_enable){
                 //  qxw_dut_mode_enable = false;
                     app_bt_power_off_customize();
-                    
+
                 ///}
                 break;
 
             case APP_KEY_EVENT_ULTRACLICK:
                 TRACE(0,"ultra kill");
                 if(IBRT_UNKNOW==p_ibrt_ctrl->nv_role){
-                    app_bt_enter_mono_pairing_mode();               
+                    app_bt_enter_mono_pairing_mode();
                 }
                 break;
 
             case APP_KEY_EVENT_RAMPAGECLICK:
-                TRACE(0,"rampage kill!you are crazy!"); 
+                TRACE(0,"rampage kill!you are crazy!");
                 if(!app_device_bt_is_connected()&&(!app_tws_ibrt_tws_link_connected())){
                     app_nvrecord_rebuild();
                     osDelay(200);
@@ -219,9 +219,9 @@ int app_ibrt_if_keyboard_notify(APP_KEY_STATUS *status, void *param)
 
 #if(TWS_Sync_Shutdowm)
 int app_ibrt_poweroff_notify_force(void)
-{   
+{
     APP_KEY_STATUS status[] = {APP_KEY_CODE_FN2,HAL_KEY_EVENT_LONGLONGPRESS};
-    
+
     if (app_tws_ibrt_tws_link_connected())
     {
         app_ibrt_customif_test1_cmd_send((uint8_t *)status, sizeof(APP_KEY_STATUS));
@@ -230,9 +230,9 @@ int app_ibrt_poweroff_notify_force(void)
 }
 
 int app_ibrt_reboot_notify_force(void)
-{   
+{
     APP_KEY_STATUS status[] = {APP_KEY_CODE_FN1,HAL_KEY_EVENT_LONGLONGPRESS};
-    
+
     if (app_tws_ibrt_tws_link_connected())
     {
         app_ibrt_customif_test1_cmd_send((uint8_t *)status, sizeof(APP_KEY_STATUS));

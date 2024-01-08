@@ -100,7 +100,7 @@ static void _custom_cmd_handle(APP_TOTA_CMD_CODE_E funcCode, uint8_t* ptrParam, 
         default:
             ;
     }
-    
+
 }
 
 TOTA_COMMAND_TO_ADD(OP_TOTA_FACTORY_RESET, _custom_cmd_handle, false, 0, NULL );

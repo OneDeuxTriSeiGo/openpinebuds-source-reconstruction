@@ -9,7 +9,7 @@ extern "C" {
 
 void btm_fast_init(uint8_t* bt_addr, uint8_t* ble_addr);
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 }
 #endif
 #endif//__BTM_FAST_INIT__

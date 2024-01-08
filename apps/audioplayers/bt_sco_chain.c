@@ -1397,7 +1397,7 @@ int32_t _speech_rx_process_(void *pcm_buf, int32_t *_pcm_len)
     speech_ns_process(speech_rx_ns_st, pcm_buf, pcm_len);
 #endif
 
-#if defined(SPEECH_RX_NS2) 
+#if defined(SPEECH_RX_NS2)
     // fix 0dB signal
     int16_t *pcm_buf16 = (int16_t *)pcm_buf;
     for(int i=0; i<pcm_len; i++)

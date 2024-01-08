@@ -34,7 +34,7 @@
 #include "app_ota.h"                  // OTA Application Definitions
 #include "app.h"                     // Application Definitions
 #include "app_task.h"                // application task definitions
-#include "ota_task.h"              
+#include "ota_task.h"
 #include "co_bt.h"
 #include "prf_types.h"
 #include "prf_utils.h"
@@ -63,7 +63,7 @@ static app_ota_tx_done_t ota_data_tx_done_callback = NULL;
  ****************************************************************************************
  */
 void app_ota_connected_evt_handler(uint8_t conidx)
-{    
+{
     app_ota_env.connectionIndex = conidx;
     app_ota_connected(APP_OTA_CONNECTED);
     ota_control_set_datapath_type(DATA_PATH_BLE);
@@ -123,9 +123,9 @@ void app_ota_init(void)
     // Reset the environment
     app_ota_env.connectionIndex =  BLE_INVALID_CONNECTION_INDEX;
     app_ota_env.isNotificationEnabled = false;
-    memset((uint8_t *)&(app_ota_env.mtu), 0, sizeof(app_ota_env.mtu));  
+    memset((uint8_t *)&(app_ota_env.mtu), 0, sizeof(app_ota_env.mtu));
 
-    app_ble_register_data_fill_handle(USER_OTA, 
+    app_ble_register_data_fill_handle(USER_OTA,
         ( BLE_DATA_FILL_FUNC_T )app_ota_ble_data_fill_handler, false);
 }
 
@@ -135,14 +135,14 @@ void app_ota_add_ota(void)
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
                                                   TASK_GAPM, TASK_APP,
                                                   gapm_profile_task_add_cmd, 0);
-    
+
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
     req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-#endif  
+#endif
 
     req->prf_task_id = TASK_ID_OTA;
     req->app_task = TASK_APP;
@@ -156,7 +156,7 @@ void app_ota_send_notification(uint8_t* ptrData, uint32_t length)
 {
     TRACE(0,"Send ota rsp:");
     DUMP8("%02x ", ptrData, length);
-    
+
     struct ble_ota_send_data_req_t * req = KE_MSG_ALLOC_DYN(OTA_SEND_NOTIFICATION,
                                                 KE_BUILD_ID(prf_get_task_from_id(TASK_ID_OTA), app_ota_env.connectionIndex),
                                                 TASK_APP,
@@ -213,7 +213,7 @@ static int app_ota_ccc_changed_handler(ke_msg_id_t const msgid,
             }
         }
     }
-    
+
     return (KE_MSG_CONSUMED);
 }
 

@@ -639,7 +639,7 @@ uint8_t app_ai_tws_get_local_role(void)
             local_role = APP_AI_TWS_UNKNOW;
     }
 
-    TRACE(5, "[%s] %d exchanged %d tws %d mobile %d", 
+    TRACE(5, "[%s] %d exchanged %d tws %d mobile %d",
                             __func__, local_role, app_ibrt_ui_is_profile_exchanged(),
                             app_tws_ibrt_tws_link_connected(),
                             app_tws_ibrt_mobile_link_connected());

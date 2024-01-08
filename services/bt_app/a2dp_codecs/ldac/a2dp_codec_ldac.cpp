@@ -61,8 +61,8 @@ const unsigned char a2dp_codec_ldac_elements[A2DP_LDAC_OCTET_NUMBER] =
 {
     0x2d, 0x01, 0x00, 0x00, //Vendor ID
     0xaa, 0x00,     //Codec ID
-    (A2DP_LDAC_SR_96000|A2DP_LDAC_SR_88200|A2DP_LDAC_SR_48000 |A2DP_LDAC_SR_44100), 
-//    (A2DP_LDAC_SR_48000 |A2DP_LDAC_SR_44100), 
+    (A2DP_LDAC_SR_96000|A2DP_LDAC_SR_88200|A2DP_LDAC_SR_48000 |A2DP_LDAC_SR_44100),
+//    (A2DP_LDAC_SR_48000 |A2DP_LDAC_SR_44100),
     (A2DP_LDAC_CM_MONO|A2DP_LDAC_CM_DUAL|A2DP_LDAC_CM_STEREO),
 };
 
@@ -78,7 +78,7 @@ bt_status_t a2dp_codec_ldac_init(int index)
     a2dp_ldac_avdtpcodec.elemLen  = sizeof(a2dp_codec_ldac_elements);
     TRACE(1,"a2dp_ldac_avdtpcodec.elemLen = %d \n", a2dp_ldac_avdtpcodec.elemLen);
     TRACE(7,"a2dp_ldac_avdtpcodec.elements->[0]=0x%02x,[1]=0x%02x,[2]=0x%02x,[3]=0x%02x,[4]=0x%02x,[5]=0x%02x,[6]=0x%02x,\n", \
-    a2dp_ldac_avdtpcodec.elements[0], a2dp_ldac_avdtpcodec.elements[1], a2dp_ldac_avdtpcodec.elements[2], a2dp_ldac_avdtpcodec.elements[3], 
+    a2dp_ldac_avdtpcodec.elements[0], a2dp_ldac_avdtpcodec.elements[1], a2dp_ldac_avdtpcodec.elements[2], a2dp_ldac_avdtpcodec.elements[3],
     a2dp_ldac_avdtpcodec.elements[4], a2dp_ldac_avdtpcodec.elements[5], a2dp_ldac_avdtpcodec.elements[6]);
     TRACE(1,"a2dp_ldac_avdtpcodec.elements->[7]=0x%02x,\n", a2dp_ldac_avdtpcodec.elements[7]);
 

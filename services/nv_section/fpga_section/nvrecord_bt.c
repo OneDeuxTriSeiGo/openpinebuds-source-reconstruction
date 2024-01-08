@@ -334,7 +334,7 @@ bt_status_t nv_record_add(SECTIONS_ADP_ENUM type, void *record)
     switch(type)
     {
         case section_usrdata_ddbrecord:
-            retstatus = ram_record_ddbrec_add(record);          
+            retstatus = ram_record_ddbrec_add(record);
             break;
         default:
             break;

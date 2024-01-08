@@ -655,15 +655,15 @@ void media_Play_init_audio(uint16_t aud_id)
 
     if (aud_id == AUD_ID_BT_CALL_INCOMING_NUMBER)
     {
-          g_play_continue_mark = 1; 
+          g_play_continue_mark = 1;
 
         if (g_language == MEDIA_DEFAULT_LANGUAGE)
             media_sound_map = media_sound_map_en;
         else
             media_sound_map = media_sound_map_cn;
 
-        memset(&pCont_context, 0x0, sizeof(pCont_context)); 
-        
+        memset(&pCont_context, 0x0, sizeof(pCont_context));
+
         pCont_context.g_play_continue_total =  strlen((const char*)Media_player_number);
 
         for (uint32_t i=0;( i<pCont_context.g_play_continue_total) && (i< MAX_PHB_NUMBER); i++)
@@ -676,9 +676,9 @@ void media_Play_init_audio(uint16_t aud_id)
     }   else{
         g_app_audio_read = 0;
         g_play_continue_mark = 0;
-            
+
         media_runtime_audio_prompt_update(aud_id, &g_app_audio_data, &g_app_audio_length);
-    }   
+    }
 }
 uint32_t app_play_sbc_more_data_fadeout(int16_t *buf, uint32_t len)
 {
@@ -1228,7 +1228,7 @@ void app_audio_playback_done(void)
 int app_play_audio_stop(void)
 {
     TRACE_MEDIA_PLAYESTREAM_I("[STOP]");
-    
+
     app_audio_sendrequest(APP_PLAY_BACK_AUDIO, (uint8_t)APP_BT_SETTING_CLOSE, 0);
     return 0;
 }

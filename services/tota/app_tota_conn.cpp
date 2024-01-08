@@ -44,7 +44,7 @@ typedef struct{
 static TOTA_CONN_PARAMETER_T keyManager;
 
 
-/* 
+/*
 **  @
 */
 static void _tota_conn_and_update_key_handle(APP_TOTA_CMD_CODE_E funcCode, uint8_t* ptrParam, uint32_t paramLen);
@@ -121,13 +121,13 @@ static void _calculate_encrypt_key()
     TOTA_LOG_DUMP("%02x ", keyManager.random_a.random_key, prandom_a->length);
     TOTA_LOG_DBG(1, "random list b : 0x%x", prandom_b->length);
     TOTA_LOG_DUMP("%02x ", keyManager.random_b.random_key, prandom_b->length);
-    
+
     /* calculate random_key */
     for ( uint8_t i = 0; i < prandom_a->length; i ++ )
     {
         random_key[i] = _generate_random_algorithm(i,prandom_a->random_key[i], prandom_b->random_key[i]);
     }
-    
+
     TOTA_LOG_DBG(0,"generate random key:");
     TOTA_LOG_DUMP("%02x ", random_key, prandom_a->length);
 #if defined(TOTA)

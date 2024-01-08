@@ -102,7 +102,7 @@ void app_ibrt_auto_test_print_earphone_state(void const *n)
     auto_test_state_t.ui_state.tws_link_bt_role = app_tws_ibrt_get_local_tws_role();
     auto_test_state_t.ui_state.tws_link_bt_mode = p_ibrt_ctrl->tws_mode;
     auto_test_state_t.ui_state.tws_constate = p_ibrt_ctrl->tws_constate;
-    auto_test_state_t.ui_state.role_switch_state = 
+    auto_test_state_t.ui_state.role_switch_state =
                 (p_ibrt_ctrl->slave_tws_switch_pending ||
                 p_ibrt_ctrl->master_tws_switch_pending);
 #ifdef __IAG_BLE_INCLUDE__
@@ -113,7 +113,7 @@ void app_ibrt_auto_test_print_earphone_state(void const *n)
     {
         if (app_ble_is_connection_on(i))
         {
-            auto_test_state_t.ui_state.ble_connection_state |= 
+            auto_test_state_t.ui_state.ble_connection_state |=
                 (1 << i);
         }
     }

@@ -178,7 +178,7 @@ enum
 {
     /// Display Name present
     APP_ATT_ID_DISPLAY_NAME  = 0,
-    
+
     APP_ADD_ID_NB,
 
     /// All supported App Attributes
@@ -190,7 +190,7 @@ enum
 {
     /// App Identifier
     APP_ATT_ID_DISPLAY_NAME_PRESENT  = 0x01,
-    
+
 };
 
 

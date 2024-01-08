@@ -161,7 +161,7 @@ const struct AUD_IO_PATH_CFG_T cfg_audio_input_path_cfg[CFG_HW_AUD_INPUT_PATH_NU
 };
 
 const struct HAL_IOMUX_PIN_FUNCTION_MAP MuteOutPwl ={
-    HAL_IOMUX_PIN_P1_1, HAL_IOMUX_FUNC_AS_GPIO, HAL_IOMUX_PIN_VOLTAGE_VIO, HAL_IOMUX_PIN_NOPULL 
+    HAL_IOMUX_PIN_P1_1, HAL_IOMUX_FUNC_AS_GPIO, HAL_IOMUX_PIN_VOLTAGE_VIO, HAL_IOMUX_PIN_NOPULL
 };
 
 const struct HAL_IOMUX_PIN_FUNCTION_MAP app_battery_ext_charger_enable_cfg = {
@@ -195,7 +195,7 @@ const struct HAL_IOMUX_PIN_FUNCTION_MAP TOUCH_I2C_SCL ={
 bool tgt_tws_get_channel_is_right(void)
 {
 #ifdef __FIXED_TWS_EAR_SIDE__
-    return TWS_EAR_SIDE_ROLE; 
+    return TWS_EAR_SIDE_ROLE;
 #else
     return hal_gpio_pin_get_val((enum HAL_GPIO_PIN_T)cfg_hw_tws_channel_cfg.pin);
 #endif
@@ -210,7 +210,7 @@ const IIR_CFG_T audio_eq_sw_iir_cfg = {
         {IIR_TYPE_PEAK, .0,   600,  2},
         {IIR_TYPE_PEAK, .0,   2000.0, 2},
         {IIR_TYPE_PEAK, .0,  6000.0, 2},
-        {IIR_TYPE_PEAK, .0,  12000.0, 2}            
+        {IIR_TYPE_PEAK, .0,  12000.0, 2}
     }
 };
 
@@ -249,7 +249,7 @@ const FIR_CFG_T audio_eq_hw_fir_cfg_96k = {
 const FIR_CFG_T * const audio_eq_hw_fir_cfg_list[EQ_HW_FIR_LIST_NUM]={
     &audio_eq_hw_fir_cfg_44p1k,
     &audio_eq_hw_fir_cfg_48k,
-    &audio_eq_hw_fir_cfg_96k,    
+    &audio_eq_hw_fir_cfg_96k,
 };
 
 //hardware dac iir eq
@@ -303,7 +303,7 @@ const IIR_CFG_T audio_eq_hw_iir_cfg = {
         {IIR_TYPE_PEAK, -10.1,   5000.0,   7},
         {IIR_TYPE_PEAK, -10.1,   7000.0,   7},
         {IIR_TYPE_PEAK, -10.1,   9000.0,   7},
-            
+
     }
 };
 

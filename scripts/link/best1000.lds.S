@@ -865,14 +865,14 @@ SECTIONS
 #endif
 #else
             /* common */
-#if !defined(AUDIO_ANC_FB_ADJ_MC)   
-            *:ae_common.o(.text*)       
+#if !defined(AUDIO_ANC_FB_ADJ_MC)
+            *:ae_common.o(.text*)
             *:ae_rand.o(.text*)
             *:fastmath.o(.text*)
             *:integer_delay.o(.text*)
             *:iirfilt.o(.text*)
             *:ringbuf.o(.text*)
-#endif          
+#endif
             *:scale_int16.o(.text*)
             *:speech_conv.o(.text*)
             *:speech_trans_buf.o(.text*)
@@ -1463,7 +1463,7 @@ SECTIONS
         .overlay_data6
         {
             LONG(0);
-#if defined(A2DP_SCALABLE_ON) 
+#if defined(A2DP_SCALABLE_ON)
             *:rc_decode.o(.data* .rodata*)
             *:audio_int32.o(.data* .rodata*)
             *:ssc_ifft.o(.data* .rodata*)
@@ -1485,7 +1485,7 @@ SECTIONS
             *:SeamlessBufferManagement.o(.data* .rodata*)
 #if defined(CHIP_HAS_CP) && (RAMCP_SIZE > 0)
             *:a2dp_decoder_scalable.o(.rodata*)
-#endif          
+#endif
 #endif
 #if defined(A2DP_LHDC_ON)
             *:a2dp_decoder_lhdc.o(.data* .rodata*)
@@ -1886,10 +1886,10 @@ SECTIONS
     } > FLASH
 
     __flash_end = .;
-    
+
     .hotword_model (ORIGIN(FLASH_NC) + LENGTH(FLASH_NC) - FACTORY_SECTION_SIZE  - RESERVED_SECTION_SIZE -
         AUD_SECTION_SIZE - USERDATA_SECTION_SIZE*2 - CUSTOM_PARAMETER_SECTION_SIZE -
-        LHDC_LICENSE_SECTION_SIZE - CRASH_DUMP_SECTION_SIZE - LOG_DUMP_SECTION_SIZE - 
+        LHDC_LICENSE_SECTION_SIZE - CRASH_DUMP_SECTION_SIZE - LOG_DUMP_SECTION_SIZE -
         OTA_UPGRADE_LOG_SIZE - CORE_DUMP_SECTION_SIZE - HOTWORD_SECTION_SIZE) (NOLOAD):
     {
         __hotword_model_start = .;
@@ -1899,7 +1899,7 @@ SECTIONS
 
     .coredump_section (ORIGIN(FLASH_NC) + LENGTH(FLASH_NC) - FACTORY_SECTION_SIZE  - RESERVED_SECTION_SIZE -
         AUD_SECTION_SIZE - USERDATA_SECTION_SIZE*2 - CUSTOM_PARAMETER_SECTION_SIZE -
-        LHDC_LICENSE_SECTION_SIZE - CRASH_DUMP_SECTION_SIZE - LOG_DUMP_SECTION_SIZE - 
+        LHDC_LICENSE_SECTION_SIZE - CRASH_DUMP_SECTION_SIZE - LOG_DUMP_SECTION_SIZE -
         OTA_UPGRADE_LOG_SIZE - CORE_DUMP_SECTION_SIZE) (NOLOAD) :
     {
         __coredump_section_start = .;
@@ -1943,7 +1943,7 @@ SECTIONS
         . = CUSTOM_PARAMETER_SECTION_SIZE;
         __custom_parameter_end = .;
     } > FLASH_NC
-    
+
     .lhdc_license (ORIGIN(FLASH_NC) + LENGTH(FLASH_NC) - FACTORY_SECTION_SIZE  - RESERVED_SECTION_SIZE -
         AUD_SECTION_SIZE - USERDATA_SECTION_SIZE*2 - LHDC_LICENSE_SECTION_SIZE) (NOLOAD) :
     {

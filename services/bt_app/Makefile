@@ -138,7 +138,7 @@ endif
 CFLAGS_app_bt_stream.o += -DAUDIO_OUTPUT_VOLUME_DEFAULT=$(AUDIO_OUTPUT_VOLUME_DEFAULT)
 
 ifeq ($(A2DP_LDAC_ON),1)
-ccflags-y += -Ithirdparty/audio_codec_lib/ldac/inc 
+ccflags-y += -Ithirdparty/audio_codec_lib/ldac/inc
 endif
 
 ifeq ($(RB_CODEC),1)

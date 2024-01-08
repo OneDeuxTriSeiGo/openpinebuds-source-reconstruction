@@ -24,7 +24,7 @@
 #include "audio_process.h"
 
 #define APP_CMD_TRACE(s,...) TRACE(s, ##__VA_ARGS__)
-    
+
 void cmd_event_process(hal_cmd_rx_status_t status)
 {
     APP_CMD_TRACE(1,"%s",__func__);

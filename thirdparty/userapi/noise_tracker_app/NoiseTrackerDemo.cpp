@@ -48,7 +48,7 @@
 /**< NT Engine configuration settings   */
 #define NT_ENGINE_SAMPLES_PER_FRAME      (240)
 #define NT_ENGINE_SAMPLE_RATE            (16000)
-#define NT_ENGINE_SYSFREQ                (APP_SYSFREQ_26M)  // (APP_SYSFREQ_26M) 
+#define NT_ENGINE_SYSFREQ                (APP_SYSFREQ_26M)  // (APP_SYSFREQ_26M)
 
 
 /* Utility functions                     */
@@ -131,7 +131,7 @@ static uint32_t nt_demo_stream_handler(uint8_t *buf, uint32_t length)
 
 
 /**
- * @brief Setup audio streaming from MIC 
+ * @brief Setup audio streaming from MIC
  *
  * @param do_stream   start / stop streaming
  *

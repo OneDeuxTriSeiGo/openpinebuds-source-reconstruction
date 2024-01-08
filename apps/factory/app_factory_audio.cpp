@@ -168,15 +168,15 @@ int app_factorymode_output_pcmpatten(audio_test_pcmpatten_t *pcmpatten, uint8_t 
             memcpy(buf, &(pcmpatten->buf[pcmpatten->cuur_buf_pos/2]),len);
             pcmpatten->cuur_buf_pos += len;
         }
-        else 
+        else
         {
             curr_size = pcmpatten->len-pcmpatten->cuur_buf_pos;
             memcpy(buf, &(pcmpatten->buf[pcmpatten->cuur_buf_pos/2]),curr_size);
             pcmpatten->cuur_buf_pos = len - curr_size;
-            memcpy(buf+curr_size, pcmpatten->buf, pcmpatten->cuur_buf_pos);                
+            memcpy(buf+curr_size, pcmpatten->buf, pcmpatten->cuur_buf_pos);
         }
     }
-    
+
     return 0;
 }
 

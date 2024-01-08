@@ -47,7 +47,7 @@ typedef struct
  */
 typedef struct
 {
-    uint8_t     isInRawDataXferStage;       /**< true if the received data is raw data, 
+    uint8_t     isInRawDataXferStage;       /**< true if the received data is raw data,
                                                 false if the received data is in the format of BLE_CUSTOM_CMD_PAYLOAD_T*/
     uint16_t    lengthOfRawDataXferToReceive;
     uint16_t    lengthOfReceivedRawDataXfer;
@@ -58,7 +58,7 @@ typedef struct
     uint8_t     timeoutSupervisorCount;
     osTimerId   supervisor_timer_id;
     osMutexId   mutex;
-                                                
+
 } BLE_CUSTOM_CMD_ENV_T;
 
 static uint8_t rawDataXferBuf[BLE_RAW_DATA_XFER_BUF_SIZE];
@@ -67,7 +67,7 @@ static BLE_CUSTOM_CMD_ENV_T ble_custom_cmd_env;
 osMutexDef(app_ble_cmd_mutex);
 
 static void ble_custom_cmd_rsp_supervision_timer_cb(void const *n);
-osTimerDef (APP_CUSTOM_CMD_RSP_SUPERVISION_TIMER, ble_custom_cmd_rsp_supervision_timer_cb); 
+osTimerDef (APP_CUSTOM_CMD_RSP_SUPERVISION_TIMER, ble_custom_cmd_rsp_supervision_timer_cb);
 
 static void BLE_remove_waiting_rsp_timeout_supervision(uint16_t entryIndex);
 
@@ -107,15 +107,15 @@ void BLE_get_response_handler(uint32_t funcCode, uint8_t* ptrParam, uint32_t par
 
     BLE_CUSTOM_CMD_RSP_T* rsp = (BLE_CUSTOM_CMD_RSP_T *)ptrParam;
 
-    BLE_CUSTOM_CMD_INSTANCE_T* ptCmdInstance = 
+    BLE_CUSTOM_CMD_INSTANCE_T* ptCmdInstance =
         BLE_custom_command_get_entry_pointer_from_cmd_code(rsp->cmdCodeToRsp);
     if (NULL == ptCmdInstance)
     {
         return;
     }
-    
+
     // remove the function code from the time-out supervision chain
-    BLE_remove_waiting_rsp_timeout_supervision(rsp->cmdCodeToRsp);  
+    BLE_remove_waiting_rsp_timeout_supervision(rsp->cmdCodeToRsp);
 
     // call the response handler
     if (ptCmdInstance->cmdRspHandler)
@@ -146,7 +146,7 @@ void BLE_set_raw_data_xfer_received_callback(BLE_RawDataReceived_Handler_t callb
 void BLE_raw_data_xfer_control_handler(uint32_t funcCode, uint8_t* ptrParam, uint32_t paramLen)
 {
     bool isStartXfer = false;
-    
+
     if (OP_START_RAW_DATA_XFER == funcCode)
     {
         isStartXfer = true;
@@ -161,7 +161,7 @@ void BLE_start_raw_data_xfer_control_rsp_handler(BLE_CUSTOM_CMD_RET_STATUS_E ret
 {
     if (NO_ERROR == retStatus)
     {
-        /**< now the sending data api won't wrap BLE_CUSTOM_CMD_PAYLOAD_T but will directly send the raw data */ 
+        /**< now the sending data api won't wrap BLE_CUSTOM_CMD_PAYLOAD_T but will directly send the raw data */
         ble_custom_cmd_env.isInRawDataXferStage = true;
     }
 }
@@ -182,7 +182,7 @@ static void ble_custom_cmd_refresh_supervisor_env(void)
 {
     // do nothing if no supervisor was added
     if (ble_custom_cmd_env.timeoutSupervisorCount > 0)
-    {   
+    {
         uint32_t currentTicks = GET_CURRENT_TICKS();
         uint32_t passedTicks;
         if (currentTicks >= ble_custom_cmd_env.lastSysTicks)
@@ -193,13 +193,13 @@ static void ble_custom_cmd_refresh_supervisor_env(void)
         {
             passedTicks = (hal_sys_timer_get_max() - ble_custom_cmd_env.lastSysTicks + 1) + currentTicks;
         }
-        
+
         uint32_t deltaMs = TICKS_TO_MS(passedTicks);
-        
+
         BLE_CUSTOM_CMD_WAITING_RSP_SUPERVISOR_T* pRspSupervisor = &(ble_custom_cmd_env.waitingRspTimeoutInstance[0]);
         for (uint32_t index = 0;index < ble_custom_cmd_env.timeoutSupervisorCount;index++)
         {
-            ASSERT(pRspSupervisor[index].msTillTimeout > deltaMs, 
+            ASSERT(pRspSupervisor[index].msTillTimeout > deltaMs,
                 "the waiting command response supervisor timer is missing!!!, \
                 %d ms passed but the ms to trigger is %d", deltaMs, pRspSupervisor[index].msTillTimeout);
             pRspSupervisor[index].msTillTimeout -= deltaMs;
@@ -213,7 +213,7 @@ static void ble_custom_cmd_refresh_supervisor_env(void)
  * @brief Remove the time-out supervision of waiting response
  *
  * @param entryIndex    Entry index of the command table
- * 
+ *
  */
 static void BLE_remove_waiting_rsp_timeout_supervision(uint16_t entryIndex)
 {
@@ -227,8 +227,8 @@ static void BLE_remove_waiting_rsp_timeout_supervision(uint16_t entryIndex)
     {
         if (ble_custom_cmd_env.waitingRspTimeoutInstance[index].entryIndex == entryIndex)
         {
-            memcpy(&(ble_custom_cmd_env.waitingRspTimeoutInstance[index]), 
-                &(ble_custom_cmd_env.waitingRspTimeoutInstance[index + 1]), 
+            memcpy(&(ble_custom_cmd_env.waitingRspTimeoutInstance[index]),
+                &(ble_custom_cmd_env.waitingRspTimeoutInstance[index + 1]),
                 (ble_custom_cmd_env.timeoutSupervisorCount - index - 1)*sizeof(BLE_CUSTOM_CMD_WAITING_RSP_SUPERVISOR_T));
             break;
         }
@@ -239,14 +239,14 @@ static void BLE_remove_waiting_rsp_timeout_supervision(uint16_t entryIndex)
     {
         goto exit;
     }
-    
-    ble_custom_cmd_env.timeoutSupervisorCount--;    
+
+    ble_custom_cmd_env.timeoutSupervisorCount--;
 
     if (ble_custom_cmd_env.timeoutSupervisorCount > 0)
     {
         // refresh supervisor environment firstly
         ble_custom_cmd_refresh_supervisor_env();
-            
+
         // start timer, the first entry is the most close one
         osTimerStart(ble_custom_cmd_env.supervisor_timer_id, ble_custom_cmd_env.waitingRspTimeoutInstance[0].msTillTimeout);
     }
@@ -264,7 +264,7 @@ exit:
  * @brief Add the time-out supervision of waiting response
  *
  * @param entryIndex    Index of the command entry
- * 
+ *
  */
 static void BLE_add_waiting_rsp_timeout_supervision(uint16_t entryIndex)
 {
@@ -305,7 +305,7 @@ static void BLE_add_waiting_rsp_timeout_supervision(uint16_t entryIndex)
     {
         waitingRspTimeoutInstance[insertedIndex].entryIndex = entryIndex;
         waitingRspTimeoutInstance[insertedIndex].msTillTimeout = pInstance->timeoutWaitingRspInMs;
-        
+
         insertedIndex++;
     }
 
@@ -313,7 +313,7 @@ static void BLE_add_waiting_rsp_timeout_supervision(uint16_t entryIndex)
     memcpy((uint8_t *)&(ble_custom_cmd_env.waitingRspTimeoutInstance), (uint8_t *)&waitingRspTimeoutInstance,
         insertedIndex*sizeof(BLE_CUSTOM_CMD_WAITING_RSP_SUPERVISOR_T));
 
-    ble_custom_cmd_env.timeoutSupervisorCount = insertedIndex;  
+    ble_custom_cmd_env.timeoutSupervisorCount = insertedIndex;
 
     // start timer, the first entry is the most close one
     osTimerStart(ble_custom_cmd_env.supervisor_timer_id, ble_custom_cmd_env.waitingRspTimeoutInstance[0].msTillTimeout);
@@ -346,7 +346,7 @@ uint16_t BLE_custom_command_received_raw_data_size(void)
  *
  * @param ptrData       Pointer of the received data
  * @param dataLength    Length of the received data
- * 
+ *
  * @return BLE_CUSTOM_CMD_RET_STATUS_E
  */
 BLE_CUSTOM_CMD_RET_STATUS_E BLE_custom_command_receive_data(uint8_t* ptrData, uint32_t dataLength)
@@ -354,8 +354,8 @@ BLE_CUSTOM_CMD_RET_STATUS_E BLE_custom_command_receive_data(uint8_t* ptrData, ui
     TRACE(1,"Receive length %d data: ", dataLength);
     DUMP8("0x%02x ", ptrData, dataLength);
     BLE_CUSTOM_CMD_PAYLOAD_T* pPayload = (BLE_CUSTOM_CMD_PAYLOAD_T *)ptrData;
-    
-    if ((OP_START_RAW_DATA_XFER == pPayload->cmdCode) || 
+
+    if ((OP_START_RAW_DATA_XFER == pPayload->cmdCode) ||
         (OP_STOP_RAW_DATA_XFER == pPayload->cmdCode) ||
         (!(ble_custom_cmd_env.isInRawDataXferStage)))
     {
@@ -371,7 +371,7 @@ BLE_CUSTOM_CMD_RET_STATUS_E BLE_custom_command_receive_data(uint8_t* ptrData, ui
             return PARAMETER_LENGTH_OUT_OF_RANGE;
         }
 
-        BLE_CUSTOM_CMD_INSTANCE_T* pInstance = 
+        BLE_CUSTOM_CMD_INSTANCE_T* pInstance =
             BLE_custom_command_get_entry_pointer_from_cmd_code(pPayload->cmdCode);
 
         // execute the command handler
@@ -392,7 +392,7 @@ BLE_CUSTOM_CMD_RET_STATUS_E BLE_custom_command_receive_data(uint8_t* ptrData, ui
         if (NULL == ble_custom_cmd_env.rawDataHandler)
         {
             // default handler
-        
+
             // save the received raw data into raw data buffer
             uint32_t bytesToSave;
             if ((dataLength + ble_custom_cmd_env.lengthOfReceivedRawDataXfer) > \
@@ -408,8 +408,8 @@ BLE_CUSTOM_CMD_RET_STATUS_E BLE_custom_command_receive_data(uint8_t* ptrData, ui
             memcpy((uint8_t *)&ble_custom_cmd_env.ptrRawXferDstBuf[ble_custom_cmd_env.lengthOfReceivedRawDataXfer], \
                 ptrData, bytesToSave);
 
-            
-            ble_custom_cmd_env.lengthOfReceivedRawDataXfer += bytesToSave;      
+
+            ble_custom_cmd_env.lengthOfReceivedRawDataXfer += bytesToSave;
         }
         else
         {
@@ -425,40 +425,40 @@ static void BLE_send_out_data(BLE_CUSTOM_CMD_TRANSMISSION_PATH_E path, BLE_CUSTO
 {
     switch (path)
     {
-        case TRANSMISSION_VIA_NOTIFICATION:         
-            app_datapath_server_send_data_via_notification((uint8_t *)ptPayLoad, 
+        case TRANSMISSION_VIA_NOTIFICATION:
+            app_datapath_server_send_data_via_notification((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((BLE_CUSTOM_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
             break;
-        case TRANSMISSION_VIA_INDICATION:           
-            app_datapath_server_send_data_via_indication((uint8_t *)ptPayLoad, 
+        case TRANSMISSION_VIA_INDICATION:
+            app_datapath_server_send_data_via_indication((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((BLE_CUSTOM_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
-            break;          
+            break;
         case TRANSMISSION_VIA_WRITE_CMD:
-            app_datapath_server_send_data_via_write_command((uint8_t *)ptPayLoad, 
+            app_datapath_server_send_data_via_write_command((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((BLE_CUSTOM_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
             break;
         case TRANSMISSION_VIA_WRITE_REQ:
-            app_datapath_server_send_data_via_write_request((uint8_t *)ptPayLoad, 
+            app_datapath_server_send_data_via_write_request((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((BLE_CUSTOM_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
             break;
         default:
             break;
-    }   
+    }
 }
 
 /**
- * @brief Send response to the command request 
+ * @brief Send response to the command request
  *
  * @param responsedCmdCode  Command code of the responsed command request
  * @param returnStatus      Handling result
  * @param rspData           Pointer of the response data
  * @param rspDataLen        Length of the response data
  * @param path              Path of the data transmission
- * 
+ *
  * @return BLE_CUSTOM_CMD_RET_STATUS_E
  */
 BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_response_to_command
-    (uint32_t responsedCmdCode, BLE_CUSTOM_CMD_RET_STATUS_E returnStatus, 
+    (uint32_t responsedCmdCode, BLE_CUSTOM_CMD_RET_STATUS_E returnStatus,
     uint8_t* rspData, uint32_t rspDataLen, BLE_CUSTOM_CMD_TRANSMISSION_PATH_E path)
 {
     // check responsedCmdCode's validity
@@ -498,10 +498,10 @@ BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_response_to_command
  * @param ptrParam  Pointer of the output parameter
  * @param paramLen  Length of the output parameter
  * @param path      Path of the data transmission
- * 
+ *
  * @return BLE_CUSTOM_CMD_RET_STATUS_E
  */
-BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_custom_command(uint32_t cmdCode, 
+BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_custom_command(uint32_t cmdCode,
     uint8_t* ptrParam, uint32_t paramLen, BLE_CUSTOM_CMD_TRANSMISSION_PATH_E path)
 {
     // check cmdCode's validity
@@ -517,11 +517,11 @@ BLE_CUSTOM_CMD_RET_STATUS_E BLE_send_custom_command(uint32_t cmdCode,
     {
         return PARAMETER_LENGTH_OUT_OF_RANGE;
     }
-    
+
      uint16_t entryIndex = BLE_custom_command_get_entry_index_from_cmd_code(cmdCode);
      BLE_CUSTOM_CMD_INSTANCE_T* pInstance = CUSTOM_COMMAND_PTR_FROM_ENTRY_INDEX(entryIndex);
 
-    // wrap the command payload 
+    // wrap the command payload
     payload.cmdCode = cmdCode;
     payload.paramLen = paramLen;
     memcpy(payload.param, ptrParam, paramLen);
@@ -546,7 +546,7 @@ BLE_CUSTOM_CMD_INSTANCE_T* BLE_custom_command_get_entry_pointer_from_cmd_code(ui
         if (CUSTOM_COMMAND_PTR_FROM_ENTRY_INDEX(index)->cmdCode == cmdCode)
         {
             return CUSTOM_COMMAND_PTR_FROM_ENTRY_INDEX(index);
-        }           
+        }
     }
 
     return NULL;
@@ -560,7 +560,7 @@ uint16_t BLE_custom_command_get_entry_index_from_cmd_code(uint16_t cmdCode)
         if (CUSTOM_COMMAND_PTR_FROM_ENTRY_INDEX(index)->cmdCode == cmdCode)
         {
             return index;
-        }           
+        }
     }
 
     return INVALID_CUSTOM_ENTRY_INDEX;
@@ -574,7 +574,7 @@ void BLE_custom_command_init(void)
 {
     memset((uint8_t *)&ble_custom_cmd_env, 0, sizeof(ble_custom_cmd_env));
 
-    ble_custom_cmd_env.supervisor_timer_id = 
+    ble_custom_cmd_env.supervisor_timer_id =
         osTimerCreate(osTimer(APP_CUSTOM_CMD_RSP_SUPERVISION_TIMER), osTimerOnce, NULL);
 
     ble_custom_cmd_env.mutex = osMutexCreate((osMutex(app_ble_cmd_mutex)));

@@ -39,13 +39,13 @@
  ****************************************************************************************
  */
 #define tota_service_uuid_128_content           {0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86, 0x86 }
-#define tota_val_char_val_uuid_128_content          {0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97 }   
+#define tota_val_char_val_uuid_128_content          {0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97, 0x97 }
 
 #define ATT_DECL_PRIMARY_SERVICE_UUID       { 0x00, 0x28 }
 #define ATT_DECL_CHARACTERISTIC_UUID        { 0x03, 0x28 }
 #define ATT_DESC_CLIENT_CHAR_CFG_UUID       { 0x02, 0x29 }
 
-static const uint8_t TOTA_SERVICE_UUID_128[ATT_UUID_128_LEN]    = tota_service_uuid_128_content;  
+static const uint8_t TOTA_SERVICE_UUID_128[ATT_UUID_128_LEN]    = tota_service_uuid_128_content;
 
 /// Full OTA SERVER Database Description - Used to add attributes into the database
 const struct attm_desc_128 tota_att_db[TOTA_IDX_NB] =
@@ -82,7 +82,7 @@ const struct attm_desc_128 tota_att_db[TOTA_IDX_NB] =
  * @return status code to know if profile initialization succeed or not.
  ****************************************************************************************
  */
-static uint8_t tota_init(struct prf_task_env* env, uint16_t* start_hdl, 
+static uint8_t tota_init(struct prf_task_env* env, uint16_t* start_hdl,
     uint16_t app_task, uint8_t sec_lvl, void* params)
 {
     uint8_t status;
@@ -109,7 +109,7 @@ static uint8_t tota_init(struct prf_task_env* env, uint16_t* start_hdl,
         tota_env->prf_env.app_task    = app_task
                 | (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
         // Mono Instantiated task
-        tota_env->prf_env.prf_task    = env->task | 
+        tota_env->prf_env.prf_task    = env->task |
             (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
 
         // initialize environment variable

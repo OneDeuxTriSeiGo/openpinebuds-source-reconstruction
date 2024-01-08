@@ -68,7 +68,7 @@ struct vcard_filter{
 #define VCARD_FILTER_SORT_STRING    27   /* Sort string (Bit 27) */
 #define VCARD_FILTER_TIMESTAMP  28   /* Time stamp (Bit 28) */
 /* Bits 29-38 Reserved for future use */
-#define VCARD_FILTER_PROPRIETARY    39   /* Use of a proprietary filter (Bit 39) */ 
+#define VCARD_FILTER_PROPRIETARY    39   /* Use of a proprietary filter (Bit 39) */
 /* Bits 40-63 Reserved for proprietary filter usage */
 
 typedef uint8 vcard_format;
@@ -169,7 +169,7 @@ struct pbap_client{
 
 struct pbap_control_t{
     enum pbap_state state;
-    
+
     uint8 connectID[4];
 #if OBEX_AUTHENTICATION == 1
     uint8 challenge[AUTH_NONCE_LEN];

@@ -199,10 +199,10 @@ void app_btmap_sms_save(BT_DEVICE_ID_T id, char* telNum, char* msg)
     app_sms_msg.msg = msg;
     app_sms_msg.telNumLen = strlen(telNum);
     app_sms_msg.msgLen = strlen(msg);
-    
+
     if (NULL == app_btmap_state_check_handling_timer_id)
     {
-        app_btmap_state_check_handling_timer_id = 
+        app_btmap_state_check_handling_timer_id =
         osTimerCreate(osTimer(APP_BTMAP_STATE_CHECK_HANDLING_TIMER), osTimerOnce, NULL);
     }
 

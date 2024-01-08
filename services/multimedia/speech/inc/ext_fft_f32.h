@@ -79,7 +79,7 @@ static POSSIBLY_UNUSED void ext_f32_fft(void *table, float *in, float *out)
     float *optr = NULL;
 
     if (st->mode)
-    { 
+    {
         optr = st->out;
     }
     else
@@ -94,7 +94,7 @@ static POSSIBLY_UNUSED void ext_f32_fft(void *table, float *in, float *out)
     arm_rfft_fast_f32(&(st->fft), iptr, optr, 0);
 
     if (st->mode)
-    {    
+    {
         out[0] = optr[0];
         for (int32_t i = 1; i < N - 1; i++) {
             out[i] = optr[i + 1];
@@ -121,7 +121,7 @@ static POSSIBLY_UNUSED void ext_f32_ifft(void *table, float *in, float *out)
 #endif
 
     if (st->mode)
-    {   
+    {
         iptr[0] = in[0];
         iptr[1] = in[N - 1];
         for (int32_t i = 1; i < N - 1; i++) {

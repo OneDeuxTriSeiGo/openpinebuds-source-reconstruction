@@ -107,7 +107,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
     // Get the address of the environment
     struct gfpsp_env_tag* gfpsp_env = PRF_ENV_GET(GFPSP, gfpsp);
     uint8_t conidx = KE_IDX_GET(src_id);
@@ -124,7 +124,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         cfm->status = status;
         ke_msg_send(cfm);
     }
-    
+
     if (gfpsp_env != NULL)
     {
         switch (param->handle-gfpsp_env->start_hdl)
@@ -137,7 +137,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                         prf_src_task_get(&gfpsp_env->prf_env, conidx),
                         gfpsp_write_ind_t,
                         param->length);
-                ind->length = param->length; 
+                ind->length = param->length;
                 ind->pendingWriteRsp.dst_task_id = src_id;
                 ind->pendingWriteRsp.src_task_id = dest_id;
                 ind->pendingWriteRsp.handle = param->handle;
@@ -161,7 +161,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
             }
             case GFPSP_IDX_PASSKEY_NTF_CFG:
             {
-                uint16_t value = 0x0000;            
+                uint16_t value = 0x0000;
                 memcpy(&value, &(param->value), sizeof(uint16_t));
                 struct app_gfps_pass_key_notif_config_t * ind = KE_MSG_ALLOC(GFPSP_KEY_PASS_KEY_NTF_CFG,
                         prf_dst_task_get(&gfpsp_env->prf_env, conidx),
@@ -170,7 +170,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 
                 ind->isNotificationEnabled = value;
                 ke_msg_send(ind);
-                break;  
+                break;
             }
             case GFPSP_IDX_PASSKEY_VAL:
             {
@@ -180,10 +180,10 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                         prf_src_task_get(&gfpsp_env->prf_env, conidx),
                         gfpsp_write_ind_t,
                         param->length);
-                ind->length = param->length; 
+                ind->length = param->length;
                 memcpy((uint8_t *)(ind->data),&(param->value), param->length);
-    
-                ke_msg_send(ind); 
+
+                ke_msg_send(ind);
                 break;
             }
             case GFPSP_IDX_ACCOUNT_KEY_VAL:
@@ -195,10 +195,10 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                         prf_src_task_get(&gfpsp_env->prf_env, conidx),
                         gfpsp_write_ind_t,
                         param->length);
-                ind->length = param->length; 
+                ind->length = param->length;
                 memcpy((uint8_t *)(ind->data),&(param->value), param->length);
-    
-                ke_msg_send(ind);                
+
+                ke_msg_send(ind);
                 break;
             }
             case GFPSP_IDX_NAME_VAL:
@@ -211,13 +211,13 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                         prf_src_task_get(&gfpsp_env->prf_env, conidx),
                         gfpsp_write_ind_t,
                         param->length);
-                ind->length = param->length; 
+                ind->length = param->length;
                 ind->pendingWriteRsp.dst_task_id = src_id;
                 ind->pendingWriteRsp.src_task_id = dest_id;
                 ind->pendingWriteRsp.handle = param->handle;
                 memcpy((uint8_t *)(ind->data),&(param->value), param->length);
-    
-                ke_msg_send(ind); 
+
+                ke_msg_send(ind);
                 break;
             }
             default:
@@ -253,7 +253,7 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
     // Get the address of the environment
     struct gattc_att_info_cfm * cfm;
 
-  
+
 
     //Send write response
     cfm = KE_MSG_ALLOC(GATTC_ATT_INFO_CFM, src_id, dest_id, gattc_att_info_cfm);
@@ -282,20 +282,20 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
     } else if (param->handle == (gfpsp_env->start_hdl + GFPSP_IDX_KEY_BASED_PAIRING_VAL)) {
         // force length to zero to reject any write starting from something != 0
         cfm->length = 0;
-        cfm->status = GAP_ERR_NO_ERROR;         
+        cfm->status = GAP_ERR_NO_ERROR;
     } else if (param->handle == (gfpsp_env->start_hdl + GFPSP_IDX_PASSKEY_VAL)) {
         // force length to zero to reject any write starting from something != 0
         cfm->length = 0;
-        cfm->status = GAP_ERR_NO_ERROR;         
+        cfm->status = GAP_ERR_NO_ERROR;
     } else if (param->handle == (gfpsp_env->start_hdl + GFPSP_IDX_ACCOUNT_KEY_VAL)) {
         // force length to zero to reject any write starting from something != 0
         cfm->length = 0;
-        cfm->status = GAP_ERR_NO_ERROR;         
+        cfm->status = GAP_ERR_NO_ERROR;
     } else if (param->handle == (gfpsp_env->start_hdl + GFPSP_IDX_NAME_VAL)) {
         // force length to zero to reject any write starting from something != 0
         cfm->length = 0;
-        cfm->status = GAP_ERR_NO_ERROR;         
-    } 
+        cfm->status = GAP_ERR_NO_ERROR;
+    }
     else {
         cfm->length = 0;
         cfm->status = ATT_ERR_WRITE_NOT_PERMITTED;

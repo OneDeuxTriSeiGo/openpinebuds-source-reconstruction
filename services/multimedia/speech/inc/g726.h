@@ -23,7 +23,7 @@ extern "C" {
 unsigned long g726_Encode(unsigned char *speech,char *bitstream, uint32_t sampleCount, uint8_t isReset);
 unsigned long g726_Decode(char *bitstream,unsigned char *speech, uint32_t sampleCount, uint8_t isReset);
 
-#ifdef __cplusplus  
+#ifdef __cplusplus
 }
 #endif
 

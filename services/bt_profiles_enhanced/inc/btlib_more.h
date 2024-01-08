@@ -20,6 +20,6 @@
 
 #include "cobuf.h"
 #include "co_printf.h"
-#include "btlib_type.h"     
+#include "btlib_type.h"
 
 #endif /* __BT_LIB_MORE_H__ */

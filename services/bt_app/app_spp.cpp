@@ -151,7 +151,7 @@ static void spp_test_client_callback(struct spp_device *locDev, struct spp_callb
         case BTIF_SPP_EVENT_DATA_SENT:
             TRACE(1,"::SPP_EVENT_DATA_SENT %d\n", Info->event);
             break;
-            
+
         default:
             TRACE(1,"::unknown event %d\n", Info->event);
             break;
@@ -220,8 +220,8 @@ void pts_spp_client_init(void)
 #include "conmgr_api.h"
 btif_remote_device_t *btif_cmgr_pts_get_remDev(btif_cmgr_handler_t *cmgr_handler);
 extern btif_cmgr_handler_t* pts_cmgr_handler;
-void pts_cmgr_callback(btif_cmgr_handler_t *cHandler, 
-                              cmgr_event_t    Event, 
+void pts_cmgr_callback(btif_cmgr_handler_t *cHandler,
+                              cmgr_event_t    Event,
                               bt_status_t     Status)
 {
     btif_remote_device_t *remDev = btif_cmgr_pts_get_remDev(pts_cmgr_handler);

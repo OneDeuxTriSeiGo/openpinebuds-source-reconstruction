@@ -16,7 +16,7 @@ enum voice_detector_id {
 #if defined(CHIP_BEST2300P)
 #define VAD_BUFFER_LEN 8192
 #else
-#define VAD_BUFFER_LEN 2048 
+#define VAD_BUFFER_LEN 2048
 #endif
 
 /* commands of voice detector */

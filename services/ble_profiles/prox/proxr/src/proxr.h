@@ -186,7 +186,7 @@ const struct prf_task_cbs* proxr_prf_itf_get(void);
  * @brief Disable role.
  ****************************************************************************************
  */
-void proxr_disable(uint16_t conhdl); 
+void proxr_disable(uint16_t conhdl);
 
 /*
  * GLOBAL VARIABLES DECLARATIONS

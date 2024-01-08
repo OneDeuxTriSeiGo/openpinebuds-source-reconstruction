@@ -36,7 +36,7 @@ enum APP_MODUAL_ID_T {
     APP_MODUAL_AUDIO_MANAGE,
     APP_MODUAL_ANC,
     APP_MODUAL_SMART_MIC,
-#ifdef __PC_CMD_UART__  
+#ifdef __PC_CMD_UART__
     APP_MODUAL_CMD,
 #endif
 #ifdef TILE_DATAPATH

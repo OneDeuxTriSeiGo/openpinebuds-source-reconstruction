@@ -23,7 +23,7 @@
 #include "rwip_config.h"     // stack configuration
 #include "compiler.h"        // compiler defines, INLINE
 #include "ke_msg.h"          // kernel message defines
- 
+
 /* Default Message handler code to handle several message type in same handler. */
 #define KE_MSG_DEFAULT_HANDLER  (0xFFFF)
 /* Invalid task */

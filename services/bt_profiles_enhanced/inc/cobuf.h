@@ -23,7 +23,7 @@ extern "C" {
 #endif
 
 /*must be 4 align*/
-struct cobuf_statistic_packet 
+struct cobuf_statistic_packet
 {
     unsigned short stat_flag; /*must be 0x5a5a if used, or 0xa5a5 if released*/
     unsigned short alloc_place_id;

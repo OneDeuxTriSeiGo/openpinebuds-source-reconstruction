@@ -21,11 +21,11 @@
 #define APP_TOTA_PATH_TYPE_SPP  (1 << 0)
 
 #define APP_TOTA_PATH_TYPE      (APP_TOTA_PATH_TYPE_SPP)
-    
-#define APP_TOTA_CONNECTED             (1 << 0)    
+
+#define APP_TOTA_CONNECTED             (1 << 0)
 #define APP_TOTA_DISCONNECTED          (~(1 << 0))
 
-#define TOTA_SHARE_TX_RX_BUF    1  
+#define TOTA_SHARE_TX_RX_BUF    1
 
 #ifdef __cplusplus
 extern "C" {

@@ -18,7 +18,7 @@ const char *g_slave_ble_state_str[] =
     "BLE_STARTING_ADV",
     "BLE_STOPPING_ADV",
 };
-    
+
 const char *g_slave_ble_op_str[] =
 {
     "BLE_OP_IDLE",
@@ -69,7 +69,7 @@ void app_ibrt_slave_ble_cmd_complete_callback(const void *para)
                 TRACE(2,"%s error p_cmd_complete->param[0] %d", __func__, p_cmd_complete->param[0]);
                 SET_SLAVE_BLE_STATE(BLE_STATE_IDLE);
                 SET_SLAVE_BLE_OP(BLE_OP_IDLE);
-            } 
+            }
         default:
         break;
     }
@@ -93,7 +93,7 @@ void app_ibrt_slave_ble_cmd_complete_callback(const void *para)
 void app_ibrt_ble_adv_para_data_init(void)
 {
     app_ble_adv_para_data_t *adv_para_cfg = &app_ble_adv_para_data_cfg;
-    
+
     adv_para_cfg->adv_type = ADV_CONN_UNDIR;
     adv_para_cfg->advInterval_Ms = APP_IBRT_BLE_ADV_INTERVAL;
     adv_para_cfg->own_addr_type = ADDR_PUBLIC;
@@ -104,18 +104,18 @@ void app_ibrt_ble_adv_para_data_init(void)
 
     const char* ble_name_in_nv = (const char*)factory_section_get_ble_name();
     uint32_t nameLen = strlen(ble_name_in_nv);
-    
+
     ASSERT(APP_IBRT_BLE_ADV_DATA_MAX_LEN >= nameLen, "ble adv data exceed");
-    
+
     adv_para_cfg->adv_data_len = 0;
     adv_para_cfg->adv_data[adv_para_cfg->adv_data_len++] = nameLen+1;
     adv_para_cfg->adv_data[adv_para_cfg->adv_data_len++] = 0x08;
     memcpy(&adv_para_cfg->adv_data[adv_para_cfg->adv_data_len], ble_name_in_nv, nameLen);
     adv_para_cfg->adv_data_len += nameLen;
-    
+
     adv_para_cfg->scan_rsp_data_len = 0;
     memset(adv_para_cfg->scan_rsp_data,0,sizeof(adv_para_cfg->scan_rsp_data));
-    
+
     memset(&slaveBleMode, 0, sizeof(slaveBleMode));
     btif_me_register_cmd_complete_callback(HCI_CMD_COMPLETE_USER_BLE, app_ibrt_slave_ble_cmd_complete_callback);
 }
@@ -146,7 +146,7 @@ void app_ibrt_ble_set_adv_para_handler(app_ble_adv_para_data_t *adv_para_cfg)
     adv_para.adv_chanmap = adv_para_cfg->adv_chanmap;
     adv_para.adv_filter_policy = adv_para_cfg->adv_filter_policy;
     memcpy(adv_para.bd_addr.address, adv_para_cfg->bd_addr.address, BTIF_BD_ADDR_SIZE);
-    
+
     btif_me_ble_set_adv_parameters(&adv_para);
 }
 /*****************************************************************************
@@ -205,7 +205,7 @@ void app_ibrt_ble_adv_start(uint8_t adv_type, uint16_t advInterval)
             SET_SLAVE_BLE_STATE(BLE_STARTING_ADV);
             app_ibrt_ble_set_adv_para_handler(&app_ble_adv_para_data_cfg);
             app_ibrt_ble_set_adv_data_handler(&app_ble_adv_para_data_cfg);
-            btif_me_ble_set_adv_en(true); 
+            btif_me_ble_set_adv_en(true);
             break;
         default:
         break;
@@ -266,9 +266,9 @@ void app_ibrt_ble_switch_activities(void)
             {
                 SET_SLAVE_BLE_OP(BLE_OP_IDLE);
             }
-            break;            
+            break;
        default:
-        break; 
+        break;
     }
     switch(slaveBleMode.op)
     {

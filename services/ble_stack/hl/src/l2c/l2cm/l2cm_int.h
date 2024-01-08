@@ -51,7 +51,7 @@ struct l2cm_env_tag
     uint16_t    nb_buffer_avail;
 
     uint16_t    usedBufferNumber[BLE_CONNECTION_MAX];
-    
+
  };
 
 /*
@@ -71,9 +71,9 @@ extern struct l2cm_env_tag l2cm_env;
  */
 static __INLINE void l2cm_buffer_acquire(uint8_t conidx)
 {
-    l2cm_env.nb_buffer_avail--; 
+    l2cm_env.nb_buffer_avail--;
     l2cm_env.usedBufferNumber[conidx]++;
-#if TRACE_BLE_TX_BUFFER_USAGE   
+#if TRACE_BLE_TX_BUFFER_USAGE
     TRACE(3, "ble nb -- to %d coidx %d use buf ++ to %d", l2cm_env.nb_buffer_avail,
         conidx, l2cm_env.usedBufferNumber[conidx]);
 #endif
@@ -98,7 +98,7 @@ static __INLINE void l2cm_buffer_release(uint8_t conidx, uint16_t nb)
         l2cm_env.nb_buffer_avail += nb;
         l2cm_env.usedBufferNumber[conidx] -= nb;
     }
-#if TRACE_BLE_TX_BUFFER_USAGE   
+#if TRACE_BLE_TX_BUFFER_USAGE
     TRACE(4, "post ble nb ++ %d to %d coidx %d use buf -- to %d", nb, l2cm_env.nb_buffer_avail,
         conidx, l2cm_env.usedBufferNumber[conidx]);
 #endif
@@ -114,9 +114,9 @@ static __INLINE void l2cm_buffer_reset(uint8_t conidx)
     l2cm_env.nb_buffer_avail += l2cm_env.usedBufferNumber[conidx];
     l2cm_env.usedBufferNumber[conidx] = 0;
 
-#if TRACE_BLE_TX_BUFFER_USAGE   
+#if TRACE_BLE_TX_BUFFER_USAGE
     TRACE(3, "post ble reset to %d conidx %d use buf to %d", l2cm_env.nb_buffer_avail,
-        conidx, l2cm_env.usedBufferNumber[conidx]); 
+        conidx, l2cm_env.usedBufferNumber[conidx]);
 #endif
 }
 

@@ -47,7 +47,7 @@ endif
 
 else
 obj_c := $(filter-out src/anc_assist.c ,$(obj_c))
-endif 
+endif
 
 
 ifeq ($(AUDIO_RESAMPLE),1)

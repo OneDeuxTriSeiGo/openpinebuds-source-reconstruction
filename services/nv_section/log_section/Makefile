@@ -10,7 +10,7 @@ ccflags-y := \
 	-Iutils/crc32 \
 	-Iutils/heap \
 	-Iplatform/drivers/ana \
-	-Iservices/norflash_api 
+	-Iservices/norflash_api
 
 ifeq ($(TRACE_DUMP2FLASH),1)
 ccflags-y += -DTRACE_DUMP2FLASH

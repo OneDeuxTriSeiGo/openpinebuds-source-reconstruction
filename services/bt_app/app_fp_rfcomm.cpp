@@ -86,15 +86,15 @@ static uint8_t *fp_rfcomm_tx_buf_addr(uint32_t chunk)
 static int32_t fp_rfcomm_alloc_tx_chunk(void)
 {
     uint32_t lock = int_lock_global();
-    
+
     if (fp_rfcomm_tx_buf_allocated_chunk_cnt >= FP_RFCOMM_TX_BUF_CHUNK_CNT)
     {
         int_unlock_global(lock);
         return -1;
     }
 
-    uint32_t returnedChunk = fp_rfcomm_tx_buf_next_allocated_chunk; 
-    
+    uint32_t returnedChunk = fp_rfcomm_tx_buf_next_allocated_chunk;
+
     fp_rfcomm_tx_buf_allocated_chunk_cnt++;
     fp_rfcomm_tx_buf_next_allocated_chunk++;
     if (FP_RFCOMM_TX_BUF_CHUNK_CNT == fp_rfcomm_tx_buf_next_allocated_chunk)
@@ -181,7 +181,7 @@ void app_set_find_my_buds(uint8_t mode)
                 if (IBRT_SLAVE != p_ibrt_ctrl->current_role)
                 {
                     app_voice_report(APP_STATUS_INDICATION_FIND_MY_BUDS, 0);
-                    
+
                     find_buds_flag |= FIND_MY_BUDS_STATUS_MASTER_MASK;
                 }
             }
@@ -193,7 +193,7 @@ void app_set_find_my_buds(uint8_t mode)
                 if (IBRT_SLAVE == p_ibrt_ctrl->current_role)
                 {
                     app_voice_report(APP_STATUS_INDICATION_FIND_MY_BUDS, 0);
-                    
+
                     find_buds_flag |= FIND_MY_BUDS_STATUS_SLAVE_MASK;
                 }
             }
@@ -264,7 +264,7 @@ void fp_rfcomm_ring_timer_set(uint8_t period)
     {
         ring_timeout_timer_id = osTimerCreate(osTimer(GFPS_FIND_DEVICES_RING_TIMEOUT), osTimerOnce, NULL);
     }
-    
+
     osTimerStop(ring_timeout_timer_id);
     if(period)
     {
@@ -283,7 +283,7 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
     }
 
     gfps_set_find_my_buds(requestdata[0]);
-    
+
     // TODO: implement the continuous audio prompt playing state machine
 #if 0
     uint8_t isAllowed = false;
@@ -292,8 +292,8 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
     {
         case 3:
         {
-             if (IS_CONNECTED_WITH_TWS() && 
-                ((0 == fp_ring_status.isLeftRinging) && 
+             if (IS_CONNECTED_WITH_TWS() &&
+                ((0 == fp_ring_status.isLeftRinging) &&
                     (0 == fp_ring_status.isRightRinging)))
             {
                 // TODO: start ringing on both sides
@@ -304,7 +304,7 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
             }
             break;
         }
-        case 1:            
+        case 1:
             if (0 == fp_ring_status.isRightRinging)
             {
                 if (((fp_ring_status.isLeftRinging) && app_tws_is_right_side()) ||
@@ -338,9 +338,9 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
                     else if (app_tws_is_left_side())
                     {
                         // TODO: stop local ringing
-                    }                  
+                    }
                 }
-                
+
                 fp_ring_status.isLeftRinging = false;
                 fp_ring_status.isRightRinging = true;
 
@@ -381,7 +381,7 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
                     else if (app_tws_is_right_side())
                     {
                         // TODO: stop local ringing
-                    }                  
+                    }
                 }
 
                 fp_ring_status.isLeftRinging = true;
@@ -390,8 +390,8 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
             }
             break;
         case 0:
-             if (IS_CONNECTED_WITH_TWS() && 
-                ((1 == fp_ring_status.isLeftRinging) && 
+             if (IS_CONNECTED_WITH_TWS() &&
+                ((1 == fp_ring_status.isLeftRinging) &&
                     (1 == fp_ring_status.isRightRinging)))
             {
                 // TODO: stop ringing on both sides
@@ -423,7 +423,7 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
                     else if (app_tws_is_right_side())
                     {
                         // TODO: stop local ringing
-                    }                  
+                    }
                 }
 
                 if (fp_ring_status.isLeftRinging)
@@ -436,9 +436,9 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
                     else if (app_tws_is_left_side())
                     {
                         // TODO: stop local ringing
-                    }                  
+                    }
                 }
-                
+
                 fp_ring_status.isLeftRinging = false;
                 fp_ring_status.isRightRinging = false;
 
@@ -456,8 +456,8 @@ static void fp_rfcomm_ring_request_handling(uint8_t* requestdata, uint16_t datal
     }
     else
     {
-        app_fp_msg_send_message_nak(FP_MSG_NAK_REASON_NOT_ALLOWED, 
-            FP_MSG_GROUP_DEVICE_ACTION, FP_MSG_DEVICE_ACTION_RING);        
+        app_fp_msg_send_message_nak(FP_MSG_NAK_REASON_NOT_ALLOWED,
+            FP_MSG_GROUP_DEVICE_ACTION, FP_MSG_DEVICE_ACTION_RING);
     }
 #endif
 }
@@ -482,11 +482,11 @@ static void fp_rfcomm_data_accumulator(uint8_t* ptr, uint16_t len)
 
     uint16_t msgTotalLen;
     FP_MESSAGE_STREAM_T* msgStream;
-    
+
     while (fp_accumulated_data_size >= FP_MESSAGE_RESERVED_LEN)
     {
         msgStream = (FP_MESSAGE_STREAM_T *)fp_accumulated_data_buf;
-        msgTotalLen = ((msgStream->dataLenHighByte << 8)|msgStream->dataLenLowByte) + 
+        msgTotalLen = ((msgStream->dataLenHighByte << 8)|msgStream->dataLenLowByte) +
             FP_MESSAGE_RESERVED_LEN;
         ASSERT(msgTotalLen < sizeof(fp_accumulated_data_buf),
             "Wrong fp msg len %d received!", msgTotalLen);
@@ -508,7 +508,7 @@ static void fp_rfcomm_data_handler(uint8_t* ptr, uint16_t len)
 {
     FP_MESSAGE_STREAM_T* pMsg = (FP_MESSAGE_STREAM_T *)ptr;
     uint16_t datalen = 0;
-    TRACE(2,"fp rfcomm receives msg group %d code %d", 
+    TRACE(2,"fp rfcomm receives msg group %d code %d",
         pMsg->messageGroup, pMsg->messageCode);
 
     switch (pMsg->messageGroup)
@@ -569,7 +569,7 @@ static void fp_rfcomm_connected_handler(void)
     }
 }
 
-static bool fp_rfcomm_callback(RFCOMM_EVENT_E event, 
+static bool fp_rfcomm_callback(RFCOMM_EVENT_E event,
     uint8_t instanceIndex, uint16_t connHandle,
     uint8_t* pBtAddr, uint8_t* pSentDataBuf, uint16_t sentDataLen)
 {
@@ -579,12 +579,12 @@ static bool fp_rfcomm_callback(RFCOMM_EVENT_E event,
         case RFCOMM_INCOMING_CONN_REQ:
         {
             TRACE(0,"Connected Indication RFComm device info:");
-            TRACE(2,"hci handle is 0x%x service index %d", 
+            TRACE(2,"hci handle is 0x%x service index %d",
                 connHandle, instanceIndex);
             if (pBtAddr)
             {
                 TRACE(0,"Bd addr is:");
-                DUMP8("%02x ", pBtAddr, 6);     
+                DUMP8("%02x ", pBtAddr, 6);
             }
 
             fp_rfcomm_connected_handler();
@@ -597,7 +597,7 @@ static bool fp_rfcomm_callback(RFCOMM_EVENT_E event,
               TRACE(0,"Bd addr is:");
               DUMP8("%02x ", pBtAddr, 6);
             }
-        
+
             fp_rfcomm_connected_handler();
             break;
         }
@@ -609,7 +609,7 @@ static bool fp_rfcomm_callback(RFCOMM_EVENT_E event,
             TRACE(1,"hci handle is 0x%x", connHandle);
 
             TRACE(1,"::RFCOMM_DISCONNECTED %d", event);
-            
+
             fp_rfcomm_service.isConnected = false;
             fp_rfcomm_reset_tx_buf();
             break;
@@ -694,7 +694,7 @@ bt_status_t app_fp_rfcomm_init(void)
         }
 
         fp_rfcomm_service.isRfcommInitialized = true;
-        
+
         RFCOMM_CONFIG_T tConfig;
         tConfig.callback = fp_rfcomm_callback;
         tConfig.tx_pkt_cnt = FP_RFCOMM_TX_PKT_CNT;
@@ -707,9 +707,9 @@ bt_status_t app_fp_rfcomm_init(void)
         int8_t index = app_rfcomm_open(&tConfig);
 
         if (-1 == index)
-        {            
+        {
             TRACE(0,"fast pair rfcomm open failed");
-            return BT_STS_FAILED;           
+            return BT_STS_FAILED;
         }
 
         fp_rfcomm_service.isConnected = false;
@@ -821,7 +821,7 @@ static __attribute__((unused)) void app_fp_msg_send_active_components_rsp(void)
     else
     {
         if (app_tws_is_left_side())
-        {   
+        {
             req.data[0] = FP_MSG_LEFT_BUD_ACTIVE;
         }
         else

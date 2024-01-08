@@ -79,7 +79,7 @@ extern struct message_t recv_msg;
 /**
  * @brief
  * Data transmission will be slightly slower in sniff mode. PC Tool may disconnet SPP connection
- * because of command response timed out. We should always in active mode to work around this case. 
+ * because of command response timed out. We should always in active mode to work around this case.
  */
 extern void anc_data_buff_init(void);
 extern void anc_data_buff_deinit(void);

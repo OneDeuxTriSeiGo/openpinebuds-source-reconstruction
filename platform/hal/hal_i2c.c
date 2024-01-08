@@ -2295,7 +2295,7 @@ unsigned char I2C_WriteByte(unsigned char reg, unsigned char data)
 
     buff[0] = reg;
     buff[1] = data;
-    
+
     result = hal_gpio_i2c_simple_send((unsigned char)touch_ic_device_addr,buff,2);
     return result;
 }
@@ -2303,7 +2303,7 @@ unsigned char I2C_WriteByte(unsigned char reg, unsigned char data)
 unsigned char I2C_ReadByte(unsigned char reg, unsigned char* data)
 {
     unsigned char result;
-    
+
     result = hal_gpio_i2c_simple_recv((unsigned char)touch_ic_device_addr,&reg,1,data,1);
 
     return result;
@@ -2368,7 +2368,7 @@ int app_i2c_demo_init(void)
         0,
     };
     hal_gpio_i2c_open(&i2c_cfg);
- 
+
     return 0;
 }
 

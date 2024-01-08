@@ -113,14 +113,14 @@ void tota_write_flash_test(uint32_t startAddr, uint8_t * dataBuf, uint32_t dataL
     TOTA_LOG_DBG(4,"-- %u %u %u %u --", s1, s2, s3, s4);
     TOTA_LOG_DBG(2,"flush %d bytes to flash addr 0x%x", dataLen, startAddr);
     TOTA_LOG_DBG(1,"data: %s", (char *)dataBuf);
-    
+
     lock=int_lock_global();
     pmu_flash_write_config();
     hal_norflash_erase(HAL_NORFLASH_ID_0, (uint32_t)(startAddr), FLASH_SECTOR_SIZE_IN_BYTES);
     hal_norflash_write(HAL_NORFLASH_ID_0, (uint32_t)(startAddr), dataBuf, dataLen);
     pmu_flash_read_config();
     int_unlock_global(lock);
-    
+
     uint8_t * pbuf = (uint8_t*)startAddr;
     for ( uint32_t i = 0; i < dataLen; i ++ )
     {
@@ -240,18 +240,18 @@ static bool _write_flash_with_crc_check(uint32_t startAddr, uint8_t * dataBuf, u
     {
         exist_bytes = sector_size - post_bytes;
         memcpy(sector_buffer, (uint8_t*)(base2+post_bytes), exist_bytes);
-        
+
         lock=int_lock_global();
         pmu_flash_write_config();
-        
+
         hal_norflash_erase(HAL_NORFLASH_ID_0, base2, FLASH_SECTOR_SIZE_IN_BYTES);
         hal_norflash_write(HAL_NORFLASH_ID_0, base2, dataBuf+(base2-startAddr), post_bytes);
         hal_norflash_write(HAL_NORFLASH_ID_0, base2+post_bytes, sector_buffer, exist_bytes);
-        
+
         pmu_flash_read_config();
         int_unlock_global(lock);
     }
-    
+
     // read and check crc
     const uint32_t read_size = 1024;
     uint8_t  read_buffer[read_size];
@@ -338,13 +338,13 @@ static void _erase_flash(uint32_t startAddr, uint32_t dataLen)
     {
         exist_bytes = sector_size - post_bytes;
         memcpy(sector_buffer, (uint8_t*)(base2+post_bytes), exist_bytes);
-        
+
         lock=int_lock_global();
         pmu_flash_write_config();
-        
+
         hal_norflash_erase(HAL_NORFLASH_ID_0, base2, FLASH_SECTOR_SIZE_IN_BYTES);
         hal_norflash_write(HAL_NORFLASH_ID_0, base2+post_bytes, sector_buffer, exist_bytes);
-        
+
         pmu_flash_read_config();
         int_unlock_global(lock);
     }

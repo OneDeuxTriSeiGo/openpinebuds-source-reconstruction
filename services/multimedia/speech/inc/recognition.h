@@ -25,10 +25,10 @@
 #define VOICE_RECOGNITION_MODE_NUM_MAX (8)
 
 typedef struct{
-    vad_t vad;    
+    vad_t vad;
     mfcc_t mfcc;
     mfcc_vct_t mfcc_vct;
-    int tag;   
+    int tag;
     short in_tmp[VOICE_RECOGNITION_NN * 2 + VOICE_RECOGNITION_OVLP];
     int dis_thr;
     mfcc_vct_t *mode[VOICE_RECOGNITION_MODE_NUM_MAX];

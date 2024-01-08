@@ -2716,14 +2716,14 @@ uint8_t a2dp_get_current_codec_type(uint8_t *elements)
 {
     uint8_t current_codec_type = 0;
 
-    TRACE(4,"INFO element[0]:0x%x, element[1]:0x%x, element[2]:0x%x, element[3]:0x%x", 
+    TRACE(4,"INFO element[0]:0x%x, element[1]:0x%x, element[2]:0x%x, element[3]:0x%x",
         elements[0], elements[1],elements[2], elements[3]);
 
 #if defined(A2DP_LHDC_ON)
-    TRACE(4,"LHDC element[0]:0x%x, element[1]:0x%x, element[2]:0x%x, element[3]:0x%x", 
+    TRACE(4,"LHDC element[0]:0x%x, element[1]:0x%x, element[2]:0x%x, element[3]:0x%x",
         a2dp_codec_lhdc_elements[0], a2dp_codec_lhdc_elements[1],
         a2dp_codec_lhdc_elements[2], a2dp_codec_lhdc_elements[3]);
-        
+
     if (!(strncmp((char*)elements, (char*)&a2dp_codec_lhdc_elements, 4)))
     {
         TRACE(0,"USE codec type is LHDC");
@@ -2732,10 +2732,10 @@ uint8_t a2dp_get_current_codec_type(uint8_t *elements)
 #endif
 
 #if defined(A2DP_LDAC_ON)
-    TRACE(4,"LDAC element[0]:0x%x, element[1]:0x%x, element[2]:0x%x, element[3]:0x%x", 
+    TRACE(4,"LDAC element[0]:0x%x, element[1]:0x%x, element[2]:0x%x, element[3]:0x%x",
         a2dp_codec_ldac_elements[0], a2dp_codec_ldac_elements[1],
         a2dp_codec_ldac_elements[2], a2dp_codec_ldac_elements[3]);
-        
+
     if (!(strncmp((char*)elements, (char*)&a2dp_codec_ldac_elements, 4)))
     {
         TRACE(0,"USE codec type is LDAC");
@@ -3496,7 +3496,7 @@ extern "C" void a2dp_callback(a2dp_stream_t *Stream, const a2dp_callback_parms_t
             setconfig_codec.elemLen = Info->p.codec->elemLen;
             setconfig_codec.elements = tmp_element;
             memset(tmp_element, 0, sizeof(tmp_element));
-            
+
             DUMP8("%02x ", (setconfig_codec.elements), 8);
             if(Info->p.codec->codecType == BTIF_AVDTP_CODEC_TYPE_SBC){
                 setconfig_codec.elements[0] = (Info->p.codec->elements[0]) & (a2dp_codec_elements[0]);

@@ -303,7 +303,7 @@ __STATIC __INLINE uint16_t co_read16p(void const *ptr16)
  * @return The 24 bits value.
  ****************************************************************************************
  */
- 
+
 __STATIC __INLINE uint32_t co_read24p(void const *ptr24)
 {
     uint16_t addr_l, addr_h;
@@ -319,7 +319,7 @@ __STATIC __INLINE uint32_t co_read24p(void const *ptr24)
  * @param[in] value The value to write.
  ****************************************************************************************
  */
- 
+
 __STATIC __INLINE void co_write24p(void const *ptr24, uint32_t value)
 {
     uint8_t *ptr=(uint8_t*)ptr24;

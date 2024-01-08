@@ -364,7 +364,7 @@ inline int sco_parse_synchronization_header(uint8_t *buf, uint8_t *sn)
 #define SAMPLES_LEN_PER_FRAME (120)
 #define MSBC_LEN_PER_FRAME (57+3)
 
-#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST2001) 
+#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A) || defined(CHIP_BEST2001)
 #define MSBC_MUTE_PATTERN (0x5555)
 #else
 #define MSBC_MUTE_PATTERN (0x0000)

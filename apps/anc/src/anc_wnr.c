@@ -78,7 +78,7 @@ typedef short   WNR_PCM_T;
 #define _PERIOD        (12)
 #define _TARGET_TIME   (4)
 
-//#define TEST_MIPS 
+//#define TEST_MIPS
 #ifdef TEST_MIPS
     static uint32_t pre_ticks = 0;
     static uint32_t start_ticks = 0;
@@ -209,7 +209,7 @@ void anc_gain_tuning_init(void)
 }
 
 static void anc_tuning_ff_gain_timer_timeout(void *param)
-{   
+{
     timer_cnt++;
     int32_t ff_gain_l=0;
     int32_t ff_gain_r=0;
@@ -222,8 +222,8 @@ static void anc_tuning_ff_gain_timer_timeout(void *param)
             pre_ff_gain_l = pre_ff_gain_l - 1;
             ff_gain_l = pre_ff_gain_l;
         }
-            
-        
+
+
         if(pre_ff_gain_r<tgt_ff_gain_r){
             pre_ff_gain_r = pre_ff_gain_r + 1;
             ff_gain_r = pre_ff_gain_r;
@@ -281,9 +281,9 @@ static void _set_anc_ff_gain(bool update_anc_gain, float gain_coef, enum ANC_TYP
     delta_ff_gain_l = abs(tgt_ff_gain_l-pre_ff_gain_l);
     delta_ff_gain_r = abs(tgt_ff_gain_r-pre_ff_gain_r);
     TRACE(3,"[%s] tgt_ff_gain_l = %d, tgt_ff_gain_r = %d.", __func__, tgt_ff_gain_l, tgt_ff_gain_r);
-    
+
     timer_cnt=0;
-        
+
     //timer restart
     hwtimer_start(c->timer_ff_gain_id, MS_TO_TICKS(ANC_TIMER_PERIOD_GAIN));
     c->timer_ff_gain_run = 1;
@@ -307,7 +307,7 @@ int32_t anc_wnr_ctrl(int32_t sample_rate, int32_t frame_len)
     TRACE(3,"[%s] sample_rate = %d, frame_len = %d", __func__, sample_rate, frame_len);
 
     g_sample_rate = sample_rate;
-    g_frame_len = frame_len;    
+    g_frame_len = frame_len;
 
     if (g_sample_rate == 16000) {
         g_frame_len >>= 1;
@@ -468,7 +468,7 @@ static void app_wnr_share_module_info(void)
     buf[0] = IBRT_ACTION_SYNC_WNR;
     buf[1] = (uint8_t)APP_WNR_SHARE_MODULE_INFO;
     buf[2] = (uint8_t)g_local_Wind_module_onoff;
-    
+
     app_ibrt_ui_send_user_action(buf, 3);
 }
 void app_wnr_sync_state(void)
@@ -483,7 +483,7 @@ void app_wnr_sync_state(void)
     g_wnr_request_flag = false;
     g_peer_Wind_module_onoff = false;
     g_peer_Windstate = 0;
-    
+
     if(g_local_Wind_module_onoff == true)
     {
         g_wnr_sync_flag = true;
@@ -532,17 +532,17 @@ static void app_wnr_sync_timer_handler(void const *param)
 static void app_wnr_notify_detect_result(void)
 {
     uint8_t buf[3] = {0};
-    
+
 #if(WNR_SYNC_DEBUG_LOG == 1)
     TRACE(2,"[%s] local_Windstate:%d", __func__, g_local_Windstate);
 #endif
     g_wnr_sync_flag = false;
     g_wnr_notify_flag = true;
-    
+
     buf[0] = IBRT_ACTION_SYNC_WNR;
     buf[1] = (uint8_t)APP_WNR_NOTIFY_DETECT_RESULT;
     buf[2] = g_local_Windstate;
-    
+
     app_ibrt_ui_send_user_action(buf, 3);
 }
 static void app_wnr_request_detect_result(void)
@@ -554,11 +554,11 @@ static void app_wnr_request_detect_result(void)
 #endif
     g_wnr_sync_flag = false;
     g_wnr_request_flag = true;
-    
+
     buf[0] = IBRT_ACTION_SYNC_WNR;
     buf[1] = (uint8_t)APP_WNR_REQUEST_DETECT_RESULT;
     buf[2] = g_local_Windstate;
-    
+
     app_ibrt_ui_send_user_action(buf, 3);
 }
 static void app_wnr_response_detect_result(uint32_t arg0)
@@ -586,7 +586,7 @@ static void app_wnr_response_detect_result(uint32_t arg0)
     buf[0] = IBRT_ACTION_SYNC_WNR;
     buf[1] = (uint8_t)APP_WNR_RESPONSE_DETECT_RESULT;
     buf[2] = g_local_Windstate;
-    
+
     app_ibrt_ui_send_user_action(buf, 3);
 }
 static void app_wnr_process_detect_result(uint32_t arg0)
@@ -908,10 +908,10 @@ int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
         return 0;
     }
     TRACE(4,"[%s] mode = %d, g_sample_rate = %d, g_frame_len = %d", __func__, mode, g_sample_rate, g_frame_len);
-    
+
     hal_sysfreq_req(APP_SYSFREQ_USER_ANC_WNR, HAL_CMU_FREQ_26M);
     TRACE(2,"[%s] Sys freq: %d", __func__, hal_sys_timer_calc_cpu_freq(5, 0));
-    
+
     app_wnr_reset_state_queue();
     app_set_threadhandle(APP_MODUAL_WNR, app_wnr_internal_event_process);
     g_local_Wind_module_onoff = true;
@@ -946,14 +946,14 @@ int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
         _open_mic();
 
         //audio_dump_init(_FRAME_LEN, sizeof(short), 2);
-        
+
     } else if (mode == ANC_WNR_OPEN_MODE_CONFIGURE) {
         g_wnr_open_mode = ANC_WNR_OPEN_MODE_CONFIGURE;//sco mode...
         wnr_sync_counter_for_sco = 0;
         wnr_sync_counter_for_normal = 0;
         ASSERT(g_sample_rate == 8000 || g_sample_rate == 16000, "[%s] g_sample_rate(%d) is invalid.", __func__, g_sample_rate);
         ASSERT(g_frame_len == 60 || g_frame_len == 120, "[%s] g_frame_len(%d) is invalid.", __func__, g_frame_len);
-        
+
         wind_st = WindDetection2Mic_create(_SAMPLE_RATE,_SAMPLE_BITS, g_frame_len, &wind_cfg);
 
         //audio_dump_init(g_frame_len, sizeof(int), 2);
@@ -961,21 +961,21 @@ int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
     } else {
         ASSERT(0, "[%s] mode(%d) is invalid.", __func__, mode);
     }
-    
+
 #ifndef HW_SUPPORT_SMOOOTHING_GAIN
     anc_gain_tuning_init();
 
     struct anc_tuning_ctrl *c = &anc_tctrl;
-   
+
     if (!c->timer_init) {
         c->timer_ff_gain_id = hwtimer_alloc(anc_tuning_ff_gain_timer_timeout, (void *)c);
         c->timer_ff_gain_run = 0;
         c->timer_init = 1;
     }
 #endif
-    
+
     g_open_mode = mode;
-    
+
 
     TRACE(1,"[%s] End...", __func__);
     wnr_open_flg = 1;
@@ -985,7 +985,7 @@ int32_t anc_wnr_open(anc_wnr_open_mode_t mode)
 int32_t anc_wnr_close(void)
 {
     TRACE(1,"[%s] ...", __func__);
-    
+
 #ifndef HW_SUPPORT_SMOOOTHING_GAIN
     struct anc_tuning_ctrl *c = &anc_tctrl;
     if (c->timer_ff_gain_run) {
@@ -994,7 +994,7 @@ int32_t anc_wnr_close(void)
     hwtimer_free(c->timer_ff_gain_id);
     c->timer_init = 0;
 #endif
-    
+
     if (g_open_mode == ANC_WNR_OPEN_MODE_STANDALONE) {
         _close_mic();
         g_open_mode = ANC_WNR_OPEN_MODE_QTY;
@@ -1045,9 +1045,9 @@ static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t fr
     //short targettimer = _TARGET_TIME;
     float windictor = 0.0;
     float wind_power;
-    
+
     ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
-    
+
     if(cnt<=_PERIOD)
     {
 #if _SAMPLE_BITS==16
@@ -1064,11 +1064,11 @@ static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t fr
     if(cnt==period)
     {
          cnt = 0;
-         wind_indictor = 0.8 * wind_indictor + 0.2 * windsum/period; 
+         wind_indictor = 0.8 * wind_indictor + 0.2 * windsum/period;
          windsum = 0.0;
-         
+
         //TRACE(2,"[%s] wind_indictor = %d.", __func__, (int)(wind_indictor*1000));
-           
+
        //float gain_coef;
 
        static uint8_t Windstate = 0;
@@ -1085,7 +1085,7 @@ static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t fr
 
 
       //TRACE(2,"[%s] windstate = %d.", __func__, Windstate);
-      
+
            app_wnr_push_state_to_queue(g_wnr_open_mode, Windstate);
 
             if(g_wnr_open_mode == ANC_WNR_OPEN_MODE_STANDALONE)
@@ -1109,7 +1109,7 @@ static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t fr
                             app_wnr_trigger_internal_event(APP_WNR_REQUEST_DETECT_RESULT, 0, 0, 0);
                         return 0;
                     }
-                    
+
                     if((app_tws_ibrt_tws_link_connected() == true) && (p_ibrt_ctrl->nv_role == IBRT_SLAVE) && (g_wnr_sync_flag == true))
                     {
 #if(WNR_SYNC_DEBUG_LOG == 1)
@@ -1172,7 +1172,7 @@ static int32_t anc_wnr_process_frame(WNR_PCM_T *inF, WNR_PCM_T *inR, uint32_t fr
                             app_wnr_trigger_internal_event(APP_WNR_REQUEST_DETECT_RESULT, 0, 0, 0);
                         return 0;
                     }
-                    
+
                     if((app_tws_ibrt_tws_link_connected() == true) && (p_ibrt_ctrl->nv_role == IBRT_SLAVE) && (g_wnr_sync_flag == true))
                     {
 #if(WNR_SYNC_DEBUG_LOG == 1)
@@ -1266,7 +1266,7 @@ int32_t anc_wnr_process(void *pcm_buf, uint32_t pcm_len)
     TRACE(2,"[%s] pcm_len = %d", __func__, pcm_len);
 
     //audio_dump_clear_up();
-    
+
     WNR_PCM_T *tmp_buf= (WNR_PCM_T *)pcm_buf;
     if (g_open_mode != ANC_WNR_OPEN_MODE_CONFIGURE) {
         return 1;
@@ -1276,10 +1276,10 @@ int32_t anc_wnr_process(void *pcm_buf, uint32_t pcm_len)
     if (g_sample_rate == 16000) {
         stereo_resample_16k(tmp_buf, pcm_len, (WNR_PCM_T *)af_stream_mic1, (WNR_PCM_T *)af_stream_mic2);
         // 2ch --> 1ch, 16k --> 8k
-        pcm_len = pcm_len / _CHANNEL_NUM / 2;   
+        pcm_len = pcm_len / _CHANNEL_NUM / 2;
     }
     else{
-        
+
         WNR_PCM_T *mic1 = (WNR_PCM_T *)af_stream_mic1;
         WNR_PCM_T *mic2 = (WNR_PCM_T *)af_stream_mic2;
         pcm_len = pcm_len / _CHANNEL_NUM;
@@ -1289,7 +1289,7 @@ int32_t anc_wnr_process(void *pcm_buf, uint32_t pcm_len)
        }
 
     }
-    
+
     //TRACE(2,"[%s] new pcm_len = %d", __func__, pcm_len);
 
     anc_wnr_process_frame((WNR_PCM_T *)af_stream_mic1, (WNR_PCM_T *)af_stream_mic2, pcm_len);
@@ -1313,17 +1313,17 @@ static uint32_t anc_wnr_callback(uint8_t *buf, uint32_t len)
 
     WNR_PCM_T *mic1 = (WNR_PCM_T *)af_stream_mic1;
     WNR_PCM_T *mic2 = (WNR_PCM_T *)af_stream_mic2;
-    
+
     for(int32_t j=0; j<_LOOP_CNT; j++){
         for (int32_t i=0; i<frame_len; i++) {
             mic1[i] = pcm_buf[_CHANNEL_NUM*i + 0];
             mic2[i] = pcm_buf[_CHANNEL_NUM*i + 1];
             }
-        
+
         anc_wnr_process_frame((WNR_PCM_T *)mic1, (WNR_PCM_T *)mic2, frame_len);
         pcm_buf +=  _FRAME_LEN *  _CHANNEL_NUM;
     }
-    
+
 #ifdef TEST_MIPS
         end_ticks = hal_fast_sys_timer_get();
         used_mips = (end_ticks - start_ticks) * 1000 / (start_ticks - pre_ticks);
@@ -1332,7 +1332,7 @@ static uint32_t anc_wnr_callback(uint8_t *buf, uint32_t len)
         //TRACE(2,"[%s] WNR frame takes %d ms.", __func__, FAST_TICKS_TO_MS((start_ticks - pre_ticks)*100));
         pre_ticks = start_ticks;
 #endif
-    
+
 
     return len;
 }
@@ -1342,7 +1342,7 @@ static void _open_mic(void)
     struct AF_STREAM_CONFIG_T stream_cfg;
 
     TRACE(1,"[%s] ...", __func__);
-    
+
     memset(&stream_cfg, 0, sizeof(stream_cfg));
     stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)_CHANNEL_NUM;
     stream_cfg.sample_rate = (enum AUD_SAMPRATE_T)_SAMPLE_RATE;

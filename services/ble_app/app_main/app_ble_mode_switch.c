@@ -1031,7 +1031,7 @@ void app_ble_start_connect(uint8_t *bdAddrToConnect)
 
 bool app_ble_is_connection_on(uint8_t index)
 {
-    return (BLE_CONNECTED == 
+    return (BLE_CONNECTED ==
         bleModeEnv.bleEnv->context[index].connectStatus);
 }
 

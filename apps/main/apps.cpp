@@ -551,7 +551,7 @@ if(((last_voice_waring == APP_STATUS_INDICATION_POWERON)&&(status == APP_STATUS_
                 break;
         }
     }
-    
+
     uint16_t aud_pram = 0;
     if (isMerging){
         aud_pram |= PROMOT_ID_BIT_MASK_MERGING;
@@ -1306,7 +1306,7 @@ void app_ibrt_ui_test_mtu_change_sync_notify(void)
    if(!latency_mode_is_open)
     {
         avdtp_playback_delay_sbc_mtu = 32;
-        avdtp_playback_delay_aac_mtu = 3; 
+        avdtp_playback_delay_aac_mtu = 3;
         app_ibrt_if_force_audio_retrigger_slave_sync();
     }
     else
@@ -1321,21 +1321,21 @@ void app_ibrt_ui_test_mtu_change_sync_notify(void)
 
 static void low_latlatency_delay_switchfun(const void *)
 {
-    extern volatile uint8_t avdtp_playback_delay_sbc_mtu;    
-    extern volatile uint8_t avdtp_playback_delay_aac_mtu; 
+    extern volatile uint8_t avdtp_playback_delay_sbc_mtu;
+    extern volatile uint8_t avdtp_playback_delay_aac_mtu;
 
     latency_mode_is_open = !latency_mode_is_open;
     if(latency_mode_is_open){
         avdtp_playback_delay_sbc_mtu = 32;
-        avdtp_playback_delay_aac_mtu = 3;    
-        TRACE(3,"%s latency_mode_is_open!!",__func__);  
-    }else{   
-        avdtp_playback_delay_sbc_mtu = 50;         
-        avdtp_playback_delay_aac_mtu = 6;    
-        TRACE(3,"%s latency_mode_is_close!!",__func__);  
-    }  
+        avdtp_playback_delay_aac_mtu = 3;
+        TRACE(3,"%s latency_mode_is_open!!",__func__);
+    }else{
+        avdtp_playback_delay_sbc_mtu = 50;
+        avdtp_playback_delay_aac_mtu = 6;
+        TRACE(3,"%s latency_mode_is_close!!",__func__);
+    }
     app_ibrt_if_force_audio_retrigger();
-    app_ibrt_customif_test3_cmd_send(&latency_mode_is_open,1); 
+    app_ibrt_customif_test3_cmd_send(&latency_mode_is_open,1);
 }
 
 void startlow_latlatency_delay_switch(int ms)
@@ -1356,17 +1356,17 @@ void stoplow_latlatency_delay_switch(void)
 
 
 void app_latency_switch_key_handler(void)
-{ 
+{
 
     if((btif_me_get_activeCons() > 0)&&(app_bt_device.hfchan_call[BT_DEVICE_ID_1] == BTIF_HF_CALL_NONE)&&(app_bt_device.hfchan_callSetup[BT_DEVICE_ID_1] == BTIF_HF_CALL_SETUP_NONE))
-    {  
+    {
         if(latency_mode_is_open){
             app_voice_report(APP_STATUS_INDICATION_ALEXA_STOP,0);//close latlatency mode
         }else{
             app_voice_report(APP_STATUS_INDICATION_ALEXA_START,0);//close latlatency mode
         }
         startlow_latlatency_delay_switch(1500);
-    } 
+    }
 }
 
 void app_key_init(void)
@@ -1410,7 +1410,7 @@ bool enterpairing_flag = false;
 bool IsTwsLinkdiscon = false;
 bool reconnect_fail_fail_flag= false;
 static void app_enterpairing_timehandler(void const *param);
-osTimerDef (APP_ENTERPAIRING_TIMER, app_enterpairing_timehandler); 
+osTimerDef (APP_ENTERPAIRING_TIMER, app_enterpairing_timehandler);
 static osTimerId enterpairing_timer = NULL;
 static void app_enterpairing_timehandler(void const *param)
 {
@@ -1435,7 +1435,7 @@ static void app_enterpairing_timehandler(void const *param)
         TRACE(3,"xqd---log:return evt 2!!!\n");
         return;
     }
-    
+
     if (app_ibrt_ui_get_enter_pairing_mode()) {
         TRACE(3,"xqd---log:return evt 3!!!\n");
         if((IBRT_UNKNOW != p_ibrt_ctrl->nv_role)&&(nv_record_get_paired_dev_count()>=2)){
@@ -1444,11 +1444,11 @@ static void app_enterpairing_timehandler(void const *param)
         app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
         return;
     }
-    
+
     if(app_tws_ibrt_tws_link_connected() && (p_ibrt_ctrl->current_role == IBRT_MASTER))
     {
         TRACE(3,"xqd---log:return evt 4!!!\n");
-        
+
         //p_ui_ctrl->config.enter_pairing_on_reconnect_mobile_failed = true;
         //p_ui_ctrl->config.nv_slave_enter_pairing_on_mobile_disconnect = true;
         //app_ibrt_if_enter_freeman_pairing();
@@ -1470,7 +1470,7 @@ static void app_enterpairing_timehandler(void const *param)
         app_ibrt_ui_judge_scan_type(IBRT_CONNECTE_TRIGGER, MOBILE_LINK, 0);
         app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
     }
-    
+
 }
 void app_enterpairing_timer_start(void)
 {
@@ -1479,7 +1479,7 @@ void app_enterpairing_timer_start(void)
     if(p_ibrt_ctrl->nv_role == IBRT_UNKNOW)return;
 
     enterpairing_flag = true;
-    
+
     osTimerStop(enterpairing_timer);
     osTimerStart(enterpairing_timer, 11000);
 }
@@ -1495,7 +1495,7 @@ void app_enterpairing_timer_open(void)
     {
         enterpairing_timer = osTimerCreate (osTimer(APP_ENTERPAIRING_TIMER), osTimerOnce, (void *)0);
     }
-        
+
 }
 extern bool IsMobileLinkLossing;
 extern bool IsTwsLinkLossing;
@@ -1561,7 +1561,7 @@ static void Auto_Shutdowm_Timerfun(const void *)
         if((!app_device_bt_is_connected())&& p_ibrt_ctrl->current_role != BTIF_BCR_SLAVE)
         {
             auto_shutdown_cnt++;
-            if(auto_shutdown_cnt == Auto_Shutdowm_TIME/5) 
+            if(auto_shutdown_cnt == Auto_Shutdowm_TIME/5)
             {
                 TRACE(0,"xqd---shutdown!!@@@@@@!!");
                 auto_shutdown_cnt = 0;
@@ -1581,7 +1581,7 @@ static void Auto_Shutdowm_Timerfun(const void *)
 
 #if(QXW_TOUCH_INEAR_DET)
     last_tws_con_status = app_tws_ibrt_tws_link_connected();
-#endif 
+#endif
 }
 
 void startAuto_Shutdowm_Timer(int ms)
@@ -1640,7 +1640,7 @@ static void once_delay_event_Timer_fun(const void *)
             }
             if((app_device_bt_is_connected()))return;
             app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
-            app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);  
+            app_voice_report(APP_STATUS_INDICATION_BOTHSCAN,0);
             if(p_ibrt_ctrl->nv_role == IBRT_MASTER)
             {
                 app_ibrt_if_enter_pairing_after_tws_connected();
@@ -1656,7 +1656,7 @@ static void once_delay_event_Timer_fun(const void *)
                         app_ibrt_ui_set_freeman_enable();
             }
             break;
-            
+
         case 4:
             if(!app_device_bt_is_connected()){
                 app_voice_report_generic(APP_STATUS_INDICATION_DISCONNECTED, 0,0);
@@ -1676,7 +1676,7 @@ static void once_delay_event_Timer_fun(const void *)
             break;
         default:
             break;
-        
+
     }
     once_event_case = 0;
 }
@@ -1705,7 +1705,7 @@ bool Curr_Is_Master(void)
     static ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
     if(p_ibrt_ctrl->current_role == IBRT_MASTER)
         return 1;
-    else 
+    else
         return 0;
 }
 
@@ -1714,7 +1714,7 @@ bool Curr_Is_Slave(void)
     static ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
     if(p_ibrt_ctrl->current_role == IBRT_SLAVE)
         return 1;
-    else 
+    else
         return 0;
 }
 
@@ -2036,7 +2036,7 @@ static void app_tell_battery_info_handler(uint8_t *batteryValueCount,
 void touch_evt_handler(enum HAL_GPIO_PIN_T pin)
 {
     TRACE(3,"SCL_TOUCH !!!!");
-    
+
     /*
     unsigned char  keyEventBUff0 ;
     unsigned char  keyEventBUff1 ;
@@ -2049,22 +2049,22 @@ void touch_evt_handler(enum HAL_GPIO_PIN_T pin)
     I2C_ReadByte(regaddr2,&keyEventBUff2);
     I2C_ReadByte(regaddr3,&keyEventBUff3);
     unsigned char   firstaddr;
-    
+
     I2C_ReadByte(decice_firstreg,&firstaddr);
     TRACE(3,"0X00 REG = 0x%x",firstaddr);
     unsigned char  keyEventBUff4byte[4] ;
     I2C_Read4Byte(regaddr0,keyEventBUff4byte);
-    
+
     I2C_ReadByte(0xC8,&temp);
     temp |= 0x01;
     I2C_WriteByte(0xC8,temp);
     TRACE(3,"REG0X40 = 0x%x, REG0X41 = 0x%x, REG0X42 = 0x%x, REG0X43 = 0x%x",keyEventBUff0,keyEventBUff1,keyEventBUff2,keyEventBUff3);
     TRACE(3,"keyEventBUff4BYTE :");
     DUMP8("0x%02x ",keyEventBUff4byte,4);
-    
+
     uint8_t  keyEventBUff0[4];
     uint8_t  keyEventBUff4[1];
-    
+
     touch_key_i2c_read(regaddr0,&keyEventBUff0[0],1);
     touch_key_i2c_read(regaddr1,&keyEventBUff0[1],1);
     touch_key_i2c_read(regaddr2,&keyEventBUff0[2],1);
@@ -2169,13 +2169,13 @@ void lhdc_license_check()
     uint8_t *lhdc_license_data=(uint8_t * )__lhdc_license_start + 0x98;
     TRACE(5,"lhdc_license_data:%p, lhdc license %02x %02x %02x %02x",lhdc_license_data,
             lhdc_license_data[0],lhdc_license_data[1],lhdc_license_data[2],lhdc_license_data[3]);
-            
+
     app_overlay_select(APP_OVERLAY_A2DP_LHDC);
     TRACE(1, "current_overlay = %d", app_get_current_overlay());
-    
+
     lhdc_license_key = lhdcSetLicenseKeyTable(lhdc_license_data, bes_bt_local_info_get);
     TRACE(0, "lhdc_license_key:%d", lhdc_license_key);
-    
+
     if(lhdc_license_key)
     {
         TRACE(0, "LHDC OK");
@@ -2375,7 +2375,7 @@ extern int rpc_service_setup(void);
         osDelay(500);
         TRACE(1,"gpio val is:%d \n\r",gpio_val);
     }
-    
+
 #ifdef WL_DET
     app_mic_alg_audioloop(true,APP_SYSFREQ_78M);
 #endif
@@ -2604,7 +2604,7 @@ extern int rpc_service_setup(void);
              app_gfps_set_battery_datatype(SHOW_UI_INDICATION);
 #endif
         osDelay(500);
-           
+
             switch (pwron_case) {
                 case APP_POWERON_CASE_CALIB:
                     break;

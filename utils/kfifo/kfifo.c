@@ -3,8 +3,8 @@
 #include "kfifo.h"
 #include "hal_trace.h"
 
-static int is_power_of_2(unsigned int n)  
-{  
+static int is_power_of_2(unsigned int n)
+{
     int r = 0;
     if (n != 0 && ((n & (n - 1)) == 0))
         r = 1;
@@ -23,7 +23,7 @@ void kfifo_init(struct kfifo *fifo, unsigned char *buffer, unsigned int len)
 unsigned int kfifo_put(struct kfifo *fifo, unsigned char *buffer, unsigned int len)
 {
     unsigned int l;
-    len = MIN(len, fifo->size - fifo->in + fifo->out); 
+    len = MIN(len, fifo->size - fifo->in + fifo->out);
     __sync_synchronize();
 
     l = MIN(len, fifo->size - (fifo->in & (fifo->size - 1)));

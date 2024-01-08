@@ -874,7 +874,7 @@ else
 		  --whole-archive)) \
 		  $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
 		  -Wl,--no-whole-archive $(LIB_LDFLAGS) $(LIB_LDFLAGS)
-		  
+
 endif
 quiet_cmd_link-IMAGE_FILE = LINK    $@
 

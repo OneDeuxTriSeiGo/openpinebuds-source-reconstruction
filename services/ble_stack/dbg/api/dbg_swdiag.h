@@ -762,10 +762,10 @@ enum dbg_swdiag
 
     DBG_SWDIAG_LLDFM_PROG_PUSH_OFFSET             = 2,
     DBG_SWDIAG_LLDFM_PROG_PUSH_MASK               = 0x04,
-     
+
     DBG_SWDIAG_LLDFM_INIT_OFFSET                  = 3,
     DBG_SWDIAG_LLDFM_INIT_MASK                    = 0x08,
-    
+
     DBG_SWDIAG_LLDFM_TX_ISR_OFFSET                = 4,
     DBG_SWDIAG_LLDFM_TX_ISR_MASK                  = 0x10,
 

@@ -12,7 +12,7 @@ subdir-ccflags-y += \
 	-Iservices/audio_dump/include \
 	-Ithirdparty/cyberon_lib/include \
 	-Ithirdparty/cyberon_lib/src \
-	-Iservices/multimedia/speech/inc	
+	-Iservices/multimedia/speech/inc
 
 ifeq ($(VD_TEST),1)
 subdir-ccflags-y += -DVD_TEST

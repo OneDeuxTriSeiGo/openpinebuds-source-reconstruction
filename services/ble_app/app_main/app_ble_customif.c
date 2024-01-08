@@ -112,7 +112,7 @@ void app_ble_customif_global_callback_handler_ind(ble_callback_evnet_t *event, v
    uint8_t evt_type = event->evt_type;
    uint16_t index = 0;
    const ble_callback_event_handler_t *p_ble_callback_event_hand = NULL;
-   
+
    for (index=0; index<BLE_EVENT_NUM_MAX; index++)
    {
        p_ble_callback_event_hand = &app_ble_customif_callback_event_handler_tab[index];

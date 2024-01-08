@@ -71,14 +71,14 @@ inline static void free_list(list_t *list)
 list_t *list_new(list_free_cb callback, list_mempool_zmalloc zmalloc, list_mempool_free free) {
   list_t *list = NULL;
   if (zmalloc){
-    list = (list_t *)zmalloc(sizeof(list_t));    
+    list = (list_t *)zmalloc(sizeof(list_t));
     if (list){
       list->mempool_functions.zmalloc = zmalloc;
       list->mempool_functions.free = free;
       list->free_cb = callback;
     }
   }else{
-    list = (list_t *)malloc_list();    
+    list = (list_t *)malloc_list();
     if (list){
       list->free_cb = callback;
     }
@@ -309,7 +309,7 @@ static list_node_t *list_free_node_(list_t *list, list_node_t *node) {
 
   if (list->free_cb)
     list->free_cb(node->data);
-  
+
   if (list->mempool_functions.free)
     list->mempool_functions.free(node);
   else

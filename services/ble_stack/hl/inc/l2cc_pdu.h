@@ -189,7 +189,7 @@ enum l2cc_security_code
     L2C_CODE_SIGNING_INFORMATION          = 0x0A,
     /// Security Request
     L2C_CODE_SECURITY_REQUEST             = 0x0B,
-    // Pairing Public Keys 
+    // Pairing Public Keys
     L2C_CODE_PUBLIC_KEY                   = 0x0C,
     // Pairing DHKey Check
     L2C_CODE_DHKEY_CHECK                  = 0x0D,

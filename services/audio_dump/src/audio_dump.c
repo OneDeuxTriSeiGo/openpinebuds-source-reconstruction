@@ -242,7 +242,7 @@ void data_dump_run(const char *str, void *data_buf, uint32_t data_len)
     int_ptr = (int32_t *)(buf_ptr + len);
     *int_ptr = 0;
     len += sizeof(int32_t);
-    
+
     data_dump_index++;
 
     // if (data_dump_index % 20 == 0)

@@ -77,7 +77,7 @@ const unsigned char a2dp_codec_lhdc_elements[A2DP_LHDC_OCTET_NUMBER] = {
     (A2DP_LHDC_SR_48000 | A2DP_LHDC_SR_44100) | (A2DP_LHDC_FMT_16 | A2DP_LHDC_FMT_24),
     (
 #if defined(IBRT)
-    A2DP_LHDC_LLC_ENABLE | 
+    A2DP_LHDC_LLC_ENABLE |
 #endif
     A2DP_LHDC_MAX_SR_400 | A2DP_LHDC_VERSION_NUM),
     (A2DP_LHDC_COF_CSC_DISABLE)

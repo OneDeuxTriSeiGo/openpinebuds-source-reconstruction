@@ -27,7 +27,7 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
- 
+
 #include "rwip_config.h"
 
 #if (BLE_ANC_CLIENT)
@@ -72,7 +72,7 @@ static uint8_t ancc_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
 
     ancc_env->prf_env.app_task = app_task
             | (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
-    ancc_env->prf_env.prf_task = env->task | 
+    ancc_env->prf_env.prf_task = env->task |
         (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
 
     // initialize environment variable
@@ -172,7 +172,7 @@ const struct prf_task_cbs* ancc_prf_itf_get(void)
 void ancc_enable_rsp_send(struct ancc_env_tag *ancc_env, uint8_t conidx, uint8_t status)
 {
     BLE_FUNC_ENTER();
-    
+
     //ASSERT(status == GAP_ERR_NO_ERROR, "%s error %d", __func__, status);
     if (status == GAP_ERR_NO_ERROR)
     {

@@ -204,7 +204,7 @@ TEXT_SSC_LOC static int a2dp_cp_scalable_mcu_decode(uint8_t * buffer, uint32_t b
     while ((node = a2dp_audio_list_begin(list)) != NULL) {
         decoder_frame_p = (a2dp_audio_scalable_decoder_frame_t *)
         a2dp_audio_list_node(node);
-        
+
         if (false == is_valid_frame(decoder_frame_p)) {
             return A2DP_DECODER_DECODE_ERROR;
         }
@@ -323,7 +323,7 @@ TEXT_SSC_LOC int a2dp_cp_scalable_cp_decode(void)
         /* decode one SSC frame */
         output_samples = ssc_decode(scalableDec_handle,(const unsigned char*)in_buf, ss_pcm_buff, SCALABLE_FRAME_SIZE, 0, 2);
         if (0 == output_samples)
-        {  
+        {
             a2dp_audio_scalable_decoder_reinit();
             TRACE(0, "scalable_decode reinin codec \n");
             error = A2DP_DECODER_DECODE_ERROR;
@@ -378,7 +378,7 @@ static int a2dp_audio_scalable_init(A2DP_AUDIO_OUTPUT_CONFIG_T * config, void *c
     decoder_size = ssc_decoder_get_size(output_config.num_channels); //todo:  get size with codec capability
 
     TRACE(0, "decoder size %d", decoder_size);
-    
+
     scalable_decoder_place = (unsigned char *)a2dp_audio_heap_malloc(decoder_size);
     ASSERT_A2DP_DECODER(scalable_decoder_place, "no memory resource for scalable_decoder_place");
 

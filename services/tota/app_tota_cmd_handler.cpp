@@ -18,7 +18,7 @@
 #include "hal_timer.h"
 #include "apps.h"
 #include "stdbool.h"
-#include "app_tota.h" 
+#include "app_tota.h"
 #include "app_tota_cmd_handler.h"
 #include "app_tota_cmd_code.h"
 //#include "rwapp_config.h"
@@ -59,7 +59,7 @@ static APP_TOTA_CMD_HANDLER_ENV_T tota_cmd_handler_env;
 osMutexDef(app_tota_cmd_handler_mutex);
 
 static void app_tota_cmd_handler_rsp_supervision_timer_cb(void const *n);
-osTimerDef (APP_TOTA_CMD_HANDLER_RSP_SUPERVISION_TIMER, app_tota_cmd_handler_rsp_supervision_timer_cb); 
+osTimerDef (APP_TOTA_CMD_HANDLER_RSP_SUPERVISION_TIMER, app_tota_cmd_handler_rsp_supervision_timer_cb);
 
 static void app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(uint16_t entryIndex);
 static void app_tota_cmd_handler_add_waiting_rsp_timeout_supervision(uint16_t entryIndex);
@@ -123,15 +123,15 @@ void app_tota_get_cmd_response_handler(APP_TOTA_CMD_CODE_E funcCode, uint8_t* pt
 
     APP_TOTA_CMD_RSP_T* rsp = (APP_TOTA_CMD_RSP_T *)ptrParam;
 
-    
+
     uint16_t entryIndex = app_tota_cmd_handler_get_entry_index_from_cmd_code((APP_TOTA_CMD_CODE_E)(rsp->cmdCodeToRsp));
     if (INVALID_TOTA_ENTRY_INDEX == entryIndex)
     {
         return;
     }
-    
+
     // remove the function code from the time-out supervision chain
-    app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(entryIndex);    
+    app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(entryIndex);
 
     APP_TOTA_CMD_INSTANCE_T* ptCmdInstance = TOTA_COMMAND_PTR_FROM_ENTRY_INDEX(entryIndex);
 
@@ -152,7 +152,7 @@ static void app_tota_cmd_refresh_supervisor_env(void)
 {
     // do nothing if no supervisor was added
     if (tota_cmd_handler_env.timeoutSupervisorCount > 0)
-    {   
+    {
         uint32_t currentTicks = GET_CURRENT_TICKS();
         uint32_t passedTicks;
         if (currentTicks >= tota_cmd_handler_env.lastSysTicks)
@@ -163,9 +163,9 @@ static void app_tota_cmd_refresh_supervisor_env(void)
         {
             passedTicks = (hal_sys_timer_get_max() - tota_cmd_handler_env.lastSysTicks + 1) + currentTicks;
         }
-        
+
         uint32_t deltaMs = TICKS_TO_MS(passedTicks);
-        
+
         APP_TOTA_CMD_WAITING_RSP_SUPERVISOR_T* pRspSupervisor = &(tota_cmd_handler_env.waitingRspTimeoutInstance[0]);
         for (uint32_t index = 0;index < tota_cmd_handler_env.timeoutSupervisorCount;index++)
         {
@@ -187,7 +187,7 @@ static void app_tota_cmd_refresh_supervisor_env(void)
  * @brief Remove the time-out supervision of waiting response
  *
  * @param entryIndex    Entry index of the command table
- * 
+ *
  */
 static void app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(uint16_t entryIndex)
 {
@@ -201,8 +201,8 @@ static void app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(uint16_t
     {
         if (tota_cmd_handler_env.waitingRspTimeoutInstance[index].entryIndex == entryIndex)
         {
-            memcpy(&(tota_cmd_handler_env.waitingRspTimeoutInstance[index]), 
-                &(tota_cmd_handler_env.waitingRspTimeoutInstance[index + 1]), 
+            memcpy(&(tota_cmd_handler_env.waitingRspTimeoutInstance[index]),
+                &(tota_cmd_handler_env.waitingRspTimeoutInstance[index + 1]),
                 (tota_cmd_handler_env.timeoutSupervisorCount - index - 1)*sizeof(APP_TOTA_CMD_WAITING_RSP_SUPERVISOR_T));
             break;
         }
@@ -213,8 +213,8 @@ static void app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(uint16_t
     {
         goto exit;
     }
-    
-    tota_cmd_handler_env.timeoutSupervisorCount--;  
+
+    tota_cmd_handler_env.timeoutSupervisorCount--;
 
     //TOTA_LOG_DBG(1,"decrease the supervisor timer to %d", tota_cmd_handler_env.timeoutSupervisorCount);
 
@@ -222,9 +222,9 @@ static void app_tota_cmd_handler_remove_waiting_rsp_timeout_supervision(uint16_t
     {
         // refresh supervisor environment firstly
         app_tota_cmd_refresh_supervisor_env();
-            
+
         // start timer, the first entry is the most close one
-        osTimerStart(tota_cmd_handler_env.supervisor_timer_id, 
+        osTimerStart(tota_cmd_handler_env.supervisor_timer_id,
             tota_cmd_handler_env.waitingRspTimeoutInstance[0].msTillTimeout);
     }
     else
@@ -241,7 +241,7 @@ exit:
  * @brief Add the time-out supervision of waiting response
  *
  * @param entryIndex    Index of the command entry
- * 
+ *
  */
 static void app_tota_cmd_handler_add_waiting_rsp_timeout_supervision(uint16_t entryIndex)
 {
@@ -282,7 +282,7 @@ static void app_tota_cmd_handler_add_waiting_rsp_timeout_supervision(uint16_t en
     {
         waitingRspTimeoutInstance[insertedIndex].entryIndex = entryIndex;
         waitingRspTimeoutInstance[insertedIndex].msTillTimeout = pInstance->timeoutWaitingRspInMs;
-        
+
         insertedIndex++;
     }
 
@@ -290,7 +290,7 @@ static void app_tota_cmd_handler_add_waiting_rsp_timeout_supervision(uint16_t en
     memcpy((uint8_t *)&(tota_cmd_handler_env.waitingRspTimeoutInstance), (uint8_t *)&waitingRspTimeoutInstance,
         insertedIndex*sizeof(APP_TOTA_CMD_WAITING_RSP_SUPERVISOR_T));
 
-    tota_cmd_handler_env.timeoutSupervisorCount = insertedIndex;    
+    tota_cmd_handler_env.timeoutSupervisorCount = insertedIndex;
 
     //TOTA_LOG_DBG(1,"increase the supervisor timer to %d", tota_cmd_handler_env.timeoutSupervisorCount);
 
@@ -307,7 +307,7 @@ static void app_tota_cmd_handler_add_waiting_rsp_timeout_supervision(uint16_t en
  *
  * @param ptrData       Pointer of the received data
  * @param dataLength    Length of the received data
- * 
+ *
  * @return APP_TOTA_CMD_RET_STATUS_E
  */
 APP_TOTA_CMD_RET_STATUS_E app_tota_cmd_received(uint8_t* ptrData, uint32_t dataLength)
@@ -315,7 +315,7 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_cmd_received(uint8_t* ptrData, uint32_t dataL
     TOTA_LOG_DBG(0,"TOTA Receive data:");
     TOTA_LOG_DUMP("0x%02x ", ptrData, dataLength);
     APP_TOTA_CMD_PAYLOAD_T* pPayload = (APP_TOTA_CMD_PAYLOAD_T *)ptrData;
-    
+
     // check command code
     if (pPayload->cmdCode >= OP_TOTA_COMMAND_COUNT || pPayload->cmdCode < OP_TOTA_STRING)
     {
@@ -330,7 +330,7 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_cmd_received(uint8_t* ptrData, uint32_t dataL
         return TOTA_PARAM_LEN_OUT_OF_RANGE;
     }
 
-    APP_TOTA_CMD_INSTANCE_T* pInstance = 
+    APP_TOTA_CMD_INSTANCE_T* pInstance =
         app_tota_cmd_handler_get_entry_pointer_from_cmd_code((APP_TOTA_CMD_CODE_E)(pPayload->cmdCode));
 
     // execute the command handler
@@ -346,7 +346,7 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_cmd_received(uint8_t* ptrData, uint32_t dataL
 static void app_tota_cmd_send(APP_TOTA_TRANSMISSION_PATH_E path, APP_TOTA_CMD_PAYLOAD_T* ptPayLoad)
 {
     TOTA_LOG_DBG(1,"Send tota cmd: size=%u", (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
-    TOTA_LOG_DUMP("%02x ", (uint8_t *)ptPayLoad, 
+    TOTA_LOG_DUMP("%02x ", (uint8_t *)ptPayLoad,
         (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
 
     app_tota_send_data_via_spp((uint8_t *)ptPayLoad, (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
@@ -355,42 +355,42 @@ static void app_tota_cmd_send(APP_TOTA_TRANSMISSION_PATH_E path, APP_TOTA_CMD_PA
     switch (path)
     {
         case APP_TOTA_VIA_SPP:
-            app_tota_send_cmd_via_spp((uint8_t *)ptPayLoad, 
+            app_tota_send_cmd_via_spp((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
             break;
-#ifdef BLE_TOTA_ENABLED  
+#ifdef BLE_TOTA_ENABLED
         case APP_TOTA_VIA_NOTIFICATION:
-            app_tota_send_notification((uint8_t *)ptPayLoad, 
+            app_tota_send_notification((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
             break;
         case APP_TOTA_VIA_INDICATION:
-            app_tota_send_indication((uint8_t *)ptPayLoad, 
+            app_tota_send_indication((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
             break;
 #endif
         case APP_TOTA_GEN_VIA_SPP:
-            app_tota_gen_send_cmd_via_spp((uint8_t *)ptPayLoad, 
+            app_tota_gen_send_cmd_via_spp((uint8_t *)ptPayLoad,
                 (uint32_t)(&(((APP_TOTA_CMD_PAYLOAD_T *)0)->param)) + ptPayLoad->paramLen);
         break;
         default:
             break;
-    }   
+    }
 #endif
 }
 
 /**
- * @brief Send response to the command request 
+ * @brief Send response to the command request
  *
  * @param responsedCmdCode  Command code of the responsed command request
  * @param returnStatus      Handling result
  * @param rspData           Pointer of the response data
  * @param rspDataLen        Length of the response data
  * @param path              Path of the data transmission
- * 
+ *
  * @return APP_TOTA_CMD_RET_STATUS_E
  */
 APP_TOTA_CMD_RET_STATUS_E app_tota_send_response_to_command
-    (APP_TOTA_CMD_CODE_E responsedCmdCode, APP_TOTA_CMD_RET_STATUS_E returnStatus, 
+    (APP_TOTA_CMD_CODE_E responsedCmdCode, APP_TOTA_CMD_RET_STATUS_E returnStatus,
     uint8_t* rspData, uint32_t rspDataLen, APP_TOTA_TRANSMISSION_PATH_E path)
 {
     TOTA_LOG_DBG(1,"[%s]",__func__);
@@ -431,10 +431,10 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_send_response_to_command
  * @param ptrParam  Pointer of the output parameter
  * @param paramLen  Length of the output parameter
  * @param path      Path of the data transmission
- * 
+ *
  * @return APP_TOTA_CMD_RET_STATUS_E
  */
-APP_TOTA_CMD_RET_STATUS_E app_tota_send_command(APP_TOTA_CMD_CODE_E cmdCode, 
+APP_TOTA_CMD_RET_STATUS_E app_tota_send_command(APP_TOTA_CMD_CODE_E cmdCode,
     uint8_t* ptrParam, uint32_t paramLen, APP_TOTA_TRANSMISSION_PATH_E path)
 {
     // check cmdCode's validity
@@ -452,7 +452,7 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_send_command(APP_TOTA_CMD_CODE_E cmdCode,
         TOTA_LOG_DBG(0, "TOTA_PARAM_LEN_OUT_OF_RANGE");
         return TOTA_PARAM_LEN_OUT_OF_RANGE;
     }
-    
+
     uint16_t entryIndex = app_tota_cmd_handler_get_entry_index_from_cmd_code(cmdCode);
     if (INVALID_TOTA_ENTRY_INDEX == entryIndex)
     {
@@ -476,10 +476,10 @@ APP_TOTA_CMD_RET_STATUS_E app_tota_send_command(APP_TOTA_CMD_CODE_E cmdCode,
         // may encrypt here
     }
 #endif
-    
+
     APP_TOTA_CMD_INSTANCE_T* pInstance = TOTA_COMMAND_PTR_FROM_ENTRY_INDEX(entryIndex);
 
-    // wrap the command payload 
+    // wrap the command payload
     payload.cmdCode = cmdCode;
     payload.paramLen = paramLen;
     memcpy(payload.param, ptrParam, paramLen);
@@ -504,7 +504,7 @@ void app_tota_cmd_handler_init(void)
 {
     memset((uint8_t *)&tota_cmd_handler_env, 0, sizeof(tota_cmd_handler_env));
 
-    tota_cmd_handler_env.supervisor_timer_id = 
+    tota_cmd_handler_env.supervisor_timer_id =
         osTimerCreate(osTimer(APP_TOTA_CMD_HANDLER_RSP_SUPERVISION_TIMER), osTimerOnce, NULL);
 
     tota_cmd_handler_env.mutex = osMutexCreate((osMutex(app_tota_cmd_handler_mutex)));

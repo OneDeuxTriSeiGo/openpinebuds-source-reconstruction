@@ -81,10 +81,10 @@ uint32_t voice_sbc_encode(uint8_t *input, uint32_t inputBytes, uint32_t* purchas
     {
         voice_sbc_init_encoder();
     }
-    
+
     btif_sbc_pcm_data_t PcmEncData;
     uint16_t outputSbcBytes, bytes_encoded;
-    
+
     PcmEncData.numChannels = voice_sbc_encoder.streamInfo.numChannels;
     PcmEncData.sampleFreq = voice_sbc_encoder.streamInfo.sampleFreq;
 
@@ -119,12 +119,12 @@ uint32_t voice_sbc_encode(uint8_t *input, uint32_t inputBytes, uint32_t* purchas
         btif_sbc_encode_frames(&voice_sbc_encoder, &PcmEncData, &bytes_encoded,
                                         output, &outputSbcBytes, 0xFFFF) ;
     }
-    
+
     TRACE(2,"Encode %d bytes PCM data into %d bytes SBC data.", inputBytes, outputSbcBytes);
     TRACE(1,"Consumed PCM data %d bytes", bytes_encoded);
-    
+
     *purchasedBytes = bytes_encoded;
-    
+
     return outputSbcBytes;
 }
 
@@ -142,11 +142,11 @@ uint32_t voice_sbc_decode(uint8_t* pcm_buffer, CQueue* encodedDataQueue, uint32_
     uint16_t byte_decode;
     int8_t ret;
     btif_sbc_pcm_data_t voice_PcmDecData;
-    
-get_again:    
+
+get_again:
     voice_PcmDecData.data = pcm_buffer+pcm_offset;
     voice_PcmDecData.dataLen = 0;
-    
+
     if (LengthOfCQueue(encodedDataQueue) > VOICE_SBC_ENCODED_DATA_SIZE_PER_FRAME)
     {
         sbcDataBytesToDecode = VOICE_SBC_ENCODED_DATA_SIZE_PER_FRAME;
@@ -155,12 +155,12 @@ get_again:
     {
         sbcDataBytesToDecode = LengthOfCQueue(encodedDataQueue);
     }
-    
+
     len1 = len2 = 0;
     r = PeekCQueue(encodedDataQueue, sbcDataBytesToDecode, &e1, &len1, &e2, &len2);
     if ((r == CQ_ERR) || (0 == len1)) {
         goto exit;
-    }   
+    }
 
     ret = btif_sbc_decode_frames(&voice_sbc_decoder, (unsigned char *)e1, len1, &byte_decode,
                 &voice_PcmDecData, expectedOutputSize-pcm_offset, voice_sbc_eq_band_gain);
@@ -170,18 +170,18 @@ get_again:
     TRACE(1,"voice_PcmDecData.dataLen %d", voice_PcmDecData.dataLen);
 
     DeCQueue(encodedDataQueue, 0, byte_decode);
-    
+
     pcm_offset += voice_PcmDecData.dataLen;
-    
+
     if (expectedOutputSize == pcm_offset)
     {
         goto exit;
     }
-    
+
     if ((ret == BT_STS_SDP_CONT_STATE) || (ret == BT_STS_SUCCESS))  {
         goto get_again;
     }
-    
+
 exit:
     TRACE(1,"Get pcm data size %d", pcm_offset);
     return pcm_offset;

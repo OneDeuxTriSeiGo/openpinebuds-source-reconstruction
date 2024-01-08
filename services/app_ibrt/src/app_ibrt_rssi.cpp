@@ -48,7 +48,7 @@ static void rssi_window_push(struct rssi_window_struct *p, int8_t data)
     {
         return;
     }
-    
+
     if(p->index < RSSI_WINDOW_SIZE)
     {
         for(uint8_t i=p->index; i>0; i--)
@@ -207,7 +207,7 @@ bool app_ibrt_ui_tws_switch_according_rssi_needed(void)
         (p_ibrt_ctrl->raw_rssi.rssi0 >= IBRT_UI_MIN_RSSI))
     {
         int8_t rssi_d_value_diff = p_ibrt_ctrl->peer_raw_rssi.rssi0 - p_ibrt_ctrl->raw_rssi.rssi0;
-        
+
         if(rssi_d_value_diff >= p_ibrt_ui->config.rssi_threshold)
         {
             //local RSSI is stronger than peer and local role is SLAVE
@@ -374,7 +374,7 @@ void app_ibrt_get_peer_mobile_rssi_rsp_handler(uint16_t rsp_seq, uint8_t *p_buff
             p_ibrt_ctrl->cur_buf_size = rssi_battery_info.cur_buf_size;
 
             app_ibrt_print_rssi_info();
-            
+
             if(p_ibrt_ui->config.tws_switch_according_to_rssi_value)
             {
                 bool need_roleswitch_with_rssi = app_ibrt_ui_tws_switch_according_rssi_needed();
@@ -393,7 +393,7 @@ void app_ibrt_get_peer_mobile_rssi_rsp_handler(uint16_t rsp_seq, uint8_t *p_buff
         {
             p_ibrt_ctrl->role_switch_debonce_time--;
         }
-    }   
+    }
 }
 
 void app_ibrt_rssi_get_stutter(uint8_t * data,uint32_t * data_len)

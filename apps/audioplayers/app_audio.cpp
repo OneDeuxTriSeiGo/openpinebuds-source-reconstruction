@@ -297,12 +297,12 @@ void app_audio_switch_flash_flush_req(void)
 
 static void app_audio_switch_flash_proc(void)
 {
-    // no need to do this across the audio switch, 
+    // no need to do this across the audio switch,
     // will use suspend flash erase to assure that no audio
     // irq is missing for handling caused by long time global irq disabling
     // during flash erase.
     // Just flash the nvrecord flash periodically
-    return; 
+    return;
 
     uint32_t lock;
     bool need_flush_flash = false;
@@ -584,7 +584,7 @@ void app_audio_list_playback_clear(void)
         if(audio_handle == NULL)
         {
             TRACE_AUD_HDL_I("[STREAM_LIST][CLR] find null\n ");
-            return; 
+            return;
         }
         if (audio_handle->id == APP_PLAY_BACK_AUDIO){
             list_remove(app_audio_conifg.audio_list, list_node(node));

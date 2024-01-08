@@ -103,7 +103,7 @@ static void hal_trace_fault_handler(void);
 
 #define TRACE_NEAR_FULL_THRESH          200
 
-#define TRACE_CRLF 
+#define TRACE_CRLF
 
 #ifdef TRACE_CRLF
 #define NEW_LINE_STR                    "\r\n"
@@ -1685,7 +1685,7 @@ static void NORETURN hal_trace_crash_end(void)
 #endif
 #endif
 #ifdef CRASH_REBOOT
-    
+
     hal_sw_bootmode_set(HAL_SW_BOOTMODE_REBOOT|HAL_SW_BOOTMODE_REBOOT_FROM_CRASH);
     hal_cmu_sys_reboot();
 #else
@@ -2797,7 +2797,7 @@ int hal_trace_rx_reopen()
 {
     hal_uart_reopen(trace_uart, &uart_rx_enable_cfg);
     hal_trace_rx_open();
-    
+
     return 0;
 }
 #endif

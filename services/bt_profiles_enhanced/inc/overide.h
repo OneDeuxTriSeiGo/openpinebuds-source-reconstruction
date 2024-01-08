@@ -85,7 +85,7 @@
                             XA_MODULE(AVRCP) \
                             XA_MODULE(HID)
 #endif
-#endif 
+#endif
                             /*      XA_MODULE(HF) \
                          XA_MODULE(OBEX) \
                             XA_MODULE(GOEP) \
@@ -197,14 +197,14 @@
 #endif
 //#define HCI_ACL_DATA_SIZE                         350
 #endif
-#ifndef _SCO_BTPCM_CHANNEL_        
+#ifndef _SCO_BTPCM_CHANNEL_
 #define HCI_SCO_DATA_SIZE                           180
 #else
 #define HCI_SCO_DATA_SIZE                           4
 #endif
 //#define HCI_NUM_ACL_BUFFERS                           (L2CAP_ERTM_RX_WIN_SIZE * L2CAP_NUM_ENHANCED_CHANNELS)
 #define HCI_NUM_ACL_BUFFERS                         6
-#ifndef _SCO_BTPCM_CHANNEL_        
+#ifndef _SCO_BTPCM_CHANNEL_
 #define HCI_NUM_SCO_BUFFERS                         6
 #else
 #define HCI_NUM_SCO_BUFFERS                         1
@@ -639,12 +639,12 @@
 #define HS_SECURITY_SETTINGS                (BSL_AUTHORIZATION_IN | BSL_SECURITY_L2_IN | BSL_SECURITY_L2_OUT)
 #define HS_MEMORY_EXTERNAL                  XA_DISABLED
 #define HS_REMOTE_AUDIO_VOLUME_CONTROL      TRUE
- 
+
 #define HS_SNIFF_ATTEMPT    0x0160
 #define HS_SNIFF_TIMEOUT    0x0160
 #define HS_SNIFF_MAX_INTERVAL   0x0800
-#define HS_SNIFF_MIN_INTERVAL   0x0040 
-    
+#define HS_SNIFF_MIN_INTERVAL   0x0040
+
 #define HS_RECV_BUFFER_SIZE     HCI_ACL_DATA_SIZE
 #define HS_TX_BUFFER_SIZE       128
 

@@ -139,7 +139,7 @@ const char *DebugMask2Prefix(uint8_t mask);
 #define BLE_SMP_FUNC_ENTER()     TRACE(LOG_SMP_TAG"%s line: %d +++\n", __FUNCTION__, __LINE__)
 #define BLE_SMP_FUNC_LEAVE()     TRACE(LOG_SMP_TAG"%s line: %d ---\n", __FUNCTION__, __LINE__)
 #else
-#define BLE_SMP_DBG(str,...) 
+#define BLE_SMP_DBG(str,...)
 #define BLE_SMP_ERR(str,...)     DebugOut(SMP_ERROR, str, ##__VA_ARGS__)
 #define BLE_SMP_FUNC_ENTER()
 #define BLE_SMP_FUNC_LEAVE()
@@ -179,7 +179,7 @@ const char *DebugMask2Prefix(uint8_t mask);
 #else
 #define BLE_DBG(str,...)
 #define BLE_ERR(str,...)         DebugOut(BLE_ERROR, str, ##__VA_ARGS__)
-#define BLE_FUNC_ENTER() 
+#define BLE_FUNC_ENTER()
 #define BLE_FUNC_LEAVE()
 #define BLE_DUMP8(x,y,z)
 

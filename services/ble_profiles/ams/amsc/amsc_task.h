@@ -52,7 +52,7 @@ enum
 
     /// Read the value of a Client Characteristic Configuration Descriptor in the peer device database
     AMSC_READ_CMD,
-    
+
     /// Write the value of a Client Characteristic Configuration Descriptor in the peer device database
     AMSC_WRITE_CMD,
 

@@ -17,8 +17,8 @@ subdir-ccflags-y += -Iplatform/drivers/ana \
 					-Iutils/lockcqueue \
 					-Iservices/bt_app/a2dp_codecs/include\
 					-Iservices/bt_if_enhanced/inc
-					
 
 
 
-					
+
+

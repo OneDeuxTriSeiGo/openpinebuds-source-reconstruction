@@ -46,7 +46,7 @@ int store_speech_cfg_into_audio_section(SpeechConfig *cfg)
     }
     else
     {
-        TRACE(1,"[%s] Store speech cfg into audio section!!!", __func__); 
+        TRACE(1,"[%s] Store speech cfg into audio section!!!", __func__);
     }
 
     return res;
@@ -64,7 +64,7 @@ void *load_speech_cfg_from_audio_section(void)
     if (res)
     {
         TRACE(2,"[%s] ERROR: res = %d", __func__, res);
-        res_ptr = NULL;  
+        res_ptr = NULL;
     }
     else
     {
@@ -93,7 +93,7 @@ uint32_t speech_tuning_check(unsigned char *buf, uint32_t len)
     uint32_t res = 0;
 
     // Check valid
-    uint32_t config_size = sizeof(SpeechConfig); 
+    uint32_t config_size = sizeof(SpeechConfig);
 
     if (config_size != len)
     {
@@ -118,9 +118,9 @@ uint32_t speech_tuning_check(unsigned char *buf, uint32_t len)
 //#if defined(SPEECH_RX_EQ)
 //        TRACE(1,"[speech tuning] RX: eq num: %d", cfg->rx_eq.num);
 //#endif
-    } 
+    }
 
-    return res; 
+    return res;
 }
 
 uint32_t speech_tuning_rx_callback(unsigned char *buf, uint32_t len)

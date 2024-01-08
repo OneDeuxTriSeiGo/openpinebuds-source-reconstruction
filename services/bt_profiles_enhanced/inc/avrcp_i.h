@@ -132,7 +132,7 @@ struct avrcp_control_t {
     uint8 unitinfo_cmd_buff[64];
     uint8 is_src_playing;
     uint8 is_volume_sync;
-   
+
     void (*indicate) (struct avrcp_control_t *avrcp_ctl, uint8 event, void *pdata);
     void (*data_cb) (struct avrcp_control_t *avrcp_ctl, struct pp_buff *ppb);
 
@@ -203,7 +203,7 @@ void app_callback(uint8 event, void *pdata);
 /* AVRCP */
 int8 avrcp_init_inst(struct avrcp_control_t *avrcp_ctl, void (*indicate) (struct avrcp_control_t *avrcp_ctl, uint8 event, void *pdata),
                 void (*datarecv_callback) (struct avrcp_control_t *avrcp_ctl, struct pp_buff *ppb));
-                
+
 enum avrcp_state_enum avrcp_getState(struct avrcp_control_t *avrcp_ctl);
 void avrcp_setState(struct avrcp_control_t *avrcp_ctl, enum avrcp_state_enum state);
 int8 avrcp_turnOn(struct avrcp_control_t *avrcp_ctl);

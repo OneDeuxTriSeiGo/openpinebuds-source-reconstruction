@@ -40,7 +40,7 @@
 #include "hal_location.h"
 #include "app_hfp.h"
 #include "bt_drv_reg_op.h"
-#if defined(IBRT) 
+#if defined(IBRT)
 #include "app_tws_ibrt.h"
 #endif
 #include "cmsis.h"
@@ -67,7 +67,7 @@ typedef struct
     APP_TOTA_TRANSMISSION_PATH_E dataPath;
 } APP_TOTA_ENV_T;
 
-static APP_TOTA_ENV_T app_tota_env= 
+static APP_TOTA_ENV_T app_tota_env=
 {
     0,
 };
@@ -97,7 +97,7 @@ void app_tota_init(void)
     /* set module to access spp callback */
     //tota_callback_module_set(APP_TOTA_AUDIO_DUMP);
     tota_callback_module_set(APP_TOTA_ANC);
-    
+
 #if (BLE_APP_TOTA)
     app_ble_rx_handler_init();
 #endif
@@ -179,7 +179,7 @@ void test_aes_encode_decode()
     uint8_t w[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     uint8_t z[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t x[16] = {1, 1, 1, 1, 1, 1, 1, 1};
-    
+
     uint8_t dw[16]= {0x69, 0x0a, 0x6c, 0x5e, 0xd6, 0x66, 0x51, 0x25, 0x97, 0xfa, 0x1e, 0x6e, 0xcc, 0xfc, 0x1b, 0xdb};
     uint8_t dz[16]= {0x50, 0xfe, 0x67, 0xcc, 0x99, 0x6d, 0x32, 0xb6, 0xda, 0x09, 0x37, 0xe9, 0x9b, 0xaf, 0xec, 0x60};
     uint32_t length = 0;
@@ -231,7 +231,7 @@ uint8_t * tota_decrypt_packet(uint8_t * in, uint32_t inLen, uint32_t * poutLen)
 //TODO:
 static char strBuf[MAX_SPP_PACKET_SIZE-4];
 void tota_printf(const char * format, ...)
-{   
+{
     va_list vlist;
     va_start(vlist, format);
     vsprintf(strBuf, format, vlist);

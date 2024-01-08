@@ -75,14 +75,14 @@ void app_hrps_add_profile(void)
                                                   TASK_GAPM, TASK_APP,
                                                   gapm_profile_task_add_cmd, sizeof(struct hrps_db_cfg));
 
-    
+
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
     req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-#endif  
+#endif
 
     req->prf_task_id = TASK_ID_HRPS;
     req->app_task = TASK_APP;
@@ -133,7 +133,7 @@ static int app_hrps_ctrl_point_received_handler(ke_msg_id_t const msgid,
                               ke_task_id_t const dest_id,
                               ke_task_id_t const src_id)
 {
-   TRACE(1,"%s", __func__); 
+   TRACE(1,"%s", __func__);
 
    app_hrps_send_measument_via_notification();
    return (KE_MSG_CONSUMED);

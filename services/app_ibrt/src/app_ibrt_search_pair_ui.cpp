@@ -210,7 +210,7 @@ void app_bt_manager_ibrt_role_process(const btif_event_t *Event)
                     {
                         memcpy(p_ibrt_ctrl->local_addr.address,p_remote_dev_addr->address,6);
                     }
-                        
+
 #if 0
                     p_ibrt_ctrl->audio_chnl_sel = A2DP_AUDIO_CHANNEL_SELECT_LRMERGE;
 #else
@@ -512,7 +512,7 @@ void app_start_tws_serching_direactly()
         }
         else
         {
-            p_ibrt_ctrl->nv_role=IBRT_UNKNOW;            
+            p_ibrt_ctrl->nv_role=IBRT_UNKNOW;
             find_tws_peer_device_start();
 
            //app_status_indication_set(APP_STATUS_INDICATION_CONNECTING);
@@ -732,7 +732,7 @@ void app_bt_enter_mono_pairing_mode(void)
     app_ibrt_ui_t *p_ibrt_ui = app_ibrt_ui_get_ctx();
 
     p_ibrt_ui->box_state = IBRT_OUT_BOX;
-    
+
     TRACE(0,"ibrt_ui_log:app_bt_enter_mono_pairing_mode");
 
     if(!app_device_bt_is_connected())
@@ -749,7 +749,7 @@ void app_bt_enter_mono_pairing_mode(void)
             app_ibrt_ui_judge_scan_type(IBRT_CONNECTE_TRIGGER,MOBILE_LINK, 0);
         }
     }
-            
+
 }
 void app_ibrt_enter_limited_mode(void)
 {

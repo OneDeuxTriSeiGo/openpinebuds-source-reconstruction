@@ -65,15 +65,15 @@ extern "C" {
 int8 l2cap_init ( void );
 
 
-int8 l2cap_register  (uint16 psm, 
-                      int8 l2cap_conn_count_max, 
+int8 l2cap_register  (uint16 psm,
+                      int8 l2cap_conn_count_max,
                       int (*l2cap_notify_callback)(enum l2cap_event_enum event, uint32 l2cap_handle, void *pdata, uint8 reason),
                       void (*l2cap_datarecv_callback)(uint32 l2cap_handle, struct pp_buff *ppb)
                       );
 
 
-uint32 l2cap_open (struct bdaddr_t *remote, 
-                    uint16 psm, 
+uint32 l2cap_open (struct bdaddr_t *remote,
+                    uint16 psm,
                     int (*l2cap_notify_callback)(enum l2cap_event_enum event, uint32 l2cap_handle, void *pdata, uint8 reason),
                     void (*l2cap_datarecv_callback)(uint32 l2cap_handle, struct pp_buff *ppb)
                     );

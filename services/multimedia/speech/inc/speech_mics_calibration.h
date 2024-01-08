@@ -61,7 +61,7 @@ typedef struct {
 typedef void *SPEECH_MICS_CALIBRATION_STATE_T;
 
 // Creat a instance from speech_mics_calibration module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SPEECH_MICS_CALIBRATION_STATE_T *speech_mics_calibration_create(SPEECH_MICS_CALIBRATION_CFG_T *cfg, int frame_size, int sample_rate);
 
 // Destory a speech mics_calibration instance

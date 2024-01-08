@@ -32,6 +32,6 @@
 #define TRACE_A2DP_DECODER_E(str, ...) LOG_ERROR(LOG_MOD(AUDFLG),    "[AUD][DECODER][ERR]"str, ##__VA_ARGS__)
 #endif
 
-#define ASSERT_A2DP_DECODER(cond, str, ...) ASSERT(cond, str, ##__VA_ARGS__) 
+#define ASSERT_A2DP_DECODER(cond, str, ...) ASSERT(cond, str, ##__VA_ARGS__)
 
 #endif

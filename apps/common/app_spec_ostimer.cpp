@@ -21,7 +21,7 @@
 
 /// Create timer
 osStatus app_spec_timer_create (SPEC_TIMER_CTX_T *spec_timer_ctx, const osTimerDef_t *timer_def, os_timer_type type, void *argument)
-{    
+{
     spec_timer_ctx->type     = type;
     spec_timer_ctx->argument = argument;
     spec_timer_ctx->timerid  = osTimerCreate(timer_def, type, spec_timer_ctx);
@@ -38,7 +38,7 @@ osStatus app_spec_timer_start (SPEC_TIMER_CTX_T *spec_timer_ctx, uint32_t millis
         spec_timer_ctx->interval = millisec;
         spec_timer_ctx->ctx = millisec;
         status = osTimerStart(spec_timer_ctx->timerid, UINT16_MAX);
-    }else{        
+    }else{
         spec_timer_ctx->interval = millisec;
         spec_timer_ctx->ctx = millisec;
         status = osTimerStart(spec_timer_ctx->timerid, (uint32_t)millisec);

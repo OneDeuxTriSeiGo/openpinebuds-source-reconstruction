@@ -200,7 +200,7 @@ HW_CODEC_IIR_CFG_T *hw_codec_iir_get_cfg(enum AUD_SAMPRATE_T sample_rate, const 
     float coefs_l[6],coefs_r[6];
     float gain0,gain1;
     int sample_rate_iir=sample_rate;
-    
+
 #if defined(CHIP_BEST2001)
 #ifdef __AUDIO_RESAMPLE__
     sample_rate_iir=50781.25f*8;
@@ -209,9 +209,9 @@ HW_CODEC_IIR_CFG_T *hw_codec_iir_get_cfg(enum AUD_SAMPRATE_T sample_rate, const 
     {
     case AUD_SAMPRATE_22050:
     case AUD_SAMPRATE_44100:
-    case AUD_SAMPRATE_88200:        
+    case AUD_SAMPRATE_88200:
     case AUD_SAMPRATE_176400:
-    case AUD_SAMPRATE_352800:   
+    case AUD_SAMPRATE_352800:
     case AUD_SAMPRATE_705600:
     sample_rate_iir=44100*8;
     break;

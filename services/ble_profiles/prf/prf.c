@@ -618,8 +618,8 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
         case TASK_ID_GFPSP:
             prf_cbs = gfpsp_prf_itf_get();
             break;
-        #endif //(BLE_GFPS_PROVIDER) 
-        
+        #endif //(BLE_GFPS_PROVIDER)
+
         #if (BLE_AI_VOICE)
         case TASK_ID_AI:
             prf_cbs = ai_prf_itf_get();

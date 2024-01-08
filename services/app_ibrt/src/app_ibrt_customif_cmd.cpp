@@ -243,7 +243,7 @@ static void app_ibrt_user_a2dp_info_sync_handler(uint16_t rsp_seq, uint8_t *p_bu
     TRACE(4,"%s %d %d %d",__func__,a2dp_user_config_ptr->aac_bitrate,a2dp_user_config_ptr->sbc_bitpool,a2dp_user_config_ptr->audio_latentcy);
     if((app_tws_ibrt_slave_ibrt_link_connected())){
         a2dp_avdtpcodec_sbc_user_configure(a2dp_user_config_ptr->sbc_bitpool, true);
-        a2dp_avdtpcodec_aac_user_configure(a2dp_user_config_ptr->aac_bitrate, true); 
+        a2dp_avdtpcodec_aac_user_configure(a2dp_user_config_ptr->aac_bitrate, true);
         app_audio_dynamic_update_dest_packet_mtu(0, (a2dp_user_config_ptr->audio_latentcy-USER_CONFIG_AUDIO_LATENCY_ERROR)/3, true);//sbc
         app_audio_dynamic_update_dest_packet_mtu(1, (a2dp_user_config_ptr->audio_latentcy-USER_CONFIG_AUDIO_LATENCY_ERROR)/23, true);//aac
         uint32_t lock = nv_record_pre_write_operation();

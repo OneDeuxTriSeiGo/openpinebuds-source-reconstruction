@@ -48,13 +48,13 @@
  * FUNCTION DEFINITIONS
  ****************************************************************************************
 */
- 
+
 void app_amsc_add_amsc(void)
 {
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
                                                   TASK_GAPM, TASK_APP,
                                                   gapm_profile_task_add_cmd, 0);
-    
+
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
@@ -79,13 +79,13 @@ void app_amsc_add_amsc(void)
 void app_amsc_enable(uint8_t conidx)
 {
     // Allocate the message
-    struct amsc_enable_req * req = KE_MSG_ALLOC(AMSC_ENABLE_REQ, 
+    struct amsc_enable_req * req = KE_MSG_ALLOC(AMSC_ENABLE_REQ,
         KE_BUILD_ID(prf_get_task_from_id(TASK_ID_AMSC), conidx), TASK_APP,
         amsc_enable_req);
 
     // Fill in the parameter structure
     req->conidx = conidx;
-    
+
     // Send the message
     ke_msg_send(req);
 }

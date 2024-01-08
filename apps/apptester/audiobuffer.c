@@ -90,7 +90,7 @@ int audio_buffer_get(uint8_t *buff, uint16_t len)
 #endif
     status = PeekCQueue(&audio_queue, len, &e1, &len1, &e2, &len2);
     if (len==(len1+len2)){
-        memcpy(buff,e1,len1);   
+        memcpy(buff,e1,len1);
         memcpy(buff+len1,e2,len2);
         DeCQueue(&audio_queue, 0, len);
         DeCQueue(&audio_queue, 0, len2);
@@ -99,7 +99,7 @@ int audio_buffer_get(uint8_t *buff, uint16_t len)
         status = -1;
     }
 #ifndef _AUDIO_NO_THREAD_
-    osMutexRelease(g_audio_queue_mutex_id); 
+    osMutexRelease(g_audio_queue_mutex_id);
 #endif
     return status;
 }

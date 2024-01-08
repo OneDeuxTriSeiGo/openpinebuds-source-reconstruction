@@ -3,7 +3,7 @@
 
 #include "usb_audio.h"
 
-#ifdef USB_ANC_MC_EQ_TUNING    
+#ifdef USB_ANC_MC_EQ_TUNING
 #define VENDOR_RX_BUF_SZ        5000
 #else
 #define VENDOR_RX_BUF_SZ        240

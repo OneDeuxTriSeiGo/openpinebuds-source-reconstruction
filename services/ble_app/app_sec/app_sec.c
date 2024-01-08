@@ -318,7 +318,7 @@ static int gapc_bond_ind_handler(ke_msg_id_t const msgid,
 #ifdef _BLE_NVDS_
             TRACE(1,"isLocal %d", param->data.ltk.isLocal);
             TRACE(0,"Peer device LTK is:");
-            
+
             DUMP8("%02x ", param->data.ltk.ltk.key, BLE_LTK_SIZE);
             TRACE(1,"EDIV %04x ", param->data.ltk.ediv);
             TRACE(0,"Peer device random number is:");

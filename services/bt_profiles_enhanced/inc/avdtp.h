@@ -85,20 +85,20 @@ typedef struct
 {
     U8 version; /* RTP Version */
 
-    U8 padding; /* If the padding bit is set, the packet contains 
-                         * one or more additional padding octets at the end, 
-                         * which are not parts of the payload.  The last 
-                         * octet of the padding contains a count of how many 
-                         * padding octets should be ignored.  
+    U8 padding; /* If the padding bit is set, the packet contains
+                         * one or more additional padding octets at the end,
+                         * which are not parts of the payload.  The last
+                         * octet of the padding contains a count of how many
+                         * padding octets should be ignored.
                          */
 
-    U8 marker; /* Profile dependent.  Used to mark significant 
-                         * events such as frame boundaries in the packet 
-                         * stream.  
+    U8 marker; /* Profile dependent.  Used to mark significant
+                         * events such as frame boundaries in the packet
+                         * stream.
                          */
 
-    U8 payloadType; /* Profile dependent.  Identifies the RTP payload 
-                         * type.  
+    U8 payloadType; /* Profile dependent.  Identifies the RTP payload
+                         * type.
                          */
 
     U16 sequenceNumber; /* Incremented by one for each packet sent */
@@ -107,8 +107,8 @@ typedef struct
 
     U32 ssrc; /* Synchronization source */
 
-    U8 csrcCount; /* The number of CSRC (Contributing Source) 
-                         * identifiers that follow the fixed header.  
+    U8 csrcCount; /* The number of CSRC (Contributing Source)
+                         * identifiers that follow the fixed header.
                          */
 
     U32 csrcList[15]; /* List of CSRC identifiers */

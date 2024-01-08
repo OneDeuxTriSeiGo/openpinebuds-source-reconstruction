@@ -64,7 +64,7 @@ uint32_t voice_sbc_decode(uint8_t* pcm_buffer, CQueue* encodedDataQueue, uint32_
 int voice_sbc_init(VOICE_SBC_CONFIG_T* pConfig);
 uint32_t voice_sbc_get_frame_len(void);
 
-#ifdef __cplusplus  
+#ifdef __cplusplus
 }
 #endif
 

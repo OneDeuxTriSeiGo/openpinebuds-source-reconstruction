@@ -101,7 +101,7 @@ static void app_gfps_init_env(void)
     memset(( uint8_t * )&app_gfps_env, 0, sizeof(struct app_gfps_env_tag));
     app_gfps_env.connectionIndex = BLE_INVALID_CONNECTION_INDEX;
     app_gfps_env.batteryDataType = HIDE_UI_INDICATION;
-    app_gfps_env.advRandSalt = GFPS_INITIAL_ADV_RAND_SALT;  
+    app_gfps_env.advRandSalt = GFPS_INITIAL_ADV_RAND_SALT;
     app_ble_register_data_fill_handle(USER_GFPS, ( BLE_DATA_FILL_FUNC_T )gfps_ble_data_fill_handler, false);
 }
 
@@ -130,12 +130,12 @@ void app_gfps_connected_evt_handler(uint8_t conidx)
     bd_addr_t *pBdAddr = gapm_get_connected_bdaddr(conidx);
     big_little_switch(pBdAddr->addr, &app_gfps_env.local_le_addr.addr[0], 6);
     DUMP8("0x%02x ", pBdAddr->addr, 6);
-#if !defined(IBRT)    
+#if !defined(IBRT)
     big_little_switch((&bt_addr[0]), &app_gfps_env.local_bt_addr.addr[0], 6);
     TRACE(0,"local bt addr: ");
     DUMP8("0x%02x ", &bt_addr[0], 6);
 #else
-    big_little_switch(app_tws_ibrt_get_bt_ctrl_ctx()->local_addr.address, 
+    big_little_switch(app_tws_ibrt_get_bt_ctrl_ctx()->local_addr.address,
         &app_gfps_env.local_bt_addr.addr[0], 6);
     TRACE(0,"local bt addr: ");
     DUMP8("0x%02x ", app_tws_ibrt_get_bt_ctrl_ctx()->local_addr.address, 6);
@@ -378,7 +378,7 @@ void app_gfps_handling_on_mobile_link_disconnection(btif_remote_device_t* pRemDe
     bool isDisconnectedWithMobile = false;
 #ifdef IBRT
 
-    ibrt_link_type_e link_type = 
+    ibrt_link_type_e link_type =
         app_tws_ibrt_get_remote_link_type(pRemDev);
     if (MOBILE_LINK == link_type)
     {
@@ -394,7 +394,7 @@ void app_gfps_handling_on_mobile_link_disconnection(btif_remote_device_t* pRemDe
         {
             app_gfps_enter_connectable_mode_req_handler(app_gfps_get_last_response());
         }
-    }    
+    }
 }
 
 void app_gfps_enter_connectable_mode_req_handler(uint8_t *response)
@@ -415,14 +415,14 @@ void app_gfps_enter_connectable_mode_req_handler(uint8_t *response)
     {
         memcpy(app_gfps_env.pendingLastResponse, response, GFPSP_ENCRYPTED_RSP_LEN);
         app_gfps_env.isLastResponsePending = true;
-    #ifndef IBRT    
+    #ifndef IBRT
         app_disconnect_all_bt_connections();
     #else
         app_tws_ibrt_disconnect_mobile();
     #endif
     }
     else
-    {       
+    {
         app_gfps_env.isLastResponsePending = false;
         app_gfps_send_keybase_pairing_via_notification(response, GFPSP_ENCRYPTED_RSP_LEN);
         TRACE(0,"wait for pair req maybe classic or ble");
@@ -488,7 +488,7 @@ static uint8_t app_gfps_handle_decrypted_keybase_pairing_request(gfpsp_req_resp 
                         en_rsp.uint128_array);
 
     TRACE(1,"message type is 0x%x", raw_req->rx_tx.raw_req.message_type);
-    TRACE(4,"bit 0: %d, bit 1: %d, bit 2: %d, bit 3: %d", 
+    TRACE(4,"bit 0: %d, bit 1: %d, bit 2: %d, bit 3: %d",
         raw_req->rx_tx.key_based_pairing_req.flags_discoverability,
         raw_req->rx_tx.key_based_pairing_req.flags_bonding_addr,
         raw_req->rx_tx.key_based_pairing_req.flags_get_existing_name,
@@ -606,29 +606,29 @@ static bool app_gfps_decrypt_keybase_pairing_request(uint8_t *pairing_req, uint8
             memcpy(output, accountKey, FP_ACCOUNT_KEY_SIZE);
             TRACE(1,"fp message type 0x%02x.", raw_req.rx_tx.raw_req.message_type);
             if (KEY_BASED_PAIRING_REQ == raw_req.rx_tx.raw_req.message_type)
-            {                
+            {
                 app_gfps_handle_decrypted_keybase_pairing_request(&raw_req, accountKey);
                 return true;
             }
             else if (ACTION_REQUEST == raw_req.rx_tx.raw_req.message_type)
-            {          
+            {
                 memcpy(app_gfps_env.keybase_pair_key, accountKey, 16);
-                memcpy(&app_gfps_env.seeker_bt_addr.addr[0], 
+                memcpy(&app_gfps_env.seeker_bt_addr.addr[0],
                     &(raw_req.rx_tx.key_based_pairing_req.seeker_addr[0]), 6);
                 gfpsp_encrypted_resp  en_rsp;
                 gfpsp_raw_resp  raw_rsp;
-                
+
                 raw_rsp.message_type = KEY_BASED_PAIRING_RSP;// Key-based Pairing Response
                 memcpy(raw_rsp.provider_addr, app_gfps_env.local_bt_addr.addr, 6);
-                
+
                 TRACE(0,"raw_rsp.provider_addr:");
                 DUMP8("%02x ",raw_rsp.provider_addr, 6);
-                
+
                 for (uint8_t index = 0;index < 9;index++)
                 {
                     raw_rsp.salt[index] = (uint8_t)rand();
                 }
-                
+
                 gfps_crypto_encrypt((const uint8_t *)(&raw_rsp.message_type), sizeof(raw_rsp),
                     app_gfps_env.keybase_pair_key,en_rsp.uint128_array);
 
@@ -636,7 +636,7 @@ static bool app_gfps_decrypt_keybase_pairing_request(uint8_t *pairing_req, uint8
 
                 if (raw_req.rx_tx.action_req.isDeviceAction)
                 {
-                    // TODO: device action via BLE 
+                    // TODO: device action via BLE
                 }
                 else if (raw_req.rx_tx.action_req.isFollowedByAdditionalDataCh)
                 {
@@ -645,9 +645,9 @@ static bool app_gfps_decrypt_keybase_pairing_request(uint8_t *pairing_req, uint8
                     app_gfps_env.isPendingForWritingNameReq = true;
                 }
                 return true;
-            }            
+            }
         }
-        
+
 
     }
 
@@ -773,15 +773,15 @@ static int app_gfps_write_name_ind_hander(ke_msg_id_t const msgid,
                                           ke_task_id_t const src_id)
 {
     bool isSuccessful = false;
-    
+
     if (!app_gfps_env.isPendingForWritingNameReq)
     {
         TRACE(0,"Pre fp write name request is not received.");
     }
     else
     {
-        uint8_t rawName[FP_MAX_NAME_LEN]; 
-        
+        uint8_t rawName[FP_MAX_NAME_LEN];
+
         struct gfpsp_write_ind_t* pWriteInd = (struct gfpsp_write_ind_t *)param;
         if (app_gfps_env.isInitialPairing)
         {
@@ -803,14 +803,14 @@ static int app_gfps_write_name_ind_hander(ke_msg_id_t const msgid,
             nv_record_fp_update_name(rawName, pWriteInd->length-16);
             TRACE(1,"Rename BT name: [%s]", rawName);
             app_gfps_update_local_bt_name();
-        #ifdef IBRT    
+        #ifdef IBRT
             app_tws_send_fastpair_info_to_slave();
         #endif
         }
 
         app_gfps_env.isPendingForWritingNameReq = false;
     }
-    
+
     struct gfpsp_send_write_rsp_t *response = KE_MSG_ALLOC(
             GFPSP_SEND_WRITE_RESPONSE, src_id, dest_id, gfpsp_send_write_rsp_t);
     *response = param->pendingWriteRsp;
@@ -823,7 +823,7 @@ static int app_gfps_write_name_ind_hander(ke_msg_id_t const msgid,
         response->status = ATT_ERR_WRITE_NOT_PERMITTED;
     }
     ke_msg_send(response);
-    
+
     return (KE_MSG_CONSUMED);
 }
 
@@ -1244,16 +1244,16 @@ void app_gfps_tws_sync_init(void)
     };
 
     app_tws_if_register_sync_user(TWS_SYNC_USER_GFPS_INFO, &userGfps);
-#endif    
+#endif
 }
 static FastPairInfo g_fast_pair_info;
-uint32_t app_bt_get_model_id(void) 
-{ 
-    return g_fast_pair_info.model_id; 
+uint32_t app_bt_get_model_id(void)
+{
+    return g_fast_pair_info.model_id;
 }
 
 extern uint32_t Get_ModelId();
-void app_bt_get_fast_pair_info(void) 
+void app_bt_get_fast_pair_info(void)
 {
     g_fast_pair_info.model_id = Get_ModelId();
     switch(g_fast_pair_info.model_id)
@@ -1261,27 +1261,27 @@ void app_bt_get_fast_pair_info(void)
         //default model id(bes moddel id)
         case FP_DEVICE_MODEL_ID:
         {
-            memcpy (g_fast_pair_info.public_anti_spoofing_key, 
+            memcpy (g_fast_pair_info.public_anti_spoofing_key,
                     bes_demo_Public_anti_spoofing_key, sizeof(bes_demo_Public_anti_spoofing_key));
-            memcpy (g_fast_pair_info.private_anti_spoofing_key, 
+            memcpy (g_fast_pair_info.private_anti_spoofing_key,
                     bes_demo_private_anti_spoofing_key, sizeof(bes_demo_private_anti_spoofing_key));
         }
         break;
 
        //customer add customer model id here;
 
-       default:    
+       default:
        {
            g_fast_pair_info.model_id = FP_DEVICE_MODEL_ID;
-           memcpy (g_fast_pair_info.public_anti_spoofing_key, 
+           memcpy (g_fast_pair_info.public_anti_spoofing_key,
                     bes_demo_Public_anti_spoofing_key, sizeof(bes_demo_Public_anti_spoofing_key));
-           memcpy (g_fast_pair_info.private_anti_spoofing_key, 
+           memcpy (g_fast_pair_info.private_anti_spoofing_key,
                     bes_demo_private_anti_spoofing_key, sizeof(bes_demo_private_anti_spoofing_key));
        }
     }
 }
 
-void app_bt_set_fast_pair_info(FastPairInfo fast_pair_info) 
+void app_bt_set_fast_pair_info(FastPairInfo fast_pair_info)
 {
     memcpy(&g_fast_pair_info, &fast_pair_info,sizeof(fast_pair_info));
 }

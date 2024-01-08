@@ -22,7 +22,7 @@
 #include "avctp_i.h"
 
 #define AVRCP_BT_COMPANY_ID "\x00\x19\x58"
- 
+
  /* Define Opcode */
 #define AVRCP_OPCODE_UNIT_INFO       0x30
 #define AVRCP_OPCODE_SUBUNIT_INFO    0x31

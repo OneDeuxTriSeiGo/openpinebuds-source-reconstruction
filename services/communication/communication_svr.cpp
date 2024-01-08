@@ -159,7 +159,7 @@ static void uart_rx_dma_start(void)
     mask.RT = 1;
     //hal_uart_irq_set_mask(comm_uart, mask);
     hal_uart_dma_recv_mask(comm_uart, rx_command_block_p->cmd_buf, COMMAND_LEN_MAX, NULL, NULL,&mask);
-    
+
     uart_rx_dma_is_running = true;
 
     int_unlock(lock);

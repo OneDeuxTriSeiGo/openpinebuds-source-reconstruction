@@ -60,7 +60,7 @@ const SpeechIirCalibConfig WEAK speech_tx_mic_calib_cfg =
  * Parameters:
  *     bypass(0/1): bypass enable or disable.
  *     mic_num(1~4): the number of microphones. The filter num is (mic_num - 1)
- *     calib: {filter, filter_length, nfft}. 
+ *     calib: {filter, filter_length, nfft}.
  * Resource consumption:
  *     RAM:     None
  *     FLASE:   None
@@ -102,7 +102,7 @@ const SpeechConfig WEAK speech_cfg_default = {
  *     leak_estimate(0~32767): echo supression value. This is a fixed mode. It has relatively large
  *         echo supression and large damage to speech signal.
  *     leak_estimate_shift(0~8): echo supression value. if leak_estimate == 0, then leak_estimate_shift
- *         can take effect. This is a adaptive mode. It has relatively small echo supression and also 
+ *         can take effect. This is a adaptive mode. It has relatively small echo supression and also
  *         small damage to speech signal.
  * Resource consumption:
  *     RAM:     None
@@ -244,7 +244,7 @@ const SpeechConfig WEAK speech_cfg_default = {
  *         e.g. 0: 0~2cm; 1: 2~4; 2: 5~6...
  *     freq_smooth_enable(1): Must enable
  *     wnr_enable(0/1): wind noise reduction enable or disable. This is also useful for improving
- *         noise suppression, but it also has some damage to speech signal. 
+ *         noise suppression, but it also has some damage to speech signal.
  * Resource consumption:
  *     RAM:     None
  *     FLASE:   None
@@ -254,9 +254,9 @@ const SpeechConfig WEAK speech_cfg_default = {
 ****************************************************************************************************/
     .tx_2mic_ns2 = {
         .bypass             = 0,
-        .delay_taps         = 0.f,  
+        .delay_taps         = 0.f,
         .freq_smooth_enable = 1,
-        .wnr_enable         = 1, 
+        .wnr_enable         = 1,
     },
 #endif
 
@@ -272,7 +272,7 @@ const SpeechConfig WEAK speech_cfg_default = {
  *         e.g. 0: 0~2cm; 1: 2~4; 2: 5~6...
  *     freq_smooth_enable(1): Must enable
  *     wnr_enable(0/1): wind noise reduction enable or disable. This is also useful for improving
- *         noise suppression, but it also has some damage to speech signal. 
+ *         noise suppression, but it also has some damage to speech signal.
  *     delay_enable(0/1): enable the delay_taps or not. Ideally, never need to enable the delay and
  *          delay_taps will be a useless parameter.
  * Resource consumption:
@@ -286,7 +286,7 @@ const SpeechConfig WEAK speech_cfg_default = {
         .bypass             = 0,
         .delay_taps         = 0.0f,
         .freq_smooth_enable = 1,
-        .wnr_enable         = 0, 
+        .wnr_enable         = 0,
         .delay_enable       = 0,
     },
 #endif
@@ -333,7 +333,7 @@ const SpeechConfig WEAK speech_cfg_default = {
  *     delay_tapsS(0~4): MIC L/S delay samples. Refer to SPEECH_TX_2MIC_NS2 delay_taps
  *     freq_smooth_enable(1): Must enable
  *     wnr_enable(0/1): wind noise reduction enable or disable. This is also useful for improving
- *         noise suppression, but it also has some damage to speech signal. 
+ *         noise suppression, but it also has some damage to speech signal.
  * Resource consumption:
  *     RAM:     None
  *     FLASE:   None
@@ -370,7 +370,7 @@ const SpeechConfig WEAK speech_cfg_default = {
  *         e.g. 0: 0~2cm; 1: 2~4; 2: 5~6...
  *     freq_smooth_enable(1): Must enable
  *     wnr_enable(0/1): wind noise reduction enable or disable. This is also useful for improving
- *         noise suppression, but it also has some damage to speech signal. 
+ *         noise suppression, but it also has some damage to speech signal.
  * Resource consumption:
  *     RAM:     None
  *     FLASE:   None
@@ -382,9 +382,9 @@ const SpeechConfig WEAK speech_cfg_default = {
         .bypass             = 0,
         .endfire_enable     = 1,
         .broadside_enable   = 1,
-        .delay_taps         = 0.7f,  
+        .delay_taps         = 0.7f,
         .freq_smooth_enable = 1,
-        .wnr_enable         = 0, 
+        .wnr_enable         = 0,
     },
 #endif
 
@@ -413,10 +413,10 @@ const SpeechConfig WEAK speech_cfg_default = {
  *     Noise Suppression
  * Parameters:
  *     bypass(0/1): bypass enable or disable.
- *     denoise_dB(-30~0): noise suppression, unit(dB). 
+ *     denoise_dB(-30~0): noise suppression, unit(dB).
  *         e.g. -15: Can reduce 15dB of stationary noise.
  * Resource consumption:
- *     RAM:     fs = 16k:   RAM = 8k; 
+ *     RAM:     fs = 16k:   RAM = 8k;
  *              fs = 8k:    RAM = 4k;
  *              RAM = frame_size * 30
  *     FLASE:   None
@@ -436,14 +436,14 @@ const SpeechConfig WEAK speech_cfg_default = {
  *     Noise Suppression
  * Parameters:
  *     bypass(0/1): bypass enable or disable.
- *     denoise_dB(-30~0): noise suppression, unit(dB). 
+ *     denoise_dB(-30~0): noise suppression, unit(dB).
  *         e.g. -15: Can reduce 15dB of stationary noise.
  * Resource consumption:
  *     RAM:     None
  *     FLASE:   None
  *     MIPS:    fs = 16kHz;
  * Note:
- *     This is a 'float' version for SPEECH_TX_NS2. 
+ *     This is a 'float' version for SPEECH_TX_NS2.
  *     It needs more MIPS and RAM, but can redece quantization noise.
 ****************************************************************************************************/
     .tx_ns2float = {

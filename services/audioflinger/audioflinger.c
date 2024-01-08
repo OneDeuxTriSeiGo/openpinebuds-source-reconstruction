@@ -209,16 +209,16 @@ static FloatLimiterPtr FloatLimiterP;
 #else
 typedef struct {
     float coefs_b[3];
-    float coefs_a[3];    
+    float coefs_a[3];
     float history_x[2];
-    float history_y[2];    
+    float history_y[2];
 }SW_GAIN_IIR_T;
 SW_GAIN_IIR_T sw_gain_iir=
     {
         .coefs_b={0.00000042780818597736f,   0.00000085561637195472f,   0.00000042780818597736f},
         .coefs_a={1.00000000000000000000f, -1.99738371810092970000f,   0.99738542933367369000f},
         .history_x={0,0},
-        .history_y={0,0} ,       
+        .history_y={0,0} ,
     };
 #endif
 #endif
@@ -517,9 +517,9 @@ static float af_codec_sw_gain_filter(float gain_in)
                             -sw_gain_iir.history_y[1]*sw_gain_iir.coefs_a[2];
 
     sw_gain_iir.history_y[1]=sw_gain_iir.history_y[0];
-    sw_gain_iir.history_y[0]=gain_out;    
+    sw_gain_iir.history_y[0]=gain_out;
     sw_gain_iir.history_x[1]=sw_gain_iir.history_x[0];
-    sw_gain_iir.history_x[0]=saved_output_coef;    
+    sw_gain_iir.history_x[0]=saved_output_coef;
 
     return gain_out;
 }
@@ -530,7 +530,7 @@ static void af_codec_sw_gain_process(uint8_t *buf, uint32_t size, enum AUD_BITS_
     float output_gain=1.0f;
 
     //TRACE(1,"af_codec_sw_gain_process:%d",(int32_t)(saved_output_coef*1000));
-    
+
     if(chans==AUD_CHANNEL_NUM_1)
     {
         if (bits <= AUD_BITS_16)
@@ -552,7 +552,7 @@ static void af_codec_sw_gain_process(uint8_t *buf, uint32_t size, enum AUD_BITS_
             for (i = 0; i < pcm_len; i++)
             {
                 output_gain=af_codec_sw_gain_filter(saved_output_coef);
-                
+
                 pcm_out = (int32_t)(pcm_buf[i] * output_gain);
                 pcm_buf[i] = __SSAT(pcm_out, 24);
             }
@@ -567,10 +567,10 @@ static void af_codec_sw_gain_process(uint8_t *buf, uint32_t size, enum AUD_BITS_
             for (i = 0; i < pcm_len; i=i+2)
             {
                 output_gain=af_codec_sw_gain_filter(saved_output_coef);
-                
+
                 pcm_out = (int32_t)(pcm_buf[i] * output_gain);
                 pcm_buf[i] = __SSAT(pcm_out, 16);
-                pcm_out = (int32_t)(pcm_buf[i+1] * output_gain);                
+                pcm_out = (int32_t)(pcm_buf[i+1] * output_gain);
                 pcm_buf[i+1] = __SSAT(pcm_out, 16);
             }
         }
@@ -1535,9 +1535,9 @@ uint32_t af_stream_open(enum AUD_STREAM_ID_T id, enum AUD_STREAM_T stream, const
             sw_gain_iir.history_x[0]=0.0f;
             sw_gain_iir.history_x[1]=0.0f;
             sw_gain_iir.history_y[0]=0.0f;
-            sw_gain_iir.history_y[1]=0.0f;    
+            sw_gain_iir.history_y[1]=0.0f;
 #endif
-#endif 
+#endif
 
 
 #ifdef CODEC_DSD
@@ -1701,7 +1701,7 @@ uint32_t af_stream_open(enum AUD_STREAM_ID_T id, enum AUD_STREAM_T stream, const
     }
     af_stream_update_dma_buffer(stream, role, cfg);
     role->handler = cfg->handler;
-    
+
     af_set_status(id, stream, AF_STATUS_STREAM_OPEN_CLOSE);
 #ifndef RTOS
     af_clear_flag(&af_flag_signal, 1 << (id * 2 + stream));

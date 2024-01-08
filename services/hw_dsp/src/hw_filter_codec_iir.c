@@ -29,7 +29,7 @@ struct hw_filter_codec_iir_state_
     int32_t     channel_num;
     int32_t     bits;
 
-    /* configure info */ 
+    /* configure info */
     int32_t     bypass;
     int32_t     need_value;
     HW_CODEC_IIR_TYPE_T iir_device;
@@ -61,9 +61,9 @@ hw_filter_codec_iir_state *hw_filter_codec_iir_create(int32_t sample_rate, int32
 
     // Initialize internal variables
     st->iir_device_opened = 0;
-    
+
     // Malloc dynamic memory
-    
+
     // Initialize dynamic memory
 
     hw_filter_codec_iir_set_config(st, cfg);
@@ -98,9 +98,9 @@ int32_t hw_filter_codec_iir_set_config(hw_filter_codec_iir_state *st, hw_filter_
     }
 
 #if 1
-    hw_codec_iir_set_coefs(&cfg->iir_cfg, st->iir_device); 
+    hw_codec_iir_set_coefs(&cfg->iir_cfg, st->iir_device);
 #else
-    HW_CODEC_IIR_CFG_T *hw_iir_cfg=NULL; 
+    HW_CODEC_IIR_CFG_T *hw_iir_cfg=NULL;
 
     hw_iir_cfg = hw_codec_iir_get_cfg((enum AUD_SAMPRATE_T)st->sample_rate, &cfg->iir_cfg);
     ASSERT(hw_iir_cfg != NULL, "[%s] codec IIR parameter error!", __func__);
@@ -108,7 +108,7 @@ int32_t hw_filter_codec_iir_set_config(hw_filter_codec_iir_state *st, hw_filter_
     hw_codec_iir_set_cfg(hw_iir_cfg, (enum AUD_SAMPRATE_T)st->sample_rate, st->iir_device);
 #endif
 
-    
+
 
     return 0;
 }
@@ -119,7 +119,7 @@ int32_t hw_filter_codec_iir_set_config(hw_filter_codec_iir_state *st, hw_filter_
 //     {
 //     case HW_FILTER_CODEC_IIR_SET_AAA:
 //         st->aaa = (*(int32_t*)ptr);
-//         break; 
+//         break;
 
 //     case HW_FILTER_CODEC_IIR_GET_AAA:
 //         (*(int32_t*)ptr) = (int32_t)st->aaa;
@@ -130,7 +130,7 @@ int32_t hw_filter_codec_iir_set_config(hw_filter_codec_iir_state *st, hw_filter_
 //         return -1;
 //     }
 
-//     return 0;    
+//     return 0;
 // }
 
 int32_t hw_filter_codec_iir_dump(hw_filter_codec_iir_state *st)
@@ -140,6 +140,6 @@ int32_t hw_filter_codec_iir_dump(hw_filter_codec_iir_state *st)
     // Add dump info
 
     // End
-    
+
     return 0;
 }

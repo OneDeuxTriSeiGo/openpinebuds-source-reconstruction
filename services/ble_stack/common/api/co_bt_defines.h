@@ -1223,7 +1223,7 @@ enum ble_feature
 #define SYNC_TRAIN_INTV_CLK_ADJ       32
 
 /// Future CSB instant value offset for Coarse clock adjustment (in slots) BB: 8.11.2
-#define SYNC_TRAIN_CSB_INSTANT_OFFSET_CLK_ADJ  1600 
+#define SYNC_TRAIN_CSB_INSTANT_OFFSET_CLK_ADJ  1600
 
 /// Minimum value for synchronization train interval (in slots) HCI:7.3.90
 #define SYNC_TRAIN_INTV_MIN           0x20
@@ -1558,7 +1558,7 @@ enum le_evt_mask
 #define MAX_SCAN_PHYS     2
 
 /// Max initiatng PHYs which can be set HCI:7.8.66
-#define MAX_INIT_PHYS     2   
+#define MAX_INIT_PHYS     2
 
 /// Ext Scanning interval (in 625us slot) (chapter 2.E.7.8.64)
 #define EXT_SCAN_INTERVAL_MIN     0x0004 //(2.5 ms)

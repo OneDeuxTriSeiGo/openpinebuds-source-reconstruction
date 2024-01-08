@@ -115,18 +115,18 @@ static void _audio_dump_control(APP_TOTA_CMD_CODE_E funcCode, uint8_t* ptrParam,
         TOTA_LOG_DBG(0, "tota_audio_dump start");
         app_tota_audio_dump_start();
         break;
-        
+
     case OP_TOTA_AUDIO_DUMP_STOP:
         TOTA_LOG_DBG(0, "tota_audio_dump stop");
         app_tota_audio_dump_stop();
         break;
-        
+
     case OP_TOTA_AUDIO_DUMP_CONTROL:
         TOTA_LOG_DBG(0, "tota_audio_dump contorl");
         // TODO: Can get or set info
         app_tota_send_response_to_command(funcCode, TOTA_NO_ERROR, (uint8_t *)".pcm", sizeof(".pcm"), app_tota_get_datapath());
         break;
-        
+
     default:
         break;
     }
@@ -148,7 +148,7 @@ uint16_t audioBuf[512];
 static void tota_audio_dump_test_thread(void const *argument)
 {
     app_tota_audio_dump_flush();
-    while (true)         
+    while (true)
     {
         osDelay(1000);
         for (uint16_t i=0; i<sizeof(audioBuf)/sizeof(uint16_t); i++) {

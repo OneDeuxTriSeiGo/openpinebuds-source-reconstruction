@@ -22,7 +22,7 @@
 #include "nvrecord_fp_account_key.h"
 #include "hal_trace.h"
 
-#ifdef GFPS_ENABLED 
+#ifdef GFPS_ENABLED
 
 static NV_FP_ACCOUNT_KEY_RECORD_T *nvrecord_fp_account_key_p = NULL;
 
@@ -39,7 +39,7 @@ NV_FP_ACCOUNT_KEY_RECORD_T* nv_record_get_fp_data_structure_info(void)
 
 void nv_record_update_fp_data_structure(NV_FP_ACCOUNT_KEY_RECORD_T* pFpData)
 {
-    if (!memcmp((uint8_t *)pFpData, (uint8_t *)nvrecord_fp_account_key_p, 
+    if (!memcmp((uint8_t *)pFpData, (uint8_t *)nvrecord_fp_account_key_p,
         sizeof(NV_FP_ACCOUNT_KEY_RECORD_T)))
     {
         // the updated fp data is the same as the local content, do nothing
@@ -70,23 +70,23 @@ void nv_record_fp_account_key_add(NV_FP_ACCOUNT_KEY_ENTRY_T* param_rec)
     if (FP_ACCOUNT_KEY_RECORD_NUM == nvrecord_fp_account_key_p->key_count)
     {
         // discard the earliest key
-        memmove((uint8_t *)&(nvrecord_fp_account_key_p->accountKey[0]), 
+        memmove((uint8_t *)&(nvrecord_fp_account_key_p->accountKey[0]),
             (uint8_t *)&(nvrecord_fp_account_key_p->accountKey[1]),
             (FP_ACCOUNT_KEY_RECORD_NUM - 1)*sizeof(NV_FP_ACCOUNT_KEY_ENTRY_T));
 
         nvrecord_fp_account_key_p->key_count--;
     }
 
-    memcpy((uint8_t *)&(nvrecord_fp_account_key_p->accountKey[nvrecord_fp_account_key_p->key_count]), 
+    memcpy((uint8_t *)&(nvrecord_fp_account_key_p->accountKey[nvrecord_fp_account_key_p->key_count]),
             param_rec,
             sizeof(NV_FP_ACCOUNT_KEY_ENTRY_T));
-    
+
     nvrecord_fp_account_key_p->key_count++;
     nv_record_post_write_operation(lock);
     nv_record_update_runtime_userdata();
 }
 
-void nv_record_fp_account_info_reset(void) 
+void nv_record_fp_account_info_reset(void)
 {
     uint32_t lock = nv_record_pre_write_operation();
     uint8_t size = nv_record_fp_account_key_count();
@@ -110,13 +110,13 @@ bool nv_record_fp_account_key_get_by_index(uint8_t index, uint8_t* outputKey)
     {
         return false;
     }
-    
+
     memcpy(outputKey, (uint8_t *)&(nvrecord_fp_account_key_p->accountKey[index]),
         sizeof(NV_FP_ACCOUNT_KEY_ENTRY_T));
 
     TRACE(1,"Get account key %d as:", index);
     DUMP8("0x%02x ", outputKey, sizeof(NV_FP_ACCOUNT_KEY_ENTRY_T));
-    
+
     return true;
 }
 
@@ -130,7 +130,7 @@ void nv_record_fp_update_name(uint8_t* ptrName, uint32_t nameLen)
 {
     TRACE(1,"update name len %d", nameLen);
     uint32_t lock = nv_record_pre_write_operation();
-    
+
     memset(nvrecord_fp_account_key_p->name, 0, FP_MAX_NAME_LEN);
     if (nameLen > 0)
     {

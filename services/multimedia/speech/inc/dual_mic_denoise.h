@@ -51,12 +51,12 @@ void dual_mic_denoise_init(int32_t sample_rate, int32_t frame_size, const DUAL_M
  *
  * @param      in    input sample buffer
  *                   sample rate: 16k;
- *                   sample bit: 16; 
- *                   channel num: 2; 
+ *                   sample bit: 16;
+ *                   channel num: 2;
  *                   LRLRLR......: Left: main mic, Right: assist mic
  * @param      out   output sample buffer
  *                   sample rate: 16k;
- *                   sample bit: 16; 
+ *                   sample bit: 16;
  *                   channel num: 1;
  * @param[in]  len   The length is sample number
  */
@@ -72,7 +72,7 @@ void dual_mic_denoise_run(short *in, short len, short *out);
 void dual_mic_denoise_Cal_Gain(short *in, short len, DUAL_MIC_DENOISE_CFG_T *cfg);
 
 /**
- * @brief      Oppose initialization 
+ * @brief      Oppose initialization
  */
 void dual_mic_denoise_deinit(void);
 

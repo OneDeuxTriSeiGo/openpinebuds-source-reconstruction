@@ -85,14 +85,14 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
     // Get the address of the environment
     struct ota_env_tag *ota_env = PRF_ENV_GET(OTA, ota);
     uint8_t conidx = KE_IDX_GET(src_id);
 
     uint8_t status = GAP_ERR_NO_ERROR;
 
-    BLE_GATT_DBG("gattc_write_req_ind_handler ota_env 0x%x write handle %d shdl %d", 
+    BLE_GATT_DBG("gattc_write_req_ind_handler ota_env 0x%x write handle %d shdl %d",
         ota_env, param->handle, ota_env->shdl);
 
 #if 0   //reply write-response so fast which results in rx queue oveflow
@@ -113,7 +113,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
             cfm->handle = param->handle;
             cfm->status = status;
             ke_msg_send(cfm);
-            
+
             //Extract value before check
             memcpy(&value, &(param->value), sizeof(uint16_t));
 
@@ -187,11 +187,11 @@ __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_ev
     struct ota_env_tag *ota_env = PRF_ENV_GET(OTA, ota);
 
     uint8_t conidx = KE_IDX_GET(dest_id);
-        
+
     // notification or write request has been sent out
     if ((GATTC_NOTIFY == param->operation) || (GATTC_INDICATE == param->operation))
     {
-        
+
         struct ble_ota_tx_sent_ind_t * ind = KE_MSG_ALLOC(OTA_TX_DATA_SENT,
                 prf_dst_task_get(&ota_env->prf_env, conidx),
                 prf_src_task_get(&ota_env->prf_env, conidx),
@@ -204,7 +204,7 @@ __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_ev
     }
 
     ke_state_set(dest_id, OTA_IDLE);
-    
+
     return (KE_MSG_CONSUMED);
 }
 
@@ -223,7 +223,7 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_read_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
     // Get the address of the environment
     struct ota_env_tag *ota_env = PRF_ENV_GET(OTA, ota);
 
@@ -238,7 +238,7 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
     {
         uint16_t notify_ccc;
         cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id, gattc_read_cfm, sizeof(notify_ccc));
-        
+
         if (ota_env->isNotificationEnabled[conidx])
         {
             notify_ccc = 1;
@@ -280,7 +280,7 @@ static void send_notifiction(uint8_t conidx, const uint8_t* ptrData, uint32_t le
 
     TRACE(1,"Send ota notificationto handle offset %d:", handle_offset);
     DUMP8("%02x ", ptrData, length);
-        
+
 
     if (0xFFFF != handle_offset)
     {
@@ -382,7 +382,7 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
     {
         // force length to zero to reject any write starting from something != 0
         cfm->length = 0;
-        cfm->status = GAP_ERR_NO_ERROR;         
+        cfm->status = GAP_ERR_NO_ERROR;
     }
     else
     {
@@ -409,7 +409,7 @@ KE_MSG_HANDLER_TAB(ota)
     {GATTC_CMP_EVT,             (ke_msg_func_t) gattc_cmp_evt_handler},
     {GATTC_READ_REQ_IND,        (ke_msg_func_t) gattc_read_req_ind_handler},
     {OTA_SEND_NOTIFICATION,     (ke_msg_func_t) send_notification_handler},
-    {OTA_SEND_INDICATION,       (ke_msg_func_t) send_indication_handler},       
+    {OTA_SEND_INDICATION,       (ke_msg_func_t) send_indication_handler},
     {GATTC_ATT_INFO_REQ_IND,    (ke_msg_func_t) gattc_att_info_req_ind_handler },
 };
 

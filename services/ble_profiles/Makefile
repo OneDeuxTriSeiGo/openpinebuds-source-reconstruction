@@ -115,7 +115,7 @@ subdir-ccflags-y += \
 	-Ithirdparty/tile/tile_common/tile_service \
 	-Ithirdparty/tile/tile_common/tile_storage \
 	-Iservices/bt_app
-	
+
 ifeq ($(OTA_ENABLE),1)
 ifeq ($(IBRT),1)
 ccflags-y += -Iservices/ibrt_ota/inc

@@ -41,7 +41,7 @@ typedef enum {
     APP_TWS_IBRT_AUDIO_TRIGGER_TYPE_LOCAL,
 }APP_TWS_IBRT_AUDIO_TRIGGER_TYPE;
 
-typedef struct {    
+typedef struct {
     uint32_t timestamp;
     uint16_t sequenceNumber;
     uint8_t curSubSequenceNumber;
@@ -94,7 +94,7 @@ typedef struct{
     float factor_reference;
     float factor_fast_limit;
     float factor_slow_limit;
-    uint32_t dead_zone_us;  
+    uint32_t dead_zone_us;
 }APP_TWS_IBRT_AUDIO_SYNC_CFG_T;
 
 float app_tws_ibrt_audio_sync_config_factor_reference_get(void);

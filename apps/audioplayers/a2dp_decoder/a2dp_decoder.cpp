@@ -693,7 +693,7 @@ int a2dp_audio_sync_handler(uint8_t *buffer, uint32_t buffer_bytes)
         }
         goto exit;
     }
-    
+
     if (audio_sync->tick%A2DP_AUDIO_SYNC_INTERVAL == 0){
         diff_mtu = a2dp_audio_context.average_packet_mut-(float)a2dp_audio_context.dest_packet_mut;
         if (ABS(diff_mtu) < 0.6f){
@@ -723,13 +723,13 @@ int a2dp_audio_sync_handler(uint8_t *buffer, uint32_t buffer_bytes)
             float ref_us  = 0;
             float dest_us  = 0;
             float sample_us =0;
-            
+
             dma_buffer_samples = app_bt_stream_get_dma_buffer_samples()/2;
             dma_interval = A2DP_AUDIO_SYNC_FIX_DIFF_INTERVAL;
 
             ref_ratio  = a2dp_audio_context.init_factor_reference;
             curr_ratio = a2dp_audio_context.output_cfg.factor_reference;
-            
+
             samples = dma_interval*dma_buffer_samples;
             sampleRate = lastframe_info->stream_info.sample_rate * ref_ratio;
 
@@ -745,7 +745,7 @@ int a2dp_audio_sync_handler(uint8_t *buffer, uint32_t buffer_bytes)
             }else{
                 limit_ratio = ratio;
             }
-            TRACE_A2DP_DECODER_I("[SYNC] sampleRate:%d ref_ratio:%d samples:%d %d->%d", (int32_t)sampleRate, 
+            TRACE_A2DP_DECODER_I("[SYNC] sampleRate:%d ref_ratio:%d samples:%d %d->%d", (int32_t)sampleRate,
                                                                                                (int32_t)(ref_ratio * 10000000),
                                                                                                samples,
                                                                                                (int32_t)ref_us,
@@ -774,7 +774,7 @@ int a2dp_audio_sync_handler(uint8_t *buffer, uint32_t buffer_bytes)
                 }
             }
         }else{
-            TRACE_A2DP_DECODER_I("[SYNC] avg_mut:%d dest_mtu:%d", (int32_t)(a2dp_audio_context.average_packet_mut+0.5f), 
+            TRACE_A2DP_DECODER_I("[SYNC] avg_mut:%d dest_mtu:%d", (int32_t)(a2dp_audio_context.average_packet_mut+0.5f),
                                                                                       a2dp_audio_context.dest_packet_mut);
         }
     }else{
@@ -1235,9 +1235,9 @@ int a2dp_audio_store_packet(btif_media_header_t * header, unsigned char *buf, un
     if( a2dp_audio_get_status() == A2DP_AUDIO_DECODER_STATUS_NULL)
     {//if mem deinit , drop data
         return nRet;
-    }    
+    }
     a2dp_audio_status_mutex_lock();
-    
+
 #ifdef DECODER_ERR_TEST
     static uint16_t cnt = 0;
     static uint16_t limit = 500;
@@ -1501,12 +1501,12 @@ int a2dp_audio_init(uint32_t sysfreq, A2DP_AUDIO_CODEC_TYPE codec_type, A2DP_AUD
 
     A2DP_AUDIO_OUTPUT_CONFIG_T decoder_output_config;
     TRACE_A2DP_DECODER_I("[INIT] freq:%d codec:%d chnl:%d", sysfreq, codec_type, chnl_sel);
-    TRACE_A2DP_DECODER_I("[INIT] out:%d-%d-%d smp:%d dest:%d", 
+    TRACE_A2DP_DECODER_I("[INIT] out:%d-%d-%d smp:%d dest:%d",
                                                                config->sample_rate,
                                                                config->num_channels,
                                                                config->bits_depth,
                                                                config->frame_samples,
-                                                               dest_packet_mut);                                                                          
+                                                               dest_packet_mut);
     a2dp_audio_sysfreq_boost_init(sysfreq);
     a2dp_audio_sysfreq_boost_start(A2DP_AUDIO_SYSFREQ_BOOST_RESUME_CNT);
     a2dp_audio_semaphore_init();
@@ -1669,13 +1669,13 @@ int a2dp_audio_stop(void)
 {
     TRACE_A2DP_DECODER_I("[STOP]");
     int cnt = 0;
-    
+
     a2dp_audio_set_status(A2DP_AUDIO_DECODER_STATUS_STOP);
     a2dp_audio_semaphore_release();
 
     cnt = 50;
     do {
-        if (a2dp_audio_get_playback_status() == A2DP_AUDIO_DECODER_PLAYBACK_STATUS_IDLE){            
+        if (a2dp_audio_get_playback_status() == A2DP_AUDIO_DECODER_PLAYBACK_STATUS_IDLE){
             TRACE_A2DP_DECODER_I("[DEINIT]PLAYBACK_STATUS_IDLE cnt:%d", cnt);
             break;
         }else{
@@ -2012,7 +2012,7 @@ int a2dp_audio_dest_packet_mut_get(void)
 int a2dp_audio_set_channel_select(A2DP_AUDIO_CHANNEL_SELECT_E chnl_sel)
 {
     int nRet = A2DP_DECODER_NO_ERROR;
-    
+
     if (a2dp_audio_get_status() == A2DP_AUDIO_DECODER_STATUS_START){
         a2dp_audio_context.chnl_sel = chnl_sel;
         if (a2dp_audio_context.audio_decoder.audio_decoder_channel_select) {

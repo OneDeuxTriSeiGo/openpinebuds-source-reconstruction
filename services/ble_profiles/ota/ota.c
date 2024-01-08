@@ -42,7 +42,7 @@
  ****************************************************************************************
  */
 
-static const uint8_t OTA_SERVICE_UUID_128[ATT_UUID_128_LEN]    = BES_OTA_UUID_128;  
+static const uint8_t OTA_SERVICE_UUID_128[ATT_UUID_128_LEN]    = BES_OTA_UUID_128;
 
 #define RD_PERM PERM(RD, ENABLE)
 #define VAL_PERM PERM(WRITE_REQ, ENABLE) | PERM(NTF, ENABLE)
@@ -83,11 +83,11 @@ const struct attm_desc_128 ota_att_db[OTA_IDX_NB] =
  * @return status code to know if profile initialization succeed or not.
  ****************************************************************************************
  */
-static uint8_t ota_init(struct prf_task_env* env, uint16_t* start_hdl, 
+static uint8_t ota_init(struct prf_task_env* env, uint16_t* start_hdl,
     uint16_t app_task, uint8_t sec_lvl, void* params)
 {
     uint8_t status;
-        
+
     //Add Service Into Database
     status = attm_svc_create_db_128(start_hdl, OTA_SERVICE_UUID_128, NULL,
             OTA_IDX_NB, NULL, env->task, &ota_att_db[0],
@@ -115,7 +115,7 @@ static uint8_t ota_init(struct prf_task_env* env, uint16_t* start_hdl,
         ota_env->prf_env.app_task    = app_task
                 | (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
         // Mono Instantiated task
-        ota_env->prf_env.prf_task    = env->task | 
+        ota_env->prf_env.prf_task    = env->task |
             (PERM_GET(sec_lvl, SVC_MI) ? PERM(PRF_MI, ENABLE) : PERM(PRF_MI, DISABLE));
 
         // initialize environment variable

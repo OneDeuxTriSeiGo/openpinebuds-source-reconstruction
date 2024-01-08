@@ -1332,7 +1332,7 @@ int hal_norflash_freq_dynamic_adjust_save_config(struct HAL_NORFLASH_FREQ_DYNAMI
             break;
         }
     }
-    
+
     return ret;
 }
 
@@ -1349,7 +1349,7 @@ int hal_norflash_freq_dynamic_adjust_set_freq(enum HAL_CMU_FREQ_T freq)
             break;
         }
     }
-    
+
     return ret;
 }
 #endif

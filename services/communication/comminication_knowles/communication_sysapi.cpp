@@ -590,12 +590,12 @@ void uart_data_process_thread(const void *arg)
     uint32_t frame_len=0;
     //uint32_t stime,etime;
     //stime=hal_sys_timer_get();
-    
+
     while(1)
     {
         //TRACE(0,"---in uart_process_thread\n");
         osEvent evt;
-        
+
         if(avil_len_of_the_fifo()<=640){
             evt = osSignalWait(0x0, osWaitForever);
         }
@@ -626,7 +626,7 @@ void uart_data_process_thread(const void *arg)
                     //etime=hal_sys_timer_get();
                     //TRACE(1,"OPUS COST TIME %d", TICKS_TO_MS(etime-stime));
                     //TRACE(2,"%s ====>sys freq calc : %d\n", __func__, hal_sys_timer_calc_cpu_freq(50, 0));
-                    audio_dump_add_channel_data(0, (short *)uart_stream_buf, frame_len/2); 
+                    audio_dump_add_channel_data(0, (short *)uart_stream_buf, frame_len/2);
                     audio_dump_run();
                     send_message();
                     if(ret < 0) {

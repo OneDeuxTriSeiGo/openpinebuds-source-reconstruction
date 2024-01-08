@@ -95,10 +95,10 @@ static void app_spp_tota_gen_free_tx_buf(uint8_t* ptrData, uint32_t dataLen)
 
 uint8_t* app_spp_tota_gen_fill_data_into_tx_buf(uint8_t* ptrData, uint32_t dataLen)
 {
-    ASSERT((occupiedTotaSppGenTxBufSize + dataLen) < TOTA_SPP_TX_BUF_SIZE, 
+    ASSERT((occupiedTotaSppGenTxBufSize + dataLen) < TOTA_SPP_TX_BUF_SIZE,
         "Pending SPP General tx data has exceeded the tx buffer size !");
 
-        
+
     if ((offsetToFillTotaSppGenTxData + dataLen) > TOTA_SPP_TX_BUF_SIZE)
     {
         offsetToFillTotaSppGenTxData = 0;
@@ -113,7 +113,7 @@ uint8_t* app_spp_tota_gen_fill_data_into_tx_buf(uint8_t* ptrData, uint32_t dataL
 
     TOTA_LOG_DBG(3,"dataLen %d offsetToFillTotaSppGenTxData %d occupiedTotaSppGenTxBufSize %d",
         dataLen, offsetToFillTotaSppGenTxData, occupiedTotaSppGenTxBufSize);
-    
+
     return filledPtr;
 }
 
@@ -126,8 +126,8 @@ extern "C" APP_TOTA_CMD_RET_STATUS_E app_tota_cmd_received(uint8_t* ptrData, uin
  ****************************************************************************/
  #if 0
  static const U8 TotaGenClassId[] = {
-    SDP_ATTRIB_HEADER_8BIT(3),        /* Data Element Sequence, 6 bytes */ 
-    SDP_UUID_16BIT(SC_SERIAL_PORT),     /* Hands-Free UUID in Big Endian */ 
+    SDP_ATTRIB_HEADER_8BIT(3),        /* Data Element Sequence, 6 bytes */
+    SDP_UUID_16BIT(SC_SERIAL_PORT),     /* Hands-Free UUID in Big Endian */
 };
 //#else
 /* 128 bit UUID in Big Endian a8b1fbc4-7855-4235-8633-ff36c8235e16 */
@@ -167,22 +167,22 @@ static const U8 TotaGenClassId[] = {
 #endif
 
 static const U8 TotaSppGenProtoDescList[] = {
-    SDP_ATTRIB_HEADER_8BIT(12),  /* Data element sequence, 12 bytes */ 
+    SDP_ATTRIB_HEADER_8BIT(12),  /* Data element sequence, 12 bytes */
 
-    /* Each element of the list is a Protocol descriptor which is a 
-     * data element sequence. The first element is L2CAP which only 
-     * has a UUID element.  
-     */ 
-    SDP_ATTRIB_HEADER_8BIT(3),   /* Data element sequence for L2CAP, 3 
-                                  * bytes 
-                                  */ 
+    /* Each element of the list is a Protocol descriptor which is a
+     * data element sequence. The first element is L2CAP which only
+     * has a UUID element.
+     */
+    SDP_ATTRIB_HEADER_8BIT(3),   /* Data element sequence for L2CAP, 3
+                                  * bytes
+                                  */
 
-    SDP_UUID_16BIT(PROT_L2CAP),  /* Uuid16 L2CAP */ 
+    SDP_UUID_16BIT(PROT_L2CAP),  /* Uuid16 L2CAP */
 
-    /* Next protocol descriptor in the list is RFCOMM. It contains two 
-     * elements which are the UUID and the channel. Ultimately this 
-     * channel will need to filled in with value returned by RFCOMM.  
-     */ 
+    /* Next protocol descriptor in the list is RFCOMM. It contains two
+     * elements which are the UUID and the channel. Ultimately this
+     * channel will need to filled in with value returned by RFCOMM.
+     */
 
     /* Data element sequence for RFCOMM, 5 bytes */
     SDP_ATTRIB_HEADER_8BIT(5),
@@ -203,19 +203,19 @@ static const U8 TotaSppGenProfileDescList[] = {
     SDP_ATTRIB_HEADER_8BIT(6),
 
     SDP_UUID_16BIT(SC_SERIAL_PORT),   /* Uuid16 SPP */
-    SDP_UINT_16BIT(0x0102)            /* As per errata 2239 */ 
+    SDP_UINT_16BIT(0x0102)            /* As per errata 2239 */
 };
 
 /*
  * * OPTIONAL *  ServiceName
  */
 static const U8 TotaSppGenServiceName1[] = {
-    SDP_TEXT_8BIT(8),          /* Null terminated text string */ 
+    SDP_TEXT_8BIT(8),          /* Null terminated text string */
     'S', 'p', 'p', 'G','e','n', '1','\0'
 };
 
 static const U8 TotaSppGenServiceName2[] = {
-    SDP_TEXT_8BIT(8),          /* Null terminated text string */ 
+    SDP_TEXT_8BIT(8),          /* Null terminated text string */
     'S', 'p', 'p', 'G','e','n', '2','\0'
 };
 
@@ -226,7 +226,7 @@ static const U8 TotaSppGenServiceName2[] = {
  */
 static sdp_attribute_t TotaSppGenSdpAttributes1[] = {
 
-    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaGenClassId), 
+    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaGenClassId),
 
     SDP_ATTRIBUTE(AID_PROTOCOL_DESC_LIST, TotaSppGenProtoDescList),
 
@@ -239,7 +239,7 @@ static sdp_attribute_t TotaSppGenSdpAttributes1[] = {
 /*
 static sdp_attribute_t TotaSppGenSdpAttributes2[] = {
 
-    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaGenClassId), 
+    SDP_ATTRIBUTE(AID_SERVICE_CLASS_ID_LIST, TotaGenClassId),
 
     SDP_ATTRIBUTE(AID_PROTOCOL_DESC_LIST, TotaSppGenProtoDescList),
 
@@ -269,11 +269,11 @@ static void tota_spp_general_read_thread(const void *arg)
 {
     uint8_t buffer[TOTA_SPP_MAX_PACKET_SIZE];
     U16 maxBytes;
-    
+
     while (1)
     {
         maxBytes = TOTA_SPP_MAX_PACKET_SIZE;
-        
+
         btif_spp_read(tota_spp_gen_dev, (char *)buffer, &maxBytes);
         TOTA_LOG_DBG(2,"[%s]general data receive length = %d",__func__,maxBytes);
         TOTA_LOG_DUMP("[0x%x]",buffer,maxBytes);
@@ -329,7 +329,7 @@ static void spp_tota_gen_callback(struct spp_device *locDev, struct spp_callback
         if (app_spp_tota_gen_tx_done_func)
         {
             app_spp_tota_gen_tx_done_func();
-        }       
+        }
     }
     else
     {

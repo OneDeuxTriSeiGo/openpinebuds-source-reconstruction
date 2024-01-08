@@ -1,11 +1,11 @@
 [RX]:
-04 3e 13 01 00 00 00 01 01 7e dd 73 45 f9 4c 20 00 00 00 d0 07 01 
+04 3e 13 01 00 00 00 01 01 7e dd 73 45 f9 4c 20 00 00 00 d0 07 01
 [BLE_HCI]: Func: HciProcessEvent, Line: 82  event: 62
 [BLE]: Func: MeHandleEvents, Line: 2458
 
 [BLE]: bridge_hci_ble_event line: 294 ++++
 
-3e 13 01 00 00 00 01 01 7e dd 73 45 f9 4c 20 00 00 00 d0 07 01 
+3e 13 01 00 00 00 01 01 7e dd 73 45 f9 4c 20 00 00 00 d0 07 01
 [BLE]: Func: bridge_hci_ble_event, Line: 313 len: 15
 [BLE]: Func: bridge_hci_ble_event, Line: 317 len: 13, code: 3e
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 19
@@ -81,7 +81,7 @@
 [BLE]: gapm_con_enable line: 641 ----
 
 [RX]:
-02 00 20 0b 00 07 00 04 00 10 01 00 ff ff 00 28 
+02 00 20 0b 00 07 00 04 00 10 01 00 ff ff 00 28
 [BLE]: bridge_hcif_recv_acl line: 376 ++++
 
 [BLE_HCI]: Func: hci_acl_rx_data_received, Line: 1783 conhdl: 0, idx: 0
@@ -95,7 +95,7 @@
 [BLE_L2C]: Func: hci_ble_acl_data_rx_handler, Line: 542 pb_flag: 2
 [BLE]: l2cc_pdu_header_check line: 1069 ++++
 
-00 20 0b 00 07 
+00 20 0b 00 07
 [BLE_L2C]: Func: l2cc_pdu_header_check, Line: 1103 cid: 11
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 74
 [BLE]: ke_msg_send line: 72 ++++
@@ -137,7 +137,7 @@
 [BLE]: hci_tx_start line: 835 ++++
 
 [TX2]:
-02 00 00 0e 00 0a 00 05 00 01 00 06 00 02 00 0b 00 00 00 
+02 00 00 0e 00 0a 00 05 00 01 00 06 00 02 00 0b 00 00 00
 [BLE_HCI]: Func: bridge_hcif_send_acl, Line: 409 ****** bytes_sent: 0 , bytes_to_send: 18******
 [BLE]: hci_tx_trigger line: 1190 ----
 
@@ -150,13 +150,13 @@
 [BLE]: l2cm_l2cap_tx_handler line: 74 ----
 
 [RX]:
-04 13 05 01 00 00 01 00 
+04 13 05 01 00 00 01 00
 [BLE_HCI]: Func: HciProcessEvent, Line: 82  event: 19
 [BLE]: Func: HciProcessEvent, Line: 92
 
 [BLE]: bridge_hci_ble_event line: 294 ++++
 
-13 05 01 00 00 01 00 
+13 05 01 00 00 01 00
 [BLE]: Func: bridge_hci_ble_event, Line: 313 len: 07
 [BLE]: Func: bridge_hci_ble_event, Line: 317 len: 05, code: 13
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 6
@@ -169,15 +169,15 @@
 [BLE]: hci_nb_cmp_pkts_evt_handler line: 478 ----
 
 [TX]:
-01 35 0c 05 01 00 00 01 00 
+01 35 0c 05 01 00 00 01 00
 [RX]:
-04 3e 0a 03 00 00 00 06 00 00 00 d0 07 
+04 3e 0a 03 00 00 00 06 00 00 00 d0 07
 [BLE_HCI]: Func: HciProcessEvent, Line: 82  event: 62
 [BLE]: Func: MeHandleEvents, Line: 2458
 
 [BLE]: bridge_hci_ble_event line: 294 ++++
 
-3e 0a 03 00 00 00 06 00 00 00 d0 07 
+3e 0a 03 00 00 00 06 00 00 00 d0 07
 [BLE]: Func: bridge_hci_ble_event, Line: 313 len: 0c
 [BLE]: Func: bridge_hci_ble_event, Line: 317 len: 0a, code: 3e
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 10
@@ -189,7 +189,7 @@
 [BLE]: ke_msg_send line: 72 ++++
 
 [RX]:
-02 00 20 0b 00 07 00 04 00 10 01 00 ff ff 00 28 
+02 00 20 0b 00 07 00 04 00 10 01 00 ff ff 00 28
 [BLE]: bridge_hcif_recv_acl line: 376 ++++
 
 [BLE_HCI]: Func: hci_acl_rx_data_received, Line: 1783 conhdl: 0, idx: 0
@@ -203,7 +203,7 @@
 [BLE_L2C]: Func: hci_ble_acl_data_rx_handler, Line: 542 pb_flag: 2
 [BLE]: l2cc_pdu_header_check line: 1069 ++++
 
-00 20 0b 00 07 
+00 20 0b 00 07
 [BLE_L2C]: Func: l2cc_pdu_header_check, Line: 1103 cid: 11
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 74
 [BLE]: ke_msg_send line: 72 ++++
@@ -245,7 +245,7 @@
 [BLE]: hci_tx_start line: 835 ++++
 
 [TX2]:
-02 00 00 0e 00 0a 00 05 00 01 00 06 00 02 00 0b 00 00 00 
+02 00 00 0e 00 0a 00 05 00 01 00 06 00 02 00 0b 00 00 00
 [BLE_HCI]: Func: bridge_hcif_send_acl, Line: 409 ****** bytes_sent: 0 , bytes_to_send: 18******
 [BLE]: hci_tx_trigger line: 1190 ----
 
@@ -258,13 +258,13 @@
 [BLE]: l2cm_l2cap_tx_handler line: 74 ----
 
 [RX]:
-04 13 05 01 00 00 01 00 
+04 13 05 01 00 00 01 00
 [BLE_HCI]: Func: HciProcessEvent, Line: 82  event: 19
 [BLE]: Func: HciProcessEvent, Line: 92
 
 [BLE]: bridge_hci_ble_event line: 294 ++++
 
-13 05 01 00 00 01 00 
+13 05 01 00 00 01 00
 [BLE]: Func: bridge_hci_ble_event, Line: 313 len: 07
 [BLE]: Func: bridge_hci_ble_event, Line: 317 len: 05, code: 13
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 6
@@ -277,9 +277,9 @@
 [BLE]: hci_nb_cmp_pkts_evt_handler line: 478 ----
 
 [TX]:
-01 35 0c 05 01 00 00 01 00 
+01 35 0c 05 01 00 00 01 00
 [RX]:
-02 00 20 0b 00 07 00 04 00 10 01 00 ff ff 00 28 
+02 00 20 0b 00 07 00 04 00 10 01 00 ff ff 00 28
 [BLE]: bridge_hcif_recv_acl line: 376 ++++
 
 [BLE_HCI]: Func: hci_acl_rx_data_received, Line: 1783 conhdl: 0, idx: 0
@@ -293,7 +293,7 @@
 [BLE_L2C]: Func: hci_ble_acl_data_rx_handler, Line: 542 pb_flag: 2
 [BLE]: l2cc_pdu_header_check line: 1069 ++++
 
-00 20 0b 00 07 
+00 20 0b 00 07
 [BLE_L2C]: Func: l2cc_pdu_header_check, Line: 1103 cid: 11
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 74
 [BLE]: ke_msg_send line: 72 ++++
@@ -335,7 +335,7 @@
 [BLE]: hci_tx_start line: 835 ++++
 
 [TX2]:
-02 00 00 0e 00 0a 00 05 00 01 00 06 00 02 00 0b 00 00 00 
+02 00 00 0e 00 0a 00 05 00 01 00 06 00 02 00 0b 00 00 00
 [BLE_HCI]: Func: bridge_hcif_send_acl, Line: 409 ****** bytes_sent: 0 , bytes_to_send: 18******
 [BLE]: hci_tx_trigger line: 1190 ----
 
@@ -348,13 +348,13 @@
 [BLE]: l2cm_l2cap_tx_handler line: 74 ----
 
 [RX]:
-04 13 05 01 00 00 01 00 
+04 13 05 01 00 00 01 00
 [BLE_HCI]: Func: HciProcessEvent, Line: 82  event: 19
 [BLE]: Func: HciProcessEvent, Line: 92
 
 [BLE]: bridge_hci_ble_event line: 294 ++++
 
-13 05 01 00 00 01 00 
+13 05 01 00 00 01 00
 [BLE]: Func: bridge_hci_ble_event, Line: 313 len: 07
 [BLE]: Func: bridge_hci_ble_event, Line: 317 len: 05, code: 13
 [BLE]: Func: ke_msg_alloc, Line: 61  param_len: 6
@@ -367,4 +367,4 @@
 [BLE]: hci_nb_cmp_pkts_evt_handler line: 478 ----
 
 [TX]:
-01 35 0c 05 01 00 00 01 00 
+01 35 0c 05 01 00 00 01 00

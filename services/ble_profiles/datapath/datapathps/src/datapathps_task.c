@@ -54,14 +54,14 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
     // Get the address of the environment
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
     uint8_t conidx = KE_IDX_GET(src_id);
 
     uint8_t status = GAP_ERR_NO_ERROR;
 
-    BLE_GATT_DBG("gattc_write_req_ind_handler datapathps_env 0x%x write handle %d shdl %d", 
+    BLE_GATT_DBG("gattc_write_req_ind_handler datapathps_env 0x%x write handle %d shdl %d",
         datapathps_env, param->handle, datapathps_env->shdl);
 
 
@@ -71,7 +71,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         if (param->handle == (datapathps_env->shdl + DATAPATHPS_IDX_TX_NTF_CFG))
         {
             uint16_t value = 0x0000;
-            
+
             //Extract value before check
             memcpy(&value, &(param->value), sizeof(uint16_t));
 
@@ -145,11 +145,11 @@ __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_ev
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
 
     uint8_t conidx = KE_IDX_GET(dest_id);
-        
+
     // notification has been sent out
     if ((GATTC_NOTIFY == param->operation) || (GATTC_WRITE_NO_RESPONSE == param->operation))
     {
-        
+
         struct ble_datapath_tx_sent_ind_t * ind = KE_MSG_ALLOC(DATAPATHPS_TX_DATA_SENT,
                 prf_dst_task_get(&datapathps_env->prf_env, conidx),
                 prf_src_task_get(&datapathps_env->prf_env, conidx),
@@ -162,7 +162,7 @@ __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_ev
     }
 
     ke_state_set(dest_id, DATAPATHPS_IDLE);
-    
+
     return (KE_MSG_CONSUMED);
 }
 
@@ -181,11 +181,11 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_read_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
     // Get the address of the environment
     struct datapathps_env_tag *datapathps_env = PRF_ENV_GET(DATAPATHPS, datapathps);
 
-    struct gattc_read_cfm* cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id, 
+    struct gattc_read_cfm* cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id,
         gattc_read_cfm, BLE_MAXIMUM_CHARACTERISTIC_DESCRIPTION);
 
     uint8_t conidx = KE_IDX_GET(src_id);
@@ -344,10 +344,10 @@ __STATIC int gattc_event_ind_handler(ke_msg_id_t const msgid,
                         prf_src_task_get(&datapathps_env->prf_env, conidx),
                         ble_datapath_rx_data_ind_t,
                         param->length);
-                
+
                 ind->length = param->length;
                 memcpy((uint8_t *)(ind->data), &(param->value), param->length);
-                
+
                 ke_msg_send(ind);
 
             }
@@ -447,7 +447,7 @@ KE_MSG_HANDLER_TAB(datapathps)
     {GATTC_EVENT_IND,                           (ke_msg_func_t) gattc_event_ind_handler},
     {DATAPATHPS_CONTROL_NOTIFICATION,           (ke_msg_func_t) control_notification_handler},
     {GATTC_ATT_INFO_REQ_IND,                    (ke_msg_func_t) gattc_att_info_req_ind_handler },
-    
+
 };
 
 void datapathps_task_init(struct ke_task_desc *task_desc)

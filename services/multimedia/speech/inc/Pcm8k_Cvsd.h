@@ -14,7 +14,7 @@
  *
  ****************************************************************************/
 /////////////////////////////////////////////////////////////////////////
-//PCM8K <=> CVSD                                      
+//PCM8K <=> CVSD
 /////////////////////////////////////////////////////////////////////////
 #ifndef _PCM8K_CVSD_H_
 #define _PCM8K_CVSD_H_
@@ -25,8 +25,8 @@
 #define MAXNUMOFSAMPLES 128
 
 
-//resample delay 
-#define RESAMPLE_DELAY 32 
+//resample delay
+#define RESAMPLE_DELAY 32
 
 
 void Pcm8k_CvsdInit(void);

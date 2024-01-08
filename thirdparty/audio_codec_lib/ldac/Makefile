@@ -1,4 +1,4 @@
-#obj-y := src/ 
+#obj-y := src/
 
 APP_LDAC_LIB_NAME := ldac_lib
 obj-y += $(APP_LDAC_LIB_NAME).a
@@ -10,5 +10,5 @@ subdir-ccflags-y += \
 subdir-ccflags-y += -Wall -Wno-long-long
 
 
-		
-	
+
+

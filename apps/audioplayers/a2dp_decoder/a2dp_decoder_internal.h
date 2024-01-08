@@ -87,12 +87,12 @@ typedef struct {
     AUDIO_DECODER_CHANNEL_SELECT audio_decoder_channel_select;
 } A2DP_AUDIO_DECODER_T;
 
-typedef struct {    
+typedef struct {
     list_t *input_raw_packet_list;
     list_t *output_pcm_packet_list;
 } A2DP_AUDIO_DATAPATH_T;
 
-typedef struct {    
+typedef struct {
     bool  enalbe;
     void *semaphore;
 } AUDIO_BUFFER_SEMAPHORE_T;
@@ -133,7 +133,7 @@ typedef struct {
     uint32_t cnt;
 } A2DP_AUDIO_SYNC_T;
 
-typedef struct {    
+typedef struct {
     A2DP_AUDIO_OUTPUT_CONFIG_T output_cfg;
     float init_factor_reference;
     A2DP_AUDIO_CHANNEL_SELECT_E chnl_sel;

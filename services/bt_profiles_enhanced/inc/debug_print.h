@@ -23,12 +23,12 @@ usage:
    #undef MOUDLE
    #define MOUDLE BB
    #include "debug_print.h"
-   
-2.define the module debug level in debug_cfg.h, 
+
+2.define the module debug level in debug_cfg.h,
   NOTICE,if no define, then no print
-  
+
    #define BB_LEVEL INFO_LEVEL
-   
+
 3.use DEBUG_INFO,DEBUG_WARNING,and DEBUG_ERROR in your module's codes
 
 4.DEBUG_ASSERT always work.
@@ -109,7 +109,7 @@ void _debug_print_dump_data(char *mem, int mem_size);
                                            }while(0);
 
 #else
-#define DEBUG_DUMP_DATA(...) 
+#define DEBUG_DUMP_DATA(...)
 #endif
 
 
@@ -124,8 +124,8 @@ void _debug_print_dump_data(char *mem, int mem_size);
 #define DEBUG_WARNING(...)
 #define DEBUG_ERROR(...)
 #define DEBUG_ASSERT(expr)
-#define DEBUG_DUMP_DATA(...)  
-#define DEBUG_RAW(...) 
+#define DEBUG_DUMP_DATA(...)
+#define DEBUG_RAW(...)
 #endif
 
 #endif /* __DEBUG_PRINT_H__ */

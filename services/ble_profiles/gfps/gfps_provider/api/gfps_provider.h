@@ -52,7 +52,7 @@ enum
     GFPSP_STATE_MAX
 };
 
-/// GFPSP Attributes database handle list 
+/// GFPSP Attributes database handle list
 enum gfpsp_att_db_handles
 {
     GFPSP_IDX_SVC,
@@ -60,11 +60,11 @@ enum gfpsp_att_db_handles
     GFPSP_IDX_KEY_BASED_PAIRING_CHAR,
     GFPSP_IDX_KEY_BASED_PAIRING_VAL,
     GFPSP_IDX_KEY_BASED_PAIRING_NTF_CFG,
-    
+
     GFPSP_IDX_PASSKEY_CHAR,
     GFPSP_IDX_PASSKEY_VAL,
     GFPSP_IDX_PASSKEY_NTF_CFG,
-    
+
     GFPSP_IDX_ACCOUNT_KEY_CHAR,
     GFPSP_IDX_ACCOUNT_KEY_VAL,
     GFPSP_IDX_ACCOUNT_KEY_CFG,
@@ -72,7 +72,7 @@ enum gfpsp_att_db_handles
     GFPSP_IDX_NAME_CHAR,
     GFPSP_IDX_NAME_VAL,
     GFPSP_IDX_NAME_CFG,
-    
+
     GFPSP_IDX_NB,
 };
 
@@ -122,7 +122,7 @@ typedef enum
     KEY_BASED_PAIRING_REQ = 0x00,
     KEY_BASED_PAIRING_RSP = 0x01,
     ACTION_REQUEST        = 0x10,
-} GFPS_MESSAGE_TYPE_E;   
+} GFPS_MESSAGE_TYPE_E;
 
 typedef struct {
     uint8_t message_type;
@@ -131,11 +131,11 @@ typedef struct {
 
 typedef struct {
     uint8_t message_type;   // KEY_BASED_PAIRING_REQ
-    uint8_t flags_reserved          :   4;    
+    uint8_t flags_reserved          :   4;
     uint8_t flags_retroactively_write_account_key   :   1;
-    uint8_t flags_get_existing_name :   1;    
-    uint8_t flags_bonding_addr      :   1;    
-    uint8_t flags_discoverability   :   1; 
+    uint8_t flags_get_existing_name :   1;
+    uint8_t flags_bonding_addr      :   1;
+    uint8_t flags_discoverability   :   1;
 
     uint8_t provider_addr[6];
     uint8_t seeker_addr[6];
@@ -144,11 +144,11 @@ typedef struct {
 
 typedef struct {
     uint8_t message_type;   // ACTION_REQUEST
-    uint8_t flags_reserved          :   6;    
-    uint8_t isFollowedByAdditionalDataCh   :   1; 
-    uint8_t isDeviceAction          :   1;       
+    uint8_t flags_reserved          :   6;
+    uint8_t isFollowedByAdditionalDataCh   :   1;
+    uint8_t isDeviceAction          :   1;
 
-    uint8_t provider_addr[6];   
+    uint8_t provider_addr[6];
     uint8_t messageGroup;           // Mandatory if Flags Bit 1 is set.
     uint8_t messageCode;            // Mandatory if Flags Bit 1 is set.
     uint8_t additionalDataLen;      // Mandatory if Flags Bit 1 is set. Less than 6
@@ -175,7 +175,7 @@ typedef struct _gfpsp_req_resp{
     union{
         gfpsp_raw_req_t                 raw_req;
         gfpsp_encrypted_req_uint128     en_req;
-        gfpsp_key_based_pairing_req_t   key_based_pairing_req;     
+        gfpsp_key_based_pairing_req_t   key_based_pairing_req;
         gfpsp_action_req_t              action_req;
         gfpsp_raw_resp                  key_based_pairing_rsp;
         gfpsp_encrypted_resp            en_rsp;

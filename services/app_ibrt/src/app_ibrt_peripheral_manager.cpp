@@ -63,7 +63,7 @@ int app_ibrt_peripheral_mailbox_put(TWS_PD_MSG_BLOCK* msg_src)
         TRACE(0,"msg_src is a null pointer in app_ibrt_peripheral_mailbox_put!");
         return -1;
     }
-    
+
     osStatus status;
     TWS_PD_MSG_BLOCK *msg_p = NULL;
     msg_p = (TWS_PD_MSG_BLOCK*)osMailAlloc(app_ibrt_peripheral_mailbox, 0);
@@ -228,7 +228,7 @@ void app_ibrt_peripheral_automate_test_handler(uint8_t* cmd_buf, uint32_t cmd_le
     static uint8_t last_group_code = 0xFF;
     static uint8_t last_operation_code = 0xFF;
 
-    //TRACE(4, "%s group 0x%x op 0x%x times %d len %d", __func__, 
+    //TRACE(4, "%s group 0x%x op 0x%x times %d len %d", __func__,
                 //test_cmd->group_code, test_cmd->opera_code, test_cmd->test_times, test_cmd->param_len);
     //TRACE(2, "last group 0x%x last op 0x%x", last_group_code, last_operation_code);
     if (last_group_code != test_cmd->group_code || last_operation_code != test_cmd->opera_code)

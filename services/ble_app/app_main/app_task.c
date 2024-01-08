@@ -38,7 +38,7 @@
 #include "ke_timer.h"             // Kernel timer
 #include "gattc_task.h"
 #include "app_ble_include.h"
-#include "../l2cm/l2cm_int.h" 
+#include "../l2cm/l2cm_int.h"
 
 #include "co_utils.h"
 #if (BLE_APP_SEC)
@@ -214,7 +214,7 @@ static int gapm_device_ready_ind_handler(ke_msg_id_t const msgid,
     {
         return KE_MSG_CONSUMED;
     }
-    
+
 #ifdef __FACTORY_MODE_SUPPORT__
     if (app_factorymode_get())
     {
@@ -260,8 +260,8 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
                                 ke_task_id_t const dest_id,
                                 ke_task_id_t const src_id)
 {
-    BLE_APP_FUNC_ENTER();    
-    BLE_APP_DBG("param->operation: %d status is %d app_env.next_svc is %d", 
+    BLE_APP_FUNC_ENTER();
+    BLE_APP_DBG("param->operation: %d status is %d app_env.next_svc is %d",
         param->operation, param->status, app_env.next_svc);
 
     switch(param->operation)
@@ -294,7 +294,7 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
                 cmd->att_cfg = 0;
                 cmd->att_cfg |= GAPM_MASK_ATT_SVC_CHG_EN;
                 #if (BLE_APP_HID)
-                // Enable Slave Preferred Connection Parameters present 
+                // Enable Slave Preferred Connection Parameters present
                 cmd->att_cfg |= GAPM_MASK_ATT_SLV_PREF_CON_PAR_EN;
                 #endif //(BLE_APP_HID)
 
@@ -351,9 +351,9 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
         case (GAPM_ADV_DIRECT_LDC):
         {
             LOG_I("adv evt cmp status 0x%x", param->status);
-            ASSERT(GAP_ERR_ADV_DATA_INVALID != param->status, 
+            ASSERT(GAP_ERR_ADV_DATA_INVALID != param->status,
                 "The BLE adv data or scan rsp data is invalid! Better check their length.");
-                
+
             if (GAP_ERR_CANCELED == param->status)
             {
                 app_advertising_stopped();
@@ -373,7 +373,7 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
         {
             app_advertising_starting_failed();
         }
-        
+
         break;
     }
     case GAPM_UPDATE_ADVERTISE_DATA:
@@ -566,7 +566,7 @@ static void POSSIBLY_UNUSED gpac_exchange_data_packet_length(uint8_t conidx)
 #if defined(CHIP_BEST2300) || defined(CHIP_BEST2300P)
     return;
 #endif
-    
+
     struct gapc_set_le_pkt_size_cmd *set_le_pakt_size_req = KE_MSG_ALLOC(GAPC_SET_LE_PKT_SIZE_CMD,
                                                                          KE_BUILD_ID(TASK_GAPC, conidx),
                                                                          TASK_APP,
@@ -634,7 +634,7 @@ static int gapc_connection_req_ind_handler(ke_msg_id_t const msgid,
     uint8_t conidx = KE_IDX_GET(src_id);
 
     APP_BLE_CONN_CONTEXT_T* pContext = &(app_env.context[conidx]);
-    
+
     pContext->connectStatus = BLE_CONNECTED;
 
     APP_BLE_NEGOTIATED_CONN_PARAM_T connParam;
@@ -668,7 +668,7 @@ static int gapc_connection_req_ind_handler(ke_msg_id_t const msgid,
     {
         pContext->peerAddrType = param->peer_addr_type;
         memcpy(pContext->bdAddr, param->peer_addr.addr, BD_ADDR_LEN);
-        
+
         // Retrieve the connection info from the parameters
         pContext->conhdl = param->conhdl;
 
@@ -716,7 +716,7 @@ static int gapc_connection_req_ind_handler(ke_msg_id_t const msgid,
 #endif
 
     app_env.context[conidx].connInterval = param->con_interval;
-    
+
     app_ble_update_conn_param_mode(BLE_CONN_PARAM_MODE_DEFAULT, true);
     BLE_APP_FUNC_LEAVE();
 
@@ -786,7 +786,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     app_env.context[conidx].isFeatureExchanged = false;
     app_env.context[conidx].connInterval = 0;
     l2cm_buffer_reset(conidx);
-    
+
     // Go to the ready state
     ke_state_set(TASK_APP, APPM_READY);
 
@@ -803,7 +803,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     #if (BLE_OTA)
     app_ota_disconnected_evt_handler(conidx);
     #endif
-    
+
     #if (BLE_APP_TOTA)
     app_tota_disconnected_evt_handler(conidx);
     #endif
@@ -811,7 +811,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     #if(BLE_APP_GFPS)
     app_gfps_disconnected_evt_handler(conidx);
     #endif
-    
+
 
     #if (BLE_AI_VOICE)
     app_ai_disconnected_evt_handler(conidx);
@@ -932,7 +932,7 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
             msg_pol = appm_get_handler(&app_hrps_table_handler, msgid, param, src_id);
         } break;
         #endif
-        
+
         #if (BLE_APP_VOICEPATH)
         case (TASK_ID_VOICEPATH):
         {
@@ -953,7 +953,7 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
         {
         // Call the TILE Module
             msg_pol = appm_get_handler(&app_tile_table_handler, msgid, param, src_id);
-        } 
+        }
         break;
         #endif
 
@@ -980,7 +980,7 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
             msg_pol = appm_get_handler(&app_tota_table_handler, msgid, param, src_id);
         } break;
         #endif //(BLE_APP_TOTA)
-        
+
         #if (BLE_APP_ANCC)
         case (TASK_ID_ANCC):
         {
@@ -1027,7 +1027,7 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
 static int gapm_adv_report_ind_handler(ke_msg_id_t const msgid,
                                           struct gapm_adv_report_ind *param,
                                           ke_task_id_t const dest_id,
-                                          ke_task_id_t const src_id)    
+                                          ke_task_id_t const src_id)
 {
     app_adv_reported_scanned(param);
     return KE_MSG_CONSUMED;
@@ -1036,7 +1036,7 @@ static int gapm_adv_report_ind_handler(ke_msg_id_t const msgid,
 static int gapm_addr_solved_ind_handler(ke_msg_id_t const msgid,
                                           struct gapm_addr_solved_ind *param,
                                           ke_task_id_t const dest_id,
-                                          ke_task_id_t const src_id)    
+                                          ke_task_id_t const src_id)
 {
     /// Indicate that resolvable random address has been solved
     appm_random_ble_addr_solved(true, param->irk.key);
@@ -1049,10 +1049,10 @@ __STATIC int gattc_mtu_changed_ind_handler(ke_msg_id_t const msgid,
                                         ke_task_id_t const src_id)
 {
     uint8_t conidx = KE_IDX_GET(src_id);
-    
+
     LOG_I("MTU has been negotiated as %d conidx %d", param->mtu, conidx);
-    
-    
+
+
 #if (BLE_APP_DATAPATH_SERVER)
     app_datapath_server_mtu_exchanged_handler(conidx, param->mtu);
 #endif
@@ -1099,7 +1099,7 @@ __STATIC int gapc_conn_param_update_req_ind_handler(ke_msg_id_t const msgid,
     event.p.conn_param_update_req_handled.intv_max = param->intv_max;
     event.p.conn_param_update_req_handled.latency  = param->latency;
     event.p.conn_param_update_req_handled.time_out = param->time_out;
-    
+
     app_ble_core_global_handle(&event, &accept);
     LOG_I("%s ret %d ", __func__, accept);
 
@@ -1107,7 +1107,7 @@ __STATIC int gapc_conn_param_update_req_ind_handler(ke_msg_id_t const msgid,
 
 #ifdef GFPS_ENABLED
     // if fastpair doesn't have the requirement of finishing
-    // pairing in a really short period, just comment out this 
+    // pairing in a really short period, just comment out this
     // code block to avoid audio glitch if this event happens during music
     // playback and interval is smaller than 15ms
     if (param->intv_min < (uint16_t)(15/1.25))
@@ -1143,7 +1143,7 @@ static int gapc_conn_param_updated_handler(ke_msg_id_t const msgid,
     connParam.sup_to= param->sup_to;
     connParam.con_latency = param->con_latency;
     app_ble_save_negotiated_conn_param(conidx, &connParam);
-    
+
 #if (BLE_VOICEPATH)
     app_voicepath_ble_conn_parameter_updated(conidx, param->con_interval, param->con_latency);
 #endif
@@ -1152,21 +1152,21 @@ static int gapc_conn_param_updated_handler(ke_msg_id_t const msgid,
 #endif
 
     app_env.context[conidx].connInterval = param->con_interval;
-    
+
     if (param->con_interval >= 32)
     {
         if (app_ble_is_parameter_mode_enabled(conidx, BLE_CONN_PARAM_MODE_OTA))
         {
-            app_ble_parameter_mode_clear(conidx, BLE_CONN_PARAM_MODE_OTA); 
-            app_ble_update_conn_param_mode(BLE_CONN_PARAM_MODE_OTA_SLOWER, true); 
+            app_ble_parameter_mode_clear(conidx, BLE_CONN_PARAM_MODE_OTA);
+            app_ble_update_conn_param_mode(BLE_CONN_PARAM_MODE_OTA_SLOWER, true);
         }
         else if (app_ble_is_parameter_mode_enabled(conidx, BLE_CONN_PARAM_MODE_AI_STREAM_ON))
         {
             app_ble_parameter_mode_clear(conidx, BLE_CONN_PARAM_MODE_AI_STREAM_ON);
-            app_ble_update_conn_param_mode(BLE_CONN_PARAM_MODE_AI_STREAM_ON, true); 
+            app_ble_update_conn_param_mode(BLE_CONN_PARAM_MODE_AI_STREAM_ON, true);
         }
     }
-    
+
     return (KE_MSG_CONSUMED);
 }
 

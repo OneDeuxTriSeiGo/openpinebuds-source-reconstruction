@@ -34,7 +34,7 @@ static void get_mic_data_max(short *buf, uint32_t len)
 {
     int max0 = -32768, min0 = 32767, diff0 = 0;
     int max1 = -32768, min1 = 32767, diff1 = 0;
-    
+
     for(uint32_t i=0; i<len/2;i+=2)
     {
         if(buf[i+0]>max0)
@@ -113,31 +113,31 @@ static const float DEN[MWSPT_NSEC][3] = {
     }
 };
 
-#else 
+#else
 
 #define MWSPT_NSEC 3
 static const int NL[MWSPT_NSEC] = { 1,3,1 };
 static const float NUM[MWSPT_NSEC][3] = {
   {
-  0.0002616526908,              0,              0 
+  0.0002616526908,              0,              0
   },
   {
-                1,              2,              1 
+                1,              2,              1
   },
   {
-                1,              0,              0 
+                1,              0,              0
   }
 };
 static const int DL[MWSPT_NSEC] = { 1,3,1 };
 static const float DEN[MWSPT_NSEC][3] = {
   {
-                1,              0,              0 
+                1,              0,              0
   },
   {
-                1,   -1.953727961,   0.9547745585 
+                1,   -1.953727961,   0.9547745585
   },
   {
-                1,              0,              0 
+                1,              0,              0
   }
 };
 
@@ -162,7 +162,7 @@ TRACE(0,"capture");
         {
             BufDstL[i]=BufSrcL[j];
             BufDstR[i]=BufSrcR[j];
-            
+
         }
 
     }
@@ -177,9 +177,9 @@ TRACE(0,"capture");
         {
             BufDstL[i]=BufSrcL[j];
             BufDstR[i]=BufSrcR[j];
-            
+
         }
-   
+
    }
 
 
@@ -212,9 +212,9 @@ TRACE(0,"capture");
             BufDstL = (short *)(playback_buf+playback_size/2);
             BufDstR = (short *)(playback_buf+playback_size/2+2);
 
-       
+
        }
-        
+
 
 
     for(int i=0,j=0;i<capture_size/4;i=i+4,j=j+2)
@@ -258,7 +258,7 @@ TRACE(0,"capture");
         else
         {
             OutValue= PcmValue;
-        }   
+        }
 
         OutValue=OutValue>>6;
     //  OutValue=BufSrcR[i];
@@ -287,12 +287,12 @@ TRACE(0,"capture");
             }
 
             OutValue = (short)y0;
-        }           
-        
+        }
+
 
         BufDstL[j]=OutValue;
         BufDstR[j]=OutValue;
-    }       
+    }
 
 
 #endif
@@ -362,7 +362,7 @@ void dualadc_audio_app(bool on)
         stream_cfg.data_size = playback_size;
         af_stream_open(AUD_STREAM_ID_0, AUD_STREAM_PLAYBACK, &stream_cfg);
 
-        
+
         stream_cfg.bits = AUD_BITS_16;
         stream_cfg.channel_num = AUD_CHANNEL_NUM_2;
         stream_cfg.sample_rate = sample_rate_capture;

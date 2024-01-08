@@ -87,14 +87,14 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
     // Get the address of the environment
     struct tota_env_tag *tota_env = PRF_ENV_GET(TOTA, tota);
     uint8_t conidx = KE_IDX_GET(src_id);
 
     uint8_t status = GAP_ERR_NO_ERROR;
 
-    BLE_GATT_DBG("gattc_write_req_ind_handler tota_env 0x%x write handle %d shdl %d", 
+    BLE_GATT_DBG("gattc_write_req_ind_handler tota_env 0x%x write handle %d shdl %d",
         tota_env, param->handle, tota_env->shdl);
 
     //Send write response
@@ -109,7 +109,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         if (param->handle == (tota_env->shdl + TOTA_IDX_NTF_CFG))
         {
             uint16_t value = 0x0000;
-            
+
             //Extract value before check
             memcpy(&value, &(param->value), sizeof(uint16_t));
 
@@ -184,11 +184,11 @@ __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_ev
     struct tota_env_tag *tota_env = PRF_ENV_GET(TOTA, tota);
 
     uint8_t conidx = KE_IDX_GET(dest_id);
-        
+
     // notification or write request has been sent out
     if ((GATTC_NOTIFY == param->operation) || (GATTC_INDICATE == param->operation))
     {
-        
+
         struct ble_tota_tx_sent_ind_t * ind = KE_MSG_ALLOC(TOTA_TX_DATA_SENT,
                 prf_dst_task_get(&tota_env->prf_env, conidx),
                 prf_src_task_get(&tota_env->prf_env, conidx),
@@ -201,7 +201,7 @@ __STATIC int gattc_cmp_evt_handler(ke_msg_id_t const msgid,  struct gattc_cmp_ev
     }
 
     ke_state_set(dest_id, TOTA_IDLE);
-    
+
     return (KE_MSG_CONSUMED);
 }
 
@@ -220,7 +220,7 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_read_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
-{   
+{
 
     TOTA_LOG_DBG(1,"[%s]TOTA",__func__);
     // Get the address of the environment
@@ -237,7 +237,7 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
     {
         uint16_t notify_ccc;
         cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id, gattc_read_cfm, sizeof(notify_ccc));
-        
+
         if (tota_env->isNotificationEnabled[conidx])
         {
             notify_ccc = 1;
@@ -381,7 +381,7 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
     {
         // force length to zero to reject any write starting from something != 0
         cfm->length = 0;
-        cfm->status = GAP_ERR_NO_ERROR;         
+        cfm->status = GAP_ERR_NO_ERROR;
     }
     else
     {
@@ -408,7 +408,7 @@ KE_MSG_HANDLER_TAB(tota)
     {GATTC_CMP_EVT,             (ke_msg_func_t) gattc_cmp_evt_handler},
     {GATTC_READ_REQ_IND,        (ke_msg_func_t) gattc_read_req_ind_handler},
     {TOTA_SEND_NOTIFICATION,    (ke_msg_func_t) send_notification_handler},
-    {TOTA_SEND_INDICATION,      (ke_msg_func_t) send_indication_handler},       
+    {TOTA_SEND_INDICATION,      (ke_msg_func_t) send_indication_handler},
     {GATTC_ATT_INFO_REQ_IND,    (ke_msg_func_t) gattc_att_info_req_ind_handler },
 };
 

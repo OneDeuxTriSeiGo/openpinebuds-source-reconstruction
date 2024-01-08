@@ -32,13 +32,13 @@ enum
     ///Set the value of an attribute - Request
     GFPSP_SET_VALUE_REQ = TASK_FIRST_MSG(TASK_ID_GFPSP),
     ///Set the value of an attribute - Response
-    GFPSP_SET_VALUE_RSP,    
+    GFPSP_SET_VALUE_RSP,
     /// Peer device request to get profile attribute value
     GFPSP_VALUE_REQ_IND,
     /// Peer device confirm value of requested attribute
     GFPSP_VALUE_CFM,
-    
-    GFPSP_KEY_BASED_PAIRING_NTF_CFG,    
+
+    GFPSP_KEY_BASED_PAIRING_NTF_CFG,
     GFPSP_KEY_BASED_PAIRING_WRITE_IND,
     GFPSP_KEY_BASED_PAIRING_WRITE_NOTIFY,
 
@@ -51,7 +51,7 @@ enum
     GFPSP_NAME_NOTIFY,
 
     GFPSP_SEND_WRITE_RESPONSE,
-    
+
 };
 
 ///Attribute Table Indexes

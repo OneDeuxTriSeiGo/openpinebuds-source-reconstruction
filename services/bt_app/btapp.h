@@ -160,7 +160,7 @@ extern const unsigned char a2dp_codec_elements[];
 #define HFP_KEY_DUAL_HF_HANGUP_ANOTHER      19
 #define HFP_KEY_DUAL_HF_HANGUP_CURR_ANSWER_ANOTHER  20
 #define HFP_KEY_DUAL_HF_HOLD_CURR_ANSWER_ANOTHER    21
-#define HFP_KEY_DUAL_HF_CHANGETOPHONE_ANSWER_ANOTHER  22 
+#define HFP_KEY_DUAL_HF_CHANGETOPHONE_ANSWER_ANOTHER  22
 #define HFP_KEY_DUAL_HF_CHANGETOPHONE_ANOTHER_ADDTOEARPHONE 23
 #define HFP_KEY_DUAL_HF_HANGUP_ANOTHER_ADDTOEARPHONE 24
 #endif
@@ -257,7 +257,7 @@ struct BT_DEVICE_T{
     enum BT_DEVICE_ID_T curr_a2dp_stream_id;
     uint16_t current_a2dp_conhdl;
 
-    
+
     uint8_t a2dp_state[BT_DEVICE_NUM];
     uint8_t a2dp_streamming[BT_DEVICE_NUM];
     uint8_t a2dp_play_pause_flag;

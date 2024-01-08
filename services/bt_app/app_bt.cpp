@@ -5263,7 +5263,7 @@ int8_t app_tile_get_ble_rssi(void)
 void app_bt_prepare_for_ota(void)
 {
     app_ibrt_ui_t *p_ui_ctrl = app_ibrt_ui_get_ctx();
-   
+
     p_ui_ctrl->config.disable_tws_switch = true;//disable role switch
 
     app_key_close();

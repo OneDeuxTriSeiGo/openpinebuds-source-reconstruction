@@ -81,7 +81,7 @@ subdir-ccflags-y += \
     -Iservices/app_tws/inc \
     -Iservices/app_ai/inc \
     -Iservices/ai_voice/protocol/gma/gma_crypto \
-    -Iapps/anc/inc 
+    -Iapps/anc/inc
 
 ifeq ($(IBRT),1)
 subdir-ccflags-y += \

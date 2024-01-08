@@ -49,7 +49,7 @@ void btm_process_cmd_complete_inquiry_cancel (uint8 *data);
 void btm_process_cmd_complete_remote_name_cancel(uint8 *data);
 void btm_process_cmd_complete_evt(struct hci_evt_packet_t *pkt);
 void btm_process_cmd_complete_read_buffer_size(uint8 *data);
-void btm_process_return_linkkeys_evt (struct hci_evt_packet_t *pkt); 
+void btm_process_return_linkkeys_evt (struct hci_evt_packet_t *pkt);
 void btm_acl_handle_nocopy(uint16 conn_handle, uint16 data_len, uint8 *data_p);
 extern void hcile_acl_rx_data_received(uint16 conn_handle, uint16 data_len, uint8 *data_p);
 extern int hci_no_operation_cmd_cmp_evt_handler(uint16_t opcode, void const *param);

@@ -472,12 +472,12 @@ void app_ibrt_enable_tports_test(void)
  Date         : 2019/4/10
  Author       : bestechnic
  Modification : Created function
- 
+
  *****************************************************************************/
  void app_ibrt_ui_tws_swtich_test(void)
  {
      ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
- 
+
      if (p_ibrt_ctrl->current_role == IBRT_MASTER)
      {
          btif_me_ibrt_role_switch(p_ibrt_ctrl->mobile_conhandle);
@@ -487,7 +487,7 @@ void app_ibrt_enable_tports_test(void)
          TRACE(0,"ibrt_ui_log:local role is ibrt_slave, pls send tws switch in another dev");
      }
  }
- 
+
  /*****************************************************************************
   Prototype    : app_ibrt_ui_suspend_ibrt_test
   Description  : suspend ibrt fastack
@@ -496,17 +496,17 @@ void app_ibrt_enable_tports_test(void)
   Return Value :
   Calls        :
   Called By    :
- 
+
   History        :
   Date         : 2019/4/24
   Author       : bestechnic
   Modification : Created function
- 
+
  *****************************************************************************/
  void app_ibrt_ui_suspend_ibrt_test(void)
  {
      ibrt_ctrl_t *p_ibrt_ctrl = app_tws_ibrt_get_bt_ctrl_ctx();
- 
+
      if (p_ibrt_ctrl->current_role== IBRT_MASTER)
      {
          btif_me_suspend_ibrt();
@@ -524,12 +524,12 @@ void app_ibrt_enable_tports_test(void)
   Return Value :
   Calls        :
   Called By    :
- 
+
   History        :
   Date         : 2019/4/27
   Author       : bestechnic
   Modification : Created function
- 
+
  *****************************************************************************/
  void app_ibrt_ui_resume_ibrt_test(void)
  {
@@ -543,12 +543,12 @@ void app_ibrt_enable_tports_test(void)
   Return Value :
   Calls        :
   Called By    :
- 
+
   History        :
   Date         : 2019/11/20
   Author       : bestechnic
   Modification : Created function
- 
+
  *****************************************************************************/
  void app_ibrt_ui_pairing_mode_test(void)
  {
@@ -562,18 +562,18 @@ void app_ibrt_enable_tports_test(void)
   Return Value :
   Calls        :
   Called By    :
- 
+
   History        :
   Date         : 2019/11/21
   Author       : bestechnic
   Modification : Created function
- 
+
  *****************************************************************************/
  void app_ibrt_ui_freeman_pairing_mode_test(void)
  {
      app_ibrt_ui_event_entry(IBRT_FREEMAN_PAIRING_EVENT);
  }
- 
+
  void app_ibrt_inquiry_start_test(void)
  {
      app_bt_start_search();

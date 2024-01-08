@@ -48,7 +48,7 @@ void mic_key_irq_hdl (uint16_t irq_val, HAL_GPADC_MV_T volt)
 
         uint8_t i, j;
         uint32_t mean;
-        
+
         for (i = 0; i < MIC_KEY_NUM; i++) {
             mean = 0;
 
@@ -57,7 +57,7 @@ void mic_key_irq_hdl (uint16_t irq_val, HAL_GPADC_MV_T volt)
             }
             mean /= MIC_KEY_CHK_TIMES-MIC_KEY_SKIP_CNT;
 
-            if ((mean > mic_key_cfg_lst[i].ref_vol_low) && (mean <= mic_key_cfg_lst[i].ref_vol_high)) 
+            if ((mean > mic_key_cfg_lst[i].ref_vol_low) && (mean <= mic_key_cfg_lst[i].ref_vol_high))
                 break;
         }
 

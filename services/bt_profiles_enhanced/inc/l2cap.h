@@ -93,9 +93,9 @@ struct l2cap_sig_conn_req {
 #define L2CAP_SIG_RESULT_PENDING 0x1
 #define L2CAP_SIG_RESULT_REFUSE_PSM 0x2
 #define L2CAP_SIG_RESULT_REFUSE_SECURITY 0x3
-#define L2CAP_SIG_RESULT_REFUSE_RESOURCE 0x4    
+#define L2CAP_SIG_RESULT_REFUSE_RESOURCE 0x4
 
-#define L2CAP_SIG_RESULT_PENDING_NOINFO 0x00    
+#define L2CAP_SIG_RESULT_PENDING_NOINFO 0x00
 #define L2CAP_SIG_RESULT_PENDING_AUTHEN 0x01
 #define L2CAP_SIG_RESULT_PENDING_AUTHOR 0x02
 struct l2cap_sig_conn_rsp {
@@ -120,7 +120,7 @@ struct l2cap_sig_cfg_rsp {
     uint16 flags;
     uint16 result;
 }__attribute__ ((packed));
-    
+
 #define L2CAP_CFG_TYPE_MTU      0x01
 #define L2CAP_CFG_TYPEF_FLUSH_TO    0x02
 #define L2CAP_CFG_TYPE_QOS      0x03
@@ -138,27 +138,27 @@ struct l2cap_sig_cfg_opt_mtu {
     uint16 mtu;
 }__attribute__ ((packed));
 struct l2cap_sig_cfg_opt_flushto {
-    
+
     uint16 flushto;
 }__attribute__ ((packed));
 
 #define L2CAP_QOS_NO_TRAFFIC        0x00
 #define L2CAP_QOS_BEST_EFFORT       0x01
-#define L2CAP_QOS_GUARANTEED        0x02    
+#define L2CAP_QOS_GUARANTEED        0x02
 struct l2cap_sig_cfg_opt_qos {
-   
+
     byte     flags;
     byte     service_type;
     uint32  token_rate;
     uint32  token_size;
     uint32  bandwidth;
     uint32  latency;
-    uint32  delay_variation;    
+    uint32  delay_variation;
 }__attribute__ ((packed));
 
 #define L2CAP_MODE_BASE 0
 #define L2CAP_MODE_RETRANSMISSION 1
-#define L2CAP_MODE_FLOWCONTROL  2   
+#define L2CAP_MODE_FLOWCONTROL  2
 #define L2CAP_MODE_ENHANCED_RETRANSMISSION  3
 #define L2CAP_MODE_STREAMING    4
 struct l2cap_sig_cfg_opt_rfc {
@@ -263,7 +263,7 @@ enum l2cap_channel_state_enum {
     L2CAP_WAIT_CONNECTION_RSP,
     L2CAP_WAIT_CONFIG,
     L2CAP_WAIT_CONFIG_REQ_RSP,
-    L2CAP_WAIT_CONFIG_RSP, 
+    L2CAP_WAIT_CONFIG_RSP,
     L2CAP_WAIT_CONFIG_REQ,
     L2CAP_OPEN
 };
@@ -299,7 +299,7 @@ struct l2cap_channel{
 
 
     enum l2cap_channel_state_enum state;
-    
+
     int (*l2cap_notify_callback)(enum l2cap_event_enum event, uint32 l2cap_handle, void *pdata, uint8 reason);
     void (*l2cap_datarecv_callback)(uint32 l2cap_handle, struct pp_buff *ppb);
 #if SUPPORT_L2CAP_ENHANCED_RETRANS==1

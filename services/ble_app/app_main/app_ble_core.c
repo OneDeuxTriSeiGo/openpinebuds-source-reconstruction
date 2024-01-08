@@ -199,7 +199,7 @@ void app_ble_core_global_callback_event(ble_callback_evnet_t *event, void *outpu
    uint8_t evt_type = event->evt_type;
    uint16_t index = 0;
    const ble_callback_event_handler_t *p_ble_callback_event_hand = NULL;
-   
+
    for (index=0; index<BLE_EVENT_NUM_MAX; index++)
    {
        p_ble_callback_event_hand = &ble_callback_event_handler_tab[index];

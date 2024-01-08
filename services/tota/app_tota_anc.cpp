@@ -68,7 +68,7 @@ void app_tota_anc_init()
 {
     tota_callback_module_register(s_module, s_func);
     reset_programmer_state(&g_buf, &g_len);
-    
+
     if (app_check_send_synccmd_timer == NULL)
         app_check_send_synccmd_timer = osTimerCreate (osTimer(APP_SYNCCMD), osTimerPeriodic, NULL);
 }

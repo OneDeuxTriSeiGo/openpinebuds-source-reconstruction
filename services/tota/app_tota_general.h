@@ -42,7 +42,7 @@ typedef struct{
     /* crystal info */
     uint32_t crystal_freq;                      // 4 bytes
     uint32_t xtal_fcap;                         // 4 bytes
-    
+
     /* battery info */
     APP_BATTERY_MV_T        battery_volt;       // 2 bytes
     uint8_t                 battery_level;      // 1 byte
@@ -50,7 +50,7 @@ typedef struct{
 
     /* firmware info */
     uint8_t fw_version[4];                      // 4 bytes
-    
+
     /* ear location info */
     APP_TWS_SIDE_T          ear_location;       // 4 byte
 

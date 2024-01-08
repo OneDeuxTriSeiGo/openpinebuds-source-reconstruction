@@ -58,7 +58,7 @@ static void *a2dp_audio_example_frame_malloc(uint32_t packet_len)
 
 void a2dp_audio_example_free(void *packet)
 {
-    a2dp_audio_example_decoder_frame_t *decoder_frame_p = (a2dp_audio_example_decoder_frame_t *)packet; 
+    a2dp_audio_example_decoder_frame_t *decoder_frame_p = (a2dp_audio_example_decoder_frame_t *)packet;
     a2dp_audio_heap_free(decoder_frame_p->buffer);
     a2dp_audio_heap_free(decoder_frame_p);
 }
@@ -72,7 +72,7 @@ int a2dp_audio_example_store_packet(btif_media_header_t * header, uint8_t *buffe
     decoder_frame_p->timestamp = header->timestamp;
     memcpy(decoder_frame_p->buffer, buffer, buffer_bytes);
     decoder_frame_p->buffer_len = buffer_bytes;
-    a2dp_audio_list_append(list, decoder_frame_p);       
+    a2dp_audio_list_append(list, decoder_frame_p);
 
     return A2DP_DECODER_NO_ERROR;
 }
@@ -97,7 +97,7 @@ int a2dp_audio_example_init(A2DP_AUDIO_OUTPUT_CONFIG_T *config, void *context)
     TRACE_A2DP_DECODER_D("%s", __func__);
     a2dp_audio_context_p = (A2DP_AUDIO_CONTEXT_T *)context;
 
-    memset(&a2dp_audio_ldac_example_info, 0, sizeof(A2DP_AUDIO_DECODER_LASTFRAME_INFO_T));    
+    memset(&a2dp_audio_ldac_example_info, 0, sizeof(A2DP_AUDIO_DECODER_LASTFRAME_INFO_T));
     memcpy(&a2dp_audio_example_output_config, config, sizeof(A2DP_AUDIO_OUTPUT_CONFIG_T));
     a2dp_audio_ldac_example_info.stream_info = &a2dp_audio_example_output_config;
 

@@ -682,7 +682,7 @@ enum {
     ATT_CHAR_HEIGHT                             = ATT_UUID_16(0x2A8E),
     /// Hip Circumference
     ATT_CHAR_HIP_CIRCUMFERENCE                  = ATT_UUID_16(0x2A8F),
-    /// Last Name 
+    /// Last Name
     ATT_CHAR_LAST_NAME                          = ATT_UUID_16(0x2A90),
     /// Maximum Recommended Heart Rate
     ATT_CHAR_MAXIMUM_RECOMMENDED_HEART_RATE     = ATT_UUID_16(0x2A91),
@@ -702,7 +702,7 @@ enum {
     ATT_CHAR_WEIGHT                             = ATT_UUID_16(0x2A98),
     /// Database Change Increment
     ATT_CHAR_DATABASE_CHANGE_INCREMENT          = ATT_UUID_16(0x2A99),
-    /// User Index 
+    /// User Index
     ATT_CHAR_USER_INDEX                         = ATT_UUID_16(0x2A9A),
     /// Body Composition Feature
     ATT_CHAR_BODY_COMPOSITION_FEATURE           = ATT_UUID_16(0x2A9B),

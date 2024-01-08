@@ -33,7 +33,7 @@ typedef struct {
     uint16_t promptId;
     uint16_t promptPram;
     uint32_t sampleRate;
-    uint32_t trigger_time;    
+    uint32_t trigger_time;
 }APP_TWS_CMD_MIX_PROMPT_SYNC_T;
 
 #endif

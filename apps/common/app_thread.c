@@ -55,7 +55,7 @@ int app_mailbox_put(APP_MESSAGE_BLOCK* msg_src)
         for (uint8_t i=0; i<APP_MAILBOX_MAX; i++){
             evt = osMailGet(app_mailbox, 0);
             if (evt.status == osEventMail) {
-                TRACE_IMM(9,"cnt:%d mod:%d src:%08x tim:%d id:%x ptr:%08x para:%08x/%08x/%08x", 
+                TRACE_IMM(9,"cnt:%d mod:%d src:%08x tim:%d id:%x ptr:%08x para:%08x/%08x/%08x",
                                                                        i,
                                                                        ((APP_MESSAGE_BLOCK *)(evt.value.p))->mod_id,
                                                                        ((APP_MESSAGE_BLOCK *)(evt.value.p))->src_thread,
@@ -65,14 +65,14 @@ int app_mailbox_put(APP_MESSAGE_BLOCK* msg_src)
                                                                        ((APP_MESSAGE_BLOCK *)(evt.value.p))->msg_body.message_Param0,
                                                                        ((APP_MESSAGE_BLOCK *)(evt.value.p))->msg_body.message_Param1,
                                                                        ((APP_MESSAGE_BLOCK *)(evt.value.p))->msg_body.message_Param2);
-            }else{                
-                TRACE_IMM(2,"cnt:%d %d", i, evt.status); 
+            }else{
+                TRACE_IMM(2,"cnt:%d %d", i, evt.status);
                 break;
             }
         }
         TRACE_IMM(0,"osMailAlloc error dump end");
     }
-    
+
     ASSERT(msg_p, "osMailAlloc error");
     msg_p->src_thread = (uint32_t)osThreadGetId();
     msg_p->dest_thread = (uint32_t)NULL;

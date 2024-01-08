@@ -61,11 +61,11 @@ enum avctp_role_enum {
 /*
 struct avctp_session {
     struct list_node list;
-    
+
     uint32 l2cap_handle;
-    
+
     struct bdaddr_t remote;
-    
+
     void (*notify_callback) (uint8 event, struct avctp_session *s, void *pdata);
     void (*datarecv_callback) (struct avctp_session *s, struct pp_buff *ppb);
 };
@@ -109,7 +109,7 @@ struct avctp_frame_t {
 struct avctp_control_t {
     struct list_node node;
     struct list_node tx_list;
-    
+
     struct bdaddr_t remote;
     struct avctp_header header;
     int8 server_channel;
@@ -118,7 +118,7 @@ struct avctp_control_t {
     int8 tx_status;
 
     enum avctp_ctl_state_enum ctl_state;
-    
+
     enum avctp_role_enum role;
     int (*notify_callback)(struct avctp_control_t *avctp_ctl, uint8 event, uint32 handle, void *pdata);
     void (*datarecv_callback)(struct avctp_control_t *avctp_ctl, uint32 handle, struct pp_buff *ppb);
@@ -148,10 +148,10 @@ int8 avctp_register_server (struct avctp_control_t *avctp_ctl, int8 server_chann
                             int (*avctp_notify_callback)(struct avctp_control_t *avctp_ctl, uint8 event, uint32 handle, void *pdata),
                             void (*avctp_datarecv_callback)(struct avctp_control_t *avctp_ctl, uint32 handle, struct pp_buff *ppb)
                             );
-                            
+
 int8 avctp_unregister_server (struct avctp_control_t *avctp_ctl, int8 server_channel);
 
-void avctp_init_packet_header(struct avctp_control_t *avctp_ctl, struct avctp_frame_t *frame, 
+void avctp_init_packet_header(struct avctp_control_t *avctp_ctl, struct avctp_frame_t *frame,
     int8 is_cmd, int8 ipid_ind, uint16 profile_ind);
 int8 avctp_send_message(struct avctp_control_t *avctp_ctl, struct avctp_frame_t *frame);
 int8 avctp_close(struct avctp_control_t *avctp_ctl);

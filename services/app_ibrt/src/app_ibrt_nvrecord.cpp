@@ -103,7 +103,7 @@ Modification : Created function
 void app_ibrt_nvrecord_update_ibrt_mode_tws(bool status)
 {
     struct nvrecord_env_t *nvrecord_env;
-    
+
     TRACE(2,"##%s,%d",__func__,status);
     nv_record_env_get(&nvrecord_env);
     nvrecord_env->ibrt_mode.tws_connect_success = status;
@@ -184,7 +184,7 @@ int app_ibrt_nvrecord_choice_mobile_addr(bt_bdaddr_t *mobile_addr, uint8_t index
                 return 1;
             }
 
-            mobile_found_count += 1;   
+            mobile_found_count += 1;
         }
     }
 

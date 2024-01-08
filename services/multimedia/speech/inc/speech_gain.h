@@ -35,7 +35,7 @@ struct SpeechGainState_;
 typedef struct SpeechGainState_ SpeechGainState;
 
 // Creat a instance from speech_gain module/class
-// Common value include: sample rate, frame size and so on. 
+// Common value include: sample rate, frame size and so on.
 SpeechGainState *speech_gain_create(int32_t sample_rate, int32_t frame_size, const SpeechGainConfig *cfg);
 
 // Destory a speech gain instance

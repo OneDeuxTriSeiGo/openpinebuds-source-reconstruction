@@ -178,14 +178,14 @@ void app_ht_add_hts(void)
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
                                                   TASK_GAPM, TASK_APP,
                                                   gapm_profile_task_add_cmd, sizeof(struct htpt_db_cfg));
-    
+
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
 #if BLE_CONNECTION_MAX>1
     req->sec_lvl = PERM(SVC_AUTH, ENABLE)|PERM(SVC_MI, ENABLE);
 #else
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-#endif  
+#endif
 
     req->prf_task_id = TASK_ID_HTPT;
     req->app_task = TASK_APP;

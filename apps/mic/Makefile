@@ -56,4 +56,4 @@ ccflags-y += \
 	-Iservices/multimedia/audio/codec/sbc/inc \
 	-Iservices/multimedia/audio/codec/sbc/src/inc \
 	-Iservices/bt_app/a2dp_codecs/include
-	
+

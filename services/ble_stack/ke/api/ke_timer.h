@@ -114,19 +114,19 @@ void ke_timer_adjust_all(uint32_t delay);
 /**
  ****************************************************************************************
  * @brief Compute the authorized sleep time until next kernel timer event
- * 
+ *
  * The function takes as argument the current time to compute the sleep time.
- * 
- * if some timer are programmed it return the sleep time between current time and 
+ *
+ * if some timer are programmed it return the sleep time between current time and
  * first timer expiration.
- * 
- * If there is no timer programmed, function return false meaning that platform should not 
+ *
+ * If there is no timer programmed, function return false meaning that platform should not
  * consider the kernel timer to decide the sleep time duration.
- * 
+ *
  * @param[in]     current_time   Current system time
  * @param[out]    sleep_time     Computed sleep duration
  *
- * @return true sleep time has been computed ; false if there is no programed timer, 
+ * @return true sleep time has been computed ; false if there is no programed timer,
            meaning that sleep_time is not relevant and can be ignored.
  ****************************************************************************************
  */

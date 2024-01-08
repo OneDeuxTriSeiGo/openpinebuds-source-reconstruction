@@ -101,4 +101,4 @@ obj-y := $(MULTIMEDIA_LIB_NAME).a $(rel_src_obj)
 subdir-ccflags-y += \
 	-Iutils/heap \
 
-	
+

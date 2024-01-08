@@ -37,7 +37,7 @@ static APP_THROUGHPUT_CMD_INSTANCE_T *find_throughput_instance_by_code(uint16_t 
     return NULL;
 }
 
-bool app_throughput_send_command(APP_THROUGHPUT_CMD_CODE_E cmdCode, 
+bool app_throughput_send_command(APP_THROUGHPUT_CMD_CODE_E cmdCode,
     uint8_t *ptrParam, uint32_t paramLen)
 {
     APP_THROUGHPUT_CMD_PAYLOAD_T payload;
@@ -107,7 +107,7 @@ uint32_t app_throughput_receive_cmd(void *param1, uint32_t param2)
             pInstance->cmdHandler((APP_THROUGHPUT_CMD_CODE_E)(pPayload->cmdCode), pPayload->param, pPayload->paramLen);
         }
     }
-    
+
     return 0;
 }
 

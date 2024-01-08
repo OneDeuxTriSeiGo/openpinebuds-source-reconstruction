@@ -159,18 +159,18 @@ typedef enum
  * @param cmdCode   Custom command code
  * @param ptrParam  Pointer of the received parameter
  * @param paramLen  Length of the recevied parameter
- * 
+ *
  */
 typedef void (*app_tota_cmd_handler_t)(APP_TOTA_CMD_CODE_E cmdCode, uint8_t* ptrParam, uint32_t paramLen);
 
 /**
- * @brief Format of the tota command response handler function, 
+ * @brief Format of the tota command response handler function,
  *  called when the response to formerly sent command is received
  *
  * @param retStatus Handling return status of the command
  * @param ptrParam  Pointer of the received parameter
  * @param paramLen  Length of the recevied parameter
- * 
+ *
  */
 typedef void (*app_tota_cmd_response_handler_t)(APP_TOTA_CMD_RET_STATUS_E retStatus, uint8_t* ptrParam, uint32_t paramLen);
 

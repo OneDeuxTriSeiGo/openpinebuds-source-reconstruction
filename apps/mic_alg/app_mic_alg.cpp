@@ -108,7 +108,7 @@ static short POSSIBLY_UNUSED tmp_buff[BT_AUDIO_FACTORMODE_BUFF_SIZE>>2];
 //static short audio_uart_buff[BT_AUDIO_FACTORMODE_BUFF_SIZE>>2];
 
 
-#if SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 2    
+#if SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 2
 
 static short POSSIBLY_UNUSED  one_buff[BT_AUDIO_FACTORMODE_BUFF_SIZE>>2];
 static short POSSIBLY_UNUSED  two_buff[BT_AUDIO_FACTORMODE_BUFF_SIZE>>2];
@@ -143,10 +143,10 @@ static void POSSIBLY_UNUSED audio_mono2stereo_16bits(int16_t *dst_buf, int16_t *
     }
 }
 
-#elif SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 3  
+#elif SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 3
 
 
-#elif SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 4  
+#elif SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 4
 
 #endif
 
@@ -224,7 +224,7 @@ static uint32_t app_mic_alg_data_come(uint8_t *buf, uint32_t len)
         {
             sum_ss += ABS(tx_pcmbuf16[i_cnt]);
         }
-        
+
         sum_ss = 1*sum_ss/pcm_len;
 
         db_sum = convert_multiple_to_db(sum_ss);
@@ -248,7 +248,7 @@ static uint32_t app_mic_alg_data_come(uint8_t *buf, uint32_t len)
         //TRACE("notch 500 mic_alg 16k nsx 3 agc 15 closed speed  time:%d ms and pcm_lens:%d freq:%d ", TICKS_TO_MS(hal_sys_timer_get() - stime), pcm_len,hal_sysfreq_get());
         TRACE(2,"denoise det  speed  time:%d ms and pcm_lens:%d freq:%d ", TICKS_TO_MS(hal_sys_timer_get() - stime), pcm_len,hal_sysfreq_get());
     }
-    
+
 
     if (a2dp_cache_status == APP_AUDIO_CACHE_QTY){
         a2dp_cache_status = APP_AUDIO_CACHE_OK;
@@ -259,7 +259,7 @@ static uint32_t app_mic_alg_data_come(uint8_t *buf, uint32_t len)
 // static uint32_t app_mic_uart_playback_data(uint8_t *buf, uint32_t len)
 // {
 //     if (a2dp_cache_status != APP_AUDIO_CACHE_QTY){
-// #if SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 2    
+// #if SPEECH_CODEC_CAPTURE_CHANNEL_NUM == 2
 //         #ifdef WL_AEC
 //         app_audio_pcmbuff_get((uint8_t *)app_audioloop_play_cache, len/2);
 //         app_bt_stream_copy_track_one_to_two_16bits((int16_t *)buf, app_audioloop_play_cache, len/2/2);

@@ -149,9 +149,9 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
         if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
         {
             TRACE(3,"xqd log 1 -- mobile linkloss\n");
-            IsMobileLinkLossing = TRUE; 
+            IsMobileLinkLossing = TRUE;
             nv_record_flash_flush();
-        } 
+        }
             if (!app_tws_ibrt_mobile_link_connected())
             {
                 app_ibrt_if_sniff_checker_reset();
@@ -181,7 +181,7 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
                     startonce_delay_event_Timer_(1500);
                  }*/
             }
-        
+
             if((MOBILE_LINK == link_type) && (p_ui_ctrl->box_state != IBRT_IN_BOX_CLOSED) && ((status == BTIF_BEC_CONNECTION_TIMEOUT)|| (status == BTIF_BEC_LOW_RESOURCES)))
             {
                 TRACE(3,"xqd log 2 -- mobile linkloss\n");
@@ -200,7 +200,7 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
                 nv_record_flash_flush();
                 startonce_delay_event_Timer_(10000);
                 TRACE(3,"MyLog: The TWS connection is lost, reset the indication!!!");
-                if (!app_device_bt_is_connected() && !IsMobileLinkLossing) {    
+                if (!app_device_bt_is_connected() && !IsMobileLinkLossing) {
                     TRACE(3,"MyLog: The TWS connection is lost, reset the indication!!!");
                     //app_status_indication_set(APP_STATUS_INDICATION_BOTHSCAN);
                 }
@@ -257,7 +257,7 @@ void app_ibrt_customif_ui_global_handler_ind(ibrt_link_type_e link_type, uint8_t
 
         case BTIF_BTEVENT_BES_AUD_DISCONNECTED:
             app_tws_if_tws_disconnected_handler();
-        if(!app_poweroff_flag && !IsTwsLinkLossing && !IsMobileLinkLossing) 
+        if(!app_poweroff_flag && !IsTwsLinkLossing && !IsMobileLinkLossing)
         {
             TRACE(3,"xqd--log: TWS is disconnected and it isn't tws link lossed.");
         }else{

@@ -20,7 +20,7 @@
 #include "hal_timer.h"
 #include "apps.h"
 #include "stdbool.h"
-#include "app_tota.h" 
+#include "app_tota.h"
 #include "app_tota_cmd_code.h"
 #include "app_tota_cmd_handler.h"
 #include "app_tota_data_handler.h"
@@ -32,20 +32,20 @@
 #include "tota_stream_data_transfer.h"
 #include "app_tota_conn.h"
 
-/* 
+/*
 **  stream control strcut
 **  stream packet format:
 **  # header + body #
 **  > header: 2   bytes
 **  > body  : 664 bytes
-**  
+**
 **  note: stream will never be encrypted!
 */
 typedef struct{
     uint32_t flush_bytes;
     bool     is_streaming;
     uint8_t  module;
-    
+
     osMutexId mutex;
     osSemaphoreId sem;
 }stream_control_t;

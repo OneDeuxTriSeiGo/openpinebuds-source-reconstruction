@@ -29,7 +29,7 @@
 // #if _M_IX86_FP >= 1 || defined(_M_X64)
 // #define _USE_SSE
 // #endif
-// 
+//
 // #if _M_IX86_FP >= 2 || defined(_M_X64)
 // #define _USE_SSE2
 // #endif

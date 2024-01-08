@@ -183,7 +183,7 @@ int sco_cp_init(int frame_len, int channel_num)
     uint32_t cnt=0;
     while(cp_accel_init_done() == false) {
         hal_sys_timer_delay_us(100);
-        
+
         cnt++;
         if (cnt % 10 == 0) {
             if (cnt == 10 * 200) {     // 200ms

@@ -107,10 +107,10 @@ static sdp_attribute_t rfcommAttributes[] = {
 
     SDP_ATTRIBUTE(AID_PROTOCOL_DESC_LIST, RfcommProtoDescList),
 
-    SDP_ATTRIBUTE(AID_BT_PROFILE_DESC_LIST, ProfileDescList), 
+    SDP_ATTRIBUTE(AID_BT_PROFILE_DESC_LIST, ProfileDescList),
 };
 
-static sdp_attribute_t rfcommAttributesArray[RFCOMM_SERVER_MAX_CHANNEL_CNT][ARRAY_SIZE(rfcommAttributes)] = 
+static sdp_attribute_t rfcommAttributesArray[RFCOMM_SERVER_MAX_CHANNEL_CNT][ARRAY_SIZE(rfcommAttributes)] =
 {
 
 };
@@ -141,28 +141,28 @@ uint8_t app_rfcomm_get_instance_index(void* dev)
     return 0;
 }
 
-static void app_rfcomm_org_callback(struct spp_device *locDev, struct spp_callback_parms *info)    
+static void app_rfcomm_org_callback(struct spp_device *locDev, struct spp_callback_parms *info)
 {
     uint8_t index = app_rfcomm_get_instance_index(locDev);
     RfcommService_t* pService = &(RfcommServiceInstance[index]);
     RFCOMM_EVENT_E event;
     uint16_t sentDataLen = 0;
     uint8_t* sentDataBuf = NULL;
-    
-    if (BTIF_SPP_EVENT_REMDEV_CONNECTED_IND == info->event) 
-    {  
+
+    if (BTIF_SPP_EVENT_REMDEV_CONNECTED_IND == info->event)
+    {
         event = RFCOMM_INCOMING_CONN_REQ;
     }
-    else if (BTIF_SPP_EVENT_REMDEV_CONNECTED == info->event) 
-    {  
+    else if (BTIF_SPP_EVENT_REMDEV_CONNECTED == info->event)
+    {
         event = RFCOMM_CONNECTED;
     }
-    else if (BTIF_SPP_EVENT_REMDEV_DISCONNECTED == info->event) 
-    {  
+    else if (BTIF_SPP_EVENT_REMDEV_DISCONNECTED == info->event)
+    {
         event = RFCOMM_DISCONNECTED;
     }
-    else if (BTIF_SPP_EVENT_DATA_SENT == info->event) 
-    {  
+    else if (BTIF_SPP_EVENT_DATA_SENT == info->event)
+    {
         struct spp_tx_done* pTxDone = (struct spp_tx_done *)(info->p.other);
         sentDataBuf = pTxDone->tx_buf;
         sentDataLen = pTxDone->tx_data_length;
@@ -217,7 +217,7 @@ static bt_status_t app_rfcomm_service_init(RfcommService_t *service,
     service->sppDev->portType = BTIF_SPP_SERVER_PORT;
     uint8_t* ptrRxBuf = &rfcomm_rx_buf[rfcomm_rx_buf_allocated_offset];
     uint32_t rxBufSize = RFCOMM_RECV_BUFFER_SIZE;
-    
+
     rfcomm_rx_buf_allocated_offset += rxBufSize;
 
     ASSERT(rfcomm_rx_buf_allocated_offset <= RFCOMM_RECV_BUFFER_POOL_SIZE,
@@ -227,14 +227,14 @@ static bt_status_t app_rfcomm_service_init(RfcommService_t *service,
     btif_spp_init_rx_buf(service->sppDev, ptrRxBuf,
         rxBufSize);
 
-    service->sppSdpRecord = btif_sdp_create_record();    
+    service->sppSdpRecord = btif_sdp_create_record();
 
     btif_sdp_record_param_t param;
     param.attrs = sdpAttributes,
     param.attr_count = attributeCount;
     param.COD = BTIF_COD_MAJOR_PERIPHERAL;
-    btif_sdp_record_setup(service->sppSdpRecord, &param); 
-    
+    btif_sdp_record_setup(service->sppSdpRecord, &param);
+
     service->sppService->rf_service.serviceId = serviceId;
     service->sppService->numPorts = 0;
     service->sppDev->app_id = app_id;
@@ -257,7 +257,7 @@ void app_rfcomm_read(uint8_t instanceIndex, uint8_t* pBuf, uint16_t* ptrLen)
 
     uint16_t lenToRead = *ptrLen;
 
-    btif_spp_read(RfcommServiceInstance[instanceIndex].sppDev, 
+    btif_spp_read(RfcommServiceInstance[instanceIndex].sppDev,
         (char *)pBuf, &lenToRead);
     *ptrLen = lenToRead;
 }
@@ -268,7 +268,7 @@ int8_t app_rfcomm_write(uint8_t instanceIndex, const uint8_t* pBuf, uint16_t len
     {
         return -1;
     }
-    
+
     uint16_t len = (uint16_t)length;
     if (BT_STS_SUCCESS != btif_spp_write(RfcommServiceInstance[instanceIndex].sppDev,
         (char *)pBuf, &len))
@@ -317,7 +317,7 @@ int8_t app_rfcomm_open(RFCOMM_CONFIG_T* ptConfig)
         return -1;
     }
 
-    RfcommService_t* sppServiceInstance = 
+    RfcommService_t* sppServiceInstance =
         &RfcommServiceInstance[rfcomm_service_used_instance_cnt];
 
     sppServiceInstance->callback = ptConfig->callback;
@@ -326,38 +326,38 @@ int8_t app_rfcomm_open(RFCOMM_CONFIG_T* ptConfig)
         rfcommClassId, sizeof(rfcommClassId));
     for (int32_t index = 0;index < 16;index++)
     {
-        rfcommClassIdArray[rfcomm_service_used_instance_cnt*sizeof(rfcommClassId) + 3 + index] 
+        rfcommClassIdArray[rfcomm_service_used_instance_cnt*sizeof(rfcommClassId) + 3 + index]
             = ptConfig->rfcomm_128bit_uuid[15-index];
     }
 
     memcpy(&RfcommProtoDescListArray[rfcomm_service_used_instance_cnt*sizeof(RfcommProtoDescList)],
         RfcommProtoDescList, sizeof(RfcommProtoDescList));
-    memcpy(&RfcommProtoDescListArray[rfcomm_service_used_instance_cnt*sizeof(RfcommProtoDescList) + 13], 
+    memcpy(&RfcommProtoDescListArray[rfcomm_service_used_instance_cnt*sizeof(RfcommProtoDescList) + 13],
         &(ptConfig->rfcomm_ch), 1);
 
     memcpy(&rfcommAttributesArray[rfcomm_service_used_instance_cnt],
         rfcommAttributes, sizeof(rfcommAttributes));
-    
+
     rfcommAttributesArray[rfcomm_service_used_instance_cnt][0].value = &rfcommClassIdArray[rfcomm_service_used_instance_cnt*sizeof(rfcommClassId)];
     rfcommAttributesArray[rfcomm_service_used_instance_cnt][1].value = &RfcommProtoDescListArray[rfcomm_service_used_instance_cnt*sizeof(RfcommProtoDescList)];
 
     sppServiceInstance->instanceIndex = rfcomm_service_used_instance_cnt;
 
     bt_status_t status = app_rfcomm_service_init(
-      sppServiceInstance, rfcommAttributesArray[rfcomm_service_used_instance_cnt], 
+      sppServiceInstance, rfcommAttributesArray[rfcomm_service_used_instance_cnt],
       ARRAY_SIZE(rfcommAttributes),
       ptConfig->rfcomm_ch, ptConfig->app_id,
       ptConfig->spp_handle_data_event_func,
       ptConfig->tx_pkt_cnt,
       ptConfig->mutexId,
       ptConfig->creditMutexId);
-      
-    if (status != BT_STS_SUCCESS) 
+
+    if (status != BT_STS_SUCCESS)
     {
         return -1;
     }
     else
-    {        
+    {
         return rfcomm_service_used_instance_cnt++;
     }
 }

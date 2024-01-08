@@ -377,7 +377,7 @@
 #define BLE_TILE            1
 #else
 #define BLE_TILE            0
-#endif  // 
+#endif  //
 
 #if defined(CFG_AI_VOICE)
 #define BLE_AI_VOICE            1
@@ -425,7 +425,7 @@
 #endif // defined(CFG_PRF_AMS)
 #if defined(CFG_PRF_GFPS_PROVIDER)
 #define BLE_GFPS_PROVIDER       1
-#else 
+#else
 #define BLE_GFPS_PROVIDER       0
 #endif
 
@@ -548,7 +548,7 @@
 #define BLE_WSC_SERVER              0
 /// Weight Scale Profile Client Role
 #define BLE_WSC_CLIENT              0
-/// Body Composition Profile Client Role 
+/// Body Composition Profile Client Role
 #define BLE_BCS_CLIENT          0
 /// Body Composition Profile Server Role
 #define BLE_BCS_SERVER          0

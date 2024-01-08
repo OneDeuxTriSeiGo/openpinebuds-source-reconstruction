@@ -46,7 +46,7 @@ bool tota_stream_buffer_write(uint8_t * buf, uint32_t bufLen)
         if ( stream_buf.writePos + bufLen <= TOTA_STREAM_BUF_SIZE )
         {
             memcpy(stream_buf.buf + stream_buf.writePos, buf, bufLen);
-            
+
             stream_buf.writePos += bufLen;
             if ( stream_buf.writePos == TOTA_STREAM_BUF_SIZE )
                 stream_buf.writePos = 0;
@@ -68,7 +68,7 @@ bool tota_stream_buffer_write(uint8_t * buf, uint32_t bufLen)
         osMutexRelease(stream_buf_mutex_id);
         /* set signal to father thread, has data */
         osSignalSet(father_thread_tid, 0x0001);
-        
+
         return true;
     }
     else

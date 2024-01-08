@@ -390,8 +390,8 @@ static int voice_detector_vad_stop(struct voice_detector_dev *pdev)
 #else
     /* get vad buf info after stopping it */
     af_vad_get_data_info(&(pdev->vad_buf_info));
-    TRACE(4,"vad_buf base_addr:0x%x, buf_size:0x%x, data_count:%d, addr_count:%d", 
-        pdev->vad_buf_info.base_addr, pdev->vad_buf_info.buf_size, 
+    TRACE(4,"vad_buf base_addr:0x%x, buf_size:0x%x, data_count:%d, addr_count:%d",
+        pdev->vad_buf_info.base_addr, pdev->vad_buf_info.buf_size,
         pdev->vad_buf_info.data_count, pdev->vad_buf_info.addr_count);
 #if defined(CHIP_BEST2300)
     vad_buf_len = pdev->vad_buf_info.data_count/2;
@@ -402,7 +402,7 @@ static int voice_detector_vad_stop(struct voice_detector_dev *pdev)
     return 0;
 }
 
-void voice_detector_get_vad_data_info(enum voice_detector_id id, 
+void voice_detector_get_vad_data_info(enum voice_detector_id id,
                                                                        struct CODEC_VAD_BUF_INFO_T* vad_buf_info)
 {
 

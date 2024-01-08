@@ -73,7 +73,7 @@ static void peak_detector_run_16bits(int16_t *buf, uint32_t len, float vol_multi
     float tgt_rate = 1.0;
 
     for(uint32_t i = 0; i < len; i++)
-    {   
+    {
         pkd_factor1 = Max(buf[i], pkd_alphaR * pkd_factor1);
         pkd_factor2 = pkd_alphaA * pkd_factor2 + (1 - pkd_alphaA) * pkd_factor1;
 
@@ -100,7 +100,7 @@ static void peak_detector_run_16bits(int16_t *buf, uint32_t len, float vol_multi
 
         buf[i] = (int16_t)(buf[i] * tgt_rate);
         // buf[i] = 0;
-        // 
+        //
         // TRACE(2,"%d, %d", buf[i], pkd_factor2);
     }
 
@@ -132,7 +132,7 @@ static void peak_detector_run_16bits(int16_t *buf, uint32_t len, float vol_multi
         {
             sample_min = sample;
         }
-    } 
+    }
 
 
     TRACE(2,"Max = %10d, Min = %10d",sample_max, sample_min);
@@ -145,7 +145,7 @@ static void peak_detector_run_24bits(int32_t *buf, uint32_t len, float vol_multi
     float tgt_rate = 1.0;
 
     for(uint32_t i = 0; i < len; i++)
-    {   
+    {
         pkd_factor1 = Max(buf[i], pkd_alphaR * pkd_factor1);
         pkd_factor2 = pkd_alphaA * pkd_factor2 + (1 - pkd_alphaA) * pkd_factor1;
 
@@ -172,7 +172,7 @@ static void peak_detector_run_24bits(int32_t *buf, uint32_t len, float vol_multi
 
         buf[i] = (int32_t)(buf[i] * tgt_rate);
         // buf[i] = 0;
-        // 
+        //
         // TRACE(2,"%d, %d", buf[i], pkd_factor2);
     }
 }

@@ -57,7 +57,7 @@ enum
 
     /// Read the value of a Client Characteristic Configuration Descriptor in the peer device database
     ANCC_READ_CMD,
-    
+
     /// Write the value of a Client Characteristic Configuration Descriptor in the peer device database
     ANCC_WRITE_CMD,
 

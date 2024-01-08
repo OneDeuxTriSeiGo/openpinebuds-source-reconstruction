@@ -136,7 +136,7 @@ enum TASK_API_ID
     TASK_ID_BCSC         = 64,   // Body Composition Client Task
 
     TASK_ID_GFPSP        = 65,   //google fast pair service provider
-    TASK_ID_GFPSS        = 66,   // seeker 
+    TASK_ID_GFPSS        = 66,   // seeker
 
     TASK_ID_VOICEPATH    = 67,   // Voice Path Task
 

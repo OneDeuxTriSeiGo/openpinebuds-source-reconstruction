@@ -114,7 +114,7 @@ extern "C" {
  *    thourghput cmd send done callback
  *
  * Parameters:
- *    param1 -- callback data 
+ *    param1 -- callback data
  *    param2 -- callback data length
  *
  * Return:
@@ -130,7 +130,7 @@ uint32_t app_throughput_cmd_send_done(void *param1, uint32_t param2);
  *    thourghput receive and handle cmd
  *
  * Parameters:
- *    param1 -- receive data 
+ *    param1 -- receive data
  *    param2 -- receive data length
  *
  * Return:

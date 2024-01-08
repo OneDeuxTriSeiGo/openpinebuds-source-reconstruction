@@ -95,7 +95,7 @@ bool audio_engine_tt_is_on(){
 
 #define _tgt_ff_gain (512)
 void anc_assist_set_anc_gain(float gain_ch_l, float gain_ch_r,enum ANC_TYPE_T anc_type){
-   
+
     TRACE(2,"[%s] set anc gain %d",__func__,(int)(100*gain_ch_l));
     uint32_t tgt_ff_gain_l,tgt_ff_gain_r;
     tgt_ff_gain_l = (uint32_t)(_tgt_ff_gain*gain_ch_l);
@@ -150,7 +150,7 @@ void anc_assist_open(ANC_ASSIST_MODE_T mode){
         else if(mode == ANC_ASSIST_PHONE_16K){
             // normal init 16k
         }
-        
+
     }
 
 
@@ -188,7 +188,7 @@ void anc_assist_close(){
         else if(g_anc_assist_mode == ANC_ASSIST_PHONE_16K){
             // normal init 16k
         }
-        
+
     }
 
 }
@@ -237,7 +237,7 @@ void anc_assist_process(uint8_t * buf, int len){
     //process fft
 
     // wnr
-    
+
 
     // pnc
 
@@ -319,7 +319,7 @@ static void _open_mic_anc_assist(void)
 #if defined(ANC_ASSIST_WNR_ENABLED)
     anc_assist_mic_num = anc_assist_mic_num | ANC_ASSIST_FF1_MIC | ANC_ASSIST_FF2_MIC;
 #endif
- 
+
     switch(anc_assist_mic_num){
         case(0):
         {
@@ -380,7 +380,7 @@ static void _open_mic_anc_assist(void)
     MIC_MAP = AUD_INPUT_PATH_AF_ANC;
     struct AF_STREAM_CONFIG_T stream_cfg;
     TRACE(1,"[%s] ...", __func__);
-    
+
     memset(&stream_cfg, 0, sizeof(stream_cfg));
     stream_cfg.channel_num = (enum AUD_CHANNEL_NUM_T)MIC_NUM;
     stream_cfg.sample_rate = (enum AUD_SAMPRATE_T)_SAMPLE_RATE;
@@ -403,7 +403,7 @@ static void _open_mic_anc_assist(void)
 #if defined(ANC_ASSIST_PILOT_ENABLED)
     // struct AF_STREAM_CONFIG_T stream_cfg;
     TRACE(1,"[%s] set play ...", __func__);
-    
+
     memset(&stream_cfg, 0, sizeof(stream_cfg));
 
 
