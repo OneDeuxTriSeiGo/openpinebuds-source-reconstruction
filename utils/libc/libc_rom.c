@@ -162,4 +162,3 @@ int vsscanf(const char *fp, const char *fmt0, va_list ap)
     return __export_fn_rom.vsscanf(fp, fmt0, ap);
 }
 #endif
-

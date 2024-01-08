@@ -43,4 +43,3 @@ endif
 ifeq ($(POWERKEY_I2C_SWITCH),1)
 CFLAGS_app_factory.o += -DPOWERKEY_I2C_SWITCH
 endif
-

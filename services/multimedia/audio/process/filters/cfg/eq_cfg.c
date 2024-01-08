@@ -418,4 +418,3 @@ HW_IIR_CFG_T *hw_iir_get_cfg(enum AUD_SAMPRATE_T sample_rate, const IIR_CFG_T* e
 
     return &hw_iir_eq;
 }
-

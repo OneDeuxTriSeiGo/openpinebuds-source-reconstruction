@@ -41,4 +41,3 @@ $(error *** Error: FLASH_CHIP is NOT defined!)
 endif
 
 CFLAGS_norflash_drv.o += $(foreach flash,$(FLASH_CHIP),-D__NORFLASH_$(flash)__)
-

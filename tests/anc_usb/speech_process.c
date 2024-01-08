@@ -258,4 +258,3 @@ enum HAL_CMU_FREQ_T speech_process_need_freq(void)
 {
     return HAL_CMU_FREQ_208M;
 }
-

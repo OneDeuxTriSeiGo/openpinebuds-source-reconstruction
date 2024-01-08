@@ -79,4 +79,3 @@ void app_ibrt_role_switch_test(void);
 #endif
 
 #endif
-

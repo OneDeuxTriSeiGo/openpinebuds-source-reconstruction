@@ -112,4 +112,3 @@ static const enum HAL_DMA_PERIPH_T gpdma_fifo_periph[GPDMA_PERIPH_NUM] = {
 };
 
 #endif
-

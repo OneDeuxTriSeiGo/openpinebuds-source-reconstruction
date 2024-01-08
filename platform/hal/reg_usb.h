@@ -1741,4 +1741,3 @@ struct USBIF_T {
 #define USBIF_18_ID_DIG                     (1 << 20)
 
 #endif
-

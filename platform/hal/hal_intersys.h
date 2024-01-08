@@ -74,4 +74,3 @@ void hal_intersys_mic_rx_irq();
 #endif
 
 #endif
-

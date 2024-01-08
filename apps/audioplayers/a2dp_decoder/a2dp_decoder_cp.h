@@ -79,4 +79,3 @@ bool is_cp_init_done(void);
 #endif
 
 #endif
-

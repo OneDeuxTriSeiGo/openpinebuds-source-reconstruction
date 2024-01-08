@@ -49,9 +49,3 @@ ccflags-y += \
 	-Iservices/multimedia/audio/codec/sbc/src/inc \
 	$(BT_IF_INCLUDES) \
   -Iservices/norflash_api
-
-
-
-
-
-

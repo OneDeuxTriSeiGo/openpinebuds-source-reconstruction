@@ -157,4 +157,3 @@ void hal_sysfreq_print(void)
     }
     TRACE(1,"*** SYSFREQ top_user=%d", top_user);
 }
-

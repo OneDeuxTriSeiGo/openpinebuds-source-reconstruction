@@ -11,6 +11,3 @@ subdir-ccflags-y += \
 	-Igfps_crypto/ \
 	-Iutils/encrypt \
 	-Iapi/
-
-
-

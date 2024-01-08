@@ -13,4 +13,3 @@ ccflags-y := \
 	-Iutils/heap \
 	-Iutils/crc32 \
 	-Iservices/norflash_api
-

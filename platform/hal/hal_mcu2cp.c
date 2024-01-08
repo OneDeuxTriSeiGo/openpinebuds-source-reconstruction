@@ -551,4 +551,3 @@ int MCU2CP_API(hal_mcu2cp_local_irq_pending)(enum HAL_MCU2CP_ID_T id)
 }
 
 #endif
-

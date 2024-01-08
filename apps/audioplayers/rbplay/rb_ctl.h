@@ -72,4 +72,3 @@ extern int rb_ctl_is_audio_file(const char* file_path);
 
 uint8_t rb_ctl_get_vol(void);
 #endif
-

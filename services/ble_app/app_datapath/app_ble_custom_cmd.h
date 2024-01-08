@@ -62,4 +62,3 @@ typedef enum
 
 
 #endif // #ifndef __APP_BLE_CUSTOM_CMD_H__
-

@@ -47,4 +47,3 @@ enum HAL_BT_CHIP_SERIES_T hal_get_bt_chip_series(void)
     return HAL_BT_CHIP_SERIES_2300;
 #endif
 }
-

@@ -8,7 +8,3 @@ subdir-ccflags-y += \
 		-Iservices/bt_app
 
 subdir-ccflags-y += -Wall -Wno-long-long
-
-
-
-

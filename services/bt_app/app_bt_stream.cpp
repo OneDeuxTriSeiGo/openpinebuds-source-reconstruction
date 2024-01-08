@@ -8207,4 +8207,3 @@ int app_bt_stream_init(void)
     app_bt_stream_trigger_checker_init();
     return 0;
 }
-

@@ -13,4 +13,3 @@ ccflags-y := \
 	-Iservices/nv_section/log_section \
 	-Irtos/rtx/TARGET_CORTEX_M/ \
 	-Iutils/xyzmodem/
-

@@ -402,5 +402,3 @@ bt_status_t ddbif_enum_device_records(I16 index, btif_device_record_t *record)
     return BT_STS_FAILED;
 }
 #endif
-
-

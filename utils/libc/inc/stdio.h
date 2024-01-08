@@ -25,6 +25,3 @@ int vsscanf(const char *fp, const char *fmt0, va_list ap);
 #endif
 
 #endif /* STDIO_H */
-
-
-

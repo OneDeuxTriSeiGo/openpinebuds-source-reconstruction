@@ -130,4 +130,3 @@ void app_ble_customif_init(void)
     app_ble_core_register_global_handler_ind(app_ble_customif_global_handler_ind);
     app_ble_core_register_global_callback_handle_ind(app_ble_customif_global_callback_handler_ind);
 }
-

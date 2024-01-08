@@ -11,4 +11,3 @@ ccflags-y := \
 ifeq ($(RESAMPLE_ANY_SAMPLE_RATE),1)
 CFLAGS_resample_coef.o += -DRESAMPLE_ANY_SAMPLE_RATE
 endif
-

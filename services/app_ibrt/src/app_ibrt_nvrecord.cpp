@@ -320,4 +320,3 @@ void app_ibrt_nvrecord_rebuild(void)
     app_ibrt_if_config_keeper_clear();
     app_ibrt_ui_reboot_sdk();
 }
-

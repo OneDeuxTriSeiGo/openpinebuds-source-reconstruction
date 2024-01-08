@@ -43,4 +43,3 @@ bool hal_memsc_avail(enum HAL_MEMSC_ID_T id);
 #endif
 
 #endif
-

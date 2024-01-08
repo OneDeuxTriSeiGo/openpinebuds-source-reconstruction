@@ -301,4 +301,3 @@ SECTIONS
     ASSERT(ADDR(.rom_export_fn) >= __rom_end, "region ROM overflowed with .rom_export_fn")
     __free_rom = ADDR(.rom_export_fn) - __rom_end;
 }
-

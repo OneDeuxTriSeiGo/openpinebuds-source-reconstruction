@@ -328,4 +328,3 @@ void nv_record_ble_delete_entry(uint8_t* pBdAddr)
     }
 }
 #endif // !defined(NEW_NV_RECORD_ENABLED)
-

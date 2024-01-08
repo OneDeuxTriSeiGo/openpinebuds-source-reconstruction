@@ -2292,4 +2292,3 @@ void analog_aud_vad_adc_enable(bool en)
 }
 
 #endif
-

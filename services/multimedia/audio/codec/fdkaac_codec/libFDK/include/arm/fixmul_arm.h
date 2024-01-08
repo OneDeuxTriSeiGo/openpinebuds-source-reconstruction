@@ -139,4 +139,3 @@ inline INT fixmuldiv2_SD (const SHORT a, const INT b)
 #endif /* defined(__GNUC__) && defined(__arm__) */
 
 #endif /* __arm__ */
-

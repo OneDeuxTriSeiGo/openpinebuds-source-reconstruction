@@ -45,4 +45,3 @@ uint32_t get_cpu_id(void);
 #endif
 
 #endif
-

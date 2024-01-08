@@ -193,4 +193,3 @@ void peak_detector_run(uint8_t *buf, uint32_t len, float vol_multiple)
 
     // vol_level = app_bt_stream_local_volume_get();
 }
-

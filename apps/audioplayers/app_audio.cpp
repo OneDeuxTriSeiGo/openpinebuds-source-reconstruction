@@ -787,5 +787,3 @@ void app_audio_close(void)
     app_set_threadhandle(APP_MODUAL_AUDIO, NULL);
     app_audio_init = false;
 }
-
-

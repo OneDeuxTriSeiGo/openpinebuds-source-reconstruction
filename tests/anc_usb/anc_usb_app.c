@@ -1054,4 +1054,3 @@ void anc_usb_app_term(void)
 {
     anc_full_close();
 }
-

@@ -117,4 +117,3 @@ endif
 ifeq ($(A2DP_TRACE_CP_DEC_TIME),1)
 ccflags-y += -DA2DP_TRACE_CP_DEC_TIME
 endif
-

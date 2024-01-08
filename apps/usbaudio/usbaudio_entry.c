@@ -343,5 +343,3 @@ void btusbaudio_exit(void)
 {
     anc_usb_close();
 }
-
-

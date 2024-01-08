@@ -397,4 +397,3 @@ void app_ibrt_ui_perform_user_action(uint8_t *p_buff, uint16_t length)
 }
 
 #endif
-

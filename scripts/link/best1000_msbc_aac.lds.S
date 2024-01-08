@@ -918,4 +918,3 @@ SECTIONS
     ASSERT(FLASH_NC_TO_C(__crash_dump_start) >= __flash_end, "region FLASH overflowed")
     __free_flash = FLASH_NC_TO_C(__crash_dump_start) - __flash_end;
 }
-

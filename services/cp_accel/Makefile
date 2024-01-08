@@ -12,4 +12,3 @@ ccflags-y += -Iapps/common -Iutils/cqueue
 ifeq ($(CP_ACCEL_DEBUG),1)
 ccflags-y += -DCP_ACCEL_DEBUG
 endif
-

@@ -126,4 +126,3 @@ inline void cplxMult( FIXP_DBL *c_Re,
 #endif
 
 #endif /* defined(__GNUC__) && defined(__mips__) */
-

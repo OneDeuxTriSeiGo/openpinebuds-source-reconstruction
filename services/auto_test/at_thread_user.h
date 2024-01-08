@@ -98,4 +98,3 @@ int at_thread_user_enqueue_cmd(enum THREAD_USER_ID user_id,
 #endif
 
 #endif // __AT_THREAD_USER_H__
-

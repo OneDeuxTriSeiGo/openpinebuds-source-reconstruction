@@ -33,4 +33,3 @@ CFLAGS_libc_rom.o += -DNO_VSSCANF
 CFLAGS_libc_rom.o += -DNO_ASSERT
 
 endif # !NOSTD
-

@@ -78,4 +78,3 @@ APP_TOTA_CMD_RET_STATUS_E app_anc_tota_cmd_received(uint8_t* ptrData, uint32_t d
 #endif
 
 #endif // #ifndef __APP_TOTA_CMD_HANDLER_H__
-

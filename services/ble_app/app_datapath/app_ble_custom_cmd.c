@@ -136,4 +136,3 @@ BLE_CUSTOM_CMD_INSTANCE_T     customCommandArray[] =
 };
 #endif
 #endif
-

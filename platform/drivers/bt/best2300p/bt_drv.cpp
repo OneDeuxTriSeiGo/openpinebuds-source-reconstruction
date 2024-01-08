@@ -1388,4 +1388,3 @@ void btdrv_enable_rf_sw(int rx_on, int tx_on)
     BTDIGITAL_REG(0xD0340000) = (BTDIGITAL_REG(0xD0340000) & ~(1<<24));
     BTDIGITAL_REG(0xD0220050) = (BTDIGITAL_REG(0xD0220050) & ~0xFF) | 0xA6;
 }
-

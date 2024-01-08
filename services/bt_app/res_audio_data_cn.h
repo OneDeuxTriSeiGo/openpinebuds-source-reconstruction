@@ -150,4 +150,3 @@ const uint8_t CN_BT_FINDME[] = {
 };
 #endif
 #endif
-

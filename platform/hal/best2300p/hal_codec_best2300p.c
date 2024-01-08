@@ -4194,4 +4194,3 @@ int hal_codec_bt_trigger_stop(void)
     return 0;
 }
 //********************BT trigger functions: END********************
-

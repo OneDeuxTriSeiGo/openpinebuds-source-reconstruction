@@ -98,4 +98,3 @@ WEAK void analog_aud_vad_enable(enum AUD_VAD_TYPE_T type, bool en) {}
 }
 
 #endif // __ARMCC_VERSION
-

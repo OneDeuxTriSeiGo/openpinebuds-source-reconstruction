@@ -884,4 +884,3 @@ uint16_t rb_ctl_songs_count(void)
 {
     return sd_playlist.total_songs;
 }
-

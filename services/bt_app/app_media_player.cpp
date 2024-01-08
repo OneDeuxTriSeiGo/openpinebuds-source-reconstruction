@@ -1513,4 +1513,3 @@ void app_tws_cmd_stop_prompt_handler(uint8_t* ptrParam, uint16_t paramLen)
     app_stop_local_prompt_playing();
 }
 #endif
-

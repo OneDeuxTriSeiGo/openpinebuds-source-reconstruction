@@ -19,4 +19,3 @@ endif
 ifeq ($(TRACE_CRLF),1)
 ccflags-y += -DTRACE_CRLF
 endif
-

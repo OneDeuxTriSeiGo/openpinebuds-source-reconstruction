@@ -271,4 +271,3 @@ uint32_t integer_sqrt_nearest(uint32_t val)
     s = integer_sqrt(val * 4);
     return (s + 1) / 2;
 }
-

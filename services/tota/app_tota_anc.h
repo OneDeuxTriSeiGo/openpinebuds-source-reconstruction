@@ -35,4 +35,3 @@ extern "C" int get_send_sync_flag(void);
 void app_tota_anc_init();
 
 #endif
-

@@ -94,4 +94,3 @@ struct ble_tota_send_data_req_t
 /// @} TOTATASK
 
 #endif /* _TOTA_TASK_H_ */
-

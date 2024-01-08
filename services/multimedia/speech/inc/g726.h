@@ -28,4 +28,3 @@ unsigned long g726_Decode(char *bitstream,unsigned char *speech, uint32_t sample
 #endif
 
 #endif
-

@@ -211,4 +211,3 @@ inline void cplxMultDiv2( FIXP_DBL *c_Re,
 
 
 #endif
-

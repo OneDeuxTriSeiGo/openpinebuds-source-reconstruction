@@ -254,4 +254,3 @@ void pts_cmgr_callback(btif_cmgr_handler_t *cHandler,
     }
 }
 #endif
-

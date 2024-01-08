@@ -226,5 +226,3 @@ static uint8_t * _get_tx_buf_ptr()
 {
     return (spp_tx_buffer + tx_buf_index*MAX_SPP_PACKET_SIZE);
 }
-
-

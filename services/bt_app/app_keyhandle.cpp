@@ -1531,4 +1531,3 @@ void bt_key_init(void)
     bt_key.code = 0xff;
     bt_key.event = 0xff;
 }
-

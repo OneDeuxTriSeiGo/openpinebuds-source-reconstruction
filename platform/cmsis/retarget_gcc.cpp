@@ -139,4 +139,3 @@ extern "C" void exit(int return_code)
 #endif /*LIBC_HOOKS*/
 
 #endif // __GNUC__ && !__ARMCC_VERSION
-

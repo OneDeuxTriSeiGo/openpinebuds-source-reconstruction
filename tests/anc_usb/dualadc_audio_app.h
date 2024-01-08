@@ -35,4 +35,3 @@ void dualadc_audio_app_term(void);
 #endif
 
 #endif
-

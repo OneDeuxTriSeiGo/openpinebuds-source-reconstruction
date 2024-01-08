@@ -137,4 +137,3 @@ void rb_pcmbuf_stop(void)
     af_stream_stop(AUD_STREAM_ID_0,AUD_STREAM_PLAYBACK);
     af_stream_close(AUD_STREAM_ID_0,AUD_STREAM_PLAYBACK);
 }
-

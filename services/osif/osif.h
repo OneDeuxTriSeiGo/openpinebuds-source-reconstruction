@@ -64,4 +64,3 @@ uint8_t osif_lock_is_exist(void);
 #endif
 
 #endif /*__OSIF_H__*/
-

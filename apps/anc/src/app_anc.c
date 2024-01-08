@@ -1958,4 +1958,3 @@ void app_anc_sync_status(void)
     }
 }
 #endif
-

@@ -194,4 +194,3 @@ void app_ai_if_pre_music_or_prompt_check(void);
 
 
 #endif //AI_IF_H_
-

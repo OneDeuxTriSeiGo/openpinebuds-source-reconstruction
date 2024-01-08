@@ -97,4 +97,3 @@ void pmu_led_set_hiz(enum HAL_GPIO_PIN_T pin);
 #endif
 
 #endif
-

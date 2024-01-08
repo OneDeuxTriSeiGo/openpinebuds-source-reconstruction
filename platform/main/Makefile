@@ -249,4 +249,3 @@ endif
 ifeq ($(DEBUG_MODE_USB_DOWNLOAD),1)
 ccflags-y += -DDEBUG_MODE_USB_DOWNLOAD
 endif
-

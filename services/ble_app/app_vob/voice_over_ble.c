@@ -1227,4 +1227,3 @@ void voice_over_ble_init(void)
 }
 
 #endif // #if __VOICE_OVER_BLE_ENABLED__
-

@@ -99,4 +99,3 @@ void hal_sw_bootmode_clear(uint32_t bm);
 #endif
 
 #endif
-

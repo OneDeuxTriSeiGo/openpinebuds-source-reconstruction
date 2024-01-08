@@ -37,4 +37,3 @@ bool btusb_is_usb_mode(void);
 }
 #endif
 #endif // _BTUSB_AUDIO_H_
-

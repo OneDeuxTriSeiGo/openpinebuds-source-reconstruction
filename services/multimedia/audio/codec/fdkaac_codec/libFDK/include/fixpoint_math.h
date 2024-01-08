@@ -494,4 +494,3 @@ inline FIXP_DBL GetInvInt(int intValue)
 
 
 #endif
-

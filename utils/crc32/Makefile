@@ -15,4 +15,3 @@ obj-y := $(filter-out $(EXCLUDE_OBJS),$(obj-y))
 ifeq ($(MAKE_CRC32_TABLE),1)
 ccflags-y += -DMAKE_CRC32_TABLE
 endif
-

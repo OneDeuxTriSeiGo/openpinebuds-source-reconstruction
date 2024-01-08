@@ -127,4 +127,3 @@ endif
 $(USB_DEV_LIB_NAME)-y := $(src_obj)
 
 obj-y := $(USB_DEV_LIB_NAME).a $(cfg_obj)
-

@@ -452,4 +452,3 @@ void nv_record_btdevicerecord_set_vend_id_and_source(nvrec_btdevicerecord* pReco
 }
 
 #endif //#if defined(NEW_NV_RECORD_ENABLED)
-

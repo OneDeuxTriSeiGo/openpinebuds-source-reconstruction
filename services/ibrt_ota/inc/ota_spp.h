@@ -57,4 +57,3 @@ void ota_disconnect(void);
 
 
 #endif
-

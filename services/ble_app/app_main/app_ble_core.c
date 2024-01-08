@@ -332,4 +332,3 @@ void ble_adv_data_parse(uint8_t *bleBdAddr,
     }
 #endif
 }
-

@@ -44,4 +44,3 @@ else
 CFLAGS_norflash_api.o += -DFLASH_API_NORMAL
 endif
 endif
-

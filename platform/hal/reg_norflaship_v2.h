@@ -429,4 +429,3 @@ struct NORFLASH_CTRL_T {
 #endif
 
 #endif
-

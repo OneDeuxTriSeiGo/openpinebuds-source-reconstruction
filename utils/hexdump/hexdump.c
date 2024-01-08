@@ -79,4 +79,3 @@ void dump_buffer_imm(const void *buf, size_t len)
 {
     dump_buffer_internal((const unsigned char *)buf, len, 1);
 }
-

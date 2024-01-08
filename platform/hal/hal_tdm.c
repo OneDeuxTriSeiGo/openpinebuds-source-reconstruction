@@ -586,4 +586,3 @@ void hal_tdm_set_config(enum HAL_I2S_ID_T i2s_id,struct HAL_TDM_CONFIG_T *tdm_cf
     hal_i2s_tdm_set_config(i2s_id, &i2s_tdm_cfg);
 #endif
 }
-

@@ -92,4 +92,3 @@ const char *aud_id2str(UINT16 aud_id);
 extern UINT8 BIN_FILE[];
 
 #endif//__RESOURCES_H__
-

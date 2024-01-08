@@ -116,31 +116,3 @@ typedef struct {
 } SpeechConfig;
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

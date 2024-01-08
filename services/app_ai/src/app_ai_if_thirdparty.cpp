@@ -105,4 +105,3 @@ void app_ai_if_thirdparty_init(void)
     app_ai_if_thirdparty_event_handle(THIRDPARTY_FUNC_KWS, THIRDPARTY_INIT);
 #endif
 }
-

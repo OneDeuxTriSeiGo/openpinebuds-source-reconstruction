@@ -91,4 +91,3 @@ subdir-ccflags-y += \
 endif
 
 CFLAGS_app_tws_ibrt.o += -DBESLIB_INFO=$(BESLIB_INFO)
-

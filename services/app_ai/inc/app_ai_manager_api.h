@@ -248,4 +248,3 @@ void app_ai_manager_init(void);
 
 
 #endif //APP_AI_MANAGER_API_H_
-

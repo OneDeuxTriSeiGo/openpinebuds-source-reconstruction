@@ -105,4 +105,3 @@ void nvrec_config_set_string(nvrec_config_t *config, const char *section, const 
 nvrec_section_t *nvrec_section_find(const nvrec_config_t *config, const char *section);
 void nvrec_entry_free(void *ptr);
 #endif
-

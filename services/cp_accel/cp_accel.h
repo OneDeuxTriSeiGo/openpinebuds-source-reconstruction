@@ -128,4 +128,3 @@ int cp_accel_send_event_cp2mcu(uint8_t event);
 #endif
 
 #endif
-

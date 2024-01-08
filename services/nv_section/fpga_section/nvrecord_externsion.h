@@ -313,4 +313,3 @@ void nv_record_init(void);
 #endif
 #endif
 #endif  //#if defined(NEW_NV_RECORD_ENABLED)
-

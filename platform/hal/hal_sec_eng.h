@@ -146,4 +146,3 @@ enum HAL_SE_RET_T hal_se_hmac_reset(void);
 #endif
 
 #endif
-

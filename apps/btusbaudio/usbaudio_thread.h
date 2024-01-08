@@ -46,4 +46,3 @@ int usb_os_init(void);
 #endif
 
 #endif // __USB_THREAD_H__
-

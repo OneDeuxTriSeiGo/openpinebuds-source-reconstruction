@@ -580,4 +580,3 @@ void BLE_custom_command_init(void)
     ble_custom_cmd_env.mutex = osMutexCreate((osMutex(app_ble_cmd_mutex)));
 }
 #endif
-

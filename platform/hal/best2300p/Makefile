@@ -75,4 +75,3 @@ CFLAGS_hal_psc_$(CHIP).o += $(PSC_CFG_FLAGS)
 CFLAGS_hal_codec_$(CHIP).o += $(CODEC_CFG_FLAGS)
 
 CFLAGS_hal_iomux_$(CHIP).o += $(IOMUX_CFG_FLAGS)
-

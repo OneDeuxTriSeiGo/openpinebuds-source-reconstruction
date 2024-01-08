@@ -50,5 +50,3 @@ subdir-ccflags-y += \
 	-Iservices/osif/ \
 	$(BT_IF_INCLUDES) \
 	$(BT_PROFILES_INCLUDES)
-
-

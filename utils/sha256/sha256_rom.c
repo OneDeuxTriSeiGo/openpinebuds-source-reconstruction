@@ -36,4 +36,3 @@ const uint8_t* SHA256_hash(const void* data, uint32_t len, uint8_t* digest)
 {
     return __export_fn_rom.SHA256_hash(data, len, digest);
 }
-

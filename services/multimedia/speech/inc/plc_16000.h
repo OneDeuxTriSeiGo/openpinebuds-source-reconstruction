@@ -42,4 +42,3 @@ void InitPLC(struct PLC_State *plc_state);
 void PLC_bad_frame(struct PLC_State *plc_state, short *ZIRbuf, short *out);
 void PLC_good_frame(struct PLC_State *plc_state, short *in, short *out);
 #endif /* SBCPLC_H */
-

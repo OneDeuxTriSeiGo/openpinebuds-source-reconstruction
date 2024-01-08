@@ -12,4 +12,3 @@ KBUILD_CPPFLAGS += -D_VOICESPOT_
 endif
 
 obj-y += $(foreach lib,$(THIRDPARTY_LIB),$(lib)_lib/)
-

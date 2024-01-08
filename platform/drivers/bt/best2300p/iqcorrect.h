@@ -16,4 +16,3 @@ void btdrv_tx_iq_cal(void);
 #endif
 
 #endif // __IQ_CORRECT_H__
-

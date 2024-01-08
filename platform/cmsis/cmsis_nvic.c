@@ -218,4 +218,3 @@ void SRAM_TEXT_LOC NVIC_PowerDownWakeup(uint32_t *buf, uint32_t cnt)
 #endif
 
 #endif
-

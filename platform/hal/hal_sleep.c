@@ -584,4 +584,3 @@ int hal_chip_wake_unlock(enum HAL_CHIP_WAKE_LOCK_USER_T user)
 
     return 0;
 }
-

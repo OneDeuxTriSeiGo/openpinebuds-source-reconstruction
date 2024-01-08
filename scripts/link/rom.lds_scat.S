@@ -177,4 +177,3 @@ LR_build_info +0
 
     ScatterAssert(LoadLimit(rom_build_info) <= (ROM_BASE + ROM_SIZE))
 }
-

@@ -123,4 +123,3 @@ int usb_serial_send_break(void);
 #endif
 
 #endif
-

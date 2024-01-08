@@ -19,4 +19,3 @@ __stack_chk_fail (void)
   const char *msg = "*** stack smashing detected ***: terminated\n";
   ASSERT(0, "%s", msg);
 }
-

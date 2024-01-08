@@ -243,4 +243,3 @@ void app_bt_hid_send_capture(hid_channel_t chnl)
 }
 
 #endif /* BTIF_HID_DEVICE */
-

@@ -77,5 +77,3 @@ void otaConfigureBleBdAddr(void)
         ble_addr[5] |= 0xC0;
     }
 }
-
-

@@ -40,4 +40,3 @@
 #endif
 
 #endif //APP_AI_IF_CONFIG_H_
-

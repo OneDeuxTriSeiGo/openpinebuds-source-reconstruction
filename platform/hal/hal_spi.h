@@ -206,4 +206,3 @@ int hal_spidpd_recv(const void *cmd, void *data, uint32_t len);
 #endif
 
 #endif
-

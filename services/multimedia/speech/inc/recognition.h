@@ -38,4 +38,3 @@ typedef struct{
 int speech_recognition_process(mfcc_extract_t *mfcc_exec, short *buf, unsigned int len);
 
 #endif // __RECOGNITION_H__
-

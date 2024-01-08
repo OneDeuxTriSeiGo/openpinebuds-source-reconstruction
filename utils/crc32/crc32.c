@@ -131,4 +131,3 @@ unsigned long crc32(unsigned long crc, const unsigned char *buf, unsigned int le
 
     return c ^ 0xffffffffL;
 }
-

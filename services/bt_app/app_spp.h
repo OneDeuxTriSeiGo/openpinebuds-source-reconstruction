@@ -79,4 +79,3 @@ void app_spp_open(struct spp_device *osDev_t, btif_remote_device_t  *btDevice, b
 #endif
 
 #endif
-

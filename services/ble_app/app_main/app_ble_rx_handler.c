@@ -171,4 +171,3 @@ static void app_ble_rx_handler_thread(void const *argument)
         }
     }
 }
-

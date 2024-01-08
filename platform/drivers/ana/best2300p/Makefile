@@ -96,4 +96,3 @@ CFLAGS_pmu_$(CHIP).o += $(PMU_CFG_FLAGS)
 CFLAGS_analog_$(CHIP).o += $(ANA_CFG_FLAGS)
 
 CFLAGS_usbphy_$(CHIP).o += $(USBPHY_CFG_FLAGS)
-

@@ -339,5 +339,3 @@ int app_mic_alg_audioloop(bool on, enum APP_SYSFREQ_FREQ_T freq)
     isRun=on;
     return 0;
 }
-
-

@@ -297,4 +297,3 @@ APP_THROUGHPUT_CMD_INSTANCE_T through_put_table[APP_THROUGHPUT_CMD_INSTANCE_NUMB
     {THROUGHPUT_OP_THROUGHPUT_TEST_DATA_ACK, app_throughput_test_data_ack_handler},
     {THROUGHPUT_OP_THROUGHPUT_TEST_DONE, app_throughput_test_done_signal_handler}
 };
-

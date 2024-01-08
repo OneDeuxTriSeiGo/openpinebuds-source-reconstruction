@@ -1606,4 +1606,3 @@ int hal_norflash_get_remap_status(enum HAL_NORFLASH_ID_T id)
     return HAL_NORFLASH_ERR;
 #endif
 }
-

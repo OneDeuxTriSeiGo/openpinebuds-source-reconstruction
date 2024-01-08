@@ -109,4 +109,3 @@ int g726_40_decoder(
          g726_state *state_ptr);
 
 #endif /* !_G72X_H */
-

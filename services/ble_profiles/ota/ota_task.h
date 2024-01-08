@@ -93,4 +93,3 @@ struct ble_ota_send_data_req_t
 /// @} OTATASK
 
 #endif /* _OTA_TASK_H_ */
-

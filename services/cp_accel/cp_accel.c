@@ -415,4 +415,3 @@ int SRAM_TEXT_LOC cp_accel_busy(enum CP_TASK_TYPE task_id)
 }
 
 #endif
-

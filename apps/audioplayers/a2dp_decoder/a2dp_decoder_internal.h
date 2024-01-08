@@ -198,4 +198,3 @@ uint32_t a2dp_audio_decoder_internal_check_sum_generate(const uint8_t *buf, uint
 #endif
 
 #endif//__A2DPPLAY_H__
-

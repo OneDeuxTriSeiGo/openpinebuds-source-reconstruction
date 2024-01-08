@@ -4284,4 +4284,3 @@ void pmu_ntc_capture_enable(void)
 void pmu_ntc_capture_disable(void)
 {
 }
-

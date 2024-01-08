@@ -66,4 +66,3 @@ void hal_sysfreq_print(void);
 #endif
 
 #endif
-

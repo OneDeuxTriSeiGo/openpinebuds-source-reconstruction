@@ -85,4 +85,3 @@ void app_ibrt_auto_test_init(void);
 #endif
 
 #endif
-

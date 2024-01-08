@@ -78,4 +78,3 @@ int hfp_volume_set(enum BT_DEVICE_ID_T id, int vol);
 }
 #endif                          /*  */
 #endif /*__APP_HFP_H__*/
-

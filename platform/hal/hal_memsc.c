@@ -43,4 +43,3 @@ bool hal_memsc_avail(enum HAL_MEMSC_ID_T id)
 
     return !!((hal_cmu_get_memsc_addr())[4] & (1 << id));
 }
-

@@ -204,4 +204,3 @@ const struct prf_task_cbs* ota_prf_itf_get(void)
 #endif /* BLE_OTA */
 
 /// @} OTA
-

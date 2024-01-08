@@ -2432,5 +2432,3 @@ int32_t at_Init(void)
     return ret;
 }
 #endif// (_AUTO_TEST_)
-
-

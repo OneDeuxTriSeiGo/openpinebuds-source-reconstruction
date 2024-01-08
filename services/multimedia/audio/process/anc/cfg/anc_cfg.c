@@ -2284,12 +2284,3 @@ int anc_cmd_send_process(uint8_t **pbuf,uint16_t *len)
     return 0;
 }
 #endif
-
-
-
-
-
-
-
-
-

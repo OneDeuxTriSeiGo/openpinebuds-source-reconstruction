@@ -31,4 +31,3 @@ subdir-ccflags-y += -DDEBUG_SLEEP=$(DEBUG_SLEEP)
 endif
 
 subdir-ccflags-y += -Irtos/rtx5/rtx_config
-

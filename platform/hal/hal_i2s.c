@@ -798,4 +798,3 @@ void hal_i2s_clk_sync_disable(void)
     uint32_t reg_base = _i2s_get_reg_base(HAL_I2S_ID_0);
     i2sip_w_clk_sync_disable(reg_base);
 }
-

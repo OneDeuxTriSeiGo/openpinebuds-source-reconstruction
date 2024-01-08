@@ -128,4 +128,3 @@ void app_thirdparty_init(void)
 
     TRACE(3, "%s cnt=%d id=%d", __func__, app_thirdparty_handle_table.thirdparty_handler_cnt, app_thirdparty_handle_table.thirdparty_lib_id);
 }
-

@@ -79,4 +79,3 @@ int app_status_indication_set(APP_STATUS_INDICATION_T status);
 #endif
 
 #endif
-

@@ -899,4 +899,3 @@ int ntc_capture_start(void)
     hal_gpadc_open(HAL_GPADC_CHAN_0, HAL_GPADC_ATP_ONESHOT, ntc_capture_irqhandler);
     return 0;
 }
-

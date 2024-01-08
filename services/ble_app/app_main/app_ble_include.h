@@ -33,4 +33,3 @@ extern "C" {
 #endif
 
 #endif /* #ifndef __APP_BLE_INCLUDE_H__ */
-

@@ -2010,4 +2010,3 @@ const char* nvrec_dev_get_ble_name(void)
         return (const char *)(&__factory_start[rev2_dev_ble_name]);
     }
 }
-

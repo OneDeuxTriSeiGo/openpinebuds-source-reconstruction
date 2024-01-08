@@ -1617,4 +1617,3 @@ void norflash_security_register_disable_read(uint32_t mode)
 }
 
 #endif
-

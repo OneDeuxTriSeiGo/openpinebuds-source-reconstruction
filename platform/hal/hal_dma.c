@@ -1054,4 +1054,3 @@ HAL_DMA_DELAY_FUNC hal_dma_set_delay_func(HAL_DMA_DELAY_FUNC new_func)
     dma_delay = new_func;
     return old_func;
 }
-

@@ -148,4 +148,3 @@ void ota_task_init(struct ke_task_desc *task_desc);
 /// @} OTA
 
 #endif /* _OTA_H_ */
-

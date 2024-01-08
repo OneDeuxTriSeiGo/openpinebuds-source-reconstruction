@@ -164,4 +164,3 @@ int simul_key_event_process(uint32_t key_code, uint8_t key_event)
     return key_event_process(key_code, key_event);
 }
 #endif
-

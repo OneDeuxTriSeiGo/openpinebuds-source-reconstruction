@@ -70,4 +70,3 @@ uint32_t btif_hid_profile_restore_ctx(uint8_t *buf, uint32_t buf_len);
 #endif
 
 #endif /* __BTIF_HID_API_H__ */
-

@@ -342,4 +342,3 @@ int hal_sensor_eng_external_input_test(void)
     return 0;
 }
 #endif
-

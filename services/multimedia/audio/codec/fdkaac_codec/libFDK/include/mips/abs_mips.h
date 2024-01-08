@@ -104,4 +104,3 @@ amm-info@iis.fraunhofer.de
 #endif /* defined(__GNUC__) && defined(__mips__) */
 
 #endif /*__mips__ */
-

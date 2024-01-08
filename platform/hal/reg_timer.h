@@ -57,4 +57,3 @@ struct DUAL_TIMER_T {
 #define TIMER_ELAPSED_CTRL_CLR          (1 << 1)
 
 #endif
-

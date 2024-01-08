@@ -177,4 +177,3 @@ void app_tws_sync_prompt_manager_reset(void);
 #endif
 
 #endif
-

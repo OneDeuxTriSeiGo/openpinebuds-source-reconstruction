@@ -11,4 +11,3 @@ ccflags-y +=  \
 ifeq ($(VOICE_PROMPT),1)
 CFLAGS_resources.o += -DMEDIA_PLAYER_SUPPORT
 endif
-

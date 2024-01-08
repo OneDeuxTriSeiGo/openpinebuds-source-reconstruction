@@ -87,4 +87,3 @@ struct norflash_cfg_struct_t {
 #endif
 
 #endif
-

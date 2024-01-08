@@ -126,4 +126,3 @@ uint8_t hal_codec_get_digmic_hw_index(uint8_t chan)
 {
     return chan - get_msb_pos(AUD_CHANNEL_MAP_DIGMIC_CH0);
 }
-

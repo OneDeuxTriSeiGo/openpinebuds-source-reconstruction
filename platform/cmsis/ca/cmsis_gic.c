@@ -189,4 +189,3 @@ IRQn_Type IRQ_GetCurrentActiveIRQ(void)
 IRQn_Type NVIC_GetCurrentActiveIRQ(void) __attribute__((alias("IRQ_GetCurrentActiveIRQ")));
 
 #endif
-

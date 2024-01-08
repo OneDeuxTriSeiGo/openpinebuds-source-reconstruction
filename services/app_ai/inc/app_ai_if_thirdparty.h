@@ -147,4 +147,3 @@ void app_ai_if_thirdparty_init(void);
 
 
 #endif //APP_AI_IF_THIRDPARTY_H_
-

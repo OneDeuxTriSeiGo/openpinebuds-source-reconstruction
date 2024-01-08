@@ -78,4 +78,3 @@ static inline void color_log_dummy(const char *fmt, ...) { }
 
 
 #endif
-

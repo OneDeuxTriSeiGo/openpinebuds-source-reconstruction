@@ -407,4 +407,3 @@ void pmu_usb_get_pin_status(int *dp, int *dm)
 }
 
 #endif
-

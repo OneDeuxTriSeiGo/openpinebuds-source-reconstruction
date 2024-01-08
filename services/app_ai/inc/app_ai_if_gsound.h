@@ -32,4 +32,3 @@ void app_ai_if_gsound_service_enable_switch(bool onOff);
 
 
 #endif //APP_AI_IF_GSOUND_H_
-

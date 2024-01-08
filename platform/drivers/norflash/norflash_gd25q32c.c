@@ -362,4 +362,3 @@ const struct NORFLASH_CFG_T xm25qh80b_cfg = {
                 HAL_NORFLASH_OP_MODE_SUSPEND),
     .write_status = gd25q32c_write_status,
 };
-

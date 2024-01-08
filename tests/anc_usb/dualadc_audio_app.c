@@ -402,4 +402,3 @@ void dualadc_audio_app_term(void)
     capture_buf = NULL;
     capture_size = 0;
 }
-

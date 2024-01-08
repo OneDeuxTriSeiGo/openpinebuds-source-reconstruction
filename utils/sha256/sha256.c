@@ -278,4 +278,3 @@ _exit:
 
     return SHA256_hash(data, len, digest);
 }
-

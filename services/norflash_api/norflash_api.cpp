@@ -1661,5 +1661,3 @@ void app_flash_page_program(enum NORFLASH_API_MODULE_ID_T module,
         }
     } while (1);
 }
-
-

@@ -1180,4 +1180,3 @@ int hal_key_close(void)
 
     return 0;
 }
-

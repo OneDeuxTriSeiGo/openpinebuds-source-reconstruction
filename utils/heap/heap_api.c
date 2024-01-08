@@ -233,4 +233,3 @@ void med_memory_info(size_t *total,
 #endif
     }
 }
-

@@ -479,4 +479,3 @@ extern void btdrv_hciopen(void);
 #endif
 
 #endif
-

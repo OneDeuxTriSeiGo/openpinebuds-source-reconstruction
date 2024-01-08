@@ -127,5 +127,3 @@ void app_ai_manager_init(void)
     ai_manager_init();
 #endif
 }
-
-

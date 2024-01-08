@@ -31,4 +31,3 @@ void usbphy_ldo_config(int enable);
 #endif
 
 #endif
-

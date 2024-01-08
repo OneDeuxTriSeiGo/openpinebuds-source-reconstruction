@@ -170,4 +170,3 @@ void hal_usbhost_wakeup(void);
 #endif
 
 #endif
-

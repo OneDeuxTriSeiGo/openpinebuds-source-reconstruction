@@ -41,5 +41,3 @@ int anc_usb_app_key(enum HAL_KEY_CODE_T code, enum HAL_KEY_EVENT_T event);
 #endif
 
 #endif
-
-

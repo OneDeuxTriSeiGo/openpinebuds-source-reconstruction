@@ -529,4 +529,3 @@ struct AONCMU_T {
 #define AON_ORST_SLP26M                 (1 << 9)
 
 #endif
-

@@ -292,4 +292,3 @@ void *app_factorymode_mic_cancellation_init(void* (* alloc_ext)(int))
 }
 
 #endif
-

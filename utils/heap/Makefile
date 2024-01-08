@@ -8,4 +8,3 @@ obj-y := $(obj_c:.c=.o) $(obj_s:.S=.o) $(obj_cpp:.cpp=.o)
 
 ccflags-y := \
 	-Iplatform/cmsis/inc/ \
-

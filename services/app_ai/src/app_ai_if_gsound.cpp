@@ -13,4 +13,3 @@ void app_ai_if_gsound_service_enable_switch(bool onOff)
     gsound_service_enable_switch(onOff);
 #endif
 }
-

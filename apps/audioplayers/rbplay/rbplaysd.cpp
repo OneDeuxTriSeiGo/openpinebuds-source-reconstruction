@@ -221,5 +221,3 @@ int app_ctl_remove_file(const int idx)
 
     return 0;
 }
-
-

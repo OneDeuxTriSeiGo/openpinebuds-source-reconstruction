@@ -396,4 +396,3 @@ void rtx_show_all_threads_usage(void)
 }
 
 #endif
-

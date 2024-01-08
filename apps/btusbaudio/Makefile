@@ -37,5 +37,3 @@ ccflags-y +=  \
 	-Iservices/multimedia/audio/codec/sbc/inc \
 	-Iservices/multimedia/audio/codec/sbc/src/inc \
     -Iservices/interconnection
-
-

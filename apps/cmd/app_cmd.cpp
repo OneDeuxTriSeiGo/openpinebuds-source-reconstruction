@@ -68,4 +68,3 @@ void app_cmd_close(void)
     return;
 }
 #endif
-

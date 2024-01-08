@@ -43,4 +43,3 @@ endif
 ifeq ($(ANC_FB_ENABLED),1)
 CFLAGS_anc_usb_app.o += -DANC_FB_ENABLED
 endif
-

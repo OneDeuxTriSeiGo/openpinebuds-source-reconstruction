@@ -91,4 +91,3 @@ void *zero_mem(void *dst, unsigned int size)
         return memset(dst, 0, size);
     }
 }
-

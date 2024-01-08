@@ -52,4 +52,3 @@ enum E_HWTIMER_T hwtimer_stop(HWTIMER_ID id);
 #endif
 
 #endif
-

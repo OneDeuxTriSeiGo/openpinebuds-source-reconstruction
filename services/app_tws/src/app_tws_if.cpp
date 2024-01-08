@@ -699,4 +699,3 @@ void app_tws_set_side_from_gpio(void)
 }
 
 #endif
-

@@ -208,4 +208,3 @@ void adda_loop_app_loop(void)
     af_thread(NULL);
 #endif
 }
-

@@ -598,4 +598,3 @@ uint8_t hal_cachecp_sync(enum HAL_CACHE_ID_T id)
     return 0;
 }
 #endif
-

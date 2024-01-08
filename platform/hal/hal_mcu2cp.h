@@ -72,4 +72,3 @@ int hal_mcu2cp_local_irq_pending_cp(enum HAL_MCU2CP_ID_T id);
 #endif
 
 #endif
-

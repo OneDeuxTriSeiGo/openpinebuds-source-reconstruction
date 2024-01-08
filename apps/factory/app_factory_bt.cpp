@@ -328,4 +328,3 @@ void app_factorymode_bt_xtalcalib(APP_KEY_STATUS *status, void *param)
 }
 
 #endif
-

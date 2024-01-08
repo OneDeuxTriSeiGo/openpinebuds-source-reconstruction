@@ -41,4 +41,3 @@ void bes_ota_init(void);
 #endif
 
 #endif
-

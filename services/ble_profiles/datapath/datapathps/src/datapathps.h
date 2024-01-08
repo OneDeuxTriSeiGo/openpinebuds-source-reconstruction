@@ -160,4 +160,3 @@ void datapathps_task_init(struct ke_task_desc *task_desc);
 /// @} DATAPATHPS
 
 #endif /* _DATAPATHPS_H_ */
-

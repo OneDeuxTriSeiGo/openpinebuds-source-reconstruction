@@ -55,4 +55,3 @@ bt_status_t ram_record_ddbrec_delete(const bt_bdaddr_t *bdaddr);
 #endif
 #endif
 #endif // #if defined(NEW_NV_RECORD_ENABLED)
-

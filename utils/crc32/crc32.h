@@ -27,4 +27,3 @@ unsigned long crc32(unsigned long crc, const unsigned char *buf, unsigned int le
 #endif
 
 #endif
-

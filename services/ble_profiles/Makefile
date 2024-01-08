@@ -123,4 +123,3 @@ else
 ccflags-y += -Iservices/ota
 endif
 endif
-

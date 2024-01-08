@@ -24,4 +24,3 @@ void app_tota_gen_send_cmd_via_spp(uint8_t* ptrData, uint32_t length);
 void app_tota_gen_send_data_via_spp(uint8_t* ptrData, uint32_t length);
 
 #endif
-

@@ -648,4 +648,3 @@ extern "C" void app_ibrt_ui_automate_test_cmd_handler(uint8_t group_code,
 
 #endif
 #endif
-

@@ -348,4 +348,3 @@ int app_bt_ME_Read_Controller_Memory_Fortest(uint32_t addr,uint32_t len,uint8_t 
 }
 #endif
 #endif /* __APP_BT_FUNC_H__ */
-

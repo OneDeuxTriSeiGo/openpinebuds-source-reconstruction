@@ -250,4 +250,3 @@ void hal_uart_printf(const char *fmt, ...);
 #endif
 
 #endif
-

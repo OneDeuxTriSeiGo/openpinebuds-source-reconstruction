@@ -30,4 +30,3 @@ int app_tws_ibrt_dequeue(ibrt_queue *ptrQueue, void *e, unsigned int len);
 int app_tws_ibrt_length_queue(ibrt_queue *ptrQueue);
 
 #endif  // __APP_BT_QUEUE_H__
-

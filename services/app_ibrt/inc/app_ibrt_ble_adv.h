@@ -69,5 +69,3 @@ void app_ibrt_ble_switch_activities(void);
 #endif
 
 #endif
-
-

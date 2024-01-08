@@ -46,4 +46,3 @@ int sco_cp_process(short *pcm_buf, short *ref_buf, int *_pcm_len);
 #endif
 
 #endif
-

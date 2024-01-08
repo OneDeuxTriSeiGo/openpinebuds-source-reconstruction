@@ -41,4 +41,3 @@ btif_remote_device_t *btif_besaud_get_peer_device(void);
 #endif
 
 #endif
-

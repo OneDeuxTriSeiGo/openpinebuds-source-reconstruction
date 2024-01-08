@@ -173,4 +173,3 @@ void hid_l2cap_interrupt_data_receive(uint32 l2cap_handle, struct pp_buff *ppb);
 #endif
 
 #endif /* __HID_I_H__ */
-

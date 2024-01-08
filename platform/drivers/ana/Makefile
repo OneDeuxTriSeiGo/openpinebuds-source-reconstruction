@@ -197,4 +197,3 @@ endif
 ifeq ($(DYN_ADC_GAIN),1)
 ANA_CFG_FLAGS += -DDYN_ADC_GAIN
 endif
-

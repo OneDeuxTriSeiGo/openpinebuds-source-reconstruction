@@ -364,4 +364,3 @@ void app_tws_ibrt_update_basic_profiles(uint32_t profile_id,bool is_add);
 }
 #endif
 #endif
-

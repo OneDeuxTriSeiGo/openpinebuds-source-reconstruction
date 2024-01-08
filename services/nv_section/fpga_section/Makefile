@@ -36,4 +36,3 @@ endif
 ifeq ($(TX_IQ_CAL),1)
 subdir-ccflags-y += -DTX_IQ_CAL
 endif
-

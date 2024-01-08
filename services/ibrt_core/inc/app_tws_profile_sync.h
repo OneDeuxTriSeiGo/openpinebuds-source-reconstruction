@@ -81,4 +81,3 @@ void ibrt_app_wait_data_send_to_peer_timeout_handler(void const *param);
 void app_tws_profile_resume_a2dp_hfp(void);
 
 #endif
-

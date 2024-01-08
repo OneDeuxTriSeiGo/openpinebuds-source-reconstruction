@@ -177,4 +177,3 @@ CFLAGS_bt_sco_chain.o += -DSPEECH_RX_24BIT
 CFLAGS_voicebtpcmplay.o += -DSPEECH_RX_24BIT
 CFLAGS_voicebtpcmplay_sco_dma_snapshot.o += -DSPEECH_RX_24BIT
 endif
-

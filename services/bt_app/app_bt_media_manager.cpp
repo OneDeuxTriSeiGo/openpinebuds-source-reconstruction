@@ -2429,6 +2429,3 @@ void app_audio_decode_err_force_trigger(void)
     trigger_media_play((AUD_ID_ENUM)AUDIO_ID_BT_MUTE, 0, false);
 #endif
 }
-
-
-

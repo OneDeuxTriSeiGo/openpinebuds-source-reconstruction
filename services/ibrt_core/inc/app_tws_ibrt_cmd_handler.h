@@ -262,4 +262,3 @@ void app_ibrt_send_mobile_link_playback_info_handler(uint16_t rsp_seq, uint8_t *
 void app_ibrt_disconnect_mobile(uint8_t *p_buff, uint16_t length);
 void app_ibrt_disconnect_mobile_handler(uint16_t rsp_seq, uint8_t *p_buff, uint16_t length);
 #endif
-

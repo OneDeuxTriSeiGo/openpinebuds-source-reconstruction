@@ -108,4 +108,3 @@ int mpu_setup_cp(const mpu_regions_t *mpu_table, uint32_t region_num);
 #endif
 
 #endif
-

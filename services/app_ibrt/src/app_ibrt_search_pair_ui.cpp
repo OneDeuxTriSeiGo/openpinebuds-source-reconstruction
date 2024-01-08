@@ -766,5 +766,3 @@ void app_ibrt_enter_limited_mode(void)
 }
 
 #endif
-
-

@@ -113,4 +113,3 @@ int nv_record_env_init(void)
     return 0;
 }
 #endif // #if defined(NEW_NV_RECORD_ENABLED)
-

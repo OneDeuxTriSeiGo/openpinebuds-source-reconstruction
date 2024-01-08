@@ -333,4 +333,3 @@ void bt_drv_reg_op_ble_sup_timeout_set(uint16_t ble_conhdl, uint16_t sup_to);
 #endif
 
 #endif
-

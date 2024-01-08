@@ -4121,6 +4121,3 @@ static void app_AVRCP_CustomCmd_Received(uint8_t* ptrData, uint32_t len)
     TRACE(1,"AVRCP Custom Command Received %d bytes data:", len);
     DUMP8("0x%02x ", ptrData, len);
 }
-
-
-

@@ -26,15 +26,3 @@ PlcSt_8000 *speech_plc_8000_init(void* (* speex_alloc_ext)(int));
 int speech_plc_8000(PlcSt_8000 *lc, short *InBuf, int len);
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

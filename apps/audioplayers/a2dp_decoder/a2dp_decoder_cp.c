@@ -615,4 +615,3 @@ int a2dp_cp_consume_full_out_frame(void)
 }
 
 #endif
-

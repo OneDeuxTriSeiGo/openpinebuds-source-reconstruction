@@ -14,4 +14,3 @@ ccflags-y += -DCQ_FUNC_ATTR=WEAK
 else
 ccflags-y += -DCQ_FUNC_ATTR=
 endif
-

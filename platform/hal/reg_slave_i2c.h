@@ -45,4 +45,3 @@ struct SLAVE_I2C_T {
 #define TIMEOUT_BYPASS                      (1 << 0)
 
 #endif
-

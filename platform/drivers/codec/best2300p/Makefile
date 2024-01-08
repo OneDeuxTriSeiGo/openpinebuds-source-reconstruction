@@ -5,4 +5,3 @@ obj-y := $(obj-y:.c=.o)
 obj-y := $(obj-y:.S=.o)
 
 CFLAGS_codec_$(CHIP).o += $(CODEC_INT_CFG_FLAGS)
-

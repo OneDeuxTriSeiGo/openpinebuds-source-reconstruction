@@ -629,5 +629,3 @@ size_t memset_s(dst0,dstMax, c0, srcMax)
     memset(dst0, c0, srcMax);
     return 0;
 }
-
-

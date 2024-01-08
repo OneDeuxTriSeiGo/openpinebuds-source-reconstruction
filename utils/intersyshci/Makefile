@@ -47,4 +47,3 @@ ccflags-y := \
 ifeq ($(INTERSYS_NO_THREAD),1)
 CFLAGS_intersyshci.o += -D_INTERSYS_NO_THREAD_
 endif
-

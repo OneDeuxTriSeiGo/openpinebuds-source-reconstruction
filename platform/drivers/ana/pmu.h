@@ -256,4 +256,3 @@ enum HAL_PWRKEY_IRQ_T pmu_pwrkey_irq_value_to_state(uint16_t irq_status);
 #endif
 
 #endif
-

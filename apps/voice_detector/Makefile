@@ -21,4 +21,3 @@ endif
 ifeq ($(I2C_VAD),1)
 subdir-ccflags-y += -DI2C_VAD
 endif
-

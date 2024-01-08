@@ -247,4 +247,3 @@ void ble_adv_data_parse(uint8_t *bleBdAddr,
 #endif
 
 #endif /* #ifndef __APP_BLE_CORE_H__ */
-

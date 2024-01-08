@@ -15,4 +15,3 @@ obj-y += $(CHIP)/
 endif
 
 subdir-ccflags-y += -Iservices/nvrecord
-

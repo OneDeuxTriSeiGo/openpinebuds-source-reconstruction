@@ -5,6 +5,3 @@ obj-y := $(obj-y:.c=.o)
 obj-y := $(obj-y:.S=.o)
 
 ccflags-y := -Iplatform/hal \
-
-
-

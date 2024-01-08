@@ -61,5 +61,3 @@
 
 #define EXT_LINE_SET_HIGH
 #define EXT_LINE_SET_LOW
-
-

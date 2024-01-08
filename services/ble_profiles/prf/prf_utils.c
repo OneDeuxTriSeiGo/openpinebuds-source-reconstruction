@@ -381,4 +381,3 @@ uint8_t prf_unpack_date_time(uint8_t *packed_date, struct prf_date_time* date_ti
 #endif /* ((BLE_SERVER_PRF || BLE_CLIENT_PRF)) */
 #endif // (BLE_PROFILES)
 /// @} PRF_UTILS
-

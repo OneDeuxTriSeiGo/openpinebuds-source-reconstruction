@@ -1034,4 +1034,3 @@ enum HAL_SE_RET_T hal_se_hmac_reset(void) __attribute__((alias("hal_se_hash_rese
 #endif
 
 #endif
-

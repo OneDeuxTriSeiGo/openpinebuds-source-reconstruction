@@ -120,4 +120,3 @@ void BOOT_TEXT_FLASH_LOC hal_psc_bt_disable(void)
         PSC_AON_BT_ISO_EN_DR | PSC_AON_BT_ISO_EN_REG |
         PSC_AON_BT_CLK_STOP_DR | PSC_AON_BT_CLK_STOP_REG;
 }
-

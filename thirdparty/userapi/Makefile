@@ -9,5 +9,3 @@ obj-y += $(foreach lib,$(THIRDPARTY_LIB),$(lib)_app/)
 
 subdir-ccflags-y +=  \
 	-Iutils/list
-
-

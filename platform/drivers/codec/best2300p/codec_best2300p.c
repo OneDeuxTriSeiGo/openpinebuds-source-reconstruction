@@ -685,4 +685,3 @@ int codec_vad_close(void)
     return 0;
 }
 #endif
-

@@ -55,4 +55,3 @@ void usbphy_wakeup(void);
 #endif
 
 #endif
-

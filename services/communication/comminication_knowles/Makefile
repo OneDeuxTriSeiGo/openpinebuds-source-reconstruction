@@ -21,4 +21,3 @@ subdir-ccflags-y += \
 	-Ithirdparty/userapi/knowles_uart_app \
 	-Ithirdparty/knowles_uart_lib \
 	-Iservices/app_ai/inc
-

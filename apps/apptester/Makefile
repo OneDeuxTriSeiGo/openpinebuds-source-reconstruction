@@ -173,4 +173,3 @@ ifeq ($(PLL_TUNE_SAMPLE_RATE),1)
 CFLAGS_usb_audio_app.o += -DPLL_TUNE_SAMPLE_RATE
 endif
 endif
-

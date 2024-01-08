@@ -306,6 +306,3 @@ void app_ibrt_ble_adv_data_config(uint8_t *advData, uint8_t advDataLen,
     app_ble_adv_para_data_cfg.adv_data_len = advDataLen;
     app_ble_adv_para_data_cfg.scan_rsp_data_len = scanRspDataLen;
 }
-
-
-

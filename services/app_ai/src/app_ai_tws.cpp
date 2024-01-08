@@ -653,4 +653,3 @@ void app_ai_tws_init(void)
     app_ai_set_in_tws_mode(true);
 #endif
 }
-

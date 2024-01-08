@@ -611,5 +611,3 @@ enum APP_SYSFREQ_FREQ_T rb_player_get_work_freq(void)
     info("Decode thread run at: %d", freq);
     return freq;
 }
-
-

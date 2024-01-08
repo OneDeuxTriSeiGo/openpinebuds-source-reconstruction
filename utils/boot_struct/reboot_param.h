@@ -31,4 +31,3 @@ struct REBOOT_PARAM_T {
 #endif
 
 #endif
-

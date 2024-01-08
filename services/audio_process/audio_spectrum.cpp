@@ -115,4 +115,3 @@ void audio_spectrum_run(const uint8_t *buf, int len)
 }
 
 #endif
-

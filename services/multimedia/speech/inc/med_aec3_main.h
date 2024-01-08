@@ -75,4 +75,3 @@ extern VOS_UINT32  MED_AEC3_SetExtenalNsHandle(
 #endif
 
 #endif /* end of med_aec_main.h*/
-

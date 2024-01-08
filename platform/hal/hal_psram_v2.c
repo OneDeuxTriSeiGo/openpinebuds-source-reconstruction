@@ -812,4 +812,3 @@ void hal_psram_init(void)
 }
 
 #endif
-

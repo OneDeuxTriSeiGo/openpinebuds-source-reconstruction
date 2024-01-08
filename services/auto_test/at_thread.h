@@ -42,4 +42,3 @@ int at_enqueue_cmd(uint32_t cmd_id, uint32_t param,uint32_t pfunc);
 #endif
 
 #endif // __AT_THREAD_H__
-

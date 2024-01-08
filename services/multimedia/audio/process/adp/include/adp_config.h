@@ -46,5 +46,3 @@
 #define USE_STATIC_MEMORY
 
 #define ADPFILTER_NUM 400
-
-

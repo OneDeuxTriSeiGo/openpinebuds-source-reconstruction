@@ -217,4 +217,3 @@ void btdrv_uart_bridge_loop(void)
 #endif
     }
 }
-

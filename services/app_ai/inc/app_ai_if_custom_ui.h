@@ -48,4 +48,3 @@ void app_ai_if_custom_init(void);
 
 
 #endif //APP_AI_IF_CUSTOM_UI_H_
-

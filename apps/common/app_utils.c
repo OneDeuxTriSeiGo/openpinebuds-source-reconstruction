@@ -278,4 +278,3 @@ int app_wdt_close(void)
 }
 
 #endif
-

@@ -132,6 +132,3 @@ int at_enqueue_cmd(uint32_t cmd_id, uint32_t param,uint32_t pfunc)
     ret = at_mailbox_put(&at_msg);
     return ret;
 }
-
-
-

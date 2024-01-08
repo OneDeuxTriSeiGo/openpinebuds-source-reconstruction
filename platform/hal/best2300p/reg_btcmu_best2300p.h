@@ -54,4 +54,3 @@ struct BTCMU_T {
 #define BT_CMU_RF_EMAS                          (1 << 28)
 
 #endif
-

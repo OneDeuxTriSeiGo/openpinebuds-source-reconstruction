@@ -264,4 +264,3 @@ void app_voice_detector_get_vad_data_info(enum voice_detector_id id,
 {
     voice_detector_get_vad_data_info(id, vad_buf_info);
 }
-

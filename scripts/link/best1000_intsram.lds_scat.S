@@ -406,4 +406,3 @@ LR_tail +0
 
     ScatterAssert(FLASH_C_TO_NC(ImageLimit(code_start_addr)) <= ImageBase(custom_parameter))
 }
-

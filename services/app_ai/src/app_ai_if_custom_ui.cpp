@@ -115,4 +115,3 @@ void app_ai_if_custom_init(void)
     app_ai_register_ui_global_handler_ind(app_ai_if_custom_ui_global_handler_ind);
 #endif
 }
-

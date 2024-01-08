@@ -1207,4 +1207,3 @@ void app_ble_get_runtime_adv_param(uint8_t* pAdvType, uint16_t* pAdvIntervalMs)
     *pAdvType = advParam.advType;
     *pAdvIntervalMs = advParam.advInterval;
 }
-

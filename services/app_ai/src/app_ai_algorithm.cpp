@@ -408,4 +408,3 @@ void app_ai_algorithm_init(void)
 }
 
 #endif //AI_ALGORITHM_ENABLE
-

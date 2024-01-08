@@ -18,4 +18,3 @@ bool gfps_decrypt_name(uint8_t* aesKey, uint8_t* hmacFirst8Bytes,
     uint8_t* nonce, uint8_t* encryptedName, uint8_t* rawName, uint32_t nameLen);
 
 #endif
-

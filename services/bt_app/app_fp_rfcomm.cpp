@@ -856,4 +856,3 @@ static __attribute__((unused)) void app_fp_msg_send_message_nak(uint8_t reason, 
 
     app_fp_rfcomm_send((uint8_t *)&req, FP_MESSAGE_RESERVED_LEN+3);
 }
-

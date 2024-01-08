@@ -134,4 +134,3 @@ A2DP_AUDIO_DECODER_T a2dp_audio_example_decoder_config = {
                                                         a2dp_audio_example_info_get,
                                                         a2dp_audio_example_free,
                                                      } ;
-

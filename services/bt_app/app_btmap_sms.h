@@ -45,4 +45,3 @@ struct SMS_MSG_T{
 #endif
 
 #endif /*__APP_BTMAP_SMS_H__*/
-

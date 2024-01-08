@@ -181,5 +181,3 @@ int app_pwl_close(void)
 #endif
     return 0;
 }
-
-

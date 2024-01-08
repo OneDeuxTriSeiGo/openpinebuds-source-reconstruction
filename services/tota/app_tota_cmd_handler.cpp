@@ -511,5 +511,3 @@ void app_tota_cmd_handler_init(void)
 }
 
 TOTA_COMMAND_TO_ADD(OP_TOTA_RESPONSE_TO_CMD, app_tota_get_cmd_response_handler, false, 0, NULL );
-
-

@@ -33,4 +33,3 @@ endif
 ifeq ($(OS_API_IN_INTLOCK),1)
 CFLAGS_rt_CMSIS.o += -DOS_API_IN_INTLOCK
 endif
-

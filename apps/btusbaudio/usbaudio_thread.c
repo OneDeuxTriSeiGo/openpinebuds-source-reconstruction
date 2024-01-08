@@ -135,5 +135,3 @@ int usb_os_init(void)
 
     return 0;
 }
-
-

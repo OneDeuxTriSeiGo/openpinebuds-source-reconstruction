@@ -40,4 +40,3 @@ endif
 ifeq ($(SPEECH_TX_AEC_CODEC_REF),1)
 CFLAGS_app_factory_audio.o += -DSPEECH_TX_AEC_CODEC_REF
 endif
-

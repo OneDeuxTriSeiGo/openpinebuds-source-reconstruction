@@ -2781,4 +2781,3 @@ uint32_t hal_cmu_cp_get_entry_addr(void)
 {
     return cp_cfg->entry;
 }
-

@@ -72,5 +72,3 @@ void app_overlay_close(void)
         app_overlay_mutex_id = NULL;
     }
 }
-
-

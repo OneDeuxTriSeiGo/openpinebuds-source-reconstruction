@@ -84,4 +84,3 @@ subdir-ccflags-y += \
     -Iservices/ibrt_ui/inc \
     -Iservices/bt_app
 endif
-

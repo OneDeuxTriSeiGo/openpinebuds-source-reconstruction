@@ -174,4 +174,3 @@ const struct RESAMPLE_COEF_T COEF_DEF(resample_coef_any_up512_36) = {
     .coef_group = filter_any_up512_36,
 };
 #endif
-

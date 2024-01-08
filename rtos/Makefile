@@ -13,4 +13,3 @@ endif
 obj-y := rtos_lib.o
 
 subdir-ccflags-y += -Iplatform/cmsis/inc -Iplatform/hal -Iutils/hwtimer_list
-

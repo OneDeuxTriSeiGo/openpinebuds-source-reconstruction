@@ -31,4 +31,3 @@ endif
 ifeq ($(CODEC_ANC_BOOST),1)
 CODEC_INT_CFG_FLAGS += -DCODEC_ANC_BOOST
 endif
-

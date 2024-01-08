@@ -116,4 +116,3 @@ struct SENSOR_ENG_T {
 #define SENSOR0_BUSY                        (1 << 4)
 
 #endif
-

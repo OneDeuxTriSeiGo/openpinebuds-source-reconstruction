@@ -1101,4 +1101,3 @@ void hal_iomux_set_codec_gpio_trigger(enum HAL_IOMUX_PIN_T pin, bool polarity)
         iomux->REG_064 |= IOMUX_CFG_CODEC_TRIG_POL;
     }
 }
-

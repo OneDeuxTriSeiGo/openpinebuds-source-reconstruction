@@ -17,4 +17,3 @@ enum COMMUNICATION_CMD_TYPE {
 #endif
 
 #endif
-

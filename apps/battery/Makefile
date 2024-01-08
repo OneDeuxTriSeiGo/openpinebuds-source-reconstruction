@@ -15,4 +15,3 @@ subdir-ccflags-y += -Iplatform/drivers/ana \
 ifeq ($(VOICE_PROMPT),1)
 CFLAGS_app_battery.o += -DMEDIA_PLAYER_SUPPORT
 endif
-

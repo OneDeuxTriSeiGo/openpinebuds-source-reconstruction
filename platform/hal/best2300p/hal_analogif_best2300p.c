@@ -208,4 +208,3 @@ int BOOT_TEXT_FLASH_LOC hal_analogif_open(void)
 
     return 0;
 }
-

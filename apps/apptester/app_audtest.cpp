@@ -304,4 +304,3 @@ void app_anc_usb_init(void)
         //app_test_capture_buff, USB_AUDIO_CAPTURE_BUFF_SIZE);
 }
 #endif
-

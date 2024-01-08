@@ -173,4 +173,3 @@ void app_tota_handle_received_data(uint8_t* buffer, uint16_t maxBytes)
     }
 
 }
-

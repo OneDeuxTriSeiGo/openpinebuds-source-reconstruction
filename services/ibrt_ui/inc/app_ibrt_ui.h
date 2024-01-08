@@ -776,4 +776,3 @@ void app_ibrt_ui_exit_sniff(ibrt_ui_exit_sniff_trigger_e exit_sniff_trigger);
 }
 #endif
 #endif
-

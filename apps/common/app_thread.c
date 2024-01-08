@@ -161,4 +161,3 @@ bool app_is_module_registered(enum APP_MODUAL_ID_T mod_id)
 {
     return mod_handler[mod_id];
 }
-

@@ -109,4 +109,3 @@ struct SPI_T
 #define SPI_SSPRXCR_RXBITS_SHIFT    (0)
 
 #endif
-

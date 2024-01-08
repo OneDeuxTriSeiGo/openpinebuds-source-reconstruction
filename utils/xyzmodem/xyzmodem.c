@@ -382,4 +382,3 @@ int xmodem_stop_xfer(void)
     }
     return ret;
 }
-

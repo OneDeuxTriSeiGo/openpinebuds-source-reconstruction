@@ -48,4 +48,3 @@ ifeq ($(SCO_CP_ACCEL),1)
 cmsis_dsp_lib-y := $(obj-y)
 obj-y := cmsis_dsp_lib.o
 endif
-

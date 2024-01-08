@@ -12,4 +12,3 @@ obj-y := $(obj_c:.c=.o) $(obj_s:.S=.o) $(obj_cpp:.cpp=.o)
 ccflags-y := \
 	-Iservices/tota \
 	-Iservices/audio_dump/include
-

@@ -216,4 +216,3 @@ void ke_task_msg_retrieve(ke_task_id_t const id);
 /// @} TASK
 
 #endif // _KE_TASK_H_
-

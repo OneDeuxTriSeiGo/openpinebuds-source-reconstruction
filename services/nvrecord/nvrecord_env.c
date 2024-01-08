@@ -136,4 +136,3 @@ void nv_record_update_ibrt_info(uint32_t newMode,bt_bdaddr_t *ibrtPeerAddr)
 }
 
 #endif // #if !defined(NEW_NV_RECORD_ENABLED)
-

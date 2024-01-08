@@ -32,4 +32,3 @@ void app_btgatt_init(void)
 }
 
 #endif
-

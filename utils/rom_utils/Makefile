@@ -22,4 +22,3 @@ $(ROM_UTILS_LIB)-y := $(rulib-y)
 obj-y := $(ROM_UTILS_LIB).a
 
 ccflags-y += \
-

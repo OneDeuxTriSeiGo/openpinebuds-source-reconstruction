@@ -137,4 +137,3 @@ uint32_t ke_get_max_mem_usage(void);
 ///@} MEM
 
 #endif // _KE_MEM_H_
-

@@ -140,4 +140,3 @@ const struct NORFLASH_CFG_T en25s80b_cfg = {
                 HAL_NORFLASH_OP_MODE_ERASE_IN_STD),
     .write_status = en25s80b_write_status,
 };
-

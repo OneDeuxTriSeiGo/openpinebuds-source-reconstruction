@@ -69,4 +69,3 @@ uint32_t voice_sbc_get_frame_len(void);
 #endif
 
 #endif  // __VOICE_SBC_H__
-

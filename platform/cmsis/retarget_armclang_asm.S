@@ -40,4 +40,3 @@
     .end
 
 #endif // __ARMCC_VERSION
-

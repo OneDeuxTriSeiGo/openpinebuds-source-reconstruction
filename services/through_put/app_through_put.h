@@ -174,4 +174,3 @@ void app_throughput_test_init(void);
 
 
 #endif //APP_THROUGH_PUT_H_
-

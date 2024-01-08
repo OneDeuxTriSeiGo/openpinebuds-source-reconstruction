@@ -18,4 +18,3 @@ ccflags-y += \
 	-Ithirdparty/knowles_uart_lib \
 	-Iutils/crc32 \
 	-Iservices/app_ai/inc
-

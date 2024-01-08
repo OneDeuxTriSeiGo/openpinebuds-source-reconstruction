@@ -39,4 +39,3 @@ void tws_besaud_extra_channel_send_data(const void* data, uint32_t len);
 #endif
 
 #endif
-

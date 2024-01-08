@@ -27,4 +27,3 @@ int anccfg_loadfrom_audsec(const struct_anc_cfg *list[], const struct_anc_cfg *l
 }
 #endif
 #endif
-

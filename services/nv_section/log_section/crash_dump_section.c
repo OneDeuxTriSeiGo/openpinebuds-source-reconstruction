@@ -661,4 +661,3 @@ uint32_t crash_dump_get_type(void)
 
 
 #endif
-

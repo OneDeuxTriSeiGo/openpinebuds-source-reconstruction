@@ -352,4 +352,3 @@ SECTIONS
 
 #endif // !GEN_BOOT_SECTION
 }
-

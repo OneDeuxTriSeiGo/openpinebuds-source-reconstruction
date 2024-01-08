@@ -29,4 +29,3 @@ void *zero_mem16(void *dst, unsigned int size);
 void *zero_mem(void *dst, unsigned int size);
 
 #endif
-

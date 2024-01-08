@@ -1265,4 +1265,3 @@ SECTIONS
     ASSERT((__flash_start - FLASH_BASE) % (FLASH_SIZE / (1 << (4 + 1))) == 0, "flash code start address not aligned with remap region boundary")
 #endif
 }
-

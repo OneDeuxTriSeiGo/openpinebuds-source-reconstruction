@@ -83,4 +83,3 @@ void app_tota_general_init();
 
 
 #endif
-

@@ -3,9 +3,3 @@
 #include <string.h>
 #include "hal_trace.h"
 #include "demo_lib.h"
-
-
-
-
-
-

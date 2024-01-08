@@ -332,4 +332,3 @@ void app_ibrt_peripheral_thread_init(void)
     return;
 }
 #endif
-

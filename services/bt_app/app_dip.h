@@ -35,4 +35,3 @@ void app_dip_init(void);
 #endif
 
 #endif
-

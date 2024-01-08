@@ -147,4 +147,3 @@ void app_ibrt_auto_test_inform_cmd_received(uint8_t group_code,
 }
 
 #endif
-

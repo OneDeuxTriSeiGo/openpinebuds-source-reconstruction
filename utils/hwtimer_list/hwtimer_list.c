@@ -584,4 +584,3 @@ void hwtimer_test(void)
 }
 
 #endif
-

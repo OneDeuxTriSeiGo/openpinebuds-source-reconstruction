@@ -21,4 +21,3 @@ unsigned long crc32(unsigned long crc, const unsigned char *buf, unsigned int le
 {
     return __export_fn_rom.crc32(crc, buf, len);
 }
-

@@ -200,4 +200,3 @@ int hal_pwm_disable(enum HAL_PWM_ID_T id)
 
     return 0;
 }
-

@@ -43,4 +43,3 @@ float SubBandAec_get_required_mips(SubBandAecState *st);
 #endif
 
 #endif
-

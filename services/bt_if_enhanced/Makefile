@@ -127,4 +127,3 @@ CFLAGS_bt_if.o += -DBESLIB_INFO=$(BESLIB_INFO)
 ifeq ($(ANC_APP),1)
 CFLAGS_besaud_api.o += -DANC_APP
 endif
-

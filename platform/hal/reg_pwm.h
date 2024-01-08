@@ -91,4 +91,3 @@ struct PWM_T
 #define PWM_PHASEMOD_3              (1 << 3)
 
 #endif
-

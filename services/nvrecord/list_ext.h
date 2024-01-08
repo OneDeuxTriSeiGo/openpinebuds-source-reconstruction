@@ -80,4 +80,3 @@ void *list_node_ext(const list_node_t *node);
 #endif
 
 #endif//__FMDEC_H__
-

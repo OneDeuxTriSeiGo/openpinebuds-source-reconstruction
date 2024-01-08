@@ -583,4 +583,3 @@ void app_ibrt_debug_parse(uint8_t *data, uint32_t data_len)
     }
 }
 #endif
-

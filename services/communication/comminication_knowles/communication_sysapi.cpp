@@ -643,4 +643,3 @@ void uart_data_process_thread(const void *arg)
     }
 }
 #endif
-

@@ -2371,4 +2371,3 @@ int app_i2c_demo_init(void)
 
     return 0;
 }
-

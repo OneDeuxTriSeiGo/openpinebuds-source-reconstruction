@@ -210,4 +210,3 @@
 
 
 #endif /* __CMSIS_COMPILER_CA_H */
-

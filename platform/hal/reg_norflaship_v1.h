@@ -127,4 +127,3 @@
 #define SPIRDEN_MASK ((0xf)<<SPIRDEN_SHIFT)
 
 #endif
-

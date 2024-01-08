@@ -192,4 +192,3 @@ uint8_t osif_lock_is_exist(void)
     else
         return 1;
 }
-

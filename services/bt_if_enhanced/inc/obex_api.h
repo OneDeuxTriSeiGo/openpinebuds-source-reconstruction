@@ -33,4 +33,3 @@ typedef enum {
 #endif
 
 #endif /* __OBEX_API_H__ */
-

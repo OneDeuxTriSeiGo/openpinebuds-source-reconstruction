@@ -10,4 +10,3 @@ ccflags-y += \
 	-Iservices/nvrecord \
 	$(BT_IF_INCLUDES) \
 	-Iutils/heap \
-

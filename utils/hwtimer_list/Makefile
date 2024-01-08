@@ -8,4 +8,3 @@ ccflags-y := -Iplatform/hal -Iplatform/cmsis
 ifneq ($(HWTIMER_NUM),)
 ccflags-y += -DHWTIMER_NUM=$(HWTIMER_NUM)
 endif
-

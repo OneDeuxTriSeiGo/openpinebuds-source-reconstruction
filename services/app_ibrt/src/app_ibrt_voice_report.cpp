@@ -508,4 +508,3 @@ bool app_ibrt_voice_report_is_me(uint32_t voice_chnlsel)
     return is_me;
 }
 #endif
-

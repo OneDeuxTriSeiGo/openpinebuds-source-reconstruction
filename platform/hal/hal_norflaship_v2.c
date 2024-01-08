@@ -560,4 +560,3 @@ void norflaship_fetch_disable()
 }
 
 #endif
-

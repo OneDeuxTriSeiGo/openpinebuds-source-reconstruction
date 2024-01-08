@@ -583,4 +583,3 @@ void app_ibrt_role_switch_test(void)
 {
     app_tws_if_trigger_role_switch();
 }
-

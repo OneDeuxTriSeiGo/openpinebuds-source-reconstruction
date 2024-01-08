@@ -966,4 +966,3 @@ A2DP_AUDIO_DECODER_T a2dp_audio_sbc_decoder_config = {
                                                         a2dp_audio_sbc_subframe_free,
                                                         a2dp_audio_sbc_channel_select,
                                                      } ;
-

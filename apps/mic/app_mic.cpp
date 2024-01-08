@@ -251,4 +251,3 @@ MIC_APP_TYPE app_mic_status(void)
     osMutexRelease(app_mic_mutex_id);
     return ret;
 }
-

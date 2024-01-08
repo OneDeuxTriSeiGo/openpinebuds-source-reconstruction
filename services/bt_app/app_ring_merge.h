@@ -44,4 +44,3 @@ void app_ring_merge_save_pending_start_stream_op(uint8_t pendingStopOp, uint8_t 
 
 
 #endif
-

@@ -379,4 +379,3 @@ void app_rfcomm_services_add_sdp(void) {
 void app_rfcomm_services_remove_sdp(void) {
 
 }
-

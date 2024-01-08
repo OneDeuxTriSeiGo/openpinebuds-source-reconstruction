@@ -909,5 +909,3 @@ int app_bt_start_custom_function_in_bt_thread(
     app_bt_mail_send(mail);
     return 0;
 }
-
-

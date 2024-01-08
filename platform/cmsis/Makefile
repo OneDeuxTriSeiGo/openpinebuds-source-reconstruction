@@ -64,4 +64,3 @@ CFLAGS_retarget_armclang.o += \
 ifeq ($(SPI_ROM_ONLY),1)
 CFLAGS_retarget_armclang.o += -DSPI_ROM_ONLY
 endif
-

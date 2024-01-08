@@ -114,4 +114,3 @@ void analog_productiontest_settings_checker(void);
 #endif
 
 #endif
-

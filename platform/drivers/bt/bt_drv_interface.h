@@ -390,4 +390,3 @@ unsigned short btdrv_get_vco_test_process_flag(void);
 #endif
 
 #endif
-

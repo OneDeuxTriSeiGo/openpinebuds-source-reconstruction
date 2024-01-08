@@ -11,4 +11,3 @@ EXCLUDE_OBJS := sha256_rom.o
 endif
 
 obj-y := $(filter-out $(EXCLUDE_OBJS),$(obj-y))
-

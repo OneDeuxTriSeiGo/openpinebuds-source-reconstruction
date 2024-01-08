@@ -49,4 +49,3 @@ void app_ble_customif_init(void);
 #endif
 
 #endif /* #ifndef __APP_BLE_CUSTOMIF_H__ */
-

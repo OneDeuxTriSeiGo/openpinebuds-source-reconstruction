@@ -1010,4 +1010,3 @@
 #define __EARPHONE__
 #define __AUTOPOWEROFF__
 #endif /* __OVERIDE_H */
-

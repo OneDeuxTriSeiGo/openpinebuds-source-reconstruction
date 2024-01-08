@@ -419,4 +419,3 @@ void app_ai_tws_init(void);
 
 
 #endif //APP_AI_TWS_H_
-

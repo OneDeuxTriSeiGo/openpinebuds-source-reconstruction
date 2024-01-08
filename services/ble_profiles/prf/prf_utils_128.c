@@ -161,4 +161,3 @@ void prf_extract_svc_info_128(const struct gattc_sdp_svc_ind* param,
 #endif /*(BLE_SAMPLE128_CLIENT) */
 
 /// @} PRF_UTILS
-

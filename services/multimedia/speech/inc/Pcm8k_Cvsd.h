@@ -35,15 +35,3 @@ void CvsdToPcm8k(unsigned char *CvsdInBuf, short *PcmOutBuf, int numsample, int 
 
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

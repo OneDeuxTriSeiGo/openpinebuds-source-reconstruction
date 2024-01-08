@@ -416,5 +416,3 @@ void ResetCQueue(CQueue *Q)
     Q->len  = 0;
     Q->read = Q->write = 0;
 }
-
-

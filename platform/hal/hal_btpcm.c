@@ -208,4 +208,3 @@ uint8_t hal_btpcm_recv(enum HAL_BTPCM_ID_T id, uint8_t *value, uint32_t value_le
 }
 
 #endif
-

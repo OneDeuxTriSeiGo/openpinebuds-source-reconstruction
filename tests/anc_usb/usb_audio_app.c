@@ -6263,4 +6263,3 @@ uint32_t usb_audio_get_capture_sample_rate(void)
 {
     return sample_rate_cap;
 }
-

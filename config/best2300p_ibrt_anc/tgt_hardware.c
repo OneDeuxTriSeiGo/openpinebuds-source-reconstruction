@@ -1086,4 +1086,3 @@ const SpectrumFixConfig audio_spectrum_cfg = {
     .freq_num = 9,
     .freq_list = {200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800},
 };
-

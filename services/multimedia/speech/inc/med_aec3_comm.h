@@ -119,4 +119,3 @@ static VOS_VOID fprint_vec_int32(FILE *fd, VOS_INT32 *buf, VOS_INT32 len)
 #endif
 
 #endif /* end of med_aec_main.h*/
-

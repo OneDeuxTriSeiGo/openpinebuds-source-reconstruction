@@ -570,4 +570,3 @@ enum USBPHY_REG_T {
 };
 
 #endif
-

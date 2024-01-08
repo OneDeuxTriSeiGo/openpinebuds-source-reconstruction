@@ -94,4 +94,3 @@ int syspool_force_used_size(uint32_t size)
     return syspoll_used  = size;
 }
 #endif
-

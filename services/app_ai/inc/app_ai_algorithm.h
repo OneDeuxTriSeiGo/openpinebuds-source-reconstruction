@@ -58,4 +58,3 @@ void cp_aec_deinit(void);
 
 
 #endif //APP_AI_ALGORITHM_H_
-

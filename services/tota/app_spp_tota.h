@@ -74,4 +74,3 @@ bool app_spp_tota_send_data(uint8_t* ptrData, uint16_t length);
 bool spp_tota_in_progress(void);
 
 #endif
-
