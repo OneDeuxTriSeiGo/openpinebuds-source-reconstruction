@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(NEW_NV_RECORD_ENALBED)
+#if defined(NEW_NV_RECORD_ENABLED)
 
 #ifndef NVRECORD_BT_H
 #define NVRECORD_BT_H
@@ -49,4 +49,4 @@ void ram_record_ddbrec_init(void);
 }
 #endif
 #endif
-#endif // #if defined(NEW_NV_RECORD_ENALBED)
+#endif // #if defined(NEW_NV_RECORD_ENABLED)

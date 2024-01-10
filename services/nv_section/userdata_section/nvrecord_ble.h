@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if defined(NEW_NV_RECORD_ENALBED)
+#if defined(NEW_NV_RECORD_ENABLED)
 
 #ifndef NVRECORD_BLE_H
 #define NVRECORD_BLE_H
@@ -45,4 +45,4 @@ uint8_t *nv_record_tws_get_self_ble_info(void);
 #endif
 
 #endif
-#endif // #if defined(NEW_NV_RECORD_ENALBED)
+#endif // #if defined(NEW_NV_RECORD_ENABLED)

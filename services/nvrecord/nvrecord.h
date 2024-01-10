@@ -25,13 +25,14 @@ extern "C" {
 #include "bluetooth.h"
 #include "me_api.h"
 #include "hal_trace.h"
-#if defined(NEW_NV_RECORD_ENALBED)
+#if defined(NEW_NV_RECORD_ENABLED)
 #include "nvrecord_extension.h"
 #include "nvrecord_bt.h"
 #include "nvrecord_env.h"
 #include "nvrecord_ble.h"
 #include "nvrecord_dma_config.h"
 #include "nvrecord_fp_account_key.h"
+#include "btif_sys_config.h"
 
 #define nvdev_tag       "nvdev_tag"
 
@@ -111,11 +112,24 @@ typedef  struct btdevice_profile{
     uint8_t a2dp_codectype;
 }btdevice_profile;
 
+typedef struct
+{
+    uint16_t spec_id;
+    uint16_t vend_id;
+    uint16_t prod_id;
+    uint16_t prod_ver;
+    uint8_t  prim_rec;
+    uint16_t vend_id_source;
+} bt_dip_pnp_info_t;
+
 typedef struct _nvrec_btdevicerecord
 {
     btif_device_record_t record;
     btdevice_volume device_vol;
     btdevice_profile device_plf;
+#ifdef BTIF_DIP_DEVICE
+    bt_dip_pnp_info_t pnp_info;
+#endif
 } nvrec_btdevicerecord;
 
 extern uint8_t nv_record_dev_rev;
@@ -133,7 +147,7 @@ int nv_record_get_paired_dev_count(void);
 void nv_record_sector_clear(void);
 void nv_record_flash_flush(void);
 int nv_record_flash_flush_in_sleep(void);
-
+void nv_record_execute_async_flush(void);
 
 int nv_record_enum_latest_two_paired_dev(btif_device_record_t* record1,btif_device_record_t* record2);
 void nv_record_all_ddbrec_print(void);
@@ -167,7 +181,8 @@ int nvrec_dev_get_sn(char *sn);
 
 uint32_t nv_record_pre_write_operation(void);
 void nv_record_post_write_operation(uint32_t lock);
-#endif // #if !defined(NEW_NV_RECORD_ENALBED)
+
+#endif // #if !defined(NEW_NV_RECORD_ENABLED)
 
 #define nv_record_debug
 #ifdef nv_record_debug
@@ -232,9 +247,9 @@ typedef enum
 
 int nvrec_dev_get_dongleaddr(bt_bdaddr_t *dongleaddr);
 int nvrec_dev_get_btaddr(char *btaddr);
-
+char* nvrec_dev_get_bt_name(void);
 const char* nvrec_dev_get_ble_name(void);
-size_t nv_record_get_bt_records_num(void);
+
 #ifdef __cplusplus
 }
 #endif

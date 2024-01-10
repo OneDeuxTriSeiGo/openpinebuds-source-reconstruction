@@ -25,7 +25,7 @@ extern "C" {
 
 enum NORFLASH_API_MODULE_ID_T
 {
-    NORFLASH_API_MODULE_ID_TRACE_DUMP,
+    NORFLASH_API_MODULE_ID_LOG_DUMP,
     NORFLASH_API_MODULE_ID_USERDATA,
     NORFLASH_API_MODULE_ID_OTA,
     NORFLASH_API_MODULE_ID_OTA_UPGRADE_LOG,
@@ -33,7 +33,7 @@ enum NORFLASH_API_MODULE_ID_T
     NORFLASH_API_MODULE_ID_CRASH_DUMP,
     NORFLASH_API_MODULE_ID_COREDUMP,
     NORFLASH_API_MODULE_ID_FACTORY,
-    NORFLASH_API_MODULE_ID_GSOUND_OTA,
+    NORFLASH_API_MODULE_ID_HOTWORD_MODEL,
     NORFLASH_API_MODULE_ID_USERDATA_EXT,
     NORFLASH_API_MODULE_ID_INTERACTION_OTA,
     NORFLASH_API_MODULE_ID_GMA_OTA,
@@ -73,6 +73,7 @@ typedef struct
 
 enum NORFLASH_API_STATE
 {
+    NORFLASH_API_STATE_UNINITED,
     NORFLASH_API_STATE_IDLE,
     NORFLASH_API_STATE_WRITTING,
     NORFLASH_API_STATE_WRITTING_SUSPEND,
@@ -82,8 +83,14 @@ enum NORFLASH_API_STATE
     NORFLASH_API_STATE_ERASE_RESUME,
 };
 
-typedef void (* NORFLASH_API_OPERA_CB)(void* opera_result);
+enum NORFLASH_API_USER
+{
+    NORFLASH_API_USER_CP,
+    NORFLASH_API_USER_COUNTS,
+};
 
+typedef void (* NORFLASH_API_OPERA_CB)(void* opera_result);
+typedef bool (*NOFLASH_API_FLUSH_ALLOWED_CB)(void);
 
 typedef struct _opera_info
 {
@@ -121,6 +128,7 @@ typedef struct
     MODULE_INFO mod_info[NORFLASH_API_MODULE_ID_COUNT];
     enum NORFLASH_API_MODULE_ID_T cur_mod_id;
     MODULE_INFO* cur_mod;
+    NOFLASH_API_FLUSH_ALLOWED_CB allowed_cb[NORFLASH_API_USER_COUNTS];
 }NORFLASH_API_INFO;
 
 #if defined(FLASH_API_SIMPLE)
@@ -194,12 +202,6 @@ enum NORFLASH_API_RET_T norflash_api_write(
 
 int norflash_api_flush(void);
 
-bool norflash_api_is_changed(
-                enum NORFLASH_API_MODULE_ID_T mod_id,
-                uint32_t start_addr,
-                const uint8_t *buffer,
-                uint32_t len);
-
 bool norflash_api_buffer_is_free(
                 enum NORFLASH_API_MODULE_ID_T mod_id);
 
@@ -211,7 +213,11 @@ uint32_t norflash_api_get_used_buffer_count(
 uint32_t norflash_api_get_free_buffer_count(
                 enum NORFLASH_API_OPRATION_TYPE type
                 );
-
+void norflash_api_flush_all(void);
+void norflash_api_flush_disable(enum NORFLASH_API_USER user_id,uint32_t cb);
+void norflash_api_flush_enable(enum NORFLASH_API_USER user_id);
+void norflash_api_flush_enable_all(void);
+enum NORFLASH_API_STATE norflash_api_get_state(enum NORFLASH_API_MODULE_ID_T mod_id);
 
 void norflash_flush_all_pending_op(void);
 

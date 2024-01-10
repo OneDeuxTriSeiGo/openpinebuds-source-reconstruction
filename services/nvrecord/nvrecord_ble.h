@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if !defined(NEW_NV_RECORD_ENALBED)
+#if !defined(NEW_NV_RECORD_ENABLED)
 
 #ifndef NVRECORD_BLE_H
 #define NVRECORD_BLE_H
@@ -64,4 +64,4 @@ bool nv_record_blerec_get_bd_addr_from_irk(uint8_t *pBdAddr, uint8_t *pIrk);
 #endif
 #endif
 
-#endif  // #if !defined(NEW_NV_RECORD_ENALBED)
+#endif  // #if !defined(NEW_NV_RECORD_ENABLED)
