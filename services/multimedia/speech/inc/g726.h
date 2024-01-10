@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef __G726_H
 #define __G726_H
 
