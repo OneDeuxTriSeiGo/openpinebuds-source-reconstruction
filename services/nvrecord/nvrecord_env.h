@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if !defined(NEW_NV_RECORD_ENALBED)
+#if !defined(NEW_NV_RECORD_ENABLED)
 
 #ifndef NVRECORD_ENV_H
 #define NVRECORD_ENV_H
@@ -28,6 +28,7 @@ extern "C" {
 #define NVRAM_ENV_STREAM_VOLUME_HFP_VOL_DEFAULT (AUDIO_OUTPUT_VOLUME_DEFAULT)
 #define NVRAM_ENV_TWS_MODE_DEFAULT (0xff)
 #define NVRAM_ENV_FACTORY_TESTER_STATUS_DEFAULT (0xaabbccdd)
+#define NVRAM_ENV_FACTORY_TESTER_STATUS_TEST_PASS (0xffffaa55)
 
 struct media_language_t
 {
@@ -89,4 +90,4 @@ void nv_record_update_factory_tester_status(uint32_t status);
 #endif
 #endif
 
-#endif // #if !defined(NEW_NV_RECORD_ENALBED)
+#endif // #if !defined(NEW_NV_RECORD_ENABLED)
