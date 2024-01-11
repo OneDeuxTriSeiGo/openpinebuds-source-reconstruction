@@ -124,6 +124,29 @@ void rt_put_rdy_first (P_TCB p_task) {
 }
 
 
+/*--------------------------- rt_put_rdy_last ------------------------------*/
+
+void rt_put_rdy_last (P_TCB p_task) {
+  /* Put task identified with "p_task" at the tail of the ready list. The   */
+  /* task must have at least a priority equal to lowest priority in list.  */
+  P_TCB p_last;
+
+  p_last = os_rdy.p_lnk;
+
+  p_task->p_rlnk = NULL;
+  p_task->p_lnk = NULL;
+
+  if (p_last == NULL) {
+    os_rdy.p_lnk = p_task;
+  } else {
+    while (p_last->p_lnk != NULL) {
+      p_last = p_last->p_lnk;
+    }
+    p_last->p_lnk = p_task;
+  }
+}
+
+
 /*--------------------------- rt_get_same_rdy_prio --------------------------*/
 
 P_TCB rt_get_same_rdy_prio (void) {

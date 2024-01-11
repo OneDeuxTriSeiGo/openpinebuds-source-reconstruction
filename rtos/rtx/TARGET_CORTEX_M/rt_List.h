@@ -49,6 +49,7 @@ extern struct OS_XCB os_dly;
 extern void  rt_put_prio      (P_XCB p_CB, P_TCB p_task);
 extern P_TCB rt_get_first     (P_XCB p_CB);
 extern void  rt_put_rdy_first (P_TCB p_task);
+extern void  rt_put_rdy_last  (P_TCB p_task);
 extern P_TCB rt_get_same_rdy_prio (void);
 extern void  rt_resort_prio   (P_TCB p_task);
 extern void  rt_put_dly       (P_TCB p_task, U16 delay);

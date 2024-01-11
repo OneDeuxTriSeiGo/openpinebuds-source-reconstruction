@@ -24,7 +24,7 @@
  */
 
 #include "rtx_lib.h"
-
+#include "hal_timer.h"
 
 //  OS Runtime Object Memory Usage
 #if ((defined(OS_OBJ_MEM_USAGE) && (OS_OBJ_MEM_USAGE != 0)))
@@ -33,6 +33,12 @@ __attribute__((section(".data.os.thread.obj"))) =
 { 0U, 0U, 0U };
 #endif
 
+#if __RTX_CPU_STATISTICS__
+uint32_t rtx_get_hwticks(void)
+{
+    return hal_sys_timer_get();
+}
+#endif
 
 //  ==== Helper functions ====
 
@@ -421,6 +427,13 @@ void osRtxThreadSwitch (os_thread_t *thread) {
 
   thread->state = osRtxThreadRunning;
   osRtxInfo.thread.run.next = thread;
+#if __RTX_CPU_STATISTICS__
+  if (osRtxInfo.thread.run.curr != thread) {
+    if (osRtxInfo.thread.run.curr)
+      osRtxInfo.thread.run.curr->swap_out_time = HWTICKS_TO_MS(rtx_get_hwticks());
+    thread->swap_in_time = HWTICKS_TO_MS(rtx_get_hwticks());
+  }
+#endif
   osRtxThreadStackCheck();
   EvrRtxThreadSwitched(thread);
 }
@@ -774,7 +787,10 @@ static osThreadId_t svcRtxThreadNew (osThreadFunc_t func, void *argument, const 
     thread->tz_module     = tz_module;
   #endif
   #endif
-
+#if __RTX_CPU_STATISTICS__
+  thread->rtime           = 0;
+  thread->step_rtime      = 0;
+#endif
     // Initialize stack
     //lint --e{613} false detection: "Possible use of null pointer"
     ptr = (uint32_t *)stack_mem;
@@ -1533,6 +1549,23 @@ static uint32_t svcRtxThreadFlagsWait (uint32_t flags, uint32_t options, uint32_
   }
   return thread_flags;
 }
+#if TASK_HUNG_CHECK_ENABLED
+osStatus_t svcRtxThreadSetHungCheck (osThreadId_t thread_id, int32_t enable, uint32_t timeout) {
+  os_thread_t *thread = osRtxThreadId(thread_id);
+
+  if (thread == NULL)
+    return osErrorParameter;
+
+  thread->hung_check = !!enable;
+  thread->hung_check_timeout = timeout;
+  return osOK;
+}
+#endif
+
+int rtx_task_idle_health_check(void)
+{
+    return 0;
+}
 
 //  Service Calls definitions
 //lint ++flb "Library Begin" [MISRA Note 11]
@@ -1557,6 +1590,9 @@ SVC0_2 (ThreadFlagsSet,      uint32_t,        osThreadId_t, uint32_t)
 SVC0_1 (ThreadFlagsClear,    uint32_t,        uint32_t)
 SVC0_0 (ThreadFlagsGet,      uint32_t)
 SVC0_3 (ThreadFlagsWait,     uint32_t,        uint32_t, uint32_t, uint32_t)
+#if TASK_HUNG_CHECK_ENABLED
+SVC0_3 (ThreadSetHungCheck,  osStatus_t,      osThreadId_t, int32_t, uint32_t)
+#endif
 //lint --flb "Library End"
 
 
@@ -1663,6 +1699,11 @@ osThreadId_t osThreadGetId (void) {
   return thread_id;
 }
 
+const char *osGetThreadName (void) {
+    os_thread_t *thread = osRtxThreadId(osThreadGetId());
+    return thread->name;
+}
+
 /// Get current thread state of a thread.
 osThreadState_t osThreadGetState (osThreadId_t thread_id) {
   osThreadState_t state;
@@ -1688,6 +1729,7 @@ uint32_t osThreadGetStackSize (osThreadId_t thread_id) {
   }
   return stack_size;
 }
+
 
 /// Get available stack space of a thread based on stack watermark recording during execution.
 uint32_t osThreadGetStackSpace (osThreadId_t thread_id) {
@@ -1900,3 +1942,11 @@ uint32_t osThreadFlagsWait (uint32_t flags, uint32_t options, uint32_t timeout) 
   }
   return thread_flags;
 }
+#if TASK_HUNG_CHECK_ENABLED
+/// enable/disable the hung check feature of an active thread
+osStatus_t osThreadSetHungCheck (osThreadId_t thread_id, int32_t enable, uint32_t timeout) {
+  if (IsIrqMode() || IsIrqMasked())
+    return osErrorISR;     // Not allowed in ISR
+  return __svcThreadSetHungCheck(thread_id, enable, timeout);
+}
+#endif

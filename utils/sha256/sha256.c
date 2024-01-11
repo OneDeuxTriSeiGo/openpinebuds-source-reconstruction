@@ -27,11 +27,16 @@
 
 // Optimized for minimal code size.
 
-#include "mincrypt/sha256.h"
+#include "sha256.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+
+#include "cmsis.h"
+#include "hal_timer.h"
+#include "hal_sec_eng.h"
+#include "plat_addr_map.h"
 
 #define ror(value, bits) (((value) >> (bits)) | ((value) << (32 - (bits))))
 #define shr(value, bits) ((value) >> (bits))
@@ -57,15 +62,25 @@ static const uint32_t K[64] = {
 static void SHA256_Transform(SHA256_CTX* ctx) {
     uint32_t W[64];
     uint32_t A, B, C, D, E, F, G, H;
+#if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) || (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+    uint32_t* p32 = ctx->buf32;
+#else
     uint8_t* p = ctx->buf;
+#endif
     int t;
 
     for(t = 0; t < 16; ++t) {
+#if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+        W[t] = __REV(*p32++);
+#elif (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+        W[t] = *p32++;
+#else
         uint32_t tmp =  *p++ << 24;
         tmp |= *p++ << 16;
         tmp |= *p++ << 8;
         tmp |= *p++;
         W[t] = tmp;
+#endif
     }
 
     for(; t < 64; t++) {
@@ -133,11 +148,32 @@ void SHA256_init(SHA256_CTX* ctx) {
 }
 
 
-void SHA256_update(SHA256_CTX* ctx, const void* data, int len) {
-    int i = (int) (ctx->count & 63);
+void SHA256_update(SHA256_CTX* ctx, const void* data, uint32_t len) {
+    uint32_t i = (uint32_t) (ctx->count & 63);
     const uint8_t* p = (const uint8_t*)data;
 
     ctx->count += len;
+
+#if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) || (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+    if (len >= 4 && (i & 0x3) == 0 && ((uint32_t)p & 0x3) == 0) {
+        const uint32_t *p32 = (const uint32_t *)p;
+        int k = i / 4;
+        while (len >= 4) {
+            len -= 4;
+#if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+            ctx->buf32[k++] = *p32++;
+#else
+            ctx->buf32[k++] = __REV(*p32++);
+#endif
+            if (k == 64 / 4) {
+                SHA256_Transform(ctx);
+                k = 0;
+            }
+        }
+        i = k * 4;
+        p = (const uint8_t *)p32;
+    }
+#endif
 
     while (len--) {
         ctx->buf[i++] = *p++;
@@ -148,11 +184,10 @@ void SHA256_update(SHA256_CTX* ctx, const void* data, int len) {
     }
 }
 
-
 const uint8_t* SHA256_final(SHA256_CTX* ctx) {
     uint8_t *p = ctx->buf;
     uint64_t cnt = ctx->count * 8;
-    int i;
+    uint32_t i;
 
     SHA256_update(ctx, (uint8_t*)"\x80", 1);
     while ((ctx->count & 63) != 56) {
@@ -175,10 +210,71 @@ const uint8_t* SHA256_final(SHA256_CTX* ctx) {
 }
 
 /* Convenience function */
-const uint8_t* SHA256_hash(const void* data, int len, uint8_t* digest) {
+const uint8_t* SHA256_hash2(const void* data1, uint32_t len1, const void* data2, uint32_t len2, uint8_t* digest)
+{
     SHA256_CTX ctx;
     SHA256_init(&ctx);
-    SHA256_update(&ctx, data, len);
+    if (data1 && len1) {
+        SHA256_update(&ctx, data1, len1);
+    }
+    if (data2 && len2) {
+        SHA256_update(&ctx, data2, len2);
+    }
     memcpy(digest, SHA256_final(&ctx), SHA256_DIGEST_SIZE);
     return digest;
+}
+
+const uint8_t* SHA256_hash(const void* data, uint32_t len, uint8_t* digest)
+{
+    return SHA256_hash2(data, len, NULL, 0, digest);
+}
+
+#if defined(SEC_ENG_BASE) && defined(SEC_ENG_HAS_HASH)
+static int hw_eng_en;
+#endif
+
+void hash_hardware_engine_enable(int enable)
+{
+#if defined(SEC_ENG_BASE) && defined(SEC_ENG_HAS_HASH)
+    hw_eng_en = enable;
+#endif
+}
+
+const uint8_t* hash_sha256(const void* data, uint32_t len, uint8_t* digest)
+{
+#if defined(SEC_ENG_BASE) && defined(SEC_ENG_HAS_HASH)
+    if (hw_eng_en) {
+        enum HAL_SE_RET_T ret;
+        struct HAL_SE_HASH_CFG_T cfg;
+        uint32_t time;
+
+        ret = hal_se_open();
+        if (ret != HAL_SE_OK) {
+            goto _exit;
+        }
+
+        memset(&cfg, 0, sizeof(cfg));
+        cfg.done_hdlr = NULL;
+        cfg.in = data;
+        cfg.in_len = len;
+
+        ret = hal_se_hash(HAL_SE_HASH_SHA256, &cfg);
+        if (ret != HAL_SE_OK) {
+            goto _exit;
+        }
+
+        time = hal_sys_timer_get();
+        while (hal_se_hash_busy() && (hal_sys_timer_get() - time < MS_TO_TICKS(10000))) {}
+
+        ret = hal_se_hash_get_digest(&digest[0], SHA256_DIGEST_SIZE, &len);
+
+_exit:
+        hal_se_close();
+        if (ret == HAL_SE_OK) {
+            return digest;
+        }
+    }
+#endif
+
+    return SHA256_hash(data, len, digest);
 }

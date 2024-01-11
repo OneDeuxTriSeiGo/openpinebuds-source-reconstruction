@@ -224,7 +224,7 @@ typedef enum {
   osStatusReserved        = 0x7FFFFFFF  ///< Prevents enum down-size compiler optimization.
 } osStatus;
 #else
-typedef int32_t                  osStatus;
+typedef osStatus_t              osStatus;
 #define osEventSignal           (0x08)
 #define osEventMessage          (0x10)
 #define osEventMail             (0x20)
@@ -234,6 +234,7 @@ typedef int32_t                  osStatus;
 #define osErrorISRRecursive     (-126)
 #define osErrorValue            (-127)
 #define osErrorPriority         (-128)
+#define os_status_reserved        osStatusReserved
 #endif
 
 
@@ -463,10 +464,11 @@ extern const osThreadDef_t os_thread_def_##name
 const osThreadDef_t os_thread_def_##name = \
 { (name), (priority), (instances), (stacksz) }
 #else
-#define osThreadDef(name, priority, instances, stacksz) \
+#define osThreadDef(name, priority, instances, stacksz, task_name) \
+uint64_t os_thread_def_stack_##name [(8*((stacksz+7)/8)) / sizeof(uint64_t)]; \
 const osThreadDef_t os_thread_def_##name = \
 { (name), \
-  { NULL, osThreadDetached, NULL, 0U, NULL, 8*((stacksz+7)/8), (priority), 0U, 0U } }
+  { task_name, osThreadDetached, NULL, 0U, os_thread_def_stack_##name, 8*((stacksz+7)/8), (priority), 0U, 0U } }
 #endif
 #endif
 
@@ -838,6 +840,7 @@ osStatus osMessagePut (osMessageQId queue_id, uint32_t info, uint32_t millisec);
 /// \return event information that includes status code.
 osEvent osMessageGet (osMessageQId queue_id, uint32_t millisec);
 
+uint32_t osMessageGetSpace (osMessageQId queue_id);
 #endif  // Message Queue available
 
 
@@ -914,6 +917,9 @@ osStatus osMailFree (osMailQId queue_id, void *mail);
 
 #endif  // Mail Queue available
 
+#if !(osCMSIS < 0x20000U)
+const char *osGetThreadName (void);
+#endif
 
 #ifdef  __cplusplus
 }

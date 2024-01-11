@@ -44,7 +44,7 @@
 //   <i> Defines the combined global dynamic memory size.
 //   <i> Default: 4096
 #ifndef OS_DYNAMIC_MEM_SIZE
-#define OS_DYNAMIC_MEM_SIZE         4096
+#define OS_DYNAMIC_MEM_SIZE         0x3000
 #endif
 
 //   <o>Kernel Tick Frequency [Hz] <1-1000000>
@@ -124,7 +124,7 @@
 //   <i> Defines stack size for threads with zero stack size specified.
 //   <i> Default: 256
 #ifndef OS_STACK_SIZE
-#define OS_STACK_SIZE               256
+#define OS_STACK_SIZE               0x1000
 #endif
 
 //   <o>Idle Thread Stack size [bytes] <72-1073741824:8>
@@ -179,7 +179,7 @@
 //     <i> Defines maximum number of objects that can be active at the same time.
 //     <i> Applies to objects with system provided memory for control blocks.
 #ifndef OS_TIMER_NUM
-#define OS_TIMER_NUM                1
+#define OS_TIMER_NUM                6
 #endif
 
 //   </e>
@@ -200,7 +200,7 @@
 //   <i> May be set to 0 when timers are not used.
 //   <i> Default: 256
 #ifndef OS_TIMER_THREAD_STACK_SIZE
-#define OS_TIMER_THREAD_STACK_SIZE  256
+#define OS_TIMER_THREAD_STACK_SIZE  0x1000
 #endif
 
 //   <o>Timer Thread TrustZone Module Identifier
@@ -216,7 +216,7 @@
 //   <i> May be set to 0 when timers are not used.
 //   <i> Default: 4
 #ifndef OS_TIMER_CB_QUEUE
-#define OS_TIMER_CB_QUEUE           4
+#define OS_TIMER_CB_QUEUE           16
 #endif
 
 // </h>

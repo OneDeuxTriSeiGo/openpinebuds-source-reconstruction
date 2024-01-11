@@ -102,7 +102,7 @@ amm-info@iis.fraunhofer.de
 /* #define TP_CELP_ENABLE */
 /* #define TP_HVXC_ENABLE */
 /* #define TP_SLS_ENABLE */
-#define TP_ELD_ENABLE
+//#define TP_ELD_ENABLE
 /* #define TP_USAC_ENABLE */
 /* #define TP_RSVD50_ENABLE */
 

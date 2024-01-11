@@ -26,6 +26,7 @@
 
 #include <string.h>
 #include "cmsis_os.h"
+#include "rtx_os.h"
 
 #if (osCMSIS >= 0x20000U)
 
@@ -128,7 +129,7 @@ osSemaphoreId osSemaphoreCreate (const osSemaphoreDef_t *semaphore_def, int32_t 
   if (semaphore_def == NULL) {
     return (osSemaphoreId)NULL;
   }
-  return osSemaphoreNew((uint32_t)count, (uint32_t)count, semaphore_def);
+  return osSemaphoreNew(osRtxSemaphoreTokenLimit, (uint32_t)count, semaphore_def);
 }
 
 int32_t osSemaphoreWait (osSemaphoreId semaphore_id, uint32_t millisec) {
@@ -229,6 +230,11 @@ osEvent osMessageGet (osMessageQId queue_id, uint32_t millisec) {
       break;
   }
   return event;
+}
+
+uint32_t osMessageGetSpace (osMessageQId queue_id)
+{
+    return osMessageQueueGetSpace(queue_id);
 }
 
 #endif  // Message Queue
@@ -356,6 +362,5 @@ osStatus osMailFree (osMailQId queue_id, void *mail) {
 }
 
 #endif  // Mail Queue
-
 
 #endif  // osCMSIS

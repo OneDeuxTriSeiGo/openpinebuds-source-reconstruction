@@ -21,6 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "hal_timer.h"
 
 #include "os_tick.h"
 
@@ -34,8 +35,22 @@
 #define SYSTICK_IRQ_PRIORITY    0xFFU
 #endif
 
-static uint8_t PendST;
+#ifdef CALIB_SLOW_TIMER
+#define OS_CLOCK            (CONFIG_SYSTICK_HZ * (OS_CLOCK_NOMINAL / CONFIG_SYSTICK_HZ_NOMINAL))
+#else
+#define OS_CLOCK            OS_CLOCK_NOMINAL
+#endif
 
+uint32_t SystemCoreClock;
+
+#define SYSTICK_EXTERNAL_CLOCK          1
+
+void SystemCoreClockUpdate()
+{
+    SystemCoreClock = OS_CLOCK;
+}
+
+static uint8_t PendST;
 // Setup OS Tick.
 __WEAK int32_t OS_Tick_Setup (uint32_t freq, IRQHandler_t handler) {
   uint32_t load;
@@ -67,7 +82,11 @@ __WEAK int32_t OS_Tick_Setup (uint32_t freq, IRQHandler_t handler) {
 #error "Unknown ARM Core!"
 #endif
 
+#if (SYSTICK_EXTERNAL_CLOCK)
+  SysTick->CTRL =  SysTick_CTRL_TICKINT_Msk;
+#else
   SysTick->CTRL =  SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk;
+#endif
   SysTick->LOAD =  load;
   SysTick->VAL  =  0U;
 

@@ -92,8 +92,14 @@ void rt_init_stack (P_TCB p_TCB, FUNCP task_body) {
    heap, therefore the last word of the stack is a moving target.
    We want to do stack/heap collision detection instead.
   */
-  if (p_TCB->task_id != 0x01)
+  if (p_TCB->task_id != 0x01) {
       p_TCB->stack[0] = MAGIC_WORD;
+#ifdef DEBUG
+      for (i = 1; i < (stk - p_TCB->stack); i++) {
+        p_TCB->stack[i] = 0xCCCCCCCC;
+      }
+#endif
+  }
 }
 
 

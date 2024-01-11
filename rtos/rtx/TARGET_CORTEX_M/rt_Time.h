@@ -32,6 +32,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
 
+// </h>
+// <h>SysTick Timer Configuration
+// ==============================
+//
+//   <o>Timer clock value [Hz] <1-1000000000>
+//   <i> Defines the timer clock value.
+//   <i> Default: 6000000  (6MHz)
+#ifdef CALIB_SLOW_TIMER
+ #define OS_CLOCK         (CONFIG_SYSTICK_HZ * (OS_CLOCK_NOMINAL / CONFIG_SYSTICK_HZ_NOMINAL))
+#else
+ #define OS_CLOCK         OS_CLOCK_NOMINAL
+#endif
+
 /* Variables */
 extern U32 os_time;
 

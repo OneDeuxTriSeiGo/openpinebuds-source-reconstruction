@@ -156,13 +156,13 @@ amm-info@iis.fraunhofer.de
 
 #define FL2FXCONST_SGL(val)                                                                                                     \
 (FIXP_SGL)( ( (val) >= 0) ?                                                                                                               \
-((( (double)(val) * (FRACT_FIX_SCALE) + 0.5 ) >= (double)(MAXVAL_SGL) ) ? (SHORT)(MAXVAL_SGL) : (SHORT)( (double)(val) * (double)(FRACT_FIX_SCALE) + 0.5)) :   \
-((( (double)(val) * (FRACT_FIX_SCALE) - 0.5) <=  (double)(MINVAL_SGL_CONST) ) ? (SHORT)(MINVAL_SGL_CONST) : (SHORT)( (double)(val) * (double)(FRACT_FIX_SCALE) - 0.5)) )
+((( (double)(val) * (FRACT_FIX_SCALE) + (double)0.5 ) >= (double)(MAXVAL_SGL) ) ? (SHORT)(MAXVAL_SGL) : (SHORT)( (double)(val) * (double)(FRACT_FIX_SCALE) + (double)0.5)) :   \
+((( (double)(val) * (FRACT_FIX_SCALE) - (double)0.5) <=  (double)(MINVAL_SGL_CONST) ) ? (SHORT)(MINVAL_SGL_CONST) : (SHORT)( (double)(val) * (double)(FRACT_FIX_SCALE) - (double)0.5)) )
 
 #define FL2FXCONST_DBL(val)                                                                                                     \
 (FIXP_DBL)( ( (val) >= 0) ?                                                                                                               \
-((( (double)(val) * (DFRACT_FIX_SCALE) + 0.5 ) >= (double)(MAXVAL_DBL) ) ? (LONG)(MAXVAL_DBL) : (LONG)( (double)(val) * (double)(DFRACT_FIX_SCALE) + 0.5)) : \
-((( (double)(val) * (DFRACT_FIX_SCALE) - 0.5) <=  (double)(MINVAL_DBL_CONST) ) ? (LONG)(MINVAL_DBL_CONST) : (LONG)( (double)(val) * (double)(DFRACT_FIX_SCALE) - 0.5)) )
+((( (double)(val) * (DFRACT_FIX_SCALE) + (double)0.5 ) >= (double)(MAXVAL_DBL) ) ? (LONG)(MAXVAL_DBL) : (LONG)( (double)(val) * (double)(DFRACT_FIX_SCALE) + (double)0.5)) : \
+((( (double)(val) * (DFRACT_FIX_SCALE) - (double)0.5) <=  (double)(MINVAL_DBL_CONST) ) ? (LONG)(MINVAL_DBL_CONST) : (LONG)( (double)(val) * (double)(DFRACT_FIX_SCALE) - (double)0.5)) )
 
 /* macros for runtime conversion of float values to integer fixedpoint. NO OVERFLOW CHECK!!! */
 #define FL2FX_SPC FL2FX_DBL

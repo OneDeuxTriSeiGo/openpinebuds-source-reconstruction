@@ -32,11 +32,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
 
-
 /* Error Codes */
-#define OS_ERR_STK_OVF          1
-#define OS_ERR_FIFO_OVF         2
-#define OS_ERR_MBX_OVF          3
+#define OS_ERR_STK_OVF          1U
+#define OS_ERR_FIFO_OVF         2U
+#define OS_ERR_MBX_OVF          3U
+#define OS_ERR_TIMER_OVF        4U
 
 /* Definitions */
 #define BOX_ALIGN_8                   0x80000000
@@ -48,10 +48,10 @@
 extern U32 idle_task_stack[];
 extern U32 os_fifo[];
 extern void *os_active_TCB[];
+extern U32 task_rtime[];
 
 /* Constants */
 extern U16 const os_maxtaskrun;
-extern U32 const os_trv;
 extern U8  const os_flags;
 extern U32 const os_rrobin;
 extern U32 const os_clockrate;
@@ -61,6 +61,7 @@ extern U16 const idle_task_stack_size;
 extern U8  const os_fifo_size;
 
 /* Functions */
+extern U32  os_get_trv      (void);
 extern void os_idle_demon   (void);
 extern int  os_tick_init    (void);
 extern void os_tick_irqack  (void);

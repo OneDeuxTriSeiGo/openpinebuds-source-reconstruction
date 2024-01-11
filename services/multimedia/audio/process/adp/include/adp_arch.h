@@ -66,7 +66,9 @@
 
 #endif
 
-//#include "speex/speex_types.h"
+#ifndef OUTSIDE_SPEEX
+//#include "speex/speexdsp_types.h"
+#endif
 
 #define ABS(x) ((x) < 0 ? (-(x)) : (x))      /**< Absolute integer value. */
 #define ABS16(x) ((x) < 0 ? (-(x)) : (x))    /**< Absolute 16-bit value.  */
@@ -161,6 +163,7 @@ typedef float spx_word32_t;
 #define VSHR32(a,shift) (a)
 #define SATURATE16(x,a) (x)
 #define SATURATE32(x,a) (x)
+#define SATURATE32PSHR(x,shift,a) (x)
 
 #define PSHR(a,shift)       (a)
 #define SHR(a,shift)       (a)

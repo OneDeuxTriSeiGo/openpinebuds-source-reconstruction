@@ -472,6 +472,10 @@ uint32_t osThreadFlagsGet (void);
 /// \return thread flags before clearing or error code if highest bit set.
 uint32_t osThreadFlagsWait (uint32_t flags, uint32_t options, uint32_t timeout);
 
+#if TASK_HUNG_CHECK_ENABLED
+/// enable/disable the hung check feature of an active thread
+osStatus_t osThreadSetHungCheck (osThreadId_t thread_id, int32_t enable, uint32_t timeout);
+#endif
 
 //  ==== Generic Wait Functions ====
 

@@ -114,7 +114,8 @@ amm-info@iis.fraunhofer.de
 
 
 /* Define __ARM_ARCH_5TE__ if armv5te features are supported  */
-#if (__TARGET_ARCH_ARM == 5) || defined(__TARGET_FEATURE_DSPMUL) || (_M_ARM == 5) || defined(__ARM_ARCH_5TEJ__) || defined(__TI_TMS470_V5__) || defined(__ARM_ARCH_7EM__)
+#if (__TARGET_ARCH_ARM == 5) || defined(__TARGET_FEATURE_DSPMUL) || (_M_ARM == 5) || defined(__ARM_ARCH_5TEJ__) || defined(__TI_TMS470_V5__) || \
+        defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
 #define __ARM_ARCH_5TE__
 #endif
 
@@ -144,7 +145,8 @@ amm-info@iis.fraunhofer.de
 #endif
 
 /* Define __ARM_ARCH_7EM__ if the ARMv7-ME instructions are being supported, e.g. Cortex-M4. */
-#if defined(__TARGET_ARCH_7E_M) || defined(__ARM_ARCH_7E_M__)
+#if defined(__TARGET_ARCH_7E_M) || defined(__ARM_ARCH_7E_M__) || defined(__ARM_ARCH_8M_MAIN__)
+#undef __ARM_ARCH_7EM__
 #define __ARM_ARCH_7EM__
 #endif
 

@@ -122,6 +122,10 @@ void osRtxTick_Handler (void) {
   OS_Tick_AcknowledgeIRQ();
   osRtxInfo.kernel.tick++;
 
+#if __RTX_CPU_STATISTICS__
+  osRtxInfo.thread.run.curr->rtime += 1;
+#endif
+
   // Process Timers
   if (osRtxInfo.timer.tick != NULL) {
     osRtxInfo.timer.tick();

@@ -24,13 +24,18 @@
  */
 
 #include "rtx_lib.h"
-
+#include "os_tick.h"
+#include "hal_timer.h"
+#include "hal_trace.h"
 
 //  OS Runtime Information
 osRtxInfo_t osRtxInfo __attribute__((section(".data.os"))) =
 //lint -e{785} "Initialize only OS ID, OS Version and Kernel State"
 { .os_id = osRtxKernelId, .version = osRtxVersionKernel, .kernel.state = osRtxKernelInactive };
 
+#define OS_BSS_LOC  __attribute__((section(".bss.os")))
+OS_BSS_LOC static uint32_t systick_lock_val;
+OS_BSS_LOC static uint32_t systick_lock_ts;
 
 //  ==== Helper functions ====
 
@@ -90,7 +95,7 @@ static osStatus_t svcRtxKernelInitialize (void) {
 #endif
 
   // Initialize osRtxInfo
-  memset(&osRtxInfo.kernel, 0, sizeof(osRtxInfo) - offsetof(osRtxInfo_t, kernel));
+  memset((uint8_t *)&osRtxInfo + offsetof(osRtxInfo_t, kernel), 0, sizeof(osRtxInfo) - offsetof(osRtxInfo_t, kernel));
 
   osRtxInfo.isr_queue.data = osRtxConfig.isr_queue.data;
   osRtxInfo.isr_queue.max  = osRtxConfig.isr_queue.max;
@@ -359,6 +364,9 @@ static uint32_t svcRtxKernelSuspend (void) {
 
   KernelBlock();
 
+  systick_lock_val = OS_Tick_GetInterval() - 1 - OS_Tick_GetCount();
+  systick_lock_ts = hal_sys_timer_get();
+
   delay = osWaitForever;
 
   // Check Thread Delay list
@@ -390,12 +398,35 @@ static void svcRtxKernelResume (uint32_t sleep_ticks) {
   uint32_t     delay;
   uint32_t     ticks;
 
+  uint32_t     resume_ts;
+  uint32_t     tick_interval;
+  uint32_t     sysclk_remain;
+  uint32_t     delta_clk;
+  uint32_t     sleep_clk;
+
   if (osRtxInfo.kernel.state != osRtxKernelSuspended) {
     EvrRtxKernelResumed();
     //lint -e{904} "Return statement before end of function" [MISRA Note 1]
     return;
   }
 
+  tick_interval = OS_Tick_GetInterval();
+  resume_ts = hal_sys_timer_get();
+  sleep_clk = (resume_ts - systick_lock_ts) * (OS_CLOCK_NOMINAL / CONFIG_SYSTICK_HZ_NOMINAL);
+  if (systick_lock_val == 0) {
+    sleep_ticks = sleep_clk / tick_interval;
+    sysclk_remain = sleep_clk % tick_interval;
+  } else if (sleep_clk >= systick_lock_val) {
+    delta_clk = sleep_clk - systick_lock_val;
+    sleep_ticks = delta_clk / tick_interval + 1;
+    sysclk_remain = tick_interval - delta_clk % tick_interval;
+  } else {
+    sleep_ticks = 0;
+    sysclk_remain = systick_lock_val - sleep_clk;
+  }
+#if __RTX_CPU_STATISTICS__
+  osRtxInfo.thread.run.curr->rtime += sleep_ticks;
+#endif
   osRtxInfo.kernel.tick += sleep_ticks;
 
   // Process Thread Delay list
@@ -436,9 +467,31 @@ static void svcRtxKernelResume (uint32_t sleep_ticks) {
 
   osRtxThreadDispatch(NULL);
 
+  if (sysclk_remain == tick_interval) {
+      sysclk_remain = 0;
+  }
+  if (sysclk_remain) {
+    SysTick->LOAD = sysclk_remain;
+    SysTick->VAL = 0;
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    while (SysTick->VAL == 0);
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+    SysTick->LOAD = tick_interval - 1;
+  } else
+    SysTick->VAL = 0;
+
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 1)
+  if (sleep_clk > 0) {
+    TRACE(7,"[%u/0x%X][%2u/%u] resume: suspend tick:%u, sleep_clk=%u ticks=%u",
+      TICKS_TO_MS(hal_sys_timer_get()), hal_sys_timer_get(), sysclk_remain, SysTick->VAL, systick_lock_val,
+      sleep_clk, sleep_ticks);
+  }
+#endif
+
   KernelUnblock();
 
   EvrRtxKernelResumed();
+
 }
 
 /// Get the RTOS kernel tick count.

@@ -34,17 +34,7 @@
 
 #define __CMSIS_GENERIC
 
-#if defined (__CORTEX_M4) || defined (__CORTEX_M4F)
-  #include "core_cm4.h"
-#elif defined (__CORTEX_M3)
-  #include "core_cm3.h"
-#elif defined (__CORTEX_M0)
-  #include "core_cm0.h"
-#elif defined (__CORTEX_A9)
-  #include "core_ca9.h"
-#else
-  #error "Missing __CORTEX_xx definition"
-#endif
+#include "cmsis.h"
 
 #include "rt_TypeDef.h"
 #include "RTX_Config.h"

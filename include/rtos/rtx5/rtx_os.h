@@ -126,6 +126,16 @@ typedef struct osRtxThread_s {
 #ifdef RTX_TF_M_EXTENSION
   uint32_t                  tz_module;  ///< TrustZone Module Identifier
 #endif
+#if __RTX_CPU_STATISTICS__
+  uint32_t               swap_in_time;  ///< the task schedule in time
+  uint32_t              swap_out_time;  ///< the task schedule out time
+  uint32_t                      rtime;  ///< the task runing time after startup
+  uint32_t                 step_rtime;  ///< the task runing time tile last show
+#if TASK_HUNG_CHECK_ENABLED
+  uint32_t                 hung_check;
+  uint32_t         hung_check_timeout;
+#endif
+#endif /* __RTX_CPU_STATISTICS__*/
 } osRtxThread_t;
 
 

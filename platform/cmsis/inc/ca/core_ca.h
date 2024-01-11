@@ -2077,7 +2077,7 @@ typedef struct RegionStruct {
                                    region.xn_t = EXECUTE; \
                                    region.priv_t = RW; \
                                    region.user_t = RW; \
-                                   region.sh_t = SHARED; \
+                                   region.sh_t = NON_SHARED; \
                                    MMU_GetPageDescriptor(&descriptor_l1, &descriptor_l2, region);
 
 //Page_64k_Device_RW.  Shared device, not executable, rw, domain 0

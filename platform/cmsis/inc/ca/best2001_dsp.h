@@ -132,13 +132,12 @@ typedef enum IRQn
 } IRQn_Type;
 
 #define AUDMA_IRQn              BES2001_AUDMA_IRQn //A7 use AUDMA
-#define GPDMA_IRQn              BES2001_GPDMA_IRQn
 
 #define GPIO_IRQn               AON_GPIO_IRQn
 #define GPIOAUX_IRQn            AON_GPIOAUX_IRQn
 #define TIMER00_IRQn            DSP_TIMER00_IRQn
 #define TIMER01_IRQn            DSP_TIMER01_IRQn
-#define WDT_IRQn                DSP_WDT_IRQn
+#define WDT_IRQn                AON_WDT_IRQn
 
 #define TRANSQ0_RMT_IRQn        TRANSQW_RMT_IRQn//use MCU's transq
 #define TRANSQ0_LCL_IRQn        TRANSQW_LCL_IRQn
