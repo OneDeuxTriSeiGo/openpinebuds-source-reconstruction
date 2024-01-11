@@ -25,7 +25,8 @@
  * limitations under the License.
  */
 
-#include <ARMCA7.h>
+#include "cmsis.h"
+#include "plat_addr_map.h"
 
 /*----------------------------------------------------------------------------
   Definitions
@@ -41,8 +42,8 @@
 /*----------------------------------------------------------------------------
   Internal References
  *----------------------------------------------------------------------------*/
-void Vectors       (void) __attribute__ ((naked, section("RESET")));
-void Reset_Handler (void) __attribute__ ((naked));
+void Vectors       (void) __attribute__ ((naked, target("arm"), section(".vectors")));
+void Reset_Handler (void) __attribute__ ((naked, section(".boot_loader")));
 
 /*----------------------------------------------------------------------------
   Exception / Interrupt Handler
@@ -59,14 +60,23 @@ void FIQ_Handler   (void) __attribute__ ((weak, alias("Default_Handler")));
  *----------------------------------------------------------------------------*/
 void Vectors(void) {
   __ASM volatile(
-  "LDR    PC, =Reset_Handler                        \n"
-  "LDR    PC, =Undef_Handler                        \n"
-  "LDR    PC, =SVC_Handler                          \n"
-  "LDR    PC, =PAbt_Handler                         \n"
-  "LDR    PC, =DAbt_Handler                         \n"
-  "NOP                                              \n"
-  "LDR    PC, =IRQ_Handler                          \n"
-  "LDR    PC, =FIQ_Handler                          \n"
+      "LDR    PC, ResetVectorPtr                        \n"
+      "LDR    PC, UndefVectorPtr                        \n"
+      "LDR    PC, SVCVectorPtr                          \n"
+      "LDR    PC, PAbtVectorPtr                         \n"
+      "LDR    PC, DAbtVectorPtr                         \n"
+      "LDR    PC, HypVectorPtr                          \n"
+      "LDR    PC, IRQVectorPtr                          \n"
+      "LDR    PC, FIQVectorPtr                          \n"
+      "ResetVectorPtr:  .LONG   Init_Handler            \n"
+      "UndefVectorPtr:  .LONG   Init_Handler            \n"
+      "SVCVectorPtr:    .LONG   Init_Handler            \n"
+      "PAbtVectorPtr:   .LONG   Init_Handler            \n"
+      "DAbtVectorPtr:   .LONG   Init_Handler            \n"
+      "HypVectorPtr:    .LONG   Init_Handler            \n"
+      "IRQVectorPtr:    .LONG   Init_Handler            \n"
+      "FIQVectorPtr:    .LONG   Init_Handler            \n"
+      "Init_Handler:    b       Init_Handler            \n"
   );
 }
 
@@ -83,6 +93,7 @@ void Reset_Handler(void) {
   "MRC     p15, 0, R0, c0, c0, 5                   \n"  // Read MPIDR
   "ANDS    R0, R0, #3                              \n"
   "goToSleep:                                      \n"
+  "IT      NE                                      \n"
   "WFINE                                           \n"
   "BNE     goToSleep                               \n"
 
@@ -98,11 +109,13 @@ void Reset_Handler(void) {
 
   // Configure ACTLR
   "MRC     p15, 0, r0, c1, c0, 1                   \n"  // Read CP15 Auxiliary Control Register
-  "ORR     r0, r0, #(1 <<  1)                      \n"  // Enable L2 prefetch hint (UNK/WI since r4p1)
+  //"ORR     r0, r0, #(1 <<  1)                      \n"  // Enable L2 prefetch hint (UNK/WI since r4p1)
+  "ORR     r0, r0, #(1 <<  6)                      \n"  // Enable SMP
   "MCR     p15, 0, r0, c1, c0, 1                   \n"  // Write CP15 Auxiliary Control Register
 
   // Set Vector Base Address Register (VBAR) to point to this application's vector table
-  "LDR    R0, =Vectors                             \n"
+  //"LDR    R0, =Vectors                             \n"
+  "LDR    R0, =" _TO_STRING(DSP_BOOT_REG) "        \n"
   "MCR    p15, 0, R0, c12, c0, 0                   \n"
 
   // Setup Stack for each exceptional mode

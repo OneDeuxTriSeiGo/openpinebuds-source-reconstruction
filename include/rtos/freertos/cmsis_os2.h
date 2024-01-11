@@ -271,6 +271,7 @@ typedef struct {
   uint32_t                 attr_bits;   ///< attribute bits
   void                      *cb_mem;    ///< memory for control block
   uint32_t                   cb_size;   ///< size of provided memory for control block
+  void                      *mutex;    ///< pointer to internal data
 } osMutexAttr_t;
 
 /// Attributes structure for semaphore.
@@ -279,6 +280,7 @@ typedef struct {
   uint32_t                 attr_bits;   ///< attribute bits
   void                      *cb_mem;    ///< memory for control block
   uint32_t                   cb_size;   ///< size of provided memory for control block
+  void                  *semaphore;    ///< pointer to internal data
 } osSemaphoreAttr_t;
 
 /// Attributes structure for memory pool.

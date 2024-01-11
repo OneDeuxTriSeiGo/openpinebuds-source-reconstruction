@@ -234,6 +234,14 @@ typedef enum {
 extern "C" {
 #endif
 
+#define USE_BUILTIN_STRING_FUNCTIONS
+#include "hal_trace.h"
+
+#define FDKprintf(num,fmt, ...) hal_trace_printf(num,fmt,##__VA_ARGS__)
+#define FDKprintfErr(num,fmt,...) hal_trace_printf(num,fmt,##__VA_ARGS__)
+#define FDKfprintf(stream, fmt, ...) hal_trace_printf(0,fmt, ##__VA_ARGS__)
+#define FDKsprintf(str, fmt, ...) hal_trace_printf(0,fmt, ##__VA_ARGS__)
+#if 0
 /** printf() using stdout. If ::ARCH_WA_FLUSH_CONSOLE defined, a flush is  done additionally after printf(). */
 void FDKprintf    ( const char* szFmt, ...);
 
@@ -245,7 +253,7 @@ int FDKgetchar(void);
 
 INT  FDKfprintf(void  *stream,  const  char *format, ...);
 INT  FDKsprintf(char *str, const char *format, ...);
-
+#endif
 
 
 const char *FDKstrchr(const char *s, INT c);
@@ -309,50 +317,56 @@ void  FDKfree_L(void *ptr);
  */
 void  FDKafree_L(void *ptr);
 
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
 
-/**
- * Copy memory. Source and destination memory must not overlap.
- * Either use implementation from a Standard Library, or, if no Standard Library
- * is available, a generic implementation.
- * The define ::USE_BUILTIN_MEM_FUNCTIONS in genericStds.cpp controls what to use.
- * The function arguments correspond to the standard memcpy(). Please see MSDN
- * documentation for details on how to use it.
- */
-void FDKmemcpy(void *dst, const void *src, const UINT size);
+/*---------------------------------------------------------------------------------------
+ * FUNCTION:    FDKmemcpy
+ * DESCRIPTION: - copies memory from "src" to "dst" with length "size" bytes
+ *              - compiled with FDK_DEBUG will give you warnings
+ *---------------------------------------------------------------------------------------*/
+inline void FDKmemcpy(void *dst, const void *src, const UINT size)
+{
 
-/**
- * Copy memory. Source and destination memory are allowed to overlap.
- * Either use implementation from a Standard Library, or, if no Standard Library
- * is available, a generic implementation.
- * The define ::USE_BUILTIN_MEM_FUNCTIONS in genericStds.cpp controls what to use.
- * The function arguments correspond to the standard memmove(). Please see MSDN
- * documentation for details on how to use it.
-*/
-void FDKmemmove(void *dst, const void *src, const UINT size);
+  /* do the copy */
+  memcpy(dst, src, size);
+}
 
-/**
- * Clear memory.
- * Either use implementation from a Standard Library, or, if no Standard Library
- * is available, a generic implementation.
- * The define ::USE_BUILTIN_MEM_FUNCTIONS in genericStds.cpp controls what to use.
- * The function arguments correspond to the standard memclear(). Please see MSDN
- * documentation for details on how to use it.
-*/
-void FDKmemclear(void *memPtr, const UINT size);
-
-/**
- * Fill memory with values.
- * The function arguments correspond to the standard memset(). Please see MSDN
- * documentation for details on how to use it.
- */
-void FDKmemset(void *memPtr, const INT value, const UINT size);
+inline void FDKmemmove(void *dst, const void *src, const UINT size)     { memmove(dst, src, size); }
+inline void FDKmemset(void *memPtr, const INT value, const UINT size)   { memset(memPtr, value, size); }
+inline void FDKmemclear(void *memPtr, const UINT size)                  { FDKmemset(memPtr,0,size); }
+inline UINT FDKstrlen(const char *s)                                    { return (UINT)strlen(s); }
 
 /* Compare function wrappers */
-INT   FDKmemcmp(const void *s1, const void *s2, const UINT size);
-INT   FDKstrcmp(const char *s1, const char *s2);
-INT   FDKstrncmp(const char *s1, const char *s2, const UINT size);
+inline INT FDKmemcmp(const void *s1, const void *s2, const UINT size)  { return memcmp(s1, s2, size); }
+inline INT FDKstrcmp(const char *s1, const char *s2)                   { return strcmp(s1, s2); }
+inline INT FDKstrncmp(const char *s1, const char *s2, const UINT size) { return strncmp(s1, s2, size); }
 
-UINT  FDKstrlen(const char *s);
+
+/* Math function wrappers. Only intended for compatibility, not to be highly optimized. */
+
+inline INT FDKabs(INT j) { return abs(j); }
+inline double FDKfabs(double x) { return fabs(x); }
+inline double FDKpow(double x, double y) { return pow(x,y); }
+inline double FDKsqrt(double x) { return sqrt(x); }
+inline double FDKatan(double x) { return atan(x); }
+inline double FDKlog(double x) { return log(x); }
+inline double FDKsin(double x) { return sin(x); }
+inline double FDKcos(double x) { return cos(x); }
+inline double FDKexp(double x) { return exp(x); }
+inline double FDKatan2(double y, double x) { return atan2(y, x); }
+inline double FDKacos(double x) { return acos(x); }
+inline double FDKtan(double x) { return tan(x); }
+inline double FDKfloor(double x) { return floor(x); }
+inline double FDKceil(double x) { return ceil(x); }
+
+inline INT   FDKatoi(const char *nptr) { return atoi(nptr); }
+inline long  FDKatol(const char *nptr) { return atol(nptr); }
+inline float FDKatof(const char *nptr) { return (float)atof(nptr); }
+
 
 #define FDKmax(a,b) ( (a) > (b) ? (a):(b))
 #define FDKmin(a,b) ( (a) < (b) ? (a):(b))
@@ -363,27 +377,11 @@ UINT  FDKstrlen(const char *s);
 /* Math function wrappers. Only intended for compatibility, not to be highly optimized. */
 /* Used for debugging, dev code .. */
 
-INT FDKabs(INT j);
-double FDKfabs(double x);
-double FDKpow(double x, double y);
-double FDKsqrt(double x);
-double FDKatan(double x);
-double FDKlog(double x);
-double FDKsin(double x);
-double FDKcos(double x);
-double FDKexp(double x);
 #define FDKlog2(a) (FDKlog(a)*1.442695041) /* log(2.0) = 1.442695041 */
 #define FDKlog10(a) (FDKlog(a)*0.434294482) /* 1.0/log(10.0) = 0.434294482 */
-double FDKatan2(double y, double x);
-double FDKacos(double x);
-double FDKtan(double x);
-double FDKfloor(double x);
-double FDKceil(double x);
-INT   FDKatoi(const char *nptr);
-long  FDKatol(const char *nptr);
-float FDKatof(const char *nptr);
 /* LONG LONG FDKatoll(const char *nptr); */
 /* LONG LONG FDKatoq(const char *nptr); */
+
 
 
 

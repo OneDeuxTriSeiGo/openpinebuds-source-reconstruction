@@ -185,6 +185,9 @@ extern void         osRtxThreadReadyPut   (os_thread_t *thread);
 extern void         osRtxThreadDelayTick  (void);
 extern uint32_t    *osRtxThreadRegPtr     (const os_thread_t *thread);
 extern void         osRtxThreadSwitch     (os_thread_t *thread);
+#if __RTX_CPU_STATISTICS__
+uint32_t rtx_get_hwticks(void);
+#endif
 extern void         osRtxThreadDispatch   (os_thread_t *thread);
 extern void         osRtxThreadWaitExit   (os_thread_t *thread, uint32_t ret_val, bool_t dispatch);
 extern bool_t       osRtxThreadWaitEnter  (uint8_t state, uint32_t timeout);

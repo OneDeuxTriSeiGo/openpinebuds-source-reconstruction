@@ -143,7 +143,7 @@ void scaleValueInPlace(FIXP_DBL *value, /*!< Value */
   #define SATURATE_RIGHT_SHIFT(src, scale, dBits)                                                        \
       ( (((LONG)(src) ^ ((LONG)(src) >> (DFRACT_BITS-1)))>>(scale)) > (LONG)(((1U)<<((dBits)-1))-1))     \
           ? ((LONG)(src) >> (DFRACT_BITS-1)) ^ (LONG)(((1U)<<((dBits)-1))-1)                             \
-          : ((LONG)(src) >> (scale))
+          : ((LONG)(src) / ((LONG)1<<(scale)))
 
   #define SATURATE_LEFT_SHIFT(src, scale, dBits)                                                         \
       ( ((LONG)(src) ^ ((LONG)(src) >> (DFRACT_BITS-1))) > ((LONG)(((1U)<<((dBits)-1))-1) >> (scale)) )  \

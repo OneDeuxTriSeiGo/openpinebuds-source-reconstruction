@@ -73,6 +73,9 @@ typedef unsigned long UBaseType_t;
 #define portSTACK_GROWTH            ( -1 )
 #define portTICK_PERIOD_MS          ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT          8
+
+/* The max restore time for the hardware jump out from deep sleep */
+#define portMAX_RESTORE_TIME        6
 /*-----------------------------------------------------------*/
 
 /* Scheduler utilities. */
@@ -100,6 +103,8 @@ extern void vPortExitCritical( void );
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    vPortSetBASEPRI(x)
 #define portDISABLE_INTERRUPTS()                vPortRaiseBASEPRI()
 #define portENABLE_INTERRUPTS()                 vPortSetBASEPRI(0)
+//#define portDISABLE_INTERRUPTS()              __disable_irq()
+//#define portENABLE_INTERRUPTS()                   __enable_irq()
 #define portENTER_CRITICAL()                    vPortEnterCritical()
 #define portEXIT_CRITICAL()                     vPortExitCritical()
 
@@ -117,6 +122,17 @@ not necessary for to use this port.  They are defined so the common demo files
     extern void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
     #define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
 #endif
+
+#ifndef portTASK_IDLE_INIT
+    extern void vPortTaskIdleInit(void);
+#define  portTASK_IDLE_INIT vPortTaskIdleInit
+#endif
+
+#ifndef portLIGHT_SLEEP
+extern void vPortLightSleep( TickType_t ulExpectedIdleTime );
+#define portLIGHT_SLEEP(xExpectedIdleTime) vPortLightSleep(xExpectedIdleTime)
+#endif
+
 /*-----------------------------------------------------------*/
 
 /* Architecture specific optimisations. */
@@ -190,15 +206,13 @@ BaseType_t xReturn;
 
 portFORCE_INLINE static void vPortRaiseBASEPRI( void )
 {
-uint32_t ulNewBASEPRI;
 
     __asm volatile
     (
-        "   mov %0, %1                                              \n" \
         "   msr basepri, %0                                         \n" \
         "   isb                                                     \n" \
         "   dsb                                                     \n" \
-        :"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
+        : : "r" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
     );
 }
 

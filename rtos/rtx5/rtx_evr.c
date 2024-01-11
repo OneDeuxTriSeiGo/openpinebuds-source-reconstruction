@@ -26,6 +26,8 @@
 #include <string.h>
 #include "cmsis_compiler.h"
 #include "rtx_evr.h"                    // RTX Event Recorder definitions
+#include "rtx_lib.h"
+#include "hal_trace.h"
 
 #ifdef  RTE_Compiler_EventRecorder
 
@@ -539,8 +541,8 @@ __WEAK void EvrRtxThreadError (osThreadId_t thread_id, int32_t status) {
 #if defined(RTE_Compiler_EventRecorder)
   (void)EventRecord2(EvtRtxThreadError, (uint32_t)thread_id, (uint32_t)status);
 #else
-  (void)thread_id;
-  (void)status;
+  os_thread_t *thread = osRtxThreadId(thread_id);
+  TRACE(2,"EvrRtxThreadError, thread name:%s, status:%d", thread ? thread->name : "NULL", status);
 #endif
 }
 #endif

@@ -31,7 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
-#include "mbed_error.h"
+#include "cmsis_os.h"
 
 #if   defined (__CC_ARM)
 #pragma O3
@@ -50,8 +50,11 @@
 
 #define _declare_box(pool,size,cnt)  uint32_t pool[(((size)+3)/4)*(cnt) + 3]
 #define _declare_box8(pool,size,cnt) uint64_t pool[(((size)+7)/8)*(cnt) + 2]
-
+#if __RTX_CPU_STATISTICS__
+#define OS_TCB_SIZE     64
+#else
 #define OS_TCB_SIZE     48
+#endif
 #define OS_TMR_SIZE     8
 
 #if defined (__CC_ARM) && !defined (__MICROLIB)
@@ -92,7 +95,6 @@ OS_RESULT _os_mut_wait    (uint32_t p, OS_ID mutex, uint16_t timeout) __svc_indi
 
 uint16_t const os_maxtaskrun = OS_TASK_CNT;
 uint32_t const os_rrobin     = (OS_ROBIN << 16) | OS_ROBINTOUT;
-uint32_t const os_trv        = OS_TRV;
 uint8_t  const os_flags      = OS_RUNPRIV;
 
 /* Export following defines to uVision debugger. */
@@ -101,7 +103,7 @@ __USED uint32_t const os_timernum  = 0;
 
 /* Stack for the os_idle_demon */
 unsigned int idle_task_stack[OS_IDLESTKSIZE];
-unsigned short const idle_task_stack_size = OS_IDLESTKSIZE;
+unsigned short const idle_task_stack_size = sizeof(idle_task_stack); //OS_IDLESTKSIZE;
 
 #ifndef OS_FIFOSZ
  #define OS_FIFOSZ      16
@@ -114,10 +116,12 @@ uint8_t  const os_fifo_size = OS_FIFOSZ;
 /* An array of Active task pointers. */
 void *os_active_TCB[OS_TASK_CNT];
 
+uint32_t task_rtime[OS_TASK_CNT];
+
 /* User Timers Resources */
 #if (OS_TIMERS != 0)
 extern void osTimerThread (void const *argument);
-osThreadDef(osTimerThread, (osPriority)(OS_TIMERPRIO-3), 4*OS_TIMERSTKSZ);
+osThreadDef(osTimerThread, (osPriority)(OS_TIMERPRIO-3), 1, 4*OS_TIMERSTKSZ, "os_timer");
 osThreadId osThreadId_osTimerThread;
 osMessageQDef(osTimerMessageQ, OS_TIMERCBQS, void *);
 osMessageQId osMessageQId_osTimerMessageQ;
@@ -158,7 +162,7 @@ int _mutex_initialize (OS_ID *mutex) {
 
   if (nr_mutex >= OS_MUTEXCNT) {
     /* If you are here, you need to increase the number OS_MUTEXCNT. */
-    error("Not enough stdlib mutexes\n");
+    os_error_str("Not enough stdlib mutexes\n");
   }
   *mutex = &std_libmutex[nr_mutex++];
   mutex_init (*mutex);
@@ -199,24 +203,26 @@ extern int main (void);
 osThreadDef_t os_thread_def_main = {(os_pthread)main, osPriorityNormal, 0, NULL};
 
 // This define should be probably moved to the CMSIS layer
+extern                        uint32_t __StackTop[];
+#define INITIAL_SP            ((unsigned int)__StackTop)
 
 #ifdef __CC_ARM
-extern uint32_t          Image$$RW_IRAM1$$ZI$$Limit[];
-#define HEAP_START      (Image$$RW_IRAM1$$ZI$$Limit)
+extern uint32_t               Image$$RW_IRAM1$$ZI$$Limit[];
+#define MAIN_STACK_BUF        (Image$$RW_IRAM1$$ZI$$Limit)
 #elif defined(__GNUC__)
-extern uint32_t          __end__[];
-#define HEAP_START      (__end__)
+extern uint32_t               __StackLimit[];
+#define MAIN_STACK_BUF        (__StackLimit)
 #elif defined(__ICCARM__)
 #pragma section="HEAP"
-#define HEAP_START     (void *)__section_begin("HEAP")
+#define MAIN_STACK_BUF        (void *)__section_begin("HEAP")
 #endif
 
 void set_main_stack(void) {
     // That is the bottom of the main stack block: no collision detection
-    os_thread_def_main.stack_pointer = HEAP_START;
+    os_thread_def_main.stack_pointer = MAIN_STACK_BUF;
 
     // Leave OS_SCHEDULERSTKSIZE words for the scheduler and interrupts
-    os_thread_def_main.stacksize = (INITIAL_SP - (unsigned int)HEAP_START) - (OS_SCHEDULERSTKSIZE * 4);
+    os_thread_def_main.stacksize = (INITIAL_SP - (unsigned int)MAIN_STACK_BUF) - (OS_SCHEDULERSTKSIZE * 4);
 }
 
 #if defined (__CC_ARM)
@@ -354,7 +360,7 @@ extern void __iar_data_init3(void);
 extern __weak void __iar_init_core( void );
 extern __weak void __iar_init_vfp( void );
 extern void __iar_dynamic_initialization(void);
-extern void mbed_sdk_init(void);
+//extern void mbed_sdk_init(void);
 extern void exit(int arg);
 
 #pragma required=__vector_table
@@ -367,7 +373,7 @@ void __iar_program_start( void )
 
   if (__low_level_init() != 0) {
     __iar_data_init3();
-    mbed_sdk_init();
+    //mbed_sdk_init();
     __iar_dynamic_initialization();
   }
   osKernelInitialize();

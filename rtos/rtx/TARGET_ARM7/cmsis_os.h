@@ -115,7 +115,7 @@ used throughout the whole project.
 #define CMSIS_OS_RTX
 
 // The stack space occupied is mainly dependent on the underling C standard library
-#if defined(TOOLCHAIN_GCC) || defined(TOOLCHAIN_ARM_STD) || defined(TOOLCHAIN_IAR)
+#if defined(__GNUC__) || defined(__CC_ARM) || defined(__ARMCC_VERSION) || defined(__ICCARM__)
 #    define WORDS_STACK_SIZE   512
 #elif defined(TOOLCHAIN_ARM_MICRO)
 #    define WORDS_STACK_SIZE   128

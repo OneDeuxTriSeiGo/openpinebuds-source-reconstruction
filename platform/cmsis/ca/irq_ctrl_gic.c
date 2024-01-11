@@ -23,18 +23,13 @@
  */
 
 #include <stddef.h>
-
-#include "RTE_Components.h"
-#include CMSIS_device_header
-
+#include "cmsis.h"
 #include "irq_ctrl.h"
 
 #if defined(__GIC_PRESENT) && (__GIC_PRESENT == 1U)
 
 /// Number of implemented interrupt lines
-#ifndef IRQ_GIC_LINE_COUNT
-#define IRQ_GIC_LINE_COUNT      (1020U)
-#endif
+#define IRQ_GIC_LINE_COUNT      USER_IRQn_QTY
 
 static IRQHandler_t IRQTable[IRQ_GIC_LINE_COUNT] = { 0U };
 static uint32_t     IRQ_ID0;

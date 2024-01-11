@@ -115,7 +115,7 @@ used throughout the whole project.
 #define CMSIS_OS_RTX
 
 // The stack space occupied is mainly dependent on the underling C standard library
-#if defined(TOOLCHAIN_GCC) || defined(TOOLCHAIN_ARM_STD) || defined(TOOLCHAIN_IAR)
+#if defined(__GNUC__) || defined(__CC_ARM) || defined(__ARMCC_VERSION) || defined(__ICCARM__)
 #    define WORDS_STACK_SIZE   512
 #elif defined(TOOLCHAIN_ARM_MICRO)
 #    define WORDS_STACK_SIZE   128
@@ -245,6 +245,9 @@ typedef struct os_thread_def  {
   uint32_t               stacksize;      ///< stack size requirements in bytes
   uint32_t               *stack_pointer;  ///< pointer to the stack memory block
   struct OS_TCB          tcb;
+#if __RTX_CPU_STATISTICS__
+  const char *           name_str;
+#endif
 } osThreadDef_t;
 
 /// Timer Definition structure contains timer parameters.
@@ -336,10 +339,17 @@ int32_t osKernelRunning(void);
 #define osThreadDef(name, priority, stacksz)  \
 extern osThreadDef_t os_thread_def_##name
 #else                            // define the object
-#define osThreadDef(name, priority, stacksz)  \
+#if __RTX_CPU_STATISTICS__
+#define osThreadDef(name, priority, instances, stacksz, task_name)  \
+uint32_t os_thread_def_stack_##name [stacksz / sizeof(uint32_t)]; \
+osThreadDef_t os_thread_def_##name = \
+{ (name), (priority), (stacksz), (os_thread_def_stack_##name) , {0,}, (task_name)}
+#else
+#define osThreadDef(name, priority, instance, stacksz, task_name)  \
 uint32_t os_thread_def_stack_##name [stacksz / sizeof(uint32_t)]; \
 osThreadDef_t os_thread_def_##name = \
 { (name), (priority), (stacksz), (os_thread_def_stack_##name)}
+#endif
 #endif
 
 /// Access a Thread definition.
@@ -360,6 +370,8 @@ osThreadId osThreadCreate (osThreadDef_t *thread_def, void *argument);
 /// \return thread ID for reference by other functions or NULL in case of error.
 /// \note MUST REMAIN UNCHANGED: \b osThreadGetId shall be consistent in every CMSIS-RTOS.
 osThreadId osThreadGetId (void);
+
+int osGetThreadIntId (void);
 
 /// Terminate execution of a thread and remove it from Active Threads.
 /// \param[in]     thread_id   thread ID obtained by \ref osThreadCreate or \ref osThreadGetId.
@@ -385,6 +397,21 @@ osStatus osThreadSetPriority (osThreadId thread_id, osPriority priority);
 /// \note MUST REMAIN UNCHANGED: \b osThreadGetPriority shall be consistent in every CMSIS-RTOS.
 osPriority osThreadGetPriority (osThreadId thread_id);
 
+/// Show a thread.
+/// \param[in]     thread_id     thread ID obtained by \ref osThreadCreate or \ref osThreadGetId.
+/// \return status code that indicates the execution status of the function.
+#if (osCMSIS < 0x20000U)
+osStatus osThreadShow (osThreadId thread_id);
+#endif
+
+///  set the hung check of an active thread.
+/// \param[in]     thread_id     thread ID obtained by \ref osThreadCreate or \ref osThreadGetId.
+/// \param[in]     enable        enable/disable the hung check feature of the task
+/// \param[in]     timeout       hung check  timeout in millisecond
+/// \return status code that indicates the execution status of the function.
+#if TASK_HUNG_CHECK_ENABLED
+osStatus osThreadSetHungCheck (osThreadId thread_id, int32_t enable, uint32_t timeout);
+#endif
 
 //  ==== Generic Wait Functions ====
 
@@ -531,6 +558,13 @@ osStatus osMutexRelease (osMutexId mutex_id);
 /// \return status code that indicates the execution status of the function.
 /// \note MUST REMAIN UNCHANGED: \b osMutexDelete shall be consistent in every CMSIS-RTOS.
 osStatus osMutexDelete (osMutexId mutex_id);
+
+/// Get owner thread of a Mutex object.
+/// \param[in]     mutex_id      mutex ID obtained by \ref osMutexCreate.
+/// \return thread id or NULL
+#if (osCMSIS < 0x20000U)
+osThreadId osMutexGetOwner (osMutexId mutex_id);
+#endif
 
 
 //  ==== Semaphore Management Functions ====
@@ -690,6 +724,10 @@ osStatus osMessagePut (osMessageQId queue_id, uint32_t info, uint32_t millisec);
 /// \note MUST REMAIN UNCHANGED: \b osMessageGet shall be consistent in every CMSIS-RTOS.
 os_InRegs osEvent osMessageGet (osMessageQId queue_id, uint32_t millisec);
 
+/// Get space in the Message Queue.
+/// \param[in]     queue_id      message queue ID obtained with \ref osMessageCreate.
+/// \return the size of the space.
+uint32_t osMessageGetSpace (osMessageQId queue_id);
 #endif     // Message Queues available
 
 
@@ -766,6 +804,7 @@ osStatus osMailFree (osMailQId queue_id, void *mail);
 
 #endif  // Mail Queues available
 
+void os_error_str (const char *fmt, ...);
 
 #ifdef  __cplusplus
 }

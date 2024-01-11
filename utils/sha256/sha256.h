@@ -37,11 +37,15 @@ extern "C" {
 typedef HASH_CTX SHA256_CTX;
 
 void SHA256_init(SHA256_CTX* ctx);
-void SHA256_update(SHA256_CTX* ctx, const void* data, int len);
+void SHA256_update(SHA256_CTX* ctx, const void* data, uint32_t len);
 const uint8_t* SHA256_final(SHA256_CTX* ctx);
 
 // Convenience method. Returns digest address.
-const uint8_t* SHA256_hash(const void* data, int len, uint8_t* digest);
+const uint8_t* SHA256_hash2(const void* data1, uint32_t len1, const void* data2, uint32_t len2, uint8_t* digest);
+const uint8_t* SHA256_hash(const void* data, uint32_t len, uint8_t* digest);
+
+void hash_hardware_engine_enable(int enable);
+const uint8_t* hash_sha256(const void* data, uint32_t len, uint8_t* digest);
 
 #define SHA256_DIGEST_SIZE 32
 

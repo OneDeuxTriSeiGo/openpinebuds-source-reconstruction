@@ -42,20 +42,22 @@
 
 #include <stdint.h>
 
-#include "RTE_Components.h"
-#include CMSIS_device_header
+//#include "RTE_Components.h"
+//#include CMSIS_device_header
+#include "cmsis.h"
+#include "hal_trace.h"
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 
 //  <o>Minimal stack size [words] <0-65535>
 //  <i> Stack for idle task and default task stack in words.
 //  <i> Default: 128
-#define configMINIMAL_STACK_SIZE                ((uint16_t)(128))
+#define configMINIMAL_STACK_SIZE                ((uint16_t)(512))
 
 //  <o>Total heap size [bytes] <0-0xFFFFFFFF>
 //  <i> Heap memory size in bytes.
 //  <i> Default: 8192
-#define configTOTAL_HEAP_SIZE                   ((size_t)8192)
+#define configTOTAL_HEAP_SIZE                   ((size_t)(8192 * 4))
 
 //  <o>Kernel tick frequency [Hz] <0-0xFFFFFFFF>
 //  <i> Kernel tick rate in Hz.
@@ -65,7 +67,7 @@
 //  <o>Timer task stack depth [words] <0-65535>
 //  <i> Stack for timer task in words.
 //  <i> Default: 80
-#define configTIMER_TASK_STACK_DEPTH            80
+#define configTIMER_TASK_STACK_DEPTH            512
 
 //  <o>Timer task priority <0-56>
 //  <i> Timer task priority.
@@ -75,12 +77,13 @@
 //  <o>Timer queue length <0-1024>
 //  <i> Timer command queue length.
 //  <i> Default: 5
-#define configTIMER_QUEUE_LENGTH                5
+#define configTIMER_QUEUE_LENGTH                25
 
 //  <o>Preemption interrupt priority
 //  <i> Maximum priority of interrupts that are safe to call FreeRTOS API.
 //  <i> Default: 16
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    16
+//#define configMAX_SYSCALL_INTERRUPT_PRIORITY    16
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY     64
 
 //  <q>Use time slicing
 //  <i> Enable setting to use timeslicing.
@@ -91,6 +94,8 @@
 //  <i> Control Yield behaviour of the idle task.
 //  <i> Default: 1
 #define configIDLE_SHOULD_YIELD                 1
+
+#define configUSE_TICKLESS_IDLE                 1
 
 //  <o>Check for stack overflow
 //    <0=>Disable <1=>Method one <2=>Method two
@@ -103,7 +108,7 @@
 //  <i> Enable callback function call on each idle task iteration.
 //  <i> Callback function vApplicationIdleHook implementation is required when idle hook is enabled.
 //  <i> Default: 0
-#define configUSE_IDLE_HOOK                     0
+#define configUSE_IDLE_HOOK                     1
 
 //  <q>Use tick hook
 //  <i> Enable callback function call during each tick interrupt.
@@ -121,13 +126,20 @@
 //  <i> Enable callback function call when out of dynamic memory.
 //  <i> Callback function vApplicationMallocFailedHook implementation is required when malloc failed hook is enabled.
 //  <i> Default: 0
-#define configUSE_MALLOC_FAILED_HOOK            0
+#define configUSE_MALLOC_FAILED_HOOK            1
 
 //  <o>Queue registry size
 //  <i> Define maximum number of queue objects registered for debug purposes.
 //  <i> The queue registry is used by kernel aware debuggers to locate queue and semaphore structures and display associated text names.
 //  <i> Default: 0
 #define configQUEUE_REGISTRY_SIZE               0
+
+//#define configGENERATE_RUN_TIME_STATS           1
+#define configUSE_STATS_FORMATTING_FUNCTIONS    1
+
+//   Used for the minist time for enter deep sleep
+//  <i> Default: 4
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   5
 
 // <h>Event Recorder configuration
 //  <i> Initialize and setup Event Recorder level filtering.
@@ -180,8 +192,10 @@
 #define configEVR_LEVEL_STREAMBUFFER            0x05
 //  </e>
 // </h>
-
+#define configASSERT( x )  do {ASSERT( x, "%s %s, %d\n", #x, __func__, __LINE__)} while(0)
 //------------- <<< end of configuration section >>> ---------------------------
+
+extern uint32_t SystemCoreClock;
 
 /* Defines needed by FreeRTOS to implement CMSIS RTOS2 API. Do not change! */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)

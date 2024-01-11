@@ -129,14 +129,23 @@
 
 #define osKernelSystemId    "FreeRTOS V9.0.0" ///< RTOS identification string
 
-#define osFeature_MainThread  0         ///< main thread      1=main can be thread, 0=not available
+// The stack space occupied is mainly dependent on the underling C standard library
+#if defined(__GNUC__) || defined(__CC_ARM) || defined(__ARMCC_VERSION) || defined(__ICCARM__)
+#    define WORDS_STACK_SIZE   512
+#elif defined(TOOLCHAIN_ARM_MICRO)
+#    define WORDS_STACK_SIZE   128
+#endif
+
+#define DEFAULT_STACK_SIZE         (WORDS_STACK_SIZE*4)
+
+#define osFeature_MainThread  1         ///< main thread      1=main can be thread, 0=not available
 #define osFeature_Signals     24U       ///< maximum number of Signal Flags available per thread
 #define osFeature_Semaphore   65535U    ///< maximum count for \ref osSemaphoreCreate function
 #define osFeature_Wait        0         ///< osWait function: 1=available, 0=not available
 #define osFeature_SysTick     1         ///< osKernelSysTick functions: 1=available, 0=not available
-#define osFeature_Pool        0         ///< Memory Pools:    1=available, 0=not available
+#define osFeature_Pool        1         ///< Memory Pools:    1=available, 0=not available
 #define osFeature_MessageQ    1         ///< Message Queues:  1=available, 0=not available
-#define osFeature_MailQ       0         ///< Mail Queues:     1=available, 0=not available
+#define osFeature_MailQ       1         ///< Mail Queues:     1=available, 0=not available
 
 #if   defined(__CC_ARM)
 #define os_InRegs __value_in_regs
@@ -148,6 +157,19 @@
 
 #include "cmsis_os2.h"
 #include "FreeRTOS.h"
+
+
+// OS_API_IN_INTLOCK can be enabled in target.mk by:
+// export OS_API_IN_INTLOCK ?= 1
+
+#ifdef OS_API_IN_INTLOCK
+// CAUTION:
+// It will be treated as in ISR when calling OS APIs in intlock(), but
+// the stack might still be using PSP instead of MSP.
+#define IN_ISR()                        (__get_IPSR() != 0 || __get_PRIMASK() != 0)
+#else
+#define IN_ISR()                        (__get_IPSR() != 0)
+#endif
 
 #ifdef  __cplusplus
 extern "C"
@@ -223,6 +245,7 @@ typedef int32_t                  osStatus;
 #define osErrorISRRecursive     (-126)
 #define osErrorValue            (-127)
 #define osErrorPriority         (-128)
+#define os_status_reserved        (0x7FFFFFFF)  ///< Prevents enum down-size compiler optimization.
 #endif
 
 
@@ -296,7 +319,8 @@ typedef struct os_timer_def {
 /// Mutex Definition structure contains setup information for a mutex.
 #if (osCMSIS < 0x20000U)
 typedef struct os_mutex_def {
-  uint32_t                     dummy;   ///< dummy value
+//  uint32_t                     dummy;   ///< dummy value
+    void                      *mutex;    ///< pointer to internal data
 } osMutexDef_t;
 #else
 #define osMutexDef_t osMutexAttr_t
@@ -305,14 +329,16 @@ typedef struct os_mutex_def {
 /// Semaphore Definition structure contains setup information for a semaphore.
 #if (osCMSIS < 0x20000U)
 typedef struct os_semaphore_def {
-  uint32_t                     dummy;   ///< dummy value
+//  uint32_t                     dummy;   ///< dummy value
+    void                  *semaphore;    ///< pointer to internal data
 } osSemaphoreDef_t;
 #else
 #define osSemaphoreDef_t osSemaphoreAttr_t
 #endif
 
 /// Definition structure for memory block allocation.
-#if (osCMSIS < 0x20000U)
+//#if (osCMSIS < 0x20000U)
+#if 1
 typedef struct os_pool_def {
   uint32_t                   pool_sz;   ///< number of items (elements) in the pool
   uint32_t                   item_sz;   ///< size of an item
@@ -348,10 +374,11 @@ typedef struct os_mailQ_def {
 } osMailQDef_t;
 #else
 typedef struct os_mailQ_def {
-  uint32_t                  queue_sz;   ///< number of elements in the queue
-  uint32_t                   item_sz;   ///< size of an item
+ // uint32_t                  queue_sz;   ///< number of elements in the queue
+ // uint32_t                   item_sz;   ///< size of an item
+  osPoolDef_t                  mq_pool;   ///< memory pool attributes
   void                         *mail;   ///< pointer to mail
-  osMemoryPoolAttr_t         mp_attr;   ///< memory pool attributes
+  //osMemoryPoolAttr_t         mp_attr;   ///< memory pool attributes
   osMessageQueueAttr_t       mq_attr;   ///< message queue attributes
 } osMailQDef_t;
 #endif
@@ -431,12 +458,12 @@ uint32_t osKernelSysTick (void);
 #define osThreadDef(name, priority, instances, stacksz) \
 extern const osThreadDef_t os_thread_def_##name
 #else                            // define the object
-#define osThreadDef(name, priority, instances, stacksz) \
+#define osThreadDef(name, priority, instances, stacksz, task_name) \
 static uint64_t os_thread_stack##name[(stacksz)?(((stacksz+7)/8)):1]; \
 static StaticTask_t os_thread_cb_##name; \
 const osThreadDef_t os_thread_def_##name = \
 { (name), \
-  { NULL, osThreadDetached, \
+  { task_name, osThreadDetached, \
     (instances == 1) ? (&os_thread_cb_##name) : NULL,\
     (instances == 1) ? sizeof(StaticTask_t) : 0U, \
     ((stacksz) && (instances == 1)) ? (&os_thread_stack##name) : NULL, \
@@ -460,6 +487,10 @@ osThreadId osThreadCreate (const osThreadDef_t *thread_def, void *argument);
 #if (osCMSIS < 0x20000U)
 osThreadId osThreadGetId (void);
 #endif
+
+//#if (osCMSIS < 0x20000U)
+int osGetThreadIntId (void);
+//#endif
 
 /// Change priority of a thread.
 /// \param[in]     thread_id     thread ID obtained by \ref osThreadCreate or \ref osThreadGetId.
@@ -692,8 +723,11 @@ osStatus osSemaphoreDelete (osSemaphoreId semaphore_id);
 extern const osPoolDef_t os_pool_def_##name
 #else                            // define the object
 #define osPoolDef(name, no, type) \
+uint32_t os_pool_m_##name[3+((sizeof(type)+3)/4)*(no)]; \
 const osPoolDef_t os_pool_def_##name = \
-{ (no), sizeof(type), NULL }
+{ (no), sizeof(type), (os_pool_m_##name) }
+//const osPoolDef_t os_pool_def_##name =
+//{ (no), sizeof(type), {NULL} }
 #endif
 
 /// \brief Access a Memory Pool definition.
@@ -770,6 +804,7 @@ osStatus osMessagePut (osMessageQId queue_id, uint32_t info, uint32_t millisec);
 /// \return event information that includes status code.
 os_InRegs osEvent osMessageGet (osMessageQId queue_id, uint32_t millisec);
 
+uint32_t osMessageGetSpace (osMessageQId queue_id);
 #endif  // Message Queue available
 
 
@@ -786,8 +821,9 @@ os_InRegs osEvent osMessageGet (osMessageQId queue_id, uint32_t millisec);
 extern const osMailQDef_t os_mailQ_def_##name
 #else                            // define the object
 #define osMailQDef(name, queue_sz, type) \
-const osMailQDef_t os_mailQ_def_##name = \
-{ (queue_sz), sizeof(type), NULL }
+static uint32_t os_mailQ_m_##name[3+((sizeof(type)+3)/4)*(queue_sz)]; \
+osMailQDef_t os_mailQ_def_##name = \
+{ {(queue_sz), sizeof(type), (os_mailQ_m_##name)}, NULL, {NULL} }
 #endif
 
 /// \brief Access a Mail Queue Definition.
@@ -799,7 +835,8 @@ const osMailQDef_t os_mailQ_def_##name = \
 /// \param[in]     queue_def     mail queue definition referenced with \ref osMailQ.
 /// \param[in]     thread_id     thread ID (obtained by \ref osThreadCreate or \ref osThreadGetId) or NULL.
 /// \return mail queue ID for reference by other functions or NULL in case of error.
-osMailQId osMailCreate (const osMailQDef_t *queue_def, osThreadId thread_id);
+//osMailQId osMailCreate (const osMailQDef_t *queue_def, osThreadId thread_id);
+osMailQId osMailCreate (osMailQDef_t *queue_def, osThreadId thread_id);
 
 /// Allocate a memory block for mail from a mail memory pool.
 /// \param[in]     queue_id      mail queue ID obtained with \ref osMailCreate.
@@ -833,6 +870,7 @@ osStatus osMailFree (osMailQId queue_id, void *mail);
 
 #endif  // Mail Queue available
 
+void os_error_str (const char *fmt, ...);
 
 #ifdef  __cplusplus
 }

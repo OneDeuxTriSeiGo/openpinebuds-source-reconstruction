@@ -636,14 +636,65 @@ __WEAK void _platform_post_stackheap_init (void) {
 #endif
 
 #elif defined(__GNUC__)
+osThreadAttr_t os_thread_attr_main = {
+    "main",
+    osThreadDetached,
+    NULL,
+    0,
+    NULL,
+    0,
+    osPriorityNormal,
+    0,
+    0
+};
+
+#ifndef OS_SCHEDULERSTKSIZE
+#define OS_SCHEDULERSTKSIZE    512
+#endif
+
+extern                        uint32_t __StackTop[];
+#define INITIAL_SP            ((uint32_t)__StackTop)
+
+extern uint32_t               __StackLimit[];
+#define MAIN_STACK_BUF        (__StackLimit)
+
+#define ROUND_UP(x, align)  (((uint32_t)(x) + (align - 1)) & ~(align - 1))
+#define ROUND_DOWN(x, align) ((uint32_t)(x) & ~(align - 1))
+
+void set_main_stack(void) {
+    // That is the bottom of the main stack block: no collision detection
+    os_thread_attr_main.stack_mem = (uint32_t *)ROUND_UP(MAIN_STACK_BUF, 8);
+
+    // Leave OS_SCHEDULERSTKSIZE words for the scheduler and interrupts
+    os_thread_attr_main.stack_size = ROUND_DOWN((INITIAL_SP - (unsigned int)ROUND_UP(MAIN_STACK_BUF, 8)) - (OS_SCHEDULERSTKSIZE * 4), 8);
+}
 
 extern void software_init_hook (void);
 __WEAK void software_init_hook (void) {
-  (void)osKernelInitialize();
+    __asm (
+      ".syntax unified\n"
+      ".thumb\n"
+      "movs r0,#0\n"
+      "movs r1,#0\n"
+      "mov  r4,r0\n"
+      "mov  r5,r1\n"
+      "bl   SystemCoreClockUpdate\n"
+      "bl   osKernelInitialize\n"
+      "ldr  r0,= __libc_fini_array\n"
+      "bl   atexit\n"
+      "bl   __libc_init_array\n"
+      "mov  r0,r4\n"
+      "mov  r1,r5\n"
+      "bl   set_main_stack\n"
+      "ldr  r0,=main\n"
+      "movs r1,#0\n"
+      "ldr r2,=os_thread_attr_main\n"
+      "bl   osThreadNew\n"
+      "bl   osKernelStart\n"
+      "bl   exit\n"
+    );
 }
-
 #endif
-
 
 // OS Hooks
 // ========

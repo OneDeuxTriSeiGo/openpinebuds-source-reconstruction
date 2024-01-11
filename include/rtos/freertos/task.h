@@ -2285,6 +2285,7 @@ void vTaskPriorityDisinheritAfterTimeout( TaskHandle_t const pxMutexHolder, UBas
  */
 UBaseType_t uxTaskGetTaskNumber( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
+UBaseType_t uxTaskGetTCBNumber( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 /*
  * Set the uxTaskNumber of the task referenced by the xTask parameter to
  * uxHandle.

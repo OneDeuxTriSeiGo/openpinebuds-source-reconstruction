@@ -31,7 +31,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
-#include "mbed_error.h"
+#include "cmsis_os.h"
 
 #if   defined (__CC_ARM)
 #pragma O3
@@ -158,7 +158,7 @@ int _mutex_initialize (OS_ID *mutex) {
 
   if (nr_mutex >= OS_MUTEXCNT) {
     /* If you are here, you need to increase the number OS_MUTEXCNT. */
-    error("Not enough stdlib mutexes\n");
+    os_error_str("Not enough stdlib mutexes\n");
   }
   *mutex = &std_libmutex[nr_mutex++];
   mutex_init (*mutex);

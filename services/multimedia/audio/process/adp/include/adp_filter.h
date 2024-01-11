@@ -19,26 +19,27 @@
    @brief Discrete Rotational Fourier Transform (DRFT)
 */
 
-#ifndef _V_SMFT_H_
-#define _V_SMFT_H_
-
+#ifndef _ADP_FILTER_H_
+#define _ADP_FILTER_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/** Discrete Rotational Fourier Transform lookup */
-struct drft_lookup{
-  int n;
-  float *trigcache;
-  int *splitcache;
+#include "adp_config.h"
+
+
+
+struct adpparam
+{
+    void *fft_lookup;
+    int M;
+    float w_fft[ADPFILTER_NUM*2];
+    float w[ADPFILTER_NUM*2];
+    float u;
 };
-
-extern void spx_drft_forward(struct drft_lookup *l,float *data);
-extern void spx_drft_backward(struct drft_lookup *l,float *data);
-extern void spx_drft_init(struct drft_lookup *l,int n);
-extern void spx_drft_clear(struct drft_lookup *l);
-
+extern void lms_block_fft(short *in, short *dest, short *out, struct adpparam *param,int upadat_flag);
+extern void *adp_filter_init(int size);
 #ifdef __cplusplus
 }
 #endif

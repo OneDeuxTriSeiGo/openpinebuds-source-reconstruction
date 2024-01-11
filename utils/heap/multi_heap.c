@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
@@ -20,13 +20,11 @@
 #include <stdio.h>
 #include <multi_heap.h>
 #include "multi_heap_internal.h"
+#include "hal_trace.h"
 
 /* Note: Keep platform-specific parts in this header, this source
    file should depend on libc only */
 #include "multi_heap_platform.h"
-
-/* Defines compile-time configuration macros */
-#include "multi_heap_config.h"
 
 #ifndef MULTI_HEAP_POISONING
 /* if no heap poisoning, public API aliases directly to these implementations */
@@ -64,8 +62,8 @@ void *multi_heap_get_block_owner(multi_heap_block_handle_t block)
 
 #endif
 
-#define ALIGN(X) ((X) & ~(sizeof(void *)-1))
-#define ALIGN_UP(X) ALIGN((X)+sizeof(void *)-1)
+#define HEAP_ALIGN(X) ((X) & ~(sizeof(void *)-1))
+#define HEAP_ALIGN_UP(X) HEAP_ALIGN((X)+sizeof(void *)-1)
 
 struct heap_block;
 
@@ -99,10 +97,14 @@ typedef struct heap_block {
  */
 typedef struct multi_heap_info {
     void *lock;
+    size_t total_bytes;
     size_t free_bytes;
     size_t minimum_free_bytes;
     heap_block_t *last_block;
     heap_block_t first_block; /* initial 'free block', never allocated */
+#if defined(MULTI_HEAP_DEFAULT_INT_LOCK)
+    size_t int_lock;
+#endif
 } heap_t;
 
 /* Given a pointer to the 'data' field of a block (ie the previous malloc/realloc result), return a pointer to the
@@ -267,7 +269,7 @@ static void split_if_necessary(heap_t *heap, heap_block_t *block, size_t size, h
     const size_t block_size = block_data_size(block);
     MULTI_HEAP_ASSERT(!is_free(block), block); // split block shouldn't be free
     MULTI_HEAP_ASSERT(size <= block_size, block); // size should be valid
-    size = ALIGN_UP(size);
+    size = HEAP_ALIGN_UP(size);
 
     /* can't split the head or tail block */
     assert(!is_first_block(heap, block));
@@ -328,12 +330,17 @@ size_t multi_heap_get_allocated_size_impl(multi_heap_handle_t heap, void *p)
 
 multi_heap_handle_t multi_heap_register_impl(void *start, size_t size)
 {
-    heap_t *heap = (heap_t *)ALIGN_UP((intptr_t)start);
-    uintptr_t end = ALIGN((uintptr_t)start + size);
+    TRACE(2,"multi_heap_register_impl start=%p,size=%d",start,size);
+    heap_t *heap = (heap_t *)HEAP_ALIGN_UP((intptr_t)start);
+    uintptr_t end = HEAP_ALIGN((uintptr_t)start + size);
     if (end - (uintptr_t)start < sizeof(heap_t) + 2*sizeof(heap_block_t)) {
         return NULL; /* 'size' is too small to fit a heap here */
     }
+#if defined(MULTI_HEAP_DEFAULT_INT_LOCK)
+    heap->lock = (void *)(&heap->int_lock);
+#else
     heap->lock = NULL;
+#endif
     heap->last_block = (heap_block_t *)(end - sizeof(heap_block_t));
 
     /* first 'real' (allocatable) free block goes after the heap structure */
@@ -356,9 +363,9 @@ multi_heap_handle_t multi_heap_register_impl(void *start, size_t size)
        - minus header of first_free_block
        - minus whole block at heap->last_block
     */
-    heap->free_bytes = ALIGN(size) - sizeof(heap_t) - sizeof(first_free_block->header) - sizeof(heap_block_t);
+    heap->free_bytes = HEAP_ALIGN(size) - sizeof(heap_t) - sizeof(first_free_block->header) - sizeof(heap_block_t);
     heap->minimum_free_bytes = heap->free_bytes;
-
+    heap->total_bytes = HEAP_ALIGN(size);
     return heap;
 }
 
@@ -404,7 +411,7 @@ void *multi_heap_malloc_impl(multi_heap_handle_t heap, size_t size)
     heap_block_t *prev_free = NULL;
     heap_block_t *prev = NULL;
     size_t best_size = SIZE_MAX;
-    size = ALIGN_UP(size);
+    size = HEAP_ALIGN_UP(size);
 
     if (size == 0 || heap == NULL) {
         return NULL;
@@ -419,6 +426,7 @@ void *multi_heap_malloc_impl(multi_heap_handle_t heap, size_t size)
     */
     if (heap->free_bytes < size) {
         MULTI_HEAP_UNLOCK(heap->lock);
+        ASSERT(0, "[%s] need size = %d, heap->free_bytes = %d", __func__, size, heap->free_bytes);
         return NULL;
     }
 
@@ -507,7 +515,7 @@ void *multi_heap_realloc_impl(multi_heap_handle_t heap, void *p, size_t size)
 {
     heap_block_t *pb = get_block(p);
     void *result;
-    size = ALIGN_UP(size);
+    size = HEAP_ALIGN_UP(size);
 
     assert(heap != NULL);
 
@@ -595,9 +603,9 @@ void *multi_heap_realloc_impl(multi_heap_handle_t heap, void *p, size_t size)
     return result;
 }
 
-#define FAIL_PRINT(MSG, ...) do {                                       \
+#define FAIL_PRINT(num,MSG, ...) do {                                       \
         if (print_errors) {                                             \
-            MULTI_HEAP_STDERR_PRINTF(MSG, __VA_ARGS__);                 \
+            MULTI_HEAP_STDERR_PRINTF(num,MSG, __VA_ARGS__);                 \
         }                                                               \
         valid = false;                                                  \
     }                                                                   \
@@ -618,23 +626,23 @@ bool multi_heap_check(multi_heap_handle_t heap, bool print_errors)
     /* note: not using get_next_block() in loop, so that assertions aren't checked here */
     for(heap_block_t *b = &heap->first_block; b != NULL; b = (heap_block_t *)(b->header & NEXT_BLOCK_MASK)) {
         if (b == prev) {
-            FAIL_PRINT("CORRUPT HEAP: Block %p points to itself\n", b);
+            FAIL_PRINT(1,"CORRUPT HEAP: Block %p points to itself\n", b);
             goto done;
         }
         if (b < prev) {
-            FAIL_PRINT("CORRUPT HEAP: Block %p is before prev block %p\n", b, prev);
+            FAIL_PRINT(2,"CORRUPT HEAP: Block %p is before prev block %p\n", b, prev);
             goto done;
         }
         if (b > heap->last_block || b < &heap->first_block) {
-            FAIL_PRINT("CORRUPT HEAP: Block %p is outside heap (last valid block %p)\n", b, prev);
+            FAIL_PRINT(2,"CORRUPT HEAP: Block %p is outside heap (last valid block %p)\n", b, prev);
             goto done;
         }
         if (is_free(b)) {
             if (prev != NULL && is_free(prev) && !is_first_block(heap, prev) && !is_last_block(b)) {
-                FAIL_PRINT("CORRUPT HEAP: Two adjacent free blocks found, %p and %p\n", prev, b);
+                FAIL_PRINT(2,"CORRUPT HEAP: Two adjacent free blocks found, %p and %p\n", prev, b);
             }
             if (expected_free != NULL && expected_free != b) {
-                FAIL_PRINT("CORRUPT HEAP: Prev free block %p pointed to next free %p but this free block is %p\n",
+                FAIL_PRINT(3,"CORRUPT HEAP: Prev free block %p pointed to next free %p but this free block is %p\n",
                        prev_free, expected_free, b);
             }
             prev_free = b;
@@ -663,14 +671,14 @@ bool multi_heap_check(multi_heap_handle_t heap, bool print_errors)
     } /* for(heap_block_t b = ... */
 
     if (prev != heap->last_block) {
-        FAIL_PRINT("CORRUPT HEAP: Last block %p not %p\n", prev, heap->last_block);
+        FAIL_PRINT(2,"CORRUPT HEAP: Last block %p not %p\n", prev, heap->last_block);
     }
     if (!is_free(heap->last_block)) {
-        FAIL_PRINT("CORRUPT HEAP: Expected prev block %p to be free\n", heap->last_block);
+        FAIL_PRINT(1,"CORRUPT HEAP: Expected prev block %p to be free\n", heap->last_block);
     }
 
     if (heap->free_bytes != total_free_bytes) {
-        FAIL_PRINT("CORRUPT HEAP: Expected %u free bytes counted %u\n", (unsigned)heap->free_bytes, (unsigned)total_free_bytes);
+        FAIL_PRINT(2,"CORRUPT HEAP: Expected %u free bytes counted %u\n", (unsigned)heap->free_bytes, (unsigned)total_free_bytes);
     }
 
  done:
@@ -684,13 +692,13 @@ void multi_heap_dump(multi_heap_handle_t heap)
     assert(heap != NULL);
 
     multi_heap_internal_lock(heap);
-    MULTI_HEAP_STDERR_PRINTF("Heap start %p end %p\nFirst free block %p\n", &heap->first_block, heap->last_block, heap->first_block.next_free);
+    MULTI_HEAP_STDERR_PRINTF(3,"Heap start %p end %p\nFirst free block %p\n", &heap->first_block, heap->last_block, heap->first_block.next_free);
     for(heap_block_t *b = &heap->first_block; b != NULL; b = get_next_block(b)) {
-        MULTI_HEAP_STDERR_PRINTF("Block %p data size 0x%08x bytes next block %p", b, block_data_size(b), get_next_block(b));
+        MULTI_HEAP_STDERR_PRINTF(3,"Block %p data size 0x%08x bytes next block %p", b, block_data_size(b), get_next_block(b));
         if (is_free(b)) {
-            MULTI_HEAP_STDERR_PRINTF(" FREE. Next free %p\n", b->next_free);
+            MULTI_HEAP_STDERR_PRINTF(1," FREE. Next free %p\n", b->next_free);
         } else {
-            MULTI_HEAP_STDERR_PRINTF("%s", "\n"); /* C macros & optional __VA_ARGS__ */
+            MULTI_HEAP_STDERR_PRINTF(1,"%s", "\n"); /* C macros & optional __VA_ARGS__ */
         }
     }
     multi_heap_internal_unlock(heap);
@@ -737,6 +745,7 @@ void multi_heap_get_info_impl(multi_heap_handle_t heap, multi_heap_info_t *info)
     }
 
     info->minimum_free_bytes = heap->minimum_free_bytes;
+    info->total_bytes = heap->total_bytes;
     // heap has wrong total size (address printed here is not indicative of the real error)
     MULTI_HEAP_ASSERT(info->total_free_bytes == heap->free_bytes, heap);
 

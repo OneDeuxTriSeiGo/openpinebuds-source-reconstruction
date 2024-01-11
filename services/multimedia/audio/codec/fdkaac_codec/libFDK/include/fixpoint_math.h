@@ -137,6 +137,8 @@ void LdDataVector(FIXP_DBL *srcVector, FIXP_DBL *destVector, INT number);
 FIXP_DBL CalcInvLdData(FIXP_DBL op);
 
 
+    extern const FIXP_DBL ldIntCoeff[];
+extern const FIXP_DBL invSqrtTab[];
 void     InitLdInt();
 FIXP_DBL CalcLdInt(INT i);
 

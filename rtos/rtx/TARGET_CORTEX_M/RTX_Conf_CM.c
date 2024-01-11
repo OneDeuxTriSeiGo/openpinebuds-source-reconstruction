@@ -32,8 +32,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
 
+#include  "stdarg.h"
+#include  "stdio.h"
 #include "cmsis_os.h"
+#include "rt_System.h"
+#include "rt_Time.h"
+#include "hal_timer.h"
+#include "hal_trace.h"
+#include "hal_sleep.h"
+#include "cmsis.h"
+#include "hwtimer_list.h"
 
+#define WEAK __attribute__((weak))
+
+void WEAK sleep(void)
+{
+    hal_sleep_enter_sleep();
+}
 
 /*----------------------------------------------------------------------------
  *      RTX User configuration part BEGIN
@@ -49,18 +64,18 @@
 //       counting "main", but not counting "osTimerThread"
 //   <i> Default: 6
 #ifndef OS_TASKCNT
-#    define OS_TASKCNT         14
+#    define OS_TASKCNT         __BEST_D_OS_TASKCNT
 #endif
 
 //   <o>Scheduler (+ interrupts) stack size [bytes] <64-4096:8><#/4>
 #ifndef OS_SCHEDULERSTKSIZE
-#      define OS_SCHEDULERSTKSIZE    256
+#      define OS_SCHEDULERSTKSIZE    __BEST_D_OS_SCHEDULERSTKSIZE
 #endif
 
 //   <o>Idle stack size [bytes] <64-4096:8><#/4>
 //   <i> Defines default stack size for the Idle thread.
 #ifndef OS_IDLESTKSIZE
- #define OS_IDLESTKSIZE         128
+ #define OS_IDLESTKSIZE         256
 #endif
 
 //   <o>Timer Thread stack size [bytes] <64-4096:8><#/4>
@@ -138,7 +153,7 @@
 //   <i> Number of concurrent active timer callback functions.
 //   <i> Default: 4
 #ifndef OS_TIMERCBQSZ
- #define OS_TIMERCBQS   4
+ #define OS_TIMERCBQS   16
 #endif
 
 // </e>
@@ -171,39 +186,108 @@
  *      RTX User configuration part END
  *---------------------------------------------------------------------------*/
 
-#define OS_TRV          ((uint32_t)(((double)OS_CLOCK*(double)OS_TICK)/1E6)-1)
+#define OS_TRV          ((uint32_t)((((float)OS_CLOCK*(float)OS_TICK))/(float)1E6+0.5f)-1)
 
+U32 os_get_trv       (void)
+{
+    return OS_TRV;
+}
+
+extern void rtx_show_all_threads(void);
+
+#if TASK_HUNG_CHECK_ENABLED
+extern void check_hung_tasks(void);
+#endif
 
 /*----------------------------------------------------------------------------
  *      OS Idle daemon
  *---------------------------------------------------------------------------*/
 void os_idle_demon (void) {
-  /* The idle demon is a system thread, running when no other thread is      */
-  /* ready to run.                                                           */
+    /* The idle demon is a system thread, running when no other thread is      */
+    /* ready to run.                                                           */
 
-  /* Sleep: ideally, we should put the chip to sleep.
+    unsigned int os_ticks;
+    HWTIMER_ID timer;
+    int ret;
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 2)
+    unsigned int start_time;
+    unsigned int start_os_time;
+    unsigned int start_tick;
+#endif
+#if defined(FPGA) || !(defined(ROM_BUILD) || defined(PROGRAMMER))
+    ret = hal_trace_crash_dump_register(HAL_TRACE_CRASH_DUMP_MODULE_SYS, rtx_show_all_threads);
+    ASSERT(ret == 0, "IdleTask: Failed to register crash dump callback");
+#endif
+    timer = hwtimer_alloc((HWTIMER_CALLBACK_T)rt_psh_req, NULL);
+    ASSERT(timer, "IdleTask: Failed to alloc sleep timer");
+    /* Sleep: ideally, we should put the chip to sleep.
      Unfortunately, this usually requires disconnecting the interface chip (debugger).
      This can be done, but it would break the local file system.
-  */
-  for (;;) {
-      // sleep();
-  }
+    */
+    for (;;) {
+#if TASK_HUNG_CHECK_ENABLED
+        check_hung_tasks();
+#endif
+
+        if (hal_sleep_light_sleep() == HAL_SLEEP_STATUS_DEEP) {
+            os_ticks = rt_suspend();
+            if (os_ticks) {
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 2)
+                __disable_irq();
+#endif
+                ret = hwtimer_start(timer, MS_TO_HWTICKS(os_ticks * OS_TICK / 1000));
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 2)
+                start_time = hal_sys_timer_get();
+                start_tick = SysTick->VAL;
+                start_os_time = os_time;
+                __enable_irq();
+#endif
+                if (ret == 0) {
+                    sleep();
+                    ret = hwtimer_stop(timer);
+                }
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 2)
+                if (hal_sys_timer_get() - start_time >= MS_TO_HWTICKS(1)) {
+                    TRACE(4,"[%u/0x%X][%2u/%u] os_idle_demon start timer",
+                        TICKS_TO_MS(start_time), start_time, start_tick, start_os_time);
+                }
+#endif
+            }
+            rt_resume(os_ticks);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------------
  *      RTX Errors
  *---------------------------------------------------------------------------*/
-extern void mbed_die(void);
-
+extern void rtx_show_current_thread(void);
 void os_error (uint32_t err_code) {
     /* This function is called when a runtime error is detected. Parameter     */
     /* 'err_code' holds the runtime error code (defined in RTX_Conf.h).      */
-    mbed_die();
+
+    rtx_show_current_thread();
+    ASSERT(0, "os_error: %d ThreadId:%d\n", err_code, osGetThreadIntId());
+
+    //mbed_die();
+}
+
+void os_error_str (const char *str, ...) {
+    va_list ap;
+    static char buf[50];
+
+    va_start(ap, str);
+    vsnprintf(buf, sizeof(buf), str, ap);
+    va_end(ap);
+
+    ASSERT(0, "%s\n", buf);
 }
 
 void sysThreadError(osStatus status) {
     if (status != osOK) {
-        mbed_die();
+        TRACE_IMM(1,"osStatus: %08x\n", status);
+        rtx_show_current_thread();
+        ASSERT(0, "sysThreadError ThreadId:%d\n", osGetThreadIntId());
     }
 }
 

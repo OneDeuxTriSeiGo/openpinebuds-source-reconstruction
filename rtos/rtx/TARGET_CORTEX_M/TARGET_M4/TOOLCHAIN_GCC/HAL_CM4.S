@@ -32,6 +32,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *---------------------------------------------------------------------------*/
 
+        #include "cmsis.h"
+
         .file   "HAL_CM4.S"
         .syntax unified
 
@@ -208,9 +210,21 @@ SVC_Handler_Veneer:
         BXEQ    LR                      /* RETI, no task switch */
         .endif
 
-        CBZ     R1,SVC_Next             /* Runtask deleted? */
+        CBNZ    R1,SVC_ContextSave      /* Runtask not deleted? */
+
+        #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
         TST     LR,#0x10                /* is it extended frame? */
-        #ifdef  __FPU_PRESENT
+        BNE     SVC_ContextRestore
+        LDR     R1,=0xE000EF34
+        LDR     R0,[R1]                 /* Load FPCCR */
+        BIC     R0,#1                   /* Clear LSPACT (Lazy state) */
+        STR     R0,[R1]                 /* Store FPCCR */
+        #endif
+        B       SVC_ContextRestore
+
+SVC_ContextSave:
+        TST     LR,#0x10                /* is it extended frame? */
+        #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
         ITTE    EQ
         VSTMDBEQ R12!,{S16-S31}         /* yes, stack also VFP hi-regs */
         #else
@@ -226,14 +240,14 @@ SVC_Handler_Veneer:
         BL      rt_stk_check            /* Check for Stack overflow */
         POP     {R2,R3}
 
-SVC_Next:
+SVC_ContextRestore:
         STR     R2,[R3]                 /* os_tsk.run = os_tsk.new */
 
         LDR     R12,[R2,#TCB_TSTACK]    /* os_tsk.new->tsk_stack */
         LDMIA   R12!,{R4-R11}           /* Restore New Context */
         LDRB    R0,[R2,#TCB_STACKF]     /* Stack Frame */
         CMP     R0,#0                   /* Basic/Extended Stack Frame */
-        #ifdef  __FPU_PRESENT
+        #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
         ITTE    NE
         VLDMIANE R12!,{S16-S31}         /* restore VFP hi-registers */
         #else
@@ -311,7 +325,7 @@ Sys_Switch:
 
         MRS     R12,PSP                 /* Read PSP */
         TST     LR,#0x10                /* is it extended frame? */
-        #ifdef  __FPU_PRESENT
+        #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
         ITTE    EQ
         VSTMDBEQ R12!,{S16-S31}         /* yes, stack also VFP hi-regs */
         #else
@@ -333,7 +347,7 @@ Sys_Switch:
         LDMIA   R12!,{R4-R11}           /* Restore New Context */
         LDRB    R0,[R2,#TCB_STACKF]     /* Stack Frame */
         CMP     R0,#0                   /* Basic/Extended Stack Frame */
-        #ifdef  __FPU_PRESENT
+        #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
         ITTE    NE
         VLDMIANE R12!,{S16-S31}         /* restore VFP hi-registers */
         #else

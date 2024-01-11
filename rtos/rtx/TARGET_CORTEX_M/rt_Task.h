@@ -71,3 +71,4 @@ extern OS_RESULT rt_tsk_prio   (OS_TID task_id, U8 new_prio);
 extern OS_RESULT rt_tsk_delete (OS_TID task_id);
 extern void      rt_sys_init   (void);
 extern void      rt_sys_start  (void);
+extern void      rt_tsk_show   (P_TCB tcb);

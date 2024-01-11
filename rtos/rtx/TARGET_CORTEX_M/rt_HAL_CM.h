@@ -38,6 +38,8 @@
 #define ITM_ITMENA      0x00000001
 #define MAGIC_WORD      0xE25A2EA5
 
+#define SYSTICK_EXTERNAL_CLOCK          1
+
 #if defined (__CC_ARM)          /* ARM Compiler */
 
 #if ((__TARGET_ARCH_7_M || __TARGET_ARCH_7E_M) && !NO_EXCLUSIVE_ACCESS)
@@ -157,8 +159,13 @@ static inline U8 __clz(U32 value)
 #define OS_PENDING      ((NVIC_INT_CTRL >> 26) & (1<<2 | 1))
 #define OS_UNPEND(fl)   NVIC_INT_CTRL  = (*fl = OS_PENDING) << 25
 #define OS_PEND(fl,p)   NVIC_INT_CTRL  = (fl | p<<2) << 26
+#if (SYSTICK_EXTERNAL_CLOCK)
+#define OS_LOCK()       NVIC_ST_CTRL   =  0x0001
+#define OS_UNLOCK()     NVIC_ST_CTRL   =  0x0003
+#else
 #define OS_LOCK()       NVIC_ST_CTRL   =  0x0005
 #define OS_UNLOCK()     NVIC_ST_CTRL   =  0x0007
+#endif
 
 #define OS_X_PENDING    ((NVIC_INT_CTRL >> 28) & 1)
 #define OS_X_UNPEND(fl) NVIC_INT_CTRL  = (*fl = OS_X_PENDING) << 27
@@ -222,9 +229,13 @@ __inline static U32 rt_inc_qi (U32 size, U8 *count, U8 *first) {
 }
 
 __inline static void rt_systick_init (void) {
-  NVIC_ST_RELOAD  = os_trv;
+  NVIC_ST_RELOAD  = os_get_trv();
   NVIC_ST_CURRENT = 0;
+#if (SYSTICK_EXTERNAL_CLOCK)
+  NVIC_ST_CTRL    = 0x0003;
+#else
   NVIC_ST_CTRL    = 0x0007;
+#endif
   NVIC_SYS_PRI3  |= 0xFF000000;
 }
 

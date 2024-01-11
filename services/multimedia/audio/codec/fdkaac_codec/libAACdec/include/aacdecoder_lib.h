@@ -420,6 +420,12 @@ typedef enum {
 
 } AAC_DECODER_ERROR;
 
+typedef enum {
+    AAC_DECODER_CHANNEL_SELECT_SELECT_STEREO ,
+    AAC_DECODER_CHANNEL_SELECT_SELECT_LRMERGE,
+    AAC_DECODER_CHANNEL_SELECT_LCHNL,
+    AAC_DECODER_CHANNEL_SELECT_RCHNL,
+} AAC_DECODER_CHANNEL_SELECT_E;
 
 /** Macro to identify initialization errors. */
 #define IS_INIT_ERROR(err)   ( (((err)>=aac_dec_init_error_start)   && ((err)<=aac_dec_init_error_end))   ? 1 : 0)
@@ -737,6 +743,8 @@ aacDecoder_DecodeFrame ( HANDLE_AACDECODER  self,
  */
 LINKSPEC_H void aacDecoder_Close ( HANDLE_AACDECODER self );
 
+LINKSPEC_CPP bool is_aacDecoder_Close ( HANDLE_AACDECODER self );
+
 /**
  * \brief       Get CStreamInfo handle from decoder.
  *
@@ -753,6 +761,7 @@ LINKSPEC_H CStreamInfo* aacDecoder_GetStreamInfo( HANDLE_AACDECODER self );
  */
 LINKSPEC_H INT aacDecoder_GetLibInfo( LIB_INFO *info );
 
+LINKSPEC_CPP AAC_DECODER_ERROR aacDecoder_DecodeFrame_Config(UINT chnl_sel);
 
 #ifdef __cplusplus
 }

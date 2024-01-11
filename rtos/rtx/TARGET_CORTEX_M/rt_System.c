@@ -44,6 +44,13 @@
 #include "rt_Robin.h"
 #include "rt_HAL_CM.h"
 
+#include "hal_sleep.h"
+#include "hal_timer.h"
+#include "hal_trace.h"
+
+extern void sysTimerTick(void);
+extern uint32_t rt_timer_delay_count(void);
+
 /*----------------------------------------------------------------------------
  *      Global Variables
  *---------------------------------------------------------------------------*/
@@ -57,6 +64,8 @@ int os_tick_irqn;
 static volatile BIT os_lock;
 static volatile BIT os_psh_flag;
 static          U8  pend_flags;
+static          U32 systick_lock_tick;
+static          U32 systick_lock_ts;
 
 /*----------------------------------------------------------------------------
  *      Global Functions
@@ -72,18 +81,45 @@ __RL_RTX_VER    EQU     0x450
 }
 #endif
 
-
 /*--------------------------- rt_suspend ------------------------------------*/
 U32 rt_suspend (void) {
   /* Suspend OS scheduler */
   U32 delta = 0xFFFF;
+  U32 start_tick;
 
+  __disable_irq();
+  start_tick = NVIC_ST_CURRENT;
   rt_tsk_lock();
+  systick_lock_tick = NVIC_ST_CURRENT;
+  systick_lock_ts = hal_sys_timer_get();
+  if (start_tick != 0 && (systick_lock_tick == 0 || start_tick < systick_lock_tick)) {
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 1)
+      TRACE(6,"[%u/0x%X][%2u/%u] rt_suspend corner case: %02u -> %02u",
+        TICKS_TO_MS(hal_sys_timer_get()), hal_sys_timer_get(), NVIC_ST_CURRENT, os_time,
+        start_tick, systick_lock_tick);
+#endif
+      pend_flags |= 1;
+  }
+  if (pend_flags) {
+    delta = 0;
+  }
+  __enable_irq();
+
+  if (delta == 0) {
+    return 0;
+  }
 
   if (os_dly.p_dlnk) {
     delta = os_dly.delta_time;
   }
-#ifndef __CMSIS_RTOS
+#ifdef __CMSIS_RTOS
+  {
+    uint32_t tcnt = rt_timer_delay_count();
+    if (tcnt && tcnt < delta) {
+      delta = tcnt;
+    }
+  }
+#else
   if (os_tmr.next) {
     if (os_tmr.tcnt < delta) delta = os_tmr.tcnt;
   }
@@ -92,62 +128,163 @@ U32 rt_suspend (void) {
   return (delta);
 }
 
-
 /*--------------------------- rt_resume -------------------------------------*/
 void rt_resume (U32 sleep_time) {
   /* Resume OS scheduler after suspend */
-  P_TCB next;
+  //P_TCB next;
   U32   delta;
+  U32   resume_ts;
+  U32   unlock_ts;
+  U32   systick_remain;
+  U32   sleep_ticks;
+  U8    tick_running = 0;
+  const U32 reload = (NVIC_ST_RELOAD + 1);
 
+  __disable_irq();
+  resume_ts = hal_sys_timer_get();
+  __enable_irq();
+
+  sleep_ticks = (resume_ts - systick_lock_ts) * (OS_CLOCK_NOMINAL / CONFIG_SYSTICK_HZ_NOMINAL);
+  if (systick_lock_tick == 0) {
+    sleep_time = sleep_ticks / reload;
+    systick_remain = reload - sleep_ticks % reload;
+  } else if (sleep_ticks >= systick_lock_tick) {
+    delta = sleep_ticks - systick_lock_tick;
+    sleep_time = delta / reload + 1;
+    systick_remain = reload - delta % reload;
+  } else {
+    sleep_time = 0;
+    systick_remain = systick_lock_tick - sleep_ticks;
+  }
+
+  if (sleep_time == 0) {
+    tick_running = 1;
+    goto _task_unlock;
+  }
+
+  // Task switching is allowed in SVC/PENDSV/SYSTICK handlers only
+#if 0
   os_tsk.run->state = READY;
   rt_put_rdy_first (os_tsk.run);
+#endif
+
+_inc_sleep_time:
 
   os_robin.task = NULL;
 
-  /* Update delays. */
-  if (os_dly.p_dlnk) {
-    delta = sleep_time;
-    if (delta >= os_dly.delta_time) {
-      delta   -= os_dly.delta_time;
-      os_time += os_dly.delta_time;
-      os_dly.delta_time = 1;
-      while (os_dly.p_dlnk) {
-        rt_dec_dly();
-        if (delta == 0) break;
-        delta--;
-        os_time++;
+  if (sleep_time) {
+    /* Update delays. */
+    if (os_dly.p_dlnk) {
+      delta = sleep_time;
+      if (delta >= os_dly.delta_time) {
+        delta   -= os_dly.delta_time;
+        os_time += os_dly.delta_time;
+        os_dly.delta_time = 1;
+        while (os_dly.p_dlnk) {
+          rt_dec_dly();
+          if (delta == 0) break;
+          delta--;
+          os_time++;
+        }
+        while (delta) {
+          delta--;
+          os_time++;
+        }
+        rt_psh_req();
+      } else {
+        os_time           += delta;
+        os_dly.delta_time -= delta;
       }
     } else {
-      os_time           += delta;
-      os_dly.delta_time -= delta;
+      os_time += sleep_time;
     }
-  } else {
-    os_time += sleep_time;
-  }
 
-#ifndef __CMSIS_RTOS
-  /* Check the user timers. */
-  if (os_tmr.next) {
+    os_idle_TCB.rtime += sleep_time;
+#ifdef __CMSIS_RTOS
     delta = sleep_time;
-    if (delta >= os_tmr.tcnt) {
-      delta   -= os_tmr.tcnt;
-      os_tmr.tcnt = 1;
-      while (os_tmr.next) {
-        rt_tmr_tick();
-        if (delta == 0) break;
-        delta--;
-      }
-    } else {
-      os_tmr.tcnt -= delta;
+    while (delta && rt_timer_delay_count()) {
+      sysTimerTick();
+      delta--;
     }
-  }
+#else
+    /* Check the user timers. */
+    if (os_tmr.next) {
+      delta = sleep_time;
+      if (delta >= os_tmr.tcnt) {
+        delta   -= os_tmr.tcnt;
+        os_tmr.tcnt = 1;
+        while (os_tmr.next) {
+          rt_tmr_tick();
+          if (delta == 0) break;
+          delta--;
+        }
+      } else {
+        os_tmr.tcnt -= delta;
+      }
+    }
 #endif
+  } // sleep_time
 
+  // Task switching is allowed in SVC/PENDSV/SYSTICK handlers only
+#if 0
   /* Switch back to highest ready task */
   next = rt_get_first (&os_rdy);
   rt_switch_req (next);
+#endif
 
-  rt_tsk_unlock();
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 1)
+  if (sleep_time > 0) {
+    TRACE(7,"[%u/0x%X][%2u/%u] rt_resume: sleep_ticks=%u sleep_time=%u systick_remain=%u",
+      TICKS_TO_MS(hal_sys_timer_get()), hal_sys_timer_get(), NVIC_ST_CURRENT, os_time,
+      sleep_ticks, sleep_time, systick_remain);
+  }
+#endif
+
+_task_unlock:
+
+  sleep_time = 0;
+
+  __disable_irq();
+  // Handle corner case: systick counter wraps inside rt_resume()
+  unlock_ts = hal_sys_timer_get();
+  sleep_ticks = (unlock_ts - resume_ts) * 2;
+  // systick_remain value range: [1, reload]
+  if (sleep_ticks >= systick_remain) {
+#if defined(DEBUG_SLEEP) && (DEBUG_SLEEP >= 1)
+    TRACE(6,"[%u/0x%X][%2u/%u] rt_resume corner case: sleep_ticks=%u systick_remain=%u",
+      TICKS_TO_MS(hal_sys_timer_get()), hal_sys_timer_get(), NVIC_ST_CURRENT, os_time,
+      sleep_ticks, systick_remain);
+    // Update timestamp since traces also consume time
+    unlock_ts = hal_sys_timer_get();
+    sleep_ticks = (unlock_ts - resume_ts) * (OS_CLOCK_NOMINAL / CONFIG_SYSTICK_HZ_NOMINAL);
+#endif
+    delta = sleep_ticks - systick_remain;
+    sleep_time = delta / reload + 1;
+    systick_remain = reload - delta % reload;
+    resume_ts = unlock_ts;
+  } else {
+    if (tick_running == 0) {
+      systick_remain -= sleep_ticks;
+      // Adjust systick_remain value range to [0, reload - 1]
+      if (systick_remain == reload) {
+        systick_remain = 0;
+      }
+      if (systick_remain) {
+        NVIC_ST_RELOAD  = systick_remain;
+        NVIC_ST_CURRENT = 0;
+        while (NVIC_ST_CURRENT == 0);
+        NVIC_ST_RELOAD  = reload - 1;
+      } else {
+        NVIC_ST_CURRENT = 0;
+      }
+    }
+    rt_tsk_unlock();
+  }
+  __enable_irq();
+
+  if (sleep_time) {
+    goto _inc_sleep_time;
+  }
 }
 
 
@@ -182,6 +319,8 @@ void rt_tsk_unlock (void) {
     OS_X_PEND (pend_flags, os_psh_flag);
     os_psh_flag = __FALSE;
   }
+  // Allow cpu sleep
+  hal_cpu_wake_unlock(HAL_CPU_WAKE_LOCK_USER_RTOS);
 }
 
 
@@ -194,6 +333,8 @@ void rt_psh_req (void) {
   }
   else {
     os_psh_flag = __TRUE;
+    // Prohibit cpu sleep when an OS service request is enqueued during os lock (rt_suspend)
+    hal_cpu_wake_lock(HAL_CPU_WAKE_LOCK_USER_RTOS);
   }
 }
 
@@ -207,7 +348,11 @@ void rt_pop_req (void) {
   U32  idx;
 
   os_tsk.run->state = READY;
-  rt_put_rdy_first (os_tsk.run);
+  if (os_tsk.run == &os_idle_TCB) {
+    rt_put_rdy_last (os_tsk.run);
+  } else {
+    rt_put_rdy_first (os_tsk.run);
+  }
 
   idx = os_psq->last;
   while (os_psq->count) {
@@ -251,12 +396,13 @@ __weak void os_tick_irqack (void) {
 
 
 /*--------------------------- rt_systick ------------------------------------*/
-
-extern void sysTimerTick(void);
-
 void rt_systick (void) {
   /* Check for system clock update, suspend running task. */
   P_TCB next;
+
+#if __RTX_CPU_STATISTICS__
+  os_tsk.run->rtime += 1;
+#endif
 
   os_tsk.run->state = READY;
   rt_put_rdy_first (os_tsk.run);
