@@ -29,8 +29,8 @@ endif
 endif
 
 # Convenient variables
-lparen	:= (
-rparen	:= )
+lparen  := (
+rparen  := )
 comma   := ,
 quote   := "
 squote  := '
@@ -46,18 +46,18 @@ endif
 ###
 # Remove/copy commands
 ifeq ($(WIN_PLAT),y)
-CMDRMFILE	= del /f /q $(subst /,\,$1) >nul 2>&1
-CMDRMFILER	= cd $(subst /,\,$1) && del /f /q /s $(subst /,\,$2)
-CMDRMDIR	= rmdir /s /q $(subst /,\,$1) >nul 2>&1 || del /f /q /s $(subst /,\,$1)\*
-CMDCPFILE	= copy /y $(subst /,\,$1 $2)
+CMDRMFILE       = del /f /q $(subst /,\,$1) >nul 2>&1
+CMDRMFILER      = cd $(subst /,\,$1) && del /f /q /s $(subst /,\,$2)
+CMDRMDIR        = rmdir /s /q $(subst /,\,$1) >nul 2>&1 || del /f /q /s $(subst /,\,$1)\*
+CMDCPFILE       = copy /y $(subst /,\,$1 $2)
 else
-CMDRMFILE	= rm -f $1
-CMDRMFILER	= find $1 $(RCS_FIND_IGNORE) \
-		   \( $(addprefix -name ,'$(firstword $2)') \
-		      $(addprefix -o -name ',$(addsuffix ',$(filter-out $(firstword $2),$2))) \) \
-		    -type f -print | xargs rm -f
-CMDRMDIR	= rm -fr $1
-CMDCPFILE	= cp -f $1 $2
+CMDRMFILE       = rm -f $1
+CMDRMFILER      = find $1 $(RCS_FIND_IGNORE) \
+                   \( $(addprefix -name ,'$(firstword $2)') \
+                      $(addprefix -o -name ',$(addsuffix ',$(filter-out $(firstword $2),$2))) \) \
+                    -type f -print | xargs rm -f
+CMDRMDIR        = rm -fr $1
+CMDCPFILE       = cp -f $1 $2
 endif
 
 ###
@@ -224,10 +224,10 @@ any-prereq = $(filter-out $(PHONY),$?) $(filter-out $(PHONY) $(wildcard $^),$^)
 ifeq ($(WIN_PLAT),y)
 depfile-new = echo. > $(depfile) && \
               echo cmd_$@ := $(make-cmd) >> $(depfile) && \
-	      echo. >> $(depfile)
+              echo. >> $(depfile)
 depfile-add = echo. >> $(depfile) && \
               echo cmd_$@ := $(make-cmd) >> $(depfile) && \
-	      echo. >> $(depfile)
+              echo. >> $(depfile)
 else
 depfile-new = printf '\n%s\n' 'cmd_$@ := $(make-cmd)' > $(depfile)
 depfile-add = printf '\n%s\n' 'cmd_$@ := $(make-cmd)' >> $(depfile)
@@ -236,25 +236,25 @@ endif
 # Execute command if command has changed or prerequisite(s) are updated.
 #
 if_changed = $(if $(strip $(any-prereq) $(arg-check)),                       \
-	@ ( $(echo-cmd) $(cmd_$(1)) ) &&                                     \
-	  ( $(depfile-new) ))
+        @ ( $(echo-cmd) $(cmd_$(1)) ) &&                                     \
+          ( $(depfile-new) ))
 
 if_changed2 = $(if $(strip $(any-prereq) $(call arg-check,$(2))),             \
-	@ ( $(call echo-cmd,$(1)) $(cmd_$(1)) && \
-	    $(call echo-cmd,$(2)) $(cmd_$(2)) ) &&                           \
-	  ( $(call depfile-new,$(2)) ))
+        @ ( $(call echo-cmd,$(1)) $(cmd_$(1)) && \
+            $(call echo-cmd,$(2)) $(cmd_$(2)) ) &&                           \
+          ( $(call depfile-new,$(2)) ))
 
 # Execute the command and also postprocess generated .d dependencies file.
 if_changed_dep = $(if $(strip $(any-prereq) $(arg-check)),                   \
-	@ ( $(echo-cmd) $(cmd_$(1)) ) &&                                     \
-	  ( $(depfile-add) ))
+        @ ( $(echo-cmd) $(cmd_$(1)) ) &&                                     \
+          ( $(depfile-add) ))
 
 # Usage: $(call if_changed_rule,foo)
 # Will check if $(cmd_foo) or any of the prerequisites changed,
 # and if so will execute $(rule_foo).
 if_changed_rule = $(if $(strip $(any-prereq) $(arg-check)),                  \
-	@ ( $(rule_$(1)) ) &&                                                \
-	  ( $(depfile-add) ))
+        @ ( $(rule_$(1)) ) &&                                                \
+          ( $(depfile-add) ))
 
 ###
 # why - tell why a a target got build

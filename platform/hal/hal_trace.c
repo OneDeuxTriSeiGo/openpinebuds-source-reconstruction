@@ -3896,22 +3896,22 @@ int hal_trace_output_crlf(const unsigned char *buf, unsigned int len,bool block_
     p_data = (char *)buf;
     j=0;
     for(int i =0;i<str_len;i++){
-	    p_str[j++] = p_data[i];
-	    if(p_data[i]=='\r' && p_data[i+1]!='\n'){
-		    p_str[j]='\n';
+        p_str[j++] = p_data[i];
+        if(p_data[i]=='\r' && p_data[i+1]!='\n'){
+            p_str[j]='\n';
             j++;
-		    continue;
-	    }
-	    if(p_data[i]=='\n'){
-		    p_str[j-1] = '\r';
-		    p_str[j] = '\n';
+            continue;
+        }
+        if(p_data[i]=='\n'){
+            p_str[j-1] = '\r';
+            p_str[j] = '\n';
             j++;
-		    continue;
-	    }
-	    if(j<UART_MAX_TEMP)
-	    {
-		    continue;
-	    }
+            continue;
+        }
+        if(j<UART_MAX_TEMP)
+        {
+            continue;
+        }
         if(j>0){
             hal_trace_output((const unsigned char *)p_str,j);
             j=0;

@@ -63,11 +63,11 @@ __STATIC_FORCEINLINE uint32_t int_lock_global(void)
     }
     return st;
 #else
-	uint32_t pri = __get_PRIMASK();
-	if ((pri & 0x1) == 0) {
-		__disable_irq();
-	}
-	return pri;
+    uint32_t pri = __get_PRIMASK();
+    if ((pri & 0x1) == 0) {
+        __disable_irq();
+    }
+    return pri;
 #endif
 }
 
@@ -80,9 +80,9 @@ __STATIC_FORCEINLINE void int_unlock_global(uint32_t pri)
         __set_CPSR(cpsr);
     }
 #else
-	if ((pri & 0x1) == 0) {
-		__enable_irq();
-	}
+    if ((pri & 0x1) == 0) {
+        __enable_irq();
+    }
 #endif
 }
 

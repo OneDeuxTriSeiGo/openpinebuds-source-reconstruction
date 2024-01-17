@@ -34,11 +34,11 @@ extern "C" {
      ((*(volatile unsigned int *)((reg_base)+(a))) = v)
 
 
-#define	PSRAM_STAT_BUSY  (0x01)
-#define	PSRAM_STAT_TXFIFO_EMPTY  	(0x02)
-#define	PSRAM_STAT_TXFIFO_FULL 	(0x04)
-#define	PSRAM_STAT_RXFIFO_EMPTY 	(0x08)
-#define    PSRAM_STAT_RXFIFO_COUNT (0x1f << 4)
+#define PSRAM_STAT_BUSY         (0x01)
+#define PSRAM_STAT_TXFIFO_EMPTY (0x02)
+#define PSRAM_STAT_TXFIFO_FULL  (0x04)
+#define PSRAM_STAT_RXFIFO_EMPTY (0x08)
+#define PSRAM_STAT_RXFIFO_COUNT (0x1f << 4)
 
 /* ip ops */
 #if 1

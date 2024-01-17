@@ -50,7 +50,7 @@ uint32_t __get_SPSR(void);
 void __set_SPSR(uint32_t spsr);
 #endif
 
-#define CA_L1C_LEVEL	(2U)
+#define CA_L1C_LEVEL    (2U)
 
 /*******************************************************************************
  *                 CMSIS definitions

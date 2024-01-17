@@ -21,7 +21,7 @@ extern "C" {
 #if 0
 #include "plat_types.h"
 
-#define CRASH_DUMP_MAGIC_CODE	  0x504D5544
+#define CRASH_DUMP_MAGIC_CODE     0x504D5544
 #define CRASH_DUMP_ASSERT_CODE    0xEB6D0924
 #define CRASH_DUMP_EXCEPTION_CODE 0xC78BA332
 /*

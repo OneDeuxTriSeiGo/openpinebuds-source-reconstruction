@@ -23,45 +23,45 @@ extern "C" {
 
 typedef struct
 {
-	uint8_t		isHasCrcCheck 	:	1;
-	uint8_t		reserved		:	7;
-	uint8_t		reservedBytes[7];
+    uint8_t     isHasCrcCheck   :   1;
+    uint8_t     reserved        :   7;
+    uint8_t     reservedBytes[7];
 } APP_TOTA_START_DATA_XFER_T;
 
 typedef struct
 {
-	uint8_t		isHasWholeCrcCheck 	:	1;
-	uint8_t		reserved		:	7;
-	uint8_t		reservedBytes1[3];
-	uint32_t	wholeDataLenToCheck;
-	uint32_t	crc32OfWholeData;
+    uint8_t     isHasWholeCrcCheck  :   1;
+    uint8_t     reserved        :   7;
+    uint8_t     reservedBytes1[3];
+    uint32_t    wholeDataLenToCheck;
+    uint32_t    crc32OfWholeData;
 } APP_TOTA_STOP_DATA_XFER_T;
 
 typedef struct
 {
-	uint32_t	segmentDataLen;
-	uint32_t	crc32OfSegment;
-	uint8_t		reserved[4];
+    uint32_t    segmentDataLen;
+    uint32_t    crc32OfSegment;
+    uint8_t     reserved[4];
 } APP_TOTA_VERIFY_DATA_SEGMENT_T;
 
 typedef struct
 {
-	uint32_t	reserved;
+    uint32_t    reserved;
 } APP_TOTA_START_DATA_XFER_RSP_T;
 
 typedef struct
 {
-	uint32_t	reserved;
+    uint32_t    reserved;
 } APP_TOTA_STOP_DATA_XFER_RSP_T;
 
 typedef struct
 {
-	uint32_t	reserved;
+    uint32_t    reserved;
 } APP_TOTA_VERIFY_DATA_SEGMENT_RSP_T;
 
 typedef struct
 {
-	uint32_t    dataLenReceivedByPeerDev;
+    uint32_t    dataLenReceivedByPeerDev;
 } APP_TOTA_DATA_ACK_T;
 
 typedef void(* receive_data_callback)(uint8_t* ptrData, uint32_t dataLength);
@@ -88,7 +88,7 @@ void app_anc_tota_send_data(APP_TOTA_TRANSMISSION_PATH_E path, uint8_t* ptrData,
 #endif
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif // #ifndef __APP_TOTA_DATA_HANDLER_H__

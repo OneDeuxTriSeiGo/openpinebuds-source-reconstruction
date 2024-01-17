@@ -61,7 +61,7 @@ typedef U8 btif_sbc_alloc_method_t;
 #define BTIF_SBC_SPLIT_LEFT              1
 #define BTIF_SBC_SPLIT_RIGHT             2
 
-#define BTIF_MSBC_BLOCKS	15
+#define BTIF_MSBC_BLOCKS    15
 
 typedef U8 btif_sbc_alloc_method_t;
 #define BTIF_SBC_ALLOC_METHOD_LOUDNESS   0
@@ -179,11 +179,11 @@ bt_status_t btif_sbc_decode_frames_parser(btif_sbc_decoder_t *Decoder,
                                                          uint16_t        *BytesParsed);
 
 bt_status_t btif_sbc_decode_frames_out_sbsamples(btif_sbc_decoder_t *Decoder,
-        uint8_t		 *Buff,
-        uint16_t		  Len,
-        uint16_t		 *BytesDecoded,
+        uint8_t      *Buff,
+        uint16_t          Len,
+        uint16_t         *BytesDecoded,
         btif_sbc_pcm_data_t *PcmData,
-        uint16_t		  MaxPcmData,
+        uint16_t          MaxPcmData,
         float* gains,
         uint8_t     ChooseDecChannel,
         REAL       *SBSamplesBuf,
@@ -199,13 +199,13 @@ bt_status_t btif_sbc_encode_frames(btif_sbc_encoder_t *Encoder,
                           uint16_t        *Len,
                           uint16_t         MaxSbcData);
 bt_status_t  btif_sbc_encode_frames_with_sbsamples(btif_sbc_encoder_t *Encoder,
-						  REAL       *SBSamplesBuf,
-						  uint32_t		 SBSamplesBufLen_bytes,
-						  uint32_t		 *SBSamplesBufUsed_bytes,
-						  uint8_t		 *Buff,
-						  uint16_t		 *Len,
-						  uint16_t		  MaxSbcData,
-						  uint8_t      *number_freame_encoded);
+                          REAL       *SBSamplesBuf,
+                          uint32_t       SBSamplesBufLen_bytes,
+                          uint32_t       *SBSamplesBufUsed_bytes,
+                          uint8_t        *Buff,
+                          uint16_t       *Len,
+                          uint16_t        MaxSbcData,
+                          uint8_t      *number_freame_encoded);
 
 void btif_plc_update_sbc_decoder_state(btif_sbc_encoder_t *Encoder, btif_sbc_pcm_data_t *PcmData, btif_sbc_decoder_t *Decoder, float *gain);
 

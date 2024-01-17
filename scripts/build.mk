@@ -161,10 +161,10 @@ endif
 all_buildobj-y := $(buildextra-y) $(buildobj-y) $(filter-out %.a,$(builtin-target))
 all_buildlib-y := $(filter %.a,$(builtin-target)) $(lib-target)
 lst_target := $(filter $(lst_target), \
-		$(all_buildobj-y:.o=.s) \
-		$(all_buildobj-y:.o=.i) \
-		$(all_buildobj-y:.o=.lst) \
-		$(patsubst %.a,%.lst,$(all_buildlib-y)))
+                $(all_buildobj-y:.o=.s) \
+                $(all_buildobj-y:.o=.i) \
+                $(all_buildobj-y:.o=.lst) \
+                $(patsubst %.a,%.lst,$(all_buildlib-y)))
 
 # Avoid .o compile error affecting .i generation
 lst_i_target := $(filter %.i, $(lst_target))
@@ -183,7 +183,7 @@ buildextra-y := $(extra-y)
 buildobj-y := $(obj-y)
 buildlib-y := $(lib-y)
 
-buildobj-y	:= $(if $(filter-obj),$(filter-out $(filter-obj),$(buildobj-y)),$(buildobj-y))
+buildobj-y      := $(if $(filter-obj),$(filter-out $(filter-obj),$(buildobj-y)),$(buildobj-y))
 endif # SUBMODS
 
 ifeq ($(LIB_BIN_IN_SRC_DIR),1)
