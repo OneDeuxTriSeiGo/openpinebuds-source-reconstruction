@@ -144,8 +144,8 @@ extern "C" {
 #define SYNC_FLAGS_LOC                  HAL_SEC_LOC(.sync_flags)
 #define SYNC_FLAGS_DEF(n)               HAL_SEC_DEF(.sync_flags, n)
 #else
-#define SYNC_FLAGS_LOC			HAL_SEC_LOC(.sram_bss)
-#define SYNC_FLAGS_DEF(n)		HAL_SEC_DEF(.sram_bss, n)
+#define SYNC_FLAGS_LOC                  HAL_SEC_LOC(.sram_bss)
+#define SYNC_FLAGS_DEF(n)               HAL_SEC_DEF(.sram_bss, n)
 #endif
 
 #if defined(__ARM_ARCH_ISA_ARM)

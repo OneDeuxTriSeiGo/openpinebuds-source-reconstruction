@@ -39,7 +39,7 @@
 #define BTIF_LLC_ECHO_RSP        0x09
 #define BTIF_LLC_INFO_REQ        0x0A
 #define BTIF_LLC_INFO_RSP        0x0B
-#define  BTIF_LLC_TWS_DATA_XFER	0xFE
+#define  BTIF_LLC_TWS_DATA_XFER 0xFE
 
 typedef U16 btif_l2cap_psm_value_t;
 

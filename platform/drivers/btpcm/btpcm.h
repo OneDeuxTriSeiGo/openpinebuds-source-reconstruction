@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif//__FMDEC_H__

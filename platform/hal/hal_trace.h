@@ -59,7 +59,7 @@ extern "C" {
 enum PRINTF_FLAG_T {
     PRINTF_FLAG_LINE_FEED   = (1 << 0),
     PRINTF_FLAG_TIME_STAMP  = (1 << 1),
-	PRINTF_FLAG_CHECK_CRLR	= (1 << 2),
+    PRINTF_FLAG_CHECK_CRLR  = (1 << 2),
 };
 
 #if defined(TRACE_STR_SECTION) && !(defined(ROM_BUILD) || defined(PROGRAMMER) || defined(FPGA))

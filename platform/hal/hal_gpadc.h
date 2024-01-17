@@ -84,7 +84,7 @@ void hal_adckey_set_irq_handler(HAL_ADCKEY_EVENT_CB_T cb);
 int hal_adckey_set_irq(enum HAL_ADCKEY_IRQ_T type);
 
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif//__FMDEC_H__

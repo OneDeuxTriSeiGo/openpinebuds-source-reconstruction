@@ -174,9 +174,9 @@ extern const unsigned char a2dp_codec_elements[];
 #define HFP_KEY_DUAL_HF_CHANGETOPHONE_ANSWER_CURR 25
 
 //hsp
-#define HSP_KEY_CKPD_CONTROL     	21
-#define HSP_KEY_ADD_TO_EARPHONE 	22
-#define HSP_KEY_CHANGE_TO_PHONE	23
+#define HSP_KEY_CKPD_CONTROL        21
+#define HSP_KEY_ADD_TO_EARPHONE     22
+#define HSP_KEY_CHANGE_TO_PHONE 23
 
 typedef enum
 {
@@ -210,9 +210,9 @@ typedef enum
     HFCALL_NEXT_STA_NUM
 } HFCALL_NEXT_STA_ENUM;
 
-#define APP_REPORT_SPEAKER_VOL_CMD 	0x01
-#define APP_CPKD_CMD				0x02
-#define SPP_MAX_TX_PACKET_NUM	5
+#define APP_REPORT_SPEAKER_VOL_CMD  0x01
+#define APP_CPKD_CMD                0x02
+#define SPP_MAX_TX_PACKET_NUM   5
 
 typedef enum bt_profile_reconnect_mode
 {
@@ -506,18 +506,18 @@ void hsp_handle_key(uint8_t hsp_key);
 void btapp_a2dp_report_speak_gain(void);
 
 #ifdef __POWERKEY_CTRL_ONOFF_ONLY__
-#define   BTAPP_FUNC_KEY			APP_KEY_CODE_FN1
-#define   BTAPP_VOLUME_UP_KEY		APP_KEY_CODE_FN2
-#define   BTAPP_VOLUME_DOWN_KEY		APP_KEY_CODE_FN3
+#define   BTAPP_FUNC_KEY            APP_KEY_CODE_FN1
+#define   BTAPP_VOLUME_UP_KEY       APP_KEY_CODE_FN2
+#define   BTAPP_VOLUME_DOWN_KEY     APP_KEY_CODE_FN3
 #ifdef SUPPORT_SIRI
-#define   BTAPP_RELEASE_KEY			APP_KEY_CODE_NONE
+#define   BTAPP_RELEASE_KEY         APP_KEY_CODE_NONE
 #endif
 #else
-#define   BTAPP_FUNC_KEY			APP_KEY_CODE_PWR
-#define   BTAPP_VOLUME_UP_KEY		APP_KEY_CODE_FN1
-#define   BTAPP_VOLUME_DOWN_KEY		APP_KEY_CODE_FN2
+#define   BTAPP_FUNC_KEY            APP_KEY_CODE_PWR
+#define   BTAPP_VOLUME_UP_KEY       APP_KEY_CODE_FN1
+#define   BTAPP_VOLUME_DOWN_KEY     APP_KEY_CODE_FN2
 #ifdef SUPPORT_SIRI
-#define   BTAPP_RELEASE_KEY			APP_KEY_CODE_NONE
+#define   BTAPP_RELEASE_KEY         APP_KEY_CODE_NONE
 #endif
 #endif
 void bt_key_init(void);

@@ -23,8 +23,8 @@ extern "C" {
 #include "hal_aud.h"
 
 enum HAL_BTPCM_ID_T {
-	HAL_BTPCM_ID_0 = 0,
-	HAL_BTPCM_ID_NUM,
+    HAL_BTPCM_ID_0 = 0,
+    HAL_BTPCM_ID_NUM,
 };
 
 struct HAL_BTPCM_CONFIG_T {

@@ -30,37 +30,37 @@ enum THREAD_USER_ID
 };
 
 typedef struct {
-	uint32_t id;
-	uint32_t ptr;
-	uint32_t param0;
-	uint32_t param1;
+    uint32_t id;
+    uint32_t ptr;
+    uint32_t param0;
+    uint32_t param1;
 } AT_USER_MESSAGE;
 
 typedef enum
 {
     RF_FREQUENCY_2402 = 0x31,//'1'
     RF_FREQUENCY_2441,
-	RF_FREQUENCY_2480,
-	RF_FREQUENCY_2440,
-	RF_CHANNEL_BLE_STOP, //'5'
-	RF_FREQUENCY_2402_RX,//'6'
-	RF_FREQUENCY_2480_RX,
-	RF_FREQUENCY_2440_RX
+    RF_FREQUENCY_2480,
+    RF_FREQUENCY_2440,
+    RF_CHANNEL_BLE_STOP, //'5'
+    RF_FREQUENCY_2402_RX,//'6'
+    RF_FREQUENCY_2480_RX,
+    RF_FREQUENCY_2440_RX
 
 }RF_FREQUENCY_E;
 typedef enum
 {
     RF_CHANNEL_DH3,
-	RF_CHANNEL_DH5,
-	RF_CHANNEL_2DH5,
-	RF_CHANNEL_3DH5
+    RF_CHANNEL_DH5,
+    RF_CHANNEL_2DH5,
+    RF_CHANNEL_3DH5
 
 }RF_CHANNEL_E;
 
 typedef enum
 {
-	RF_TX,
-	RF_RX
+    RF_TX,
+    RF_RX
 
 }RF_TXRX_E;
 
@@ -93,7 +93,7 @@ int at_thread_user_enqueue_cmd(enum THREAD_USER_ID user_id,
         uint32_t pfunc
         );
 #ifdef __cplusplus
-	}
+    }
 #endif
 
 #endif // __AT_THREAD_USER_H__

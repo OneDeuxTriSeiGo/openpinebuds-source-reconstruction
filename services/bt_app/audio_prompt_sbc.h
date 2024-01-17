@@ -150,4 +150,4 @@ bool audio_prompt_clear_pending_stream(uint8_t op);
 }
 #endif
 
-#endif	// __AUDIO_PROMPT_SBC_H__
+#endif  // __AUDIO_PROMPT_SBC_H__

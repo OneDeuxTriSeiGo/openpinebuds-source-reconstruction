@@ -16,9 +16,9 @@
 #define __FACTORY_SECTIONS_H__
 
 #define ALIGN4 __attribute__((aligned(4)))
-#define nvrec_mini_version   	1
-#define nvrec_dev_magic      	0xba80
-#define nvrec_current_version 	2
+#define nvrec_mini_version      1
+#define nvrec_dev_magic         0xba80
+#define nvrec_current_version   2
 #define FACTORY_SECTOR_SIZE     4096
 typedef struct{
     unsigned short magic;
@@ -38,14 +38,14 @@ typedef struct{
 
     unsigned int  rev2_data_len;
     unsigned int  rev2_crc;
-	unsigned int  rev2_reserved0;
-	unsigned int  rev2_reserved1;
-	unsigned int  rev2_bt_name[63];
-	unsigned int  rev2_bt_addr[2];
-	unsigned int  rev2_ble_addr[2];
-	unsigned int  rev2_dongle_addr[2];
-	unsigned int  rev2_xtal_fcap;
-	unsigned int  rev2_ble_name[8];
+    unsigned int  rev2_reserved0;
+    unsigned int  rev2_reserved1;
+    unsigned int  rev2_bt_name[63];
+    unsigned int  rev2_bt_addr[2];
+    unsigned int  rev2_ble_addr[2];
+    unsigned int  rev2_dongle_addr[2];
+    unsigned int  rev2_xtal_fcap;
+    unsigned int  rev2_ble_name[8];
 
 }factory_section_data_t;
 

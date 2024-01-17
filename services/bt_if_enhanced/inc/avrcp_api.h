@@ -392,7 +392,7 @@ typedef U8 btif_avrcp_operation_t;
 
 #define BTIF_AVRCP_OP_GENERAL_REJECT                 0xA0
 
-#define BTIF_AVRCP_OP_CUSTOM_CMD						0xF0
+#define BTIF_AVRCP_OP_CUSTOM_CMD                        0xF0
 
 typedef uint8_t avrcp_error_code_t;
 

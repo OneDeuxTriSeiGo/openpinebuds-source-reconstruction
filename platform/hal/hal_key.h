@@ -37,9 +37,9 @@ enum HAL_KEY_CODE_T {
     HAL_KEY_CODE_FN10 = (1 << 10),
     HAL_KEY_CODE_FN11 = (1 << 11),
     HAL_KEY_CODE_FN12 = (1 << 12),
-	HAL_KEY_CODE_FN13 = (1 << 13),
-	HAL_KEY_CODE_FN14 = (1 << 14),
-	HAL_KEY_CODE_FN15 = (1 << 15),
+    HAL_KEY_CODE_FN13 = (1 << 13),
+    HAL_KEY_CODE_FN14 = (1 << 14),
+    HAL_KEY_CODE_FN15 = (1 << 15),
 };
 
 enum HAL_KEY_EVENT_T {
