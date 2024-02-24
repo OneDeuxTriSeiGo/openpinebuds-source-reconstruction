@@ -19,7 +19,7 @@
 #include "bluetooth.h"
 #include "me_api.h"
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -37,7 +37,7 @@ bt_status_t ddbif_delete_record(const bt_bdaddr_t *bdAddr);
 
 bt_status_t ddbif_enum_device_records(I16 index, btif_device_record_t *record);
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 }
 #endif
 #endif /*__DDBIF_H__*/
