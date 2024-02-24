@@ -1,21 +1,23 @@
-
-/** @file
+/*********************************************************************
+* Filename:   sha256.h
+* Author:     Brad Conte (brad AT bradconte.com)
+* Copyright:
+* Disclaimer: This code is presented "as is" without any guarantees.
+* Details:    Defines the API for the corresponding SHA1 implementation.
+*********************************************************************/
+/*
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * @defgroup sha256 SHA-256 hash library
- * @{
- * @ingroup app_common
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * @brief  This module calculates SHA-256 (SHA-2, FIPS-180) hashes.
- *
- * @details To use this module, first call @ref sha256_init on a @ref sha256_context_t instance. Then call @ref
- *          sha256_update with the data to be hashed. This step can optionally be done with multiple
- *          calls to @ref sha256_update, each with a section of the data (in the correct order).
- *          After all data has been passed to @ref sha256_update, call @ref sha256_final to finalize
- *          and extract the hash value.
- *
- *          This code is adapted from code by Brad Conte, retrieved from
- *          https://github.com/B-Con/crypto-algorithms.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #ifndef SHA256_H

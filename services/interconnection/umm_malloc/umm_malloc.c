@@ -1,3 +1,32 @@
+/* ----------------------------------------------------------------------------
+ * umm_malloc.c - a memory allocator for embedded systems (microcontrollers)
+ *
+ * See LICENSE for copyright notice
+ * See README.md for acknowledgements and description of internals
+ * ----------------------------------------------------------------------------
+ *
+ * R.Hempel 2007-09-22 - Original
+ * R.Hempel 2008-12-11 - Added MIT License biolerplate
+ *                     - realloc() now looks to see if previous block is free
+ *                     - made common operations functions
+ * R.Hempel 2009-03-02 - Added macros to disable tasking
+ *                     - Added function to dump heap and check for valid free
+ *                        pointer
+ * R.Hempel 2009-03-09 - Changed name to umm_malloc to avoid conflicts with
+ *                        the mm_malloc() library functions
+ *                     - Added some test code to assimilate a free block
+ *                        with the very block if possible. Complicated and
+ *                        not worth the grief.
+ * D.Frank 2014-04-02  - Fixed heap configuration when UMM_TEST_MAIN is NOT set,
+ *                        added user-dependent configuration file umm_malloc_cfg.h
+ * R.Hempel 2016-12-04 - Add support for Unity test framework
+ *                     - Reorganize source files to avoid redundant content
+ *                     - Move integrity and poison checking to separate file
+ * R.Hempel 2017-12-29 - Fix bug in realloc when requesting a new block that
+ *                        results in OOM error - see Issue 11
+ * ----------------------------------------------------------------------------
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "stdint.h"

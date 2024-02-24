@@ -1,31 +1,18 @@
-/****************************************************************************
+/*
  *
- * File:
- *     $Id: mei_api.h 886 2009-02-24 14:40:12Z brentk $
- *     $Product: BES Blue SDK v3.x $
- *     $Revision: 886 $
+ * Copyright (c) 2021 Bestechnic (Shanghai) Co., Ltd. All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Description:
- *     Public types, defines, and prototypes for accessing the
- *     upper layer of the Management Entity.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Copyright 1999-2005 Extended Systems, Inc.
- * Portions copyright BES.
- * All rights reserved. All unpublished rights reserved.
- *
- * Unpublished Confidential Information of BES.
- * Do Not Disclose.
- *
- * No part of this work may be used or reproduced in any form or by any
- * means, or stored in a database or retrieval system, without prior written
- * permission of BES.
- *
- * Use of this work is governed by a license granted by BES.
- * This work contains confidential and proprietary information of
- * BES. which is protected by copyright, trade secret,
- * trademark and other intellectual property rights.
- *
- ****************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #ifndef __MEI_API__H__
 #define __MEI_API__H__

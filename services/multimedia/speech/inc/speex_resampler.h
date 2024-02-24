@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Jean-Marc Valin
+/* Copyright (C) 2007-2008 Jean-Marc Valin
 
 
    File: speex_resampler.h
