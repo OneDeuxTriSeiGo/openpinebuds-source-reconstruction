@@ -1,3 +1,4 @@
-# PineBuds Open Source SDK
+# OpenPineBuds Source Reconstruction
 
-This is just the SDK from the wiki, with dockerfile setup to make building easier
+An attempt to reconstruct the OpenPineBuds repository from publicly
+available sources.
