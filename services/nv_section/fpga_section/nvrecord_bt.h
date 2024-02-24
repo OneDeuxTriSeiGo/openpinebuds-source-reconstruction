@@ -13,7 +13,7 @@
  * trademark and other intellectual property rights.
  *
  ****************************************************************************/
-#if defined(NEW_NV_RECORD_ENABLED)
+#if defined(NEW_NV_RECORD_ENALBED)
 
 #ifndef NVRECORD_BT_H
 #define NVRECORD_BT_H
@@ -54,4 +54,4 @@ bt_status_t ram_record_ddbrec_delete(const bt_bdaddr_t *bdaddr);
 }
 #endif
 #endif
-#endif // #if defined(NEW_NV_RECORD_ENABLED)
+#endif // #if defined(NEW_NV_RECORD_ENALBED)

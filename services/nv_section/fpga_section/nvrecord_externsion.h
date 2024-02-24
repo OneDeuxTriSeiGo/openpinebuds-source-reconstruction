@@ -13,7 +13,7 @@
  * trademark and other intellectual property rights.
  *
  ****************************************************************************/
-#ifdef NEW_NV_RECORD_ENABLED
+#ifdef NEW_NV_RECORD_ENALBED
 
 #ifndef __NVRECORD_EXTENSION_H__
 #define __NVRECORD_EXTENSION_H__
@@ -312,4 +312,4 @@ void nv_record_init(void);
 }
 #endif
 #endif
-#endif  //#if defined(NEW_NV_RECORD_ENABLED)
+#endif  //#if defined(NEW_NV_RECORD_ENALBED)
