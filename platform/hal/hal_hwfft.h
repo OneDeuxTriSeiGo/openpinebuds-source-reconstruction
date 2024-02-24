@@ -53,36 +53,36 @@ enum hwfft_order_t {
 bool hwfft_is_enable(void);
 int hwfft_destroy(struct hwfft_t *fft_inst);
 /*
-Éú³Éhwfft_t ½á¹¹Ìå
-mode: hwfft_mode_tÀàĞÍHWFFT_MODE_FFT:  ¸´Êı£¬ ÊäÈën¸ö¸´Êı£¬Êä³ön¸ö¸´Êı£¬´ËÊ±sym_fft±ØĞëÎª0£»
-                                                                  ÊµÊı£¬ÊäÈën¸öÊµÊı£¬Êä³öÊÇn/2+1 ¸ö¸´Êı£¬´ËÊ±sym_fft±ØĞëÎª1£»
-                                      HWFFT_MODE_IFFT:  ¸´Êı£¬ ÊäÈën¸ö¸´Êı£¬Êä³ön¸ö¸´Êı£¬´ËÊ±sym_fft±ØĞëÎª0£»
-                                                                   ÊµÊı£¬ÊäÈë n/2+1¸ö¸´Êı£¬Êä³ön¸öÊµÊı£»´ËÊ±sym_fft±ØĞëÎª1£»
-                                      HWFFT_MODE_EQVL_FFT: ¼æÈİÈí¼şspx_fft¼ÆËãfftÄ£Ê½
-                                      HWFFT_MODE_EQVL_IFFT: ¼æÈİÈí¼şspx_ifft¼ÆËãifftÄ£Ê½
+ç”Ÿæˆhwfft_t ç»“æ„ä½“
+mode: hwfft_mode_tç±»å‹HWFFT_MODE_FFT:  å¤æ•°ï¼Œ è¾“å…¥nä¸ªå¤æ•°ï¼Œè¾“å‡ºnä¸ªå¤æ•°ï¼Œæ­¤æ—¶sym_fftå¿…é¡»ä¸º0ï¼›
+                                                                  å®æ•°ï¼Œè¾“å…¥nä¸ªå®æ•°ï¼Œè¾“å‡ºæ˜¯n/2+1 ä¸ªå¤æ•°ï¼Œæ­¤æ—¶sym_fftå¿…é¡»ä¸º1ï¼›
+                                      HWFFT_MODE_IFFT:  å¤æ•°ï¼Œ è¾“å…¥nä¸ªå¤æ•°ï¼Œè¾“å‡ºnä¸ªå¤æ•°ï¼Œæ­¤æ—¶sym_fftå¿…é¡»ä¸º0ï¼›
+                                                                   å®æ•°ï¼Œè¾“å…¥ n/2+1ä¸ªå¤æ•°ï¼Œè¾“å‡ºnä¸ªå®æ•°ï¼›æ­¤æ—¶sym_fftå¿…é¡»ä¸º1ï¼›
+                                      HWFFT_MODE_EQVL_FFT: å…¼å®¹è½¯ä»¶spx_fftè®¡ç®—fftæ¨¡å¼
+                                      HWFFT_MODE_EQVL_IFFT: å…¼å®¹è½¯ä»¶spx_ifftè®¡ç®—ifftæ¨¡å¼
 
-order: hwfft_order_tÀàĞÍ£¬Ö§³Ö 512/256/128/64 µãµÄ fft/ifft
+order: hwfft_order_tç±»å‹ï¼Œæ”¯æŒ 512/256/128/64 ç‚¹çš„ fft/ifft
 
-sym_fft:  1: ½«ÀûÓÃfftµÄ¶Ô³ÆĞÔ;¶Ôfft£¬ÊäÈën¸öÊµÊı£¬Êä³öÊÇn/2+1 ¸ö¸´Êı£»
-                ¶Ôifft£¬ ÊäÈë n/2+1¸ö¸´Êı£¬Êä³ön¸öÊµÊı£»n Îªfft/ifftµãÊı
-              0: ÊäÈën¸ö¸´Êı£¬Êä³ön¸ö¸´Êı
+sym_fft:  1: å°†åˆ©ç”¨fftçš„å¯¹ç§°æ€§;å¯¹fftï¼Œè¾“å…¥nä¸ªå®æ•°ï¼Œè¾“å‡ºæ˜¯n/2+1 ä¸ªå¤æ•°ï¼›
+                å¯¹ifftï¼Œ è¾“å…¥ n/2+1ä¸ªå¤æ•°ï¼Œè¾“å‡ºnä¸ªå®æ•°ï¼›n ä¸ºfft/ifftç‚¹æ•°
+              0: è¾“å…¥nä¸ªå¤æ•°ï¼Œè¾“å‡ºnä¸ªå¤æ•°
 */
 int hwfft_create(struct hwfft_t *fft_inst, int mode, int order, int sym_fft);
 /*
-¼ÆËãfft/ifft
-fft_inst: hwfft_createÉú³ÉµÄ¶ÔÓ¦½á¹¹Ìå
-in: ÊäÈëbuf
-out: Êä³öbuf
+è®¡ç®—fft/ifft
+fft_inst: hwfft_createç”Ÿæˆçš„å¯¹åº”ç»“æ„ä½“
+in: è¾“å…¥buf
+out: è¾“å‡ºbuf
 */
 int hwfft_fft_process(struct hwfft_t *fft_inst, short *in, short *out);
 /*
-Á¬Ğø¼ÆËã¶à´Î fft/ifft
-fft_inst: hwfft_createÉú³ÉµÄ¶ÔÓ¦½á¹¹Ìå
-in: ÊäÈëbuf£¬¶à´ÎfftµÄÊäÈëbuf±ØĞëÊÇÁ¬ĞøµÄ
-out: Êä³öbuf
-num: ¼ÆËã´ÎÊı
-mode: 0 Ò»Ö±µÈµ½fftÍê³Éº¯Êı²Å·µ»Ø
-         1 dmaÅäÖÃÍê³É£¬fft¿ªÊ¼º¯Êı¼´¿É·µ»Ø£¬cpu¿ÉÒÔÔÚÓ²¼şfft Ê±ÔËĞĞÆäËû³ÌĞò
+è¿ç»­è®¡ç®—å¤šæ¬¡ fft/ifft
+fft_inst: hwfft_createç”Ÿæˆçš„å¯¹åº”ç»“æ„ä½“
+in: è¾“å…¥bufï¼Œå¤šæ¬¡fftçš„è¾“å…¥bufå¿…é¡»æ˜¯è¿ç»­çš„
+out: è¾“å‡ºbuf
+num: è®¡ç®—æ¬¡æ•°
+mode: 0 ä¸€ç›´ç­‰åˆ°fftå®Œæˆå‡½æ•°æ‰è¿”å›
+         1 dmaé…ç½®å®Œæˆï¼Œfftå¼€å§‹å‡½æ•°å³å¯è¿”å›ï¼Œcpuå¯ä»¥åœ¨ç¡¬ä»¶fft æ—¶è¿è¡Œå…¶ä»–ç¨‹åº
 */
 int hwfft_multifft_process(struct hwfft_t *fft_inst, short *in, short *out, unsigned short num,unsigned char mode);
 

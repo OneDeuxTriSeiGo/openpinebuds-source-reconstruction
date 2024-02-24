@@ -1316,7 +1316,7 @@ struct hci_set_con_slv_bcst_rec_cmd
     uint8_t lt_addr;
     /// Interval (in slots)
     uint16_t interval;
-    /// Clock_Offset (28 bits) - (CLKNslave � CLK) modulo 2^28
+    /// Clock_Offset (28 bits) - (CLKNslave - CLK) modulo 2^28
     uint32_t clock_offset;
     /// Next_Connectionless_Slave_Broadcast_Clock (28 bits)
     uint32_t next_csb_clock;
