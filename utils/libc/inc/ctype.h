@@ -1,5 +1,5 @@
-#ifndef CTYPE_H
-#define CTYPE_H
+#ifndef __CTYPE_EXT_H
+#define __CTYPE_EXT_H
 
 /*
  * NOTE! This ctype does not handle EOF like the standard C
@@ -52,4 +52,4 @@ static inline unsigned char __toupper(unsigned char c)
 #define toupper(c) __toupper(c)
 
 
-#endif /* CTYPE_H */
+#endif /* __CTYPE_EXT_H */

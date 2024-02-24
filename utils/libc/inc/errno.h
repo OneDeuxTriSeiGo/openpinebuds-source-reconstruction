@@ -1,6 +1,5 @@
-#ifndef _GENERIC_ERRNO_H
-#define _GENERIC_ERRNO_H
-
+#ifndef LWIP_HDR_ERRNO_H
+#define LWIP_HDR_ERRNO_H
 
 #define EPERM             1     /* Operation not permitted */
 #define ENOENT            2     /* No such file or directory */
@@ -129,4 +128,4 @@
 #define ENOMEDIUM       123     /* No medium found */
 #define EMEDIUMTYPE     124     /* Wrong medium type */
 
-#endif
+#endif /* LWIP_HDR_ERRNO_H */
