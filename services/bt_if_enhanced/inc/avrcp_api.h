@@ -1565,8 +1565,7 @@ extern "C" {
 
     void btif_avrcp_send_custom_cmd_generic(btif_avrcp_channel_t * chnl, uint8_t * ptrData,
                                             uint32_t len);
-    bt_status_t btif_avrcp_ct_accept_custom_cmd_rsp(btif_avrcp_channel_t * chnl, void *cmd_res,
-                                                    uint8_t isAccept);
+    bt_status_t btif_avrcp_ct_accept_custom_cmd_rsp(btif_avrcp_channel_t * chnl, void *cmd_res, uint8_t isAccept);
     bt_status_t btif_avrcp_connect(btif_avrcp_channel_t * channel, bt_bdaddr_t * addr);
 
     bt_status_t btif_avrcp_connect_rsp(btif_avrcp_channel_t * chnl, BOOL accept);
@@ -1574,7 +1573,6 @@ extern "C" {
     bt_status_t btif_avrcp_disconnect(btif_avrcp_chnl_handle_t channel);
 
     bt_status_t btif_avrcp_ct_get_play_status(btif_avrcp_channel_t * channel,
-
                                               avrcp_advanced_pdu_t * cmd);
     avrcp_version_t btif_get_avrcp_version(btif_avrcp_channel_t * channel);
 
@@ -1635,13 +1633,11 @@ extern "C" {
     uint8_t btif_get_app_bt_device_avrcp_notify_rsp_transid(avrcp_advanced_pdu_t * cmd);
 
     bt_status_t btif_avrcp_ct_get_media_Info(btif_avrcp_channel_t * channel,
-
                                              avrcp_advanced_pdu_t * cmd,
                                              avrcp_media_attrId_mask_t mediaMask);
     avctp_cmd_frame_t *btif_get_avrcp_cmd_frame(const avrcp_callback_parms_t * parms);
 
     void btif_avrcp_set_capabilities_rsp_cmd(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId,
-
                                              uint8_t type);
 
     void btif_avrcp_set_control_rsp_cmd(avrcp_advanced_pdu_t * cmd_pdu, uint8_t transId,

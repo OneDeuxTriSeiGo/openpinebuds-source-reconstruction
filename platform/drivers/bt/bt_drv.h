@@ -51,7 +51,7 @@ extern "C" {
 
 
 #define BTDIGITAL_REG(a)                        (*(volatile uint32_t *)(uintptr_t)(a))
-#define BTDIGITAL_REG_WR(addr, value)         (*(volatile uint32_t *)(uintptr_t)(addr)) = (value)
+#define BTDIGITAL_REG_WR(addr, value)           (*(volatile uint32_t *)(uintptr_t)(addr)) = (value)
 
 #define BTDIGITAL_BT_EM(a)                      (*(volatile uint16_t *)(uintptr_t)(a))
 /// Macro to write a BT control structure field (16-bit wide)

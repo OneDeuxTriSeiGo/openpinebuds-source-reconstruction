@@ -27,9 +27,9 @@ extern "C" {
 #define TOTA_CONTROL_DEBUG
 
 #ifdef TOTA_CONTROL_DEBUG
-#define TOTA_LOG_DBG(num,str,...)   TRACE(num,LOG_TAG""str, ##__VA_ARGS__)             // DEBUG OUTPUT
-#define TOTA_LOG_MSG(num,str,...)   TRACE(num,LOG_TAG""str, ##__VA_ARGS__)             // MESSAGE OUTPUT
-#define TOTA_LOG_ERR(num,str,...)   TRACE(num,LOG_TAG"err:"""str, ##__VA_ARGS__)       // ERROR OUTPUT
+#define TOTA_LOG_DBG(num,str,...)   TRACE(num,LOG_TAG""str, ##__VA_ARGS__)              // DEBUG OUTPUT
+#define TOTA_LOG_MSG(num,str,...)   TRACE(num,LOG_TAG""str, ##__VA_ARGS__)              // MESSAGE OUTPUT
+#define TOTA_LOG_ERR(num,str,...)   TRACE(num,LOG_TAG"err:"""str, ##__VA_ARGS__)        // ERROR OUTPUT
 
 #define TOTA_LOG_FUNC_LINE()        TRACE(2,LOG_TAG"%s:%d\n", __FUNCTION__, __LINE__)
 #define TOTA_LOG_FUNC_IN()          TRACE(1,LOG_TAG"%s ++++\n", __FUNCTION__)
@@ -76,57 +76,56 @@ typedef enum
 typedef enum
 {
     /* basic cmd */
-    OP_TOTA_STRING              = 0x1000,
-    OP_TOTA_CONN_INITIATE       = 0x1001,
-    OP_TOTA_CONN_RESPONSE       = 0x1002,
-    OP_TOTA_CONN_CONFIRM        = 0x1003,
+    OP_TOTA_STRING                       = 0x1000,
+    OP_TOTA_CONN_INITIATE                = 0x1001,
+    OP_TOTA_CONN_RESPONSE                = 0x1002,
+    OP_TOTA_CONN_CONFIRM                 = 0x1003,
 
     /* response cmd */
-    OP_TOTA_RESPONSE_TO_CMD     = 0x6000, /**< the payload is: OP_TOTA_RESPONSE_TO_CMD + paramLen + BLE_TOTA_CMD_RSP_T */
-    OP_TOTA_SPP_DATA_ACK        = 0x6001,
+    OP_TOTA_RESPONSE_TO_CMD              = 0x6000, /**< the payload is: OP_TOTA_RESPONSE_TO_CMD + paramLen + BLE_TOTA_CMD_RSP_T */
+    OP_TOTA_SPP_DATA_ACK                 = 0x6001,
 
     /* test cmd: test ok */
-    OP_TOTA_TEST_CMD            = 0x6100,
-    OP_TOTA_ECHO_TEST_CMD       = 0x6101,
-    OP_TOTA_DEMO_CMD            = 0x6102,
+    OP_TOTA_TEST_CMD                     = 0x6100,
+    OP_TOTA_ECHO_TEST_CMD                = 0x6101,
+    OP_TOTA_DEMO_CMD                     = 0x6102,
 
     /* flash cmd: test ok */
-    OP_TOTA_WRITE_FLASH_CMD     = 0x6200,
-    OP_TOTA_ERASE_FLASH_CMD     = 0x6201,
+    OP_TOTA_WRITE_FLASH_CMD              = 0x6200,
+    OP_TOTA_ERASE_FLASH_CMD              = 0x6201,
 
     /* general info cmd: test ok */
-    OP_TOTA_GENERAL_INFO_CMD    = 0x6300,
-    OP_TOTA_MERIDIAN_EFFECT_CMD = 0x6301,
-    OP_TOTA_EQ_SELECT_CMD       = 0x6302,
-    OP_TOTA_VOLUME_PLUS_CMD     = 0x6303,
-    OP_TOTA_VOLUME_DEC_CMD      = 0x6304,
-    OP_TOTA_VOLUME_SET_CMD      = 0x6305,
-    OP_TOTA_VOLUME_GET_CMD      = 0x6306,
-    OP_TOTA_EQ_SET_CMD          = 0x6307,
-    OP_TOTA_EQ_GET_CMD          = 0x6308,
+    OP_TOTA_GENERAL_INFO_CMD             = 0x6300,
+    OP_TOTA_MERIDIAN_EFFECT_CMD          = 0x6301,
+    OP_TOTA_EQ_SELECT_CMD                = 0x6302,
+    OP_TOTA_VOLUME_PLUS_CMD              = 0x6303,
+    OP_TOTA_VOLUME_DEC_CMD               = 0x6304,
+    OP_TOTA_VOLUME_SET_CMD               = 0x6305,
+    OP_TOTA_VOLUME_GET_CMD               = 0x6306,
+    OP_TOTA_EQ_SET_CMD                   = 0x6307,
+    OP_TOTA_EQ_GET_CMD                   = 0x6308,
 
     /* audio dump and mic cmd */
-    OP_TOTA_AUDIO_DUMP_START    = 0x6400,
-    OP_TOTA_AUDIO_DUMP_STOP     = 0x6401,
-    OP_TOTA_AUDIO_DUMP_CONTROL  = 0x6402,
-    OP_TOTA_MIC_TEST_ON         = 0x6403,
-    OP_TOTA_MIC_TEST_OFF        = 0x6404,
-    OP_TOTA_MIC_SWITCH          = 0x6405,
-
+    OP_TOTA_AUDIO_DUMP_START             = 0x6400,
+    OP_TOTA_AUDIO_DUMP_STOP              = 0x6401,
+    OP_TOTA_AUDIO_DUMP_CONTROL           = 0x6402,
+    OP_TOTA_MIC_TEST_ON                  = 0x6403,
+    OP_TOTA_MIC_TEST_OFF                 = 0x6404,
+    OP_TOTA_MIC_SWITCH                   = 0x6405,
     /* custom cmd */
     // TODO:
-    OP_TOTA_FACTORY_RESET           = 0x8000,
-    OP_TOTA_CLEAR_PAIRING_INFO      = 0x8001,
-    OP_TOTA_SHUTDOWM                = 0x8002,
-    OP_TOTA_REBOOT                  = 0x8003,
+    OP_TOTA_FACTORY_RESET                = 0x8000,
+    OP_TOTA_CLEAR_PAIRING_INFO           = 0x8001,
+    OP_TOTA_SHUTDOWM                     = 0x8002,
+    OP_TOTA_REBOOT                       = 0x8003,
 
     // TODO:?
-    OP_TOTA_RAW_DATA_SET_CMD = 0x9100,
+    OP_TOTA_RAW_DATA_SET_CMD             = 0x9100,
 
     /* commond count */
     OP_TOTA_COMMAND_COUNT,
     /* to mark that it's a data packet */
-    OP_TOTA_STREAM_DATA = 0xFFFF,
+    OP_TOTA_STREAM_DATA                  = 0xFFFF,
 } APP_TOTA_CMD_CODE_E;
 
 /**

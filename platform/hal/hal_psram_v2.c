@@ -477,7 +477,7 @@ static void hal_psram_init_calib(void)
 
     delay /= 2;
     psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(delay) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay) |
-        PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay);
+                         PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(delay);
 }
 
 static void hal_psram_mc_init(uint32_t clk)
@@ -578,15 +578,15 @@ static bool psramphy_check_write_valid()
 {
     int i;
     volatile uint32_t *psram_base = (volatile uint32_t *)PSRAM_NC_BASE;
-    for (i=0; i<0x8; ++i) {
-        *(psram_base+i) = 0xffffffff;
+    for (i = 0; i < 0x8; ++i) {
+        *(psram_base + i) = 0xffffffff;
     }
-    for (i=0; i<0x8; ++i) {
-        *(psram_base+i) = ((i << 0) | (i << 8) | (i << 16) | (i << 24));
+    for (i = 0; i < 0x8; ++i) {
+        *(psram_base + i) = ((i << 0) | (i << 8) | (i << 16) | (i << 24));
     }
     hal_psramip_wb_busy_wait();
     hal_psramip_mc_busy_wait();
-    for (i=0; i<0x8; ++i) {
+    for (i = 0; i < 0x8; ++i) {
         uint32_t check_val = *(psram_base+i);
         if (check_val != ((i << 0) | (i << 8) | (i << 16) | (i << 24))) {
             //PSRAM_TRACE(2,"write fail, %p = 0x%x", (uint32_t)(psram_base+i), check_val);
@@ -620,33 +620,33 @@ static void hal_psram_calib_range(uint32_t range)
 
     val = psram_phy->REG_058;
     if ((val & PSRAM_ULP_PHY_DLL_ALL_ONE)) {
-        PSRAM_TRACE(2,"%s: all one, increase range=%d", __func__, range+1);
-        return hal_psram_calib_range(range+1);
+        PSRAM_TRACE(2, "%s: all one, increase range=%d", __func__, range + 1);
+        return hal_psram_calib_range(range + 1);
     }
 
     delay = GET_BITFIELD(val, PSRAM_ULP_PHY_DLL_DLY_IN);
-    PSRAM_TRACE(4,"%s, range:%d, T/4 = 0x%x(psram_phy->REG_058:0x%x)", __func__, range, delay/2, val);
-    if (delay > (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK>>PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) && range<3) {
-        PSRAM_TRACE("%s: bad delay (T/2 > 0x1f). increase range=%d", __func__, range+1);
-        return hal_psram_calib_range(range+1);
+    PSRAM_TRACE(4, "%s, range:%d, T/4 = 0x%x(psram_phy->REG_058:0x%x)", __func__, range, delay / 2, val);
+    if (delay > (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) && range < 3) {
+        PSRAM_TRACE("%s: bad delay (T/2 > 0x1f). increase range=%d", __func__, range + 1);
+        return hal_psram_calib_range(range + 1);
     }
 
-    inc_delay = delay/8;
+    inc_delay = delay / 8;
     if (inc_delay == 0)
         inc_delay = 1;
 
-    //volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK>>PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
-    volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK>>PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
+    //volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+    volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
 
-    PSRAM_TRACE(2,"volume:%d, inc_delay:%d", volume, inc_delay);
+    PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 
     uint8_t all_valid = 1;
 
     memset(cali_valid, 0, sizeof(cali_valid));
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
-            psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(delay/2) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay/2) |
-                PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs*inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs*inc_delay);
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
+            psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(delay / 2) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay / 2) |
+                                 PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs * inc_delay) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs * inc_delay);
             cali_valid[tx_dqs][rx_dqs] = psramphy_check_write_valid();
             if (cali_valid[tx_dqs][rx_dqs] == 0)
                 all_valid = 0;
@@ -661,19 +661,19 @@ static void hal_psram_calib_range(uint32_t range)
     memset(cali_value, 0, sizeof(cali_value));
     PSRAM_TRACENOCRLF_NOTS("\r\n\r\n ---------------------------------------------------------------------- \r\n");
     PSRAM_TRACENOCRLF_NOTS("    rx_dqs");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
         PSRAM_TRACENOCRLF_NOTS(" %2d ", tx_dqs*inc_delay);
     }
     PSRAM_TRACENOCRLF_NOTS("\r\n");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
         PSRAM_TRACENOCRLF_NOTS("tx_dqs:%2d ", tx_dqs*inc_delay);
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
             PSRAM_TRACENOCRLF_NOTS("  %d ", cali_valid[tx_dqs][rx_dqs]);
             if (cali_valid[tx_dqs][rx_dqs]) {
                 uint8_t len_from_zero;
                 int8_t p;
                 p = tx_dqs;
-                while (p>=0) {
+                while (p >= 0) {
                     if (cali_valid[p][rx_dqs] == 0)
                         break;
                     p--;
@@ -682,7 +682,7 @@ static void hal_psram_calib_range(uint32_t range)
                 cali_value[tx_dqs][rx_dqs] = len_from_zero;
 
                 p = tx_dqs;
-                while (p<=volume) {
+                while (p <= volume) {
                     if (cali_valid[p][rx_dqs] == 0)
                         break;
                     p++;
@@ -691,7 +691,7 @@ static void hal_psram_calib_range(uint32_t range)
                 cali_value[tx_dqs][rx_dqs] = MIN(cali_value[tx_dqs][rx_dqs], len_from_zero);
 
                 p = rx_dqs;
-                while (p>=0) {
+                while (p >= 0) {
                     if (cali_valid[tx_dqs][p] == 0)
                         break;
                     p--;
@@ -700,7 +700,7 @@ static void hal_psram_calib_range(uint32_t range)
                 cali_value[tx_dqs][rx_dqs] = MIN(cali_value[tx_dqs][rx_dqs], len_from_zero);
 
                 p = rx_dqs;
-                while (p<=volume) {
+                while (p <= volume) {
                     if (cali_valid[tx_dqs][p] == 0)
                         break;
                     p++;
@@ -716,13 +716,13 @@ static void hal_psram_calib_range(uint32_t range)
 #if 0
     PSRAM_TRACENOCRLF_NOTS("\r\n\r\n ---------------------------------------------------------------------- \r\n");
     PSRAM_TRACENOCRLF_NOTS("    rx_dqs");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        PSRAM_TRACENOCRLF_NOTS(" %2d ", tx_dqs*inc_delay);
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        PSRAM_TRACENOCRLF_NOTS(" %2d ", tx_dqs * inc_delay);
     }
     PSRAM_TRACENOCRLF_NOTS("\r\n");
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        PSRAM_TRACENOCRLF_NOTS("tx_dqs:%2d ", tx_dqs*inc_delay);
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        PSRAM_TRACENOCRLF_NOTS("tx_dqs:%2d ", tx_dqs * inc_delay);
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
             PSRAM_TRACENOCRLF_NOTS("  %d ", cali_value[tx_dqs][rx_dqs]);
         }
         PSRAM_TRACENOCRLF_NOTS("\r\n");
@@ -732,21 +732,21 @@ static void hal_psram_calib_range(uint32_t range)
 
     uint32_t position = 0;
     uint8_t max_value = 0;
-    for (tx_dqs=0; tx_dqs<=volume; tx_dqs++) {
-        for (rx_dqs=0; rx_dqs<=volume; rx_dqs++) {
+    for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
+        for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
             if (cali_value[tx_dqs][rx_dqs] > max_value) {
                 max_value = cali_value[tx_dqs][rx_dqs];
-                position = tx_dqs*(volume+1) + rx_dqs;
+                position = tx_dqs * (volume + 1) + rx_dqs;
             }
         }
     }
     PSRAM_TRACENOCRLF_NOTS("position:%d\r\n", position);
-    tx_dqs = position/(volume+1)*inc_delay;
-    rx_dqs = (position%(volume+1))*inc_delay;
+    tx_dqs = position / (volume + 1) * inc_delay;
+    rx_dqs = (position % (volume + 1)) * inc_delay;
     PSRAM_TRACENOCRLF_NOTS("most optimal position. tx_dqs:%d, rx_dqs:%d\r\n", tx_dqs, rx_dqs);
 
-    psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(delay/2) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay/2) |
-        PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
+    psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(delay / 2) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(delay / 2) |
+                         PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
 
 }
 static void hal_psram_calib(uint32_t clk)

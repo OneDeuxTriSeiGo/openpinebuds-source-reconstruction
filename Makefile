@@ -111,7 +111,7 @@ ifneq ($(HELP_TARGET),1)
 # A simple variant is to prefix commands with $(Q) - that's useful
 # for commands that shall be hidden in non-verbose mode.
 #
-#	$(Q)ln $@ :<
+#       $(Q)ln $@ :<
 #
 # If KBUILD_VERBOSE equals 0 then the above command will be hidden.
 # If KBUILD_VERBOSE equals 1 then the above command is displayed.
@@ -299,11 +299,11 @@ else
                 endif
         endif
 endif
-objtree		:= .
-src		:= $(srctree)
-obj		:= $(objtree)
+objtree         := .
+src             := $(srctree)
+obj             := $(objtree)
 
-VPATH		:= $(srctree)
+VPATH           := $(srctree)
 
 export srctree objtree VPATH
 
@@ -343,8 +343,8 @@ endif
 # "make" in the configured kernel build directory always uses that.
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
-ARCH		?= arm
-CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
+ARCH            ?= arm
+CROSS_COMPILE   ?= $(CONFIG_CROSS_COMPILE:"%"=%)
 
 # SHELL used by kbuild
 ifneq ($(WIN_PLAT),y)
@@ -355,68 +355,68 @@ endif
 
 # Make variables (CC, etc...)
 ifeq ($(TOOLCHAIN),armclang)
-CC		= armclang --target=arm-arm-none-eabi
-CPP		= $(CC) -E
-AS		= $(CC)
-C++		= $(CC)
-LD		= $(CC)
-AR		= armar
-NM		= fromelf
-STRIP	= fromelf
-OBJCOPY	= fromelf
-OBJDUMP	= fromelf
+CC              = armclang --target=arm-arm-none-eabi
+CPP             = $(CC) -E
+AS              = $(CC)
+C++             = $(CC)
+LD              = $(CC)
+AR              = armar
+NM              = fromelf
+STRIP           = fromelf
+OBJCOPY         = fromelf
+OBJDUMP         = fromelf
 else
-AS		= $(CROSS_COMPILE)as
-CC		= $(CROSS_COMPILE)gcc
-CPP		= $(CC) -E
-C++		= $(CROSS_COMPILE)g++
-LD		= $(CC)
-#LD		= $(CROSS_COMPILE)ld
-AR		= $(CROSS_COMPILE)ar
-NM		= $(CROSS_COMPILE)nm
-STRIP	= $(CROSS_COMPILE)strip
-OBJCOPY	= $(CROSS_COMPILE)objcopy
-OBJDUMP	= $(CROSS_COMPILE)objdump
+AS              = $(CROSS_COMPILE)as
+CC              = $(CROSS_COMPILE)gcc
+CPP             = $(CC) -E
+C++             = $(CROSS_COMPILE)g++
+LD              = $(CC)
+#LD             = $(CROSS_COMPILE)ld
+AR              = $(CROSS_COMPILE)ar
+NM              = $(CROSS_COMPILE)nm
+STRIP           = $(CROSS_COMPILE)strip
+OBJCOPY         = $(CROSS_COMPILE)objcopy
+OBJDUMP         = $(CROSS_COMPILE)objdump
 endif
 
-AWK		= awk
-PERL	= perl
-PYTHON	= python
+AWK             = awk
+PERL            = perl
+PYTHON          = python
 
 KBUILD_CPPFLAGS :=
 
-KBUILD_CFLAGS	:= -fno-common -fmessage-length=0 -Wall \
-		   -fno-exceptions -ffunction-sections \
-		   -fdata-sections -fomit-frame-pointer
+KBUILD_CFLAGS   := -fno-common -fmessage-length=0 -Wall \
+                   -fno-exceptions -ffunction-sections \
+                   -fdata-sections -fomit-frame-pointer
 
 # By default char on ARM platform is unsigned char, but char on x86 platform
 # is signed char. To avoid porting issues, force char to be signed char
 # on ARM platform.
-KBUILD_CFLAGS	+= -fsigned-char
+KBUILD_CFLAGS   += -fsigned-char
 
 ifneq ($(TOOLCHAIN),armclang)
 # 1) Avoid checking out-of-bound array accesses in a loop
 #    (and unrolling/peeling/exiting the loop based on the check)
 # 2) Avoid detecting paths dereferencing a NULL pointer
 #    (and turning the problematic statement into a trap)
-KBUILD_CFLAGS	+= -fno-aggressive-loop-optimizations \
-		   -fno-isolate-erroneous-paths-dereference
+KBUILD_CFLAGS   += -fno-aggressive-loop-optimizations \
+                   -fno-isolate-erroneous-paths-dereference
 endif
 
 # Treat floating-point constants as float instead of double
 ifeq ($(TOOLCHAIN),armclang)
-KBUILD_CFLAGS	+= -cl-single-precision-constant -fshort-enums
+KBUILD_CFLAGS   += -cl-single-precision-constant -fshort-enums
 else
-KBUILD_CFLAGS	+= -fsingle-precision-constant
+KBUILD_CFLAGS   += -fsingle-precision-constant
 endif
-KBUILD_CFLAGS	+= -Wdouble-promotion -Wfloat-conversion
+KBUILD_CFLAGS   += -Wdouble-promotion -Wfloat-conversion
 
-KBUILD_CFLAGS	+= -g
+KBUILD_CFLAGS   += -g
 
-#C_ONLY_FLAGS	:= -std=gnu89
-C_ONLY_FLAGS	:= -std=gnu99
+#C_ONLY_FLAGS   := -std=gnu89
+C_ONLY_FLAGS    := -std=gnu99
 
-C++_ONLY_FLAGS	:= -std=gnu++98 -fno-rtti
+C++_ONLY_FLAGS  := -std=gnu++98 -fno-rtti
 
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 
@@ -433,31 +433,31 @@ export C_ONLY_FLAGS C++_ONLY_FLAGS
 # Files to ignore in find ... statements
 
 export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
-			  -name CVS -o -name .pc -o -name .hg -o -name .git \) \
-			  -prune -o
+                          -name CVS -o -name .pc -o -name .hg -o -name .git \) \
+                          -prune -o
 export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
-			 --exclude CVS --exclude .pc --exclude .hg --exclude .git
+                         --exclude CVS --exclude .pc --exclude .hg --exclude .git
 
 # ===========================================================================
 # Build targets only.
 
 # Objects we will link into $(IMAGE_FILE) / subdirs we need to visit
-init-y		:= init/
-core-y		:= main/
+init-y          := init/
+core-y          := main/
 
-LDS_FILE	:= best1000.lds
+LDS_FILE        := best1000.lds
 
 # Link flags for all LD processes
-LINK_CFLAGS	:=
+LINK_CFLAGS     :=
 export LINK_CFLAGS
 
 # Link flags for image only
-LIB_LDFLAGS		:=
-CFLAGS_IMAGE	:= -static
+LIB_LDFLAGS     :=
+CFLAGS_IMAGE    := -static
 ifeq ($(TOOLCHAIN),armclang)
-LDFLAGS_IMAGE	:= --no_locals
+LDFLAGS_IMAGE   := --no_locals
 else
-LDFLAGS_IMAGE	:= -X --no-wchar-size-warning
+LDFLAGS_IMAGE   := -X --no-wchar-size-warning
 endif
 
 # Include target definitions
@@ -474,18 +474,18 @@ endif
 ifeq ($(TOOLCHAIN),armclang)
 # Entry objects
 ifeq ($(entry-y),)
-entry-y		+= utils/boot_struct/boot_struct.o
+entry-y         += utils/boot_struct/boot_struct.o
 ifeq ($(ROM_BUILD),1)
-entry-y		+= tests/rom/startup_ARMCM.o
+entry-y         += tests/rom/startup_ARMCM.o
 ifneq ($(filter tests/rom/,$(core-y)),)
-entry-y		+= tests/rom/export_fn_rom.o
+entry-y         += tests/rom/export_fn_rom.o
 endif
 else # !ROM_BUILD
-entry-y		+= platform/cmsis/retarget_armclang_asm.o
+entry-y         += platform/cmsis/retarget_armclang_asm.o
 ifeq ($(PROGRAMMER),1)
-entry-y		+= tests/programmer/sys_api_programmer.o
+entry-y         += tests/programmer/sys_api_programmer.o
 else
-entry-y		+= platform/main/startup_main.o
+entry-y         += platform/main/startup_main.o
 endif
 endif # !ROM_BUILD
 endif
@@ -498,24 +498,24 @@ $(error Only objects can be defined in entry-y in target.mk: $(BAD_ENTRY_OBJS))
 endif
 IMAGE_ENTRY := $(entry-y)
 ifeq ($(ROM_BUILD),1)
-CFLAGS_IMAGE	+= -e Reset_Handler
+CFLAGS_IMAGE    += -e Reset_Handler
 else ifeq ($(PROGRAMMER),1)
-CFLAGS_IMAGE	+= -e programmer_start
+CFLAGS_IMAGE    += -e programmer_start
 else
-CFLAGS_IMAGE	+= -e __main
+CFLAGS_IMAGE    += -e __main
 endif
 endif
 
 ifneq ($(NO_BUILDID),1)
 ifneq ($(TOOLCHAIN),armclang)
-LDFLAGS_IMAGE	+= --build-id
+LDFLAGS_IMAGE   += --build-id
 endif
 endif
 ifeq ($(CROSS_REF),1)
 ifeq ($(TOOLCHAIN),armclang)
-LDFLAGS_IMAGE	+= --xref
+LDFLAGS_IMAGE   += --xref
 else
-LDFLAGS_IMAGE	+= --cref
+LDFLAGS_IMAGE   += --cref
 endif
 endif
 
@@ -711,11 +711,11 @@ KBUILD_CFLAGS   += $(call cc-option,-Wlogical-op)
 
 #KBUILD_CFLAGS   += -Wno-address-of-packed-member
 
-KBUILD_CFLAGS	+= -Wno-trigraphs \
-		   -fno-strict-aliasing \
-		   -Wno-format-security
+KBUILD_CFLAGS   += -Wno-trigraphs \
+                   -fno-strict-aliasing \
+                   -Wno-format-security
 
-#KBUILD_CFLAGS	+= Wundef
+#KBUILD_CFLAGS  += Wundef
 
 # use the deterministic mode of AR if available
 KBUILD_ARFLAGS := D
@@ -732,25 +732,25 @@ KBUILD_CPPFLAGS += $(KCPPFLAGS)
 KBUILD_AFLAGS += $(KAFLAGS)
 KBUILD_CFLAGS += $(KCFLAGS)
 
-IMAGE-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(core-y)))
+IMAGE-dirs      := $(patsubst %/,%,$(filter %/, $(init-y) $(core-y)))
 
 submodgoals =
 ifneq ($(SUBMODS),)
 include $(srctree)/scripts/submods.mk
 
-IMAGE-builddirs	:= $(call get_subdirs,$(IMAGE-dirs),$(SUBMODS))
+IMAGE-builddirs := $(call get_subdirs,$(IMAGE-dirs),$(SUBMODS))
 ifeq ($(COMPILE_ONLY),1)
 submodgoals = $(call get_submodgoals,$@,$(SUBMODS))
 endif
 else
-IMAGE-builddirs	:= $(IMAGE-dirs)
+IMAGE-builddirs := $(IMAGE-dirs)
 endif
 
-IMAGE-alldirs	:= $(sort $(IMAGE-dirs) $(patsubst %/,%,$(filter %/, \
-			$(init-) $(core-) $(extra-))))
+IMAGE-alldirs   := $(sort $(IMAGE-dirs) $(patsubst %/,%,$(filter %/, \
+                        $(init-) $(core-) $(extra-))))
 
-init-y		:= $(patsubst %/, %/built-in$(built_in_suffix), $(init-y))
-core-y		:= $(patsubst %/, %/built-in$(built_in_suffix), $(core-y))
+init-y          := $(patsubst %/, %/built-in$(built_in_suffix), $(init-y))
+core-y          := $(patsubst %/, %/built-in$(built_in_suffix), $(core-y))
 
 IMAGE_INIT := $(init-y)
 IMAGE_MAIN := $(core-y)
@@ -762,11 +762,11 @@ IMAGE-deps := $(LDS_TARGET) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER)
 endif
 
 BUILD_INFO_FLAGS := \
-	-DREVISION_INFO=$(REVISION_INFO) \
-	-DFLASH_SIZE=$(FLASH_SIZE) \
-	-DOTA_UPGRADE_CRC_LOG_SIZE=$(OTA_UPGRADE_CRC_LOG_SIZE) \
-	-DNV_REC_DEV_VER=$(NV_REC_DEV_VER) \
-	-I$(srctree)/platform/hal
+        -DREVISION_INFO=$(REVISION_INFO) \
+        -DFLASH_SIZE=$(FLASH_SIZE) \
+        -DOTA_UPGRADE_CRC_LOG_SIZE=$(OTA_UPGRADE_CRC_LOG_SIZE) \
+        -DNV_REC_DEV_VER=$(NV_REC_DEV_VER) \
+        -I$(srctree)/platform/hal
 
 BUILD_INFO_FLAGS += $(LDS_SECTION_FLAGS)
 BUILD_INFO_FLAGS += -DCHIP=$(CHIP)
@@ -850,30 +850,30 @@ LDFLAGS_IMAGE += --verbose
 endif
 
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
-		  $(CFLAGS_IMAGE) \
-		  -Wl,$(subst $(space),$(comma),$(strip \
-		  $(LDFLAGS) $(LDFLAGS_IMAGE) \
-		  --scatter=$(LDS_TARGET) \
-		  --list=$(IMAGE_MAP) \
-		  --info=summarysizes --info=summarystack --info=totals --info=unused \
-		  --map --load_addr_map_info \
-		  --remove --no_autoat \
-		  --emit_debug_overlay_relocs --emit_debug_overlay_section \
-		  --diag_style=gnu --diag_suppress=L6314 --diag_suppress=L6329)) \
-		  $(IMAGE_ENTRY) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
-		  $(LIB_LDFLAGS) $(LIB_LDFLAGS)
+              $(CFLAGS_IMAGE) \
+              -Wl,$(subst $(space),$(comma),$(strip \
+              $(LDFLAGS) $(LDFLAGS_IMAGE) \
+              --scatter=$(LDS_TARGET) \
+              --list=$(IMAGE_MAP) \
+              --info=summarysizes --info=summarystack --info=totals --info=unused \
+              --map --load_addr_map_info \
+              --remove --no_autoat \
+              --emit_debug_overlay_relocs --emit_debug_overlay_section \
+              --diag_style=gnu --diag_suppress=L6314 --diag_suppress=L6329)) \
+              $(IMAGE_ENTRY) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
+              $(LIB_LDFLAGS) $(LIB_LDFLAGS)
 else
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
-		  $(LD_USE_PATCH_SYMBOL) \
-		  -T $(LDS_TARGET) \
-		  $(CFLAGS_IMAGE) \
-		  -Wl,$(subst $(space),$(comma),$(strip \
-		  $(LDFLAGS) $(LDFLAGS_IMAGE) \
-		  -Map=$(IMAGE_MAP) \
-		  --gc-sections \
-		  --whole-archive)) \
-		  $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
-		  -Wl,--no-whole-archive $(LIB_LDFLAGS) $(LIB_LDFLAGS)
+              $(LD_USE_PATCH_SYMBOL) \
+              -T $(LDS_TARGET) \
+              $(CFLAGS_IMAGE) \
+              -Wl,$(subst $(space),$(comma),$(strip \
+              $(LDFLAGS) $(LDFLAGS_IMAGE) \
+              -Map=$(IMAGE_MAP) \
+              --gc-sections \
+              --whole-archive)) \
+              $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
+              -Wl,--no-whole-archive $(LIB_LDFLAGS) $(LIB_LDFLAGS)
 
 endif
 quiet_cmd_link-IMAGE_FILE = LINK    $@
@@ -937,8 +937,8 @@ ifeq ($(KBUILD_OUTPUT),)
 allclean: clean ;
 else
 ifeq ($(SUBMODS),)
-quiet_cmd_clean    = RMDIR   $(KBUILD_OUTPUT)
-      cmd_clean    = $(call CMDRMDIR,$(KBUILD_OUTPUT))
+quiet_cmd_clean = RMDIR   $(KBUILD_OUTPUT)
+      cmd_clean = $(call CMDRMDIR,$(KBUILD_OUTPUT))
 
 allclean:
 	+$(call cmd,clean)

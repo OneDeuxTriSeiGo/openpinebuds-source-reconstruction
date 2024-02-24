@@ -38,7 +38,7 @@ typedef struct __CQueue
     int size;
     int len;
     CQItemType *base;
-}CQueue;
+} CQueue;
 
 /* Init Queue */
 int InitCQueue(CQueue *Q, unsigned int size, CQItemType *buf);

@@ -68,7 +68,7 @@ static void hal_trace_fault_handler(void);
 #define TRACE_IDLE_OUTPUT               0
 
 #ifndef TRACE_BAUD_RATE
-#define TRACE_BAUD_RATE                  (921600)
+#define TRACE_BAUD_RATE                 (921600)
 #endif
 
 #ifndef TRACE_BUF_SIZE

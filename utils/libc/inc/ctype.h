@@ -13,7 +13,7 @@
 #define _P    0x10    /* punct */
 #define _S    0x20    /* white space (space/lf/tab) */
 #define _X    0x40    /* hex digit */
-#define _SP    0x80    /* hard space (0x20) */
+#define _SP   0x80    /* hard space (0x20) */
 
 extern const unsigned char _ctype[];
 
@@ -29,7 +29,7 @@ extern const unsigned char _ctype[];
 #define ispunct(c)    ((__ismask(c)&(_P)) != 0)
 #define isspace(c)    ((__ismask(c)&(_S)) != 0)
 #define isupper(c)    ((__ismask(c)&(_U)) != 0)
-#define isxdigit(c)    ((__ismask(c)&(_D|_X)) != 0)
+#define isxdigit(c)   ((__ismask(c)&(_D|_X)) != 0)
 
 #define isascii(c) (((unsigned char)(c))<=0x7f)
 #define toascii(c) (((unsigned char)(c))&0x7f)

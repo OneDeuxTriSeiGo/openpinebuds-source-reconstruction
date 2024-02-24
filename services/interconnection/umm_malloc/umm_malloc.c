@@ -22,7 +22,7 @@ UMM_H_ATTPACKPRE typedef struct umm_block_t {
     } header;
     union {
         umm_ptr free;
-    unsigned char data[4];
+        unsigned char data[4];
     } body;
 } UMM_H_ATTPACKSUF umm_block;
 
@@ -85,22 +85,22 @@ static void trace_umm_blocks_info( void ) {
 
 static unsigned short int umm_blocks( size_t size ) {
 
-        /*
-        * The calculation of the block size is not too difficult, but there are
-    * a few little things that we need to be mindful of.
-    *
-    * When a block removed from the free list, the space used by the free
-    * pointers is available for data. That's what the first calculation
-    * of size is doing.
-    */
+    /*
+     * The calculation of the block size is not too difficult, but there are
+     * a few little things that we need to be mindful of.
+     *
+     * When a block removed from the free list, the space used by the free
+     * pointers is available for data. That's what the first calculation
+     * of size is doing.
+     */
 
     if( size <= (sizeof(((umm_block *)0)->body)) )
-    return( 1 );
+        return( 1 );
 
     /*
-    * If it's for more than that, then we need to figure out the number of
-    * additional whole blocks the size of an umm_block are required.
-    */
+     * If it's for more than that, then we need to figure out the number of
+     * additional whole blocks the size of an umm_block are required.
+     */
 
     size -= ( 1 + (sizeof(((umm_block *)0)->body)) );
 
@@ -117,8 +117,8 @@ static unsigned short int umm_blocks( size_t size ) {
  * Note that free pointers are NOT modified by this function.
  */
 static void umm_split_block( unsigned short int c,
-    unsigned short int blocks,
-    unsigned short int new_freemask ) {
+        unsigned short int blocks,
+        unsigned short int new_freemask ) {
 
     UMM_NBLOCK(c+blocks) = (UMM_NBLOCK(c) & UMM_BLOCKNO_MASK) | new_freemask;
     UMM_PBLOCK(c+blocks) = c;
@@ -148,10 +148,10 @@ static void umm_disconnect_from_free_list( unsigned short int c ) {
 static void umm_assimilate_up( unsigned short int c ) {
 
     if( UMM_NBLOCK(UMM_NBLOCK(c)) & UMM_FREELIST_MASK ) {
-    /*
-        * The next block is a free block, so assimilate up and remove it from
-        * the free list
-        */
+        /*
+         * The next block is a free block, so assimilate up and remove it from
+         * the free list
+         */
 
         DBGLOG_DEBUG(2, "%d Assimilate up to next block %d, which is FREE\n", c, UMM_NBLOCK(c));
 
@@ -209,36 +209,36 @@ void umm_init( void ) {
         UMM_PFREE(block_0th)  = block_1th;
 
         /*
-        * Now, we need to set the whole heap space as a huge free block. We should
-        * not touch the 0th `umm_block`, since it's special: the 0th `umm_block`
-        * is the head of the free block list. It's a part of the heap invariant.
-        *
-        * See the detailed explanation at the beginning of the file.
-        */
+         * Now, we need to set the whole heap space as a huge free block. We should
+         * not touch the 0th `umm_block`, since it's special: the 0th `umm_block`
+         * is the head of the free block list. It's a part of the heap invariant.
+         *
+         * See the detailed explanation at the beginning of the file.
+         */
 
         /*
-        * 1th `umm_block` has pointers:
-        *
-        * - next `umm_block`: the latest one
-        * - prev `umm_block`: the 0th
-        *
-        * Plus, it's a free `umm_block`, so we need to apply `UMM_FREELIST_MASK`
-        *
-        * And it's the last free block, so the next free block is 0.
-        */
+         * 1th `umm_block` has pointers:
+         *
+         * - next `umm_block`: the latest one
+         * - prev `umm_block`: the 0th
+         *
+         * Plus, it's a free `umm_block`, so we need to apply `UMM_FREELIST_MASK`
+         *
+         * And it's the last free block, so the next free block is 0.
+         */
         UMM_NBLOCK(block_1th) = block_last | UMM_FREELIST_MASK;
         UMM_NFREE(block_1th)  = 0;
         UMM_PBLOCK(block_1th) = block_0th;
         UMM_PFREE(block_1th)  = block_0th;
 
         /*
-        * latest `umm_block` has pointers:
-        *
-        * - next `umm_block`: 0 (meaning, there are no more `umm_blocks`)
-        * - prev `umm_block`: the 1st
-        *
-        * It's not a free block, so we don't touch NFREE / PFREE at all.
-        */
+         * latest `umm_block` has pointers:
+         *
+         * - next `umm_block`: 0 (meaning, there are no more `umm_blocks`)
+         * - prev `umm_block`: the 1st
+         *
+         * It's not a free block, so we don't touch NFREE / PFREE at all.
+         */
         UMM_NBLOCK(block_last) = 0;
         UMM_PBLOCK(block_last) = block_1th;
     }
@@ -259,13 +259,13 @@ void umm_free( void *ptr ) {
     }
 
     /*
-    * FIXME: At some point it might be a good idea to add a check to make sure
-    *        that the pointer we're being asked to free up is actually within
-    *        the umm_heap!
-    *
-    * NOTE:  See the new umm_info() function that you can use to see if a ptr is
-    *        on the free list!
-    */
+     * FIXME: At some point it might be a good idea to add a check to make sure
+     *        that the pointer we're being asked to free up is actually within
+     *        the umm_heap!
+     *
+     * NOTE:  See the new umm_info() function that you can use to see if a ptr is
+     *        on the free list!
+     */
 
     /* Protect the critical section... */
     UMM_CRITICAL_ENTRY();
@@ -289,9 +289,9 @@ void umm_free( void *ptr ) {
         c = umm_assimilate_down(c, UMM_FREELIST_MASK);
     } else {
         /*
-        * The previous block is not a free block, so add this one to the head
-        * of the free list
-        */
+         * The previous block is not a free block, so add this one to the head
+         * of the free list
+         */
 
         DBGLOG_DEBUG(0, "Just add to head of free list\n" );
 
@@ -323,11 +323,11 @@ void *umm_malloc( size_t size ) {
     }
 
     /*
-    * the very first thing we do is figure out if we're being asked to allocate
-    * a size of 0 - and if we are we'll simply return a null pointer. if not
-    * then reduce the size by 1 byte so that the subsequent calculations on
-    * the number of blocks to allocate are easier...
-    */
+     * the very first thing we do is figure out if we're being asked to allocate
+     * a size of 0 - and if we are we'll simply return a null pointer. if not
+     * then reduce the size by 1 byte so that the subsequent calculations on
+     * the number of blocks to allocate are easier...
+     */
 
     if( 0 == size ) {
         DBGLOG_DEBUG(0, "malloc a block of 0 bytes -> do nothing\n" );
@@ -341,12 +341,12 @@ void *umm_malloc( size_t size ) {
     blocks = umm_blocks( size );
 
     /*
-    * Now we can scan through the free list until we find a space that's big
-    * enough to hold the number of blocks we need.
-    *
-    * This part may be customized to be a best-fit, worst-fit, or first-fit
-    * algorithm
-    */
+     * Now we can scan through the free list until we find a space that's big
+     * enough to hold the number of blocks we need.
+     *
+     * This part may be customized to be a best-fit, worst-fit, or first-fit
+     * algorithm
+     */
 
     cf = UMM_NFREE(0);
 
@@ -366,7 +366,7 @@ void *umm_malloc( size_t size ) {
 #elif defined UMM_FIRST_FIT
         /* This is the first block that fits! */
         if( (blockSize >= blocks) )
-        break;
+            break;
 #else
 #  error "No UMM_*_FIT is defined - check umm_malloc_cfg.h"
 #endif
@@ -381,11 +381,11 @@ void *umm_malloc( size_t size ) {
 
     if( UMM_NBLOCK(cf) & UMM_BLOCKNO_MASK && blockSize >= blocks ) {
         /*
-        * This is an existing block in the memory heap, we just need to split off
-        * what we need, unlink it from the free list and mark it as in use, and
-        * link the rest of the block back into the freelist as if it was a new
-        * block on the free list...
-        */
+         * This is an existing block in the memory heap, we just need to split off
+         * what we need, unlink it from the free list and mark it as in use, and
+         * link the rest of the block back into the freelist as if it was a new
+         * block on the free list...
+         */
 
         if( blockSize == blocks ) {
             /* It's an exact fit and we don't neet to split off a block. */
@@ -400,17 +400,17 @@ void *umm_malloc( size_t size ) {
             DBGLOG_DEBUG(2, "Allocating %6i blocks starting at %6i - existing\n", blocks, cf );
 
             /*
-            * split current free block `cf` into two blocks. The first one will be
-            * returned to user, so it's not free, and the second one will be free.
-            */
+             * split current free block `cf` into two blocks. The first one will be
+             * returned to user, so it's not free, and the second one will be free.
+             */
             umm_split_block( cf, blocks, UMM_FREELIST_MASK /*new block is free*/ );
 
             /*
-            * `umm_split_block()` does not update the free pointers (it affects
-            * only free flags), but effectively we've just moved beginning of the
-            * free block from `cf` to `cf + blocks`. So we have to adjust pointers
-            * to and from adjacent free blocks.
-            */
+             * `umm_split_block()` does not update the free pointers (it affects
+             * only free flags), but effectively we've just moved beginning of the
+             * free block from `cf` to `cf + blocks`. So we have to adjust pointers
+             * to and from adjacent free blocks.
+             */
 
             /* previous free block */
             UMM_NFREE( UMM_PFREE(cf) ) = cf + blocks;
@@ -455,13 +455,13 @@ void *umm_realloc( void *ptr, size_t size ) {
         umm_init();
     }
 
-  /*
-   * This code looks after the case of a NULL value for ptr. The ANSI C
-   * standard says that if ptr is NULL and size is non-zero, then we've
-   * got to work the same a malloc(). If size is also 0, then our version
-   * of malloc() returns a NULL pointer, which is OK as far as the ANSI C
-   * standard is concerned.
-   */
+    /*
+     * This code looks after the case of a NULL value for ptr. The ANSI C
+     * standard says that if ptr is NULL and size is non-zero, then we've
+     * got to work the same a malloc(). If size is also 0, then our version
+     * of malloc() returns a NULL pointer, which is OK as far as the ANSI C
+     * standard is concerned.
+     */
 
     if( ((void *)NULL == ptr) ) {
         DBGLOG_DEBUG(0, "realloc the NULL pointer - call malloc()\n" );
@@ -470,10 +470,10 @@ void *umm_realloc( void *ptr, size_t size ) {
     }
 
     /*
-    * Now we're sure that we have a non_NULL ptr, but we're not sure what
-    * we should do with it. If the size is 0, then the ANSI C standard says that
-    * we should operate the same as free.
-    */
+     * Now we're sure that we have a non_NULL ptr, but we're not sure what
+     * we should do with it. If the size is 0, then the ANSI C standard says that
+     * we should operate the same as free.
+     */
 
     if( 0 == size ) {
         DBGLOG_DEBUG(0, "realloc to 0 size, just free the block\n" );
@@ -484,13 +484,13 @@ void *umm_realloc( void *ptr, size_t size ) {
     }
 
     /*
-    * Otherwise we need to actually do a reallocation. A naiive approach
-    * would be to malloc() a new block of the correct size, copy the old data
-    * to the new block, and then free the old block.
-    *
-    * While this will work, we end up doing a lot of possibly unnecessary
-    * copying. So first, let's figure out how many blocks we'll need.
-    */
+     * Otherwise we need to actually do a reallocation. A naiive approach
+     * would be to malloc() a new block of the correct size, copy the old data
+     * to the new block, and then free the old block.
+     *
+     * While this will work, we end up doing a lot of possibly unnecessary
+     * copying. So first, let's figure out how many blocks we'll need.
+     */
 
     blocks = umm_blocks( size );
 
@@ -510,12 +510,12 @@ void *umm_realloc( void *ptr, size_t size ) {
     UMM_CRITICAL_ENTRY();
 
     /* Now figure out if the previous and/or next blocks are free as well as
-    * their sizes - this will help us to minimize special code later when we
-    * decide if it's possible to use the adjacent blocks.
-    *
-    * We set prevBlockSize and nextBlockSize to non-zero values ONLY if they
-    * are free!
-    */
+     * their sizes - this will help us to minimize special code later when we
+     * decide if it's possible to use the adjacent blocks.
+     *
+     * We set prevBlockSize and nextBlockSize to non-zero values ONLY if they
+     * are free!
+     */
 
     if ((UMM_NBLOCK(UMM_NBLOCK(c)) & UMM_FREELIST_MASK)) {
         nextBlockSize = (UMM_NBLOCK(UMM_NBLOCK(c)) & UMM_BLOCKNO_MASK) - UMM_NBLOCK(c);
@@ -528,28 +528,28 @@ void *umm_realloc( void *ptr, size_t size ) {
     DBGLOG_DEBUG(4, "realloc blocks %i blockSize %i nextBlockSize %i prevBlockSize %i\n", blocks, blockSize, nextBlockSize, prevBlockSize );
 
     /*
-    * Ok, now that we're here we know how many blocks we want and the current
-    * blockSize. The prevBlockSize and nextBlockSize are set and we can figure
-    * out the best strategy for the new allocation as follows:
-    *
-    * 1. If the new block is the same size or smaller than the current block do
-    *    nothing.
-    * 2. If the next block is free and adding it to the current block gives us
-    *    enough memory, assimilate the next block.
-    * 3. If the prev block is free and adding it to the current block gives us
-    *    enough memory, remove the previous block from the free list, assimilate
-    *    it, copy to the new block.
-    * 4. If the prev and next blocks are free and adding them to the current
-    *    block gives us enough memory, assimilate the next block, remove the
-    *    previous block from the free list, assimilate it, copy to the new block.
-    * 5. Otherwise try to allocate an entirely new block of memory. If the
-    *    allocation works free the old block and return the new pointer. If
-    *    the allocation fails, return NULL and leave the old block intact.
-    *
-    * All that's left to do is decide if the fit was exact or not. If the fit
-    * was not exact, then split the memory block so that we use only the requested
-    * number of blocks and add what's left to the free list.
-    */
+     * Ok, now that we're here we know how many blocks we want and the current
+     * blockSize. The prevBlockSize and nextBlockSize are set and we can figure
+     * out the best strategy for the new allocation as follows:
+     *
+     * 1. If the new block is the same size or smaller than the current block do
+     *    nothing.
+     * 2. If the next block is free and adding it to the current block gives us
+     *    enough memory, assimilate the next block.
+     * 3. If the prev block is free and adding it to the current block gives us
+     *    enough memory, remove the previous block from the free list, assimilate
+     *    it, copy to the new block.
+     * 4. If the prev and next blocks are free and adding them to the current
+     *    block gives us enough memory, assimilate the next block, remove the
+     *    previous block from the free list, assimilate it, copy to the new block.
+     * 5. Otherwise try to allocate an entirely new block of memory. If the
+     *    allocation works free the old block and return the new pointer. If
+     *    the allocation fails, return NULL and leave the old block intact.
+     *
+     * All that's left to do is decide if the fit was exact or not. If the fit
+     * was not exact, then split the memory block so that we use only the requested
+     * number of blocks and add what's left to the free list.
+     */
 
     if (blockSize >= blocks) {
         DBGLOG_DEBUG(1, "realloc the same or smaller size block - %i, do nothing\n", blocks );
@@ -614,6 +614,6 @@ void *umm_calloc( size_t num, size_t item_size ) {
         memset(ret, 0x00, (size_t)(item_size * num));
 
     return ret;
-    }
+}
 
 /* ------------------------------------------------------------------------ */

@@ -22,8 +22,8 @@ include $(kbuild-dir)/Makefile
 # Figure out what we need to build from the various variables
 # ==========================================================================
 
-__subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
-subdir-y	+= $(__subdir-y)
+__subdir-y      := $(patsubst %/,%,$(filter %/, $(obj-y)))
+subdir-y        += $(__subdir-y)
 __subdir-m      := $(patsubst %/,%,$(filter %/, $(obj-m)))
 subdir-m        += $(__subdir-m)
 __subdir-       := $(patsubst %/,%,$(filter %/, $(obj-)))
@@ -31,27 +31,27 @@ subdir-         += $(__subdir-)
 
 # Subdirectories we need to descend into
 
-subdir-ym	:= $(sort $(subdir-y) $(subdir-m))
+subdir-ym       := $(sort $(subdir-y) $(subdir-m))
 subdir-ymn      := $(sort $(subdir-ym) $(subdir-))
 
-obj-ymn		:= $(obj-y) $(obj-m) $(obj-)
-lib-ymn		:= $(lib-y) $(lib-m) $(lib-)
+obj-ymn         := $(obj-y) $(obj-m) $(obj-)
+lib-ymn         := $(lib-y) $(lib-m) $(lib-)
 
 # if $(foo-objs) exists, foo.o is a composite object
-multi-used-ymn	:= $(sort $(foreach m,$(obj-ymn), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))), $(m))))
-multi-objs-ymn	:= $(foreach m, $(multi-used-ymn), $($(m:.o=-objs)) $($(m:.o=-y)))
+multi-used-ymn  := $(sort $(foreach m,$(obj-ymn), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))), $(m))))
+multi-objs-ymn  := $(foreach m, $(multi-used-ymn), $($(m:.o=-objs)) $($(m:.o=-y)))
 
-obj-ymn		:= $(patsubst %/, %/built-in.o %/built-in.a, $(obj-y) $(obj-m) $(obj-))
+obj-ymn         := $(patsubst %/, %/built-in.o %/built-in.a, $(obj-y) $(obj-m) $(obj-))
 
-extra-ymn	:= $(extra-y) $(extra-m) $(extra-)
+extra-ymn       := $(extra-y) $(extra-m) $(extra-)
 
 # build a list of files to remove, usually relative to the current
 # directory
 
-__clean-files	:= $(obj-ymn) $(lib-ymn) $(multi-used-ymn) \
-		   $(multi-objs-ymn) $(extra-ymn) \
-		   built-in.o built-in.a lib.a \
-		   $(always) $(targets) $(clean-files)
+__clean-files   := $(obj-ymn) $(lib-ymn) $(multi-used-ymn) \
+                   $(multi-objs-ymn) $(extra-ymn) \
+                   built-in.o built-in.a lib.a \
+                   $(always) $(targets) $(clean-files)
 
 __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
 
@@ -60,30 +60,30 @@ __clean-files   := $(filter-out $(no-clean-files), $(__clean-files))
 # you want to delete a file from the toplevel object directory).
 
 __clean-files   := $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(__clean-files))) \
-		   $(filter $(objtree)/%, $(__clean-files))
+                   $(filter $(objtree)/%, $(__clean-files))
 
 # same as clean-files
 
 __clean-dirs    := $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-dirs)))    \
-		   $(filter $(objtree)/%, $(clean-dirs))
+                   $(filter $(objtree)/%, $(clean-dirs))
 
 # Add subdir path
-subdir-ymn	:= $(addprefix $(obj)/,$(subdir-ymn))
-obj-ymn		:= $(addprefix $(obj)/,$(obj-ymn))
-lib-ymn		:= $(addprefix $(obj)/,$(lib-ymn))
-multi-used-ymn	:= $(addprefix $(obj)/,$(multi-used-ymn))
-multi-objs-ymn	:= $(addprefix $(obj)/,$(multi-objs-ymn))
+subdir-ymn      := $(addprefix $(obj)/,$(subdir-ymn))
+obj-ymn         := $(addprefix $(obj)/,$(obj-ymn))
+lib-ymn         := $(addprefix $(obj)/,$(lib-ymn))
+multi-used-ymn  := $(addprefix $(obj)/,$(multi-used-ymn))
+multi-objs-ymn  := $(addprefix $(obj)/,$(multi-objs-ymn))
 
-SUBMODS		:= $(filter $(obj)/%,$(SUBMODS))
+SUBMODS         := $(filter $(obj)/%,$(SUBMODS))
 
 ifneq ($(SUBMODS),)
 include scripts/submods.mk
 
-buildsubdir-ymn	:= $(call get_subdirs,$(subdir-ymn),$(SUBMODS))
-__full-clean-files	:= $(__clean-files)
-__clean-files	:= $(filter $(SUBMODS),$(__full-clean-files))
-__clean-files	+= $(obj)/built-in.o $(obj)/built-in.a $(obj)/lib.a
-__clean-files	+= $(foreach m,$(multi-used-ymn),$(if $(filter $(SUBMODS),$(call get_multi_objs,$m))),$m,)
+buildsubdir-ymn := $(call get_subdirs,$(subdir-ymn),$(SUBMODS))
+__full-clean-files      := $(__clean-files)
+__clean-files   := $(filter $(SUBMODS),$(__full-clean-files))
+__clean-files   += $(obj)/built-in.o $(obj)/built-in.a $(obj)/lib.a
+__clean-files   += $(foreach m,$(multi-used-ymn),$(if $(filter $(SUBMODS),$(call get_multi_objs,$m))),$m,)
 
 # Check for invalid targets
 errobj-ymn := $(SUBMODS)
@@ -104,23 +104,23 @@ endif
 endif
 
 ifeq ($(RM_DIR),1)
-buildsubdir-ymn	:=
+buildsubdir-ymn :=
 else
-buildsubdir-ymn	:= $(subdir-ymn)
+buildsubdir-ymn := $(subdir-ymn)
 endif
 
 endif # SUBMODS
 
 # Include intermediate files
 include scripts/include.mk
-__clean-files	+= $(foreach f,$(__clean-files),$(call get_depfile_name,$f))
+__clean-files   += $(foreach f,$(__clean-files),$(call get_depfile_name,$f))
 
 #$(info RM_DIR=$(RM_DIR), RM_ALL=$(RM_ALL))
 #$(info buildsubdir-ymn=$(buildsubdir-ymn))
 #$(info __clean-files=$(__clean-files))
 
-__clean-files	:= $(wildcard $(__clean-files))
-__clean-dirs	:= $(wildcard $(__clean-dirs))
+__clean-files   := $(wildcard $(__clean-files))
+__clean-dirs    := $(wildcard $(__clean-dirs))
 
 # ==========================================================================
 

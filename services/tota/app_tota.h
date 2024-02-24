@@ -66,10 +66,10 @@ typedef enum{
 typedef enum{
     TOTA_SERVICE_INIT_SYNC = 0,             /*valid payload: |2 bytes sync word |                                               */
     TOTA_SERVICE_CMD_WRITE_FLASH,           /*valid payload: |4 bytes address|4 bytes write data length|                        */
-    TOTA_SERVICE_CMD_READ_FLASH,            /*valid payload: |1 byte start_or_stop|4 bytes address|4 bytes read data length|  */
+    TOTA_SERVICE_CMD_READ_FLASH,            /*valid payload: |1 byte start_or_stop|4 bytes address|4 bytes read data length|    */
     TOTA_SERVICE_CMD_WRITE_AI_ENV_DATA,     /*valid payload: |4 bytes write data length|                                        */
     TOTA_SERVICE_CMD_VERIFY_AI_ENV_DATA,    /*valid payload: |4 bytes magic code |4 bytes CRC|                                  */
-    TOTA_SERVICE_CMD_READ_AI_ENV_DATA,      /*valid payload: |1 byte start_or_stop|4 bytes read data length |                  */
+    TOTA_SERVICE_CMD_READ_AI_ENV_DATA,      /*valid payload: |1 byte start_or_stop|4 bytes read data length |                   */
     TOTA_SERVICE_CMD_READ_ACK,              /*valid rsp payload: |1 bytes|                                                      */
     TOTA_SERVICE_CMD_GET_BAT,               /*valid rsp payload: |4 bytes|                                                      */
     TOTA_SERVICE_CMD_GET_FW_VERSION,        /*valid rsp payload: |4 bytes|                                                      */

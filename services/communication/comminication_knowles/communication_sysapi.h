@@ -11,7 +11,7 @@ extern "C" {
 #define TRACE(str, ...)                 do { printf("%s/" str "\n", __FUNCTION__, __VA_ARGS__); } while (0)
 #define ASSERT(cond, str, ...)          \
     do { if (!(cond)) { printf("[ASSERT]%s/" str, __FUNCTION__, __VA_ARGS__); while (1); } } while (0)
-#define TRACE_TIME(num,str, ...)            TRACE(num,str, __VA_ARGS__)
+#define TRACE_TIME(num,str, ...)        TRACE(num,str, __VA_ARGS__)
 
 int write_sig_data(const unsigned char *data, unsigned int len);
 int write_code_data(const unsigned char *data, unsigned int len);
@@ -20,7 +20,7 @@ void programmer_main(void);
 #include "hal_trace.h"
 #include "hal_timer.h"
 
-#define TRACE_TIME(num,str, ...)            TRACE(num+1,"[%05u] " str, TICKS_TO_MS(hal_sys_timer_get()), ##__VA_ARGS__)
+#define TRACE_TIME(num,str, ...)        TRACE(num+1,"[%05u] " str, TICKS_TO_MS(hal_sys_timer_get()), ##__VA_ARGS__)
 #endif
 
 #define UART_OUT_SIGNAL_ID 0x19

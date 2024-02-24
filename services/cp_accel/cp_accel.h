@@ -80,7 +80,7 @@ typedef enum {
     CP_ACCEL_STATE_OPENING,
     CP_ACCEL_STATE_OPENED,
     CP_ACCEL_STATE_CLOSING,
-}CP_ACCEL_STATE_E;
+} CP_ACCEL_STATE_E;
 
 /// Task descriptor grouping all information required.
 struct cp_task_desc

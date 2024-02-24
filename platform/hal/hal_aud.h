@@ -243,11 +243,11 @@ struct AUD_IO_PATH_CFG_T {
 };
 
 enum ANC_TYPE_T {
-    ANC_NOTYPE = (1 << 0),
-    ANC_FEEDFORWARD=(1 << 1),
-    ANC_FEEDBACK=(1 << 2),
-    ANC_TALKTHRU=(1 << 3),
-    ANC_MUSICCANCLE=(1 << 4),
+    ANC_NOTYPE          = (1 << 0),
+    ANC_FEEDFORWARD     = (1 << 1),
+    ANC_FEEDBACK        = (1 << 2),
+    ANC_TALKTHRU        = (1 << 3),
+    ANC_MUSICCANCLE     = (1 << 4),
 };
 
 struct CODEC_DAC_VOL_T {

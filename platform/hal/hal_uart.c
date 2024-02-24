@@ -1298,7 +1298,7 @@ static void hal_uart_irq_handler(void)
 #endif
 
 #ifndef TRACE_BAUD_RATE
-#define TRACE_BAUD_RATE                  (921600)
+#define TRACE_BAUD_RATE                 (921600)
 #endif
 
 int hal_uart_printf_init(void)
