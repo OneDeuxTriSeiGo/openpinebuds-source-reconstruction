@@ -114,25 +114,6 @@ echo-help = @echo '  $(call escchar,$(1))'
 endif
 
 ###
-# Archive command
-ifeq ($(TOOLCHAIN),armclang)
-archive-cmd = $(AR) --create --debug_symbols $@ $(1)
-else
-ifeq ($(WIN_PLAT),y)
-archive-cmd = ( ( echo create $@ && \
-  echo addmod $(subst $(space),$(comma),$(strip $(filter-out %.a,$(1)))) && \
-  $(foreach o,$(filter %.a,$(1)),echo addlib $o && ) \
-  echo save && \
-  echo end ) | $(AR) -M )
-else
-# Command "/bin/echo -e" cannot work on Apple Mac machines, so we use "/usr/bin/printf" instead
-archive-cmd = ( /usr/bin/printf 'create $@\n\
-  addmod $(subst $(space),$(comma),$(strip $(filter-out %.a,$(1))))\n\
-  $(foreach o,$(filter %.a,$(1)),addlib $o\n)save\nend' | $(AR) -M )
-endif
-endif
-
-###
 # try-run
 ifeq ($(WIN_PLAT),y)
 try-run = $(shell ($(1) >$(devnull) 2>&1) && echo. $(2) || echo. $(3))

@@ -32,11 +32,7 @@
 
 #include "umm_malloc.h"
 
-#include "umm_malloc_cfg.h"   /* user-dependent */
-
 /* Use the default DBGLOG_LEVEL and DBGLOG_FUNCTION */
-
-#define DBGLOG_LEVEL 0
 
 #include "dbglog/dbglog.h"
 
@@ -78,17 +74,6 @@ unsigned short int umm_numblocks = 0;
 #define UMM_PFREE(b)  (UMM_BLOCK(b).body.free.prev)
 #define UMM_DATA(b)   (UMM_BLOCK(b).body.data)
 
-/* -------------------------------------------------------------------------
- * There are additional files that may be included here - normally it's
- * not a good idea to include .c files but in this case it keeps the
- * main umm_malloc file clear and prevents issues with exposing internal
- * data structures to other programs.
- * -------------------------------------------------------------------------
- */
-
-#include "umm_integrity.c"
-#include "umm_poison.c"
-#include "umm_info.c"
 
 /* ------------------------------------------------------------------------ */
 

@@ -89,14 +89,6 @@ struct NORFLASH_CTRL_T {
     __IO uint32_t REG_148;
     __IO uint32_t REG_14C;
     __IO uint32_t REG_150;
-#if (CHIP_FLASH_CTRL_VER >= 5)
-    __IO uint32_t REG_154;
-    __IO uint32_t REG_158;
-    __IO uint32_t REG_15C;
-    __IO uint32_t REG_160;
-    __IO uint32_t REG_164;
-    __IO uint32_t REG_168;
-#endif
 #endif
 #endif
 #endif
@@ -268,17 +260,9 @@ struct NORFLASH_CTRL_T {
 #define REG_034_SPI_IODRV_SHIFT             16
 #define REG_034_SPI_IODRV_MASK              (0x3 << REG_034_SPI_IODRV_SHIFT)
 #define REG_034_SPI_IODRV(n)                BITFIELD_VAL(REG_034_SPI_IODRV, n)
-#if (CHIP_FLASH_CTRL_VER <= 3)
 #define REG_034_SPI_IORES_SHIFT             8
 #define REG_034_SPI_IORES_MASK              (0xFF << REG_034_SPI_IORES_SHIFT)
 #define REG_034_SPI_IORES(n)                BITFIELD_VAL(REG_034_SPI_IORES, n)
-#else
-#define REG_034_SPI_IORES_SHIFT             10
-#define REG_034_SPI_IORES_MASK              (0x3F << REG_034_SPI_IORES_SHIFT)
-#define REG_034_SPI_IORES(n)                BITFIELD_VAL(REG_034_SPI_IORES, n)
-#define REG_034_MEM_READ_CONT_EN            (1 << 9)
-#define REG_034_MEM_READ_BUS_LOCK           (1 << 8)
-#endif
 #define REG_034_SPI_RDEN_SHIFT              4
 #define REG_034_SPI_RDEN_MASK               (0xF << REG_034_SPI_RDEN_SHIFT)
 #define REG_034_SPI_RDEN(n)                 BITFIELD_VAL(REG_034_SPI_RDEN, n)
@@ -300,12 +284,6 @@ struct NORFLASH_CTRL_T {
 #define REG_038_WRAP_MODE_SEL_MASK          (0x1 << REG_038_WRAP_MODE_SEL_SHIFT)
 #define REG_038_WRAP_MODE_SEL               (REG_038_WRAP_MODE_SEL_MASK)
 
-#if (CHIP_FLASH_CTRL_VER >= 4)
-// REG_03C
-#define REG_03C_MEM_READ_IN_HOLD            (1 << 1)
-#define REG_03C_MEM_READ_BUS_IDLE           (1 << 0)
-#endif
-
 #if (CHIP_FLASH_CTRL_VER >= 3)
 // REG_40
 #define REG_040_RES_31_6_SHIFT              6
@@ -317,13 +295,6 @@ struct NORFLASH_CTRL_T {
 #define REG_040_DTR_MODE                    (1 << 2)
 #define REG_040_OPI_MODE                    (1 << 1)
 #define REG_040_QPI_MODE                    (1 << 0)
-#endif
-
-#if (CHIP_FLASH_CTRL_VER >= 5)
-// REG_044
-#define REG_044_NAND_ADDR_BYTE_NUM_SHIFT    2
-#define REG_044_NAND_ADDR_BYTE_NUM_MASK     (0x3 << REG_044_NAND_ADDR_BYTE_NUM_SHIFT)
-#define REG_044_NAND_ADDR_BYTE_NUM(n)       BITFIELD_VAL(REG_044_NAND_ADDR_BYTE_NUM, n)
 #endif
 
 // REG_058
@@ -455,38 +426,6 @@ struct NORFLASH_CTRL_T {
 #define REG_150_DUMMY_OTHERS_SHIFT          0
 #define REG_150_DUMMY_OTHERS_MASK           (0x1F << REG_150_DUMMY_OTHERS_SHIFT)
 #define REG_150_DUMMY_OTHERS(n)             BITFIELD_VAL(REG_150_DUMMY_OTHERS, n)
-#endif
-
-#if (CHIP_FLASH_CTRL_VER >= 5)
-// REG_154
-#define REG_154_DUMMY_N_RC1_SHIFT           0
-#define REG_154_DUMMY_N_RC1_MASK            (0x1F << REG_154_DUMMY_N_RC1_SHIFT)
-#define REG_154_DUMMY_N_RC1(n)              BITFIELD_VAL(REG_154_DUMMY_N_RC1, n)
-
-// REG_158
-#define REG_158_DUMMY_N_RC2_SHIFT           0
-#define REG_158_DUMMY_N_RC2_MASK            (0x1F << REG_158_DUMMY_N_RC2_SHIFT)
-#define REG_158_DUMMY_N_RC2(n)              BITFIELD_VAL(REG_158_DUMMY_N_RC2, n)
-
-// REG_15C
-#define REG_15C_DUMMY_N_RC4_SHIFT           0
-#define REG_15C_DUMMY_N_RC4_MASK            (0x1F << REG_15C_DUMMY_N_RC4_SHIFT)
-#define REG_15C_DUMMY_N_RC4(n)              BITFIELD_VAL(REG_15C_DUMMY_N_RC4, n)
-
-// REG_160
-#define REG_160_DUMMY_N_RCDIO_SHIFT         0
-#define REG_160_DUMMY_N_RCDIO_MASK          (0x1F << REG_160_DUMMY_N_RCDIO_SHIFT)
-#define REG_160_DUMMY_N_RCDIO(n)            BITFIELD_VAL(REG_160_DUMMY_N_RCDIO, n)
-
-// REG_164
-#define REG_164_DUMMY_N_RCQIO_SHIFT         0
-#define REG_164_DUMMY_N_RCQIO_MASK          (0x1F << REG_164_DUMMY_N_RCQIO_SHIFT)
-#define REG_164_DUMMY_N_RCQIO(n)            BITFIELD_VAL(REG_164_DUMMY_N_RCQIO, n)
-
-// REG_168
-#define REG_168_DUMMY_N_OTHERS_SHIFT        0
-#define REG_168_DUMMY_N_OTHERS_MASK         (0x1F << REG_168_DUMMY_N_OTHERS_SHIFT)
-#define REG_168_DUMMY_N_OTHERS(n)           BITFIELD_VAL(REG_168_DUMMY_N_OTHERS, n)
 #endif
 
 #endif

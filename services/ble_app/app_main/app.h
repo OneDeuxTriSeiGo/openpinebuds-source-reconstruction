@@ -72,85 +72,10 @@
 #define APP_MAX_TX_OCTETS   251
 #define APP_MAX_TX_TIME     2120
 
-#define INVALID_BLE_ACTIVITY_INDEX  0xFF
-
-#define BLE_CONN_PARAM_SLAVE_LATENCY_CNT        0
-#define BLE_CONN_PARAM_SUPERVISE_TIMEOUT_MS     6000
-
-/*
- * MACROS
- ****************************************************************************************
- */
-
-#define APP_HANDLERS(subtask)    {&subtask##_msg_handler_list[0], ARRAY_LEN(subtask##_msg_handler_list)}
-
-/*
- * ENUMERATIONS
- ****************************************************************************************
- */
-
-
-/// Activity state machine
-enum app_actv_state
-{
-    /// Activity does not exists
-    APP_ACTV_STATE_IDLE = 0,
-
-    /// Creating advertising activity
-    APP_ADV_STATE_CREATING,
-    /// Setting advertising data
-    APP_ADV_STATE_SETTING_ADV_DATA,
-    /// Setting scan response data
-    APP_ADV_STATE_SETTING_SCAN_RSP_DATA,
-
-    /// Starting advertising activity
-    APP_ADV_STATE_STARTING,
-    /// Advertising activity started
-    APP_ADV_STATE_STARTED,
-    /// Stopping advertising activity
-    APP_ADV_STATE_STOPPING,
-    /// Deleting advertising activity
-    APP_ADV_STATE_DELETING,
-
-    /// Creating scanning activity
-    APP_SCAN_STATE_CREATING,        //8
-    /// Starting scanning activity
-    APP_SCAN_STATE_STARTING,
-    /// Scanning activity started
-    APP_SCAN_STATE_STARTED,
-    /// Stopping scanning activity
-    APP_SCAN_STATE_STOPPING,
-    /// Deleting scanning activity
-    APP_SCAN_STATE_DELETING,
-
-    /// Creating connecting activity
-    APP_CONNECT_STATE_CREATING,     //13
-    /// Starting connecting activity
-    APP_CONNECT_STATE_STARTING,
-    /// Connecting activity started
-    APP_CONNECT_STATE_STARTED,
-    /// Stopping connecting activity
-    APP_CONNECT_STATE_STOPPING,
-    /// Deleting connecting activity
-    APP_CONNECT_STATE_DELETING,
-
-};
-
-
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
  */
-
-/// Structure containing information about the handlers for an application subtask
-struct app_subtask_handlers
-{
-    /// Pointer to the message handler table
-    const struct ke_msg_handler *p_msg_handler_tab;
-    /// Number of messages handled
-    uint16_t msg_cnt;
-};
-
 typedef enum
 {
     BLE_CONN_PARAM_MODE_DEFAULT = 0,
@@ -160,7 +85,6 @@ typedef enum
     BLE_CONN_PARAM_MODE_OTA,
     BLE_CONN_PARAM_MODE_OTA_SLOWER,
     BLE_CONN_PARAM_MODE_SNOOP_EXCHANGE,
-    BLE_CONN_PARAM_MODE_BLE_AUDIO,
     BLE_CONN_PARAM_MODE_NUM,
 } BLE_CONN_PARAM_MODE_E;
 
@@ -211,33 +135,6 @@ typedef struct {
 struct app_env_tag
 {
     uint8_t conn_cnt;
-
-    enum app_actv_state state[BLE_ACTIVITY_MAX];
-
-    /// Advertising activity index
-    uint8_t adv_actv_idx[BLE_ADV_ACTIVITY_USER_NUM];
-    /// Scanning activity index
-    uint8_t scan_actv_idx;
-    /// Connecting activity index
-    uint8_t connect_actv_idx;
-
-    bool need_restart_adv;
-    bool need_update_adv;
-    bool need_set_rsp_data;
-    BLE_ADV_PARAM_T advParam;
-
-    bool need_restart_scan;
-    uint16_t scanIntervalInMs;
-    uint16_t scanWindowInMs;
-    uint32_t scanFiltPolicy;
-
-    bool need_restart_connect;
-    BLE_INIT_PARAM_T ble_init_param;
-
-    bool need_set_white_list;
-    uint8_t white_list_size;
-    gap_bdaddr_t white_list_addr[8];
-
     /// Last initialized profile
     uint8_t next_svc;
 
@@ -289,24 +186,10 @@ bool appm_add_svc(void);
 
 /**
  ****************************************************************************************
- * @brief Add the bdaddr to white list
- ****************************************************************************************
- */
-void appm_set_white_list(gap_bdaddr_t *bdaddr, uint8_t size);
-
-/**
- ****************************************************************************************
  * @brief Put the device in general discoverable and connectable mode
  ****************************************************************************************
  */
 void appm_start_advertising(void *param);
-
-/**
- ****************************************************************************************
- * @brief
- ****************************************************************************************
- */
-void appm_actv_fsm_next(uint8_t actv_idx, uint8_t status);
 
 /**
  ****************************************************************************************
@@ -340,8 +223,6 @@ void appm_disconnect(uint8_t conidx);
  */
 uint8_t appm_get_dev_name(uint8_t* name);
 
-uint8_t appm_is_connected();
-
 /**
  ****************************************************************************************
  * @brief Return if the device is currently bonded
@@ -365,19 +246,6 @@ bool app_sec_get_bond_status(void);
  */
 void app_ble_connected_evt_handler(uint8_t conidx, gap_bdaddr_t *pPeerBdAddress);
 
-
-/**
- ****************************************************************************************
- * @brief delete advertising
- *
- * @param[in] none
- ****************************************************************************************
- */
-
-void appm_delete_activity(uint8_t actv_idx);
-
-void appm_update_actv_state(uint8_t actv_idx, enum app_actv_state newState);
-
 /*---------------------------------------------------------------------------
  *            app_ble_disconnected_evt_handler
  *---------------------------------------------------------------------------
@@ -394,8 +262,6 @@ void appm_update_actv_state(uint8_t actv_idx, enum app_actv_state newState);
 void app_ble_disconnected_evt_handler(uint8_t conidx, uint8_t errCode);
 
 void app_connecting_stopped(gap_bdaddr_t *peer_addr);
-
-bool appm_check_adv_activity_index(uint8_t actv_idx);
 
 void l2cap_update_param(uint8_t  conidx,
                         uint32_t min_interval_in_ms,
@@ -449,8 +315,6 @@ void appm_resolve_random_ble_addr_with_sepcific_irk(uint8_t conidx, uint8_t* ran
 
 void appm_random_ble_addr_solved(bool isSolvedSuccessfully, uint8_t* irkUsedForSolving);
 
-uint8_t app_ble_get_actv_state(uint8_t actv_idx);
-
 uint8_t app_ble_connection_count(void);
 
 bool app_is_arrive_at_max_ble_connections(void);
@@ -496,19 +360,7 @@ void fp_update_ble_connect_param_start(uint8_t ble_conidx);
 void fp_update_ble_connect_param_stop(uint8_t ble_conidx);
 #endif
 
-bool app_ble_is_connection_on_by_addr(uint8_t *addr);
 
-void app_ble_set_white_list_complete(void);
-
-uint8_t* app_ble_get_peer_addr(uint8_t conidx);
-
-bool app_ble_is_connection_on_by_index(uint8_t conidx);
-
-void app_init_ble_name(const char *name);
-
-void app_ble_on_bond_success(uint8_t conidx);
-
-void app_ble_on_encrypt_success(uint8_t conidx, uint8_t pairing_lvl);
 
 #ifdef __cplusplus
 }

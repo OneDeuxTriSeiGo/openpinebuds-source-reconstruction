@@ -132,21 +132,6 @@ void af_dsd_disable(void);
 typedef void (*AF_CODEC_BT_TRIGGER_CALLBACK)(void);
 void af_codec_bt_trigger_config(bool en, AF_CODEC_BT_TRIGGER_CALLBACK callback);
 
-#ifdef AUDIO_OUTPUT_SW_GAIN
-#ifndef AUDIO_OUTPUT_SW_LIMITER
-typedef struct {
-    float coefs_b[3];
-    float coefs_a[3];
-    float history_x[2];
-    float history_y[2];
-}SW_GAIN_IIR_T;
-
-void af_codec_get_current_sw_gain_filter(SW_GAIN_IIR_T *filter);
-void af_code_sw_gain_sample_24bit(int32_t * sample);
-void af_code_sw_gain_sample_16bit(int16_t * sample);
-#endif
-#endif
-
 
 #ifdef __cplusplus
 }

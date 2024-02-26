@@ -59,8 +59,6 @@ typedef uint8_t btif_avdtp_capability_type_t;
 
 typedef uint16_t btif_avdtp_codec_sample_rate_t;
 
-#define BTIF_AVDTP_CODEC_TYPE_INVALID       0xBD
-
 #define BTIF_AVDTP_CODEC_TYPE_SBC           0x00
 
 #define BTIF_AVDTP_CODEC_TYPE_MPEG1_2_AUDIO 0x01

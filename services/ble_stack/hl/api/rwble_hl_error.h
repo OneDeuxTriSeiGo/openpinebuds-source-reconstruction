@@ -82,10 +82,6 @@ enum hl_err
     ATT_ERR_UNSUPP_GRP_TYPE                                                        = 0x10,
     /// 0x11: Resources not sufficient to complete the request
     ATT_ERR_INSUFF_RESOURCE                                                        = 0x11,
-    /// 0x12: The server requests the client to rediscover the database.
-    ATT_ERR_DB_OUT_OF_SYNC                                                         = 0x12,
-    /// 0x13: The attribute parameter value was not allowed.
-    ATT_ERR_VALUE_NOT_ALLOWED                                                      = 0x13,
     /// 0x80: Application error (also used in PRF Errors)
     ATT_ERR_APP_ERROR                                                              = 0x80,
 
@@ -122,8 +118,6 @@ enum hl_err
     L2CAP_ERR_CREDIT_ERROR                                                         = 0x3D,
     /// Channel identifier already allocated
     L2CAP_ERR_CID_ALREADY_ALLOC                                                    = 0x3E,
-    /// Unknown PDU
-    L2CAP_ERR_UNKNOWN_PDU                                                          = 0x3F,
 
 
     // ----------------------------------------------------------------------------------
@@ -177,10 +171,6 @@ enum hl_err
     GATT_ERR_ATTRIBUTE_SERVER_MISSING                                              = 0x55,
     /// Permission set in service/attribute are invalid
     GATT_ERR_INVALID_PERM                                                          = 0x56,
-    /// The Attribute bearer is closed
-    GATT_ERR_ATT_BEARER_CLOSE                                                      = 0x57,
-    /// No more Attribute bearer available
-    GATT_ERR_NO_MORE_BEARER                                                        = 0x58,
 
     // ----------------------------------------------------------------------------------
     // ------------------------- SMP Specific Error -------------------------------------
@@ -430,20 +420,6 @@ enum hl_err
     LL_ERR_TERMINATED_MIC_FAILURE                                                  = 0xCD,
     /// Connection failed to be established
     LL_ERR_CONN_FAILED_TO_BE_EST                                                   = 0xCE,
-    /// MAC Connection Failed
-    LL_ERR_MAC_CONN_FAILED                                                         = 0xCF,
-    /// Coarse Clock Adjustment Rejected but Will Try to Adjust Using Clock Dragging
-    LL_ERR_CCA_REJ_USE_CLOCK_DRAG                                                  = 0xD0,
-    /// Type0 Submap Not Defined
-    LL_ERR_TYPE0_SUBMAP_NOT_DEFINED                                                = 0xD1,
-    /// Unknown Advertising Identifier
-    LL_ERR_UNKNOWN_ADVERTISING_ID                                                  = 0xD2,
-    /// Limit Reached
-    LL_ERR_LIMIT_REACHED                                                           = 0xD3,
-    /// Operation Cancelled by Host
-    LL_ERR_OPERATION_CANCELED_BY_HOST                                              = 0xD4,
-    /// Packet Too Long
-    LL_ERR_PKT_TOO_LONG                                                            = 0xD5,
 };
 
 /// @} RWBLE_HL_ERROR_H

@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef NO_ISPI
-
 #include "plat_types.h"
 #include "cmsis.h"
 #include "hal_analogif.h"
@@ -169,17 +167,10 @@ int BOOT_TEXT_FLASH_LOC hal_analogif_open(void)
         return ret;
     }
 
-    ana_cs = 0;
-    hal_ispi_activate_cs(ana_cs);
-
     ret = hal_analogif_rawread(ANA_REG_CHIP_ID, &chip_id);
     if (ret) {
         return ret;
     }
-
-#if defined(FPGA) || defined(SIMU)
-    chip_id = ANA_CHIP_ID(ANA_VAL_CHIP_ID);
-#endif
 
     if (GET_BITFIELD(chip_id, ANA_CHIP_ID) != ANA_VAL_CHIP_ID) {
         return -1;
@@ -187,5 +178,3 @@ int BOOT_TEXT_FLASH_LOC hal_analogif_open(void)
 
     return 0;
 }
-
-#endif

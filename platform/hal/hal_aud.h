@@ -44,13 +44,8 @@ extern "C" {
 
 #elif defined(CHIP_BEST1305) || \
     defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
-    defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || \
     defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || \
     defined(CHIP_BEST2300P) || defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
-
-#if defined(CHIP_BEST1501) || defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
-#define CODEC_FREQ_CRYSTAL                  CODEC_FREQ_24M
-#endif
 
 #define CODEC_FREQ_EXTRA_DIV                2
 
@@ -109,7 +104,6 @@ enum AUD_STREAM_USE_DEVICE_T{
     AUD_STREAM_USE_TDM1_MASTER,
     AUD_STREAM_USE_TDM1_SLAVE,
     AUD_STREAM_USE_INT_CODEC,
-    AUD_STREAM_USE_INT_CODEC2,
     AUD_STREAM_USE_INT_SPDIF,
     AUD_STREAM_USE_BT_PCM,
     AUD_STREAM_USE_DPD_RX,
@@ -144,8 +138,6 @@ enum AUD_SAMPRATE_T {
     AUD_SAMPRATE_406250 = 406250,   // 26M / 64
     AUD_SAMPRATE_705600 = 705600,
     AUD_SAMPRATE_768000 = 768000,
-    AUD_SAMPRATE_812500 = 812500,   // 26M / 32
-    // NOTE: DIV must be a multiple of 32
 };
 
 enum AUD_CHANNEL_NUM_T {
@@ -207,17 +199,6 @@ enum AUD_BITS_T {
     AUD_BITS_32 = 32,
 };
 
-enum AUD_DATA_ALIGN_T {
-    AUD_DATA_ALIGN_I2S = 0,
-    AUD_DATA_ALIGN_LEFT_JUSTIFIED,
-    AUD_DATA_ALIGN_RIGHT_JUSTIFIED,
-};
-
-enum AUD_FS_FIRST_EDGE_T {
-    AUD_FS_FIRST_EDGE_NEG = 0,  // I2S mode
-    AUD_FS_FIRST_EDGE_POS,      // TDM mode (likely)
-};
-
 enum AUD_STREAM_ID_T {
     AUD_STREAM_ID_0 = 0,
     AUD_STREAM_ID_1,
@@ -240,15 +221,12 @@ enum AUD_IO_PATH_T {
 
     // Input path
     AUD_INPUT_PATH_MAINMIC,
-    AUD_INPUT_PATH_VOICE_DEV,
     AUD_INPUT_PATH_VADMIC,
     AUD_INPUT_PATH_ASRMIC,
     AUD_INPUT_PATH_LINEIN,
     AUD_INPUT_PATH_NTMIC,
     AUD_INPUT_PATH_USBAUDIO,
     AUD_INPUT_PATH_ANC_ASSIST,
-    AUD_INPUT_PATH_HEARING,
-
     // Output path
     AUD_OUTPUT_PATH_SPEAKER,
 };
@@ -258,16 +236,12 @@ struct AUD_IO_PATH_CFG_T {
     unsigned int cfg;
 };
 
-#define ANC_TYPE_NUM    (8)
 enum ANC_TYPE_T {
     ANC_NOTYPE          = 0,
     ANC_FEEDFORWARD     = (1 << 0),
     ANC_FEEDBACK        = (1 << 1),
     ANC_TALKTHRU        = (1 << 2),
     ANC_MUSICCANCLE     = (1 << 3),
-    ANC_SPKCALIB        = (1 << 4),
-    ANC_DEHOWLING       = (1 << 5),
-    PSAP_FEEDFORWARD    = (1 << 6),
 };
 
 struct CODEC_DAC_VOL_T {
@@ -295,7 +269,6 @@ enum TGT_VOLUME_LEVEL_T {
     TGT_VOLUME_LEVEL_13,
     TGT_VOLUME_LEVEL_14,
     TGT_VOLUME_LEVEL_15,
-    TGT_VOLUME_LEVEL_MAX,
 
     TGT_VOLUME_LEVEL_QTY
 };
@@ -330,35 +303,6 @@ enum AUD_VAD_TYPE_T {
     AUD_VAD_TYPE_ANA,
 
     AUD_VAD_TYPE_NUM,
-};
-
-#define VAD_DEF_MIC_FRAME_LEN       0x50    // 16K sample rate
-#define VAD_DEF_STH         0x10
-#define VAD_DEF_MVAD        0x7
-#define VAD_DEF_PSD_TH0     0x0
-#define VAD_DEF_PSD_TH1     0x07ffffff
-#define VAD_DEF_UDC         0x1//0xa
-#define VAD_DEF_UPRE        0x4
-#define VAD_DEF_DIG_MODE    0x1
-#define VAD_DEF_PRE_GAIN    0x4
-#define VAD_DEF_DC_BYPASS   0x0
-#define VAD_DEF_FRAME_TH0   0x32
-#define VAD_DEF_FRAME_TH1   0x1f4
-#define VAD_DEF_FRAME_TH2   0x1388
-#define VAD_DEF_RANGE0      0xf
-#define VAD_DEF_RANGE1      0x32
-#define VAD_DEF_RANGE2      0x96
-#define VAD_DEF_RANGE3      0x12c
-
-struct AUD_VAD_SIMP_CFG_T {
-    enum AUD_VAD_TYPE_T type;
-    enum AUD_SAMPRATE_T sample_rate;
-    enum AUD_BITS_T bits;
-    AUD_VAD_CALLBACK handler;
-    uint8_t adc_gain;
-    uint8_t frame_len;
-    uint8_t frame_thresh;
-    uint8_t sound_thresh;
 };
 
 struct AUD_VAD_CONFIG_T {

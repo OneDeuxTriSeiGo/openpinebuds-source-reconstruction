@@ -15,8 +15,6 @@
 #ifndef __BTIF_HID_API_H__
 #define __BTIF_HID_API_H__
 
-#ifdef BT_HID_DEVICE
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -61,7 +59,5 @@ void btif_hid_keyboard_send_ctrl_key(struct hid_control_t *hid_ctl, uint8_t ctrl
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* BT_HID_DEVICE */
 
 #endif /* __BTIF_HID_API_H__ */

@@ -24,8 +24,6 @@
 extern "C" {
 #endif
 
-#define SPP_HEADROOM    (100)
-
 osThreadId create_spp_read_thread(void);
 
 void close_spp_read_thread(void);

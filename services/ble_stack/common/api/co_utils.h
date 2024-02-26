@@ -36,7 +36,6 @@
 #include <stddef.h>       // standard definitions
 #include "co_bt.h"        // common bt definitions
 #include "rwip_config.h"  // SW configuration
-#include "rwip.h"         // SW configuration
 #include "compiler.h"     // for inline functions
 
 
@@ -79,30 +78,7 @@
 #define CO_SUBVERSION_BUILD(minor, release)     (((minor) << 8) | (release))
 
 /// Macro to get a structure from one of its structure field
-#ifndef CONTAINER_OF
 #define CONTAINER_OF(ptr, type, member) ((type *)( (char *)ptr - OFFSETOF(type,member) ))
-#endif
-
-/// count number of bit into a long field
-#define CO_BIT_CNT(val) (co_bit_cnt((uint8_t*) &(val), sizeof(val)))
-
-/// Increment value and make sure it's never greater or equals max (else wrap to 0)
-#define CO_VAL_INC(_val, _max)      \
-    (_val) = (_val) + 1;            \
-    if((_val) >= (_max)) (_val) = 0
-
-
-/// Add value and make sure it's never greater or equals max (else wrap)
-/// _add must be less that _max
-#define CO_VAL_ADD(_val, _add, _max)      \
-    (_val) = (_val) + (_add);             \
-    if((_val) >= (_max)) (_val) -= (_max)
-
-/// sub value and make sure it's never greater or equals max (else wrap)
-/// _sub must be less that _max
-#define CO_VAL_SUB(_val, _sub, _max)      \
-    if((_val) < (_sub)) (_val) += _max;   \
-    (_val) = (_val) - (_sub)
 
 /*
  * ENUMERATIONS DEFINITIONS
@@ -117,25 +93,6 @@ enum CO_UTIL_PACK_STATUS
     CO_UTIL_PACK_OUT_BUF_OVFLW,
     CO_UTIL_PACK_WRONG_FORMAT,
     CO_UTIL_PACK_ERROR,
-};
-
-
-/// Rate information
-/*@TRACE*/
-enum phy_rate
-{
-    /// 1 Mbits/s Rate
-    CO_RATE_1MBPS   = 0,
-    /// 2 Mbits/s Rate
-    CO_RATE_2MBPS   = 1,
-    /// 125 Kbits/s Rate
-    CO_RATE_125KBPS = 2,
-    /// 500 Kbits/s Rate
-    CO_RATE_500KBPS = 3,
-    /// Undefined rate (used for reporting when no packet is received)
-    CO_RATE_UNDEF   = 4,
-
-    CO_RATE_MAX     = 4,
 };
 
 
@@ -166,49 +123,6 @@ extern const struct bd_addr co_null_bdaddr;
 
 /// Default BD address
 extern const struct bd_addr co_default_bdaddr;
-
-/// NULL Key
-extern const uint8_t co_null_key[KEY_LEN];
-
-/// Table for converting rate to PHY
-extern const uint8_t co_rate_to_phy[];
-
-/// Table for converting PHY to rate (Warning: the coded PHY is converted to 125K by default)
-extern const uint8_t co_phy_to_rate[];
-
-/// Convert PHY mask (with one single bit set) to a value
-extern const uint8_t co_phy_mask_to_value[];
-
-/// Convert PHY a value to the corresponding mask bit
-extern const uint8_t co_phy_value_to_mask[];
-
-/// Convert Rate value to the corresponding PHY mask bit
-extern const uint8_t co_rate_to_phy_mask[];
-
-/// Convert PHY mask bit to the corresponding Rate value
-extern const uint8_t co_phy_mask_to_rate[];
-
-#if BLE_PWR_CTRL
-
-/// Convert PHY rate value of power control to the corresponding PHY mask bit
-extern const uint8_t co_phypwr_value_to_mask[];
-
-/// Convert PHY mask bit of power control to the corresponding PHY rate value
-extern const uint8_t co_phypwr_mask_to_value[];
-
-/// Convert PHY rate value of power control to Rate value
-extern const uint8_t co_phypwr_to_rate[];
-
-/// Convert Rate value to PHY rate value of power control
-extern const uint8_t co_rate_to_phypwr[];
-
-/// Convert Rate value to PHY mask value of power control
-extern const uint8_t co_rate_to_phypwr_mask[];
-
-#endif // BLE_PWR_CTRL
-
-/// Convert Rate value to byte duration in us
-extern const uint8_t co_rate_to_byte_dur_us[];
 
 
 /*
@@ -249,28 +163,6 @@ extern const uint8_t co_rate_to_byte_dur_us[];
  ****************************************************************************************
  */
 #define CLK_SUB(clock_a, clock_b)     ((uint32_t)(((clock_a) - (clock_b)) & RWIP_MAX_CLOCK_TIME))
-
-/**
- ****************************************************************************************
- * @brief Bluetooth timestamp Clocks subtraction
- *
- * @param[in]   clock_a   1st operand value (in microseconds)
- * @param[in]   clock_b   2nd operand value (in microseconds)
- * @return      result    operation result (in microseconds)
- ****************************************************************************************
- */
-#define CLK_BTS_SUB(clock_a, clock_b)     (((int32_t) ((clock_a) - (clock_b))))
-
-/**
- ****************************************************************************************
- * @brief Check if clock_a is lower than or equal to clock_b
- *
- * @param[in]   clock_a   Clock A value (in BT half-slots)
- * @param[in]   clock_b   Clock B value (in BT half-slots)
- * @return      result    True: clock_a lower than or equal to clock_b | False: else
- ****************************************************************************************
- */
-#define CLK_BTS_LOWER_EQ(clock_a, clock_b) (CLK_BTS_SUB(clock_b, clock_a) < (RWIP_MAX_BTS_TIME >> 1))
 
 /**
  ****************************************************************************************
@@ -325,76 +217,7 @@ extern const uint8_t co_rate_to_byte_dur_us[];
         __r = (((__r) & ~(__b##_BIT)) | (__v ? 1 : 0) << (__b##_POS));                  \
     } while (0)
 
-/// macro to toggle a bit into a value containing several bits.
-/// @param[in] __r bit field value
-/// @param[in] __b bit field name
-#define TOGB(__r, __b)                                                           \
-    do {                                                                         \
-        __r = ((__r) ^ (__b##_BIT));                                             \
-    } while (0)
 
-/**
- ****************************************************************************************
- * @brief Check if clock_a is equal to clock_b
- *
- * @param[in]   clock_a   Clock A value (in BT half-slots)
- * @param[in]   clock_b   Clock B value (in BT half-slots)
- * @return      result    True: clock_a lower than or equal to clock_b | False: else
- ****************************************************************************************
- */
-#define CLK_EQ(clock_a, clock_b)      (clock_b == clock_a)
-
-/**
- ****************************************************************************************
- * @brief Check if clock_a is lower than or equal to clock_b
- *
- * @param[in]   clock_a   Clock A value (in BT half-slots)
- * @param[in]   clock_b   Clock B value (in BT half-slots)
- * @return      result    True: clock_a lower than or equal to clock_b | False: else
- ****************************************************************************************
- */
-#define CLK_LOWER_EQ(clock_a, clock_b)      (CLK_SUB(clock_b, clock_a) < (RWIP_MAX_CLOCK_TIME >> 1))
-
-/**
- ****************************************************************************************
- * @brief Check if clock A is lower than or equal to clock B (with half-us precision)
- *
- * @param[in]   int_a     Integer part of clock A (in BT half-slots)
- * @param[in]   fract_a   Fractional part of clock A (in half-us) (range: 0 to 624)
- * @param[in]   int_b     Integer part of clock B (in BT half-slots)
- * @param[in]   fract_b   Fractional part of clock B (in half-us) (range: 0 to 624)
- * @return      result    True: clock A lower than or equal to clock B | False: else
- ****************************************************************************************
- */
-#define CLK_LOWER_EQ_HUS(int_a, fract_a, int_b, fract_b)      (  CLK_GREATER_THAN(int_b, int_a)  \
-                                                                 || (   CLK_EQ(int_a, int_b)     \
-                                                                     && (fract_a <= fract_b) ) ) \
-
-/**
- ****************************************************************************************
- * @brief Check if clock_a is greater than clock_b
- *
- * @param[in]   clock_a   Clock A value (in BT half-slots)
- * @param[in]   clock_b   Clock B value (in BT half-slots)
- * @return      result    True: clock_a is greater than clock_b | False: else
- ****************************************************************************************
- */
-#define CLK_GREATER_THAN(clock_a, clock_b)    !(CLK_LOWER_EQ(clock_a, clock_b))
-
-/**
- ****************************************************************************************
- * @brief Check if clock A is greater than clock B (with half-us precision)
- *
- * @param[in]   int_a     Integer part of clock A (in BT half-slots)
- * @param[in]   fract_a   Fractional part of clock A (in half-us) (range: 0 to 624)
- * @param[in]   int_b     Integer part of clock B (in BT half-slots)
- * @param[in]   fract_b   Fractional part of clock B (in half-us) (range: 0 to 624)
- * @return      result    True: clock A greater than clock B | False: else
- ****************************************************************************************
- */
-#define CLK_GREATER_THAN_HUS(int_a, fract_a, int_b, fract_b)      (  CLK_GREATER_THAN(int_a, int_b)  \
-                                                                     || (   CLK_EQ(int_a, int_b)     \
-                                                                         && (fract_a > fract_b) ) )  \
 
 /*
  * FUNCTION DECLARATIONS
@@ -551,26 +374,6 @@ static __INLINE void co_write16p(void const *ptr16, uint16_t value)
     *ptr = (value&0xff00)>>8;
 }
 
-/**
- ****************************************************************************************
- * Count number of bit set to 1 in a value with variable length
- *
- * @param[in] p_val Pointer to value
- * @param[in] size  Number of Bytes
- * @return Number of bit counted
- ****************************************************************************************
- */
-static __INLINE uint8_t co_bit_cnt(const uint8_t* p_val, uint8_t size)
-{
-    uint8_t nb_bit = 0;
-    while(size-- > 0)
-    {
-        nb_bit += NB_ONE_BITS(*p_val);
-        p_val++;
-    }
-    return (nb_bit);
-}
-
 #if (RW_DEBUG || DISPLAY_SUPPORT)
 
 /**
@@ -628,20 +431,12 @@ uint8_t co_nb_good_channels(const struct chnl_map* map);
  * This function packs parameters according to a specific format. It takes care of the
  * endianess, padding, required by the compiler.
  *
- * By default output format is LSB but it can be changed with first character of format string
- *     - <  : LSB output format
- *     - >  : MSB output format
- *
  * Format strings are the mechanism used to specify the expected layout when packing and unpacking data. They are built
  * up from Format Characters, which specify the type of data being packed/unpacked.
  *     - B  : byte - 8bits value
  *     - H  : word - 16bits value
  *     - L  : long - 32-bits value
- *     - D  : 24 bits value
  *     - XXB: table of several bytes, where XX is the byte number, in decimal
- *     - XXG: Number of several bytes, where XX is the byte number, in decimal - subject to be swapped according to endianess
- *     - nB : table size over 1 byte, followed by the table of bytes
- *     - NB : table size over 2 bytes, followed by the table of bytes
  *
  * Example:   "BBLH12BLnB" => 1 byte | 1 byte | 1 long | 1 short | 12-bytes table | 1 long | table size over 1 byte | n-bytes table
  *
@@ -665,20 +460,12 @@ uint8_t co_util_pack(uint8_t* out, uint8_t* in, uint16_t* out_len, uint16_t in_l
  * This function unpacks parameters according to a specific format. It takes care of the
  * endianess, padding, required by the compiler.
  *
- * By default input format is LSB but it can be changed with first character of format string
- *     - <  : LSB input format
- *     - >  : MSB input format
- *
  * Format strings are the mechanism used to specify the expected layout when packing and unpacking data. They are built
  * up from Format Characters, which specify the type of data being packed/unpacked.
  *     - B  : byte - 8bits value
  *     - H  : word - 16bits value
  *     - L  : long - 32-bits value
- *     - D  : 24 bits value
  *     - XXB: table of several bytes, where XX is the byte number, in decimal
- *     - XXG: Number of several bytes, where XX is the byte number, in decimal - subject to be swapped according to endianess
- *     - nB : table size over 1 byte, followed by the table of bytes
- *     - NB : table size over 2 bytes, followed by the table of bytes
  *
  * Example:   "BBLH12BLnB" => 1 byte | 1 byte | 1 long | 1 short | 12-bytes table | 1 long | table size over 1 byte | n-bytes table
  *

@@ -40,7 +40,6 @@
  */
 
 /// Control packet op_code
-/*@TRACE*/
 enum co_llcp_op_code
 {
     LL_CONNECTION_UPDATE_IND_OPCODE = 0x00,
@@ -69,25 +68,6 @@ enum co_llcp_op_code
     LL_PHY_RSP_OPCODE               = 0x17,
     LL_PHY_UPDATE_IND_OPCODE        = 0x18,
     LL_MIN_USED_CHANNELS_IND_OPCODE = 0x19,
-    LL_CTE_REQ_OPCODE               = 0x1A,
-    LL_CTE_RSP_OPCODE               = 0x1B,
-    LL_PER_SYNC_IND_OPCODE          = 0x1C,
-    LL_CLK_ACC_REQ_OPCODE           = 0x1D,
-    LL_CLK_ACC_RSP_OPCODE           = 0x1E,
-
-    /// Request creation of CIS
-    LL_CIS_REQ_OPCODE           = 0x1F,
-    /// Response to CIS Request with Slave parameters
-    LL_CIS_RSP_OPCODE           = 0x20,
-    /// Issued by the Master to establish the CIS with a Slave.
-    LL_CIS_IND_OPCODE           = 0x21,
-    /// Terminate the CIS channel associated with the Stream_ID and Channel_ID fields
-    LL_CIS_TERMINATE_IND_OPCODE = 0x22,
-
-    LL_PWR_CTRL_REQ_OPCODE          = 0x23,
-    LL_PWR_CTRL_RSP_OPCODE          = 0x24,
-    LL_PWR_CHANGE_IND_OPCODE        = 0x25,
-
     /// Opcode length
     LL_OPCODE_MAX_OPCODE,
     LL_OPCODE_DEBUG = 0xFF,
@@ -122,47 +102,8 @@ enum co_llcp_length
     LL_PHY_RSP_LEN                   = 3,
     LL_PHY_UPDATE_IND_LEN            = 5,
     LL_MIN_USED_CHANNELS_IND_LEN     = 3,
-    LL_CTE_REQ_LEN                   = 2,
-    LL_CTE_RSP_LEN                   = 1,
-    LL_PER_SYNC_IND_LEN              = 35,
-    LL_CLK_ACC_REQ_LEN               = 2,
-    LL_CLK_ACC_RSP_LEN               = 2,
-
-    LL_CIS_REQ_LEN                   = 36,
-    LL_CIS_RSP_LEN                   = 9,
-    LL_CIS_IND_LEN                   = 16,
-    LL_CIS_TERMINATE_IND_LEN         = 4,
-
-    LL_PWR_CTRL_REQ_LEN              = 4,
-    LL_PWR_CTRL_RSP_LEN              = 5,
-    LL_PWR_CHANGE_IND_LEN            = 5,
-
     LL_PDU_LENGTH_MAX                = 35,
 };
-
-
-/// BIG Control packet op_code
-/*@TRACE*/
-enum co_big_op_code
-{
-    /// Channel map update
-    BIG_CHANNEL_MAP_IND_OPCODE,
-    /// Termination indication
-    BIG_TERMINATE_IND_OPCODE,
-
-    /// Opcode length
-    BIG_OPCODE_MAX_OPCODE,
-};
-
-/// BIG PDU lengths (including op_code)
-enum co_bis_length
-{
-    BIG_CHANNEL_MAP_IND_LEN           = 8,
-    BIG_TERMINATE_IND_LEN             = 4,
-
-    BIG_PDU_LENGTH_MAX                = 8
-};
-
 
 /// PDU lengths
 enum co_pdu_length
@@ -172,61 +113,12 @@ enum co_pdu_length
     PDU_CON_RSP_LEN           = 14,
 };
 
-/// Bit field definitions for BN field sent over the air
-///    7    6    5    4    3    2    1    0
-/// +----+----+----+----+----+----+----+----+
-/// |     BN_S2M     |     BN_M2S     |
-/// +----+----+----+----+----+----+----+----+
-enum co_llcp_cis_bn_field
-{
-    /// BN Master to Slave
-    LLCP_CIS_BN_M2S_LSB     = 0,
-    LLCP_CIS_BN_M2S_MASK    = (0x0F),
-
-    /// BN Slave to Master
-    LLCP_CIS_BN_S2M_LSB     = 4,
-    LLCP_CIS_BN_S2M_MASK    = (0xF0),
-};
-
-/// Bit field definitions for combination of advertising Set ID, advertiser address type and sleep clock accuracy in LL_PER_SYNC_IND
-///    7    6    5     4     3    2    1    0
-/// +----+----+----+-------+----+----+----+----+
-/// |      SCA     | AType |        SID        |
-/// +----+----+----+-------+----+----+----+----+
-enum co_llcp_sid_atype_sca
-{
-    /// Advertising SID
-    LLCP_PER_SYNC_IND_SID_LSB     = 0,
-    LLCP_PER_SYNC_IND_SID_MASK    = (0x0F),
-
-    /// Advertiser address type
-    LLCP_PER_SYNC_IND_ATYPE_POS   = 4,
-    LLCP_PER_SYNC_IND_ATYPE_BIT  = (0x10),
-
-    /// Sleep clock accuracy (@see enum SCA)
-    LLCP_PER_SYNC_IND_SCA_LSB     = 5,
-    LLCP_PER_SYNC_IND_SCA_MASK    = (0xE0),
-};
-
 /*
  * MESSAGES
  ****************************************************************************************
  */
 
-/// LL_DEFAULT structure (for packet with no parameter)
-/*@TRACE
- * @NO_PAD
-*/
-struct  ll_default
-{
-    /// op_code
-    uint8_t             op_code;
-};
-
 /// LL_CONNECTION_UPDATE_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_connection_update_ind
 {
     /// op_code
@@ -246,9 +138,6 @@ struct  ll_connection_update_ind
 };
 
 /// LL_CHANNEL_MAP_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_channel_map_ind
 {
     /// op_code
@@ -260,9 +149,6 @@ struct  ll_channel_map_ind
 };
 
 /// LL_TERMINATE_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_terminate_ind
 {
     /// op_code
@@ -272,9 +158,6 @@ struct  ll_terminate_ind
 };
 
 /// LL_ENC_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_enc_req
 {
     /// op_code
@@ -290,9 +173,6 @@ struct  ll_enc_req
 };
 
 /// LL_ENC_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_enc_rsp
 {
     /// op_code
@@ -304,9 +184,6 @@ struct  ll_enc_rsp
 };
 
 /// LL_START_ENC_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_start_enc_req
 {
     /// op_code
@@ -314,9 +191,6 @@ struct  ll_start_enc_req
 };
 
 /// LL_START_ENC_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_start_enc_rsp
 {
     /// op_code
@@ -324,9 +198,6 @@ struct  ll_start_enc_rsp
 };
 
 /// LL_UNKNOWN_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_unknown_rsp
 {
     /// op_code
@@ -336,9 +207,6 @@ struct  ll_unknown_rsp
 };
 
 /// LL_FEATURE_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_feature_req
 {
     /// op_code
@@ -349,9 +217,6 @@ struct  ll_feature_req
 
 
 /// LL_FEATURE_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_feature_rsp
 {
     /// op_code
@@ -361,9 +226,6 @@ struct  ll_feature_rsp
 };
 
 /// LL_PAUSE_ENC_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_pause_enc_req
 {
     /// op_code
@@ -371,9 +233,6 @@ struct  ll_pause_enc_req
 };
 
 /// LL_PAUSE_ENC_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_pause_enc_rsp
 {
     /// op_code
@@ -381,9 +240,6 @@ struct  ll_pause_enc_rsp
 };
 
 /// LL_VERSION_IND structure
-/*@TRACE
- * @NO_PAD
-*/
 struct ll_version_ind
 {
     /// op_code
@@ -397,9 +253,6 @@ struct ll_version_ind
 };
 
 /// LL_REJECT_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_reject_ind
 {
     /// op_code
@@ -409,9 +262,6 @@ struct  ll_reject_ind
 };
 
 /// LL_SLAVE_FEATURE_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_slave_feature_req
 {
     /// op_code
@@ -421,9 +271,6 @@ struct  ll_slave_feature_req
 };
 
 /// LL_CONNECTION_PARAM_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_connection_param_req
 {
     /// op_code
@@ -455,9 +302,6 @@ struct  ll_connection_param_req
 };
 
 /// LL_CONNECTION_PARAM_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_connection_param_rsp
 {
     /// op_code
@@ -489,9 +333,6 @@ struct  ll_connection_param_rsp
 };
 
 /// LL_REJECT_EXT_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_reject_ext_ind
 {
     /// op_code
@@ -503,9 +344,6 @@ struct  ll_reject_ext_ind
 };
 
 /// LL_PING_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_ping_req
 {
     /// op_code
@@ -513,9 +351,6 @@ struct  ll_ping_req
 };
 
 /// LL_PING_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_ping_rsp
 {
     /// op_code
@@ -523,9 +358,6 @@ struct  ll_ping_rsp
 };
 
 /// LL_LENGTH_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_length_req
 {
     /// op_code
@@ -541,9 +373,6 @@ struct  ll_length_req
 };
 
 /// LL_LENGTH_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_length_rsp
 {
     /// op_code
@@ -558,9 +387,6 @@ struct  ll_length_rsp
     uint16_t    max_tx_time;
 };
 /// LL_PHY_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_phy_req
 {
     /// op_code
@@ -572,9 +398,6 @@ struct  ll_phy_req
 };
 
 /// LL_PHY_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_phy_rsp
 {
     /// op_code
@@ -586,9 +409,6 @@ struct  ll_phy_rsp
 };
 
 /// LL_PHY_UPDATE_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_phy_update_ind
 {
     /// op_code
@@ -602,9 +422,6 @@ struct  ll_phy_update_ind
 };
 
 /// LL_MIN_USED_CHANNELS_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
 struct  ll_min_used_channels_ind
 {
     /// op_code
@@ -615,452 +432,37 @@ struct  ll_min_used_channels_ind
     uint8_t    min_used_ch;
 };
 
-/**
- * CTE length and type bit field definition
- *
- * |     5 bits     |  1b |   2 bits    |
- * |  MinCTELenReq  | RFU | CTETypeReq  |
- *
- *   - MinCTELenReq: minimum CTE length (x 8us)
- *   - CTETypeReq: 0-AoA, 1-AoD_1us, 2-AoD_2us, 3-RFU
- */
-enum cte_len_type
-{
-    CTE_TYPE_REQ_MASK       = 0xC0,
-    CTE_TYPE_REQ_LSB        = 6,
-
-    MIN_CTE_LEN_REQ_MASK    = 0x1F,
-    MIN_CTE_LEN_REQ_LSB     = 0,
-};
-
-/// LL_CTE_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct ll_cte_req
-{
-    /// op_code
-    uint8_t    op_code;
-    /// CTE length and type (@see enum cte_len_type)
-    uint8_t    cte_len_type;
-};
-
-/// LL_PER_SYNC_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct ll_per_sync_ind
-{
-    /// op_code
-    uint8_t        op_code;
-    /// ID (provided by the Host)
-    uint16_t       id;
-    /// Sync Info (Vol 6, Part B, 2.3.4.6.SyncInfo field)
-    uint8_t        sync_info[18];
-    /// Connection event counter
-    uint16_t       con_evt_cnt;
-    /// Last periodic advertising event counter
-    uint16_t       last_pa_evt_cnt;
-    /// Advertising Set ID, advertiser address type and sleep clock accuracy
-    uint8_t        sid_atype_sca;
-    /// Periodic advertising PHY (@see enum le_phy_mask)
-    uint8_t        phy;
-    /// Periodic advertiser address
-    struct bd_addr adva;
-    /// Sync Connection event counter
-    uint16_t       sync_con_evt_cnt;
-};
-
-/// LL_CLK_ACC_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct ll_clk_acc_req
-{
-    /// op_code
-    uint8_t    op_code;
-    /// SCA (@see enum SCA)
-    uint8_t    sca;
-};
-
-/// LL_CLK_ACC_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct ll_clk_acc_rsp
-{
-    /// op_code
-    uint8_t    op_code;
-    /// SCA (@see enum SCA)
-    uint8_t    sca;
-};
-
-/// LL_CIS_REQ structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct  ll_cis_req
-{
-    /// op_code
-    uint8_t         op_code;
-    /// Identifier of the Connected Isochronous Group
-    uint8_t         cig_id;
-    /// Identifier of the Connected Isochronous Stream
-    uint8_t         cis_id;
-    /// Physical Channel Info Master to Slave PHY
-    uint8_t         phy_m2s;
-    /// Physical Channel Info Slave to Master PHY
-    uint8_t         phy_s2m;
-    /// bit[0:11] shall be set to the maximum SDU size in octets from the master Host.
-    /// bit[15] Framed shall be 0 if the CIS uses unframed data PDUs and 1 if it uses framed PDUs
-    uint16_t        max_sdu_m2s;
-    /// bit[0:11] shall be set to the maximum SDU size in octets from the slave Host.
-    uint16_t        max_sdu_s2m;
-    #if BLE_AUDIO_ENABLED
-    /// bit[0:19] shall be set to the time in microseconds between two consecutive SDUs from the master Host.
-    uint8_t         sdu_interval_m2s[3];
-    /// bit[0:19] Shall be set to the time in microseconds between two consecutive SDUs from the slave Host.
-    uint8_t         sdu_interval_s2m[3];
-    #else
-    /// bit[0:19] shall be set to the time in microseconds between two consecutive SDUs from the master Host.
-    uint32_t        sdu_interval_m2s;
-    /// bit[0:19] Shall be set to the time in microseconds between two consecutive SDUs from the slave Host.
-    uint32_t        sdu_interval_s2m;
-    #endif
-    /// Max Payload Size: Master to Slave (value between 0 and 251) (in bytes)
-    uint16_t         max_pdu_m2s;
-    /// Max Payload Size: Slave to Master (value between 0 and 251) (in bytes)
-    uint16_t         max_pdu_s2m;
-    /// Number of Sub Event (value between 1 and 31)
-    uint8_t         nse;
-    /// bit[0:24] Sub interval in microseconds (Range 400us - ISO Interval)
-    uint32_t        sub_interval;
-    /// Burst number: Number of new packet per channel interval
-    /// bit[0:3] : Master to Slave Burst number The range shall be 0 to 15
-    /// bit[4:7] : Slave to Master Burst number The range shall be 0 to 15
-    uint8_t         bn;
-    /// Master to Slave Flush timeout (value between 1 and 255)
-    uint8_t         ft_m2s;
-    /// Slave to Master Flush timeout (value between 1 and 255)
-    uint8_t         ft_s2m;
-    /// Time between two consecutive Connected Isochronous Stream anchor points - 1.25ms step.
-    /// The Iso_Interval field shall be between 4 and 3200 (i.e. 5ms to 4s).
-    uint16_t        iso_interval;
-    /// bit[0:23] Minimum time in microseconds between the start of the connection event with the
-    /// connection event counter = connEventCount and the first CIS anchor point.
-    /// It shall have a value between 500µs and connInterval
-    uint32_t        cis_offset_min;
-    /// bit[0:23] Maximum time in microseconds between the start of the connection event with the
-    /// connection event counter = connEventCount and the first CIS anchor point.
-    /// It shall have a value between CIS_Offset_Min and connInterval.
-    uint32_t        cis_offset_max;
-
-    /// Reference point where the Offset_Min and Offset_Max are applied to determine the first CIS anchor point.
-    /// It be set to a connection event counter value that meets the requirement
-    /// currEvent - 2^14 < connEventCount < currEvent + 2^14 (modulo 65536), where currEvent is the counter value for
-    /// the connection event where the LL_CIS_REQ PDU is being transmitted (or retransmitted).
-    uint16_t        conn_event_cnt;
-};
-
-/// CIS Request Bit Field parameters
-enum ll_cis_req_bf
-{
-    /// bit[15] - Frame mode in max_sdu_m2s parameter
-    BLE_CIS_FRAME_MODE_BIT    = 0x8000,
-    BLE_CIS_FRAME_MODE_POS    = 15,
-
-    /// bit[0:11] - Maximum SDU size
-    BLE_CIS_MAX_SDU_MASK      = 0x0FFF,
-    BLE_CIS_MAX_SDU_LSB       = 0,
-
-    /// bit[0:19] - SDU Interval
-    BLE_CIS_SDU_INTERVAL_MASK = 0x0FFFFF,
-    BLE_CIS_SDU_INTERVAL_LSB  = 0,
-};
-
-
-
-
-/// LL_CIS_RSP structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct  ll_cis_rsp
-{
-    /// op_code
-    uint8_t         op_code;
-    /// bit[0:23] Minimum time in microseconds between the start of the connection event with the
-    /// connection event counter = connEventCount and the first CIS anchor point.
-    /// It shall have a value between 400µs and connInterval
-    uint32_t        cis_offset_min;
-    /// bit[0:23] Maximum time in microseconds between the start of the connection event with the
-    /// connection event counter = connEventCount and the first CIS anchor point.
-    /// It shall have a value between CIS_Offset_Min and connInterval.
-    uint32_t        cis_offset_max;
-    /// Event counter of the ACL event from which the Ch_Offset_Min and the Ch_Offset_Max are referenced
-    uint16_t        conn_event_cnt;
-};
-
-/// LL_CIS_UPDATE_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct  ll_cis_ind
-{
-    /// op_code
-    uint8_t         op_code;
-    /// Access Address field is the number used to identify the CIS channel.
-    uint32_t        aa;
-    /// bit[0:23] Time in microseconds from the start of the ACL connection event referenced by the connEventCount to the first
-    /// CIS anchor point.
-    uint32_t        cis_offset;
-    /// bit[0:23] Time in microseconds from the first anchor point of the Stream being set up to the CIG Synchronization point
-    /// in the same isochronous interval. The CIS_Synchronization_Delay is calculated by the master for each CIS
-    /// separately, and sent to the slave in the LL_CIS_IND when establishing the CIS.
-    /// The slave uses the CIS_Synchronization_Delay parameter to determine the CIG Synchronization point.
-    uint32_t        cig_sync_delay;
-    /// bit[0:23] Time reference when all CIS events are completed. The CIG Synchronization point is at the end of the last
-    /// sub-event of the last CIS in the CIG in an Iso_Interval. The CIG_Synchronization_Delay is the time in
-    /// microseconds between the start of the first subevent of the first CIS in the CIG and the
-    /// CIG Synchronization point
-    uint32_t        cis_sync_delay;
-    /// Reference point where the CIS_Offset is applied to determine the first CIS anchor point.
-    /// The connEventCount shall be set to a connection event counter value that meets the requirement
-    /// currEvent  2^14 < connEventCount < currEvent + 2^14 (modulo 65536), where currEvent is the counter value
-    /// for the connection event where the LL_CIS_IND PDU is being transmitted (or retransmitted).
-    uint16_t        conn_event_cnt;
-};
-
-/// LL_CIS_TERMINATE_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct  ll_cis_terminate_ind
-{
-    /// op_code
-    uint8_t         op_code;
-    /// Identifier of the Connected Isochronous Group
-    uint8_t         cig_id;
-    /// Identifier of the Connected Isochronous Stream
-    uint8_t         cis_id;
-    /// Reason for CIS termination
-    uint8_t         err_code;
-};
-
-/// LL_PWR_CTRL_REQ structure.
-/*@TRACE
-* @NO_PAD
-*/
-struct ll_pwr_ctrl_req
-{
-    /// op_code
-    uint8_t         op_code;
-    /// PHY mask for which the request is being made
-    uint8_t         phy_mask;
-    ///The requested change in the recipiant's transmit power level (in dBs)
-    int8_t          delta;
-    /// The senders transmit power level for the PHY indicated (in dBs)
-    int8_t          tx_pwr;
-};
-
-/// LL_PWR_CTRL_RSP structure.
-/*@TRACE
-* @NO_PAD
-*/
-struct ll_pwr_ctrl_rsp
-{
-    /// op_code
-    uint8_t         op_code;
-    /// bf (@see enum pwr_ctrl_flags)
-    uint8_t         flags;
-    /// The actual change in the sender's transmit power level (in dBs)
-    int8_t          delta;
-    /// The senders transmit power level for the PHY indicated (in dBs)
-    int8_t          tx_pwr;
-    /// The maximum acceptable power reduction of peer device
-    uint8_t         apr;
-};
-
-/// LL_PWR_CHANGE_IND structure.
-/*@TRACE
-* @NO_PAD
-*/
-struct ll_pwr_change_ind
-{
-    /// op_code
-    uint8_t         op_code;
-    /// PHY(s) mask for which the power level has changed
-    uint8_t         phy_mask;
-    /// bf (@see enum pwr_ctrl_flags)
-    uint8_t         flags;
-    /// The change in the sender's transmit power level (in dBs)
-    int8_t          delta;
-    /// The senders transmit power level for the PHY(s) indicated (in dBs)
-    int8_t         tx_pwr;
-};
-
 /// LLCP pdu format
-/*@TRACE
- @trc_ref co_llcp_op_code
- */
 union llcp_pdu
 {
     /// op_code
     uint8_t  op_code;
 
-    //@trc_union op_code == LL_CONNECTION_UPDATE_IND_OPCODE
     struct ll_connection_update_ind     con_update_ind;
-
-    //@trc_union op_code == LL_CHANNEL_MAP_IND_OPCODE
     struct ll_channel_map_ind           channel_map_ind;
-
-    //@trc_union op_code == LL_TERMINATE_IND_OPCODE
     struct ll_terminate_ind             terminate_ind;
-
-    //@trc_union op_code == LL_ENC_REQ_OPCODE
     struct ll_enc_req                   enc_req;
-
-    //@trc_union op_code == LL_ENC_RSP_OPCODE
     struct ll_enc_rsp                   enc_rsp;
-
-    //@trc_union op_code == LL_START_ENC_REQ_OPCODE
     struct ll_start_enc_req             start_enc_req;
-
-    //@trc_union op_code == LL_START_ENC_RSP_OPCODE
     struct ll_start_enc_rsp             start_enc_rsp;
-
-    //@trc_union op_code == LL_UNKNOWN_RSP_OPCODE
     struct ll_unknown_rsp               unknown_rsp;
-
-    //@trc_union op_code == LL_FEATURE_REQ_OPCODE
     struct ll_feature_req               feats_req;
-
-    //@trc_union op_code == LL_FEATURE_RSP_OPCODE
     struct ll_feature_rsp               feats_rsp;
-
-    //@trc_union op_code == LL_PAUSE_ENC_REQ_OPCODE
     struct ll_pause_enc_req             pause_enc_req;
-
-    //@trc_union op_code == LL_PAUSE_ENC_RSP_OPCODE
     struct ll_pause_enc_rsp             pause_enc_rsp;
-
-    //@trc_union op_code == LL_VERSION_IND_OPCODE
     struct ll_version_ind               vers_ind;
-
-    //@trc_union op_code == LL_REJECT_IND_OPCODE
     struct ll_reject_ind                reject_ind;
-
-    //@trc_union op_code == LL_SLAVE_FEATURE_REQ_OPCODE
     struct ll_slave_feature_req         slave_feature_req;
-
-    //@trc_union op_code == LL_CONNECTION_PARAM_REQ_OPCODE
     struct ll_connection_param_req      con_param_req;
-
-    //@trc_union op_code == LL_CONNECTION_PARAM_RSP_OPCODE
     struct ll_connection_param_rsp      con_param_rsp;
-
-    //@trc_union op_code == LL_REJECT_EXT_IND_OPCODE
     struct ll_reject_ext_ind            reject_ind_ext;
-
-    //@trc_union op_code == LL_PING_REQ_OPCODE
     struct ll_ping_req                  ping_req;
-
-    //@trc_union op_code == LL_PING_RSP_OPCODE
     struct ll_ping_rsp                  ping_rsp;
-
-    //@trc_union op_code == LL_LENGTH_REQ_OPCODE
     struct ll_length_req                length_req;
-
-    //@trc_union op_code == LL_LENGTH_RSP_OPCODE
     struct ll_length_rsp                length_rsp;
-
-    //@trc_union op_code == LL_PHY_REQ_OPCODE
     struct ll_phy_req                   phy_req;
-
-    //@trc_union op_code == LL_PHY_RSP_OPCODE
     struct ll_phy_rsp                   phy_rsp;
-
-    //@trc_union op_code == LL_PHY_UPDATE_IND_OPCODE
     struct ll_phy_update_ind            phy_upd_ind;
-
-    //@trc_union op_code == LL_MIN_USED_CHANNELS_IND_OPCODE
-    struct ll_min_used_channels_ind     min_used_channels_ind;
-
-    //@trc_union op_code == LL_CLK_ACC_REQ_OPCODE
-    struct ll_clk_acc_req               clk_acc_req;
-
-    //@trc_union op_code == LL_CLK_ACC_RSP_OPCODE
-    struct ll_clk_acc_rsp               clk_acc_rsp;
-
-    //@trc_union op_code == LL_PER_SYNC_IND_OPCODE
-    struct ll_per_sync_ind              per_sync_ind;
-
-    //@trc_union op_code == LL_CIS_REQ_OPCODE
-    struct  ll_cis_req                  cis_req;
-
-    //@trc_union op_code == LL_CIS_RSP_OPCODE
-    struct  ll_cis_rsp                  cis_rsp;
-
-    //@trc_union op_code == LL_CIS_IND_OPCODE
-    struct  ll_cis_ind                  cis_ind;
-
-    //@trc_union op_code == LL_CIS_TERMINATE_IND_OPCODE
-    struct  ll_cis_terminate_ind        cis_terminate_ind;
-
-    //@trc_union op_code == LL_PWR_CTRL_REQ_OPCODE
-    struct ll_pwr_ctrl_req              pwr_ctrl_req;
-
-    //@trc_union op_code == LL_PWR_CTRL_RSP_OPCODE
-    struct ll_pwr_ctrl_rsp              pwr_ctrl_rsp;
-
-    //@trc_union op_code == LL_PWR_CHANGE_IND_OPCODE
-    struct ll_pwr_change_ind            pwr_change_ind;
-};
-
-
-/// BIG_CHANNEL_MAP_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct  big_channel_map_ind
-{
-    /// op_code
-    uint8_t            op_code;
-    /// channel mapping
-    struct le_chnl_map ch_map;
-    /// BIG Event Count (Instant)
-    uint16_t           evt_cnt;
-};
-
-/// BIG_TERMINATE_IND structure.
-/*@TRACE
- * @NO_PAD
-*/
-struct  big_terminate_ind
-{
-    /// op_code
-    uint8_t         op_code;
-    /// termination code
-    uint8_t         err_code;
-    /// BIG Event Count (Instant)
-    uint16_t        evt_cnt;
-};
-
-
-/// BIS PDU format
-/*@TRACE
- @trc_ref co_big_op_code
- */
-union big_pdu
-{
-    /// op_code
-    uint8_t  op_code;
-
-    //@trc_union op_code == BIG_CHANNEL_MAP_IND_OPCODE
-    struct big_channel_map_ind channel_map_ind;
-
-    //@trc_union op_code == BIG_TERMINATE_IND_OPCODE
-    struct big_terminate_ind   terminate_ind;
 };
 
 /// @} CO_BT

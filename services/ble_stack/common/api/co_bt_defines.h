@@ -32,14 +32,6 @@
  ****************************************************************************************
  */
 
-/// Bluetooth technologies version
-#define BT40_VERSION                      (6)
-#define BT41_VERSION                      (7)
-#define BT42_VERSION                      (8)
-#define BT50_VERSION                      (9)
-#define BT51_VERSION                      (10)
-#define BT52_VERSION                      (11)
-
 /**
  * BD Address format (values in bytes)
  * |      3B        |  1B |    2B    |
@@ -52,30 +44,6 @@
 #define BD_ADDR_UAP_LEN     1
 #define BD_ADDR_NAP_POS     BD_ADDR_UAP_LEN
 #define BD_ADDR_NAP_LEN     2
-
-/**
- * Resolvable private Address format (values in bytes)
- * |      3B        |      3B        |
- * |    PRAND       |     HASH       |
- */
-/// Length of resolvable random address prand part
-#define BD_ADDR_PRAND_LEN            (3)
-/// Length of resolvable random address hash part
-#define BD_ADDR_HASH_LEN             (3)
-
-/// Random Address type
-enum random_addr_type
-{
-    /// Mask over the 2 MSBs
-    BD_ADDR_RND_ADDR_TYPE_MSK = 0xC0,
-
-    /// Static random address           - 11 (MSB->LSB)
-    BD_ADDR_STATIC      = 0xC0,
-    /// Private non resolvable address  - 00 (MSB->LSB)
-    BD_ADDR_NON_RSLV    = 0x00,
-    /// Private resolvable address      - 01 (MSB->LSB)
-    BD_ADDR_RSLV        = 0x40,
-};
 
 ///Length of fields in Bluetooth messages, in number of bytes
 #define EVT_MASK_LEN        8
@@ -135,37 +103,8 @@ enum random_addr_type
 
 #define DH_KEY_LEN          0x20
 
-// BT 5.0 - Slot Availability Masks
-
-#define SAM_SUBMAPS_LEN     12
-#define SAM_TYPE0_SUBMAP_LEN    14
-
-#define SAM_SLOT_NOT_AVAILABLE   0
-#define SAM_SLOT_TX_AVAILABLE    1
-#define SAM_SLOT_RX_AVAILABLE    2
-#define SAM_SLOT_TX_RX_AVAILABLE 3
-
-#define SAM_INDEX_MAX      3
-#define SAM_INDEX_CONTINUE 3
-#define SAM_DISABLED       0xFF
-
-#define SAM_UPDATE_INVALIDATE_MAPS  0
-#define SAM_UPDATE_IMMEDIATE        1
-#define SAM_UPDATE_AT_SUBINTERVAL   2
-
-#define T_SAM_SM_MIN             2
-#define T_SAM_SM_MAX             56
-
-#define SAM_SLOTS_SUBMAPPED         0
-#define SAM_SLOTS_AVAILABLE         1
-#define SAM_SLOTS_UNAVAILABLE       2
-
-
 /// Maximum maskable event code
 #define EVT_MASK_CODE_MAX   EVT_MASK_LEN * 8
-
-/// Default event mask
-#define EVT_MASK_DEFAULT    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x9F, 0x00, 0x20}
 
 /// Advertising and Data Channel Indices (chapter 6.B.1.4.1)
 #define DATA_CHANNEL_MIN    0
@@ -193,28 +132,8 @@ enum random_addr_type
 #define SCAN_WINDOW_MAX     0x4000 //(10.24 sec)
 #define SCAN_WINDOW_DFT     0x0010 //(10 ms)
 
-/// Sync Timeout (in Time = N*10ms)
-#define SYNC_TIMEOUT_MIN    0x000A //(100 ms)
-#define SYNC_TIMEOUT_MAX    0x4000 //(163.84 s)
-
-/// Advertising SID valid Range
-#define SYNC_SID_MIN        0x00
-#define SYNC_SID_MAX        0x0F
-
-/// Periodic Adv Skip valid Range
-#define SYNC_SKIP_MIN       0x0000
-#define SYNC_SKIP_MAX       0x01F3
-
-/// Length of Codec ID value
-#define CODEC_ID_LEN        5
-
 /// Connection interval (N*1.250ms) (chapter 2.E.7.8.12)
-#if defined(CFG_ISO_MODE_0)
-#define CON_INTERVAL_MIN_AUDIO 0x0002  //(2.5 msec)
-#define CON_INTERVAL_MIN    CON_INTERVAL_MIN_AUDIO
-#else // !defined(CFG_ISO_MODE_0)
 #define CON_INTERVAL_MIN    0x0006  //(7.5 msec)
-#endif // defined(CFG_ISO_MODE_0)
 #define CON_INTERVAL_MAX    0x0C80  //(4 sec)
 /// Connection latency (N*cnx evt) (chapter 2.E.7.8.12)
 #define CON_LATENCY_MIN     0x0000
@@ -251,27 +170,6 @@ enum ble_feature
     BLE_FEAT_PWR_CLASS_1               = (15),
     //byte 2
     BLE_FEAT_MIN_NUM_USED_CHAN_PROC    = (16),
-    BLE_FEAT_CON_CTE_REQ               = (17),
-    BLE_FEAT_CON_CTE_RSP               = (18),
-    BLE_FEAT_CONLESS_CTE_TX            = (19),
-    BLE_FEAT_CONLESS_CTE_RX            = (20),
-    BLE_FEAT_AOD                       = (21),
-    BLE_FEAT_AOA                       = (22),
-    BLE_FEAT_CTE_RX                    = (23),
-    //byte 3
-    BLE_FEAT_PER_ADV_SYNC_TRANSF_TX    = (24),
-    BLE_FEAT_PER_ADV_SYNC_TRANSF_RX    = (25),
-    BLE_FEAT_SLEEP_CLK_ACC_UPD         = (26),
-    BLE_FEAT_PUB_KEY_VALID             = (27),
-    BLE_FEAT_CON_ISO_STREAM_MASTER     = (28),
-    BLE_FEAT_CON_ISO_STREAM_SLAVE      = (29),
-    BLE_FEAT_ISO_BROADCASTER           = (30),
-    BLE_FEAT_SYNCED_RECEIVER           = (31),
-    //byte 4
-    BLE_FEAT_ISO_CHANNELS_HOST_SUPPORT = (32),
-    BLE_FEAT_POWER_CONTROL_REQ         = (33),
-    BLE_FEAT_POWER_CHANGE_IND          = (34),
-    BLE_FEAT_PATH_LOSS_MONITORING      = (35),
 };
 
 /// BLE supported states
@@ -411,97 +309,6 @@ enum ble_feature
 #define BLE_LE_SET_ADDR_RESOL_CMD               0x02
 #define BLE_LE_SET_RESOLV_PRIV_ADDR_TO_CMD      0x04
 #define BLE_LE_RD_MAX_DATA_LEN_CMD              0x08
-#define BLE_LE_RD_PHY_CMD                       0x10
-#define BLE_LE_SET_DFT_PHY_CMD                  0x20
-#define BLE_LE_SET_PHY_CMD                      0x40
-#define BLE_LE_RX_TEST_V2_CMD                   0x80
-//byte36
-#define BLE_LE_TX_TEST_V2_CMD                   0x01
-#define BLE_LE_SET_ADV_SET_RAND_ADDR_CMD        0x02
-#define BLE_LE_SET_EXT_ADV_PARAM_CMD            0x04
-#define BLE_LE_SET_EXT_ADV_DATA_CMD             0x08
-#define BLE_LE_SET_EXT_SCAN_RSP_DATA_CMD        0x10
-#define BLE_LE_SET_EXT_ADV_EN_CMD               0x20
-#define BLE_LE_RD_MAX_ADV_DATA_LEN_CMD          0x40
-#define BLE_LE_RD_NB_SUPP_ADV_SETS_CMD          0x80
-//byte37
-#define BLE_LE_RMV_ADV_SET_CMD                  0x01
-#define BLE_LE_CLEAR_ADV_SETS_CMD               0x02
-#define BLE_LE_SET_PER_ADV_PARAM_CMD            0x04
-#define BLE_LE_SET_PER_ADV_DATA_CMD             0x08
-#define BLE_LE_SET_PER_ADV_EN_CMD               0x10
-#define BLE_LE_SET_EXT_SCAN_PARAM_CMD           0x20
-#define BLE_LE_SET_EXT_SCAN_EN_CMD              0x40
-#define BLE_LE_EXT_CREATE_CON_CMD               0x80
-//byte38
-#define BLE_LE_PER_ADV_CREATE_SYNC_CMD          0x01
-#define BLE_LE_PER_ADV_CREATE_SYNC_CANCEL_CMD   0x02
-#define BLE_LE_PER_ADV_TERM_SYNC_CMD            0x04
-#define BLE_LE_ADD_DEV_TO_PER_ADV_LIST_CMD      0x08
-#define BLE_LE_RMV_DEV_FROM_PER_ADV_LIST_CMD    0x10
-#define BLE_LE_CLEAR_PER_ADV_LIST_CMD           0x20
-#define BLE_LE_RD_PER_ADV_LIST_SIZE_CMD         0x40
-#define BLE_LE_RD_TX_PWR_CMD                    0x80
-//byte39
-#define BLE_LE_RD_RF_PATH_COMP_CMD              0x01
-#define BLE_LE_WR_RF_PATH_COMP_CMD              0x02
-#define BLE_LE_SET_PRIV_MODE_CMD                0x04
-#define BLE_LE_RX_TEST_V3_CMD                   0x08
-#define BLE_LE_TX_TEST_V3_CMD                   0x10
-#define BLE_LE_SET_CONLESS_CTE_TX_PARAM_CMD     0x20
-#define BLE_LE_SET_CONLESS_CTE_TX_EN_CMD        0x40
-#define BLE_LE_SET_CONLESS_IQ_SAMPL_EN_CMD      0x80
-//byte40
-#define BLE_LE_SET_CON_CTE_RX_PARAM_CMD         0x01
-#define BLE_LE_SET_CON_CTE_TX_PARAM_CMD         0x02
-#define BLE_LE_CON_CTE_REQ_EN_CMD               0x04
-#define BLE_LE_CON_CTE_RSP_EN_CMD               0x08
-#define BLE_LE_RD_ANTENNA_INF_CMD               0x10
-#define BLE_LE_SET_PER_ADV_RX_EN_CMD            0x20
-#define BLE_LE_PER_ADV_SYNC_TRANSF_CMD          0x40
-#define BLE_LE_PER_ADV_SET_INFO_TRANSF_CMD      0x80
-//byte41
-#define BLE_LE_SET_PER_ADV_SYNC_TRANSF_PARAM_CMD        0x01
-#define BLE_LE_SET_DFT_PER_ADV_SYNC_TRANSF_PARAM_CMD    0x02
-#define BLE_LE_GEN_DHKEY_V2_CMD                         0x04
-#define BLE_LE_MOD_SLP_CLK_ACC_CMD                      0x10
-#define BLE_LE_RD_BUF_SIZE_V2_CMD                       0x20
-#define BLE_LE_RD_ISO_TX_SYNC_CMD                       0x40
-#define BLE_LE_SET_CIG_PARAMS_CMD                       0x80
-//byte42
-#define BLE_LE_SET_CIG_PARAMS_TEST_CMD                  0x01
-#define BLE_LE_CREATE_CIS_CMD                           0x02
-#define BLE_LE_REMOVE_CIG_CMD                           0x04
-#define BLE_LE_ACCEPT_CIS_REQ_CMD                       0x08
-#define BLE_LE_REJECT_CIS_REQ_CMD                       0x10
-#define BLE_LE_CREATE_BIG_CMD                           0x20
-#define BLE_LE_CREATE_BIG_TEST_CMD                      0x40
-#define BLE_LE_TERMINATE_BIG_CMD                        0x80
-//byte43
-#define BLE_LE_CREATE_BIG_SYNC_CMD                      0x01
-#define BLE_LE_BIG_TERMINATE_SYNC_CMD                   0x02
-#define BLE_LE_REQ_PEER_SCA_CMD                         0x04
-#define BLE_LE_SETUP_ISO_DATA_PATH_CMD                  0x08
-#define BLE_LE_REMOVE_ISO_DATA_PATH_CMD                 0x10
-#define BLE_LE_ISO_TX_TEST_CMD                          0x20
-#define BLE_LE_ISO_RX_TEST_CMD                          0x40
-#define BLE_LE_ISO_RD_TEST_COUNTERS_CMD                 0x80
-//byte 44
-#define BLE_LE_ISO_TEST_END_CMD                         0x01
-#define BLE_LE_SET_HOST_FEAT_CMD                        0x02
-#define BLE_LE_RD_ISO_LINK_QUALITY_CMD                  0x04
-#define BLE_LE_ENH_RD_TX_POWER_LEVEL_CMD                0x08
-#define BLE_LE_RD_REMOTE_TX_POWER_CMD                   0x10
-#define BLE_LE_SET_PATH_LOSS_REPORTING_PARAMS_CMD       0x20
-#define BLE_LE_SET_PATH_LOSS_REPORTING_ENABLE_CMD       0x40
-#define BLE_LE_SET_TX_POWER_REPORTING_ENABLE_CMD        0x80
-//byte 45
-#define BLE_LE_TX_TEST_V4_CMD                           0x01
-#define BLE_LE_SET_ECO_BASE_INTERVAL_CMD                0x02
-#define BLE_LE_RD_LOC_SUPP_CODECS_V2_CMD                0x04
-#define BLE_LE_RD_LOC_SUPP_CODEC_CAP_CMD                0x08
-#define BLE_LE_RD_LOC_SUPP_CTRL_DELAY_CMD               0x10
-#define BLE_LE_CONFIG_DATA_PATH_CMD                     0x20
 
 // Inquiry Length HCI:7.1.1
 #define INQ_LEN_MIN      0x01
@@ -517,8 +324,6 @@ enum ble_feature
 #define NB_IAC_MIN     0x01
 #define NB_IAC_MAX     0x40
 
-/// Most significant bit of the Bluetooth clock (in 312.5us half-slots)
-#define BT_CLOCK_MSB        (1L << 27)
 
 /// Logical Transport Adresses  BB:4.2
 #define LT_ADDR_BCST            0x00
@@ -771,8 +576,6 @@ enum ble_feature
 #define B1_SEC_CON_CTRL_MSK         0x01
 #define B1_PING_POS                 1
 #define B1_PING_MSK                 0x02
-#define B1_SAM_POS                  2
-#define B1_SAM_MSK                  0x04
 #define B1_TRAIN_NUDGING_POS        3
 #define B1_TRAIN_NUDGING_MSK        0x08
 
@@ -848,7 +651,6 @@ enum ble_feature
 #define FEAT_COARSE_CLK_ADJ_BIT_POS    134
 #define FEAT_SEC_CON_CTRL_BIT_POS      136
 #define FEAT_PING_BIT_POS              137
-#define FEAT_SAM_BIT_POS               138
 #define FEAT_TRAIN_NUDGING_BIT_POS     139
 
 /// Maximum number of feature bits per page (8 bytes x 8 bits)
@@ -969,8 +771,6 @@ enum ble_feature
 #define NORMAL_SYNC_POS     (64 + 4)                // End of Synchro word at bit 68 (64 + 4)
 #define SLOT_SIZE            625                    // A slot is 625 us
 #define HALF_SLOT_SIZE       625                    // A half slot is 312.5 us (in half us)
-#define HALF_SLOT_TIME_MIN  (0)                     // Minimum offset within a half-slot is 0 half-us
-#define HALF_SLOT_TIME_MAX  (HALF_SLOT_SIZE - 1)    // Maximum offset within a half-slot is 624 half-us
 
 /// Baseband timeout default value, Baseband timers: 1.1
 #define PAGE_RESP_TO_DEF        8
@@ -1022,11 +822,6 @@ enum ble_feature
 #define TIM_CHANGE_FLAG         0x01
 #define INIT2_FLAG              0x02
 #define ACCESS_WIN_FLAG         0x04
-
-/// Sniff request parameters LMP:5.2
-#define SNIFF_INTERVAL_MIN      0x0006
-#define SNIFF_INTERVAL_MAX      0x0540
-#define SNIFF_TIMEOUT_MAX       0x0028
 
 /// Packet Type Table defines    LMP:4.1.11
 #define PACKET_TABLE_1MBPS      0x00
@@ -1251,15 +1046,6 @@ enum ble_feature
 #define FIXTXPOW                0x00
 #define ADAPTTXPOW              0x01
 
-/// Maximum frequency value for test mode HCI:7.8.28
-#define TEST_FREQ_MAX                        39
-/// Minimum PHY value for test mode HCI:7.8.50
-#define TEST_PHY_MIN                         0x01
-/// Maximum PHY value for the receiver test mode HCI:7.8.50
-#define RX_TEST_PHY_MAX                      0x03
-/// Maximum PHY value for the transmitter test mode HCI:7.8.51
-#define TX_TEST_PHY_MAX                      0x04
-
 /// Packet type parameter bit field of LMP_test_control
 #define LMP_TEST_CTRL_PKT_TYPE_CODE_POS  0
 #define LMP_TEST_CTRL_PKT_TYPE_CODE_MSK  0x0F
@@ -1381,10 +1167,6 @@ enum ble_feature
 #define BT_MAX_DRIFT_SLEEP              250
 #define JITTER_DFT                      10
 #define BT_MAX_DRIFT_ACTIVE             20 // BB:2.2.5
-#define BLE_MAX_DRIFT_ACTIVE            50
-
-/// MAX LP Clock Jitter allowed by the specification (in us) (Core 4.2 - vol 6, -B - 4.2.2)
-#define BLE_MAX_JITTER              (16)
 
 /// Read Stored Link Key HCI:4.7.8
 #define LINK_KEY_BD_ADDR                0x00
@@ -1423,12 +1205,6 @@ enum ble_feature
 #define AFH_NB_CHANNEL_MIN            20
 #define AFH_NB_CHANNEL_MAX            79
 
-/// Number of frequencies available in standard hopping sequence
-#define HOP_NB_CHANNEL                79
-
-/// Base frequency in MHz of first BT hop channel [f=2402+k MHz, k=0,...,78]
-#define HOP_CHANNEL_BASE_MHZ          2402
-
 /// Maximum number of frequencies used in synchronization train BB:2.6.4.8
 #define SYNC_TRAIN_CHANNEL_NB         3
 /// Indices of frequencies used in synchronization train
@@ -1457,8 +1233,6 @@ enum ble_feature
 #define SYNC_TRAIN_INTV_DEFAULT       0x80
 /// Default value for synchronization train timeout (in slots) HCI:6.37
 #define SYNC_TRAIN_TO_DEFAULT         0x0002EE00
-/// Default value for synchronization scan timeout for CCA recovery mode (in slots) BB: Appendix B.1.8
-#define SYNC_TRAIN_TO_CCA_RM_DEFAULT  0x8000
 /// Default value for synchronization train service data HCI:6.39
 #define SYNC_TRAIN_SVC_DATA_DEFAULT   0x00
 
@@ -1471,8 +1245,6 @@ enum ble_feature
 
 /// Default value for synchronization scan timeout (in slots) BB: Apppendix B
 #define SYNC_SCAN_TO_DEFAULT          0x2000
-/// Default value for synchronization scan timeout for CCA recovery mode (in slots) BB: Appendix B.1.9
-#define SYNC_SCAN_TO_CCA_RM_DEFAULT   0x8000
 /// Recommended value for synchronization scan window (91.25ms) GAP: Appendix A
 #define SYNC_SCAN_WIN_DEFAULT         0x0092
 /// Recommended value for synchronization scan interval (320 ms) GAP: Appendix A
@@ -1528,10 +1300,6 @@ enum ble_feature
 #define MWS_PERIOD_TYPE_BIDIRECTIONAL    0x02
 #define MWS_PERIOD_TYPE_GUARD_PERIOD     0x03
 #define MWS_PERIOD_TYPE_RESERVED         0x04
-
-/// MWS inactivity duration 7B(WCI-1):3.1.4.
-#define MWS_INACT_DUR_INFINITE           0x1F
-
 
 /// Simple pairing mode HCI:7.3.58/HCI:7.3.59
 #define SP_MODE_DIS        0x00
@@ -1590,167 +1358,6 @@ enum ble_feature
 /// IFS duration in us
 #define  BLE_IFS_DUR           (150)
 
-/// MAFS duration in us
-#define  BLE_MAFS_DUR          (300)
-
-/// MSS duration in us
-#define  BLE_MSS_DUR          (150)
-
-/// Offset threshold in us, below which Offset Units is set to 0
-#define OFFSET_THRESHOLD            245700
-
-/// Maximum offset value (in us) that can be represented by the Sync Packet Offset
-#define OFFSET_LIMIT                2457300
-
-/// Offset adjust value in us
-#define OFFSET_ADJUST               2457600
-
-/// Maximum time difference (in us) between lastPaEventCount and EventCounter
-#define OFFSET_DIFF_MAX             5000000
-
-/// CTE defines
-
-/**
- * Sync CTE type, specifies whether to only sync to periodic advertising with certain types of
- * Constant Tone Extension (HCI:7.8.67)
- */
-enum sync_cte_type
-{
-    NO_SYNC_AOA_BIT      = (0x01) ,
-    NO_SYNC_AOA_POS      = (0)    ,
-    NO_SYNC_AOD_1US_BIT  = (0x02) ,
-    NO_SYNC_AOD_1US_POS  = (1)    ,
-    NO_SYNC_AOD_2US_BIT  = (0x04) ,
-    NO_SYNC_AOD_2US_POS  = (2)    ,
-    NO_SYNC_NO_CTE_BIT   = (0x10) ,
-    NO_SYNC_NO_CTE_POS   = (4)    ,
-
-};
-
-/// Modulation index
-#define STANDARD_MOD_IDX       (0)
-#define STABLE_MOD_IDX         (1)
-
-/// CTE length (in number of 8us periods)
-#define NO_CTE                 (0)
-#define CTE_LEN_MIN            (0x02)
-#define CTE_LEN_MAX            (0x14)
-
-/// CTE type
-#define CTE_TYPE_AOA           (0)
-#define CTE_TYPE_AOD_1US       (1)
-#define CTE_TYPE_AOD_2US       (2)
-#define CTE_TYPE_NO_CTE        (0xFF)
-
-/// CTE types
-enum cte_types
-{
-    CTE_TYPES_AOA_BIT      = (0x01) ,
-    CTE_TYPES_AOA_POS      = (0)    ,
-    CTE_TYPES_AOD_1US_BIT  = (0x02) ,
-    CTE_TYPES_AOD_1US_POS  = (1)    ,
-    CTE_TYPES_AOD_2US_BIT  = (0x04) ,
-    CTE_TYPES_AOD_2US_POS  = (2)    ,
-};
-
-/// Slot durations (in us)
-#define SLOT_DUR_1US          (1)
-#define SLOT_DUR_2US          (2)
-
-/// Length of switching pattern
-#define MIN_SWITCHING_PATTERN_LEN  (0x02)
-#define MAX_SWITCHING_PATTERN_LEN  (0x4B)
-
-/// CTE count
-#define MIN_CTE_CNT            (0x01)
-#define MAX_CTE_CNT            (0x10)
-
-/// CTE enable
-#define CTE_DIS                (0)
-#define CTE_EN                 (1)
-
-/// Sampling enable
-#define IQ_SAMPL_DIS           (0)
-#define IQ_SAMPL_EN            (1)
-
-/// CTE request interval (in number of connection events) HCI:7.8.85
-#define CTE_ASAP               (0x0000)
-#define MIN_CTE_INTV           (0x0001)
-#define MAX_CTE_INTV           (0xFFFF)
-
-/// Supported switching sampling rates
-#define AOD_TX_1_US            (0x01)
-#define AOD_RX_1_US            (0x02)
-#define AOA_RX_1_US            (0x04)
-
-/// Number of antennae
-#define MIN_ANTENNAE_NUM       (0x01)
-#define MAX_ANTENNAE_NUM       (0x4B)
-
-/// Sample count
-#define MIN_SAMPLE_CNT         (0x09)
-#define MAX_SAMPLE_CNT         (0x52)
-
-/// No valid sample available
-#define NO_VALID_SAMPLE        (0x80)
-
-/// CTE packet status HCI:7.7.65.21
-#define CTE_PKT_STAT_CRC_OK           (0x00)
-#define CTE_PKT_STAT_CRC_KO_LEN_USED  (0x01)
-#define CTE_PKT_STAT_CRC_KO_OTHER_WAY (0x02)
-#define CTE_PKT_STAT_INSUF_RES        (0xFF)
-
-/// Periodic advertising sync transfer defines
-
-/**
- * Periodic advertising sync information reception mode HCI:7.8.91
- *   0x00 - No attempt is made to synchronize to the periodic advertising and no HCI_LE_Periodic_Advertising_Sync_Transfer_Received event is sent to the Host.
- *   0x01 - An HCI_LE_Periodic_Advertising_Sync_Transfer_Received event is sent to the Host. HCI_LE_Periodic_Advertising_Report events will be disabled.
- *   0x02 - An HCI_LE_Periodic_Advertising_Sync_Transfer_Received event is sent to the Host. HCI_LE_Periodic_Advertising_Report events will be enabled.
- */
-enum per_adv_sync_info_rec_mode
-{
-    NO_SYNC      = 0x00,
-    SYNC_REP_DIS = 0x01,
-    SYNC_REP_EN  = 0x02,
-};
-
-/**
- * Private key type HCI:7.8.93
- *   0x00 - Use the generated private key
- *   0x01 - Use the debug private key
- */
-enum priv_key_type
-{
-    USE_GEN_PRIV_KEY      = 0x00,
-    USE_DBG_PRIV_KEY      = 0x01,
-};
-
-/**
- * Action on clock accuracy HCI:7.8.94
- *   0x00 - Switch to a more accurate clock
- *   0x01 - Switch to a less accurate clock
- */
-enum clk_acc_action
-{
-    SWITCH_TO_MORE_ACC_CLK = 0x00,
-    SWITCH_TO_LESS_ACC_CLK = 0x01,
-};
-
-/**
- * Test mode transmit power level in dBm HCI:7.8.122
- *   -127 - Lowest transmit power level
- *     20 - Highest transmit power level
- *   0x7E - Minimum transmit power level
- *   0x7F - Maximum transmit power level
- */
-enum test_mode_tx_pwr_lvl
-{
-    LOW_TX_PWR_LVL  = -127,
-    HIGH_TX_PWR_LVL =   20,
-    MIN_TX_PWR_LVL  = 0x7E,
-    MAX_TX_PWR_LVL  = 0x7F,
-};
 
 /// BLE event mask
 enum le_evt_mask
@@ -1779,50 +1386,6 @@ enum le_evt_mask
     LE_EVT_MASK_DIR_ADV_REP_EVT_MSK                 = 0x00000400,
     LE_EVT_MASK_PHY_UPD_CMP_EVT_BIT                 = 11,
     LE_EVT_MASK_PHY_UPD_CMP_EVT_MSK                 = 0x00000800,
-    LE_EVT_MASK_EXT_ADV_REPORT_EVT_BIT              = 12,
-    LE_EVT_MASK_EXT_ADV_REPORT_EVT_MSK              = 0x00001000,
-    LE_EVT_MASK_PER_ADV_SYNC_EST_EVT_BIT            = 13,
-    LE_EVT_MASK_PER_ADV_SYNC_EST_EVT_MSK            = 0x00002000,
-    LE_EVT_MASK_PER_ADV_REPORT_EVT_BIT              = 14,
-    LE_EVT_MASK_PER_ADV_REPORT_EVT_MSK              = 0x00004000,
-    LE_EVT_MASK_PER_ADV_SYNC_LOST_EVT_BIT           = 15,
-    LE_EVT_MASK_PER_ADV_SYNC_LOST_EVT_MSK           = 0x00008000,
-    LE_EVT_MASK_EXT_SCAN_TIMEOUT_EVT_BIT            = 16,
-    LE_EVT_MASK_EXT_SCAN_TIMEOUT_EVT_MSK            = 0x00010000,
-    LE_EVT_MASK_EXT_ADV_SET_TERMINATED_EVT_BIT      = 17,
-    LE_EVT_MASK_EVT_ADV_SET_TERMINATED_EVT_MSK      = 0x00020000,
-    LE_EVT_MASK_SCAN_REQ_RECEIVED_EVT_BIT           = 18,
-    LE_EVT_MASK_SCAN_REQ_RECEIVED_EVT_MSK           = 0x00040000,
-    LE_EVT_MASK_CH_SEL_ALGO_EVT_BIT                 = 19,
-    LE_EVT_MASK_CH_SEL_ALGO_EVT_MSK                 = 0x00080000,
-    LE_EVT_MASK_CONLESS_IQ_REPORT_EVT_BIT           = 20,
-    LE_EVT_MASK_CONLESS_IQ_REPORT_EVT_MSK           = 0x00100000,
-    LE_EVT_MASK_CON_IQ_REPORT_EVT_BIT               = 21,
-    LE_EVT_MASK_CON_IQ_REPORT_EVT_MSK               = 0x00200000,
-    LE_EVT_MASK_CTE_REQ_FAILED_EVT_BIT              = 22,
-    LE_EVT_MASK_CTE_REQ_FAILED_EVT_MSK              = 0x00400000,
-    LE_EVT_MASK_PER_ADV_SYNC_TRANSF_REC_EVT_BIT     = 23,
-    LE_EVT_MASK_PER_ADV_SYNC_TRANSF_REC_EVT_MSK     = 0x00800000,
-    LE_EVT_MASK_CIS_EST_EVT_BIT                     = 24,
-    LE_EVT_MASK_CIS_EST_EVT_MSK                     = 0x01000000,
-    LE_EVT_MASK_CIS_REQ_EVT_BIT                     = 25,
-    LE_EVT_MASK_CIS_REQ_EVT_MSK                     = 0x02000000,
-    LE_EVT_MASK_CREATE_BIG_CMP_EVT_BIT              = 26,
-    LE_EVT_MASK_CREATE_BIG_CMP_EVT_MSK              = 0x04000000,
-    LE_EVT_MASK_TERM_BIG_CMP_EVT_BIT                = 27,
-    LE_EVT_MASK_TERM_BIG_CMP_EVT_MSK                = 0x08000000,
-    LE_EVT_MASK_BIG_SYNC_EST_EVT_BIT                = 28,
-    LE_EVT_MASK_BIG_SYNC_EST_EVT_MSK                = 0x10000000,
-    LE_EVT_MASK_BIG_SYNC_LOST_EVT_BIT               = 29,
-    LE_EVT_MASK_BIG_SYNC_LOST_EVT_MSK               = 0x20000000,
-    LE_EVT_MASK_REQ_PEER_SCA_CMP_EVT_BIT            = 30,
-    LE_EVT_MASK_REQ_PEER_SCA_CMP_EVT_MSK            = 0x40000000,
-    LE_EVT_MASK_PATH_LOSS_THRESHOLD_EVT_BIT         = 31,
-    LE_EVT_MASK_PATH_LOSS_THRESHOLD_EVT_MSK         = 0x80000000,
-    LE_EVT_MASK_TX_POWER_REP_EVT_BIT                = 32,
-    LE_EVT_MASK_TX_POWER_REP_EVT_MSK                = 0x100000000,
-    LE_EVT_MASK_BIGINFO_ADV_REP_EVT_BIT             = 33,
-    LE_EVT_MASK_BIGINFO_ADV_REP_EVT_MSK             = 0x200000000,
     LE_EVT_MASK_DFT                                 = 0x0000001F,
 };
 
@@ -1943,14 +1506,10 @@ enum le_evt_mask
 #define LE_MIN_OCTETS       (27)
 /// Preferred minimum number of microseconds
 #define LE_MIN_TIME         (328)
-/// Preferred minimum number of microseconds LL:4.5.10
-#define LE_MIN_TIME_CODED   (2704)
 /// Preferred maximum number of payload octets
 #define LE_MAX_OCTETS       (251)
 /// Preferred maximum number of microseconds
 #define LE_MAX_TIME         (2120)
-/// Preferred maximum number of microseconds LL:4.5.10
-#define LE_MAX_TIME_CODED   (17040)
 
 /// LE LL 2.1.2 Access Address
 #define LE_ADV_CH_ACC_ADDR_H        0x8E89
@@ -1990,15 +1549,6 @@ enum le_evt_mask
 /// Maximum length of BLE advertising channel PDU payloads ((chapter 6.B.2.3))
 #define PDU_ADV_PAYLOAD_LEN_MAX     255
 
-// The total amount of Host Advertising Data before fragmentation shall not exceed 1650 octets (chapter 6.B.2.3.4.9).
-#define HOST_ADV_DATA_LEN_MAX       1650
-
-/// SyncInfo Sync Packet Offset unspecified (chapter 6.B.2.3)
-#define PER_SYNC_OFFSET_UNSPECIFIED     0
-
-/// SyncInfo Sync Interval min in 1.25ms units (chapter 6.B.2.3)
-#define PER_SYNC_INTERVAL_MIN           6 // (7.5ms)
-
 /// Ext Adv Report  - ADV SID - Define for no ADI filed in the PDU  HCI:7.7.65.13
 #define REP_ADV_NO_ADI              0xFF
 
@@ -2011,176 +1561,8 @@ enum le_evt_mask
 /// Maximum advertising handle HCI:7.8.53
 #define ADV_HDL_MAX     0xEF
 
-/// Maximum advertising Set ID HCI:7.8.53
-#define ADV_SID_MAX     0x0F
-
 /// Advertising_Tx_Power, Host has no preference HCI:7.8.53
 #define ADV_TX_PWR_NO_PREF     127
-
-/// Address type of devices sending anonymous advertisements, HCI 7.8.16
-#define ANONYMOUS_ADV_ADDR_TYPE  0xFF
-
-/// Invalid param_req offset, 2.4.2.16 LL_CONNECTION_PARAM_REQ
-#define PARAM_REQ_INVALID_OFFSET 0xFFFF
-/*
- *  ***********************************************************
- *           ISOCHRONOUS CHANNEL DEFINES
- * ***********************************************************
- */
-
-/// Maximum Payload Size value
-#define BLE_ISO_MAX_PAYLOAD_SIZE                 (0xFB)
-/// Minimum Number of Subevents value
-#define BLE_ISO_MIN_NSE                          (0x01)
-/// Maximum Number of Subevents value
-#define BLE_ISO_MAX_NSE                          (0x1F)
-/// Mask for PHY type value received from host
-#define BLE_ISO_PHY_MASK                         (0x07)
-
-/// Maximum SDU Size
-#define BLE_ISO_MAX_SDU_SIZE                     (0xFFF)
-/// Minimum SDU Interval (in microseconds)
-#define BLE_ISO_MIN_SDU_INTERVAL                 (0x000FF)
-/// Maximum SDU Interval (in microseconds)
-#define BLE_ISO_MAX_SDU_INTERVAL                 (0xFFFFF)
-
-/// Minimum Transport Latency (in milliseconds)
-#define BLE_ISO_MIN_TRANS_LATENCY                (0x0005)
-/// Maximum Transport Latency (in milliseconds)
-#define BLE_ISO_MAX_TRANS_LATENCY                (0x0FA0)
-
-/// Minimum ISO Interval value
-#define BLE_ISO_MIN_INTERVAL                     (0x0004)
-/// Maximum ISO Interval value
-#define BLE_ISO_MAX_INTERVAL                     (0x0C80)
-
-/// Maximum CIG ID value
-#define BLE_CIG_MAX_ID                           (0xEF)
-/// Maximum Channel ID value
-#define BLE_CIS_MAX_ID                           (0xEF)
-/// Minimum Flush Timeout value
-#define BLE_CIS_MIN_FT                           (0x01)
-/// Maximum Flush Timeout value
-#define BLE_CIS_MAX_FT                           (0xFF)
-/// Maximum Burst Number value
-#define BLE_CIS_MAX_BN                           (0x0F)
-/// Minimum CIS offset value - 500us
-#define BLE_CIS_MIN_OFFSET                       (500)
-/// Minimum Subevent interval value - 400us
-#define BLE_CIS_MIN_SUBEVENT_INTV                (400)
-/// Maximum number of retransmission
-#define BLE_CIS_MAX_RTN                          (0x0F)
-
-/// Maximum BIG Handle value
-#define BLE_BIG_MAX_HANDLE                       (0xEF)
-/// Maximum BIG Control PDU length, currently the number of payload bytes in a BIG_CHANNEL_MAP_IND
-#define BLE_BIG_MAX_CTRL_PDU_LEN                 (0x08)
-/// Minimum BIS Number value
-#define BLE_BIS_MIN_NB                           (0x01)
-/// Maximum BIS Number value
-#define BLE_BIS_MAX_NB                           (0x1F)
-/// Minimum Burst Number value for BIS
-#define BLE_BIS_MIN_BN                           (0x01)
-/// Maximum Burst Number value for BIS
-#define BLE_BIS_MAX_BN                           (0x07)
-/// Minimum Number of Immediate Retransmission Count value
-#define BLE_BIS_MIN_IRC                          (0x01)
-/// Maximum Number of Immediate Retransmission Count value
-#define BLE_BIS_MAX_IRC                          (0x0F)
-/// Maximum Number of Pre-Transmission Offset value
-#define BLE_BIS_MAX_PTO                          (0x0F)
-
-
-/// Size of payload count
-#define BLE_PLD_CNT_SIZE                         (5)
-/// Invalid connection link id
-#define BLE_INVALID_LINK_ID                      (0xFF)
-/// Invalid channel handle
-#define BLE_INVALID_CHANHDL                      (0xFF)
-/// Invalid Group handle
-#define BLE_INVALID_GROUP_HDL                    (0xFF)
-/// Invalid Isochronous handle
-#define BLE_INVALID_ISOHDL                       (0xFFFF)
-
-/// segmentation header size
-#define BLE_ISOAL_SEG_HEADER_SIZE   (2)
-/// Time offset information header size
-#define BLE_ISOAL_TIME_OFFSET_SIZE  (3)
-
-/// LLID of isochronous channel PDU
-enum iso_llid
-{
-    /// 0b00 = Unframed CIS Data PDU; end fragment of an SDU or a complete SDU.
-    /// 0b00 = Unframed BIS Data PDU; end fragment of an SDU or a complete SDU.
-    LLID_UNFRAMED_END   = 0,
-    /// 0b01 = Unframed CIS Data PDU; start or continuation fragment of an SDU.
-    /// 0b01 = Unframed BIS Data PDU; start or continuation fragment of an SDU.
-    LLID_UNFRAMED_CONT  = 1,
-    /// 0b10 = Framed CIS Data PDU; one or more segments of an SDU.
-    /// 0b10 = Framed BIS Data PDU; one or more segments of an SDU.
-    LLID_FRAMED_SEG     = 2,
-    /// 0b11 = Reserved for future use.
-    /// 0b11 = BIG Control PDU.
-    LLID_ISO_RFU        = 3,
-};
-
-/// Isochronous Channel Direction selection
-enum iso_rx_tx_select
-{
-    /// Isochronous tx buffer selection: Host to Controller
-    ISO_SEL_TX,
-    /// Isochronous rx buffer selection: Controller to Host
-    ISO_SEL_RX,
-
-    ISO_SEL_MAX,
-};
-
-/// Isochronous Group packing preference
-enum iso_packing
-{
-    /// Sequential stream packing
-    ISO_PACKING_SEQUENTIAL = 0,
-    /// Interleaved stream packing
-    ISO_PACKING_INTERLEAVED,
-
-    ISO_PACKING_MAX,
-};
-
-/// Isochronous PDU Framing mode
-enum iso_frame
-{
-    /// Unframed mode
-    ISO_UNFRAMED_MODE = 0,
-    /// Framed mode
-    ISO_FRAMED_MODE,
-
-    ISO_FRAME_MODE_MAX,
-};
-
-/// Segmentation header of framed PDU
-enum iso_seg_header
-{
-    /// The Start or Continuation (SC) field indicates that the data following the Segmentation Header is the start of
-    /// a new SDU or the continuation of a previous SDU.
-    /// When SC is set to 0, it indicates the start of a new SDU and that the data that follows the header is part
-    /// of a new SDU.
-    /// If SC is set to 1, it indicates a continuation of an SDU that was partially transmitted in a previous
-    /// isochronous PDU.
-    ISO_SEG_HDR_SC_POS           = 0,
-    ISO_SEG_HDR_SC_BIT           = 0x0001,
-    /// The Completion (CMPLT) field indicates that the segment following the Segmentation Header in the PDU is the end
-    /// segment of an SDU.
-    /// When CMPLT is set to 0, not all data of the SDU has been included in the current PDU. One or more additional
-    /// framed PDUs are required to complete the SDU transfer.
-    /// When CMPLT is set to 1, all data of the SDU is included in the segment and the SDU may be transferred to the
-    /// higher layer.
-    ISO_SEG_HDR_CMPLT_POS        = 1,
-    ISO_SEG_HDR_CMPLT_BIT        = 0x0002,
-    /// The length field indicates the size, in octets, of the segment that follows the Segmentation Header
-    /// in this PDU and, when present, includes the Time_Offset parameter.
-    ISO_SEG_HDR_LENGTH_LSB       = 8,
-    ISO_SEG_HDR_LENGTH_MASK      = 0xFF00,
-};
 
 
 /*
@@ -2197,33 +1579,18 @@ enum le_phys_preference
     ALL_PHYS_RX_NO_PREF = (1 << 1),
 };
 
-/// Specify what PHY the Controller has changed for TX/RX. HCI:7.7.65.12
-/*@TRACE*/
 enum le_phy_value
-{
-    PHY_UNDEF_VALUE    = 0,
-    PHY_1MBPS_VALUE    = 1,
-    PHY_2MBPS_VALUE    = 2,
-    PHY_CODED_VALUE    = 3,
-};
-
-/// Specify what PHY Host prefers to use for RX or TX HCI:7.8.48 / HCI:7.8.49
-enum le_phy_mask
 {
     /// The Host prefers to use the LE 1M transmitter/receiver PHY (possibly among others)
     PHY_1MBPS_BIT      = (1<<0),
-    PHY_1MBPS_POS      = (0),
     /// The Host prefers to use the LE 2M transmitter/receiver PHY (possibly among others)
     PHY_2MBPS_BIT      = (1<<1),
-    PHY_2MBPS_POS      = (1),
     /// The Host prefers to use the LE Coded transmitter/receiver PHY (possibly among others)
     PHY_CODED_BIT      = (1<<2),
-    PHY_CODED_POS      = (2),
     /// The Host prefers to use the LE Coded transmitter/receiver PHY (possibly among others)
     PHY_ALL        = (PHY_1MBPS_BIT | PHY_2MBPS_BIT | PHY_CODED_BIT),
 };
 
-/// Specify what rate Host prefers to use in transmission on coded PHY. HCI:7.8.49
 enum le_phy_opt
 {
     /// The Host has no preferred coding when transmitting on the LE Coded PHY
@@ -2248,103 +1615,6 @@ enum
     TX_PW_LVL_CURRENT             = 0x00,
     ///Maximum power level
     TX_PW_LVL_MAX,
-};
-
-/// Specify which PHY the Controller is specifying transmit power. HCI:7.8.117 / HCI:7.8.118
-enum le_phy_pwr_value
-{
-    PHY_PWR_1MBPS_VALUE = 1,
-    PHY_PWR_2MBPS_VALUE = 2,
-    PHY_PWR_S8_CODED_VALUE = 3,
-    PHY_PWR_S2_CODED_VALUE = 4,
-};
-
-/// Specify what PHY is selected for power control LL:2.4.2.33 LL:2.4.2.35
-enum le_phy_pwr_mask
-{
-    /// Specifies 1MBPS power level (possibly among others)
-    PHY_PWR_1MBPS_BIT      = (1<<0),
-    PHY_PWR_1MBPS_POS      = (0),
-    /// Specifies 2MBSP power level (possibly among others)
-    PHY_PWR_2MBPS_BIT      = (1<<1),
-    PHY_PWR_2MBPS_POS      = (1),
-    /// Specifies coded phy with S=8 data coding (possibly among others)
-    PHY_PWR_S8_CODED_BIT      = (1<<2),
-    PHY_PWR_S8_CODED_POS      = (2),
-    /// Specifies coded phy with S=8 data coding (possibly among others)
-    PHY_PWR_S2_CODED_BIT      = (1<<3),
-    PHY_PWR_S2_CODED_POS      = (3),
-    /// Specifies all PHY
-    PHY_PWR_ALL        = (PHY_PWR_1MBPS_BIT | PHY_PWR_2MBPS_BIT | PHY_PWR_S8_CODED_BIT | PHY_PWR_S2_CODED_BIT),
-};
-
-/// ISO Tx/Rx test payload type HCI:7.8.111 / HCI:7.8.112
-enum le_iso_test_payl_type
-{
-    ISO_TEST_ZERO_LEN     = 0,
-    ISO_TEST_VARIABLE_LEN = 1,
-    ISO_TEST_MAX_LEN      = 2,
-};
-
-/// ISO Tx/Rx test packet counter size in octets LL:7 ISO_TEST_MODE
-#define ISO_TEST_PKT_CNT_SIZE 4
-
-/// Maximum path loss configuraable (threshold+hysteresis) for path loss monitoring. HCI:7.8.119
-#define PHY_PATH_LOSS_MAX 0xFF
-
-/// Power Control Bit Field parameters.  LL:2.4.2.34, LL:2.4.2.35, HCI:7.7.65.3
-enum pwr_ctrl_flags
-{
-    /// bit[0] - Sender is at the minimum supported power level
-    BLE_PWR_CTRL_MIN_BIT    = 0x01,
-    BLE_PWR_CTRL_MIN_POS    = 0,
-
-    /// bit[1] - Sender is at the maximum supported power level
-    BLE_PWR_CTRL_MAX_BIT    = 0x02,
-    BLE_PWR_CTRL_MAX_POS    = 1,
-};
-
-/// Acceptable Power Reduction unable to determine a value. LL:2.4.2.34
-#define PWR_CTRL_APR_UNKNOWN    0xFF
-
-/// Delta requested MAX for the recipiant's transmit power. LL: 2.4.2.33
-#define PWR_CTRL_DELTA_MAX       0x7F
-
-/// Minimum number of connection events after an APR before sending new power control. LL 5.1.17.1
-#define PWR_CTRL_EVT_CNT_MIN     2
-
-/// Power Control Tx Power special values. LL:2.4.2.33, LL:5.1.17, HCI:7.7.65.3
-enum
-{
-    BLE_PWR_CTRL_UNUSED        = 0x7E,
-    BLE_PWR_UNKNOWN            = 0x7F,
-};
-
-/// Transmit Power reporting event reason. HCI:7.7.65.33
-enum pwr_report_reason
-{
-    BLE_PWR_LOC_TX_CHG      = 0x00,
-    BLE_PWR_REM_TX_CHG      = 0x01,
-    BLE_PWR_HCI_REQ         = 0x02,
-};
-
-/// Transmit Power reporting enable. HCI:7.8.121
-enum pwr_report_en
-{
-     /// Disable transmit power reports
-     BLE_TX_PWR_REP_DIS        = 0,
-     BLE_TX_PWR_REP_EN         = 1,
-};
-
-/// Path Loss zones. HCI:7.8.118
-enum le_path_loss_zone
-{
-    /// Entered Low zone
-    BLE_PATH_LOSS_LOW           = 0,
-    /// Entered Middle zone
-    BLE_PATH_LOSS_MID           = 1,
-    /// Entered High zone
-    BLE_PATH_LOSS_HIGH          = 2,
 };
 
 ///Controller to Host flow control
@@ -2573,30 +1843,6 @@ enum
     INIT_FILT_USE_WLST,
 };
 
-///Periodic Synchronization Filter policy
-enum
-{
-    ///Use the Advertising SID, Advertising Address Type and Advertising Address parameters to determine
-    ///which advertiser to listen to
-    PER_SYNC_FILT_IGNORE_PAL        = 0x00,
-    ///Use the Periodic Advertiser List to determine which advertiser to listen to
-    PER_SYNC_FILT_USE_PAL,
-};
-
-/// Periodic Synchronization Options
-enum per_sync_opt
-{
-    /**
-     * Use the Periodic Advertiser List to determine which advertiser to listen to, otherwise use the Advertising SID,
-     * Advertising Address Type and Advertising Address parameters
-     */
-    PER_SYNC_FILT_USE_PAL_POS        = 0,
-    PER_SYNC_FILT_USE_PAL_BIT        = 0x01,
-    /// Periodic advertising reports initially enabled or disabled (default enabled)
-    PER_SYNC_REP_INIT_DIS_POS        = 1,
-    PER_SYNC_REP_INIT_DIS_BIT        = 0x02,
-};
-
 ///Transmitter test Packet Payload Type
 enum
 {
@@ -2649,7 +1895,6 @@ enum SCA
 };
 
 ///Advertising pdu Type
-/*@TRACE*/
 enum ble_adv_type
 {
     /// Undirected advertising
@@ -2748,13 +1993,6 @@ enum
 /// Data status of extended advertising event - Reserved for future use
 #define ADV_EVT_DATA_STATUS_RESERVED            3
 
-/// Data status of periodic advertising event - Complete
-#define PER_ADV_EVT_DATA_STATUS_COMPLETE        0
-/// Data status of periodic advertising event - Incomplete, more data to come
-#define PER_ADV_EVT_DATA_STATUS_INCOMPLETE      1
-/// Data status of periodic advertising event - Incomplete, data truncated, no more to come
-#define PER_ADV_EVT_DATA_STATUS_TRUNCATED       2
-
 /// LLID packet
 enum
 {
@@ -2791,11 +2029,6 @@ enum
 #define BLE_PREAMBLE_ACCESS_ADDR_DUR_125KBPS    (80+256)
 #define BLE_PREAMBLE_ACCESS_ADDR_DUR_500KBPS    (80+256)
 
-
-
-/// size of the Maximum Adv Extended header length
-#define BLE_EXT_MAX_HEADER_LEN               (63)
-
 /// size of the LEN & MODE info preceeding the extended header
 #define BLE_EXT_ADV_PRE_HEADER_LEN           (1)
 /// size of the FLAGS info at start of the extended header
@@ -2812,22 +2045,6 @@ enum
 #define BLE_EXT_SYNC_LEN                     (18)
 /// Size of TX Power info in extended header
 #define BLE_EXT_TX_PWR_LEN                   (1)
-
-/// Size of the Channel Map Update Indication in extended header
-#define BLE_EXT_CHM_UPD_IND_LEN              (9)
-/// AD Types for ACAD data
-#define BLE_EXT_ACAD_CHANNEL_MAP_UPDATE_INDICATION_AD_TYPE (0x28)
-
-
-/// Size of ACAD Data for BIG info - Not Encrypted
-#define BLE_EXT_ACAD_BIG_INFO_LEN            (33)
-/// Size of ACAD Data for BIG info - Encrypted
-#define BLE_EXT_ACAD_BIG_INFO_ENC_LEN        (57)
-/// maximum duration in us of Big Offset with 30 us step
-#define BLE_BIG_OFFSET_30_US_MAX             (491460)
-/// AD Type reserved for BIGInfo ACAD data
-#define BLE_EXT_ACAD_BIG_INFO_AD_TYPE        (0x2C)
-
 
 /// Extended Header Flags
 enum ble_ext_header_flags
@@ -2873,52 +2090,6 @@ enum ble_aux_ptr
     // Aux PHY
     BLE_AUX_PHY_MASK        = 0x00E00000,
     BLE_AUX_PHY_LSB         = 21,
-};
-
-/// CTEInfo field description
-enum ble_cte_info
-{
-    // CTETime (5 bits)
-    BLE_CTE_INFO_CTE_TIME_MASK = 0x0000001F,
-    BLE_CTE_INFO_CTE_TIME_LSB  = 0,
-    // RFU (1 bit)
-    BLE_CTE_INFO_RFU_BIT       = 0x00000020,
-    BLE_CTE_INFO_RFU_POS       = 5,
-    // CTEType (2 bits)
-    BLE_CTE_INFO_CTE_TYPE_MASK = 0x000000C0,
-    BLE_CTE_INFO_CTE_TYPE_LSB  = 6,
-};
-
-/// Aux PHY values LL:2.3.4.5
-enum aux_phy
-{
-    AUX_PHY_1MBPS     = 0,
-    AUX_PHY_2MBPS     = 1,
-    AUX_PHY_CODED     = 2,
-};
-
-/// SyncInfo - various fileds description
-enum syncinfo_fields
-{
-    /// SyncInfo - Sync Offset description (13 bits)
-    BLE_SYNC_OFFSET_MASK       = 0x1FFF,
-    BLE_SYNC_OFFSET_LSB        = 0,
-
-    /// SyncInfo - Offset Units description (1 bit)
-    BLE_SYNC_OFFSET_UNITS_BIT  = 0x2000,
-    BLE_SYNC_OFFSET_UNITS_POS  = 13,
-
-    /// SyncInfo - Offset Adjust description (1 bit)
-    BLE_SYNC_OFFSET_ADJUST_BIT = 0x4000,
-    BLE_SYNC_OFFSET_ADJUST_POS = 14,
-
-    /// SyncInfo[8] - ChM description (5 bits of 37 bits)
-    BLE_SYNC_CHMAP_END_MASK    = 0x1F,
-    BLE_SYNC_CHMAP_END_LSB     = 0,
-
-    /// SyncInfo[8] - SCA description (3 bits)
-    BLE_SYNC_SCA_MASK          = 0xE0,
-    BLE_SYNC_SCA_LSB           = 5,
 };
 
 /// AdvDataInfo (ADI) field description
@@ -2984,7 +2155,6 @@ struct bd_name
 };
 
 ///Structure device name
-/*@TRACE*/
 struct device_name
 {
     ///array of bytes for name
@@ -2992,14 +2162,12 @@ struct device_name
 };
 
 ///Structure name vector
-/*@TRACE*/
 struct name_vect
 {
     uint8_t vect[NAME_VECT_SIZE];
 };
 
 /// lap structure
-/*@TRACE*/
 struct lap
 {
     /// LAP
@@ -3007,7 +2175,6 @@ struct lap
 };
 
 /// class structure
-/*@TRACE*/
 struct devclass
 {
     /// class
@@ -3015,7 +2182,6 @@ struct devclass
 };
 
 ///Extended inquiry response structure
-/*@TRACE*/
 struct eir
 {
     /// eir data
@@ -3023,7 +2189,6 @@ struct eir
 };
 
 ///Event mask structure
-/*@TRACE*/
 struct evt_mask
 {
     ///8-byte array for mask value
@@ -3040,7 +2205,6 @@ struct host_cmpl_pkts
 };
 
 ///BD Address structure
-/*@TRACE*/
 struct bd_addr
 {
     ///6-byte array address value
@@ -3048,7 +2212,6 @@ struct bd_addr
 };
 
 ///Access Address structure
-/*@TRACE*/
 struct access_addr
 {
     ///4-byte array access address
@@ -3056,7 +2219,6 @@ struct access_addr
 };
 
 ///Advertising data structure
-/*@TRACE*/
 struct adv_data
 {
     ///Maximum length data bytes array
@@ -3064,7 +2226,6 @@ struct adv_data
 };
 
 ///Scan response data structure
-/*@TRACE*/
 struct scan_rsp_data
 {
     ///Maximum length data bytes array
@@ -3072,7 +2233,6 @@ struct scan_rsp_data
 };
 
 ///Channel map structure
-/*@TRACE*/
 struct chnl_map
 {
     ///10-bytes channel map array
@@ -3080,88 +2240,13 @@ struct chnl_map
 };
 
 ///Channel map structure
-/*@TRACE*/
 struct le_chnl_map
 {
     ///5-byte channel map array
     uint8_t map[LE_CHNL_MAP_LEN];
 };
 
-/// External frame period (duration & type) structure
-struct ext_fr_period
-{
-    /// Period_Duration
-    uint16_t duration;
-    /// Period_Type
-    uint8_t type;
-};
-
-/// MWS scan frequency (low & high) structure
-struct mws_scan_freq
-{
-    ///Scan_Frequency_Low
-    uint16_t low;
-    ///Scan_Frequency_High
-    uint16_t high;
-};
-
-/// MWS pattern interval (duration & type) structure
-struct mws_pattern_intv
-{
-    ///MWS_PATTERN_IntervalDuration
-    uint16_t duration;
-    ///MWS_PATTERN_IntervalType
-    uint8_t type;
-};
-
-
-/// MWS transport rates structure
-struct mws_trans_rate
-{
-    ///To_MWS_Baud_Rate
-    uint32_t to_mws_baud_rate;
-    ///From_MWS_Baud_Rate
-    uint32_t from_mws_baud_rate;
-};
-
-/// MWS transports strucutre
-struct mws_transport
-{
-    ///Transport_Layer
-    uint8_t layer_id;
-    ///Num_Baud_Rates
-    uint8_t num_baud_rates;
-    ///To/From_MWS_Baud_Rates
-    struct mws_trans_rate *rates;
-};
-
-
-/// SAM submaps structure
-struct sam_submaps
-{
-    //12-byte SAM submaps array of 2-bit fields
-    //The nth (numbering from 0) such field defines the submap type of the nth submap in the map:
-    // - SAM_SLOTS_SUBMAPPED: Each slot is individually available or unavailable as configured.
-    // - SAM_SLOTS_AVAILABLE: All slots are available for transmission and reception.
-    // - SAM_SLOTS_UNAVAILABLE: All slots are unavailable for transmission and reception.
-    // - Other: Reserved for future use.
-    uint8_t map[SAM_SUBMAPS_LEN];
-};
-
-/// SAM type0 submap structure
-struct sam_type0_submap
-{
-    //14-byte type0 submap array of 2-bit fields
-    //The nth (numbering from 0) such field defines the submap type of the nth submap in the map:
-    // - SAM_SLOT_NOT_AVAILABLE: The slot is not available for transmision or reception.
-    // - SAM_SLOT_TX_AVAILABLE: The slot is available for transmission but not reception.
-    // - SAM_SLOT_RX_AVAILABLE: The slot is available for reception but not transmission.
-    // - SAM_SLOT_TX_RX_AVAILABLE: The slot is available for both transmission and reception.
-    uint8_t map[SAM_TYPE0_SUBMAP_LEN];
-};
-
 ///Long Term Key structure
-/*@TRACE*/
 struct ltk
 {
     ///16-byte array for LTK value
@@ -3169,7 +2254,6 @@ struct ltk
 };
 
 ///Identity Resolving Key structure
-/*@TRACE*/
 struct irk
 {
     ///16-byte array for IRK value
@@ -3177,7 +2261,6 @@ struct irk
 };
 
 /// Initialization vector (for AES-CCM encryption)
-/*@TRACE*/
 struct initialization_vector
 {
     ///8-byte array
@@ -3194,7 +2277,6 @@ struct bd_addr_plus_key
 };
 
 ///Random number structure
-/*@TRACE*/
 struct rand_nb
 {
     ///8-byte array for random number
@@ -3202,7 +2284,6 @@ struct rand_nb
 };
 
 ///Advertising report structure
-/*@TRACE*/
 struct adv_report
 {
     ///Event type:
@@ -3224,7 +2305,6 @@ struct adv_report
 };
 
 ///Direct Advertising report structure
-/*@TRACE*/
 struct dir_adv_report
 {
     ///Event type:
@@ -3243,7 +2323,6 @@ struct dir_adv_report
 };
 
 ///Exteneded Advertising report structure
-/*@TRACE*/
 struct ext_adv_report
 {
     ///Event type
@@ -3275,7 +2354,6 @@ struct ext_adv_report
 };
 
 ///Supported LE Features structure
-/*@TRACE*/
 struct le_features
 {
     ///8-byte array for LE features
@@ -3283,7 +2361,6 @@ struct le_features
 };
 
 ///Simple pairing hash structure
-/*@TRACE*/
 struct hash
 {
     ///16-byte array for LTK value
@@ -3291,7 +2368,6 @@ struct hash
 };
 
 ///Simple pairing randomizer structure
-/*@TRACE*/
 struct randomizer
 {
     ///16-byte array for LTK value
@@ -3299,7 +2375,6 @@ struct randomizer
 };
 
 ///Pin code structure
-/*@TRACE*/
 struct pin_code
 {
     ///16-byte array for PIN value
@@ -3307,7 +2382,6 @@ struct pin_code
 };
 
 ///Sres structure
-/*@TRACE*/
 struct sres_nb
 {
     ///8-byte array for random number
@@ -3315,7 +2389,6 @@ struct sres_nb
 };
 
 ///aco structure
-/*@TRACE*/
 struct aco
 {
     ///8-byte array for random number
@@ -3323,14 +2396,12 @@ struct aco
 };
 
 ///struct byte 16 to stay align with the sdl version
-/*@TRACE*/
 struct byte16
 {
     uint8_t A[16];
 };
 
 ///Controller number of completed packets structure
-/*@TRACE*/
 struct nb_cmpl_pk
 {
     ///Connection handle
@@ -3340,7 +2411,6 @@ struct nb_cmpl_pk
 };
 
 ///Supported Features  structure
-/*@TRACE*/
 struct features
 {
     ///8-byte array for features
@@ -3348,7 +2418,6 @@ struct features
 };
 
 ///Supported commands structure
-/*@TRACE*/
 struct supp_cmds
 {
     ///64-byte array for supported commands
@@ -3404,7 +2473,6 @@ struct sp_pub_key_256
 };
 
 ///Supported LE states structure
-/*@TRACE*/
 struct le_states
 {
     ///8-byte array for LE states
@@ -3420,21 +2488,7 @@ struct white_list
     uint8_t wl_bdaddr_type;
 };
 
-///RAL element structure
-struct ral_entry
-{
-    /// Peer ID address
-    struct bd_addr bd_addr;
-    /// Peer address type
-    uint8_t addr_type;
-    /// Local IRK
-    struct irk local_irk;
-    /// Peer IRK
-    struct irk peer_irk;
-};
-
 ///CRC initial value structure
-/*@TRACE*/
 struct crc_init
 {
     ///3-byte array CRC initial value
@@ -3442,7 +2496,6 @@ struct crc_init
 };
 
 ///Session key diversifier master or slave structure
-/*@TRACE*/
 struct sess_k_div_x
 {
     ///8-byte array for diversifier value
@@ -3457,14 +2510,12 @@ struct sess_k_div
 };
 
 ///Initiator vector
-/*@TRACE*/
 struct init_vect
 {
     ///4-byte array for vector
     uint8_t iv[INIT_VECT_LEN];
 };
 
-/*@TRACE*/
 typedef struct t_public_key
 {
     uint8_t x[PUBLIC_KEY_P256_LEN];
@@ -3503,209 +2554,7 @@ struct pdu_con_req_lldata
     uint8_t             hop_sca;
 };
 
-/// structure connection request
-struct pdu_con_req
-{
-    /// Initiator address
-    struct bd_addr             inita;
 
-    /// Advertiser address
-    struct bd_addr             adva;
-
-    /// LLData
-    struct pdu_con_req_lldata  lldata;
-};
-
-/// structure advertising syncinfo field
-/*@TRACE*/
-struct sync_info
-{
-    /// Sync offset (in offset units)
-    uint16_t sync_offset;
-
-    /// Offset units (0: 30us, 1: 300us)
-    uint8_t offset_units;
-
-    /// Offset adjust (0: no action, 1: add 2.4576 seconds)
-    uint8_t offset_adjust;
-
-    /// Interval (in units of 1,25 ms, i.e. 2 slots)
-    uint16_t interval;
-
-    /// Channel mapping
-    struct le_chnl_map ch_map;
-
-    /// Clock accuracy (@see enum SCA)
-    uint8_t sca;
-
-    /// Access address
-    struct access_addr  aa;
-
-    /// CRC init
-    struct crc_init crcinit;
-
-    /// Event counter
-    uint16_t evt_counter;
-};
-
-/// BIG info fields
-enum big_info_fields
-{
-    // (14 bits)   BIG_Offset
-    BIG_OFFSET_POS              = 0,
-    BIG_OFFSET_LSB              = 0,
-    BIG_OFFSET_MASK             = 0x00003FFF,
-    // (1 bit)     BIG_Offset_Units
-    BIG_OFFSET_UNIT_POS         = 0,
-    BIG_OFFSET_UNIT_LSB         = 14,
-    BIG_OFFSET_UNIT_MASK        = 0x00004000,
-    // (12 bits)   ISO_Interval
-    BIG_ISO_INTERVAL_POS        = 0,
-    BIG_ISO_INTERVAL_LSB        = 15,
-    BIG_ISO_INTERVAL_MASK       = 0x07FF8000,
-    // (5 bits)    NumBIS
-    BIG_NUM_BIS_POS             = 0,
-    BIG_NUM_BIS_LSB             = 27,
-    BIG_NUM_BIS_MASK            = 0xF8000000,
-
-    // (5 bits)    NSE
-    BIG_NSE_POS                 = 4,
-    BIG_NSE_LSB                 = 0,
-    BIG_NSE_MASK                = 0x1F,
-    // (3 bits)    BN
-    BIG_BN_POS                  = 4,
-    BIG_BN_LSB                  = 5,
-    BIG_BN_MASK                 = 0xE0,
-
-    // (20 bits)   Sub_Interval
-    BIG_SUB_INTERVAL_POS        = 5,
-    BIG_SUB_INTERVAL_LSB        = 0,
-    BIG_SUB_INTERVAL_MASK       = 0x000FFFFF,
-    // (4 bits)    PTO
-    BIG_PTO_POS                 = 5,
-    BIG_PTO_LSB                 = 20,
-    BIG_PTO_MASK                = 0x00F00000,
-
-    // (20 bits)   BIS_Spacing
-    BIG_BIS_SPACING_POS         = 8,
-    BIG_BIS_SPACING_LSB         = 0,
-    BIG_BIS_SPACING_MASK        = 0x000FFFFF,
-    // (4 bits)    IRC
-    BIG_IRC_POS                 = 8,
-    BIG_IRC_LSB                 = 20,
-    BIG_IRC_MASK                = 0x00F00000,
-    // (8 bits)    Max_PDU
-    BIG_MAX_PDU_POS             = 11,
-
-    // (1 octet)   RFU
-    BIG_RFU_POS                 = 12,
-
-    // (4 octets)  SeedAccessAddress
-    BIG_SEED_ACCESS_ADDRESS_POS = 13,
-
-    // (20 bits)   SDU_Interval
-    BIG_SDU_INTERVAL_POS        = 17,
-    BIG_SDU_INTERVAL_LSB        = 0,
-    BIG_SDU_INTERVAL_MASK       = 0x000FFFFF,
-    // (12 bits)   Max_SDU
-    BIG_MAX_SDU_POS             = 17,
-    BIG_MAX_SDU_LSB             = 20,
-    BIG_MAX_SDU_MASK            = 0xFFF00000,
-
-    // (2 octets)  BaseCRCInit
-    BIG_BASE_CRC_INIT_POS       = 21,
-
-    // (37 bits)   Channel Map
-    BIG_CHMAP_LSB_POS               = 23,
-    BIG_CHMAP_MSB_POS               = 27,
-    BIG_CHMAP_MSB_LSB               = 0,
-    BIG_CHMAP_MSB_MASK              = 0x1F,
-
-    // (3 bits)    PHY
-    BIG_PHY_POS                 = 27,
-    BIG_PHY_LSB                 = 5,
-    BIG_PHY_MASK                = 0xE0,
-
-    // (39 bits)   bisPayloadCount
-    BIG_BIS_PLD_COUNT_LSB_POS   = 28,
-    BIG_BIS_PLD_COUNT_MSB_POS   = 32,
-    BIG_BIS_PLD_COUNT_MSB_LSB   = 0,
-    BIG_BIS_PLD_COUNT_MSB_MASK  = 0x7F,
-    // (1 bit)     Framing
-    BIG_FRAMING_POS             = 32,
-    BIG_FRAMING_LSB             = 7,
-    BIG_FRAMING_MASK            = 0x80,
-
-    // (8 octets)  GIV
-    BIG_GIV_POS                 = 33,
-
-    // (16 octets) GSKD
-    BIG_GSKD_POS                = 41,
-};
-
-
-/// BIG Sync Info format
-/*@TRACE*/
-struct big_info
-{
-    /// BIG_Offset field contains the time from the start of the packet containing the BIGInfo to the next
-    /// BIG anchor point. The value of the BIG_Offset field is in the unit of time indicated by the BIG_Offset_Units
-    /// field; the actual time offset is determined by multiplying the value of BIG_Offset by the units.
-    /// The BIG_Offset shall be in the range 600 us to ISO_Interval of the associated BIG.
-    uint16_t big_offset;
-    /// If the BIG_Offset_Units bit is set then the unit is 300 us; otherwise it is 30 us.
-    /// The BIG_Offset_Units field shall be set to 0 if the offset is less than (2^14    2) us.
-    /// The BIG event anchor point shall be no earlier than the BIG_Offset and no later than the BIG_Offset
-    /// plus one BIG_Offset_Unit after the start of the relevant packet.
-    uint8_t  big_offset_unit;
-    /// ISO interval (1.25ms unit, range: 5ms to 4s)
-    uint16_t iso_interval;
-    /// Number of BIS transmitted. (range 1 to 31)
-    uint8_t  num_bis;
-    /// Number of subevents (range 1 to 31)
-    uint8_t  nse;
-    /// BN which is the number of new payloads per BIS channel in every BIS channel interval (range 1 to 7).
-    uint8_t  bn;
-
-    /// Time in microseconds of every subevent in the BIG
-    uint32_t sub_interval;
-    /// PreTransmission offset numbers which is the number of Stream Interval spacing used for selecting
-    /// payloads of events from the current channel event (range 0 to 15).
-    uint8_t  pto;
-    /// Time in microseconds between an anchor point of a BIS and the anchor point of the next BIS
-    uint32_t bis_spacing;
-    /// Immediate Repetition Count which is the number of subevents that are used for transmissions
-    /// of the intended payload for that channel event (range 1 to 15).
-    uint8_t  irc;
-    /// Maximum size of payload in each Data PDU of each BIS in the BIG
-    uint8_t  max_pdu;
-
-    /// SDU interval in microseconds
-    uint32_t sdu_interval;
-    /// ISOAL Framing mode, 0: Unframed, 1: Framed
-    uint8_t  framing;
-    /// Maximum size of SDU in each SDU interval
-    uint16_t max_sdu;
-    /// Indicates the PHY used to transmit the Isochronous Channel PDUs (see enum le_phy_mask).
-    uint8_t  phy;
-    ///  Number from which the CRC initialization value for all Data PDUs and Control PDUs are derived.
-    uint16_t base_crc_init;
-    ///  Number from which the Access Addresses for all Broadcast
-    uint32_t seed_access_addr;
-    /// Channel Map
-    uint8_t  chmap[LE_CHNL_MAP_LEN];
-    /// Payload Counter field contains 39bits payload counter of the BIS channel Data PDU.
-    /// MSB of the Payload Counter field shall be set to 0.
-    uint8_t  bis_pkt_cnt[BLE_PLD_CNT_SIZE];
-
-    // Encryption (Optional)
-    /// Used to know if BIG is encrypted
-    bool  encrypted;
-    /// GIV field is the Group Initialization Vector to be used to encrypt the BIS channel Data PDUs.
-    uint8_t  giv[IV_LEN];
-    /// GSKD field is the Group Session Key Diversifier used to encrypt the BIS channel Data PDUs
-    uint8_t  gskd[KEY_LEN];
-};
 
 /// @} CO_BT_DEFINES
 #endif // CO_BT_DEFINES_H_

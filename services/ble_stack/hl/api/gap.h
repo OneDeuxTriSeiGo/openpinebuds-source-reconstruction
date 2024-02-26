@@ -41,15 +41,12 @@
  */
 
 #include <stdint.h>
-#include <stdbool.h>
 #include "compiler.h"
 
 /*
  * DEFINES
  ****************************************************************************************
  */
-/// Invalid Procedure Token
-#define GAP_INVALID_TOKEN     (0x0000)
 
 /// BD address length
 #define GAP_BD_ADDR_LEN       (6)
@@ -73,24 +70,17 @@ enum gap_ad_type_flag
 {
     /// Limited discovery flag - AD Flag
     GAP_LE_LIM_DISCOVERABLE_FLG_BIT     = 0x01,
-    GAP_LE_LIM_DISCOVERABLE_FLG_POS     = 0,
     /// General discovery flag - AD Flag
     GAP_LE_GEN_DISCOVERABLE_FLG_BIT     = 0x02,
-    GAP_LE_GEN_DISCOVERABLE_FLG_POS     = 1,
     /// Legacy BT not supported - AD Flag
     GAP_BR_EDR_NOT_SUPPORTED_BIT        = 0x04,
-    GAP_BR_EDR_NOT_SUPPORTED_POS        =  2,
     /// Dual mode for controller supported (BR/EDR/LE) - AD Flag
     GAP_SIMUL_BR_EDR_LE_CONTROLLER_BIT  = 0x08,
-    GAP_SIMUL_BR_EDR_LE_CONTROLLER_POS  = 3,
     /// Dual mode for host supported (BR/EDR/LE) - AD Flag
     GAP_SIMUL_BR_EDR_LE_HOST_BIT        = 0x10,
-    GAP_SIMUL_BR_EDR_LE_HOST_POS        = 4,
 };
 
 /*********** GAP Miscellaneous Defines *************/
-/// Invalid activity index
-#define GAP_INVALID_ACTV_IDX                    0xFF
 /// Invalid connection index
 #define GAP_INVALID_CONIDX                      0xFF
 
@@ -116,12 +106,6 @@ enum gap_ad_type_flag
 #define GAP_ADDR_PRAND_LEN            (3)
 /// Length of resolvable random address hash part
 #define GAP_ADDR_HASH_LEN             (3)
-
-/// Number of bytes needed for a bit field indicated presence of a given Advertising Flag value
-/// in the Advertising or the Scan Response data
-/// Advertising Flags is a 8-bit value, hence 256 value are possible
-/// -> 256 / 8 bytes = 32 bytes are needed
-#define GAP_AD_TYPE_BITFIELD_BYTES                          (32)
 
 /*
  * DEFINES - Optional for BLE application usage
@@ -241,78 +225,10 @@ enum gap_ad_type_flag
 #define GAP_PPCP_SLAVE_LATENCY                              0x0000
 #define GAP_PPCP_STO_MULT                                   0x07D0
 
-
-/// Acceptable encryption key size - strict access
-#define GAP_SEC_ENC_KEY_SIZE                               (0x10)
-
-/*
- * Macros
- ****************************************************************************************
- */
-
-#define GAP_AD_TYPE_SET_BIT(bitfield, adv_flag)                             \
-                bitfield[adv_flag / 8] |= CO_BIT(adv_flag % 8)
-
-#define GAP_AD_TYPE_CHECK_BIT(bitfield, adv_flag)                           \
-                (bitfield[adv_flag / 8] & CO_BIT(adv_flag % 8))
-
-/// size of advertising data counting advertising type header
-#define GAP_AD_TOTAL_LEN(data_size)      ((data_size) + 1)
-
 /*
  * Enumerations
  ****************************************************************************************
  */
-
-
-/// List of supported BLE Features
-enum gap_le_feature
-{
-    //byte 0
-    GAP_LE_FEAT_ENC                       = (0),
-    GAP_LE_FEAT_CON_PARAM_REQ_PROC        = (1),
-    GAP_LE_FEAT_EXT_REJ_IND               = (2),
-    GAP_LE_FEAT_SLAVE_INIT_FEAT_EXCHG     = (3),
-    GAP_LE_FEAT_PING                      = (4),
-    GAP_LE_FEAT_DATA_PKT_LEN_EXT          = (5),
-    GAP_LE_FEAT_LL_PRIVACY                = (6),
-    GAP_LE_FEAT_EXT_SCAN_FILT_POLICY      = (7),
-    //byte 1
-    GAP_LE_FEAT_2M_PHY                    = (8),
-    GAP_LE_FEAT_STABLE_MOD_IDX_TX         = (9),
-    GAP_LE_FEAT_STABLE_MOD_IDX_RX         = (10),
-    GAP_LE_FEAT_CODED_PHY                 = (11),
-    GAP_LE_FEAT_EXT_ADV                   = (12),
-    GAP_LE_FEAT_PER_ADV                   = (13),
-    GAP_LE_FEAT_CHAN_SEL_ALGO_2           = (14),
-    GAP_LE_FEAT_PWR_CLASS_1               = (15),
-    //byte 2
-    GAP_LE_FEAT_MIN_NUM_USED_CHAN_PROC    = (16),
-    GAP_LE_FEAT_CON_CTE_REQ               = (17),
-    GAP_LE_FEAT_CON_CTE_RSP               = (18),
-    GAP_LE_FEAT_CONLESS_CTE_TX            = (19),
-    GAP_LE_FEAT_CONLESS_CTE_RX            = (20),
-    GAP_LE_FEAT_AOD                       = (21),
-    GAP_LE_FEAT_AOA                       = (22),
-    GAP_LE_FEAT_CTE_RX                    = (23),
-    //byte 3
-    GAP_LE_FEAT_PER_ADV_SYNC_TRANSF_TX    = (24),
-    GAP_LE_FEAT_PER_ADV_SYNC_TRANSF_RX    = (25),
-    GAP_LE_FEAT_SLEEP_CLK_ACC_UPD         = (26),
-    GAP_LE_FEAT_PUB_KEY_VALID             = (27),
-    GAP_LE_FEAT_CON_ISO_STREAM_MASTER     = (28),
-    GAP_LE_FEAT_CON_ISO_STREAM_SLAVE      = (29),
-    GAP_LE_FEAT_ISO_BROADCASTER           = (30),
-    GAP_LE_FEAT_SYNCED_RECEIVER           = (31),
-    //byte 4
-    GAP_LE_FEAT_ISO_CHANNELS_HOST_SUPPORT = (32),
-    GAP_LE_FEAT_POWER_CONTROL_REQ         = (33),
-    GAP_LE_FEAT_POWER_CHANGE_IND          = (34),
-    GAP_LE_FEAT_PATH_LOSS_MONITORING      = (35),
-
-    GAP_LE_FEAT_MAX,
-};
-
 /// GAP Advertising Flags
 enum gap_ad_type
 {
@@ -496,34 +412,6 @@ enum gap_auth
     GAP_AUTH_REQ_MASK             = 0x1F,
 };
 
-/// Pairing level achieved
-enum gap_pairing_lvl
-{
-    /// Unauthenticated pairing achieved but without bond data
-    /// (meaning-less for connection confirmation)
-    GAP_PAIRING_UNAUTH           = 0x00,
-    /// Authenticated pairing achieved but without bond data
-    /// (meaning-less for connection confirmation)
-    GAP_PAIRING_AUTH             = 0x04,
-    /// Secure connection pairing achieved but without bond data
-    /// (meaning-less for connection confirmation)
-    GAP_PAIRING_SECURE_CON       = 0x0C,
-
-    /// No pairing performed with peer device
-    /// (meaning-less for connection confirmation)
-    GAP_PAIRING_NO_BOND          = 0x00,
-    /// Peer device bonded through an unauthenticated pairing.
-    GAP_PAIRING_BOND_UNAUTH      = 0x01,
-    /// Peer device bonded through an authenticated pairing.
-    GAP_PAIRING_BOND_AUTH        = 0x05,
-    /// Peer device bonded through a secure connection pairing pairing.
-    GAP_PAIRING_BOND_SECURE_CON  = 0x0D,
-
-    /// Pairing with bond data present Bit
-    GAP_PAIRING_BOND_PRESENT_BIT = 0x01,
-    GAP_PAIRING_BOND_PRESENT_POS = 0x00,
-};
-
 /// Key Distribution Flags
 enum gap_kdist
 {
@@ -586,51 +474,9 @@ enum gap_phy_val
     GAP_PHY_500KBPS      = 4,
 };
 
-/// Modulation index
-enum gap_modulation_idx
-{
-    /// Assume transmitter will have a standard modulation index
-    GAP_MODULATION_STANDARD,
-    /// Assume transmitter will have a stable modulation index
-    GAP_MODULATION_STABLE,
-};
-
-/// Packet Payload type for test mode
-enum gap_pkt_pld_type
-{
-    /// PRBS9 sequence "11111111100000111101..." (in transmission order)
-    GAP_PKT_PLD_PRBS9,
-    /// Repeated "11110000" (in transmission order)
-    GAP_PKT_PLD_REPEATED_11110000,
-    /// Repeated "10101010" (in transmission order)
-    GAP_PKT_PLD_REPEATED_10101010,
-    /// PRBS15 sequence
-    GAP_PKT_PLD_PRBS15,
-    /// Repeated "11111111" (in transmission order) sequence
-    GAP_PKT_PLD_REPEATED_11111111,
-    /// Repeated "00000000" (in transmission order) sequence
-    GAP_PKT_PLD_REPEATED_00000000,
-    /// Repeated "00001111" (in transmission order) sequence
-    GAP_PKT_PLD_REPEATED_00001111,
-    /// Repeated "01010101" (in transmission order) sequence
-    GAP_PKT_PLD_REPEATED_01010101,
-};
-
-/// Constant Tone Extension type
-enum gap_cte_type
-{
-    /// Allow AoA Constant Tone Extension Response
-    GAP_CTE_AOA          = (1 << 0),
-    /// Allow AoD Constant Tone Extension Response with 1 us slots
-    GAP_CTE_AOD_1US_SLOT = (1 << 1),
-    /// Allow AoD Constant Tone Extension Response with 2 us slots
-    GAP_CTE_AOD_2US_SLOT = (1 << 2),
-};
-
 /*************** GAP Structures ********************/
 
 /// Device name
-/*@TRACE*/
 struct gap_dev_name
 {
     /// Length of provided value
@@ -640,7 +486,6 @@ struct gap_dev_name
 };
 
 /// Slave preferred connection parameters
-/*@TRACE*/
 typedef struct gap_slv_pref
 {
     /// Connection interval minimum
@@ -654,7 +499,6 @@ typedef struct gap_slv_pref
 } gap_slv_pref_t;
 
 ///Channel map structure
-/*@TRACE*/
 typedef struct
 {
     ///5-byte channel map array
@@ -663,7 +507,6 @@ typedef struct
 
 
 ///Random number structure
-/*@TRACE*/
 typedef struct
 {
     ///8-byte array for random number
@@ -680,7 +523,6 @@ typedef struct
 } public_key_t;
 
 /// Bluetooth address
-/*@TRACE*/
 typedef struct gap_addr
 {
     /// BD Address of device
@@ -688,7 +530,6 @@ typedef struct gap_addr
 } gap_addr_t;
 
 /// Address information about a device address
-/*@TRACE*/
 typedef struct gap_bdaddr
 {
     /// BD Address of device
@@ -698,7 +539,6 @@ typedef struct gap_bdaddr
 } gap_bdaddr_t;
 
 /// Connection parameters information
-/*@TRACE*/
 typedef struct gap_con_param
 {
     /// Connection interval in 1.25ms unit
@@ -711,19 +551,15 @@ typedef struct gap_con_param
 
 
 /// Periodic advertising address information
-/*@TRACE*/
 typedef struct gap_per_adv_bdaddr
 {
     /// BD Address of device
     uint8_t addr[GAP_BD_ADDR_LEN];
     /// Address type of the device 0=public/1=private random
     uint8_t addr_type;
-    /// Advertising SID
-    uint8_t adv_sid;
 } gap_per_adv_bdaddr_t;
 
 /// Resolving list device information
-/*@TRACE*/
 struct gap_ral_dev_info
 {
     /// Device identity
@@ -737,51 +573,12 @@ struct gap_ral_dev_info
 };
 
 /// Generic Security key structure
-/*@TRACE*/
 typedef struct gap_sec_key
 {
     /// Key value MSB -> LSB
     uint8_t key[GAP_KEY_LEN];
 } gap_sec_key_t;
 
-/// I/Q sample
-/*@TRACE*/
-struct gap_iq_sample
-{
-    /// I sample
-    uint8_t i;
-    /// Q sample
-    uint8_t q;
-};
 
-/// BIG Info Report
-/*@TRACE*/
-typedef struct gap_big_info
-{
-    /// Value of the SDU interval in microseconds (Range 0x0000FF-0x0FFFFF)
-    uint32_t  sdu_interval;
-    /// Value of the ISO Interval (1.25 ms unit)
-    uint16_t  iso_interval;
-    /// Value of the maximum PDU size (Range 0x0000-0x00FB)
-    uint16_t  max_pdu;
-    /// VValue of the maximum SDU size (Range 0x0000-0x0FFF)
-    uint16_t  max_sdu;
-    /// Number of BIS present in the group (Range 0x01-0x1F)
-    uint8_t   num_bis;
-    /// Number of sub-events (Range 0x01-0x1F)
-    uint8_t   nse;
-    /// Burst number (Range 0x01-0x07)
-    uint8_t   bn;
-    /// Pre-transmit offset (Range 0x00-0x0F)
-    uint8_t   pto;
-    /// Initial retransmission count (Range 0x01-0x0F)
-    uint8_t   irc;
-    /// PHY used for transmission (0x01: 1M, 0x02: 2M, 0x03: Coded, All other values: RFU)
-    uint8_t   phy;
-    /// Framing mode (0x00: Unframed, 0x01: Framed, All other values: RFU)
-    uint8_t   framing;
-    /// True if broadcast isochronous group is encrypted, False otherwise
-    bool      encrypted;
-} gap_big_info_t;
 /// @} GAP
 #endif // GAP_H_

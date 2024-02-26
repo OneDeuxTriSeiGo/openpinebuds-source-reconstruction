@@ -23,13 +23,6 @@
 #endif
 #endif
 
-#if BLE_AUDIO_ENABLED
-#define CFG_PRF_CSISM
-#define CFG_PRF_CSISC
-#define CFG_PRF_OTS
-#define CFG_PRF_OTC
-#endif
-
 #ifdef VOICE_DATAPATH
 #define CFG_VOICEPATH
 #else
@@ -52,17 +45,8 @@
 #define CFG_TILE
 #endif
 
-#if defined(BLE_HID_ENABLE)
-#define CFG_PRF_HOGPD
-#endif
 
-#if defined(BLE_BATT_ENABLE)
-#define CFG_PRF_BASS
-#endif
 
-#if defined(BLE_DISS_ENABLE)
-#define CFG_PRF_DISS
-#endif
 /**
  ****************************************************************************************
  * @addtogroup PRF_CONFIG
@@ -190,7 +174,6 @@
 ///Battery Service Client Role
 #if defined(CFG_PRF_BASC)
 #define BLE_BATT_CLIENT         1
-#define BASC_NB_BAS_INSTANCES_MAX (2) // Maximum number of Battery Service instances we can handle
 #else
 #define BLE_BATT_CLIENT         0
 #endif // defined(CFG_PRF_BASC)
@@ -198,7 +181,6 @@
 ///Battery Service Server Role
 #if defined(CFG_PRF_BASS)
 #define BLE_BATT_SERVER         1
-#define BASS_NB_BAS_INSTANCES_MAX (2) // Maximal number of BAS that can be added in the DB
 #else
 #define BLE_BATT_SERVER         0
 #endif // defined(CFG_PRF_BASS)
@@ -404,48 +386,6 @@
 #define BLE_TILE            0
 #endif    //
 
-#if defined(__AMA_VOICE__)
-#define BLE_AMA_VOICE    1
-#else
-#define BLE_AMA_VOICE    0
-#endif
-
-#if defined(__DMA_VOICE__)
-#define BLE_DMA_VOICE    1
-#else
-#define BLE_DMA_VOICE    0
-#endif
-
-#if defined(__GMA_VOICE__)
-#define BLE_GMA_VOICE    1
-#else
-#define BLE_GMA_VOICE    0
-#endif
-
-#if defined(__SMART_VOICE__)
-#define BLE_SMART_VOICE    1
-#else
-#define BLE_SMART_VOICE    0
-#endif
-
-#if defined(__TENCENT_VOICE__)
-#define BLE_TENCENT_VOICE    1
-#else
-#define BLE_TENCENT_VOICE    0
-#endif
-
-#if defined(__CUSTOMIZE_VOICE__)
-#define BLE_CUSTOMIZE_VOICE    1
-#else
-#define BLE_CUSTOMIZE_VOICE    0
-#endif
-
-#if defined(DUAL_MIC_RECORDING)
-#define BLE_DUAL_MIC_REC_VOICE    1
-#else
-#define BLE_DUAL_MIC_REC_VOICE    0
-#endif
-
 #if defined(CFG_AI_VOICE)
 #define BLE_AI_VOICE            1
 #else
@@ -490,75 +430,10 @@
 #else
 #define BLE_AMS_CLIENT          0
 #endif // defined(AMSC_ENABLED)
-
-#if defined(ANCS_ENABLED)
-#define BLE_ANCS_PROXY          1
-#else
-#define BLE_ANCS_PROXY          0
-#endif // defined(ANCS_ENABLED)
-
-#if defined(AMS_ENABLED)
-#define BLE_AMS_PROXY           1
-#else
-#define BLE_AMS_PROXY           0
-#endif // defined(AMS_ENABLED)
-
 #if defined(CFG_PRF_GFPS_PROVIDER)
 #define BLE_GFPS_PROVIDER       1
 #else
 #define BLE_GFPS_PROVIDER       0
-#endif
-
-#ifdef AOB_UX_ENABLED
-#define BLE_BUDS                1
-#else
-#define BLE_BUDS                0
-#endif
-
-/// Coordinated Set Identification Profile Set Member Role
-#if defined(CFG_PRF_CSISM)
-#define BLE_CSIS_MEMBER         1
-#if defined(CFG_HL_MSG_API) && (!defined(CFG_ATC_CSISM) || defined(CFG_GAF_MSG_DBG))
-#define BLE_CSISM_MSG_API       1
-#else //defined(CFG_HL_MSG_API) && (!defined(CFG_ATC_CSISM) || defined(CFG_GAF_MSG_DBG))
-#define BLE_CSISM_MSG_API       0
-#endif //defined(CFG_HL_MSG_API) && (!defined(CFG_ATC_CSISM) || defined(CFG_GAF_MSG_DBG))
-#else
-#define BLE_CSIS_MEMBER         0
-#define BLE_CSISM_MSG_API       0
-#endif // defined(CFG_PRF_CSISM)
-
-/// Coordinated Set Identification Profile Set Coordinator Role
-#if defined(CFG_PRF_CSISC)
-#define BLE_CSIS_COORD          1
-#if defined(CFG_HL_MSG_API) && (!defined(CFG_ATC_CSISC) || defined(CFG_GAF_MSG_DBG))
-#define BLE_CSISC_MSG_API       1
-#else //defined(CFG_HL_MSG_API) && (!defined(CFG_ATC_CSISC) || defined(CFG_GAF_MSG_DBG))
-#define BLE_CSISC_MSG_API       0
-#endif //defined(CFG_HL_MSG_API) && (!defined(CFG_ATC_CSISC) || defined(CFG_GAF_MSG_DBG))
-#else
-#define BLE_CSIS_COORD          0
-#define BLE_CSISC_MSG_API       0
-#endif // defined(CFG_PRF_CSISC)
-
-/// Object Transfer Profile Server Role
-#if defined(CFG_PRF_OTS)
-#define BLE_OT_SERVER           1
-#else
-#define BLE_OT_SERVER           0
-#endif // defined(CFG_PRF_OTS)
-
-/// Object Transfer Profile Client Role
-#if defined(CFG_PRF_OTC)
-#define BLE_OT_CLIENT           1
-#else
-#define BLE_OT_CLIENT           0
-#endif // defined(CFG_PRF_OTC)
-
-#if defined(USE_BT_ADAPTER)
-#define BLE_ADAPTER_SERVER_CLIENT 1
-#else
-#define BLE_ADAPTER_SERVER_CLIENT 0
 #endif
 
 /// BLE_CLIENT_PRF indicates if at least one client profile is present
@@ -587,13 +462,6 @@
 #else
 #define BLE_SERVER_PRF          0
 #endif //(BLE_PROX_REPORTER || BLE_FINDME_TARGET ...)
-
-
-#if (BLE_ISO_MODE_0_PROFILE || BLE_WPT_SERVER || BLE_WPT_CLIENT || defined(BISTO_ENABLED) || defined(ANCS_ENABLED) || defined(ANCC_ENABLED) || defined(AMS_ENABLED) || defined(AMSC_ENABLED))
-#define BLE_PRF_PROPRIETARY_SVC_SUPPORT     (1)
-#else // !(BLE_ISO_MODE_0_PROFILE || BLE_WPT_SERVER || BLE_WPT_CLIENT)
-#define BLE_PRF_PROPRIETARY_SVC_SUPPORT     (0)
-#endif // (BLE_ISO_MODE_0_PROFILE || BLE_WPT_SERVER || BLE_WPT_CLIENT)
 
 //Force ATT parts depending on profile roles or compile options
 /// Attribute Client
@@ -708,300 +576,6 @@
 #define BLE_CLIENT_PRF              0
 #endif //(BLE_OBSERVER || BLE_BROADCASTER)
 
-
-/// Profile identifiers
-enum rwprf_id
-{
-    #if (BLE_HT_THERMOM)
-    PRF_ID_HTPT,
-    #endif // (BLE_HT_THERMOM)
-
-    #if (BLE_HT_COLLECTOR)
-    PRF_ID_HTPC,
-    #endif // (BLE_HT_COLLECTOR)
-
-    #if (BLE_DIS_SERVER)
-    PRF_ID_DISS,
-    #endif // (BLE_DIS_SERVER)
-
-    #if (BLE_DIS_CLIENT)
-    PRF_ID_DISC,
-    #endif // (BLE_DIS_CLIENT)
-
-    #if (BLE_BP_SENSOR)
-    PRF_ID_BLPS,
-    #endif // (BLE_BP_SENSOR)
-
-    #if (BLE_BP_COLLECTOR)
-    PRF_ID_BLPC,
-    #endif // (BLE_BP_COLLECTOR)
-
-    #if (BLE_TIP_SERVER)
-    PRF_ID_TIPS,
-    #endif // (BLE_TIP_SERVER)
-
-    #if (BLE_TIP_CLIENT)
-    PRF_ID_TIPC,
-    #endif // (BLE_TIP_CLIENT)
-
-    #if (BLE_HR_SENSOR)
-    PRF_ID_HRPS,
-    #endif // (BLE_HR_SENSOR)
-
-    #if (BLE_HR_COLLECTOR)
-    PRF_ID_HRPC,
-    #endif // (BLE_HR_COLLECTOR)
-
-    #if (BLE_FINDME_LOCATOR)
-    PRF_ID_FINDL,
-    #endif // (BLE_FINDME_LOCATOR)
-
-    #if (BLE_FINDME_TARGET)
-    PRF_ID_FINDT,
-    #endif // (BLE_FINDME_TARGET)
-
-    #if (BLE_PROX_MONITOR)
-    PRF_ID_PROXM,
-    #endif // (BLE_PROX_MONITOR)
-
-    #if (BLE_PROX_REPORTER)
-    PRF_ID_PROXR,
-    #endif // (BLE_PROX_REPORTER)
-
-    #if (BLE_SP_SERVER)
-    PRF_ID_SCPPS,
-    #endif // (BLE_SP_SERVER)
-
-    #if (BLE_SP_CLIENT)
-    PRF_ID_SCPPC,
-    #endif // (BLE_SP_CLIENT)
-
-    #if (BLE_BATT_SERVER)
-    PRF_ID_BASS,
-    #endif // (BLE_BATT_SERVER)
-
-    #if (BLE_BATT_CLIENT)
-    PRF_ID_BASC,
-    #endif // (BLE_BATT_CLIENT)
-
-    #if (BLE_HID_DEVICE)
-    PRF_ID_HOGPD,
-    #endif // (BLE_HID_DEVICE)
-
-    #if (BLE_HID_BOOT_HOST)
-    PRF_ID_HOGPBH,
-    #endif // (BLE_HID_BOOT_HOST)
-
-    #if (BLE_HID_REPORT_HOST)
-    PRF_ID_HOGPRH,
-    #endif // (BLE_HID_REPORT_HOST)
-
-    #if (BLE_GL_COLLECTOR)
-    PRF_ID_GLPC,
-    #endif // (BLE_GL_COLLECTOR)
-
-    #if (BLE_GL_SENSOR)
-    PRF_ID_GLPS,
-    #endif // (BLE_GL_SENSOR)
-
-    #if (BLE_RSC_COLLECTOR)
-    PRF_ID_RSCPC,
-    #endif // (BLE_RSC_COLLECTOR)
-
-    #if (BLE_RSC_SENSOR)
-    PRF_ID_RSCPS,
-    #endif // (BLE_RSC_SENSOR)
-
-    #if (BLE_CSC_COLLECTOR)
-    PRF_ID_CSCPC,
-    #endif // (BLE_CSC_COLLECTOR)
-
-    #if (BLE_CSC_SENSOR)
-    PRF_ID_CSCPS,
-    #endif // (BLE_CSC_SENSOR)
-
-    #if (BLE_CP_COLLECTOR)
-    PRF_ID_CPPC,
-    #endif // (BLE_CP_COLLECTOR)
-
-    #if (BLE_CP_SENSOR)
-    PRF_ID_CPPS,
-    #endif // (BLE_CP_SENSOR)
-
-    #if (BLE_LN_COLLECTOR)
-    PRF_ID_LANC,
-    #endif // (BLE_LN_COLLECTOR)
-
-    #if (BLE_LN_SENSOR)
-    PRF_ID_LANS,
-    #endif // (BLE_LN_SENSOR)
-
-    #if (BLE_AN_CLIENT)
-    PRF_ID_ANPC,
-    #endif // (BLE_AN_CLIENT)
-
-    #if (BLE_AN_SERVER)
-    PRF_ID_ANPS,
-    #endif // (BLE_AN_SERVER)
-
-    #if (BLE_PAS_CLIENT)
-    PRF_ID_PASPC,
-    #endif // (BLE_PAS_CLIENT)
-
-    #if (BLE_PAS_SERVER)
-    PRF_ID_PASPS,
-    #endif // (BLE_PAS_SERVER)
-
-    #if (BLE_ISO_MODE_0_PROFILE)
-    PRF_ID_AM0,
-    #endif // (BLE_ISO_MODE_0_PROFILE)
-
-    #if (BLE_IPS_SERVER)
-    PRF_ID_IPSS,
-    #endif //(BLE_IPS_SERVER)
-
-    #if (BLE_IPS_CLIENT)
-    PRF_ID_IPSC,
-    #endif //(BLE_IPS_CLIENT)
-
-    #if (BLE_ENV_SERVER)
-    PRF_ID_ENVS,
-    #endif //(BLE_ENV_SERVER)
-
-    #if (BLE_ENV_CLIENT)
-    PRF_ID_ENVC,
-    #endif //(BLE_ENV_CLIENT)
-
-    #if (BLE_WSC_SERVER)
-    PRF_ID_WSCS,
-    #endif //(BLE_WSC_SERVER)
-
-    #if (BLE_WSC_CLIENT)
-    PRF_ID_WSCC,
-    #endif //(BLE_WSC_CLIENT)
-
-    #if (BLE_BCS_SERVER)
-    PRF_ID_BCSS,
-    #endif //(BLE_BCS_SERVER)
-
-    #if (BLE_BCS_CLIENT)
-    PRF_ID_BCSC,
-    #endif //(BLE_BCS_CLIENT)
-
-    #if (BLE_UDS_SERVER)
-    PRF_ID_UDSS,
-    #endif //(BLE_UDS_SERVER)
-
-    #if (BLE_UDS_CLIENT)
-    PRF_ID_UDSC,
-    #endif //(BLE_UDS_CLIENT)
-
-    #if (BLE_CSIS_MEMBER)
-    PRF_ID_CSISM,
-    #endif //(BLE_CSIS_MEMBER)
-
-    #if (BLE_CSIS_COORD)
-    PRF_ID_CSISC,
-    #endif //(BLE_CSIS_COORD)
-
-    #if (BLE_OT_SERVER)
-    PRF_ID_OTS,
-    #endif //(BLE_OT_SERVER)
-
-    #if (BLE_OT_CLIENT)
-    PRF_ID_OTC,
-    #endif //(BLE_OT_CLIENT)
-
-    #if (BLE_MESH)
-    PRF_ID_MESH,
-    #endif //(BLE_MESH)
-
-    #if (BLE_VOICEPATH)
-    PRF_ID_VOICEPATH,
-    #endif //(BLE_VOICEPATH)
-
-    #if (BLE_OTA)
-    PRF_ID_OTA,
-    #endif //(BLE_OTA)
-
-    #if (BLE_TOTA)
-    PRF_ID_TOTA,
-    #endif //(BLE_TOTA)
-
-    #if (BLE_BMS)
-    PRF_ID_BMS,
-    #endif //(BLE_BMS)
-
-    #if (BLE_ANC_CLIENT)
-    PRF_ID_ANCC,
-    #endif //(BLE_ANC_CLIENT)
-
-    #if (BLE_AMS_CLIENT)
-    PRF_ID_AMSC,
-    #endif //(BLE_AMS_CLIENT)
-
-    #if (BLE_TILE)
-    PRF_ID_TILE,
-    #endif //(BLE_TILE)
-
-    #if (BLE_ANCS_PROXY)
-    PRF_ID_ANCSP,
-    #endif //(BLE_ANCS_PROXY)
-
-    #if (BLE_AMS_PROXY)
-    PRF_ID_AMSP,
-    #endif //(BLE_AMS_PROXY)
-
-    #if (BLE_GFPS_PROVIDER)
-    PRF_ID_GFPSP,
-    #endif //(BLE_GFPS_PROVIDER)
-
-    #if (BLE_AI_VOICE)
-    PRF_ID_AI,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_AMA_VOICE)
-    PRF_ID_AMA,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_DMA_VOICE)
-    PRF_ID_DMA,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_GMA_VOICE)
-    PRF_ID_GMA,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_SMART_VOICE)
-    PRF_ID_SMVOICE,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_TENCENT_VOICE)
-    PRF_ID_TENCENT,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_CUSTOMIZE_VOICE)
-    PRF_ID_CUSTOMIZE,
-    #endif //(BLE_AI_VOICE)
-
-    #if (BLE_DATAPATH_SERVER)
-    PRF_ID_DATAPATHPS,
-    #endif //(BLE_DATAPATH_SERVER)
-
-    #if (BLE_BUDS)
-    PRF_ID_BUDS,
-    #endif //(BLE_BUDS)
-
-#ifdef USE_BT_ADAPTER
-    PRF_ID_BLE_ADAPTER_SERVER,
-    PRF_ID_BLE_ADAPTER_SERVER_END = PRF_ID_BLE_ADAPTER_SERVER + (BLE_ADAPTER_PROFILES_NUM -1),
-    PRF_ID_BLE_ADAPTER_CLIENT,
-#endif
-    PRF_ID_MAX,
-
-    /// Invalid profile identifier
-    PRF_ID_INVALID  = 0xFF,
-};
 
 /// @} PRF_CONFIG
 

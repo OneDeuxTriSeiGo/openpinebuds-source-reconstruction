@@ -44,14 +44,6 @@ enum MPU_ID_T {
 #define MPU_ID_CP_FLASH             MPU_ID_3
 #define MPU_ID_CP_FLASH_NC          MPU_ID_4
 
-#define MPU_ID_CP_PERIPHERAL        MPU_ID_NULL_POINTER
-#define MPU_ID_CP_SRAM              MPU_ID_1
-#define MPU_ID_CP_SRAMX             MPU_ID_5
-
-/*both mcu and cp section*/
-#define MPU_ID_PSRAMUHS             MPU_ID_6
-#define MPU_ID_PSRAMUHSX            MPU_ID_7
-
 enum MPU_ATTR_T {
     MPU_ATTR_READ_WRITE_EXEC = 0,
     MPU_ATTR_READ_EXEC,

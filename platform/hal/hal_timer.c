@@ -13,19 +13,13 @@
  * limitations under the License.
  */
 #include "plat_addr_map.h"
-#ifdef CMU_FREE_TIMER
-#include CHIP_SPECIFIC_HDR(reg_aoncmu)
-#endif
 #include "cmsis_nvic.h"
 #include "hal_cmu.h"
 #include "hal_location.h"
 #define IGNORE_HAL_TIMER_RAW_API_CHECK
 #include "hal_timer_raw.h"
-#include "hal_timer_fast_irq.h"
-#include "hal_timer_user_irq.h"
 #include "hal_timer.h"
 #include "reg_timer.h"
-#include "hal_trace.h"
 
 #if defined(CHIP_BEST3001) || defined(CHIP_BEST3003) || defined(CHIP_BEST3005) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402)
 #define CLOCK_SYNC_WORKAROUND
@@ -33,7 +27,6 @@
 
 #if defined(TIMER1_BASE) && defined(LOW_SYS_FREQ) && defined(LOW_SYS_FREQ_6P5M)
 #if defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || \
-        defined(CHIP_BEST2001) || defined(CHIP_BEST2003) || \
         defined(CHIP_BEST2300A) || defined(CHIP_BEST2300P)
 #define FAST_TIMER_WORKAROUND
 #endif
@@ -41,10 +34,6 @@
 
 #if !(defined(__FPU_USED) && (__FPU_USED == 1))
 #undef TIMER_USE_FPU
-#endif
-
-#ifndef SLOW_TIMER_SUB_ID_WITH_IRQ
-#define SLOW_TIMER_SUB_ID_WITH_IRQ  1
 #endif
 
 #define SLOW_TIMER_VAL_DELTA        1
@@ -59,66 +48,24 @@
 #define MAX_CALIB_TICKS             (30 * CONFIG_SYSTICK_HZ_NOMINAL)
 
 static
-#ifdef TIMER_USE_FPU
-    float
-#else
     uint32_t
-#endif
     BOOT_DATA_LOC sys_tick_hz = CONFIG_SYSTICK_HZ_NOMINAL;
 static uint32_t BOOT_BSS_LOC slow_val;
 static uint32_t BOOT_BSS_LOC fast_val;
 #endif
 
-#ifdef FAST_TIMER_COMPENSATE
-#ifndef TIMER1_BASE
-#error "FAST_TIMER_COMPENSATE need timer1"
-#endif
-#if !(defined(__FPU_USED) && (__FPU_USED == 1))
-#error "FAST_TIMER_COMPENSATE need FPU"
-#endif
-#ifdef FAST_TIMER_WORKAROUND
-#error "FAST_TIMER_COMPENSATE conflicts with FAST_TIMER_WORKAROUND"
-#endif
 #define FAST_TICK_RATIO_NUM                 3
 static float BOOT_BSS_LOC fast_tick_ratio_avg;
 static float BOOT_BSS_LOC fast_tick_ratio[FAST_TICK_RATIO_NUM];
-#endif
 
 static struct DUAL_TIMER_T * const BOOT_RODATA_SRAM_LOC dual_timer[] = {
     (struct DUAL_TIMER_T *)TIMER0_BASE,
-#ifdef TIMER1_BASE
     (struct DUAL_TIMER_T *)TIMER1_BASE,
-#endif
-#ifdef TIMER2_BASE
-    (struct DUAL_TIMER_T *)TIMER2_BASE,
-#endif
 };
-
-#ifdef CMU_FREE_TIMER
-#ifndef TIMER1_BASE
-#error "CMU_FREE_TIMER should work with TIMER1_BASE"
-#endif
-#ifdef CLOCK_SYNC_WORKAROUND
-#error "CMU_FREE_TIMER conflicts with CLOCK_SYNC_WORKAROUND"
-#endif
-#ifdef FAST_TIMER_WORKAROUND
-#error "CMU_FREE_TIMER conflicts with FAST_TIMER_WORKAROUND"
-#endif
-static struct AONCMU_T * const aoncmu = (struct AONCMU_T *)AON_CMU_BASE;
-#endif
 
 static IRQn_Type irq_num[ARRAY_SIZE(dual_timer)][2] = {
     { TIMER00_IRQn, TIMER01_IRQn, },
-#ifdef TIMER1_BASE
     { INVALID_IRQn, TIMER11_IRQn, },
-#endif
-#ifdef TIMER2_BASE
-#if defined(ASIC_SIMU)
-    { INVALID_IRQn, INVALID_IRQn, },
-#else
-    { TIMER20_IRQn, TIMER21_IRQn, },
-#endif
-#endif
 };
 
 static HAL_TIMER_IRQ_HANDLER_T irq_handler[ARRAY_SIZE(dual_timer)][2];
@@ -177,30 +124,17 @@ __STATIC_FORCEINLINE void set_timer_load(struct TIMER_T *timer, uint32_t load, u
 
 __STATIC_FORCEINLINE void fast_sys_timer_open(void)
 {
-#ifdef CMU_FREE_TIMER
-    hal_cmu_fast_timer_init();
-#endif
 #ifdef TIMER1_BASE
     hal_cmu_timer1_select_fast();
     dual_timer[1]->timer[0].Control = TIMER_CTRL_EN | TIMER_CTRL_PRESCALE_DIV_1 | TIMER_CTRL_SIZE_32_BIT;
-#endif
-#ifdef TIMER2_BASE
-    hal_cmu_timer2_select_fast();
 #endif
 }
 
 void BOOT_TEXT_FLASH_LOC hal_sys_timer_open(void)
 {
-#ifndef CMU_FREE_TIMER
     hal_cmu_timer0_select_slow();
     dual_timer[0]->timer[0].Control = TIMER_CTRL_EN | TIMER_CTRL_PRESCALE_DIV_1 | TIMER_CTRL_SIZE_32_BIT;
-#endif
     fast_sys_timer_open();
-#if defined(ASIC_SIMU)
-#if defined(TIMER2_BASE)
-    dual_timer[2]->timer[0].Control = TIMER_CTRL_EN | TIMER_CTRL_PRESCALE_DIV_1 | TIMER_CTRL_SIZE_32_BIT;
-#endif
-#endif
 }
 
 #ifdef CORE_SLEEP_POWER_DOWN
@@ -212,20 +146,7 @@ void SRAM_TEXT_LOC hal_sys_timer_wakeup(void)
 
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_get(void)
 {
-#ifdef CMU_FREE_TIMER
-    return aoncmu->FREE_TIMER;
-#else
     return -get_timer_value(&dual_timer[0]->timer[0], SLOW_TIMER_VAL_DELTA);
-#endif
-}
-
-uint32_t BOOT_TEXT_SRAM_LOC hal_aco_timer_get(void)
-{
-#if defined(TIMER2_BASE)
-    return -get_timer_value(&dual_timer[2]->timer[0], SLOW_TIMER_VAL_DELTA);
-#else
-    return hal_sys_timer_get();
-#endif
 }
 
 #ifdef CLOCK_SYNC_WORKAROUND
@@ -239,11 +160,7 @@ uint32_t hal_sys_timer_get_in_sleep(void) __attribute__((alias("hal_sys_timer_ge
 
 uint32_t BOOT_TEXT_FLASH_LOC flash_hal_sys_timer_get(void)
 {
-#ifdef CMU_FREE_TIMER
-    return aoncmu->FREE_TIMER;
-#else
     return -get_timer_value(&dual_timer[0]->timer[0], SLOW_TIMER_VAL_DELTA);
-#endif
 }
 
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_ms_get(void)
@@ -491,12 +408,8 @@ void BOOT_TEXT_SRAM_LOC hal_sys_timer_calib_start(void)
     uint32_t fast;
 
     lock = int_lock();
-#ifdef FAST_TIMER_WORKAROUND
-    ASSERT(!hal_cmu_fast_timer_offline(), "%s: Cannot calib timer while fast timer offline", __func__);
-#endif
     slow = hal_sys_timer_get();
     while (hal_sys_timer_get() == slow);
-    __ISB();
     fast = _real_fast_sys_timer_get();
     int_unlock(lock);
 
@@ -512,12 +425,8 @@ int BOOT_TEXT_SRAM_LOC hal_sys_timer_calib_end(void)
     uint32_t slow_diff;
 
     lock = int_lock();
-#ifdef FAST_TIMER_WORKAROUND
-    ASSERT(!hal_cmu_fast_timer_offline(), "%s: Cannot calib timer while fast timer offline", __func__);
-#endif
     slow = hal_sys_timer_get();
     while (hal_sys_timer_get() == slow);
-    __ISB();
     fast = _real_fast_sys_timer_get();
     int_unlock(lock);
 
@@ -535,19 +444,6 @@ int BOOT_TEXT_SRAM_LOC hal_sys_timer_calib_end(void)
 
 #ifdef TIMER_USE_FPU
     sys_tick_hz = (float)CONFIG_FAST_SYSTICK_HZ / (fast - fast_val) * slow_diff;
-#ifdef FAST_TIMER_COMPENSATE
-    uint32_t i;
-    for (i = FAST_TICK_RATIO_NUM-1; i >= 1; --i)
-       fast_tick_ratio[i] = fast_tick_ratio[i-1];
-    fast_tick_ratio[0] = (float)(fast - fast_val) / (float)slow_diff;
-    fast_tick_ratio_avg = 0;
-    for (i = 0; i < FAST_TICK_RATIO_NUM; ++i) {
-        if (fast_tick_ratio[i] < 100.0)
-            break;
-        fast_tick_ratio_avg += fast_tick_ratio[i];
-    }
-    fast_tick_ratio_avg = fast_tick_ratio_avg / i;
-#endif /*FAST_TIMER_COMPENSATE*/
 #else
     uint64_t mul;
     uint32_t fast_diff;
@@ -576,15 +472,6 @@ void BOOT_TEXT_SRAM_LOC hal_sys_timer_calib(void)
 }
 
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_systick_hz(void)
-{
-#ifdef TIMER_USE_FPU
-    return (uint32_t)(sys_tick_hz + 0.5);
-#else
-    return sys_tick_hz;
-#endif
-}
-
-float BOOT_TEXT_SRAM_LOC hal_sys_timer_systick_hz_float(void)
 {
     return sys_tick_hz;
 }
@@ -651,47 +538,6 @@ uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_ticks_to_us(uint32_t tick)
 }
 #endif
 
-#ifdef FAST_TIMER_COMPENSATE
-static uint32_t BOOT_BSS_LOC slow_timer_begin = 0;
-static uint32_t BOOT_BSS_LOC fast_timer_begin = 0;
-
-void BOOT_TEXT_SRAM_LOC hal_fast_timer_sleep()
-{
-    uint32_t slow, fast;
-    uint32_t lock;
-
-    lock = int_lock();
-    slow = hal_sys_timer_get();
-    while (hal_sys_timer_get() == slow);
-    __ISB();
-    fast = -_real_fast_sys_timer_get();
-    fast_timer_begin = fast;
-    slow_timer_begin = slow + 1;
-    int_unlock(lock);
-}
-
-void BOOT_TEXT_SRAM_LOC hal_fast_timer_wakeup()
-{
-    uint32_t slow, fast;
-    uint32_t load;
-    uint32_t lock;
-    float sleep_tick;
-
-    lock = int_lock();
-    slow = hal_sys_timer_get();
-    while (hal_sys_timer_get() == slow);
-    __ISB();
-    fast = _real_fast_sys_timer_get();
-    __ISB();
-    sleep_tick = fast_tick_ratio_avg * (float)(slow + 1 - slow_timer_begin) + 0.9;
-    load = fast_timer_begin - (uint32_t)sleep_tick;
-    __ISB();
-    load -= _real_fast_sys_timer_get() - fast;//float compute time
-    set_timer_load(&dual_timer[1]->timer[0], load, FAST_TIMER_VAL_DELTA);
-    int_unlock(lock);
-}
-#endif
-
 #ifndef RTOS
 int osDelay(uint32_t ms)
 {
@@ -699,10 +545,6 @@ int osDelay(uint32_t ms)
     return 0;
 }
 #endif
-
-//==========================================================
-// Timer IRQ APIs
-//==========================================================
 
 __STATIC_FORCEINLINE int timer_is_slow(uint32_t id)
 {
@@ -727,35 +569,9 @@ static void hal_timer_slow_irq_handler(void)
     hal_timer_common_irq_handler(0, SLOW_TIMER_SUB_ID_WITH_IRQ);
 }
 
-#ifdef TIMER1_BASE
-static void hal_timer11_irq_handler(void)
-{
-    hal_timer_common_irq_handler(1, 1);
-}
-#endif
-
-#ifdef TIMER2_BASE
-static void hal_timer2x_irq_handler(void)
-{
-    uint32_t sub_id;
-
-    // NOTE: Some chips might combine time20 and time21 IRQ into one interrupt line
-    for (sub_id = 0; sub_id < 2; sub_id++) {
-        if (hal_timer_common_irq_pending(2, sub_id)) {
-            hal_timer_common_irq_handler(2, sub_id);
-        }
-    }
-}
-#endif
-
 static const uint32_t irq_entry[ARRAY_SIZE(dual_timer)][2] = {
     { (uint32_t)hal_timer_slow_irq_handler, (uint32_t)hal_timer_slow_irq_handler, },
-#ifdef TIMER1_BASE
     { 0, (uint32_t)hal_timer11_irq_handler, },
-#endif
-#ifdef TIMER2_BASE
-    { (uint32_t)hal_timer2x_irq_handler, (uint32_t)hal_timer2x_irq_handler, },
-#endif
 };
 
 static void hal_timer_common_setup(uint32_t id, uint32_t sub_id, enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler)
@@ -873,10 +689,6 @@ static uint32_t hal_timer_common_get_elapsed_time(uint32_t id, uint32_t sub_id)
     return time - start_time[id][sub_id];
 }
 
-//----------------------------------------------------------
-// Slow timer IRQ API
-//----------------------------------------------------------
-
 void hal_timer_setup(enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler)
 {
     hal_timer_common_setup(0, SLOW_TIMER_SUB_ID_WITH_IRQ, type, handler);
@@ -902,11 +714,6 @@ int hal_timer_is_enabled(void)
     return hal_timer_common_is_enabled(0, SLOW_TIMER_SUB_ID_WITH_IRQ);
 }
 
-void hal_timer_reload(uint32_t load)
-{
-    hal_timer_common_reload(0, SLOW_TIMER_SUB_ID_WITH_IRQ, load);
-}
-
 uint32_t hal_timer_get_raw_value(void)
 {
     return hal_timer_common_get_raw_value(0, SLOW_TIMER_SUB_ID_WITH_IRQ);
@@ -927,198 +734,3 @@ uint32_t hal_timer_get_elapsed_time(void)
     return hal_timer_common_get_elapsed_time(0, SLOW_TIMER_SUB_ID_WITH_IRQ);
 }
 
-//----------------------------------------------------------
-// Fast timer IRQ API
-//----------------------------------------------------------
-
-#ifdef TIMER1_BASE
-void hal_fast_timer_setup(enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler)
-{
-    hal_timer_common_setup(1, 1, type, handler);
-}
-
-void hal_fast_timer_start(uint32_t load)
-{
-    hal_timer_common_start(1, 1, load);
-}
-
-void hal_fast_timer_stop(void)
-{
-    hal_timer_common_stop(1, 1);
-}
-
-void hal_fast_timer_pause(void)
-{
-    hal_timer_common_pause(1, 1);
-}
-
-void hal_fast_timer_continue(void)
-{
-    hal_timer_common_continue(1, 1);
-}
-
-int hal_fast_timer_is_enabled(void)
-{
-    return hal_timer_common_is_enabled(1, 1);
-}
-
-void hal_fast_timer_reload(uint32_t load)
-{
-    hal_timer_common_reload(1, 1, load);
-}
-
-void hal_fast_timer_bgload(uint32_t load)
-{
-    hal_timer_common_bgload(1, 1, load);
-}
-
-uint32_t hal_fast_timer_get_raw_value(void)
-{
-    return hal_timer_common_get_raw_value(1, 1);
-}
-
-int hal_fast_timer_irq_active(void)
-{
-    return hal_timer_common_irq_active(1, 1);
-}
-
-int hal_fast_timer_irq_pending(void)
-{
-    return hal_timer_common_irq_pending(1, 1);
-}
-
-uint32_t hal_fast_timer_get_elapsed_time(void)
-{
-    return hal_timer_common_get_elapsed_time(1, 1);
-}
-
-uint32_t hal_fast_timer_get_load(void)
-{
-    return hal_timer_common_get_load(1, 1);
-}
-
-uint32_t hal_fast_timer_get_count(void)
-{
-    return dual_timer[1]->timer[1].Load - get_timer_value(&dual_timer[1]->timer[1], FAST_TIMER_VAL_DELTA);
-}
-
-#endif
-
-//----------------------------------------------------------
-// User timer IRQ API
-//----------------------------------------------------------
-
-#ifdef TIMER2_BASE
-static void hal_user_timer_clock_enable()
-{
-    if (hal_cmu_clock_get_status(HAL_CMU_MOD_O_TIMER2) == HAL_CMU_CLK_DISABLED) {
-        hal_cmu_clock_enable(HAL_CMU_MOD_O_TIMER2);
-        hal_cmu_clock_enable(HAL_CMU_MOD_P_TIMER2);
-        hal_cmu_reset_clear(HAL_CMU_MOD_O_TIMER2);
-        hal_cmu_reset_clear(HAL_CMU_MOD_P_TIMER2);
-    }
-}
-
-void hal_user_timer0_setup(enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler)
-{
-    hal_user_timer_clock_enable();
-    hal_timer_common_setup(2, 0, type, handler);
-}
-
-void hal_user_timer0_start(uint32_t load)
-{
-    hal_timer_common_start(2, 0, load);
-}
-
-void hal_user_timer0_stop(void)
-{
-    hal_timer_common_stop(2, 0);
-}
-
-void hal_user_timer0_continue(void)
-{
-    hal_timer_common_continue(2, 0);
-}
-
-int hal_user_timer0_is_enabled(void)
-{
-    return hal_timer_common_is_enabled(2, 0);
-}
-
-void hal_user_timer0_reload(uint32_t load)
-{
-    hal_timer_common_reload(2, 0, load);
-}
-
-uint32_t hal_user_timer0_get_raw_value(void)
-{
-    return hal_timer_common_get_raw_value(2, 0);
-}
-
-int hal_user_timer0_irq_active(void)
-{
-    return hal_timer_common_irq_active(2, 0);
-}
-
-int hal_user_timer0_irq_pending(void)
-{
-    return hal_timer_common_irq_pending(2, 0);
-}
-
-uint32_t hal_user_timer0_get_elapsed_time(void)
-{
-    return hal_timer_common_get_elapsed_time(2, 0);
-}
-
-void hal_user_timer1_setup(enum HAL_TIMER_TYPE_T type, HAL_TIMER_IRQ_HANDLER_T handler)
-{
-    hal_user_timer_clock_enable();
-    hal_timer_common_setup(2, 1, type, handler);
-}
-
-void hal_user_timer1_start(uint32_t load)
-{
-    hal_timer_common_start(2, 1, load);
-}
-
-void hal_user_timer1_stop(void)
-{
-    hal_timer_common_stop(2, 1);
-}
-
-void hal_user_timer1_continue(void)
-{
-    hal_timer_common_continue(2, 1);
-}
-
-int hal_user_timer1_is_enabled(void)
-{
-    return hal_timer_common_is_enabled(2, 1);
-}
-
-void hal_user_timer1_reload(uint32_t load)
-{
-    hal_timer_common_reload(2, 1, load);
-}
-
-uint32_t hal_user_timer1_get_raw_value(void)
-{
-    return hal_timer_common_get_raw_value(2, 1);
-}
-
-int hal_user_timer1_irq_active(void)
-{
-    return hal_timer_common_irq_active(2, 1);
-}
-
-int hal_user_timer1_irq_pending(void)
-{
-    return hal_timer_common_irq_pending(2, 1);
-}
-
-uint32_t hal_user_timer1_get_elapsed_time(void)
-{
-    return hal_timer_common_get_elapsed_time(2, 1);
-}
-
-#endif

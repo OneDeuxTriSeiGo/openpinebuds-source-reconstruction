@@ -79,51 +79,6 @@ struct CMU_T {
     __IO uint32_t SIMU_RES;         // 0xF4
     __IO uint32_t SEC_ROM_CFG;      // 0xF8
     __IO uint32_t ACC_CTRL;         // 0xFC
-    __IO uint32_t CP_VTOR;          // 0x100
-    __IO uint32_t XCLK_ENABLE;      // 0x104
-    __IO uint32_t XCLK_DISABLE;     // 0x108
-    __IO uint32_t XCLK_MODE;        // 0x10C
-    __IO uint32_t XRESET_PULSE;     // 0x110
-    __IO uint32_t XRESET_SET;       // 0x114
-    __IO uint32_t XRESET_CLR;       // 0x118
-    __IO uint32_t DSP_DIV;          // 0x11C
-    __IO uint32_t WAKEUP_MASK2;     // 0x120
-    __IO uint32_t MCU2BT_INTMASK2;  // 0x124
-    __IO uint32_t MCU2WF_INTMASK0;  // 0x128
-    __IO uint32_t MCU2WF_INTMASK1;  // 0x12C
-    __IO uint32_t MCU2WF_INTMASK2;  // 0x130
-    __IO uint32_t MCU2DSP_INTMASK0; // 0x134
-    __IO uint32_t MCU2DSP_INTMASK1; // 0x138
-    __IO uint32_t MCU2DSP_INTMASK2; // 0x13C
-    __IO uint32_t DSP_CFG0;         // 0x140
-    __IO uint32_t DSP_CFG1;         // 0x144
-    __IO uint32_t DSP_CFG2;         // 0x148
-    __IO uint32_t DSP_CFG3;         // 0x14C
-    __IO uint32_t APCLK_ENABLE;     // 0x150
-    __IO uint32_t APCLK_DISABLE;    // 0x154
-    __IO uint32_t APCLK_MODE;       // 0x158
-    __IO uint32_t APRESET_PULSE;    // 0x15C
-    __IO uint32_t APRESET_SET;      // 0x160
-    __IO uint32_t APRESET_CLR;      // 0x164
-    __IO uint32_t AP_TIMER1_CLK;    // 0x168
-    __IO uint32_t AP_TIMER2_CLK;    // 0x16C
-    __IO uint32_t RESERVED_170[4];  // 0x170
-    __IO uint32_t MEMSC_AUX[0x1C];  // 0x180
-    __IO uint32_t RESERVED_1F0[4];  // 0x1F0
-    __IO uint32_t QCLK_ENABLE;      // 0x200
-    __IO uint32_t QCLK_DISABLE;     // 0x204
-    __IO uint32_t QCLK_MODE;        // 0x208
-    __IO uint32_t QRESET_PULSE;     // 0x20C
-    __IO uint32_t QRESET_SET;       // 0x210
-    __IO uint32_t QRESET_CLR;       // 0x214
-    __IO uint32_t BT_PLAYTIME;      // 0x218
-    __IO uint32_t CMU_REMAP;        // 0x21C
-    __IO uint32_t INTMSK_CORE0;     // 0x220
-    __IO uint32_t INTMSK1_CORE0;    // 0x224
-    __IO uint32_t INTMSK2_CORE0;    // 0x224
-    __IO uint32_t INTMSK_CORE1;     // 0x22C
-    __IO uint32_t INTMSK1_CORE1;    // 0x230
-    __IO uint32_t INTMSK2_CORE1;    // 0x234
 };
 
 // reg_000
@@ -250,8 +205,6 @@ struct CMU_T {
 #define CMU_DEBUG_REG_SEL(n)                    (((n) & 0x7) << 13)
 #define CMU_DEBUG_REG_SEL_MASK                  (0x7 << 13)
 #define CMU_DEBUG_REG_SEL_SHIFT                 (13)
-#define CMU_FLS1_IO_SEL                         (1 << 16)
-#define CMU_FLS0_X8_SEL                         (1 << 17)
 
 // reg_058
 #define CMU_SLEEP_TIMER(n)                      (((n) & 0xFFFFFF) << 0)
@@ -287,12 +240,7 @@ struct CMU_T {
 #define CMU_MASK_OBS(n)                         (((n) & 0x3F) << 19)
 #define CMU_MASK_OBS_MASK                       (0x3F << 19)
 #define CMU_MASK_OBS_SHIFT                      (19)
-#define CMU_JTAG_SEL_MASK                       (3 << 25)
 #define CMU_JTAG_SEL_CP                         (1 << 25)
-#define CMU_JTAG_SEL_A7                         (1 << 26)
-#define CMU_WF_ALLIRQ_MASK                      (1 << 27)
-#define CMU_A7_ALLIRQ_MASK                      (1 << 28)
-#define CMU_SEL_PSRAMX2                         (1 << 29)
 
 // reg_060
 #define CMU_RSTN_DIV_MCU_ENABLE                 (1 << 0)
@@ -307,14 +255,6 @@ struct CMU_T {
 #define CMU_BYPASS_DIV_A7_ENABLE                (1 << 9)
 #define CMU_SEL_A7_OSC_4_ENABLE                 (1 << 10)
 #define CMU_SEL_A7_OSC_2_ENABLE                 (1 << 11)
-#define CMU_SEL_A7_OSCX4_ENABLE                 (1 << 12)
-#define CMU_SEL_A7_SLOW_ENABLE                  (1 << 13)
-#define CMU_SEL_A7_FAST_ENABLE                  (1 << 14)
-#define CMU_SEL_A7_PLL_ENABLE                   (1 << 15)
-#define CMU_EN_PLLMCU_ENABLE                    (1 << 16)
-#define CMU_PU_PLLMCU_ENABLE                    (1 << 17)
-#define CMU_EN_PLLA7_ENABLE                     (1 << 18)
-#define CMU_PU_PLLA7_ENABLE                     (1 << 19)
 
 // reg_064
 #define CMU_RSTN_DIV_MCU_DISABLE                (1 << 0)
@@ -329,14 +269,6 @@ struct CMU_T {
 #define CMU_BYPASS_DIV_A7_DISABLE               (1 << 9)
 #define CMU_SEL_A7_OSC_4_DISABLE                (1 << 10)
 #define CMU_SEL_A7_OSC_2_DISABLE                (1 << 11)
-#define CMU_SEL_A7_OSCX4_DISABLE                (1 << 12)
-#define CMU_SEL_A7_SLOW_DISABLE                 (1 << 13)
-#define CMU_SEL_A7_FAST_DISABLE                 (1 << 14)
-#define CMU_SEL_A7_PLL_DISABLE                  (1 << 15)
-#define CMU_EN_PLLMCU_DISABLE                   (1 << 16)
-#define CMU_PU_PLLMCU_DISABLE                   (1 << 17)
-#define CMU_EN_PLLA7_DISABLE                    (1 << 18)
-#define CMU_PU_PLLA7_DISABLE                    (1 << 19)
 
 // reg_068
 #define CMU_ADMA_CH15_REQ_IDX(n)                (((n) & 0x3F) << 0)
@@ -401,12 +333,6 @@ struct CMU_T {
 #define CMU_SEL_OSCX2_UART2                     (1 << 21)
 #define CMU_SEL_PLL_UART2                       (1 << 22)
 #define CMU_EN_PLL_UART2                        (1 << 23)
-#define CMU_CFG_DIV_UART3(n)                    (((n) & 0x1F) << 24)
-#define CMU_CFG_DIV_UART3_MASK                  (0x1F << 24)
-#define CMU_CFG_DIV_UART3_SHIFT                 (24)
-#define CMU_SEL_OSCX2_UART3                     (1 << 29)
-#define CMU_SEL_PLL_UART3                       (1 << 30)
-#define CMU_EN_PLL_UART3                        (1 << 31)
 
 // reg_074
 #define CMU_CFG_DIV_I2C(n)                      (((n) & 0xFF) << 0)
@@ -431,11 +357,6 @@ struct CMU_T {
 #define CMU_SEL_I2S1_CLKIN                      (1 << 24)
 #define CMU_EN_CLK_I2S1_OUT                     (1 << 25)
 #define CMU_POL_CLK_I2S1_OUT                    (1 << 26)
-#define CMU_SEL_OSC_2_UART0                     (1 << 27)
-#define CMU_SEL_OSC_2_UART1                     (1 << 28)
-#define CMU_SEL_OSC_2_UART2                     (1 << 29)
-#define CMU_SEL_OSC_2_UART3                     (1 << 30)
-#define CMU_SEL_OSC_2_SPI1                      (1 << 31)
 
 // reg_078
 #define CMU_RAM_RET1N0(n)                       (((n) & 0xFFFFFFFF) << 0)
@@ -472,12 +393,6 @@ struct CMU_T {
 #define CMU_LPU_AUTO_SWITCHPLL                  (1 << 13)
 #define CMU_LPU_STATUS_26M                      (1 << 14)
 #define CMU_LPU_STATUS_PLL                      (1 << 15)
-#define CMU_LPU_EN_MCU                          (1 << 16)
-#define CMU_LPU_EN_A7                           (1 << 17)
-#define CMU_OSC_READY_MODE                      (1 << 18)
-#define CMU_CFG_SRAM_IN_M33(n)                  (((n) & 0x1FF) << 19)
-#define CMU_CFG_SRAM_IN_M33_MASK                (0x1FF << 19)
-#define CMU_CFG_SRAM_IN_M33_SHIFT               (19)
 
 // reg_090
 #define CMU_CFG_DIV_TIMER10(n)                  (((n) & 0xFFFF) << 0)
@@ -521,26 +436,6 @@ struct CMU_T {
 #define CMU_MCU2BT_DATA_IND_SET                 (1 << 2)
 #define CMU_MCU2BT_DATA1_IND_SET                (1 << 3)
 #define CMU_BT_ALLIRQ_MASK_SET                  (1 << 4)
-#define CMU_BT_PLAYTIME_STAMP_INTR              (1 << 5)
-#define CMU_BT_PLAYTIME_STAMP1_INTR             (1 << 6)
-#define CMU_BT_PLAYTIME_STAMP2_INTR             (1 << 7)
-#define CMU_BT_PLAYTIME_STAMP3_INTR             (1 << 8)
-#define CMU_BT_PLAYTIME_STAMP_INTR_MSK          (1 << 9)
-#define CMU_BT_PLAYTIME_STAMP1_INTR_MSK         (1 << 10)
-#define CMU_BT_PLAYTIME_STAMP2_INTR_MSK         (1 << 11)
-#define CMU_BT_PLAYTIME_STAMP3_INTR_MSK         (1 << 12)
-#define CMU_BT2MCU_DATA_MSK_SET                 (1 << 13)
-#define CMU_BT2MCU_DATA1_MSK_SET                (1 << 14)
-#define CMU_MCU2BT_DATA_MSK_SET                 (1 << 15)
-#define CMU_MCU2BT_DATA1_MSK_SET                (1 << 16)
-#define CMU_BT2MCU_DATA_INTR                    (1 << 17)
-#define CMU_BT2MCU_DATA1_INTR                   (1 << 18)
-#define CMU_MCU2BT_DATA_INTR                    (1 << 19)
-#define CMU_MCU2BT_DATA1_INTR                   (1 << 20)
-#define CMU_BT2MCU_DATA_INTR_MSK                (1 << 21)
-#define CMU_BT2MCU_DATA1_INTR_MSK               (1 << 22)
-#define CMU_MCU2BT_DATA_INTR_MSK                (1 << 23)
-#define CMU_MCU2BT_DATA1_INTR_MSK               (1 << 24)
 
 // reg_0a4
 #define CMU_BT2MCU_DATA_DONE_CLR                (1 << 0)
@@ -548,14 +443,6 @@ struct CMU_T {
 #define CMU_MCU2BT_DATA_IND_CLR                 (1 << 2)
 #define CMU_MCU2BT_DATA1_IND_CLR                (1 << 3)
 #define CMU_BT_ALLIRQ_MASK_CLR                  (1 << 4)
-#define CMU_BT_PLAYTIME_STAMP_INTR_CLR          (1 << 5)
-#define CMU_BT_PLAYTIME_STAMP1_INTR_CLR         (1 << 6)
-#define CMU_BT_PLAYTIME_STAMP2_INTR_CLR         (1 << 7)
-#define CMU_BT_PLAYTIME_STAMP3_INTR_CLR         (1 << 8)
-#define CMU_BT2MCU_DATA_MSK_CLR                 (1 << 13)
-#define CMU_BT2MCU_DATA1_MSK_CLR                (1 << 14)
-#define CMU_MCU2BT_DATA_MSK_CLR                 (1 << 15)
-#define CMU_MCU2BT_DATA1_MSK_CLR                (1 << 16)
 
 // reg_0a8
 #define CMU_CFG_DIV_MCU(n)                      (((n) & 0x3) << 0)
@@ -643,34 +530,6 @@ struct CMU_T {
 #define CMU_MEMSC_STATUS1                       (1 << 1)
 #define CMU_MEMSC_STATUS2                       (1 << 2)
 #define CMU_MEMSC_STATUS3                       (1 << 3)
-#define CMU_MEMSC_STATUS4                       (1 << 4)
-#define CMU_MEMSC_STATUS5                       (1 << 5)
-#define CMU_MEMSC_STATUS6                       (1 << 6)
-#define CMU_MEMSC_STATUS7                       (1 << 7)
-#define CMU_MEMSC_STATUS8                       (1 << 8)
-#define CMU_MEMSC_STATUS9                       (1 << 9)
-#define CMU_MEMSC_STATUS10                      (1 << 10)
-#define CMU_MEMSC_STATUS11                      (1 << 11)
-#define CMU_MEMSC_STATUS12                      (1 << 12)
-#define CMU_MEMSC_STATUS13                      (1 << 13)
-#define CMU_MEMSC_STATUS14                      (1 << 14)
-#define CMU_MEMSC_STATUS15                      (1 << 15)
-#define CMU_MEMSC_STATUS16                      (1 << 16)
-#define CMU_MEMSC_STATUS17                      (1 << 17)
-#define CMU_MEMSC_STATUS18                      (1 << 18)
-#define CMU_MEMSC_STATUS19                      (1 << 19)
-#define CMU_MEMSC_STATUS20                      (1 << 20)
-#define CMU_MEMSC_STATUS21                      (1 << 21)
-#define CMU_MEMSC_STATUS22                      (1 << 22)
-#define CMU_MEMSC_STATUS23                      (1 << 23)
-#define CMU_MEMSC_STATUS24                      (1 << 24)
-#define CMU_MEMSC_STATUS25                      (1 << 25)
-#define CMU_MEMSC_STATUS26                      (1 << 26)
-#define CMU_MEMSC_STATUS27                      (1 << 27)
-#define CMU_MEMSC_STATUS28                      (1 << 28)
-#define CMU_MEMSC_STATUS29                      (1 << 29)
-#define CMU_MEMSC_STATUS30                      (1 << 30)
-#define CMU_MEMSC_STATUS31                      (1 << 31)
 
 // reg_0d4
 #define CMU_ADMA_CH0_REQ_IDX(n)                 (((n) & 0x3F) << 0)
@@ -804,447 +663,6 @@ struct CMU_T {
 #define CMU_JTAG_ACC_RAM_EN                     (1 << 3)
 #define CMU_JTAG_ACC_SECROM_EN                  (1 << 4)
 #define CMU_DCODE_ACC_SECROM_EN                 (1 << 5)
-#define CMU_SRAM0_ACC_REFUSE                    (1 << 6)
-
-// reg_100
-#define CMU_VTOR_CORE1(n)                       (((n) & 0x1FFFFFF) << 7)
-#define CMU_VTOR_CORE1_MASK                     (0x1FFFFFF << 7)
-#define CMU_VTOR_CORE1_SHIFT                    (7)
-
-// reg_104
-#define CMU_MANUAL_XCLK_ENABLE(n)               (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MANUAL_XCLK_ENABLE_MASK             (0xFFFFFFFF << 0)
-#define CMU_MANUAL_XCLK_ENABLE_SHIFT            (0)
-
-// reg_108
-#define CMU_MANUAL_XCLK_DISABLE(n)              (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MANUAL_XCLK_DISABLE_MASK            (0xFFFFFFFF << 0)
-#define CMU_MANUAL_XCLK_DISABLE_SHIFT           (0)
-
-// reg_10c
-#define CMU_MODE_XCLK(n)                        (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MODE_XCLK_MASK                      (0xFFFFFFFF << 0)
-#define CMU_MODE_XCLK_SHIFT                     (0)
-
-// reg_110
-#define CMU_XRESETN_PULSE(n)                    (((n) & 0xFFFFFFFF) << 0)
-#define CMU_XRESETN_PULSE_MASK                  (0xFFFFFFFF << 0)
-#define CMU_XRESETN_PULSE_SHIFT                 (0)
-
-// reg_114
-#define CMU_XRESETN_SET(n)                      (((n) & 0xFFFFFFFF) << 0)
-#define CMU_XRESETN_SET_MASK                    (0xFFFFFFFF << 0)
-#define CMU_XRESETN_SET_SHIFT                   (0)
-
-// reg_118
-#define CMU_XRESETN_CLR(n)                      (((n) & 0xFFFFFFFF) << 0)
-#define CMU_XRESETN_CLR_MASK                    (0xFFFFFFFF << 0)
-#define CMU_XRESETN_CLR_SHIFT                   (0)
-
-// reg_11c
-#define CMU_CFG_DIV_A7(n)                       (((n) & 0x3) << 0)
-#define CMU_CFG_DIV_A7_MASK                     (0x3 << 0)
-#define CMU_CFG_DIV_A7_SHIFT                    (0)
-#define CMU_CFG_DIV_XCLK(n)                     (((n) & 0x3) << 2)
-#define CMU_CFG_DIV_XCLK_MASK                   (0x3 << 2)
-#define CMU_CFG_DIV_XCLK_SHIFT                  (2)
-#define CMU_CFG_DIV_APCLK(n)                    (((n) & 0x3) << 4)
-#define CMU_CFG_DIV_APCLK_MASK                  (0x3 << 4)
-#define CMU_CFG_DIV_APCLK_SHIFT                 (4)
-#define CMU_SEL_32K_TIMER_AP(n)                 (((n) & 0x3) << 6)
-#define CMU_SEL_32K_TIMER_AP_MASK               (0x3 << 6)
-#define CMU_SEL_32K_TIMER_AP_SHIFT              (6)
-#define CMU_SEL_32K_WDT_AP                      (1 << 8)
-#define CMU_SEL_TIMER_FAST_AP(n)                (((n) & 0x3) << 9)
-#define CMU_SEL_TIMER_FAST_AP_MASK              (0x3 << 9)
-#define CMU_SEL_TIMER_FAST_AP_SHIFT             (9)
-#define CMU_CFG_DIV_IR(n)                       (((n) & 0x1F) << 11)
-#define CMU_CFG_DIV_IR_MASK                     (0x1F << 11)
-#define CMU_CFG_DIV_IR_SHIFT                    (11)
-#define CMU_SEL_OSCX2_IR                        (1 << 16)
-#define CMU_SEL_PLL_IR                          (1 << 17)
-#define CMU_EN_PLL_IR                           (1 << 18)
-
-// reg_120
-#define CMU_WAKEUP_IRQ_MASK2(n)                 (((n) & 0xFF) << 0)
-#define CMU_WAKEUP_IRQ_MASK2_MASK               (0xFF << 0)
-#define CMU_WAKEUP_IRQ_MASK2_SHIFT              (0)
-
-// reg_124
-#define CMU_MCU2BT_INTISR_MASK2(n)              (((n) & 0xFF) << 0)
-#define CMU_MCU2BT_INTISR_MASK2_MASK            (0xFF << 0)
-#define CMU_MCU2BT_INTISR_MASK2_SHIFT           (0)
-
-// reg_128
-#define CMU_MCU2WF_INTISR_MASK0(n)              (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MCU2WF_INTISR_MASK0_MASK            (0xFFFFFFFF << 0)
-#define CMU_MCU2WF_INTISR_MASK0_SHIFT           (0)
-
-// reg_12c
-#define CMU_MCU2WF_INTISR_MASK1(n)              (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MCU2WF_INTISR_MASK1_MASK            (0xFFFFFFFF << 0)
-#define CMU_MCU2WF_INTISR_MASK1_SHIFT           (0)
-
-// reg_130
-#define CMU_MCU2WF_INTISR_MASK2(n)              (((n) & 0xFF) << 0)
-#define CMU_MCU2WF_INTISR_MASK2_MASK            (0xFF << 0)
-#define CMU_MCU2WF_INTISR_MASK2_SHIFT           (0)
-
-// reg_134
-#define CMU_M33TOA7_INTISR_MASK0(n)             (((n) & 0xFFFFFFFF) << 0)
-#define CMU_M33TOA7_INTISR_MASK0_MASK           (0xFFFFFFFF << 0)
-#define CMU_M33TOA7_INTISR_MASK0_SHIFT          (0)
-
-// reg_138
-#define CMU_M33TOA7_INTISR_MASK1(n)             (((n) & 0xFFFFFFFF) << 0)
-#define CMU_M33TOA7_INTISR_MASK1_MASK           (0xFFFFFFFF << 0)
-#define CMU_M33TOA7_INTISR_MASK1_SHIFT          (0)
-
-// reg_13c
-#define CMU_M33TOA7_INTISR_MASK2(n)             (((n) & 0xFF) << 0)
-#define CMU_M33TOA7_INTISR_MASK2_MASK           (0xFF << 0)
-#define CMU_M33TOA7_INTISR_MASK2_SHIFT          (0)
-
-// reg_140
-#define CMU_A7TOM33_IRQS_MASK(n)                (((n) & 0xFF) << 0)
-#define CMU_A7TOM33_IRQS_MASK_MASK              (0xFF << 0)
-#define CMU_A7TOM33_IRQS_MASK_SHIFT             (0)
-#define CMU_CA7_L1RSTDISABLE(n)                 (((n) & 0x3) << 8)
-#define CMU_CA7_L1RSTDISABLE_MASK               (0x3 << 8)
-#define CMU_CA7_L1RSTDISABLE_SHIFT              (8)
-#define CMU_CA7_L2RSTDISABLE                    (1 << 10)
-#define CMU_CA7_DBGEN(n)                        (((n) & 0x3) << 11)
-#define CMU_CA7_DBGEN_MASK                      (0x3 << 11)
-#define CMU_CA7_DBGEN_SHIFT                     (11)
-#define CMU_CA7_SPIDEN(n)                       (((n) & 0x3) << 13)
-#define CMU_CA7_SPIDEN_MASK                     (0x3 << 13)
-#define CMU_CA7_SPIDEN_SHIFT                    (13)
-#define CMU_CA7_NIDEN(n)                        (((n) & 0x3) << 15)
-#define CMU_CA7_NIDEN_MASK                      (0x3 << 15)
-#define CMU_CA7_NIDEN_SHIFT                     (15)
-#define CMU_CA7_SPNIDEN(n)                      (((n) & 0x3) << 17)
-#define CMU_CA7_SPNIDEN_MASK                    (0x3 << 17)
-#define CMU_CA7_SPNIDEN_SHIFT                   (17)
-#define CMU_CA7_DBGROMADDRV                     (1 << 19)
-#define CMU_CA7_DBGSELFADDRV                    (1 << 20)
-#define CMU_CA7_DBGRESTART(n)                   (((n) & 0x3) << 21)
-#define CMU_CA7_DBGRESTART_MASK                 (0x3 << 21)
-#define CMU_CA7_DBGRESTART_SHIFT                (21)
-#define CMU_CA7_CP15SDISABLE(n)                 (((n) & 0x3) << 23)
-#define CMU_CA7_CP15SDISABLE_MASK               (0x3 << 23)
-#define CMU_CA7_CP15SDISABLE_SHIFT              (23)
-#define CMU_CA7_TEINIT(n)                       (((n) & 0x3) << 25)
-#define CMU_CA7_TEINIT_MASK                     (0x3 << 25)
-#define CMU_CA7_TEINIT_SHIFT                    (25)
-#define CMU_CA7_CFGSDISABLE                     (1 << 27)
-#define CMU_M33TOA7_INTR_MASK_AP                (1 << 28)
-#define CMU_COUNTER_EN_AP                       (1 << 29)
-
-// reg_148
-#define CMU_AWQOS_CA7(n)                        (((n) & 0xF) << 0)
-#define CMU_AWQOS_CA7_MASK                      (0xF << 0)
-#define CMU_AWQOS_CA7_SHIFT                     (0)
-#define CMU_ARQOS_CA7(n)                        (((n) & 0xF) << 4)
-#define CMU_ARQOS_CA7_MASK                      (0xF << 4)
-#define CMU_ARQOS_CA7_SHIFT                     (4)
-#define CMU_AWQOS_DMA_M(n)                      (((n) & 0xF) << 8)
-#define CMU_AWQOS_DMA_M_MASK                    (0xF << 8)
-#define CMU_AWQOS_DMA_M_SHIFT                   (8)
-#define CMU_ARQOS_DMA_M(n)                      (((n) & 0xF) << 12)
-#define CMU_ARQOS_DMA_M_MASK                    (0xF << 12)
-#define CMU_ARQOS_DMA_M_SHIFT                   (12)
-
-// reg_14c
-#define CMU_XDMA_CHL_SECURE(n)                  (((n) & 0xFFFF) << 0)
-#define CMU_XDMA_CHL_SECURE_MASK                (0xFFFF << 0)
-#define CMU_XDMA_CHL_SECURE_SHIFT               (0)
-#define CMU_XDMA_GLOBAL_SECURE_ENABLE           (1 << 16)
-#define CMU_XDMA_ID_TYPE                        (1 << 17)
-#define CMU_XDMA_SRAM_CLK_ON                    (1 << 18)
-
-// reg_150
-#define CMU_MANUAL_APCLK_ENABLE(n)              (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MANUAL_APCLK_ENABLE_MASK            (0xFFFFFFFF << 0)
-#define CMU_MANUAL_APCLK_ENABLE_SHIFT           (0)
-
-// reg_154
-#define CMU_MANUAL_APCLK_DISABLE(n)             (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MANUAL_APCLK_DISABLE_MASK           (0xFFFFFFFF << 0)
-#define CMU_MANUAL_APCLK_DISABLE_SHIFT          (0)
-
-// reg_158
-#define CMU_MODE_APCLK(n)                       (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MODE_APCLK_MASK                     (0xFFFFFFFF << 0)
-#define CMU_MODE_APCLK_SHIFT                    (0)
-
-// reg_15c
-#define CMU_APRESETN_PULSE(n)                   (((n) & 0xFFFFFFFF) << 0)
-#define CMU_APRESETN_PULSE_MASK                 (0xFFFFFFFF << 0)
-#define CMU_APRESETN_PULSE_SHIFT                (0)
-
-// reg_160
-#define CMU_APRESETN_SET(n)                     (((n) & 0xFFFFFFFF) << 0)
-#define CMU_APRESETN_SET_MASK                   (0xFFFFFFFF << 0)
-#define CMU_APRESETN_SET_SHIFT                  (0)
-
-// reg_164
-#define CMU_APRESETN_CLR(n)                     (((n) & 0xFFFFFFFF) << 0)
-#define CMU_APRESETN_CLR_MASK                   (0xFFFFFFFF << 0)
-#define CMU_APRESETN_CLR_SHIFT                  (0)
-
-// reg_168
-#define CMU_CFG_DIV_TIMER00_AP(n)               (((n) & 0xFFFF) << 0)
-#define CMU_CFG_DIV_TIMER00_AP_MASK             (0xFFFF << 0)
-#define CMU_CFG_DIV_TIMER00_AP_SHIFT            (0)
-#define CMU_CFG_DIV_TIMER01_AP(n)               (((n) & 0xFFFF) << 16)
-#define CMU_CFG_DIV_TIMER01_AP_MASK             (0xFFFF << 16)
-#define CMU_CFG_DIV_TIMER01_AP_SHIFT            (16)
-
-// reg_16c
-#define CMU_CFG_DIV_TIMER10_AP(n)               (((n) & 0xFFFF) << 0)
-#define CMU_CFG_DIV_TIMER10_AP_MASK             (0xFFFF << 0)
-#define CMU_CFG_DIV_TIMER10_AP_SHIFT            (0)
-#define CMU_CFG_DIV_TIMER11_AP(n)               (((n) & 0xFFFF) << 16)
-#define CMU_CFG_DIV_TIMER11_AP_MASK             (0xFFFF << 16)
-#define CMU_CFG_DIV_TIMER11_AP_SHIFT            (16)
-
-// reg_170
-#define CMU_RAM_RET2N0(n)                       (((n) & 0xFFFFFFFF) << 0)
-#define CMU_RAM_RET2N0_MASK                     (0xFFFFFFFF << 0)
-#define CMU_RAM_RET2N0_SHIFT                    (0)
-
-// reg_174
-#define CMU_RAM_RET2N1(n)                       (((n) & 0xFFFFFFFF) << 0)
-#define CMU_RAM_RET2N1_MASK                     (0xFFFFFFFF << 0)
-#define CMU_RAM_RET2N1_SHIFT                    (0)
-
-// reg_178
-#define CMU_RAM_PGEN0(n)                        (((n) & 0xFFFFFFFF) << 0)
-#define CMU_RAM_PGEN0_MASK                      (0xFFFFFFFF << 0)
-#define CMU_RAM_PGEN0_SHIFT                     (0)
-
-// reg_17c
-#define CMU_RAM_PGEN1(n)                        (((n) & 0xFFFFFFFF) << 0)
-#define CMU_RAM_PGEN1_MASK                      (0xFFFFFFFF << 0)
-#define CMU_RAM_PGEN1_SHIFT                     (0)
-
-// reg_180
-#define CMU_MEMSC4                              (1 << 0)
-
-// reg_184
-#define CMU_MEMSC5                              (1 << 0)
-
-// reg_188
-#define CMU_MEMSC6                              (1 << 0)
-
-// reg_18c
-#define CMU_MEMSC7                              (1 << 0)
-
-// reg_190
-#define CMU_MEMSC8                              (1 << 0)
-
-// reg_194
-#define CMU_MEMSC9                              (1 << 0)
-
-// reg_198
-#define CMU_MEMSC10                             (1 << 0)
-
-// reg_19c
-#define CMU_MEMSC11                             (1 << 0)
-
-// reg_1a0
-#define CMU_MEMSC12                             (1 << 0)
-
-// reg_1a4
-#define CMU_MEMSC13                             (1 << 0)
-
-// reg_1a8
-#define CMU_MEMSC14                             (1 << 0)
-
-// reg_1ac
-#define CMU_MEMSC15                             (1 << 0)
-
-// reg_1b0
-#define CMU_MEMSC16                             (1 << 0)
-
-// reg_1b4
-#define CMU_MEMSC17                             (1 << 0)
-
-// reg_1b8
-#define CMU_MEMSC18                             (1 << 0)
-
-// reg_1bc
-#define CMU_MEMSC19                             (1 << 0)
-
-// reg_1c0
-#define CMU_MEMSC20                             (1 << 0)
-
-// reg_1c4
-#define CMU_MEMSC21                             (1 << 0)
-
-// reg_1c8
-#define CMU_MEMSC22                             (1 << 0)
-
-// reg_1cc
-#define CMU_MEMSC23                             (1 << 0)
-
-// reg_1d0
-#define CMU_MEMSC24                             (1 << 0)
-
-// reg_1d4
-#define CMU_MEMSC25                             (1 << 0)
-
-// reg_1d8
-#define CMU_MEMSC26                             (1 << 0)
-
-// reg_1dc
-#define CMU_MEMSC27                             (1 << 0)
-
-// reg_1e0
-#define CMU_MEMSC28                             (1 << 0)
-
-// reg_1e4
-#define CMU_MEMSC29                             (1 << 0)
-
-// reg_1e8
-#define CMU_MEMSC30                             (1 << 0)
-
-// reg_1ec
-#define CMU_MEMSC31                             (1 << 0)
-
-// reg_1f0
-#define CMU_RF2_EMAA(n)                         (((n) & 0x7) << 0)
-#define CMU_RF2_EMAA_MASK                       (0x7 << 0)
-#define CMU_RF2_EMAA_SHIFT                      (0)
-#define CMU_RF2_EMASA                           (1 << 3)
-#define CMU_RF2_EMAB(n)                         (((n) & 0x7) << 4)
-#define CMU_RF2_EMAB_MASK                       (0x7 << 4)
-#define CMU_RF2_EMAB_SHIFT                      (4)
-#define CMU_RAMDP_EMAA(n)                       (((n) & 0x7) << 7)
-#define CMU_RAMDP_EMAA_MASK                     (0x7 << 7)
-#define CMU_RAMDP_EMAA_SHIFT                    (7)
-#define CMU_RAMDP_EMAWA(n)                      (((n) & 0x3) << 10)
-#define CMU_RAMDP_EMAWA_MASK                    (0x3 << 10)
-#define CMU_RAMDP_EMAWA_SHIFT                   (10)
-#define CMU_RAMDP_EMASA                         (1 << 12)
-#define CMU_RAMDP_EMAB(n)                       (((n) & 0x7) << 13)
-#define CMU_RAMDP_EMAB_MASK                     (0x7 << 13)
-#define CMU_RAMDP_EMAB_SHIFT                    (13)
-#define CMU_RAMDP_EMAWB(n)                      (((n) & 0x3) << 16)
-#define CMU_RAMDP_EMAWB_MASK                    (0x3 << 16)
-#define CMU_RAMDP_EMAWB_SHIFT                   (16)
-#define CMU_RAMDP_EMASB                         (1 << 18)
-
-// reg_1f4
-#define CMU_RF_RET1N0(n)                        (((n) & 0x1F) << 0)
-#define CMU_RF_RET1N0_MASK                      (0x1F << 0)
-#define CMU_RF_RET1N0_SHIFT                     (0)
-#define CMU_RF_RET1N1(n)                        (((n) & 0x1F) << 5)
-#define CMU_RF_RET1N1_MASK                      (0x1F << 5)
-#define CMU_RF_RET1N1_SHIFT                     (5)
-#define CMU_RF_RET2N0(n)                        (((n) & 0x1F) << 10)
-#define CMU_RF_RET2N0_MASK                      (0x1F << 10)
-#define CMU_RF_RET2N0_SHIFT                     (10)
-#define CMU_RF_RET2N1(n)                        (((n) & 0x1F) << 15)
-#define CMU_RF_RET2N1_MASK                      (0x1F << 15)
-#define CMU_RF_RET2N1_SHIFT                     (15)
-#define CMU_RF_PGEN0(n)                         (((n) & 0x1F) << 20)
-#define CMU_RF_PGEN0_MASK                       (0x1F << 20)
-#define CMU_RF_PGEN0_SHIFT                      (20)
-#define CMU_RF_PGEN1(n)                         (((n) & 0x1F) << 25)
-#define CMU_RF_PGEN1_MASK                       (0x1F << 25)
-#define CMU_RF_PGEN1_SHIFT                      (25)
-
-// reg_1f8
-#define CMU_RF2_RET1N0(n)                       (((n) & 0x1F) << 0)
-#define CMU_RF2_RET1N0_MASK                     (0x1F << 0)
-#define CMU_RF2_RET1N0_SHIFT                    (0)
-#define CMU_RF2_RET1N1(n)                       (((n) & 0x1F) << 5)
-#define CMU_RF2_RET1N1_MASK                     (0x1F << 5)
-#define CMU_RF2_RET1N1_SHIFT                    (5)
-#define CMU_RF2_RET2N0(n)                       (((n) & 0x1F) << 10)
-#define CMU_RF2_RET2N0_MASK                     (0x1F << 10)
-#define CMU_RF2_RET2N0_SHIFT                    (10)
-#define CMU_RF2_RET2N1(n)                       (((n) & 0x1F) << 15)
-#define CMU_RF2_RET2N1_MASK                     (0x1F << 15)
-#define CMU_RF2_RET2N1_SHIFT                    (15)
-#define CMU_RF2_PGEN0(n)                        (((n) & 0x1F) << 20)
-#define CMU_RF2_PGEN0_MASK                      (0x1F << 20)
-#define CMU_RF2_PGEN0_SHIFT                     (20)
-#define CMU_RF2_PGEN1(n)                        (((n) & 0x1F) << 25)
-#define CMU_RF2_PGEN1_MASK                      (0x1F << 25)
-#define CMU_RF2_PGEN1_SHIFT                     (25)
-
-// reg_200
-#define CMU_MANUAL_QCLK_ENABLE(n)               (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MANUAL_QCLK_ENABLE_MASK             (0xFFFFFFFF << 0)
-#define CMU_MANUAL_QCLK_ENABLE_SHIFT            (0)
-
-// reg_204
-#define CMU_MANUAL_QCLK_DISABLE(n)              (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MANUAL_QCLK_DISABLE_MASK            (0xFFFFFFFF << 0)
-#define CMU_MANUAL_QCLK_DISABLE_SHIFT           (0)
-
-// reg_208
-#define CMU_MODE_QCLK(n)                        (((n) & 0xFFFFFFFF) << 0)
-#define CMU_MODE_QCLK_MASK                      (0xFFFFFFFF << 0)
-#define CMU_MODE_QCLK_SHIFT                     (0)
-
-// reg_20c
-#define CMU_QRESETN_PULSE(n)                    (((n) & 0xFFFFFFFF) << 0)
-#define CMU_QRESETN_PULSE_MASK                  (0xFFFFFFFF << 0)
-#define CMU_QRESETN_PULSE_SHIFT                 (0)
-
-// reg_210
-#define CMU_QRESETN_SET(n)                      (((n) & 0xFFFFFFFF) << 0)
-#define CMU_QRESETN_SET_MASK                    (0xFFFFFFFF << 0)
-#define CMU_QRESETN_SET_SHIFT                   (0)
-
-// reg_214
-#define CMU_QRESETN_CLR(n)                      (((n) & 0xFFFFFFFF) << 0)
-#define CMU_QRESETN_CLR_MASK                    (0xFFFFFFFF << 0)
-#define CMU_QRESETN_CLR_SHIFT                   (0)
-
-// reg_218
-#define CMU_BT_PLAYTIME_STAMP_MASK              (1 << 0)
-#define CMU_BT_PLAYTIME_STAMP1_MASK             (1 << 1)
-#define CMU_BT_PLAYTIME_STAMP2_MASK             (1 << 2)
-#define CMU_BT_PLAYTIME_STAMP3_MASK             (1 << 3)
-
-// reg_21c
-#define CMU_REMAP(n)                            (((n) & 0xF) << 0)
-#define CMU_REMAP_MASK                          (0xF << 0)
-#define CMU_REMAP_SHIFT                         (0)
-
-// reg_220
-#define CMU_INTISR_CORE0_MSK0(n)                (((n) & 0xFFFFFFFF) << 0)
-#define CMU_INTISR_CORE0_MSK0_MASK              (0xFFFFFFFF << 0)
-#define CMU_INTISR_CORE0_MSK0_SHIFT             (0)
-
-// reg_224
-#define CMU_INTISR_CORE0_MSK1(n)                (((n) & 0xFFFFFFFF) << 0)
-#define CMU_INTISR_CORE0_MSK1_MASK              (0xFFFFFFFF << 0)
-#define CMU_INTISR_CORE0_MSK1_SHIFT             (0)
-
-// reg_228
-#define CMU_INTISR_CORE0_MSK2(n)                (((n) & 0xFF) << 0)
-#define CMU_INTISR_CORE0_MSK2_MASK              (0xFF << 0)
-#define CMU_INTISR_CORE0_MSK2_SHIFT             (0)
-
-// reg_22c
-#define CMU_INTISR_CORE1_MSK0(n)                (((n) & 0xFFFFFFFF) << 0)
-#define CMU_INTISR_CORE1_MSK0_MASK              (0xFFFFFFFF << 0)
-#define CMU_INTISR_CORE1_MSK0_SHIFT             (0)
-
-// reg_230
-#define CMU_INTISR_CORE1_MSK1(n)                (((n) & 0xFFFFFFFF) << 0)
-#define CMU_INTISR_CORE1_MSK1_MASK              (0xFFFFFFFF << 0)
-#define CMU_INTISR_CORE1_MSK1_SHIFT             (0)
-
-// reg_234
-#define CMU_INTISR_CORE1_MSK2(n)                (((n) & 0xFF) << 0)
-#define CMU_INTISR_CORE1_MSK2_MASK              (0xFF << 0)
-#define CMU_INTISR_CORE1_MSK2_SHIFT             (0)
 
 // MCU System AHB Clocks:
 #define SYS_HCLK_CORE0                          (1 << 0)
@@ -1347,22 +765,8 @@ struct CMU_T {
 #define SYS_PRST_I2S0                           (1 << 15)
 #define SYS_PCLK_SPDIF0                         (1 << 16)
 #define SYS_PRST_SPDIF0                         (1 << 16)
-#define SYS_PCLK_TQWF                           (1 << 17)
-#define SYS_PRST_TQWF                           (1 << 17)
-#define SYS_PCLK_TQA7                           (1 << 18)
-#define SYS_PRST_TQA7                           (1 << 18)
-#define SYS_PCLK_TRNG                           (1 << 19)
-#define SYS_PRST_TRNG                           (1 << 19)
 #define SYS_PCLK_BCM                            (1 << 20)
 #define SYS_PRST_BCM                            (1 << 20)
-#define SYS_PCLK_TZC                            (1 << 21)
-#define SYS_PRST_TZC                            (1 << 21)
-#define SYS_PCLK_IR                             (1 << 22)
-#define SYS_PRST_IR                             (1 << 22)
-#define SYS_PCLK_I2C2                           (1 << 23)
-#define SYS_PRST_I2C2                           (1 << 23)
-#define SYS_PCLK_UART3                          (1 << 24)
-#define SYS_PRST_UART3                          (1 << 24)
 #define SYS_PCLK_I2S1                           (1 << 25)
 #define SYS_PRST_I2S1                           (1 << 25)
 
@@ -1373,10 +777,6 @@ struct CMU_T {
 #define SYS_ORST_USB                            (1 << 1)
 #define SYS_OCLK_USB32K                         (1 << 2)
 #define SYS_ORST_USB32K                         (1 << 2)
-#define SYS_OCLK_PSRAM1G                        (1 << 3)
-#define SYS_ORST_PSRAM1G                        (1 << 3)
-#define SYS_OCLK_PSRAM200                       (1 << 4)
-#define SYS_ORST_PSRAM200                       (1 << 4)
 #define SYS_OCLK_FLASH                          (1 << 5)
 #define SYS_ORST_FLASH                          (1 << 5)
 #define SYS_OCLK_SDMMC                          (1 << 6)
@@ -1415,105 +815,5 @@ struct CMU_T {
 #define SYS_ORST_SPDIF0                         (1 << 22)
 #define SYS_OCLK_I2S1                           (1 << 23)
 #define SYS_ORST_I2S1                           (1 << 23)
-#define SYS_OCLK_A7                             (1 << 24)
-#define SYS_ORST_A7                             (1 << 24)
-#define SYS_OCLK_TSF                            (1 << 25)
-#define SYS_ORST_TSF                            (1 << 25)
-#define SYS_OCLK_WDT_AP                         (1 << 26)
-#define SYS_ORST_WDT_AP                         (1 << 26)
-#define SYS_OCLK_TIMER0_AP                      (1 << 27)
-#define SYS_ORST_TIMER0_AP                      (1 << 27)
-#define SYS_OCLK_TIMER1_AP                      (1 << 28)
-#define SYS_ORST_TIMER1_AP                      (1 << 28)
-#define SYS_OCLK_FLASH1                         (1 << 29)
-#define SYS_ORST_FLASH1                         (1 << 29)
-#define SYS_OCLK_I2C2                           (1 << 30)
-#define SYS_ORST_I2C2                           (1 << 30)
-#define SYS_OCLK_UART3                          (1 << 31)
-#define SYS_ORST_UART3                          (1 << 31)
-
-// MCU System Other Clocks2:
-#define SYS_QCLK_DSI_32K                        (1 << 1)
-#define SYS_QRST_DSI_32K                        (1 << 1)
-#define SYS_QCLK_DSI_PN                         (1 << 2)
-#define SYS_QRST_DSI_PN                         (1 << 2)
-#define SYS_QCLK_DSI_TV                         (1 << 3)
-#define SYS_QRST_DSI_TV                         (1 << 3)
-#define SYS_QCLK_DSI_PIX                        (1 << 4)
-#define SYS_QRST_DSI_PIX                        (1 << 4)
-#define SYS_QCLK_DSI_DSI                        (1 << 5)
-#define SYS_QRST_DSI_DSI                        (1 << 5)
-#define SYS_QCLK_CSI_LANE                       (1 << 6)
-#define SYS_QRST_CSI_LANE                       (1 << 6)
-#define SYS_QCLK_CSI_PIX                        (1 << 7)
-#define SYS_QRST_CSI_PIX                        (1 << 7)
-#define SYS_QCLK_CSI_LANG                       (1 << 8)
-#define SYS_QRST_CSI_LANG                       (1 << 8)
-#define SYS_QCLK_IR                             (1 << 9)
-#define SYS_QRST_IR                             (1 << 9)
-
-// AXI Clocks:
-#define SYS_XCLK_DMA                            (1 << 0)
-#define SYS_XRST_DMA                            (1 << 0)
-#define SYS_XCLK_NIC                            (1 << 1)
-#define SYS_XRST_NIC                            (1 << 1)
-#define SYS_XCLK_IMEMLO                         (1 << 2)
-#define SYS_XRST_IMEMLO                         (1 << 2)
-#define SYS_XCLK_IMEMHI                         (1 << 3)
-#define SYS_XRST_IMEMHI                         (1 << 3)
-#define SYS_XCLK_PSRAM1G                        (1 << 4)
-#define SYS_XRST_PSRAM1G                        (1 << 4)
-#define SYS_XCLK_PER                            (1 << 5)
-#define SYS_XRST_PER                            (1 << 5)
-#define SYS_XCLK_PDBG                           (1 << 6)
-#define SYS_XRST_PDBG                           (1 << 6)
-#define SYS_XCLK_CORE0                          (1 << 7)
-#define SYS_XRST_CORE0                          (1 << 7)
-#define SYS_XCLK_CORE1                          (1 << 8)
-#define SYS_XRST_CORE1                          (1 << 8)
-#define SYS_XCLK_CORE2                          (1 << 9)
-#define SYS_XRST_CORE2                          (1 << 9)
-#define SYS_XCLK_CORE3                          (1 << 10)
-#define SYS_XRST_CORE3                          (1 << 10)
-#define SYS_XCLK_DBG                            (1 << 11)
-#define SYS_XRST_DBG                            (1 << 11)
-#define SYS_XCLK_SCU                            (1 << 12)
-#define SYS_XRST_SCU                            (1 << 12)
-#define SYS_XCLK_DISPLAYX                       (1 << 13)
-#define SYS_XRST_DISPLAYX                       (1 << 13)
-#define SYS_XCLK_DISPLAYH                       (1 << 14)
-#define SYS_XRST_DISPLAYH                       (1 << 14)
-#define SYS_XCLK_CSI                            (1 << 15)
-#define SYS_XRST_CSI                            (1 << 15)
-#define SYS_XCLK_DSI                            (1 << 16)
-#define SYS_XRST_DSI                            (1 << 16)
-#define SYS_XCLK_PSRAM1GMX                      (1 << 17)
-#define SYS_XRST_PSRAM1GMX                      (1 << 17)
-#define SYS_XCLK_GPV_MAIN                       (1 << 18)
-#define SYS_XRST_GPV_MAIN                       (1 << 18)
-#define SYS_XCLK_GPV_PSRAM1G                    (1 << 19)
-#define SYS_XRST_GPV_PSRAM1G                    (1 << 19)
-
-// A7 APB Clocks:
-#define SYS_APCLK_BOOTREG                       (1 << 0)
-#define SYS_APRST_BOOTREG                       (1 << 0)
-#define SYS_APCLK_WDT                           (1 << 1)
-#define SYS_APRST_WDT                           (1 << 1)
-#define SYS_APCLK_TIMER0                        (1 << 2)
-#define SYS_APRST_TIMER0                        (1 << 2)
-#define SYS_APCLK_TIMER1                        (1 << 3)
-#define SYS_APRST_TIMER1                        (1 << 3)
-#define SYS_APCLK_TQ                            (1 << 4)
-#define SYS_APRST_TQ                            (1 << 4)
-#define SYS_APCLK_TSGEN                         (1 << 5)
-#define SYS_APRST_TSGEN                         (1 << 5)
-#define SYS_APCLK_TSGENRD                       (1 << 6)
-#define SYS_APRST_TSGENRD                       (1 << 6)
-#define SYS_APCLK_DAP                           (1 << 7)
-#define SYS_APRST_DAP                           (1 << 7)
-#define SYS_APCLK_DISPLAY                       (1 << 8)
-#define SYS_APRST_DISPLAY                       (1 << 8)
-#define SYS_APCLK_CSI                           (1 << 9)
-#define SYS_APRST_CSI                           (1 << 9)
 
 #endif

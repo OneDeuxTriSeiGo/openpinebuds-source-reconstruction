@@ -217,9 +217,6 @@ typedef uint8_t btif_hci_buf_flags_t;
 #define BTIF_HCI_BUFTYPE_INTERMEDIATE 0x10  /* Intermediate part of an L2CAP packet */
 #define BTIF_HCI_BUFTYPE_L2CAP        0x20  /* L2CAP owns this buffer */
 
-#define BTIF_STANDARD_SCAN           0x00
-#define BTIF_INTERLACED_SCAN         0x01
-
 #ifdef __IAG_BLE_INCLUDE__
 #define BTIF_HCI_BUFTYPE_BLE          0x40
 #endif /*  */
@@ -264,8 +261,6 @@ typedef void (*btif_tws_role_switch_cmp_callback_func) (uint16_t conhdl, uint8_t
 typedef void (*btif_bt_addr_exchanged_callback_func) (uint8_t * newBtAddr);
 
 typedef void (*btif_hci_vendor_event_callback_func)(uint8_t* pbuf, uint32_t length);
-
-typedef void (*btif_hci_read_avg_rssi_callback_func)(uint8_t status, uint16_t conhdl, int8_t rssi);
 
 #if defined(IBRT)
 typedef uint8_t (*btif_hci_sync_airmode_check_ind_func)(uint8_t status, bt_bdaddr_t *bdaddr);
@@ -326,13 +321,8 @@ extern "C" {
     int btif_hci_init(void);
 
     void btif_register_vendor_event_callback(btif_hci_vendor_event_callback_func func);
-
-    void btif_register_read_rssi_callback(btif_hci_read_avg_rssi_callback_func func);
-
     uint8_t* btif_hci_peek_hci_tx_buf(uint8_t tx_type,uint16_t handle);
     void btif_hci_ahead_hci_tx_buf(uint8_t* hci_buf);
-    void btif_hci_print_buff_status(void);
-    void btif_hci_fault_dump_trace(void);
 
 #if defined(IBRT)
     void btif_register_hci_sync_airmode_check_ind_callback(btif_hci_sync_airmode_check_ind_func func);

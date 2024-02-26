@@ -33,7 +33,6 @@
 #include <stdbool.h>       // boolean definitions
 #include <stdlib.h>        // standard library
 #include "compiler.h"      // for __INLINE
-#include "arch.h"          // for ASSERT_ERR
 
 extern void srand (unsigned int seed);
 extern int rand (void);
@@ -54,29 +53,6 @@ extern int rand (void);
  */
 #define CO_BIT(pos) (1UL<<(pos))
 
-/**
- ****************************************************************************************
- * @brief Return value bit into a bit field.
- *
- * @param[in] bf  Bit Field
- * @param[in] pos Position of the bit
- *
- * @return value of a bit into a bit field
- ****************************************************************************************
- */
-#define CO_BIT_GET(bf, pos) (((((uint8_t*)bf)[((pos) >> 3)])>>((pos) & 0x7)) & 0x1)
-
-/**
- ****************************************************************************************
- * @brief Update value bit into a bit field.
- *
- * @param[in] bf  Bit Field
- * @param[in] pos Position of the bit
- * @param[in] val New value of the bit (0 or 1)
- ****************************************************************************************
- */
-#define CO_BIT_SET(bf, pos, val) (((uint8_t*)bf)[((pos) >> 3)]) = ((((uint8_t*)bf)[((pos) >> 3)]) & ~CO_BIT(((pos) & 0x7))) \
-                                                                | (((val) & 0x1) << ((pos) & 0x7))
 /**
  ****************************************************************************************
  * @brief Align val on the multiple of 4 equal or nearest higher.
@@ -115,45 +91,6 @@ extern int rand (void);
  */
 #define CO_ALIGN2_LO(val) ((val)&~1)
 
-/**
- ****************************************************************************************
- * Perform a division and ceil up the result
- *
- * @param[in] val Value to divide
- * @param[in] div Divide value
- * @return ceil(val/div)
- ****************************************************************************************
- */
-#define CO_DIVIDE_CEIL(val, div) (((val) + ((div) - 1))/ (div))
-
-/**
- ****************************************************************************************
- * Perform a division and round the result
- *
- * @param[in] val Value to divide
- * @param[in] div Divide value
- * @return round(val/div)
- ****************************************************************************************
- */
-#define CO_DIVIDE_ROUND(val, div) (((val) + ((div) >> 1))/ (div))
-
-/**
- ****************************************************************************************
- * Perform a modulo operation
- *
- * @param[in] val    Dividend
- * @param[in] div    Divisor
- * @return  val/div)
- ****************************************************************************************
- */
-//#define CO_MOD(val, div) ((val) % (div))
-static __INLINE uint32_t co_mod(uint32_t val, uint32_t div)
-{
-   ASSERT_ERR(div);
-   return ((val) % (div));
-}
-#define CO_MOD(val, div) co_mod(val, div)
-
 
 /*
  * FUNCTION DEFINTIONS
@@ -187,33 +124,6 @@ __INLINE uint32_t co_clz(uint32_t val)
     #endif // defined(__arm__)
 }
 
-/**
- ****************************************************************************************
- * @brief Count trailing zeros.
- * @param[in] val Value to count the number of trailing zeros on.
- * @return Number of trailing zeros when value is written as 32 bits.
- ****************************************************************************************
- */
-__INLINE uint32_t co_ctz(uint32_t val)
-{
-    #if defined(__arm__)
-    return __builtin_ctz(val);
-    #elif defined(__GNUC__)
-    if (val == 0)
-    {
-        return 32;
-    }
-    return __builtin_ctz(val);
-    #else
-    uint32_t i;
-    for (i = 0; i < 32; i++)
-    {
-        if (val & CO_BIT(i))
-            break;
-    }
-    return i;
-    #endif // defined(__arm__)
-}
 /**
  ****************************************************************************************
  * @brief Function to initialize the random seed.
@@ -265,17 +175,6 @@ __INLINE uint32_t co_rand_word(void)
  ****************************************************************************************
  */
 __INLINE uint32_t co_min(uint32_t a, uint32_t b)
-{
-    return a < b ? a : b;
-}
-
-/**
- ****************************************************************************************
- * @brief Function to return the smallest of 2 signed 32 bits words.
- * @return The smallest value.
- ****************************************************************************************
- */
-__INLINE int32_t co_min_s(int32_t a, int32_t b)
 {
     return a < b ? a : b;
 }

@@ -33,16 +33,6 @@ typedef uint8_t btif_avctp_event_t;
 
 #define BTIF_AVCTP_OPERANDS_EVENT            9
 
-#define BTIF_AVCTP_CT_SDP_INFO_EVENT        10
-
-#define BTIF_AVCTP_TG_SDP_INFO_EVENT        11
-
-#define BTIF_AVCTP_CONNECT_EVENT_MOCK       12
-
-#define BTIF_AVCTP_EVENT_PLAYBACK_STATUS_CHANGE_EVENT_SUPPORT 13
-
-#define BTIF_AVCTP_EVENT_PLAYBACK_STATUS_CHANGED 14
-
 #define BTIF_AVCTP_LAST_EVENT               30
 
 #define BTIF_AVCTP_CTYPE_CONTROL               0x00

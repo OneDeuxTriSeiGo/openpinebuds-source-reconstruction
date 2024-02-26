@@ -37,10 +37,8 @@ extern "C" {
 #define A2DP_LDAC_CM_STEREO                      0x01
 
 #if defined(A2DP_LDAC_ON)
-extern btif_avdtp_codec_t a2dp_ldac_avdtpcodec;
 extern const unsigned char a2dp_codec_ldac_elements[A2DP_LDAC_OCTET_NUMBER];
 bt_status_t a2dp_codec_ldac_init(int index);
-void a2dp_codec_ldac_common_init(void);
 #endif /* A2DP_LDAC_ON */
 
 #if defined(__cplusplus)

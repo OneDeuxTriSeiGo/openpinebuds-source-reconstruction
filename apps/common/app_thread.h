@@ -15,8 +15,6 @@
 #ifndef __APP_THREAD_H__
 #define __APP_THREAD_H__
 
-#include "stdbool.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -36,7 +34,6 @@ enum APP_MODUAL_ID_T {
     APP_MODUAL_WATCHDOG,
     APP_MODUAL_AUDIO_MANAGE,
     APP_MODUAL_ANC,
-    APP_MODUAL_VOICE_ASSIST,
     APP_MODUAL_SMART_MIC,
 #ifdef __PC_CMD_UART__
     APP_MODUAL_CMD,
@@ -47,9 +44,6 @@ enum APP_MODUAL_ID_T {
     APP_MODUAL_MIC,
 #ifdef VOICE_DETECTOR_EN
     APP_MODUAL_VOICE_DETECTOR,
-#endif
-#ifdef AUDIO_HEARING_COMPSATN
-    APP_MODUAL_HEAR_COMP,
 #endif
     APP_MODUAL_OHTER,
 

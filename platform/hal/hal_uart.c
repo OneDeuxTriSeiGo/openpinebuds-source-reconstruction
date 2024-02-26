@@ -19,7 +19,6 @@
 #include "reg_uart.h"
 #include "cmsis_nvic.h"
 #include "hal_bootmode.h"
-#include "hal_cache.h"
 #include "hal_cmu.h"
 #include "hal_dma.h"
 #include "hal_iomux.h"
@@ -74,16 +73,6 @@ static const struct HAL_UART_HW_DESC_T uart[HAL_UART_ID_QTY] = {
         .tx_periph = HAL_GPDMA_UART2_TX,
     },
 #endif
-#if (CHIP_HAS_UART >= 4)
-    {
-        .base = (struct UART_T *)UART3_BASE,
-        .irq = UART3_IRQn,
-        .mod = HAL_CMU_MOD_O_UART3,
-        .apb = HAL_CMU_MOD_P_UART3,
-        .rx_periph = HAL_GPDMA_UART3_RX,
-        .tx_periph = HAL_GPDMA_UART3_TX,
-    },
-#endif
 #ifdef BT_UART
     {
         .base = (struct UART_T *)BT_UART_BASE,
@@ -113,11 +102,6 @@ static union HAL_UART_IRQ_T recv_mask[HAL_UART_ID_QTY];
 
 static enum UART_RX_DMA_MODE_T recv_dma_mode[HAL_UART_ID_QTY];
 
-#ifdef CORE_SLEEP_POWER_DOWN
-static bool uart_opened[HAL_UART_ID_QTY];
-static struct SAVED_UART_REGS_T saved_uart_regs[HAL_UART_ID_QTY];
-#endif
-
 static const char * const err_invalid_id = "Invalid UART ID: %d";
 static const char * const err_recv_dma_api = "%s: Set RT irq in hal_uart_dma_recv_mask... to avoid data lost";
 
@@ -142,16 +126,7 @@ static void set_baud_rate(enum HAL_UART_ID_T id, uint32_t rate)
     uint32_t ibrd, fbrd;
     uint32_t div;
     uint32_t over_sample_ratio;
-
-#ifdef UART_CLK_DIV_4
-    over_sample_ratio = 4;
-
-    uart[id].base->UARTOVSAMP = SET_BITFIELD(uart[id].base->UARTOVSAMP, UARTOVSAMP_RATIO, (over_sample_ratio - 1));
-    uart[id].base->UARTOVSAMPST = SET_BITFIELD(uart[id].base->UARTOVSAMPST, UARTOVSAMPST_START, 1);
-#else
     over_sample_ratio = 16;
-    // over sample start is 8
-#endif
 
     mod_clk = 0;
 #ifdef PERIPH_PLL_FREQ
@@ -170,10 +145,6 @@ static void set_baud_rate(enum HAL_UART_ID_T id, uint32_t rate)
 #if (CHIP_HAS_UART >= 3)
             } else if (id == HAL_UART_ID_2) {
                 hal_cmu_uart2_set_div(2);
-#endif
-#if (CHIP_HAS_UART >= 4)
-            } else if (id == HAL_UART_ID_3) {
-                hal_cmu_uart3_set_div(2);
 #endif
             }
         } else {
@@ -202,10 +173,6 @@ static void set_baud_rate(enum HAL_UART_ID_T id, uint32_t rate)
 #if (CHIP_HAS_UART >= 3)
         } else if (id == HAL_UART_ID_2) {
             hal_cmu_uart2_set_freq(periph_freq);
-#endif
-#if (CHIP_HAS_UART >= 4)
-        } else if (id == HAL_UART_ID_3) {
-            hal_cmu_uart3_set_freq(periph_freq);
 #endif
         }
     }
@@ -245,10 +212,6 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     if (cfg == NULL) {
         cfg = &default_cfg;
     }
-
-#ifdef CORE_SLEEP_POWER_DOWN
-    uart_opened[id] = true;
-#endif
 
     hal_cmu_clock_enable(uart[id].mod);
     hal_cmu_clock_enable(uart[id].apb);
@@ -330,7 +293,6 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     dmacr = 0;
 
     if (cfg->dma_rx) {
-        lcr |= UARTLCR_H_DMA_RT_EN;
         dmacr |= UARTDMACR_RXDMAE;
     }
     if (cfg->dma_tx) {
@@ -353,7 +315,6 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     uart[id].base->UARTICR = ~0UL;
     // Configure UART
     set_baud_rate(id, cfg->baud);
-    uart[id].base->UARTRXEXT = UARTRXEXT_BYPASS_HANDSHAKE | UARTRXEXT_USE_RXD_REG;
     uart[id].base->UARTLCR_H = lcr;
     uart[id].base->UARTDMACR = dmacr;
     uart[id].base->UARTIFLS = UARTIFLS_TXFIFO_LEVEL(cfg->tx_level) |
@@ -386,12 +347,7 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
         }
     }
 
-#ifdef CORE_SLEEP_POWER_DOWN
-    uart_opened[id] = true;
-#endif
-
     cr = uart[id].base->UARTCR & ~(UARTCR_RTSEN | UARTCR_CTSEN);
-    cr |= UARTCR_UARTEN | UARTCR_TXE | UARTCR_RXE;
 
     switch (cfg->flow) {
         case HAL_UART_FLOW_CONTROL_NONE:
@@ -411,11 +367,9 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
             break;
     }
 
-    lcr = uart[id].base->UARTLCR_H | UARTLCR_H_FEN;
     dmacr = 0;
 
     if (cfg->dma_rx) {
-        lcr |= UARTLCR_H_DMA_RT_EN;
         dmacr |= UARTDMACR_RXDMAE;
     }
     if (cfg->dma_tx) {
@@ -425,19 +379,7 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
         dmacr |= UARTDMACR_DMAONERR;
     }
 
-    // Disable UART
-    uart[id].base->UARTCR &= ~UARTCR_UARTEN;
-    // Empty FIFO
-    uart[id].base->UARTLCR_H &= ~UARTLCR_H_FEN;
-    // Wait until UART becomes idle
-    while (((uart[id].base->UARTFR) & UARTFR_BUSY) != 0);
-    // Clear previous errors
-    uart[id].base->UARTECR = 1;
-    // Clear previous IRQs
-    uart[id].base->UARTIMSC = 0;
-    uart[id].base->UARTICR = ~0UL;
     // Configure UART
-    uart[id].base->UARTLCR_H = lcr;
     uart[id].base->UARTDMACR = dmacr;
     uart[id].base->UARTCR = cr;
 
@@ -462,7 +404,6 @@ int hal_uart_close(enum HAL_UART_ID_T id)
         NVIC_DisableIRQ(uart[id].irq);
     }
 
-    if (init_done) {
         lock = int_lock();
         if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
             hal_gpdma_cancel(recv_dma_chan[id]);
@@ -475,7 +416,6 @@ int hal_uart_close(enum HAL_UART_ID_T id)
             send_dma_chan[id] = HAL_DMA_CHAN_NONE;
         }
         int_unlock(lock);
-    }
 
     // Disable UART
     uart[id].base->UARTCR &= ~UARTCR_UARTEN;
@@ -486,10 +426,6 @@ int hal_uart_close(enum HAL_UART_ID_T id)
     hal_cmu_reset_set(uart[id].mod);
     hal_cmu_clock_disable(uart[id].apb);
     hal_cmu_clock_disable(uart[id].mod);
-
-#ifdef CORE_SLEEP_POWER_DOWN
-    uart_opened[id] = false;
-#endif
 
     return 0;
 }
@@ -506,45 +442,6 @@ int hal_uart_opened(enum HAL_UART_ID_T id)
     }
     return 0;
 }
-
-#ifdef CORE_SLEEP_POWER_DOWN
-void hal_uart_sleep(void)
-{
-    enum HAL_UART_ID_T id;
-
-    for (id = 0; id < HAL_UART_ID_QTY; id++) {
-        if (uart_opened[id]) {
-            saved_uart_regs[id].UARTILPR    = uart[id].base->UARTILPR;
-            saved_uart_regs[id].UARTIBRD    = uart[id].base->UARTIBRD;
-            saved_uart_regs[id].UARTFBRD    = uart[id].base->UARTFBRD;
-            saved_uart_regs[id].UARTLCR_H   = uart[id].base->UARTLCR_H;
-            saved_uart_regs[id].UARTCR      = uart[id].base->UARTCR;
-            saved_uart_regs[id].UARTIFLS    = uart[id].base->UARTIFLS;
-            saved_uart_regs[id].UARTIMSC    = uart[id].base->UARTIMSC;
-            saved_uart_regs[id].UARTDMACR   = uart[id].base->UARTDMACR;
-        }
-    }
-}
-
-void hal_uart_wakeup(void)
-{
-    enum HAL_UART_ID_T id;
-
-    for (id = 0; id < HAL_UART_ID_QTY; id++) {
-        if (uart_opened[id]) {
-            uart[id].base->UARTCR       = 0;
-            uart[id].base->UARTILPR     = saved_uart_regs[id].UARTILPR;
-            uart[id].base->UARTIBRD     = saved_uart_regs[id].UARTIBRD;
-            uart[id].base->UARTFBRD     = saved_uart_regs[id].UARTFBRD;
-            uart[id].base->UARTLCR_H    = saved_uart_regs[id].UARTLCR_H;
-            uart[id].base->UARTIFLS     = saved_uart_regs[id].UARTIFLS;
-            uart[id].base->UARTIMSC     = saved_uart_regs[id].UARTIMSC;
-            uart[id].base->UARTDMACR    = saved_uart_regs[id].UARTDMACR;
-            uart[id].base->UARTCR       = saved_uart_regs[id].UARTCR;
-        }
-    }
-}
-#endif
 
 int hal_uart_change_baud_rate(enum HAL_UART_ID_T id, uint32_t rate)
 {
@@ -576,12 +473,8 @@ int hal_uart_pause(enum HAL_UART_ID_T id, enum HAL_UART_XFER_TYPE_T type)
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     if (hal_uart_opened(id)) {
         uint32_t val = 0;
-        if (type & HAL_UART_XFER_TYPE_TX) {
             val |= UARTCR_TXE;
-        }
-        if (type & HAL_UART_XFER_TYPE_RX) {
             val |= UARTCR_RXE;
-        }
         uart[id].base->UARTCR &= ~val;
         return 0;
     }
@@ -593,12 +486,8 @@ int hal_uart_continue(enum HAL_UART_ID_T id, enum HAL_UART_XFER_TYPE_T type)
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     if (hal_uart_opened(id)) {
         uint32_t val = 0;
-        if (type & HAL_UART_XFER_TYPE_TX) {
             val |= UARTCR_TXE;
-        }
-        if (type & HAL_UART_XFER_TYPE_RX) {
             val |= UARTCR_RXE;
-        }
         uart[id].base->UARTCR |= val;
         return 0;
     }
@@ -629,9 +518,7 @@ uint8_t hal_uart_getc(enum HAL_UART_ID_T id)
 int hal_uart_putc(enum HAL_UART_ID_T id, uint8_t c)
 {
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
-#if !defined(ARM_CMSE) && !defined(CP_BUILD) && !defined(__ARM_ARCH_ISA_ARM)
     ASSERT((uart[id].base->UARTDMACR & UARTDMACR_TXDMAE) == 0, "TX-DMA configured on UART %d", id);
-#endif
     uart[id].base->UARTDR = c;
     return 0;
 }
@@ -953,8 +840,6 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     uint32_t cnt;
     uint32_t i;
     enum HAL_DMA_PERIPH_T periph;
-    struct HAL_DMA_DESC_T desc_c1;
-    enum HAL_UART_FIFO_LEVEL_T rx_level;
     enum HAL_DMA_BSIZE_T src_bsize;
 
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
@@ -1028,9 +913,6 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
         if (*desc_cnt < cnt) {
             return -2;
         }
-    } else {
-        // Use desc in current stack
-        desc = &desc_c1;
     }
     if (desc_cnt) {
         *desc_cnt = (cnt == 1) ? 0 : cnt;
@@ -1041,22 +923,7 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     }
 
     periph = uart[id].rx_periph;
-    rx_level = GET_BITFIELD(uart[id].base->UARTIFLS, UARTIFLS_RXFIFO_LEVEL);
-    // WARNING: this config is used for uart fifo length 16
-    switch (rx_level) {
-        case HAL_UART_FIFO_LEVEL_1_4:
-            src_bsize = HAL_DMA_BSIZE_4;
-            break;
-        case HAL_UART_FIFO_LEVEL_1_2:
             src_bsize = HAL_DMA_BSIZE_8;
-            break;
-        case HAL_UART_FIFO_LEVEL_1_8:
-        case HAL_UART_FIFO_LEVEL_3_4:
-        case HAL_UART_FIFO_LEVEL_7_8:
-        default:
-            src_bsize = HAL_DMA_BSIZE_1;
-            break;
-    }
 
     memset(&dma_cfg, 0, sizeof(dma_cfg));
     dma_cfg.dst = (uint32_t)buf;
@@ -1433,18 +1300,12 @@ static void hal_uart_irq_handler(void)
 #include "stdarg.h"
 #include "stdio.h"
 
-#ifndef UART_PRINTF_ID
-#if (CHIP_HAS_UART >= 4) && (DEBUG_PORT == 4)
-#define UART_PRINTF_ID                  HAL_UART_ID_3
-#elif (CHIP_HAS_UART >= 3) && (DEBUG_PORT == 3)
-#define UART_PRINTF_ID                  HAL_UART_ID_2
 #elif (CHIP_HAS_UART >= 2) && (DEBUG_PORT == 2)
 #define UART_PRINTF_ID                  HAL_UART_ID_1
 #elif (DEBUG_PORT == 1)
 #define UART_PRINTF_ID                  HAL_UART_ID_0
 #else
 #define UART_PRINTF_ID                  HAL_UART_ID_QTY
-#endif
 #endif
 
 #ifndef TRACE_BAUD_RATE
@@ -1470,44 +1331,17 @@ int hal_uart_printf_init(void)
         .dma_rx_stop_on_err = false,
     };
 
-    if (0) {
     } else if (UART_PRINTF_ID == HAL_UART_ID_0) {
         hal_iomux_set_uart0();
-#if (CHIP_HAS_UART >= 2)
     } else if (UART_PRINTF_ID == HAL_UART_ID_1) {
         hal_iomux_set_uart1();
-#endif
-#if (CHIP_HAS_UART >= 3)
-    } else if (UART_PRINTF_ID == HAL_UART_ID_2) {
-        hal_iomux_set_uart2();
-#endif
-#if (CHIP_HAS_UART >= 4)
-    } else if (UART_PRINTF_ID == HAL_UART_ID_3) {
-        hal_iomux_set_uart3();
-#endif
-    } else {
-        return 0;
     }
-
      return hal_uart_open(UART_PRINTF_ID, &uart_cfg);
-}
-
-int hal_uart_get_port(void)
-{
-    return UART_PRINTF_ID;
 }
 
 void hal_uart_printf_output(const uint8_t *buf, uint32_t len)
 {
     uint32_t i;
-
-    if (UART_PRINTF_ID >= HAL_UART_ID_QTY) {
-        return;
-    }
-    if (!hal_uart_opened(UART_PRINTF_ID)) {
-        return;
-    }
-
     for (i = 0; i < len; i++) {
         hal_uart_blocked_putc(UART_PRINTF_ID, buf[i]);
     }
@@ -1537,10 +1371,4 @@ void hal_uart_printf(const char *fmt, ...)
     }
 }
 
-int hal_uart_dma_send_sync_cache(enum HAL_UART_ID_T id, const uint8_t *buf, uint32_t len,struct HAL_DMA_DESC_T *desc, uint32_t *desc_cnt)
-{
-    hal_cache_sync_all(HAL_CACHE_ID_D_CACHE);
-    hal_uart_dma_send(id,buf,len,desc,desc_cnt);
-    return 0;
-}
 #endif // CHIP_HAS_UART

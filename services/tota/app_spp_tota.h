@@ -15,8 +15,6 @@
 #ifndef __APP_SPP_TOTA_H__
 #define __APP_SPP_TOTA_H__
 
-#include "me_api.h"
-
 #define TOTA_SPP_ID                  0
 #define TOTA_SPP_MAX_PACKET_SIZE     666
 #define TOTA_SPP_MAX_PACKET_NUM      5
@@ -35,6 +33,5 @@ void app_tota_send_data_via_spp(uint8_t* ptrData, uint32_t length);
 uint16_t app_spp_tota_tx_buf_size(void);
 void app_spp_tota_init_tx_buf(uint8_t* ptr);
 
-void app_spp_tota_client_open(btif_remote_device_t *remDev);
 
 #endif

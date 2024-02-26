@@ -24,7 +24,6 @@ extern "C" {
 extern btif_avdtp_codec_t a2dp_avdtpcodec;
 extern const unsigned char a2dp_codec_elements[];
 bt_status_t a2dp_codec_sbc_init(int index);
-void a2dp_codec_sbc_common_init(void);
 
 #if defined(__cplusplus)
 }

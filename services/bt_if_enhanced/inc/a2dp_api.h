@@ -197,12 +197,6 @@ typedef uint8_t btif_a2dp_event_t;
 
 #define BTIF_A2DP_EVENT_STREAM_STARTED_MOCK      29
 
-#define BTIF_A2DP_REMOTE_NOT_SUPPORT             30
-
-#define BTIF_A2DP_EVENT_STREAM_OPEN_MOCK         31
-
-#define BTIF_A2DP_EVENT_CODEC_INFO_MOCK          32
-
 //user define @biao
 #define BTIF_A2DP_EVENT_AVDTP_CLOSE_IND          81
 #define BTIF_A2DP_EVENT_AVDTP_DISCOVER_IND       82
@@ -366,8 +360,6 @@ typedef struct {
     I8 status;
     btif_a2dp_error_t error;
     btif_a2dp_error_t discReason;
-    bool a2dp_closed_due_to_sdp_fail;
-    bool start_stream_already_sent;
     union {
         btif_avdtp_content_prot_t *cp;
         btif_avdtp_codec_t *codec;
@@ -386,7 +378,6 @@ typedef struct {
         a2dp_stream_t    *dstStream;  /* Stream to switch */
     } p;
     btif_remote_device_t   *remDev;
-    bt_bdaddr_t remote;
 } btif_a2dp_callback_parms_t;
 
 typedef struct {
@@ -398,7 +389,6 @@ typedef struct {
     bool free;
     uint8_t state;
     a2dp_stream_t *a2dp_stream; //stack A2dpStream  object
-    btif_avdtp_codec_t *prev_conn_codec;
 } btif_a2dp_stream_t;
 
 
@@ -416,16 +406,12 @@ extern "C" {
     uint16_t btif_avdtp_parse_mediaHeader(btif_media_header_t * header,
                                           btif_a2dp_callback_parms_t * Info, uint8_t avdtp_cp);
 
-    uint16_t btif_a2dp_stream_get_media_mtu(a2dp_stream_t *stream);
 
     void a2dp_set_config_codec(btif_avdtp_codec_t * config_codec,
                                const btif_a2dp_callback_parms_t * Info);
 
     void btif_a2dp_stream_init(btif_a2dp_stream_t *Stream, btif_a2dp_endpoint_type_t stream_type);
 
-    void btif_a2dp_disable_aac_codec(uint32_t disable);
-
-    void btif_a2dp_disable_vendor_codec(uint32_t disable);
 
     bt_status_t btif_a2dp_register(btif_a2dp_stream_t *Stream,
                                    btif_a2dp_endpoint_type_t sep_type,
@@ -489,8 +475,6 @@ extern "C" {
                                           btif_avdtp_codec_t * codec_cfg,
                                           btif_avdtp_content_prot_t * cp);
 
-    void btif_a2dp_reconfig_codec_to_sbc(a2dp_stream_t *Stream);
-
     uint8_t btif_a2dp_security_control_req(a2dp_stream_t *stream, uint8_t *data, uint16_t len);
     uint8_t btif_a2dp_security_control_rsp(a2dp_stream_t *stream,uint8_t* data,uint16_t len, uint8_t error);
 
@@ -525,7 +509,6 @@ extern "C" {
     BOOL btif_a2dp_is_stream_device_has_delay_reporting(a2dp_stream_t * Stream);
 
     btif_avdtp_codec_t *btif_a2dp_get_stream_codec(a2dp_stream_t * Stream);
-    btif_avdtp_codec_t *btif_a2dp_get_stream_codec_from_id(uint8_t device_id);
 
     uint16_t btif_a2dp_get_stream_conn_remDev_hciHandle(a2dp_stream_t * Stream);
 
@@ -537,12 +520,6 @@ extern "C" {
                                                  btif_a2dp_sbc_packet_t * Packet,
                                                  btif_sbc_stream_info_short_t * StreamInfo);
 
-    bt_status_t btif_a2dp_stream_send_aac_packet(a2dp_stream_t *stream,
-                                                            btif_a2dp_sbc_packet_t *Packet,
-                                                            btif_sbc_stream_info_short_t *StreamInfo);
-    bt_status_t btif_a2dp_stream_send_lhdc_packet(a2dp_stream_t *stream,
-            btif_a2dp_sbc_packet_t *Packet,
-            btif_sbc_stream_info_short_t *StreamInfo);
     void btif_a2dp_sync_avdtp_streaming_state(bt_bdaddr_t *addr);
 
     void btif_app_a2dp_source_init(void);
@@ -565,19 +542,15 @@ extern "C" {
 
     uint8_t btif_a2dp_confirm_stream_state(a2dp_stream_t *Stream, uint8_t old_state, uint8_t new_state);
 
-    void btif_a2dp_accept_stream_request_command(bt_bdaddr_t* remote, uint8_t transaction, uint8_t signal_id);
 
-    void btif_a2dp_set_stream_command_accept_pack_callback(int (*cb)(void* remote, uint8_t transaction, uint8_t signal_id));
 
     btif_remote_device_t *btif_a2dp_get_remote_device_from_cbparms(a2dp_stream_t *Stream, const a2dp_callback_parms_t *info);
 
     btif_avdtp_codec_type_t btif_a2dp_get_codec_type(const a2dp_callback_parms_t *info);
 
-    void btif_a2dp_register_multi_link_connect_not_allowed_callback(bool (*cb)(uint8_t device_id));
 
     void btif_a2dp_set_codec_info_func(void (*func)(uint8_t dev_num, const uint8_t *codec));
     void btif_a2dp_get_codec_info_func(void (*func)(uint8_t dev_num, uint8_t *codec));
-    bool btif_a2dp_is_profile_initiator(bt_bdaddr_t* remote);
 
 #if defined(IBRT)
     void btif_a2dp_set_codec_info(uint8_t dev_num, const uint8_t *codec);
@@ -586,7 +559,6 @@ extern "C" {
     uint32_t btif_a2dp_profile_restore_ctx(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint32_t buf_len);
     uint8_t btif_a2dp_is_critical_avdtp_cmd_handling(void);
     void btif_a2dp_critical_avdtp_cmd_timeout(void);
-void btif_a2dp_force_disconnect_a2dp_profile(uint8_t device_id,uint8_t reason);
 #endif /* IBRT */
 
     /* Callout functions, do not call directly */

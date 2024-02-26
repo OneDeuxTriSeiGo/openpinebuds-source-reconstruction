@@ -10,8 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ifneq ($(GEN_SDK_LIB_SERVICE),1)
-
 obj-y += audio_dump/ \
          audioflinger/ \
          audio_process/ \
@@ -83,14 +81,6 @@ endif
 
 ifeq ($(TEST_OVER_THE_AIR),1)
 obj-y += tota/
-endif
-
-ifneq ($(filter 1, $(BES_OTA) $(AI_OTA) $(GMA_VOICE)),)
-ifeq ($(FPGA_IBRT_OTA),1)
-obj-y += fpga_ibrt_ota/
-else
-obj-y += ota/
-endif
 endif
 
 ifneq ($(filter 1, $(BES_OTA) $(AI_OTA) $(BES_OTA_BASIC)),)

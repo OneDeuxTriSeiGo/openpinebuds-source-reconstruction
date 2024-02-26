@@ -48,7 +48,6 @@ typedef struct {
     uint16_t promptPram;
     uint32_t sampleRate;
     uint32_t trigger_time;
-    bt_bdaddr_t remote;
 }APP_TWS_CMD_MIX_PROMPT_SYNC_T;
 
 #endif
@@ -57,7 +56,6 @@ typedef struct
 {
     uint8_t                 dev_id;
     uint16_t                voicePrompt;
-    uint16_t                prompt_type;
 } app_tws_voice_prompt_to_play_t;
 
 #define IS_IGNORME_SBC_FRAME_HEADER             (1)
@@ -69,31 +67,15 @@ typedef struct
 #define AUDIO_PROMPT_SBC_BLOCK_SIZE             40
 #define AUDIO_PROMPT_SBC_SIZE_PER_SAMPLE        (2)// 16 bits, 1 channel
 
-#if 1    // by default it's 16000 sample rate
-// Set this macro to 8000 if you want to use 8k sample rate ringtone
 #define AUDIO_PROMPT_SBC_SAMPLE_RATE_VALUE      16000
 
 #define AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE     (512)
-#if (AUDIO_PROMPT_SBC_SAMPLE_RATE_VALUE == 8000)
 #define AUDIO_PROMPT_TARGET_PCM_BUFFER_SIZE     (AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE*4)
-#else
-#define AUDIO_PROMPT_TARGET_PCM_BUFFER_SIZE     (AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE*2)
-#endif
 #define AUDIO_PROMPT_PCM_BUFFER_SIZE            (AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE*4)
 
 #define AUDIO_PROMPT_SBC_FRAME_PERIOD_IN_MS     (24)
 
 #define AUDIO_PROMPT_SBC_PCM_DATA_SIZE_PER_FRAME        256
-#else
-#define AUDIO_PROMPT_SBC_SAMPLE_RATE_VALUE      48000  // could be changed to 32000 or 48000 if needed
-
-#define AUDIO_PROMPT_SBC_FRAME_PERIOD_IN_MS     32
-
-#define AUDIO_PROMPT_SBC_PCM_DATA_SIZE_PER_FRAME        512
-#define AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE     (1024)
-#define AUDIO_PROMPT_TARGET_PCM_BUFFER_SIZE     (AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE*2)
-#define AUDIO_PROMPT_PCM_BUFFER_SIZE            (AUDIO_PROMPT_SOURCE_PCM_BUFFER_SIZE*4)
-#endif
 
 #define AUDIO_PROMPT_PCM_FILL_UNIT_SIZE                 (AUDIO_PROMPT_SBC_PCM_DATA_SIZE_PER_FRAME*2)
 
@@ -138,11 +120,6 @@ uint32_t audio_prompt_get_sample_rate(void);
 void tws_playback_ticks_check_for_mix_prompt(uint8_t device_id);
 void app_tws_cmd_sync_mix_prompt_req_handler(uint8_t *ptrParam, uint16_t paramLen);
 #endif
-
-void app_tws_cmd_prompt_play_req_handler(uint8_t *ptrParam, uint32_t paramLen);
-
-bool app_tws_let_peer_device_play_audio_prompt(uint16_t promptId,
-    uint16_t aud_param, uint8_t dev_id);
 
 bool audio_prompt_clear_pending_stream(uint8_t op);
 

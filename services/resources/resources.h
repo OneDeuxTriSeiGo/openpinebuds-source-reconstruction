@@ -14,7 +14,6 @@
  */
 #ifndef __RESOURCES_H__
 #define __RESOURCES_H__
-#include "plat_types.h"
 
 typedef enum {
     AUD_ID_INVALID  = -1,

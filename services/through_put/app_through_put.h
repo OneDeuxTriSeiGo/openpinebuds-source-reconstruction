@@ -56,7 +56,6 @@ typedef struct
 {
     bool        isThroughputTestOn;
     uint8_t     conidx;
-    uint8_t     testAiIndex;
 } THROUGHPUT_TEST_ENV_T;
 
 typedef struct

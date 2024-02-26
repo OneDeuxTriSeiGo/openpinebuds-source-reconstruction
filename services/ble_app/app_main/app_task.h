@@ -72,15 +72,12 @@ enum appm_state
     APPM_CONNECTING,
     /// Connected state
     APPM_CONNECTED,
-    //Connection Encryption
-    APPM_ENCRYPTED,
     /// Number of defined states.
     APPM_STATE_MAX
 };
 
 
 /// APP Task messages
-/*@TRACE*/
 enum app_msg_id
 {
     APPM_DUMMY_MSG = TASK_FIRST_MSG(TASK_ID_APP),
@@ -92,30 +89,14 @@ enum app_msg_id
 
     #if (BLE_APP_HID)
     /// Timer used to disconnect the moue if no activity is detecter
-    APP_HID_RELEASE_TIMER,
-    /// Timer used to disconnect the moue if no activity is detecter
     APP_HID_MOUSE_TIMEOUT_TIMER,
     #endif //(BLE_APP_HID)
 };
 
 
-/*
- * GLOBAL VARIABLE DECLARATIONS
- ****************************************************************************************
- */
 
 /// @} APPTASK
 
 #endif //(BLE_APP_PRESENT)
-
-#ifdef USE_BT_ADAPTER
-#include "app_ble_mode_switch.h"
-
-typedef void (*app_ble_connect_cb_t)(int8_t connId, ble_bdaddr_t *bleAddr);
-void app_ble_connect_callback_register(app_ble_connect_cb_t req_cb, app_ble_connect_cb_t done_cb);
-void app_ble_connect_callback_deregister(void);
-void app_set_accept_ble_state(uint8_t acceptState);
-void app_set_authen_level(uint8_t authLevel);
-#endif
 
 #endif // APP_TASK_H_

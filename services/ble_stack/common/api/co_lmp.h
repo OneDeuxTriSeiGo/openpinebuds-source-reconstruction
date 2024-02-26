@@ -34,7 +34,6 @@
  */
 
 /// LMP Opcodes
-/*@TRACE*/
 
 /// PDU lengths (including opcode)
 enum co_lmp_pdu_length
@@ -163,9 +162,6 @@ enum lmp_opcode_trid
  */
 
 ///LMP_name_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_name_req
 {
     ///Opcode (including transaction ID)
@@ -175,9 +171,6 @@ struct lmp_name_req
 };
 
 ///LMP_name_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_name_res
 {
     ///Opcode (including transaction ID)
@@ -191,9 +184,6 @@ struct lmp_name_res
 };
 
 ///LMP_accepted PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_accepted
 {
     ///Opcode (including transaction ID)
@@ -203,9 +193,6 @@ struct lmp_accepted
 };
 
 ///LMP_not_accepted PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_not_accepted
 {
     ///Opcode (including transaction ID)
@@ -217,9 +204,6 @@ struct lmp_not_accepted
 };
 
 ///LMP_clkoffset_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_clk_off_req
 {
     ///Opcode (including transaction ID)
@@ -227,9 +211,6 @@ struct lmp_clk_off_req
 };
 
 ///LMP_clkoffset_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_clk_off_res
 {
     ///Opcode (including transaction ID)
@@ -239,9 +220,6 @@ struct lmp_clk_off_res
 };
 
 ///LMP_detach PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_detach
 {
     ///Opcode (including transaction ID)
@@ -251,9 +229,6 @@ struct lmp_detach
 };
 
 ///LMP_in_rand PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_inrand
 {
     ///Opcode (including transaction ID)
@@ -263,9 +238,6 @@ struct lmp_inrand
 };
 
 ///LMP_comb_key PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_combkey
 {
     ///Opcode (including transaction ID)
@@ -275,9 +247,6 @@ struct lmp_combkey
 };
 
 ///LMP_unit_key PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_unitkey
 {
     ///Opcode (including transaction ID)
@@ -287,9 +256,6 @@ struct lmp_unitkey
 };
 
 ///LMP_au_rand PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_aurand
 {
     ///Opcode (including transaction ID)
@@ -299,9 +265,6 @@ struct lmp_aurand
 };
 
 ///LMP_sres PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_sres
 {
     ///Opcode (including transaction ID)
@@ -311,9 +274,6 @@ struct lmp_sres
 };
 
 ///LMP_temp_rand PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_temprand
 {
     ///Opcode (including transaction ID)
@@ -323,9 +283,6 @@ struct lmp_temprand
 };
 
 ///LMP_temp_key PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_tempkey
 {
     ///Opcode (including transaction ID)
@@ -335,9 +292,6 @@ struct lmp_tempkey
 };
 
 ///LMP_encryption_mode_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_enc_mode_req
 {
     ///Opcode (including transaction ID)
@@ -347,9 +301,6 @@ struct lmp_enc_mode_req
 };
 
 ///LMP_encryption_key_size_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_enc_key_size_req
 {
     ///Opcode (including transaction ID)
@@ -359,9 +310,6 @@ struct lmp_enc_key_size_req
 };
 
 ///LMP_start_encryption_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_start_enc_req
 {
     ///Opcode (including transaction ID)
@@ -371,9 +319,6 @@ struct lmp_start_enc_req
 };
 
 ///LMP_stop_encryption_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_stop_enc_req
 {
     ///Opcode (including transaction ID)
@@ -381,9 +326,6 @@ struct lmp_stop_enc_req
 };
 
 ///LMP_switch_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_switch_req
 {
     ///Opcode (including transaction ID)
@@ -393,9 +335,6 @@ struct lmp_switch_req
 };
 
 ///LMP_sniff_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_sniff_req
 {
     ///Opcode (including transaction ID)
@@ -413,9 +352,6 @@ struct lmp_sniff_req
 };
 
 ///LMP_unsniff_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_unsniff_req
 {
     ///Opcode (including transaction ID)
@@ -423,9 +359,6 @@ struct lmp_unsniff_req
 };
 
 ///LMP_incr_power_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_incr_pwr_req
 {
     ///Opcode (including transaction ID)
@@ -435,9 +368,6 @@ struct lmp_incr_pwr_req
 };
 
 ///LMP_decr_power_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_decr_pwr_req
 {
     ///Opcode (including transaction ID)
@@ -447,9 +377,6 @@ struct lmp_decr_pwr_req
 };
 
 ///LMP_max_power PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_max_pwr
 {
     ///Opcode (including transaction ID)
@@ -457,9 +384,6 @@ struct lmp_max_pwr
 };
 
 ///LMP_min_power PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_min_pwr
 {
     ///Opcode (including transaction ID)
@@ -467,9 +391,6 @@ struct lmp_min_pwr
 };
 
 ///LMP_auto_rate PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_auto_rate
 {
     ///Opcode (including transaction ID)
@@ -477,9 +398,6 @@ struct lmp_auto_rate
 };
 
 ///LMP_preferred_rate PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_pref_rate
 {
     ///Opcode (including transaction ID)
@@ -489,9 +407,6 @@ struct lmp_pref_rate
 };
 
 ///LMP_version_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ver_req
 {
     ///Opcode (including transaction ID)
@@ -505,9 +420,6 @@ struct lmp_ver_req
 };
 
 ///LMP_version_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ver_res
 {
     ///Opcode (including transaction ID)
@@ -521,9 +433,6 @@ struct lmp_ver_res
 };
 
 ///LMP_features_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_feats_req
 {
     ///Opcode (including transaction ID)
@@ -533,9 +442,6 @@ struct lmp_feats_req
 };
 
 ///LMP_features_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_feats_res
 {
     ///Opcode (including transaction ID)
@@ -545,9 +451,6 @@ struct lmp_feats_res
 };
 
 ///LMP_quality_of_service PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_qos
 {
     ///Opcode (including transaction ID)
@@ -560,9 +463,6 @@ struct lmp_qos
 
 
 ///LMP_quality_of_service_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_qos_req
 {
     ///Opcode (including transaction ID)
@@ -574,9 +474,6 @@ struct lmp_qos_req
 };
 
 ///LMP_SCO_link_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_sco_link_req
 {
     ///Opcode (including transaction ID)
@@ -596,9 +493,6 @@ struct lmp_sco_link_req
 };
 
 ///LMP_remove_SCO_link_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_rmv_sco_link_req
 {
     ///Opcode (including transaction ID)
@@ -610,9 +504,6 @@ struct lmp_rmv_sco_link_req
 };
 
 ///LMP_max_slot PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_max_slot
 {
     ///Opcode (including transaction ID)
@@ -623,9 +514,6 @@ struct lmp_max_slot
 
 
 ///LMP_max_slot_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_max_slot_req
 {
     ///Opcode (including transaction ID)
@@ -635,9 +523,6 @@ struct lmp_max_slot_req
 };
 
 ///LMP_timing_accuracy_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_timing_accu_req
 {
     ///Opcode (including transaction ID)
@@ -645,9 +530,6 @@ struct lmp_timing_accu_req
 };
 
 ///LMP_timing_accuracy_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_timing_accu_res
 {
     ///Opcode (including transaction ID)
@@ -659,9 +541,6 @@ struct lmp_timing_accu_res
 };
 
 ///LMP_setup_complete PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_setup_cmp
 {
     ///Opcode (including transaction ID)
@@ -669,9 +548,6 @@ struct lmp_setup_cmp
 };
 
 ///LMP_use_semi_permanent_key PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_use_semi_perm_key
 {
     ///Opcode (including transaction ID)
@@ -679,9 +555,6 @@ struct lmp_use_semi_perm_key
 };
 
 ///LMP_host_connection_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_host_con_req
 {
     ///Opcode (including transaction ID)
@@ -689,9 +562,6 @@ struct lmp_host_con_req
 };
 
 ///LMP_slot_offset PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_slot_off
 {
     ///Opcode (including transaction ID)
@@ -703,9 +573,6 @@ struct lmp_slot_off
 };
 
 ///LMP_page_mode_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_page_mode_req
 {
     ///Opcode (including transaction ID)
@@ -717,9 +584,6 @@ struct lmp_page_mode_req
 };
 
 ///LMP_page_scan_mode_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_page_scan_mode_req
 {
     ///Opcode (including transaction ID)
@@ -731,9 +595,6 @@ struct lmp_page_scan_mode_req
 };
 
 ///LMP_supervision_timeout PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_supv_to
 {
     ///Opcode (including transaction ID)
@@ -743,9 +604,6 @@ struct lmp_supv_to
 };
 
 ///LMP_test_activate PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_test_activate
 {
     ///Opcode (including transaction ID)
@@ -753,9 +611,6 @@ struct lmp_test_activate
 };
 
 ///LMP_test_control PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_test_ctrl
 {
     ///Opcode (including transaction ID)
@@ -779,9 +634,6 @@ struct lmp_test_ctrl
 };
 
 ///LMP_encryption_key_size_mask_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_enc_key_size_mask_req
 {
     ///Opcode (including transaction ID)
@@ -789,9 +641,6 @@ struct lmp_enc_key_size_mask_req
 };
 
 ///LMP_encryption_key_size_mask_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_enc_key_size_mask_res
 {
     ///Opcode (including transaction ID)
@@ -801,9 +650,6 @@ struct lmp_enc_key_size_mask_res
 };
 
 ///LMP_set_AFH PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_set_afh
 {
     ///Opcode (including transaction ID)
@@ -817,9 +663,6 @@ struct lmp_set_afh
 };
 
 ///LMP_encapsulated_header PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_encaps_hdr
 {
     ///Opcode (including transaction ID)
@@ -833,9 +676,6 @@ struct lmp_encaps_hdr
 };
 
 ///LMP_encapsulated_payload PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_encaps_payl
 {
     ///Opcode (including transaction ID)
@@ -845,9 +685,6 @@ struct lmp_encaps_payl
 };
 
 ///LMP_Simple_Pairing_Confirm PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_sp_cfm
 {
     ///Opcode (including transaction ID)
@@ -857,9 +694,6 @@ struct lmp_sp_cfm
 };
 
 ///LMP_Simple_Pairing_Number PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_sp_nb
 {
     ///Opcode (including transaction ID)
@@ -869,9 +703,6 @@ struct lmp_sp_nb
 };
 
 ///LMP_DHkey_check PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_dhkey_chk
 {
     ///Opcode (including transaction ID)
@@ -881,9 +712,6 @@ struct lmp_dhkey_chk
 };
 
 ///LMP_pause_encryption_aes_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_pause_enc_aes_req
 {
     ///Opcode (including transaction ID)
@@ -897,9 +725,6 @@ struct lmp_pause_enc_aes_req
  ****************************************************************************************/
 
 ///LMP_accepted_ext PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_accepted_ext
 {
     ///Opcode (including transaction ID)
@@ -913,9 +738,6 @@ struct lmp_accepted_ext
 };
 
 ///LMP_not_accepted_ext PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_not_accepted_ext
 {
     ///Opcode (including transaction ID)
@@ -931,9 +753,6 @@ struct lmp_not_accepted_ext
 };
 
 ///LMP_features_req_ext PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_feats_req_ext
 {
     ///Opcode (including transaction ID)
@@ -949,9 +768,6 @@ struct lmp_feats_req_ext
 };
 
 ///LMP_features_res_ext PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_feats_res_ext
 {
     ///Opcode (including transaction ID)
@@ -967,9 +783,6 @@ struct lmp_feats_res_ext
 };
 
 ///LMP_clk_adj PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_clk_adj
 {
     ///Opcode (including transaction ID)
@@ -991,9 +804,6 @@ struct lmp_clk_adj
 };
 
 ///LMP_clk_adj_ack PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_clk_adj_ack
 {
     ///Opcode (including transaction ID)
@@ -1005,9 +815,6 @@ struct lmp_clk_adj_ack
 };
 
 ///LMP_clk_adj_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_clk_adj_req
 {
     ///Opcode (including transaction ID)
@@ -1023,9 +830,6 @@ struct lmp_clk_adj_req
 };
 
 ///LMP_packet_type_table_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_pkt_type_tbl_req
 {
     ///Opcode (including transaction ID)
@@ -1036,57 +840,7 @@ struct lmp_pkt_type_tbl_req
     uint8_t  pkt_type_tbl;
 };
 
-///LMP_SAM_define_map PDU structure
-struct lmp_sam_define_map
-{
-    ///Opcode (including transaction ID)
-    uint8_t opcode;
-    ///Extended opcode
-    uint8_t ext_opcode;
-    ///SAM Index
-    uint8_t index;
-    ///Tsam-sm
-    uint8_t t_sam_sm;
-    ///Nsam-sm
-    uint8_t n_sam_sm;
-    ///SAM Submaps
-    struct sam_submaps submaps;
-};
-
-///LMP_SAM_set_type0 PDU structure
-struct lmp_sam_set_type0
-{
-    ///Opcode (including transaction ID)
-    uint8_t opcode;
-    ///Extended opcode
-    uint8_t ext_opcode;
-    ///Update mode
-    uint8_t update_mode;
-    ///SAM Type0 submap
-    struct sam_type0_submap submap;
-};
-
-///LMP_SAM_switch PDU structure
-struct lmp_sam_switch
-{
-    ///Opcode (including transaction ID)
-    uint8_t opcode;
-    ///Extended opcode
-    uint8_t ext_opcode;
-    ///SAM Index
-    uint8_t index;
-    ///timing control flags
-    uint8_t flags;
-    ///Dsam
-    uint8_t d_sam;
-    ///SAM instant
-    uint32_t instant;
-};
-
 ///LMP_eSCO_link_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_esco_link_req
 {
     ///Opcode (including transaction ID)
@@ -1120,9 +874,6 @@ struct lmp_esco_link_req
 };
 
 ///LMP_remove_eSCO_link_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_rmv_esco_link_req
 {
     ///Opcode (including transaction ID)
@@ -1136,9 +887,6 @@ struct lmp_rmv_esco_link_req
 };
 
 ///LMP_channel_classification_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ch_class_req
 {
     ///Opcode (including transaction ID)
@@ -1154,9 +902,6 @@ struct lmp_ch_class_req
 };
 
 ///LMP_channel_classification PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ch_class
 {
     ///Opcode (including transaction ID)
@@ -1168,9 +913,6 @@ struct lmp_ch_class
 };
 
 ///LMP_sniff_subrating_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ssr_req
 {
     ///Opcode (including transaction ID)
@@ -1186,9 +928,6 @@ struct lmp_ssr_req
 };
 
 ///LMP_sniff_subrating_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ssr_res
 {
     ///Opcode (including transaction ID)
@@ -1204,9 +943,6 @@ struct lmp_ssr_res
 };
 
 ///LMP_pause_encryption_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_pause_enc_req
 {
     ///Opcode (including transaction ID)
@@ -1216,9 +952,6 @@ struct lmp_pause_enc_req
 };
 
 ///LMP_resume_encryption_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_resume_enc_req
 {
     ///Opcode (including transaction ID)
@@ -1228,9 +961,6 @@ struct lmp_resume_enc_req
 };
 
 ///LMP_IO_capability_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_io_cap_req
 {
     ///Opcode (including transaction ID)
@@ -1247,9 +977,6 @@ struct lmp_io_cap_req
 
 
 ///LMP_IO_capability_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_io_cap_res
 {
     ///Opcode (including transaction ID)
@@ -1265,9 +992,6 @@ struct lmp_io_cap_res
 };
 
 ///LMP_numeric_comparison_failed PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_num_comparison_fail
 {
     ///Opcode (including transaction ID)
@@ -1277,9 +1001,6 @@ struct lmp_num_comparison_fail
 };
 
 ///LMP_passkey_failed PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_passkey_fail
 {
     ///Opcode (including transaction ID)
@@ -1289,9 +1010,6 @@ struct lmp_passkey_fail
 };
 
 ///LMP_oob_failed PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_oob_fail
 {
     ///Opcode (including transaction ID)
@@ -1301,9 +1019,6 @@ struct lmp_oob_fail
 };
 
 ///LMP_keypress_notification PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_keypress_notif
 {
     ///Opcode (including transaction ID)
@@ -1315,9 +1030,6 @@ struct lmp_keypress_notif
 };
 
 ///LMP_power_control_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_pwr_ctrl_req
 {
     ///Opcode (including transaction ID)
@@ -1330,9 +1042,6 @@ struct lmp_pwr_ctrl_req
 };
 
 ///LMP_power_control_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_pwr_ctrl_res
 {
     ///Opcode (including transaction ID)
@@ -1344,9 +1053,6 @@ struct lmp_pwr_ctrl_res
 };
 
 /// LMP_ping_req PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ping_req
 {
     ///Opcode (including transaction ID)
@@ -1356,9 +1062,6 @@ struct lmp_ping_req
 };
 
 /// LMP_ping_res PDU structure
-/*@TRACE
- * @NO_PAD
-*/
 struct lmp_ping_res
 {
     ///Opcode (including transaction ID)
@@ -1434,9 +1137,6 @@ union lmp_pdu
     struct lmp_feats_req_ext           feats_req_ext         ;
     struct lmp_feats_res_ext           feats_res_ext         ;
     struct lmp_pkt_type_tbl_req        pkt_type_tbl_req      ;
-    struct lmp_sam_define_map          sam_define_map        ;
-    struct lmp_sam_set_type0           sam_set_type0         ;
-    struct lmp_sam_switch              sam_switch            ;
     struct lmp_esco_link_req           esco_link_req         ;
     struct lmp_rmv_esco_link_req       rmv_esco_link_req     ;
     struct lmp_ch_class_req            ch_class_req          ;

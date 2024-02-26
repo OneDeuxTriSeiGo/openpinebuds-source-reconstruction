@@ -19,8 +19,6 @@
 #include "app_ble_core.h"
 #include "app_ble_mode_switch.h"
 #include "app_ble_customif.h"
-#include "app_ble_custom_api.h"
-#include "app_ble_evt_mediator.h"
 
 #ifdef __cplusplus
 extern "C" {

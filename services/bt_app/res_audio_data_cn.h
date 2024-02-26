@@ -149,10 +149,4 @@ const uint8_t CN_BT_FINDME[] = {
 #include "res/cn/SOUND_FINDME.txt"
 };
 #endif
-
-/*doesn't have chinese version sound mute */
-const uint8_t CN_BT_MUTE[] = {
-#include "res/SOUND_MUTE.txt"
-};
-
 #endif

@@ -16,7 +16,6 @@
 #define RWBLE_HL_H_
 
 #include <stdint.h>
-#include <stdbool.h>                // standard boolean definitions
 /**
  ****************************************************************************************
  * @addtogroup ROOT
@@ -44,8 +43,6 @@
 /**
  ****************************************************************************************
  * @brief Initialize the BLE Host stack.
- *
- * @param[in] init_type  Type of initialization (@see enum rwip_init_type)
  ****************************************************************************************
  */
 void rwble_hl_init(uint8_t init_type);

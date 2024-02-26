@@ -321,11 +321,6 @@ typedef uint8_t btif_error_code_t;
 #define BTIF_BEC_SDP_INTERNAL_ERR     0xd4
 #define BTIF_BEC_STORE_LINK_KEY_ERR   0xe0
 
-//BES vendor error code
-#define BTIF_BEC_BT_LINK_REAL_DISCONNECTED 0xb8
-#define BTIF_BEC_BT_CANCEL_PAGE       0xb9
-#define BTIF_BEC_BT_DISCONNECT_ITSELF 0xba
-
 typedef uint32_t btif_iac_t;
 
 #define BTIF_BT_IAC_GIAC 0x9E8B33   /* General/Unlimited Inquiry Access Code */
@@ -636,10 +631,6 @@ typedef uint32_t btif_class_of_device_t;
 #define  BTIF_EVT_ERROR_SCO_UNKNOWN       (0xE8)
 #define  BTIF_EVT_ERROR_ACL_UNKNOWN       (0xE9)
 
-//RX filter typpe
-#define BTIF_BTM_RX_FILTER_HCI_TYPE   (0x01)
-#define BTIF_BTM_RX_FILTER_L2C_TYPE   (0x02)
-
 
 typedef struct {
     list_entry_t node;
@@ -746,17 +737,9 @@ typedef struct {
 typedef struct {
     bt_bdaddr_t bdAddr;
     bool trusted;
-    bool for_bt_source;
     uint8_t linkKey[16];
     btif_link_key_type_t keyType;
     uint8_t pinLen;
-#ifdef _SUPPORT_REMOTE_COD_
-    uint8_t cod[3];
-#endif
-#ifdef LINK_KEY_ENCRYPT_BY_CUSTOMER
-    uint8_t encryptlinkKey[32];
-    uint8_t encryptrandom[12];
-#endif
 } btif_device_record_t;
 
 typedef struct {
@@ -828,12 +811,6 @@ typedef struct
     U8   psMode;
     U16  clockOffset;
 } bt_page_scanInfo_t;
-
-struct dbg_send_prefer_rate
-{
-    uint16_t conhdl;
-    uint8_t rate;
-};
 
 typedef struct
 {
@@ -941,13 +918,6 @@ typedef struct
             U8              maxSlot;
         } maxSlotChanged;
 
-        /* Information for BTEVENT_CONN_PACKET_TYPE_CHNG */
-        struct
-        {
-            U16 connHandle;
-            U16 packetType;
-        } packetTypeChanged;
-
         /* Information for BTEVENT_QOS_SETUP_COMPLETE */
         struct
         {
@@ -1052,7 +1022,6 @@ typedef struct
              * ignored.
              */
             btif_error_code_t status;
-            U8 device_id;
         } disconnect;
 
         /* Result for the BTEVENT_SCO_DATA_CNF event */
@@ -1072,7 +1041,6 @@ typedef struct
             U16             scoHandle;  /* SCO Connection handle for HCI */
             void   *scoCon;     /* SCO connection */
             U8      scoLinkType;/* SCO link type */
-            U8      device_id;  /* Belong device id */
             void   *scoTxParms; /* Pointer to eSCO TX parameters */
             void   *scoRxParms; /* Pointer to eSCO RX parameters */
         } scoConnect;
@@ -1130,7 +1098,6 @@ typedef struct
         {
             uint8_t status;
             bt_bdaddr_t bdAddr; /* Address of the device sending the keypress */
-            uint8_t name[248];
         } name_rsp;
         struct
         {
@@ -1159,7 +1126,6 @@ void btif_me_set_sniffer_env(uint8_t sniffer_acitve, uint8_t sniffer_role,
 BOOL btif_me_get_remote_device_initiator(btif_remote_device_t * rdev);
 uint16_t btif_me_get_remote_device_hci_handle(btif_remote_device_t * rdev);
 btif_remote_device_t* btif_me_get_remote_device_by_handle(uint16_t hci_handle);
-uint16_t btif_me_get_conhandle_by_remote_address(bt_bdaddr_t *addr);
 uint16_t btif_me_get_hci_handle_by_remote_dev(btif_remote_device_t *p_remote_dev);
 btif_remote_device_t* btif_me_get_remote_device_by_bdaddr(bt_bdaddr_t *bdaddr);
 uint8_t btif_me_get_remote_device_op_optype(btif_remote_device_t * rdev);
@@ -1183,9 +1149,6 @@ bt_status_t btif_me_ble_set_adv_en(uint8_t en);
 bt_status_t btif_me_ble_set_scan_parameter(btif_scan_para_struct_t * para);
 bt_status_t btif_me_ble_set_scan_en(uint8_t scan_en, uint8_t filter_duplicate);
 bt_status_t btif_me_ble_receive_adv_report(void (*cb)(const btif_ble_adv_report* report));
-bt_status_t btif_me_ble_read_chnle_map(uint16_t conn_handle);
-bt_status_t btif_me_ble_set_host_chnl_classification(uint8_t *chnl_map);
-
 bt_status_t btif_sec_find_device_record(const bt_bdaddr_t * bdAddr,
                                         btif_device_record_t * record);
 
@@ -1203,22 +1166,14 @@ uint8_t btif_me_get_callback_event_disconnect_rem_dev_disc_reason_saved(const bt
         event);
 uint8_t btif_me_get_callback_event_disconnect_rem_dev_disc_reason(const btif_event_t *
         event);
-uint8_t btif_me_reset_this_device_to_source(uint8_t device_id);
 
 uint8_t btif_me_get_pendCons(void);
 
 uint8_t btif_me_get_activeCons(void);
 
-uint8_t btif_me_get_source_activeCons(void);
-
 void btif_me_set_pendCons(uint8_t pendCons);
 
 void btif_me_set_activeCons(uint8_t activeCons );
-
-void btif_me_reset_l2cap_sigid(void *addr);
-
-uint8_t btif_me_get_callback_event_max_slot(const btif_event_t *event);
-uint16_t btif_me_get_callback_event_packet_type(const btif_event_t * event);
 
 btif_remote_device_t *btif_me_get_callback_event_rem_dev(const btif_event_t * event);
 
@@ -1227,7 +1182,6 @@ btif_remote_device_t *btif_me_get_callback_event_sco_connect_rem_dev(const btif_
         event);
 uint8_t btif_me_get_callback_event_role_change_new_role(const btif_event_t * event);
 bt_bdaddr_t *btif_me_get_callback_event_inq_result_bd_addr(const btif_event_t * event);
-bt_bdaddr_t *btif_me_get_callback_event_name_rsp_bd_addr(const btif_event_t * event);
 uint8_t *btif_me_get_callback_event_inq_result_bd_addr_addr(const btif_event_t * event);
 uint8_t btif_me_get_callback_event_inq_result_inq_mode(const btif_event_t * event);
 uint8_t btif_me_get_callback_event_rssi(const btif_event_t *event);
@@ -1272,10 +1226,8 @@ bt_status_t btif_me_set_accessible_mode(btif_accessible_mode_t mode,
 bt_status_t btif_me_write_page_timeout(uint16_t timeout);
 bool btif_me_is_op_in_progress(btif_remote_device_t * rdev);
 bt_status_t btif_me_switch_role(btif_remote_device_t * rdev);
-void btif_me_set_bt_source_event_handler(btif_handler *handler);
 bt_status_t btif_me_register_global_handler(void *handler);
 void *btif_me_register_accept_handler(void *handler);
-void btif_me_register_sco_request_handler(bool (*cb)(uint8_t device_id, const uint8_t *remote));
 bt_status_t btif_me_set_event_mask(void *handler, btif_event_mask_t mask);
 void *btif_me_get_bt_handler(void);
 bt_status_t btif_me_set_bt_address(uint8_t * btAddr);
@@ -1330,37 +1282,14 @@ void btif_me_inquiry_result_setup(uint8_t *inquiry_buff, bool rssi,
                                   bool extended_mode);
 btif_remote_device_t *btif_me_enumerate_remote_devices(uint32_t devid);
 
-bool btif_me_get_remote_dip_queried(btif_remote_device_t *rdev);
-void btif_me_set_remote_dip_queried(btif_remote_device_t *rdev, bool queried);
-bool btif_me_is_remote_dip_query_on_going(btif_remote_device_t *rdev);
-void btif_me_set_remote_dip_query_state(btif_remote_device_t *rdev, bool isInQuery);
-
 uint8_t btif_me_get_remote_sevice_encrypt_state(btif_remote_device_t* rdev);
 
 uint8_t btif_me_get_remote_device_disc_reason_saved(btif_remote_device_t * device);
 
-void btif_me_register_snoop_acl_connection_callback(void (*conn)(uint8_t device_id, void* remote, void* btm_conn), void (*disc)(uint8_t device_id, void* remote));
-
-void btif_me_register_check_to_accept_new_sco_callback(void (*cb)(uint8_t));
-
-void btif_me_register_pending_too_many_rx_acl_packets_callback(void (*cb)(void));
 
 uint8_t btif_me_get_remote_device_disc_reason(btif_remote_device_t * device);
-bool btif_me_wait_acl_complete(void* remote, void (*cb)(uint8_t device_id, void* remote, bool succ, uint8_t errcode));
-
-uint8_t btif_me_get_device_id_from_addr(bt_bdaddr_t *addr);
-uint8_t btif_me_get_device_id_from_rdev(btif_remote_device_t *rdev);
 
 void  btif_me_event_report(me_event_t *event);
-
-void btif_me_set_creating_source_link(const bt_bdaddr_t *remote, bool mark_as_source);
-bool btif_me_is_creating_source_link(const void *remote);
-
-void btif_me_set_accepting_source_link(bool set_source_link);
-bool btif_me_is_accepting_source_link(const bt_bdaddr_t *remote);
-
-void btif_me_register_is_creating_source_link(bool (*cb)(const void *remote));
-
 void btif_me_init_peer_headset_addr(uint8_t *p_remote_addr);
 bt_bdaddr_t * btif_me_get_peer_headset_addr(void);
 uint8_t btif_me_get_remote_device_link_mode(btif_remote_device_t* rdev);
@@ -1370,44 +1299,9 @@ void btif_me_cobuf_state_dump(void);
 void btif_me_hcibuff_state_dump(void);
 bt_status_t btif_me_read_controller_memory(uint32_t addr, uint32_t len,uint8_t type);
 bt_status_t btif_me_write_controller_memory(uint32_t addr,uint32_t val,uint8_t type);
-bool btif_me_is_in_sniff_mode(bt_bdaddr_t *remote);
-bool btif_me_is_in_active_mode(bt_bdaddr_t *remote);
-
-void btif_me_set_conn_tws_link(void *conn, uint8_t is_tws_link);
-bool btif_me_get_conn_tws_link(void *conn);
-bt_status_t btif_me_bt_dbg_send_prefer_rate(uint16_t conhdl,uint8_t rate);
-bt_status_t btif_me_bt_dbg_set_txpwr_link_thd(uint8_t index, uint8_t enable,uint8_t link_id,
-    uint16_t rssi_avg_nb_pkt, int8_t rssi_high_thd, int8_t rssi_low_thd, int8_t rssi_below_low_thd, int8_t rssi_interf_thd);
-bt_status_t btif_me_read_avg_rssi(uint16_t connhld);
-
 bt_status_t btif_me_qos_set_up(uint16_t conn_handle);
-bt_status_t btif_me_qos_setup_with_tpoll(uint16_t conn_handle, uint32_t tpoll_slot);
-#define QOS_SETUP_SERVICE_TYPE_NO_TRAFFIC       0x00
-#define QOS_SETUP_SERVICE_TYPE_BEST_EFFORT      0x01
-#define QOS_SETUP_SERVICE_TYPE_GUARANTEED       0x02
-
-bt_status_t btif_me_qos_setup_with_tpoll_generic(uint16_t conn_handle, uint32_t tpoll_slot, uint8_t service_type);
-
 void btif_set_sco_max_number(uint8_t num);
 uint8_t btif_get_sco_max_number();
-
-/**
- ****************************************************************************************
- * @brief bt set channel classification map which related Set AFH Host Channel Classification command
- * AFH_Host_Channel_Classification: Size: 10 octets (79 bits meaningful)
- * This parameter contains 80 1-bit fields
- * The nth such field (in the range 0 to 78) contains the value for channel n:
- *    0: channel n is bad
- *    1: channel n is unknown
- *
- * The most significant bit (bit 79) is reserved for future use
- * At least (Nmin == 20) channels shall be marked as unknown.
- *
- * default all bits value is 1
- ****************************************************************************************
- */
-bt_status_t  btif_me_set_afh_chnl_classification(uint8_t *chnl_map);
-
 #if defined(IBRT)
 // ibrt fast ack toggle
 #define IBRT_FAST_ACK_OFF                    (0)
@@ -1423,7 +1317,6 @@ bt_status_t btif_me_enable_fastack(uint16_t conhdl, uint8_t direction, uint8_t e
 bt_status_t btif_me_start_ibrt(U16 slaveConnHandle, U16 mobileConnHandle);
 bt_status_t btif_me_stop_ibrt(uint16_t mobile_conhdl,uint8_t reason);
 bt_status_t btif_me_suspend_ibrt(void);
-bt_status_t btif_me_set_fix_tws_interval_param(uint16_t duration, uint16_t interval, uint16_t interval_in_sco);
 bt_status_t btif_me_ibrt_mode_init(bool enable);
 bt_status_t btif_me_ibrt_role_switch(uint16_t mobile_conhdl);
 
@@ -1452,7 +1345,6 @@ void btif_me_write_scan_activity_specific(uint16_t opcode, uint16_t scan_interva
 void btif_me_write_dbg_sniffer(const uint8_t subcode, const uint16_t connhandle);
 void btif_me_ibrt_simu_hci_event_disallow(uint8_t opcode1, uint8_t opcode2);
 void btif_me_register_cmd_status_callback(void (*cb)(const void *para));
-void btif_me_register_get_ibrt_handle_callback(uint16_t (*cb)(void* remote));
 void btif_me_register_cmd_complete_callback(HCI_CMD_COMPLETE_USER_E index, void (*cb)(const btif_event_t *para));
 bt_status_t btif_me_ibrt_conn_connected(bt_bdaddr_t *bt_addr, uint16_t conhdl);
 bt_status_t btif_me_ibrt_conn_disconnected(bt_bdaddr_t *bt_addr, uint16_t conhdl, uint8_t status, uint8_t reason);
@@ -1460,10 +1352,6 @@ void btif_me_register_ibrt_io_capbility_callback(ibrt_io_capbility_callback cb);
 bt_status_t btif_me_auth_req(uint16_t conn_handle);
 void btif_me_set_ecc_ibrt_data_test(uint8_t  ecc_data_test_en, uint8_t ecc_data_len, uint16_t ecc_count, uint32_t data_pattern);
 void btif_me_send_prefer_rate(uint16_t connhdl, uint8_t rate);
-uint16_t btif_me_get_ibrt_hci_handle(bt_bdaddr_t *bd_addr);
-void btif_btm_register_ibrt_rx_data_filter_callback(bool (*cb)(const void* addr,uint8_t rx_filter_type,void*para));
-void btif_me_configure_keeping_both_scan(bool isToKeepBothScan);
-
 #endif
 #ifdef __cplusplus
 }

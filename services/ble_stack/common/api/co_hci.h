@@ -31,7 +31,6 @@
 #include <stddef.h>        // standard definitions
 #include <stdint.h>        // standard integer definitions
 #include "rwip_config.h"   // IP configuration
-#include "co_bt_defines.h" // Common definitions
 #include "compiler.h"      // compiler definitions
 
 /*
@@ -169,140 +168,6 @@ enum hci_syn_hdr_fields
 /// Maximum length of HCI advertising data fragments
 #define HCI_ADV_DATA_FRAG_MAX_LEN        251
 
-/// Maximum length of HCI periodic advertising data fragments
-#define HCI_PER_ADV_DATA_FRAG_MAX_LEN    252
-
-/// HCI ISO header: handle and flags decoding
-enum  hci_iso_hdr_fields
-{
-    /// Connection handle (12 bits)
-    HCI_ISO_HDR_HDL_LSB        = (0),
-    HCI_ISO_HDR_HDL_MASK       = (0x0FFF),
-    /// Packet boundary flag (2 bits)
-    HCI_ISO_HDR_PB_FLAG_LSB    = (12),
-    HCI_ISO_HDR_PB_FLAG_MASK   = (0x3000),
-    /// Time_Stamp flag (1 bit)
-    HCI_ISO_HDR_TS_FLAG_POS    = (14),
-    HCI_ISO_HDR_TS_FLAG_BIT    = (0x4000),
-    /// RFU (1 bit)
-    HCI_ISO_HDR_RFU_FLAG_POS    = (0),
-    HCI_ISO_HDR_RFU_FLAG_BIT    = (0x8000),
-    /// ISO_Data_Load_Length (14 bits)
-    HCI_ISO_HDR_ISO_DATA_LOAD_LEN_LSB  = (0),
-    HCI_ISO_HDR_ISO_DATA_LOAD_LEN_MASK = (0x3FFF),
-    /// RFU2 (2 bits)
-    HCI_ISO_HDR_ISO_RFU2_LSB    = (14),
-    HCI_ISO_HDR_ISO_RFU2_MASK   = (0xC000),
-};
-
-#define HCI_ISO_HDR_HDL_FLAGS_POS  (0)
-#define HCI_ISO_HDR_HDL_FLAGS_LEN  (2)
-/// HCI ISO header: ISO_Data_Load field length
-#define HCI_ISO_HDR_ISO_DATA_LOAD_LEN_POS   (HCI_ISO_HDR_HDL_FLAGS_LEN)
-#define HCI_ISO_HDR_ISO_DATA_LOAD_LEN_LEN   (2)
-
-///HCI ACL data packet header length
-#define HCI_ISO_HDR_LEN            (HCI_ISO_HDR_HDL_FLAGS_LEN + HCI_ISO_HDR_ISO_DATA_LOAD_LEN_LEN)
-
-/// Packet Boundary Flag   HCI:5.4.5
-#define PB_FLAG_1ST_FRAG          0x00
-#define PB_FLAG_CONT_FRAG         0x01
-#define PB_FLAG_CMP_FRAG          0x02
-#define PB_FLAG_LAST_FRAG         0x03
-
-/// HCI ISO header: handle and flags decoding
-enum  hci_iso_data_load_fields
-{
-    /// Time_Stamp (32 bits)
-    HCI_ISO_DATA_LOAD_TIME_STAMP_POS        = (0),
-    HCI_ISO_DATA_LOAD_TIME_STAMP_LSB        = (0),
-    HCI_ISO_DATA_LOAD_TIME_STAMP_MASK       = (0xFFFFFFFF),
-    /// Packet_Sequence_Number (16 bits)
-    HCI_ISO_DATA_LOAD_PKT_SEQ_NB_POS    = (4),
-    HCI_ISO_DATA_LOAD_PKT_SEQ_NB_LSB    = (0),
-    HCI_ISO_DATA_LOAD_PKT_SEQ_NB_MASK   = (0xFFFF),
-    /// ISO_SDU_Length (12 bits)
-    HCI_ISO_DATA_LOAD_ISO_SDU_LEN_POS    = (6),
-    HCI_ISO_DATA_LOAD_ISO_SDU_LEN_LSB    = (0),
-    HCI_ISO_DATA_LOAD_ISO_SDU_LEN_MASK   = (0x0FFF),
-    /// RFU (2 bits)
-    HCI_ISO_DATA_LOAD_RFU_POS    = (6),
-    HCI_ISO_DATA_LOAD_RFU_LSB    = (12),
-    HCI_ISO_DATA_LOAD_RFU_MASK   = (0x3000),
-    /// Packet_Status_Flag (2 bits)
-    HCI_ISO_DATA_LOAD_PKT_STAT_FLAG_LSB  = (14),
-    HCI_ISO_DATA_LOAD_PKT_STAT_FLAG_MASK = (0xC000),
-};
-
-/// HCI ISO_Data_Load - Length of Time_Stamp field
-#define HCI_ISO_DATA_LOAD_TIME_STAMP_LEN    (4)
-
-/// HCI ISO_Data_Load - Length of Packet Sequence Number field
-#define HCI_ISO_DATA_LOAD_PKT_SEQ_NB_LEN    (2)
-
-/// HCI ISO_Data_Load - Length of ISO SDU Length and packet status flags field
-#define HCI_ISO_DATA_LOAD_ISO_SDU_LEN_LEN   (2)
-
-/// HCI ISO_Data_Load - maximum header length
-#define HCI_ISO_DATA_LOAD_HDR_LEN_MAX    (HCI_ISO_DATA_LOAD_TIME_STAMP_LEN + HCI_ISO_DATA_LOAD_PKT_SEQ_NB_LEN + HCI_ISO_DATA_LOAD_ISO_SDU_LEN_LEN)
-
-/// HCI ISO_Data_Load - Packet Status Flag
-enum  hci_iso_pkt_stat_flag
-{
-    /// Valid data. The complete ISO_SDU was received correctly
-    HCI_ISO_PKT_STAT_FLAG_VALID   = (0),
-    /// Possibly invalid data. The contents of the ISO_SDU may contain errors or part of the ISO_SDU may
-    /// be missing. This is reported as "data with possible errors".
-    HCI_ISO_PKT_STAT_FLAG_INVALID = (1),
-    /// Part(s) of the ISO_SDU were not received correctly. This is reported as "lost data".
-    HCI_ISO_PKT_STAT_FLAG_LOST    = (2),
-};
-
-///HCI Command header components structure
-struct hci_cmd_hdr
-{
-    /// Opcode field
-    uint16_t opcode;
-    ///Parameter length - the number of bytes of the command parameters
-    uint8_t parlen;
-};
-
-///HCI ACL data packets header structure
-struct hci_acl_hdr
-{
-    ///Connection handle & Data Flags
-    uint16_t hdl_flags;
-    ///Data length in number of bytes
-    uint16_t datalen;
-};
-
-///HCI synchronous data packets header structure
-struct hci_sync_hdr
-{
-    /// Connection handle & Data Flags
-    uint16_t conhdl_flags;
-    /// Data total length in number of bytes
-    uint8_t data_total_len;
-};
-
-///HCI Event header components structure - contains all details possible in an event
-struct hci_evt_hdr
-{
-    ///Event code
-    uint8_t  code;
-    ///Event parameters length
-    uint8_t  parlen;
-};
-
-///HCI ISO data packets header structure
-struct hci_iso_hdr
-{
-    /// Connection handle & Data Flags
-    uint16_t conhdl_flags;
-    /// ISO Data load length in number of bytes
-    uint16_t iso_data_load_len;
-};
-
 
 /**************************************************************************************
  **************                       HCI COMMANDS                     ****************
@@ -344,7 +209,6 @@ enum
  */
 
 ///HCI enumeration of possible Command OP Codes.
-/*@TRACE*/
 enum hci_opcode
 {
     HCI_NO_OPERATION_CMD_OPCODE               = 0x0000,
@@ -505,8 +369,6 @@ enum hci_opcode
     HCI_WR_EXT_PAGE_TO_CMD_OPCODE             = 0x0C7F,
     HCI_RD_EXT_INQ_LEN_CMD_OPCODE             = 0x0C80,
     HCI_WR_EXT_INQ_LEN_CMD_OPCODE             = 0x0C81,
-    HCI_SET_ECO_BASE_INTV_CMD_OPCODE          = 0x0C82,
-    HCI_CONFIG_DATA_PATH_CMD_OPCODE           = 0x0C83,
 
     //Info Params
     HCI_RD_LOCAL_VER_INFO_CMD_OPCODE               = 0x1001,
@@ -515,12 +377,7 @@ enum hci_opcode
     HCI_RD_LOCAL_EXT_FEATS_CMD_OPCODE              = 0x1004,
     HCI_RD_BUF_SIZE_CMD_OPCODE                     = 0x1005,
     HCI_RD_BD_ADDR_CMD_OPCODE                      = 0x1009,
-    HCI_RD_DATA_BLOCK_SIZE_CMD_OPCODE              = 0x100A,
     HCI_RD_LOCAL_SUPP_CODECS_CMD_OPCODE            = 0x100B,
-    HCI_RD_LOCAL_SP_OPT_CMD_OPCODE                 = 0x100C,
-    HCI_RD_LOCAL_SUPP_CODECS_V2_CMD_OPCODE         = 0x100D,
-    HCI_RD_LOCAL_SUPP_CODEC_CAP_CMD_OPCODE         = 0x100E,
-    HCI_RD_LOCAL_SUPP_CTRL_DELAY_CMD_OPCODE        = 0x100F,
 
     //Status Params
     HCI_RD_FAIL_CONTACT_CNT_CMD_OPCODE             = 0x1401,
@@ -537,7 +394,6 @@ enum hci_opcode
     HCI_WR_LOOPBACK_MODE_CMD_OPCODE                = 0x1802,
     HCI_EN_DUT_MODE_CMD_OPCODE                     = 0x1803,
     HCI_WR_SP_DBG_MODE_CMD_OPCODE                  = 0x1804,
-    HCI_WR_SEC_CON_TEST_MODE_CMD_OPCODE            = 0x180A,
 
     /// LE Commands Opcodes
     HCI_LE_SET_EVT_MASK_CMD_OPCODE                      = 0x2001,
@@ -618,50 +474,6 @@ enum hci_opcode
     HCI_LE_WR_RF_PATH_COMP_CMD_OPCODE                   = 0x204D,
     HCI_LE_SET_PRIV_MODE_CMD_OPCODE                     = 0x204E,
     HCI_LE_RX_TEST_V3_CMD_OPCODE                        = 0x204F,
-    HCI_LE_TX_TEST_V3_CMD_OPCODE                        = 0x2050,
-    HCI_LE_SET_CONLESS_CTE_TX_PARAM_CMD_OPCODE          = 0x2051,
-    HCI_LE_SET_CONLESS_CTE_TX_EN_CMD_OPCODE             = 0x2052,
-    HCI_LE_SET_CONLESS_IQ_SAMPL_EN_CMD_OPCODE           = 0x2053,
-    HCI_LE_SET_CON_CTE_RX_PARAM_CMD_OPCODE              = 0x2054,
-    HCI_LE_SET_CON_CTE_TX_PARAM_CMD_OPCODE              = 0x2055,
-    HCI_LE_CON_CTE_REQ_EN_CMD_OPCODE                    = 0x2056,
-    HCI_LE_CON_CTE_RSP_EN_CMD_OPCODE                    = 0x2057,
-    HCI_LE_RD_ANTENNA_INF_CMD_OPCODE                    = 0x2058,
-    HCI_LE_SET_PER_ADV_REC_EN_CMD_OPCODE                = 0x2059,
-    HCI_LE_PER_ADV_SYNC_TRANSF_CMD_OPCODE               = 0x205A,
-    HCI_LE_PER_ADV_SET_INFO_TRANSF_CMD_OPCODE           = 0x205B,
-    HCI_LE_SET_PER_ADV_SYNC_TRANSF_PARAM_CMD_OPCODE     = 0x205C,
-    HCI_LE_SET_DFT_PER_ADV_SYNC_TRANSF_PARAM_CMD_OPCODE = 0x205D,
-    HCI_LE_GEN_DHKEY_V2_CMD_OPCODE                      = 0x205E,
-    HCI_LE_MOD_SLEEP_CLK_ACC_CMD_OPCODE                 = 0x205F,
-    HCI_LE_RD_BUF_SIZE_V2_CMD_OPCODE                    = 0x2060,
-    HCI_LE_RD_ISO_TX_SYNC_CMD_OPCODE                    = 0x2061,
-    HCI_LE_SET_CIG_PARAMS_CMD_OPCODE                    = 0x2062,
-    HCI_LE_SET_CIG_PARAMS_TEST_CMD_OPCODE               = 0x2063,
-    HCI_LE_CREATE_CIS_CMD_OPCODE                        = 0x2064,
-    HCI_LE_REMOVE_CIG_CMD_OPCODE                        = 0x2065,
-    HCI_LE_ACCEPT_CIS_REQ_CMD_OPCODE                    = 0x2066,
-    HCI_LE_REJECT_CIS_REQ_CMD_OPCODE                    = 0x2067,
-    HCI_LE_CREATE_BIG_CMD_OPCODE                        = 0x2068,
-    HCI_LE_CREATE_BIG_TEST_CMD_OPCODE                   = 0x2069,
-    HCI_LE_TERMINATE_BIG_CMD_OPCODE                     = 0x206A,
-    HCI_LE_BIG_CREATE_SYNC_CMD_OPCODE                   = 0x206B,
-    HCI_LE_BIG_TERMINATE_SYNC_CMD_OPCODE                = 0x206C,
-    HCI_LE_REQ_PEER_SCA_CMD_OPCODE                      = 0x206D,
-    HCI_LE_SETUP_ISO_DATA_PATH_CMD_OPCODE               = 0x206E,
-    HCI_LE_REMOVE_ISO_DATA_PATH_CMD_OPCODE              = 0x206F,
-    HCI_LE_ISO_TX_TEST_CMD_OPCODE                       = 0x2070,
-    HCI_LE_ISO_RX_TEST_CMD_OPCODE                       = 0x2071,
-    HCI_LE_ISO_READ_TEST_COUNTERS_CMD_OPCODE            = 0x2072,
-    HCI_LE_ISO_TEST_END_CMD_OPCODE                      = 0x2073,
-    HCI_LE_SET_HOST_FEATURE_CMD_OPCODE                  = 0x2074,
-    HCI_LE_RD_ISO_LINK_QUALITY_CMD_OPCODE               = 0x2075,
-    HCI_LE_ENH_RD_TX_PWR_LVL_CMD_OPCODE                 = 0x2076,
-    HCI_LE_RD_REMOTE_TX_PWR_LVL_CMD_OPCODE              = 0x2077,
-    HCI_LE_SET_PATH_LOSS_REP_PARAM_CMD_OPCODE           = 0x2078,
-    HCI_LE_SET_PATH_LOSS_REP_EN_CMD_OPCODE              = 0x2079,
-    HCI_LE_SET_TX_POWER_REP_EN_CMD_OPCODE               = 0x207A,
-    HCI_LE_TX_TEST_V4_CMD_OPCODE                        = 0x207B,
 
     ///Debug commands - OGF = 0x3F (spec)
     HCI_DBG_RD_MEM_CMD_OPCODE                      = 0xFC01,
@@ -676,7 +488,6 @@ enum hci_opcode
     HCI_DBG_WLAN_COEX_CMD_OPCODE                   = 0xFC0B,
     HCI_DBG_WLAN_COEXTST_SCEN_CMD_OPCODE           = 0xFC0D,
     HCI_DBG_BT_SEND_LMP_CMD_OPCODE                 = 0xFC0E,
-    HCI_DBG_SET_LOCAL_CLOCK_CMD_OPCODE             = 0xFC0F,
     HCI_DBG_RD_KE_STATS_CMD_OPCODE                 = 0xFC10,
     HCI_DBG_PLF_RESET_CMD_OPCODE                   = 0xFC11,
     HCI_DBG_RD_MEM_INFO_CMD_OPCODE                 = 0xFC12,
@@ -701,49 +512,10 @@ enum hci_opcode
 
     HCI_DBG_MWS_COEX_CMD_OPCODE                    = 0xFC45,
     HCI_DBG_MWS_COEXTST_SCEN_CMD_OPCODE            = 0xFC46,
-    #if (BT_READ_PICONET_CLOCK)
-    HCI_VS_RD_PICONET_CLOCK_CMD_OPCODE             = 0xFC50,
-    #endif // (BT_READ_PICONET_CLOCK)
-
-    #if (BLE_ISO_MODE_0)
-    /// Vendor Specific commands for ISO Mode 0
-    HCI_VS_MIC_LESS_SET_CMD_OPCODE                   = 0xFC51,
-    HCI_VS_SETUP_AM0_DATA_PATH_CMD_OPCODE            = 0xFC52,
-    HCI_VS_REMOVE_AM0_DATA_PATH_CMD_OPCODE           = 0xFC53,
-    HCI_VS_SETUP_AM0_STREAM_CMD_OPCODE               = 0xFC54,
-    HCI_VS_REMOVE_AM0_STREAM_CMD_OPCODE              = 0xFC55,
-    #endif // (BLE_ISO_MODE_0)
-
-    /// Debug commands for ISO
-    HCI_DBG_ISO_SET_PARAM_CMD_OPCODE               = 0xFC57,
-    HCI_VS_SET_ISO_DATA_PATH_TRIGGER_CMD_OPCODE    = 0xFC5A,
 
     #if CRYPTO_UT
     HCI_DBG_TEST_CRYPTO_FUNC_CMD_OPCODE            = 0xFC60,
     #endif //CRYPTO_UT
-
-    #if RW_DEBUG
-    HCI_DBG_TEST_SCH_PLAN_SET_CMD_OPCODE           = 0xFC61,
-    HCI_DBG_TEST_SCH_PLAN_REM_CMD_OPCODE           = 0xFC62,
-    HCI_DBG_TEST_SCH_PLAN_CHK_CMD_OPCODE           = 0xFC63,
-    HCI_DBG_TEST_SCH_PLAN_REQ_CMD_OPCODE           = 0xFC64,
-    #endif //RW_DEBUG
-
-    #if BLE_IQ_GEN
-    HCI_DBG_IQGEN_CFG_CMD_OPCODE                   = 0xFC65,
-    #endif //BLE_IQ_GEN
-
-    #if (AUDIO_SYNC_SUPPORT)
-    HCI_VS_AUSY_CON_EVT_CNT_GET_CMD_OPCODE        = 0xFC66,
-    HCI_VS_AUSY_EVT_TX_TIME_GET_CMD_OPCODE        = 0xFC67,
-    HCI_VS_AUSY_LAST_RX_TIME_GET_CMD_OPCODE       = 0xFC68,
-    HCI_VS_AUSY_CLOCK_SAMPLE_GET_CMD_OPCODE       = 0xFC69,
-    HCI_VS_AUSY_CLOCK_CONVERT_CMD_OPCODE          = 0xFC6A,
-    HCI_VS_AUSY_CIS_EVT_CTRL_CMD_OPCODE           = 0xFC6B,
-    #endif // (AUDIO_SYNC_SUPPORT)
-
-    HCI_DBG_SET_DUAL_BD_ADDR_CMD_OPCODE           = 0xFC72,
-    HCI_DBG_SET_BLE_PUBLIC_ADDR_CMD_OPCODE    = 0xFC77,
 };
 
 /**************************************************************************************
@@ -751,7 +523,6 @@ enum hci_opcode
  **************************************************************************************/
 
 ///Event Codes
-/*@TRACE*/
 enum hci_evt_code
 {
     HCI_INQ_CMP_EVT_CODE                       = 0x01,
@@ -813,14 +584,9 @@ enum hci_evt_code
     HCI_SLV_PAGE_RSP_TO_EVT_CODE               = 0x54,
     HCI_CON_SLV_BCST_CH_MAP_CHG_EVT_CODE       = 0x55,
     HCI_AUTH_PAYL_TO_EXP_EVT_CODE              = 0x57,
-    HCI_SAM_STATUS_CHANGE_EVT_CODE             = 0x58,
     HCI_MAX_EVT_MSK_PAGE_2_CODE                = 0x59,
     HCI_DBG_META_EVT_CODE                      = 0xFF,
-};
 
-/*@TRACE*/
-enum hci_le_evt_subcode
-{
     /// LE Events Subcodes
     HCI_LE_CON_CMP_EVT_SUBCODE                 = 0x01,
     HCI_LE_ADV_REPORT_EVT_SUBCODE              = 0x02,
@@ -842,41 +608,9 @@ enum hci_le_evt_subcode
     HCI_LE_ADV_SET_TERMINATED_EVT_SUBCODE      = 0x12,
     HCI_LE_SCAN_REQ_RCVD_EVT_SUBCODE           = 0x13,
     HCI_LE_CH_SEL_ALGO_EVT_SUBCODE             = 0x14,
-    HCI_LE_CONLESS_IQ_REPORT_EVT_SUBCODE       = 0x15,
-    HCI_LE_CON_IQ_REPORT_EVT_SUBCODE           = 0x16,
-    HCI_LE_CTE_REQ_FAILED_EVT_SUBCODE          = 0x17,
-    HCI_LE_PER_ADV_SYNC_TRANSF_REC_EVT_SUBCODE = 0x18,
-    HCI_LE_CIS_ESTABLISHED_EVT_SUBCODE         = 0x19,
-    HCI_LE_CIS_REQUEST_EVT_SUBCODE             = 0x1A,
-    HCI_LE_CREATE_BIG_CMP_EVT_SUBCODE          = 0x1B,
-    HCI_LE_TERMINATE_BIG_CMP_EVT_SUBCODE       = 0x1C,
-    HCI_LE_BIG_SYNC_ESTABLISHED_EVT_SUBCODE    = 0x1D,
-    HCI_LE_BIG_SYNC_LOST_EVT_SUBCODE           = 0x1E,
-    HCI_LE_REQ_PEER_SCA_CMP_EVT_SUBCODE        = 0x1F,
-    HCI_LE_PATH_LOSS_THRESHOLD_EVT_SUBCODE     = 0x20,
-    HCI_LE_TX_POWER_REPORTING_EVT_SUBCODE      = 0x21,
-    HCI_LE_BIG_INFO_ADV_REPORT_EVT_SUBCODE     = 0x22,
-};
-
-/*@TRACE*/
-enum hci_vs_evt_subcode
-{
-    HCI_DBG_TRACE_2_HOST_EVT_SUBCODE        = 0x01,
     #if (RW_DEBUG)
-    /// DBG Events Subcodes
     HCI_DBG_ASSERT_EVT_SUBCODE              = 0x02,
     #endif //(RW_DEBUG)
-
-    #if (BLE_ISOGEN)
-    /// VS ISO Gen Statistics Status
-    HCI_VS_ISOGEN_STAT_EVT_SUBCODE          = 0x03,
-    #endif // (BLE_ISOGEN)
-
-    #if (AUDIO_SYNC_SUPPORT)
-    HCI_VS_AUSY_CIS_ESTAB_PARAM_EVT_SUBCODE = 0x04,
-    #endif // (AUDIO_SYNC_SUPPORT)
-
-    HCI_VS_INVALID_EVT_SUBCODE              = 0xFF,
 };
 
 /// Event mask page enum
@@ -894,50 +628,7 @@ enum hci_evt_mask_page
     HCI_PAGE_LE,
 };
 
-#if (BLE_ISO_PRESENT)
-#if (BLE_ISO_MODE_0)
-/// Current audio mode
-enum iso_am0_ctrl
-{
-    // Stop Audio Mode 0 Stream
-    ISO_AM0_CRL_DISABLE,
-    // Start Audio Mode 0 Stream
-    ISO_AM0_CRL_ENABLE,
-};
-#endif // (BLE_ISO_MODE_0)
-
-/// Isochronous Channel data path selection
-enum iso_dp_type
-{
-    /// ISO over HCI Data Path
-    ISO_DP_ISOOHCI                  = 0x00,
-    /// Data Path direction is disabled
-    ISO_DP_DISABLE                  = 0xFF,
-
-    // vendor specifics
-    // @see enum dp_type
-    // @see enum plf_dp_type
-};
-
-/// Isochronous Data Path Direction
-enum iso_dp_direction
-{
-    /// Input (Host to Controller)
-    ISO_DP_INPUT                     = 0x00,
-    /// Output (Controller to Host)
-    ISO_DP_OUTPUT                    = 0x01,
-};
-
-#endif // (BLE_ISO_PRESENT)
-
-
-
-/**************************************************************************************
- **************                 HCI MESSAGE STRUCTURES                 ****************
- **************************************************************************************/
-
 /// HCI ACL data packet structure
-/*@TRACE*/
 struct hci_acl_data
 {
     /// bits[00:11]: Connection handle
@@ -953,7 +644,6 @@ struct hci_acl_data
 };
 
 /// HCI Synchronous data packet structure
-/*@TRACE*/
 struct hci_sync_data
 {
     /// bits[00:11]: Connection handle
@@ -965,51 +655,13 @@ struct hci_sync_data
     uint16_t  buf_ptr;
 };
 
-#if (BLE_EMB_PRESENT || BLE_AUDIO_ENABLED)
-#if BLE_ISO_PRESENT
-/// ISO_Data_load structure
-/*@TRACE*/
-struct iso_data_load
-{
-    /// Time_Stamp
-    uint32_t time_stamp;
-    /// Packet Sequence Number
-    uint16_t  pkt_seq_nb;
-    /// length of the ISO SDU
-    /// bits[00:11]: ISO SDU length
-    /// bits[12:13]: RFU
-    /// bits[14:15]: Packet_Status_Flag
-    uint16_t  iso_sdu_length_psf;
-    /// Pointer to the SDU
-    uint8_t* iso_sdu_ptr;
-};
 
-/// HCI ISO data packet structure
-/*@TRACE*/
-struct hci_iso_data
-{
-    /// bits[00:11]: Connection handle
-    /// bits[12:13]: Packet boundary flag
-    /// bit[14]: Time_Stamp flag
-    /// bit[15]: RFU
-    uint16_t  conhdl_pbf_tsf;
-    /// ISO_Data_Load_Length and 2 RFU bits
-    uint16_t  iso_data_load_len;
-    /// ISO_Data_Load
-    struct  iso_data_load iso_data_load;
-};
-#endif //BLE_ISO_PRESENT
-#endif //BLE_EMB_PRESENT
 /*
  * HCI COMMANDS PARAMETERS (to classify)
  ****************************************************************************************
  */
 
 /// HCI basic command structure with connection handle
-/*@TRACE
- * hci_rd_rssi_cmd = hci_basic_conhdl_cmd
- * hci_le_rd_chnl_map_cmd = hci_basic_conhdl_cmd
- * hci_le_ltk_req_neg_reply_cmd = hci_basic_conhdl_cmd*/
 struct hci_basic_conhdl_cmd
 {
     /// connection handle
@@ -1024,7 +676,6 @@ struct hci_basic_bd_addr_cmd
 };
 
 /// HCI Accept connection request command structure
-/*@TRACE*/
 struct hci_accept_con_req_cmd
 {
     ///BdAddr
@@ -1034,7 +685,6 @@ struct hci_accept_con_req_cmd
 };
 
 /// HCI Accept synchronous connection request command structure
-/*@TRACE*/
 struct hci_accept_sync_con_req_cmd
 {
     ///BdAddr
@@ -1054,7 +704,6 @@ struct hci_accept_sync_con_req_cmd
 };
 
 /// HCI Enhanced Accept synchronous connection request command structure
-/*@TRACE*/
 struct hci_enh_accept_sync_con_cmd
 {
 
@@ -1087,7 +736,6 @@ struct hci_enh_accept_sync_con_cmd
 };
 
 /// HCI reject connection request command structure
-/*@TRACE*/
 struct hci_reject_con_req_cmd
 {
     ///BdAddr
@@ -1097,7 +745,6 @@ struct hci_reject_con_req_cmd
 };
 
 /// HCI reject synchronous connection request command structure
-/*@TRACE*/
 struct hci_reject_sync_con_req_cmd
 {
     ///BdAddr
@@ -1107,7 +754,6 @@ struct hci_reject_sync_con_req_cmd
 };
 
 /// HCI link key request reply command structure
-/*@TRACE*/
 struct hci_lk_req_reply_cmd
 {
     ///BdAddr
@@ -1117,7 +763,6 @@ struct hci_lk_req_reply_cmd
 };
 
 /// HCI link key request reply command structure
-/*@TRACE*/
 struct hci_pin_code_req_reply_cmd
 {
     ///BdAddr
@@ -1129,7 +774,6 @@ struct hci_pin_code_req_reply_cmd
 };
 
 /// HCI switch role command structure
-/*@TRACE*/
 struct hci_switch_role_cmd
 {
     ///BdAddr
@@ -1139,7 +783,6 @@ struct hci_switch_role_cmd
 };
 
 /// HCI flow specification command parameters structure
-/*@TRACE*/
 struct hci_flow_spec_cmd
 {
     ///Connection handle
@@ -1161,7 +804,6 @@ struct hci_flow_spec_cmd
 };
 
 /// HCI enhanced flush command parameters structure
-/*@TRACE*/
 struct hci_enh_flush_cmd
 {
     ///Connection handle
@@ -1182,7 +824,6 @@ struct hci_rd_auto_flush_to_cmd_cmp_evt
 };
 
 /// HCI write flush timeout command parameters structure
-/*@TRACE*/
 struct hci_wr_auto_flush_to_cmd
 {
     ///Connection handle
@@ -1192,7 +833,6 @@ struct hci_wr_auto_flush_to_cmd
 };
 
 /// HCI change connection packet type command parameters structure
-/*@TRACE*/
 struct hci_chg_con_pkt_type_cmd
 {
     ///Connection handle
@@ -1202,7 +842,6 @@ struct hci_chg_con_pkt_type_cmd
 };
 
 /// HCI read link policy settings command parameters structure
-/*@TRACE*/
 struct hci_rd_link_pol_stg_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1214,7 +853,6 @@ struct hci_rd_link_pol_stg_cmd_cmp_evt
 };
 
 /// HCI read link policy settings command parameters structure
-/*@TRACE*/
 struct hci_wr_link_pol_stg_cmd
 {
     ///Connection handle
@@ -1224,7 +862,6 @@ struct hci_wr_link_pol_stg_cmd
 };
 
 /// HCI sniff mode request command parameters structure
-/*@TRACE*/
 struct hci_sniff_mode_cmd
 {
     ///Connection handle
@@ -1240,7 +877,6 @@ struct hci_sniff_mode_cmd
 };
 
 /// HCI sniff subrating mode request command parameters structure
-/*@TRACE*/
 struct hci_sniff_sub_cmd
 {
     ///Connection handle
@@ -1254,7 +890,6 @@ struct hci_sniff_sub_cmd
 };
 
 /// HCI role discovery complete event parameters structure
-/*@TRACE*/
 struct hci_role_discovery_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1267,7 +902,6 @@ struct hci_role_discovery_cmd_cmp_evt
 };
 
 /// HCI read failed contact counter command parameters structure
-/*@TRACE*/
 struct hci_rd_fail_contact_cnt_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1279,7 +913,6 @@ struct hci_rd_fail_contact_cnt_cmd_cmp_evt
 };
 
 /// HCI read link quality complete event parameters structure
-/*@TRACE*/
 struct hci_rd_link_qual_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1291,7 +924,6 @@ struct hci_rd_link_qual_cmd_cmp_evt
 };
 
 /// HCI read afh channel map complete event parameters structure
-/*@TRACE*/
 struct hci_rd_afh_ch_map_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1305,7 +937,6 @@ struct hci_rd_afh_ch_map_cmd_cmp_evt
 };
 
 /// HCI read lmp handle complete event parameters structure
-/*@TRACE*/
 struct hci_rd_lmp_hdl_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1319,7 +950,6 @@ struct hci_rd_lmp_hdl_cmd_cmp_evt
 };
 
 /// HCI read remote extended features command parameters structure
-/*@TRACE*/
 struct hci_rd_rem_ext_feats_cmd
 {
     ///Connection handle
@@ -1329,7 +959,6 @@ struct hci_rd_rem_ext_feats_cmd
 };
 
 /// HCI read encryption key size complete event parameters structure
-/*@TRACE*/
 struct hci_rd_enc_key_size_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1341,7 +970,6 @@ struct hci_rd_enc_key_size_cmd_cmp_evt
 };
 
 /// HCI read enhanced transmit power command parameters structure
-/*@TRACE*/
 struct hci_rd_enh_tx_pwr_lvl_cmd
 {
     ///Connection handle
@@ -1351,7 +979,6 @@ struct hci_rd_enh_tx_pwr_lvl_cmd
 };
 
 /// HCI read enhanced transmit power complete event parameters structure
-/*@TRACE*/
 struct hci_rd_enh_tx_pwr_lvl_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1374,7 +1001,6 @@ struct hci_rd_enh_tx_pwr_lvl_cmd_cmp_evt
 
 /// Format of the message of the Group: LINK_CONTROL_COMMANDS
 /// HCI Inquiry command parameters structure
-/*@TRACE*/
 struct hci_inq_cmd
 {
     ///Lap
@@ -1384,7 +1010,6 @@ struct hci_inq_cmd
     ///Number of response
     uint8_t     nb_rsp;
 };
-/*@TRACE*/
 struct hci_per_inq_mode_cmd
 {
     ///Maximum period length
@@ -1398,7 +1023,6 @@ struct hci_per_inq_mode_cmd
     ///Number of response
     uint8_t nb_rsp;
 };
-/*@TRACE*/
 struct hci_create_con_cmd
 {
     /// BdAddr
@@ -1423,7 +1047,6 @@ struct hci_create_con_cmd
 };
 
 /// HCI disconnect command structure
-/*@TRACE*/
 struct hci_disconnect_cmd
 {
     /// connection handle
@@ -1433,7 +1056,6 @@ struct hci_disconnect_cmd
 };
 
 /// HCI master link key command structure
-/*@TRACE*/
 struct hci_master_lk_cmd
 {
     ///Key flag
@@ -1441,7 +1063,6 @@ struct hci_master_lk_cmd
 };
 
 /// HCI authentication request command parameters structure
-/*@TRACE*/
 struct hci_set_con_enc_cmd
 {
     ///Connection handle
@@ -1450,7 +1071,6 @@ struct hci_set_con_enc_cmd
     uint8_t enc_en;
 };
 
-/*@TRACE*/
 struct hci_rem_name_req_cmd
 {
     ///BdAddr
@@ -1471,7 +1091,6 @@ struct hci_rem_name_req_cmd
 };
 
 /// HCI remote name request complete event structure
-/*@TRACE*/
 struct hci_rem_name_req_cmp_evt
 {
     /// Status
@@ -1483,7 +1102,6 @@ struct hci_rem_name_req_cmp_evt
 };
 
 /// HCI setup synchronous connection command structure
-/*@TRACE*/
 struct hci_setup_sync_con_cmd
 {
     ///Connection handle
@@ -1503,7 +1121,6 @@ struct hci_setup_sync_con_cmd
 };
 
 /// HCI setup synchronous connection command structure
-/*@TRACE*/
 struct hci_enh_setup_sync_con_cmd
 {
     uint16_t      conhdl;               // Connection Handle
@@ -1533,7 +1150,6 @@ struct hci_enh_setup_sync_con_cmd
 };
 
 /// HCI io capability request reply command structure
-/*@TRACE*/
 struct hci_io_cap_req_reply_cmd
 {
     ///BdAddr
@@ -1548,7 +1164,6 @@ struct hci_io_cap_req_reply_cmd
 };
 
 /// HCI io capability request negative reply command structure
-/*@TRACE*/
 struct hci_io_cap_req_neg_reply_cmd
 {
     ///BdAddr
@@ -1558,7 +1173,6 @@ struct hci_io_cap_req_neg_reply_cmd
 };
 
 /// HCI user pass key request reply command structure
-/*@TRACE*/
 struct hci_user_passkey_req_reply_cmd
 {
     ///BdAddr
@@ -1568,7 +1182,6 @@ struct hci_user_passkey_req_reply_cmd
 };
 
 /// HCI remote oob data request reply command structure
-/*@TRACE*/
 struct hci_rem_oob_data_req_reply_cmd
 {
     ///BdAddr
@@ -1580,7 +1193,6 @@ struct hci_rem_oob_data_req_reply_cmd
 };
 
 /// HCI send key press notification command structure
-/*@TRACE*/
 struct hci_send_keypress_notif_cmd
 {
     ///BdAddr
@@ -1590,7 +1202,6 @@ struct hci_send_keypress_notif_cmd
 };
 
 /// HCI truncated page command structure
-/*@TRACE*/
 struct hci_trunc_page_cmd
 {
     ///BdAddr
@@ -1609,7 +1220,6 @@ struct hci_trunc_page_cmd
 };
 
 /// HCI truncated page cancel command structure
-/*@TRACE*/
 struct hci_trunc_page_can_cmd
 {
     ///BdAddr
@@ -1617,7 +1227,6 @@ struct hci_trunc_page_can_cmd
 };
 
 /// HCI set connectionless slave broadcast command structure
-/*@TRACE*/
 struct hci_set_con_slv_bcst_cmd
 {
     /// Enable
@@ -1637,7 +1246,6 @@ struct hci_set_con_slv_bcst_cmd
 };
 
 /// HCI set connectionless slave broadcast command complete event structure
-/*@TRACE*/
 struct hci_set_con_slv_bcst_cmd_cmp_evt
 {
     /// Status
@@ -1649,7 +1257,6 @@ struct hci_set_con_slv_bcst_cmd_cmp_evt
 };
 
 /// HCI set connectionless slave broadcast receive command structure
-/*@TRACE*/
 struct hci_set_con_slv_bcst_rec_cmd
 {
     /// Enable
@@ -1677,7 +1284,6 @@ struct hci_set_con_slv_bcst_rec_cmd
 };
 
 /// HCI set connectionless slave broadcast receive command complete event structure
-/*@TRACE*/
 struct hci_set_con_slv_bcst_rec_cmd_cmp_evt
 {
     /// Status
@@ -1689,7 +1295,6 @@ struct hci_set_con_slv_bcst_rec_cmd_cmp_evt
 };
 
 /// HCI Receive Synchronization Train command structure
-/*@TRACE*/
 struct hci_rec_sync_train_cmd
 {
     /// BD_ADDR
@@ -1703,7 +1308,6 @@ struct hci_rec_sync_train_cmd
 };
 
 /// HCI remote oob extended data request reply command structure
-/*@TRACE*/
 struct hci_rem_oob_ext_data_req_reply_cmd
 {
     ///BdAddr
@@ -1718,38 +1322,17 @@ struct hci_rem_oob_ext_data_req_reply_cmd
     struct randomizer oob_r_256;
 };
 
-/*@TRACE*/
 struct hci_le_gen_dhkey_v1_cmd
+
 {
-    /// Remote P-256 public key
     uint8_t public_key[64];
 };
-
-/*@TRACE*/
-struct hci_le_gen_dhkey_v2_cmd
-{
-    /// Remote P-256 public key
-    uint8_t public_key[64];
-
-    /// Private key type (@see enum priv_key_type)
-    uint8_t key_type;
-};
-
-/*@TRACE*/
-struct hci_le_mod_sleep_clk_acc_cmd
-{
-    /// Switch to more or less accurate clock (@see enum clk_acc_action)
-    uint8_t action;
-};
-
-
 /*
  * HCI LINK POLICY COMMANDS PARAMETERS
  ****************************************************************************************
  */
 
 /// HCI setup quality of service command structure
-/*@TRACE*/
 struct hci_qos_setup_cmd
 {
     ///Connection handle
@@ -1769,7 +1352,6 @@ struct hci_qos_setup_cmd
 };
 
 /// HCI command complete event structure for read default link policy command structure
-/*@TRACE*/
 struct hci_rd_dft_link_pol_stg_cmd_cmp_evt
 {
     ///Status of the command reception
@@ -1778,7 +1360,6 @@ struct hci_rd_dft_link_pol_stg_cmd_cmp_evt
     uint16_t    link_pol_stg;
 };
 
-/*@TRACE*/
 struct hci_wr_dft_link_pol_stg_cmd
 {
     ///Link policy
@@ -1791,7 +1372,6 @@ struct hci_wr_dft_link_pol_stg_cmd
  */
 
 /// HCI set event mask command structure
-/*@TRACE*/
 struct hci_set_evt_mask_cmd
 {
     ///Event Mask
@@ -1799,7 +1379,6 @@ struct hci_set_evt_mask_cmd
 };
 
 /// HCI set event filter command structure
-/*@TRACE*/
 struct hci_set_evt_filter_cmd
 {
     /// Filter type
@@ -1883,7 +1462,6 @@ struct hci_set_evt_filter_cmd
 };
 
 /// HCI command completed event structure for the flush command
-/*@TRACE*/
 struct hci_flush_cmd_cmp_evt
 {
     ///Status for command reception
@@ -1893,7 +1471,6 @@ struct hci_flush_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for the Read pin type command
-/*@TRACE*/
 struct hci_rd_pin_type_cmd_cmp_evt
 {
     ///Status of the command
@@ -1902,14 +1479,12 @@ struct hci_rd_pin_type_cmd_cmp_evt
     uint8_t   pin_type;
 };
 
-/*@TRACE*/
 struct hci_wr_pin_type_cmd
 {
     ///PIN type
     uint8_t pin_type;
 };
 
-/*@TRACE*/
 struct hci_rd_stored_lk_cmd
 {
     ///BdAddr
@@ -1919,7 +1494,6 @@ struct hci_rd_stored_lk_cmd
 };
 
 /// HCI command complete event structure for read stored link key command
-/*@TRACE*/
 struct hci_rd_stored_lk_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -1931,7 +1505,6 @@ struct hci_rd_stored_lk_cmd_cmp_evt
 };
 
 #if BT_EMB_PRESENT
-/*@TRACE*/
 struct hci_wr_stored_lk_cmd
 {
     /// Number of key to write
@@ -1943,7 +1516,6 @@ struct hci_wr_stored_lk_cmd
 #endif //BT_EMB_PRESENT
 
 /// HCI command complete event structure for write stored link key command
-/*@TRACE*/
 struct hci_wr_stored_lk_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -1952,7 +1524,6 @@ struct hci_wr_stored_lk_cmd_cmp_evt
     uint8_t    num_key_wr;
 };
 
-/*@TRACE*/
 struct hci_del_stored_lk_cmd
 {
     ///BdAddr
@@ -1962,7 +1533,6 @@ struct hci_del_stored_lk_cmd
 };
 
 /// HCI command complete event structure for delete stored link key command
-/*@TRACE*/
 struct hci_del_stored_lk_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -1971,7 +1541,6 @@ struct hci_del_stored_lk_cmd_cmp_evt
     uint16_t num_key_del;
 };
 
-/*@TRACE*/
 struct hci_wr_local_name_cmd
 {
     ///Name
@@ -1979,7 +1548,6 @@ struct hci_wr_local_name_cmd
 };
 
 /// HCI command complete event structure for the read local name command
-/*@TRACE*/
 struct hci_rd_local_name_cmd_cmp_evt
 {
     ///Status of the command
@@ -1989,7 +1557,6 @@ struct hci_rd_local_name_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for the Read connection accept to command
-/*@TRACE*/
 struct hci_rd_con_accept_to_cmd_cmp_evt
 {
     ///Status of the command
@@ -1998,7 +1565,6 @@ struct hci_rd_con_accept_to_cmd_cmp_evt
     uint16_t    con_acc_to;
 };
 
-/*@TRACE*/
 struct hci_wr_con_accept_to_cmd
 {
     /// Connection accept timeout (in slots)
@@ -2006,7 +1572,6 @@ struct hci_wr_con_accept_to_cmd
 };
 
 /// HCI command complete event structure for the Read page to command
-/*@TRACE*/
 struct hci_rd_page_to_cmd_cmp_evt
 {
     ///Status of the command
@@ -2015,7 +1580,6 @@ struct hci_rd_page_to_cmd_cmp_evt
     uint16_t    page_to;
 };
 
-/*@TRACE*/
 struct hci_wr_page_to_cmd
 {
     /// Page timeout (in slots)
@@ -2023,7 +1587,6 @@ struct hci_wr_page_to_cmd
 };
 
 /// HCI command complete event structure for the Read scan enable command
-/*@TRACE*/
 struct hci_rd_scan_en_cmd_cmp_evt
 {
     ///Status of the command
@@ -2032,7 +1595,6 @@ struct hci_rd_scan_en_cmd_cmp_evt
     uint8_t     scan_en;
 };
 
-/*@TRACE*/
 struct hci_wr_scan_en_cmd
 {
     ///Status of the scan enable
@@ -2040,7 +1602,6 @@ struct hci_wr_scan_en_cmd
 };
 
 /// HCI command complete event structure for the Read scan activity command
-/*@TRACE*/
 struct hci_rd_page_scan_act_cmd_cmp_evt
 {
     ///Status of the command
@@ -2051,7 +1612,6 @@ struct hci_rd_page_scan_act_cmd_cmp_evt
     uint16_t page_scan_win;
 };
 
-/*@TRACE*/
 struct hci_wr_page_scan_act_cmd
 {
     /// Page scan interval (in slots)
@@ -2061,7 +1621,6 @@ struct hci_wr_page_scan_act_cmd
 };
 
 /// HCI command complete event structure for the Read inquiry scan activity command
-/*@TRACE*/
 struct hci_rd_inq_scan_act_cmd_cmp_evt
 {
     /// Status of the command
@@ -2072,7 +1631,6 @@ struct hci_rd_inq_scan_act_cmd_cmp_evt
     uint16_t inq_scan_win;
 };
 
-/*@TRACE*/
 struct hci_wr_inq_scan_act_cmd
 {
     /// Inquiry scan interval (in slots)
@@ -2082,7 +1640,6 @@ struct hci_wr_inq_scan_act_cmd
 };
 
 /// HCI command complete event structure for the Read authentication command
-/*@TRACE*/
 struct hci_rd_auth_en_cmd_cmp_evt
 {
     ///Status of the command
@@ -2091,7 +1648,6 @@ struct hci_rd_auth_en_cmd_cmp_evt
     uint8_t    auth_en;
 };
 
-/*@TRACE*/
 struct hci_wr_auth_en_cmd
 {
     ///Value of the authentication
@@ -2099,7 +1655,6 @@ struct hci_wr_auth_en_cmd
 };
 
 /// HCI command complete event structure for the read class of device command
-/*@TRACE*/
 struct hci_rd_class_of_dev_cmd_cmp_evt
 {
     ///Status of the command
@@ -2108,7 +1663,6 @@ struct hci_rd_class_of_dev_cmd_cmp_evt
     struct devclass class_of_dev;
 };
 
-/*@TRACE*/
 struct hci_wr_class_of_dev_cmd
 {
     ///Class of device
@@ -2116,7 +1670,6 @@ struct hci_wr_class_of_dev_cmd
 };
 
 /// HCI read voice settings complete event
-/*@TRACE*/
 struct hci_rd_voice_stg_cmd_cmp_evt
 {
     ///Status of the command reception
@@ -2125,7 +1678,6 @@ struct hci_rd_voice_stg_cmd_cmp_evt
     uint16_t voice_stg;
 };
 
-/*@TRACE*/
 struct hci_wr_voice_stg_cmd
 {
     /// voice setting
@@ -2133,7 +1685,6 @@ struct hci_wr_voice_stg_cmd
 };
 
 /// HCI command complete event structure for read number of broadcast retrans command
-/*@TRACE*/
 struct hci_rd_nb_bdcst_retx_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2142,7 +1693,6 @@ struct hci_rd_nb_bdcst_retx_cmd_cmp_evt
     uint8_t num_bcst_ret;
 };
 
-/*@TRACE*/
 struct hci_wr_nb_bdcst_retx_cmd
 {
     ///Read number of broadcast retransmission
@@ -2150,7 +1700,6 @@ struct hci_wr_nb_bdcst_retx_cmd
 };
 
 /// HCI command complete event structure for the Read Synchronous Flow Control command
-/*@TRACE*/
 struct hci_rd_sync_flow_ctrl_en_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2159,7 +1708,6 @@ struct hci_rd_sync_flow_ctrl_en_cmd_cmp_evt
     uint8_t     sync_flow_ctrl_en;
 };
 
-/*@TRACE*/
 struct hci_wr_sync_flow_ctrl_en_cmd
 {
     /// Synchronous Flow Control enable
@@ -2167,7 +1715,6 @@ struct hci_wr_sync_flow_ctrl_en_cmd
 };
 
 ///HCI set controller to host flow control command
-/*@TRACE*/
 struct hci_set_ctrl_to_host_flow_ctrl_cmd
 {
     ///Flow control enable for controller
@@ -2175,7 +1722,6 @@ struct hci_set_ctrl_to_host_flow_ctrl_cmd
 };
 
 ///HCI host buffer size command
-/*@TRACE*/
 struct hci_host_buf_size_cmd
 {
     ///Host ACL packet length
@@ -2190,7 +1736,6 @@ struct hci_host_buf_size_cmd
 
 #if BT_EMB_PRESENT
 ///HCI host number of completed packets command
-/*@TRACE*/
 struct hci_host_nb_cmp_pkts_cmd
 {
     ///Number of handles for which the completed packets number is given
@@ -2202,7 +1747,6 @@ struct hci_host_nb_cmp_pkts_cmd
 };
 #elif BLE_EMB_PRESENT || BLE_HOST_PRESENT
 ///HCI host number of completed packets command
-/*@TRACE*/
 struct hci_host_nb_cmp_pkts_cmd
 {
     ///Number of handles for which the completed packets number is given
@@ -2226,7 +1770,6 @@ struct hci_rd_link_supv_to_cmd_cmp_evt
 };
 
 /// HCI write link supervision timeout command parameters structure
-/*@TRACE*/
 struct hci_wr_link_supv_to_cmd
 {
     ///Connection handle
@@ -2236,7 +1779,6 @@ struct hci_wr_link_supv_to_cmd
 };
 
 /// HCI command complete event structure for the nb of supported IAC command
-/*@TRACE*/
 struct hci_rd_nb_supp_iac_cmd_cmp_evt
 {
     ///Status of the command
@@ -2246,7 +1788,6 @@ struct hci_rd_nb_supp_iac_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for read current IAC LAP command
-/*@TRACE*/
 struct hci_rd_curr_iac_lap_cmd_cmp_evt
 {
     ///Status of the command
@@ -2258,7 +1799,6 @@ struct hci_rd_curr_iac_lap_cmd_cmp_evt
 };
 
 /// HCI write current IAC LAP command structure
-/*@TRACE*/
 struct hci_wr_curr_iac_lap_cmd
 {
     /// Number of current iac laps
@@ -2267,7 +1807,6 @@ struct hci_wr_curr_iac_lap_cmd
     struct lap iac_lap[(HCI_MAX_CMD_PARAM_SIZE / BD_ADDR_LAP_LEN) - 1];
 };
 
-/*@TRACE*/
 struct hci_set_afh_host_ch_class_cmd
 {
     ///AFH channel map
@@ -2275,7 +1814,6 @@ struct hci_set_afh_host_ch_class_cmd
 };
 
 /// HCI command complete event structure for write inquiry scan type command structure
-/*@TRACE*/
 struct hci_rd_inq_scan_type_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2284,7 +1822,6 @@ struct hci_rd_inq_scan_type_cmd_cmp_evt
     uint8_t     inq_scan_type;
 };
 
-/*@TRACE*/
 struct hci_wr_inq_scan_type_cmd
 {
     /// Inquiry scan type
@@ -2292,7 +1829,6 @@ struct hci_wr_inq_scan_type_cmd
 };
 
 /// HCI command complete event structure for read inquiry mode command structure
-/*@TRACE*/
 struct hci_rd_inq_mode_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2301,7 +1837,6 @@ struct hci_rd_inq_mode_cmd_cmp_evt
     uint8_t     inq_mode;
 };
 
-/*@TRACE*/
 struct hci_wr_inq_mode_cmd
 {
     /// Inquiry mode
@@ -2309,7 +1844,6 @@ struct hci_wr_inq_mode_cmd
 };
 
 /// HCI command complete event structure for write page scan type command structure
-/*@TRACE*/
 struct hci_rd_page_scan_type_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2318,7 +1852,6 @@ struct hci_rd_page_scan_type_cmd_cmp_evt
     uint8_t     page_scan_type;
 };
 
-/*@TRACE*/
 struct hci_wr_page_scan_type_cmd
 {
     /// Page scan type
@@ -2326,7 +1859,6 @@ struct hci_wr_page_scan_type_cmd
 };
 
 /// HCI command complete event structure for read assessment mode command structure
-/*@TRACE*/
 struct hci_rd_afh_ch_assess_mode_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2335,7 +1867,6 @@ struct hci_rd_afh_ch_assess_mode_cmd_cmp_evt
     uint8_t     afh_ch_ass_mode;
 };
 
-/*@TRACE*/
 struct hci_wr_afh_ch_assess_mode_cmd
 {
     ///AFH channel assessment mode
@@ -2343,7 +1874,6 @@ struct hci_wr_afh_ch_assess_mode_cmd
 };
 
 /// HCI command complete event structure for remote name request cancel command
-/*@TRACE*/
 struct hci_rd_ext_inq_rsp_cmd_cmp_evt
 {
     ///status
@@ -2354,7 +1884,6 @@ struct hci_rd_ext_inq_rsp_cmd_cmp_evt
     struct eir  eir;
 };
 
-/*@TRACE*/
 struct hci_wr_ext_inq_rsp_cmd
 {
     ///FEC required
@@ -2364,7 +1893,6 @@ struct hci_wr_ext_inq_rsp_cmd
 };
 
 /// HCI command complete event structure for remote name request cancel command
-/*@TRACE*/
 struct hci_rd_sp_mode_cmd_cmp_evt
 {
     ///status
@@ -2373,7 +1901,6 @@ struct hci_rd_sp_mode_cmd_cmp_evt
     uint8_t     sp_mode;
 };
 
-/*@TRACE*/
 struct hci_wr_sp_mode_cmd
 {
     ///Simple pairing mode
@@ -2381,7 +1908,6 @@ struct hci_wr_sp_mode_cmd
 };
 
 /// HCI command complete event structure for read oob data command
-/*@TRACE*/
 struct hci_rd_loc_oob_data_cmd_cmp_evt
 {
     ///status
@@ -2393,7 +1919,6 @@ struct hci_rd_loc_oob_data_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for read inquiry response transmit power command
-/*@TRACE*/
 struct hci_rd_inq_rsp_tx_pwr_lvl_cmd_cmp_evt
 {
     ///status
@@ -2402,7 +1927,6 @@ struct hci_rd_inq_rsp_tx_pwr_lvl_cmd_cmp_evt
     uint8_t tx_pwr;
 };
 
-/*@TRACE*/
 struct hci_wr_inq_tx_pwr_lvl_cmd
 {
     ///TX power
@@ -2410,7 +1934,6 @@ struct hci_wr_inq_tx_pwr_lvl_cmd
 };
 
 /// HCI command complete event structure for read erroneous data reporting command
-/*@TRACE*/
 struct hci_rd_dft_err_data_rep_cmd_cmp_evt
 {
     ///status
@@ -2419,7 +1942,6 @@ struct hci_rd_dft_err_data_rep_cmd_cmp_evt
     uint8_t     err_data_rep;
 };
 
-/*@TRACE*/
 struct hci_wr_dft_err_data_rep_cmd
 {
     ///Erroneous data reporting
@@ -2427,7 +1949,6 @@ struct hci_wr_dft_err_data_rep_cmd
 };
 
 /// HCI read LE Host Supported complete event
-/*@TRACE*/
 struct  hci_rd_le_host_supp_cmd_cmp_evt
 {
     ///Status
@@ -2439,7 +1960,6 @@ struct  hci_rd_le_host_supp_cmd_cmp_evt
 };
 
 /// HCI write LE Host Supported command
-/*@TRACE*/
 struct  hci_wr_le_host_supp_cmd
 {
     ///LE_Supported_Host
@@ -2449,7 +1969,6 @@ struct  hci_wr_le_host_supp_cmd
 };
 
 /// HCI Set MWS Channel Parameters command
-/*@TRACE*/
 struct hci_set_mws_channel_params_cmd
 {
     ///MWS_Channel_Enable
@@ -2467,7 +1986,6 @@ struct hci_set_mws_channel_params_cmd
 };
 
 /// HCI Set External Frame Configuration command
-/*@TRACE*/
 struct hci_set_external_frame_config_cmd
 {
     /// Ext_Frame_Duration
@@ -2483,7 +2001,6 @@ struct hci_set_external_frame_config_cmd
 };
 
 /// HCI Set MWS Signaling command
-/*@TRACE*/
 struct hci_set_mws_signaling_cmd
 {
     ///MWS_RX_Assert_Offset
@@ -2519,7 +2036,6 @@ struct hci_set_mws_signaling_cmd
 };
 
 /// HCI Set MWS Signaling command complete event
-/*@TRACE*/
 struct hci_set_mws_signaling_cmd_cmp_evt
 {
     ///Status
@@ -2559,7 +2075,6 @@ struct hci_set_mws_signaling_cmd_cmp_evt
 };
 
 /// HCI Set MWS Transport Layer command
-/*@TRACE*/
 struct hci_set_mws_transport_layer_cmd
 {
     ///Transport_Layer
@@ -2571,7 +2086,6 @@ struct hci_set_mws_transport_layer_cmd
 };
 
 /// HCI Set MWS Scan Frequency Table command
-/*@TRACE*/
 struct hci_set_mws_scan_freq_table_cmd
 {
     ///Num_Scan_Frequencies
@@ -2581,7 +2095,6 @@ struct hci_set_mws_scan_freq_table_cmd
 };
 
 /// HCI Set MWS Pattern Configuration command
-/*@TRACE*/
 struct hci_set_mws_pattern_config_cmd
 {
     ///MWS_PATTERN_Index
@@ -2593,7 +2106,6 @@ struct hci_set_mws_pattern_config_cmd
 };
 
 /// Hci Get MWS Transport Layer Configuration command complete event
-/*@TRACE*/
 struct hci_get_mws_transport_layer_config_cmd_cmp_evt
 {
     ///Status
@@ -2605,7 +2117,6 @@ struct hci_get_mws_transport_layer_config_cmd_cmp_evt
 };
 
 /// HCI read Secure Connections Host Support complete event
-/*@TRACE*/
 struct  hci_rd_sec_con_host_supp_cmd_cmp_evt
 {
     ///Status
@@ -2615,35 +2126,13 @@ struct  hci_rd_sec_con_host_supp_cmd_cmp_evt
 };
 
 /// HCI write Secure Connections Host Support command
-/*@TRACE*/
 struct  hci_wr_sec_con_host_supp_cmd
 {
     /// Secure Connections Host Support
     uint8_t sec_con_host_supp;
 };
 
-/// HCI write Secure Connections Test Mode command
-struct  hci_wr_sec_con_test_mode_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// DM1 ACL-U mode
-    uint8_t dm1_acl_u_mode;
-    /// eSCO loopback mode
-    uint8_t esco_loopback_mode;
-};
-
-/// HCI write Secure Connections Test Mode complete event
-struct  hci_wr_sec_con_test_mode_cmd_cmp_evt
-{
-    ///Status
-    uint8_t status;
-    /// Connection handle
-    uint16_t conhdl;
-};
-
 /// HCI Set Reserved LT_ADDR command
-/*@TRACE*/
 struct hci_set_res_lt_addr_cmd
 {
     /// LT_ADDR
@@ -2651,7 +2140,6 @@ struct hci_set_res_lt_addr_cmd
 };
 
 /// HCI Set Reserved LT_ADDR command complete event
-/*@TRACE*/
 struct hci_set_res_lt_addr_cmd_cmp_evt
 {
     /// Status
@@ -2661,7 +2149,6 @@ struct hci_set_res_lt_addr_cmd_cmp_evt
 };
 
 /// HCI Delete Reserved LT_ADDR command
-/*@TRACE*/
 struct hci_del_res_lt_addr_cmd
 {
     /// LT_ADDR
@@ -2669,7 +2156,6 @@ struct hci_del_res_lt_addr_cmd
 };
 
 /// HCI Delete Reserved LT_ADDR command complete event
-/*@TRACE*/
 struct hci_del_res_lt_addr_cmd_cmp_evt
 {
     /// Status
@@ -2679,7 +2165,6 @@ struct hci_del_res_lt_addr_cmd_cmp_evt
 };
 
 /// HCI Set Connectionless Slave Broadcast Data command
-/*@TRACE*/
 struct hci_set_con_slv_bcst_data_cmd
 {
     /// LT_ADDR
@@ -2693,7 +2178,6 @@ struct hci_set_con_slv_bcst_data_cmd
 };
 
 /// HCI Set Connectionless Slave Broadcast Data command complete event
-/*@TRACE*/
 struct hci_set_con_slv_bcst_data_cmd_cmp_evt
 {
     /// Status
@@ -2703,7 +2187,6 @@ struct hci_set_con_slv_bcst_data_cmd_cmp_evt
 };
 
 /// HCI Read Synchronization Train Parameters command complete event
-/*@TRACE*/
 struct hci_rd_sync_train_param_cmd_cmp_evt
 {
     /// Status
@@ -2717,7 +2200,6 @@ struct hci_rd_sync_train_param_cmd_cmp_evt
 };
 
 /// HCI Write Synchronization Train Parameters command
-/*@TRACE*/
 struct hci_wr_sync_train_param_cmd
 {
     /// Interval_Min (in slots)
@@ -2731,7 +2213,6 @@ struct hci_wr_sync_train_param_cmd
 };
 
 /// HCI Write Synchronization Train Parameters command complete event
-/*@TRACE*/
 struct hci_wr_sync_train_param_cmd_cmp_evt
 {
     /// Status
@@ -2748,7 +2229,6 @@ struct hci_sync_train_cmp_evt
 };
 
 /// HCI read authenticated payload timeout command
-/*@TRACE*/
 struct hci_rd_auth_payl_to_cmd
 {
     ///Connection handle
@@ -2756,7 +2236,6 @@ struct hci_rd_auth_payl_to_cmd
 };
 
 /// HCI command complete event structure for the Read Authenticated Payload Timeout Command
-/*@TRACE*/
 struct hci_rd_auth_payl_to_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2768,7 +2247,6 @@ struct hci_rd_auth_payl_to_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for read oob extended data command
-/*@TRACE*/
 struct hci_rd_loc_oob_ext_data_cmd_cmp_evt
 {
     ///status
@@ -2784,7 +2262,6 @@ struct hci_rd_loc_oob_ext_data_cmd_cmp_evt
 };
 
 /// HCI read Extended Page Timeout CC event
-/*@TRACE*/
 struct hci_rd_ext_page_to_cmd_cmp_evt
 {
     /// Status
@@ -2798,7 +2275,6 @@ struct hci_rd_ext_page_to_cmd_cmp_evt
 };
 
 /// HCI write Extended Page Timeout
-/*@TRACE*/
 struct hci_wr_ext_page_to_cmd
 {
     /**
@@ -2810,7 +2286,6 @@ struct hci_wr_ext_page_to_cmd
 };
 
 /// HCI read Extended Inquiry Length CC event
-/*@TRACE*/
 struct hci_rd_ext_inq_len_cmd_cmp_evt
 {
     /// Status
@@ -2820,33 +2295,10 @@ struct hci_rd_ext_inq_len_cmd_cmp_evt
 };
 
 /// HCI write Extended Inquiry Length
-/*@TRACE*/
 struct hci_wr_ext_inq_len_cmd
 {
     /// Extended Inquiry Length
     uint16_t ext_inq_len;
-};
-
-/// HCI Set Ecosystem Base Interval command
-/*@TRACE*/
-struct hci_set_eco_base_intv_cmd
-{
-    /// Interval
-    uint16_t interval;
-};
-
-/// HCI Configure Data Path command
-/*@TRACE*/
-struct hci_config_data_path_cmd
-{
-    /// Data Path Direction
-    uint8_t data_path_direction;
-    /// Data Path ID
-    uint8_t data_path_id;
-    /// Vendor Specific Config Length (in bytes)
-    uint8_t vendor_specific_cfg_len;
-    /// Vendor Specific Config
-    uint8_t vendor_specific_cfg[__ARRAY_EMPTY];
 };
 
 /*
@@ -2855,7 +2307,6 @@ struct hci_config_data_path_cmd
  */
 
 ///HCI command complete event structure for read local version information
-/*@TRACE*/
 struct hci_rd_local_ver_info_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2873,7 +2324,6 @@ struct hci_rd_local_ver_info_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for read local supported commands
-/*@TRACE*/
 struct hci_rd_local_supp_cmds_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2883,7 +2333,6 @@ struct hci_rd_local_supp_cmds_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for read local supported features command
-/*@TRACE*/
 struct hci_rd_local_supp_feats_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2892,7 +2341,6 @@ struct hci_rd_local_supp_feats_cmd_cmp_evt
     struct features feats;
 };
 
-/*@TRACE*/
 struct hci_rd_local_ext_feats_cmd
 {
     ///Page number
@@ -2900,7 +2348,6 @@ struct hci_rd_local_ext_feats_cmd
 };
 
 /// HCI command complete event structure for read local extended features command
-/*@TRACE*/
 struct hci_rd_local_ext_feats_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2914,7 +2361,6 @@ struct hci_rd_local_ext_feats_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for the Read Buffer Size Command
-/*@TRACE*/
 struct hci_rd_buf_size_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2930,7 +2376,6 @@ struct hci_rd_buf_size_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for read bd address
-/*@TRACE*/
 struct hci_rd_bd_addr_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2940,7 +2385,6 @@ struct hci_rd_bd_addr_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for read local supported codecs
-/*@TRACE*/
 struct hci_rd_local_supp_codecs_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -2952,87 +2396,12 @@ struct hci_rd_local_supp_codecs_cmd_cmp_evt
 //    struct supp_codecs    local_codecs;
 };
 
-/// HCI command complete event structure for read local supported codecs v2
-/*@TRACE*/
-struct hci_rd_local_supp_codecs_v2_cmd_cmp_evt
-{
-    /// Status of the command reception
-    uint8_t               status;
-    uint8_t               num_supp_standard_codecs;
-    uint8_t               num_supp_vendor_specific_codecs;
-
-//    ///Supported Codecs structure
-//    struct supp_codecs    local_codecs;
-};
-
-/// HCI command complete event structure for read local simple pairing options
-struct hci_rd_local_sp_opt_cmd_cmp_evt
-{
-    /// Status of the command reception
-    uint8_t status;
-    /// Simple Pairing options (bit 0: Remote public key validation)
-    uint8_t sp_opt;
-    /// Maximum Encryption Key Size (in octets)
-    uint8_t max_enc_key_size;
-};
-
-/// HCI Read Local Supported Codec Capabilities command
-struct hci_rd_local_supp_codec_cap_cmd
-{
-    /// Codec ID
-    uint8_t codec_id[CODEC_ID_LEN];
-    /// Logical Transport Type
-    uint8_t logical_transport_type;
-    /// Direction
-    uint8_t direction;
-};
-
-/// HCI command complete event structure for Read Local Supported Codec Capabilities command
-struct hci_rd_local_supp_codec_cap_cmd_cmp_evt
-{
-    /// Status of the command reception
-    uint8_t status;
-    /// Num Codec Capabilities
-    uint8_t num_codec_cap;
-    /// Codec Capability Length [i]
-    uint8_t codec_cap_len; // TODO: update when the number of codecs is available
-    /// Codec Capability [i]
-    uint8_t codec_cap[__ARRAY_EMPTY]; // TODO: update when the number of codecs is available
-};
-
-/// HCI Read Local Supported Controller Delay command
-struct hci_rd_local_supp_ctrl_delay_cmd
-{
-    /// Codec ID
-    uint8_t codec_id[CODEC_ID_LEN];
-    /// Logical Transport Type
-    uint8_t logical_transport_type;
-    /// Direction
-    uint8_t direction;
-    /// Codec Configuration Length
-    uint8_t codec_cfg_len;
-    /// Codec Configuration
-    uint8_t codec_cfg[__ARRAY_EMPTY];
-};
-
-/// HCI command complete event structure for Read Local Supported Controller Delay command
-struct hci_rd_local_supp_ctrl_delay_cmd_cmp_evt
-{
-    /// Status of the command reception
-    uint8_t status;
-    /// Min Controller Delay
-    uint8_t min_ctrl_delay[3];
-    /// Max Controller Delay
-    uint8_t max_ctrl_delay[3];
-};
-
 /*
  * HCI STATUS PARAMETERS COMMANDS PARAMETERS
  ****************************************************************************************
  */
 
 /// HCI command complete event structure for read rssi
-/*@TRACE*/
 struct hci_rd_rssi_cmd_cmp_evt
 {
     ///Status for command reception
@@ -3043,7 +2412,6 @@ struct hci_rd_rssi_cmd_cmp_evt
     int8_t rssi;
 };
 
-/*@TRACE*/
 struct hci_rd_clk_cmd
 {
     ///Connection handle
@@ -3053,7 +2421,6 @@ struct hci_rd_clk_cmd
 };
 
 /// HCI read clock command structure
-/*@TRACE*/
 struct hci_rd_clk_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -3073,7 +2440,6 @@ struct hci_rd_clk_cmd_cmp_evt
  */
 
 /// HCI command complete event structure for read loop back mode command
-/*@TRACE*/
 struct hci_rd_loopback_mode_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -3082,14 +2448,11 @@ struct hci_rd_loopback_mode_cmd_cmp_evt
     uint8_t     lb_mode;
 };
 
-/*@TRACE*/
 struct hci_wr_loopback_mode_cmd
 {
     ///Local  supported features
     uint8_t     lb_mode;
 };
-
-/*@TRACE*/
 struct hci_wr_sp_dbg_mode_cmd
 {
     ///Simple pairing mode
@@ -3103,7 +2466,6 @@ struct hci_wr_sp_dbg_mode_cmd
  */
 
 ///HCI LE Set Event Mask Command parameters structure
-/*@TRACE*/
 struct hci_le_set_evt_mask_cmd
 {
     ///LE Event Mask
@@ -3111,7 +2473,6 @@ struct hci_le_set_evt_mask_cmd
 };
 
 ///HCI LE Set Random Address Command parameters structure
-/*@TRACE*/
 struct hci_le_set_rand_addr_cmd
 {
     ///Random address to set
@@ -3119,7 +2480,6 @@ struct hci_le_set_rand_addr_cmd
 };
 
 ///HCI LE Set Advertising Parameters Command parameters structure
-/*@TRACE*/
 struct hci_le_set_adv_param_cmd
 {
     ///Minimum interval for advertising
@@ -3141,7 +2501,6 @@ struct hci_le_set_adv_param_cmd
 };
 
 ///HCI LE Set Advertising Data Command parameters structure
-/*@TRACE*/
 struct hci_le_set_adv_data_cmd
 {
     ///Advertising data length
@@ -3151,7 +2510,6 @@ struct hci_le_set_adv_data_cmd
 };
 
 ///HCI LE Set Scan Response Data Command parameters structure
-/*@TRACE*/
 struct hci_le_set_scan_rsp_data_cmd
 {
     ///Scan response data length
@@ -3161,7 +2519,6 @@ struct hci_le_set_scan_rsp_data_cmd
 };
 
 ///HCI LE Set Advertise Enable Command parameters structure
-/*@TRACE*/
 struct hci_le_set_adv_en_cmd
 {
     ///Advertising enable - 0=disabled, 1=enabled
@@ -3169,7 +2526,6 @@ struct hci_le_set_adv_en_cmd
 };
 
 ///HCI LE Set Scan Parameters Command parameters structure
-/*@TRACE*/
 struct hci_le_set_scan_param_cmd
 {
     ///Scan type - 0=passive / 1=active
@@ -3185,7 +2541,6 @@ struct hci_le_set_scan_param_cmd
 };
 
 ///HCI LE Set Scan Enable Command parameters structure
-/*@TRACE*/
 struct hci_le_set_scan_en_cmd
 {
     ///Scan enable - 0=disabled, 1=enabled
@@ -3195,7 +2550,6 @@ struct hci_le_set_scan_en_cmd
 };
 
 ///HCI LE Create Connection Command parameters structure
-/*@TRACE*/
 struct hci_le_create_con_cmd
 {
     ///Scan interval (N * 0.625 ms)
@@ -3225,7 +2579,6 @@ struct hci_le_create_con_cmd
 };
 
 ///HCI LE Add Device to White List Command parameters structure
-/*@TRACE*/
 struct hci_le_add_dev_to_wlst_cmd
 {
     ///Type of address of the device to be added to the White List - 0=public/1=random
@@ -3235,7 +2588,6 @@ struct hci_le_add_dev_to_wlst_cmd
 };
 
 ///HCI LE Remove Device from White List Command parameters structure
-/*@TRACE*/
 struct hci_le_rmv_dev_from_wlst_cmd
 {
     ///Type of address of the device to be removed from the White List - 0=public/1=random
@@ -3245,7 +2597,6 @@ struct hci_le_rmv_dev_from_wlst_cmd
 };
 
 ///HCI LE Set Extended Scan Paramaters Command parameters structure
-/*@TRACE*/
 struct hci_le_set_ext_scan_param_cmd
 {
     ///Own address type public/random/rpa
@@ -3267,7 +2618,6 @@ struct hci_le_set_ext_scan_param_cmd
 };
 
 ///HCI LE Set Extended Scan Enable Command parameters structure
-/*@TRACE*/
 struct hci_le_set_ext_scan_en_cmd
 {
     ///Scan enable - 0=disabled, 1=enabled
@@ -3280,7 +2630,6 @@ struct hci_le_set_ext_scan_en_cmd
     uint16_t            period;
 };
 
-/*@TRACE*/
 struct init_phy_param
 {
     ///Scan interval (N * 0.625 ms)
@@ -3302,7 +2651,6 @@ struct init_phy_param
 };
 
 ///HCI LE Extended Create Connection Command parameters structure
-/*@TRACE*/
 struct hci_le_ext_create_con_cmd
 {
     ///Initiator filter policy
@@ -3320,7 +2668,6 @@ struct hci_le_ext_create_con_cmd
 };
 
 ///HCI LE Periodic Advertising Create Sync Command parameters structure
-/*@TRACE*/
 struct hci_le_per_adv_create_sync_cmd
 {
     /// Options (@see enum per_sync_opt)
@@ -3335,12 +2682,9 @@ struct hci_le_per_adv_create_sync_cmd
     uint16_t        skip;
     ///Sync timeout (Time=N*10ms)
     uint16_t        sync_to;
-    /// Sync CTE type (@see enum sync_cte_type)
-    uint8_t         sync_cte_type;
 };
 
 ///HCI LE Periodic Advertising Terminate Sync Command parameters structure
-/*@TRACE*/
 struct hci_le_per_adv_term_sync_cmd
 {
     ///Sync handle
@@ -3348,7 +2692,6 @@ struct hci_le_per_adv_term_sync_cmd
 };
 
 ///HCI LE Add Device to Periodic Advertiser List Command parameters structure
-/*@TRACE*/
 struct hci_le_add_dev_to_per_adv_list_cmd
 {
      ///Advertiser address type
@@ -3360,7 +2703,6 @@ struct hci_le_add_dev_to_per_adv_list_cmd
 };
 
 ///HCI LE Remove Device from Periodic Advertiser List Command parameters structure
-/*@TRACE*/
 struct hci_le_rmv_dev_from_per_adv_list_cmd
 {
      ///Advertiser address type
@@ -3372,7 +2714,6 @@ struct hci_le_rmv_dev_from_per_adv_list_cmd
 };
 
 ///HCI LE Set Privacy Mode Command parameters structure
-/*@TRACE*/
 struct hci_le_set_priv_mode_cmd
 {
     ///Peer identity address type
@@ -3384,7 +2725,6 @@ struct hci_le_set_priv_mode_cmd
 };
 
 ///HCI LE Set Host Channel Classification Command parameters structure
-/*@TRACE*/
 struct hci_le_set_host_ch_class_cmd
 {
     ///Channel map
@@ -3393,7 +2733,6 @@ struct hci_le_set_host_ch_class_cmd
 
 
 ///HCI LE Receiver Test v1 Command parameters structure
-/*@TRACE*/
 struct hci_le_rx_test_v1_cmd
 {
     /// RX channel, range: 0x00 to 0x27
@@ -3401,7 +2740,6 @@ struct hci_le_rx_test_v1_cmd
 };
 
 ///HCI LE Transmitter Test v1 Command parameters structure
-/*@TRACE*/
 struct hci_le_tx_test_v1_cmd
 {
     /// TX channel, range: 0x00 to 0x27
@@ -3410,21 +2748,11 @@ struct hci_le_tx_test_v1_cmd
     uint8_t     test_data_len;
     /**
      * Packet payload
-     * 0x00 PRBS9 sequence "11111111100000111101" (in transmission order) as described in [Vol 6] Part F, Section 4.1.5
-     * 0x01 Repeated "11110000" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x02 Repeated "10101010" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x03 PRBS15 sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x04 Repeated "11111111" (in transmission order) sequence
-     * 0x05 Repeated "00000000" (in transmission order) sequence
-     * 0x06 Repeated "00001111" (in transmission order) sequence
-     * 0x07 Repeated "01010101" (in transmission order) sequence
-     * 0x08-0xFF Reserved for future use
      */
     uint8_t     pkt_payl;
 };
 
 ///HCI LE Encrypt Command parameters structure
-/*@TRACE*/
 struct hci_le_enc_cmd
 {
     ///Long term key structure
@@ -3434,7 +2762,6 @@ struct hci_le_enc_cmd
 };
 
 /// HCI LE Connection Update Command parameters structure
-/*@TRACE*/
 struct hci_le_con_update_cmd
 {
     ///Connection Handle
@@ -3454,7 +2781,6 @@ struct hci_le_con_update_cmd
 };
 
 /// HCI LE Enable Encryption Command parameters structure
-/*@TRACE*/
 struct hci_le_en_enc_cmd
 {
     ///Connection handle
@@ -3468,7 +2794,6 @@ struct hci_le_en_enc_cmd
 };
 
 /// HCI long term key request reply command parameters structure
-/*@TRACE*/
 struct hci_le_ltk_req_reply_cmd
 {
     ///Connection handle
@@ -3478,7 +2803,6 @@ struct hci_le_ltk_req_reply_cmd
 };
 
 /// HCI long term key request negative reply command parameters structure
-/*@TRACE*/
 struct hci_le_ltk_req_neg_reply_cmd
 {
     ///Connection handle
@@ -3486,7 +2810,6 @@ struct hci_le_ltk_req_neg_reply_cmd
 };
 
 /// HCI LE remote connection parameter request reply command parameters structure
-/*@TRACE*/
 struct hci_le_rem_con_param_req_reply_cmd
 {
     ///Connection handle
@@ -3506,7 +2829,6 @@ struct hci_le_rem_con_param_req_reply_cmd
 };
 
 /// HCI LE remote connection parameter request negative reply command parameters structure
-/*@TRACE*/
 struct hci_le_rem_con_param_req_neg_reply_cmd
 {
     ///Connection handle
@@ -3517,7 +2839,6 @@ struct hci_le_rem_con_param_req_neg_reply_cmd
 
 
 /// HCI LE Set Data Length  Command parameters structure
-/*@TRACE*/
 struct hci_le_set_data_len_cmd
 {
     ///Connection Handle
@@ -3531,7 +2852,6 @@ struct hci_le_set_data_len_cmd
 };
 
 /// HCI LE Read Suggested Default Data Length Command
-/*@TRACE*/
 struct hci_le_wr_suggted_dft_data_len_cmd
 {
     ///Suggested value for the Controller's maximum transmitted number of payload octets to be used
@@ -3541,7 +2861,6 @@ struct hci_le_wr_suggted_dft_data_len_cmd
 };
 
 /// HCI LE Add Device to Resolving List Command
-/*@TRACE*/
 struct hci_le_add_dev_to_rslv_list_cmd
 {
     /// Peer Identity Address Type
@@ -3555,7 +2874,6 @@ struct hci_le_add_dev_to_rslv_list_cmd
 };
 
 /// HCI LE Remove Device From Resolving List Command
-/*@TRACE*/
 struct hci_le_rmv_dev_from_rslv_list_cmd
 {
     /// Peer Identity Address Type
@@ -3565,7 +2883,6 @@ struct hci_le_rmv_dev_from_rslv_list_cmd
 };
 
 /// HCI LE Read Peer Resolvable Address Command
-/*@TRACE*/
 struct hci_le_rd_peer_rslv_addr_cmd
 {
     /// Peer Identity Address Type
@@ -3575,7 +2892,6 @@ struct hci_le_rd_peer_rslv_addr_cmd
 };
 
 /// HCI LE Read Local Resolvable Address Command
-/*@TRACE*/
 struct hci_le_rd_loc_rslv_addr_cmd
 {
     /// Peer Identity Address Type
@@ -3585,7 +2901,6 @@ struct hci_le_rd_loc_rslv_addr_cmd
 };
 
 /// HCI LE Set Address Resolution Enable Command
-/*@TRACE*/
 struct hci_le_set_addr_resol_en_cmd
 {
     /// Address Resolution Enable
@@ -3593,7 +2908,6 @@ struct hci_le_set_addr_resol_en_cmd
 };
 
 /// HCI LE Set Resolvable Private Address Timeout Command
-/*@TRACE*/
 struct hci_le_set_rslv_priv_addr_to_cmd
 {
     /// RPA Timeout
@@ -3606,7 +2920,6 @@ struct hci_le_set_rslv_priv_addr_to_cmd
  */
 
 /// HCI inquiry complete event structure
-/*@TRACE*/
 struct hci_inq_cmp_evt
 {
     ///Status of the procedure
@@ -3615,7 +2928,6 @@ struct hci_inq_cmp_evt
 
 
 /// HCI Inquiry result event structure (with only 1 result)
-/*@TRACE*/
 struct hci_inq_res_evt
 {
 
@@ -3637,7 +2949,6 @@ struct hci_inq_res_evt
 };
 
 /// HCI Inquiry result with rssi event structure (with only 1 result)
-/*@TRACE*/
 struct hci_inq_res_with_rssi_evt
 {
     ///Number of response
@@ -3658,7 +2969,6 @@ struct hci_inq_res_with_rssi_evt
 };
 
 /// HCI Extended inquiry result indication structure (with only 1 result)
-/*@TRACE*/
 struct hci_ext_inq_res_evt
 {
     ///Number of response
@@ -3680,7 +2990,6 @@ struct hci_ext_inq_res_evt
 };
 
 /// HCI disconnect complete event structure
-/*@TRACE*/
 struct hci_disc_cmp_evt
 {
     ///Status of received command
@@ -3692,32 +3001,6 @@ struct hci_disc_cmp_evt
 };
 
 /// HCI basic command complete event structure
-/*@TRACE
- * hci_dbg_wr_par_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_dbg_llcp_discard_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_reset_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_set_evt_mask_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_per_adv_en_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_create_con_cancel_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_evt_mask_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_host_ch_class_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_wr_suggted_dft_data_len_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_dft_phy_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_rmv_dev_from_wlst_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_adv_param_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_adv_data_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_scan_rsp_data_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_adv_en_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_scan_param_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_scan_en_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_rand_addr_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_addr_resol_en_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_set_rslv_priv_addr_to_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_rmv_dev_from_rslv_list_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_create_con_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_dbg_plf_reset_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * hci_le_wr_rf_path_comp_cmd_cmp_evt = hci_basic_cmd_cmp_evt
- * */
 struct hci_basic_cmd_cmp_evt
 {
     ///Status of the command reception
@@ -3725,7 +3008,6 @@ struct hci_basic_cmd_cmp_evt
 };
 
 /// HCI basic command complete event structure with connection handle
-/*@TRACE*/
 struct hci_basic_conhdl_cmd_cmp_evt
 {
     /// status
@@ -3760,7 +3042,6 @@ struct hci_basic_conhdl_evt
 };
 
 /// HCI complete event with status only.
-/*@TRACE*/
 struct hci_cmd_stat_event
 {
     /// Status of the command reception
@@ -3768,7 +3049,6 @@ struct hci_cmd_stat_event
 };
 
 /// HCI number of packet complete event structure
-/*@TRACE*/
 struct hci_nb_cmp_pkts_evt
 {
     /// number of handles
@@ -3780,7 +3060,6 @@ struct hci_nb_cmp_pkts_evt
 };
 
 /// HCI data buffer overflow event structure
-/*@TRACE*/
 struct hci_data_buf_ovflw_evt
 {
     ///Link type
@@ -3788,7 +3067,6 @@ struct hci_data_buf_ovflw_evt
 };
 
 /// HCI Hardware Error Event parameters structure
-/*@TRACE*/
 struct hci_hw_err_evt
 {
     /// HW error code
@@ -3807,8 +3085,6 @@ struct hci_enc_change_evt
 };
 
 /// HCI encryption key refresh complete event structure
-/*@TRACE
- * hci_enc_key_refresh_evt = hci_enc_key_ref_cmp_evt */
 struct hci_enc_key_ref_cmp_evt
 {
     ///Status for command reception
@@ -3818,7 +3094,6 @@ struct hci_enc_key_ref_cmp_evt
 };
 
 /// HCI Authenticated Payload Timeout Expired Event structure
-/*@TRACE*/
 struct hci_auth_payl_to_exp_evt
 {
     ///Connection handle
@@ -3826,7 +3101,6 @@ struct hci_auth_payl_to_exp_evt
 };
 
 /// HCI command complete event structure for create connection
-/*@TRACE*/
 struct hci_con_cmp_evt
 {
     /// Status
@@ -3842,7 +3116,6 @@ struct hci_con_cmp_evt
 };
 
 /// HCI command complete event structure for qos setup
-/*@TRACE*/
 struct hci_qos_setup_cmp_evt
 {
     ///Status for command reception
@@ -3864,7 +3137,6 @@ struct hci_qos_setup_cmp_evt
 };
 
 /// HCI flow specification complete event parameters structure
-/*@TRACE*/
 struct hci_flow_spec_cmp_evt
 {
     ///Status for command reception
@@ -3888,7 +3160,6 @@ struct hci_flow_spec_cmp_evt
 };
 
 /// HCI role change event parameters structure
-/*@TRACE*/
 struct hci_role_chg_evt
 {
     ///Status
@@ -3900,7 +3171,6 @@ struct hci_role_chg_evt
 };
 
 /// HCI complete event structure for the read clock offset command
-/*@TRACE*/
 struct hci_rd_clk_off_cmp_evt
 {
     ///Status for command reception
@@ -3912,7 +3182,6 @@ struct hci_rd_clk_off_cmp_evt
 };
 
 /// HCI event structure for the flush occurred event
-/*@TRACE*/
 struct hci_flush_occurred_evt
 {
     ///Connection handle
@@ -3920,7 +3189,6 @@ struct hci_flush_occurred_evt
 };
 
 /// HCI max slot change event structure
-/*@TRACE*/
 struct hci_max_slot_chg_evt
 {
     ///Connection handle
@@ -3930,7 +3198,6 @@ struct hci_max_slot_chg_evt
 };
 
 /// HCI sniff subrating event parameters structure
-/*@TRACE*/
 struct hci_sniff_sub_evt
 {
     ///Status.
@@ -3948,7 +3215,6 @@ struct hci_sniff_sub_evt
 };
 
 /// HCI read remote extended features complete event parameters structure
-/*@TRACE*/
 struct hci_rd_rem_ext_feats_cmp_evt
 {
     ///Status for command reception
@@ -3964,7 +3230,6 @@ struct hci_rd_rem_ext_feats_cmp_evt
 };
 
 /// HCI read remote extended features complete event parameters structure
-/*@TRACE*/
 struct hci_rem_host_supp_feats_notif_evt
 {
     ///BD address
@@ -3974,7 +3239,6 @@ struct hci_rem_host_supp_feats_notif_evt
 };
 
 /// HCI command complete event structure for the read remote supported features command
-/*@TRACE*/
 struct hci_rd_rem_supp_feats_cmp_evt
 {
     ///Status for command reception
@@ -3986,7 +3250,6 @@ struct hci_rd_rem_supp_feats_cmp_evt
 };
 
 /// HCI command complete event structure for the read remote information version command
-/*@TRACE*/
 struct hci_rd_rem_ver_info_cmp_evt
 {
     ///Status for command reception
@@ -4002,7 +3265,6 @@ struct hci_rd_rem_ver_info_cmp_evt
 };
 
 /// HCI encryption change event structure
-/*@TRACE*/
 struct hci_enc_chg_evt
 {
     ///Status for command reception
@@ -4014,7 +3276,6 @@ struct hci_enc_chg_evt
 };
 
 /// HCI mode change event structure
-/*@TRACE*/
 struct hci_mode_chg_evt
 {
     ///Status for command reception
@@ -4028,7 +3289,6 @@ struct hci_mode_chg_evt
 };
 
 /// HCI simple pairing complete event structure
-/*@TRACE*/
 struct hci_sp_cmp_evt
 {
     ///Status for command reception
@@ -4038,7 +3298,6 @@ struct hci_sp_cmp_evt
 };
 
 /// HCI Authentication complete event structure
-/*@TRACE*/
 struct hci_auth_cmp_evt
 {
     ///Status for command reception
@@ -4048,7 +3307,6 @@ struct hci_auth_cmp_evt
 };
 
 /// HCI change connection link key complete event structure
-/*@TRACE*/
 struct hci_chg_con_lk_cmp_evt
 {
     ///Status
@@ -4058,7 +3316,6 @@ struct hci_chg_con_lk_cmp_evt
 };
 
 /// HCI encryption key refresh complete event structure
-/*@TRACE*/
 struct hci_enc_key_refresh_cmp_evt
 {
     ///Status for command reception
@@ -4068,7 +3325,6 @@ struct hci_enc_key_refresh_cmp_evt
 };
 
 /// HCI master link key complete event structure
-/*@TRACE*/
 struct hci_master_lk_cmp_evt
 {
     ///Status for command reception
@@ -4079,7 +3335,6 @@ struct hci_master_lk_cmp_evt
     uint8_t key_flag;
 };
 /// HCI synchronous link connection complete event structure
-/*@TRACE*/
 struct hci_sync_con_cmp_evt
 {
     ///Status for command reception
@@ -4104,7 +3359,6 @@ struct hci_sync_con_cmp_evt
 };
 
 /// HCI synchronous connection change event structure
-/*@TRACE*/
 struct hci_sync_con_chg_evt
 {
     ///Status for command reception
@@ -4122,7 +3376,6 @@ struct hci_sync_con_chg_evt
 };
 
 /// HCI connection packet type change event structure
-/*@TRACE*/
 struct hci_con_pkt_type_chg_evt
 {
     ///Status for command reception
@@ -4134,7 +3387,6 @@ struct hci_con_pkt_type_chg_evt
 };
 
 /// HCI link supervision timeout change event structure
-/*@TRACE*/
 struct hci_link_supv_to_chg_evt
 {
     ///Connection handle
@@ -4144,7 +3396,6 @@ struct hci_link_supv_to_chg_evt
 };
 
 /// HCI link key request event structure
-/*@TRACE*/
 struct hci_lk_req_evt
 {
     ///BD address
@@ -4152,7 +3403,6 @@ struct hci_lk_req_evt
 };
 
 /// HCI encryption key refresh event structure
-/*@TRACE*/
 struct hci_enc_key_refresh_evt
 {
     ///Status for command reception
@@ -4162,7 +3412,6 @@ struct hci_enc_key_refresh_evt
 };
 
 /// HCI connection request event structure
-/*@TRACE*/
 struct hci_con_req_evt
 {
     ///BD address
@@ -4174,7 +3423,6 @@ struct hci_con_req_evt
 };
 
 /// HCI quality of service violation event structure
-/*@TRACE*/
 struct hci_qos_viol_evt
 {
     ///Connection handle
@@ -4182,7 +3430,6 @@ struct hci_qos_viol_evt
 };
 
 /// HCI io capability response event structure
-/*@TRACE*/
 struct hci_io_cap_rsp_evt
 {
     ///BdAddr
@@ -4197,7 +3444,6 @@ struct hci_io_cap_rsp_evt
 };
 
 /// HCI IO capability response event structure
-/*@TRACE*/
 struct hci_io_cap_req_evt
 {
     ///BdAddr
@@ -4205,7 +3451,6 @@ struct hci_io_cap_req_evt
 };
 
 /// HCI Return link keys event structure
-/*@TRACE*/
 struct hci_return_link_keys_evt
 {
     ///Number of Keys
@@ -4217,7 +3462,6 @@ struct hci_return_link_keys_evt
 };
 
 /// HCI pin code request event structure
-/*@TRACE*/
 struct hci_pin_code_req_evt
 {
     ///BdAddr
@@ -4225,7 +3469,6 @@ struct hci_pin_code_req_evt
 };
 
 /// HCI user passkey request event structure
-/*@TRACE*/
 struct hci_user_passkey_req_evt
 {
     ///BdAddr
@@ -4233,7 +3476,6 @@ struct hci_user_passkey_req_evt
 };
 
 /// HCI user passkey notification event structure
-/*@TRACE*/
 struct hci_user_passkey_notif_evt
 {
     ///BdAddr
@@ -4243,7 +3485,6 @@ struct hci_user_passkey_notif_evt
 };
 
 /// HCI remote OOB data request event structure
-/*@TRACE*/
 struct hci_rem_oob_data_req_evt
 {
     ///BdAddr
@@ -4251,7 +3492,6 @@ struct hci_rem_oob_data_req_evt
 };
 
 /// HCI user confirmation request event structure
-/*@TRACE*/
 struct hci_user_cfm_req_evt
 {
     ///BdAddr
@@ -4261,7 +3501,6 @@ struct hci_user_cfm_req_evt
 };
 
 /// HCI keypress notification event structure
-/*@TRACE*/
 struct hci_keypress_notif_evt
 {
     ///BdAddr
@@ -4271,7 +3510,6 @@ struct hci_keypress_notif_evt
 };
 
 /// HCI link key notification event structure
-/*@TRACE*/
 struct hci_lk_notif_evt
 {
     ///BdAddr
@@ -4280,25 +3518,6 @@ struct hci_lk_notif_evt
     struct ltk  key;
     ///type
     uint8_t key_type;
-};
-
-/// HCI SAM status change event strucutre
-struct hci_sam_status_change_evt
-{
-    ///Connection handle
-    uint16_t    conhdl;
-    ///Local SAM index
-    uint8_t     loc_idx;
-    ///Local SAM TX availability
-    uint8_t     loc_tx_av;
-    ///Local SAM RX availability
-    uint8_t     loc_rx_av;
-    ///Remote SAM index
-    uint8_t     rem_idx;
-    ///Remote SAM TX availability
-    uint8_t     rem_tx_av;
-    ///Remote SAM RX availability
-    uint8_t     rem_rx_av;
 };
 
 
@@ -4311,7 +3530,6 @@ struct hci_sam_status_change_evt
 // LE event structures
 
 /// HCI command complete event structure for the Read Local Supported Features
-/*@TRACE*/
 struct hci_le_rd_local_supp_feats_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4321,8 +3539,6 @@ struct hci_le_rd_local_supp_feats_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for the Read Advertising Channel Tx Power Command
-/*@TRACE
- * hci_le_rd_adv_chnl_tx_pw_cmd_cmp_evt = hci_rd_adv_chnl_tx_pw_cmd_cmp_evt*/
 struct hci_rd_adv_chnl_tx_pw_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4332,7 +3548,6 @@ struct hci_rd_adv_chnl_tx_pw_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for the Read White List Size Command
-/*@TRACE*/
 struct hci_le_rd_wlst_size_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4342,7 +3557,6 @@ struct hci_le_rd_wlst_size_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for the Read Buffer Size Command
-/*@TRACE*/
 struct hci_le_rd_buf_size_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4354,7 +3568,6 @@ struct hci_le_rd_buf_size_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for LE Rand Command
-/*@TRACE*/
 struct hci_le_rand_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4364,7 +3577,6 @@ struct hci_le_rand_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for Read Supported States Command
-/*@TRACE*/
 struct hci_le_rd_supp_states_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4374,8 +3586,6 @@ struct hci_le_rd_supp_states_cmd_cmp_evt
 };
 
 ///HCI command complete event structure for Test End
-/*@TRACE
- *  * hci_le_test_end_cmd_cmp_evt = hci_test_end_cmd_cmp_evt*/
 struct hci_test_end_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4385,7 +3595,6 @@ struct hci_test_end_cmd_cmp_evt
 };
 
 ///HCI LE Encrypt complete event structure
-/*@TRACE*/
 struct hci_le_enc_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4396,7 +3605,6 @@ struct hci_le_enc_cmd_cmp_evt
 
 #if BLE_EMB_PRESENT || BLE_HOST_PRESENT
 ///HCI LE advertising report event structure
-/*@TRACE*/
 struct hci_le_adv_report_evt
 {
     ///LE Subevent code
@@ -4408,7 +3616,6 @@ struct hci_le_adv_report_evt
 };
 
 ///HCI LE extended advertising report event structure
-/*@TRACE*/
 struct hci_le_ext_adv_report_evt
 {
     ///LE Subevent code
@@ -4420,8 +3627,6 @@ struct hci_le_ext_adv_report_evt
 };
 
 ///HCI LE periodic advertising sync established event structure
-/*@TRACE
- * hci_le_periodic_adv_sync_est_evt = hci_le_per_adv_sync_est_evt*/
 struct hci_le_per_adv_sync_est_evt
 {
     ///LE Subevent code
@@ -4445,8 +3650,6 @@ struct hci_le_per_adv_sync_est_evt
 };
 
 ///HCI LE periodic advertising report event structure
-/*@TRACE
- * hci_le_periodic_adv_report_evt = hci_le_per_adv_report_evt*/
 struct hci_le_per_adv_report_evt
 {
     ///LE Subevent code
@@ -4457,8 +3660,6 @@ struct hci_le_per_adv_report_evt
     uint8_t             tx_power;
     /// RSSI
     int8_t              rssi;
-    /// CTE type
-    uint8_t             cte_type;
     /// Data Status
     uint8_t             status;
     ///Data length in advertising packet
@@ -4468,8 +3669,6 @@ struct hci_le_per_adv_report_evt
 };
 
 ///HCI LE periodic advertising sync lost event structure
-/*@TRACE
- * hci_le_periodic_adv_sync_lost_evt = hci_le_per_adv_sync_lost_evt*/
 struct hci_le_per_adv_sync_lost_evt
 {
     ///LE Subevent code
@@ -4479,7 +3678,6 @@ struct hci_le_per_adv_sync_lost_evt
 };
 
 ///HCI LE scan timeout event structure
-/*@TRACE*/
 struct hci_le_scan_timeout_evt
 {
     ///LE Subevent code
@@ -4489,7 +3687,6 @@ struct hci_le_scan_timeout_evt
 #endif //BLE_EMB_PRESENT || BLE_HOST_PRESENT
 
 /// HCI command complete event structure for Read Channel Map Command
-/*@TRACE*/
 struct hci_le_rd_chnl_map_cmd_cmp_evt
 {
     ///Status of command reception
@@ -4501,7 +3698,6 @@ struct hci_le_rd_chnl_map_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for Long Term Key Request Reply Command
-/*@TRACE*/
 struct hci_le_ltk_req_reply_cmd_cmp_evt
 {
     ///Status of command reception
@@ -4511,7 +3707,6 @@ struct hci_le_ltk_req_reply_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for Long Term Key Request Negative Reply Command
-/*@TRACE*/
 struct hci_le_ltk_req_neg_reply_cmd_cmp_evt
 {
     ///Status of command reception
@@ -4521,7 +3716,6 @@ struct hci_le_ltk_req_neg_reply_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for LE Read Suggested Default Data Length Command
-/*@TRACE*/
 struct hci_le_rd_suggted_dft_data_len_cmd_cmp_evt
 {
     ///Status of command reception
@@ -4532,7 +3726,6 @@ struct hci_le_rd_suggted_dft_data_len_cmd_cmp_evt
     uint16_t       suggted_max_tx_time;
 };
 /// HCI command complete event structure for LE Read Maximum Data Length Command
-/*@TRACE*/
 struct hci_le_rd_max_data_len_cmd_cmp_evt
 {
     ///Status of command reception
@@ -4548,7 +3741,6 @@ struct hci_le_rd_max_data_len_cmd_cmp_evt
 };
 
 /// HCI LE Read Peer Resolvable Address Command Complete Event
-/*@TRACE*/
 struct hci_le_rd_peer_rslv_addr_cmd_cmp_evt
 {
     ///Status
@@ -4558,7 +3750,6 @@ struct hci_le_rd_peer_rslv_addr_cmd_cmp_evt
 };
 
 /// HCI LE Read Local Resolvable Address Command Complete Event
-/*@TRACE*/
 struct hci_le_rd_loc_rslv_addr_cmd_cmp_evt
 {
     ///Status
@@ -4568,7 +3759,6 @@ struct hci_le_rd_loc_rslv_addr_cmd_cmp_evt
 };
 
 /// HCI LE Read Resolving List Size Command Complete Event
-/*@TRACE*/
 struct hci_le_rd_rslv_list_size_cmd_cmp_evt
 {
     ///Status
@@ -4579,7 +3769,6 @@ struct hci_le_rd_rslv_list_size_cmd_cmp_evt
 
 
 /// HCI write authenticated payload timeout command
-/*@TRACE*/
 struct hci_wr_auth_payl_to_cmd
 {
     ///Connection handle
@@ -4589,7 +3778,6 @@ struct hci_wr_auth_payl_to_cmd
 };
 
 /// HCI command complete event structure for the Write Authenticated Payload Timeout Command
-/*@TRACE*/
 struct hci_wr_auth_payl_to_cmd_cmp_evt
 {
     /// Status of the command reception
@@ -4599,7 +3787,6 @@ struct hci_wr_auth_payl_to_cmd_cmp_evt
 };
 
 /// HCI command complete event structure for HCI LE Connection Update Command
-/*@TRACE*/
 struct hci_le_con_update_cmp_evt
 {
     ///LE Subevent code
@@ -4617,7 +3804,6 @@ struct hci_le_con_update_cmp_evt
 };
 
 /// HCI command complete event structure for create connection
-/*@TRACE*/
 struct hci_le_con_cmp_evt
 {
     ///LE Subevent code
@@ -4643,7 +3829,6 @@ struct hci_le_con_cmp_evt
 };
 
 /// HCI LE read remote used feature command parameters structure
-/*@TRACE*/
 struct hci_le_rd_rem_feats_cmd
 {
     ///Connection handle
@@ -4651,7 +3836,6 @@ struct hci_le_rd_rem_feats_cmd
 };
 
 /// HCI command complete event structure for HCI LE read remote feature Command
-/*@TRACE*/
 struct hci_le_rd_rem_feats_cmd_cmp_evt
 {
     ///LE Subevent code
@@ -4665,7 +3849,6 @@ struct hci_le_rd_rem_feats_cmd_cmp_evt
 };
 
 /// HCI command structure for the read transmit power level command
-/*@TRACE*/
 struct hci_rd_tx_pwr_lvl_cmd
 {
     ///Connection handle
@@ -4675,7 +3858,6 @@ struct hci_rd_tx_pwr_lvl_cmd
 };
 
 /// HCI command complete event structure for the read transmit power level command
-/*@TRACE*/
 struct hci_rd_tx_pwr_lvl_cmd_cmp_evt
 {
     ///Status for command reception
@@ -4687,7 +3869,6 @@ struct hci_rd_tx_pwr_lvl_cmd_cmp_evt
 };
 
 /// HCI read remote information version command parameters structure
-/*@TRACE*/
 struct hci_rd_rem_ver_info_cmd
 {
     ///Connection handle
@@ -4695,7 +3876,6 @@ struct hci_rd_rem_ver_info_cmd
 };
 
 /// HCI LE remote connection parameter request event
-/*@TRACE*/
 struct hci_le_rem_con_param_req_evt
 {
     ///LE Subevent code
@@ -4714,7 +3894,6 @@ struct hci_le_rem_con_param_req_evt
 
 
 /// HCI command complete event structure for enhance create connection
-/*@TRACE*/
 struct hci_le_enh_con_cmp_evt
 {
     ///LE Subevent code
@@ -4766,7 +3945,6 @@ struct hci_rd_local_p256_public_key_cmp_evt
 
 #if BLE_EMB_PRESENT || BLE_HOST_PRESENT
 /// HCI LE Direct Advertising Report Event
-/*@TRACE*/
 struct hci_le_dir_adv_rep_evt
 {
     ///LE Subevent code
@@ -4778,17 +3956,7 @@ struct hci_le_dir_adv_rep_evt
 };
 #endif //BLE_EMB_PRESENT || BLE_HOST_PRESENT
 
-/// Connected LE event
-struct hci_le_con_evt
-{
-    ///LE Subevent code
-    uint8_t             subcode;
-    ///Connection handle
-    uint16_t            conhdl;
-};
-
 /// HCI command complete event structure for HCI LE read remote used feature Command
-/*@TRACE*/
 struct hci_le_ltk_request_evt
 {
     ///LE Subevent code
@@ -4802,7 +3970,6 @@ struct hci_le_ltk_request_evt
 };
 
 /// HCI LE META event LE Data Length Change Event
-/*@TRACE*/
 struct hci_le_data_len_chg_evt
 {
     ///LE Subevent code
@@ -4821,7 +3988,6 @@ struct hci_le_data_len_chg_evt
 
 
 /// HCI Synchronization Train Received Event
-/*@TRACE*/
 struct hci_sync_train_rec_evt
 {
     /// Status
@@ -4843,7 +4009,6 @@ struct hci_sync_train_rec_evt
 };
 
 /// HCI Connectionless Slave Broadcast Receive Event
-/*@TRACE*/
 struct hci_con_slv_bcst_rec_evt
 {
     /// BD_ADDR
@@ -4865,7 +4030,6 @@ struct hci_con_slv_bcst_rec_evt
 };
 
 /// HCI Connectionless Slave Broadcast Timeout Event
-/*@TRACE*/
 struct hci_con_slv_bcst_to_evt
 {
     /// BD_ADDR
@@ -4875,14 +4039,12 @@ struct hci_con_slv_bcst_to_evt
 };
 
 /// HCI Connectionless Slave Broadcast Channel Map Change Event
-/*@TRACE*/
 struct hci_con_slv_bcst_ch_map_chg_evt
 {
     /// Channel_Map
     struct chnl_map    ch_map;
 };
 
-/*@TRACE*/
 struct hci_le_gen_dhkey_cmp_evt
 {
     ///LE Subevent code
@@ -4891,7 +4053,6 @@ struct hci_le_gen_dhkey_cmp_evt
     uint8_t      dh_key[32];
 };
 
-/*@TRACE*/
 struct hci_le_rd_loc_p256_pub_key_cmp_evt
 {
     ///LE Subevent code
@@ -4900,466 +4061,12 @@ struct hci_le_rd_loc_p256_pub_key_cmp_evt
     t_public_key  public_key;
 };
 
-
-/// HCI command structure for the LE receiver test v3 command
-/*@TRACE*/
-struct hci_le_rx_test_v3_cmd
-{
-    /// RX channel, range: 0x00 to 0x27
-    uint8_t     rx_channel;
-    /// PHY (@enum le_phy_value)
-    uint8_t     phy;
-    /// Modulation index (0: standard | 1: stable)
-    uint8_t     mod_idx;
-    /// Expected CTE length in 8us units, range: 0x02 to 0x14
-    uint8_t     exp_cte_len;
-    /// Expected CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t     exp_cte_type;
-    /// Slot durations (1: 1 us | 2: 2 us)
-    uint8_t     slot_dur;
-    /// Length of switching pattern (number of antenna IDs in the pattern), range: 0x02 to 0x4B
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-};
-
-/// HCI command structure for the LE transmitter test v3 command
-/*@TRACE*/
-struct hci_le_tx_test_v3_cmd
-{
-    /// TX channel, range: 0x00 to 0x27
-    uint8_t     tx_channel;
-    /// Length of test data in bytes, range: 0x00 to 0xFF
-    uint8_t     test_data_len;
-    /**
-     * Packet payload
-     * 0x00 PRBS9 sequence "11111111100000111101" (in transmission order) as described in [Vol 6] Part F, Section 4.1.5
-     * 0x01 Repeated "11110000" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x02 Repeated "10101010" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x03 PRBS15 sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x04 Repeated "11111111" (in transmission order) sequence
-     * 0x05 Repeated "00000000" (in transmission order) sequence
-     * 0x06 Repeated "00001111" (in transmission order) sequence
-     * 0x07 Repeated "01010101" (in transmission order) sequence
-     * 0x08-0xFF Reserved for future use
-     */
-    uint8_t     pkt_payl;
-    /// PHY (@enum le_phy_value)
-    uint8_t     phy;
-    /// CTE length (in 8us unit)
-    uint8_t     cte_len;
-    /// CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t     cte_type;
-    /// Length of switching pattern (number of antenna IDs in the pattern)
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-};
-
-/// HCI command structure for the LE transmitter test v4 command
-/*@TRACE*/
-struct hci_le_tx_test_v4_cmd
-{
-    /// TX channel, range: 0x00 to 0x27
-    uint8_t     tx_channel;
-    /// Length of test data in bytes, range: 0x00 to 0xFF
-    uint8_t     test_data_len;
-    /**
-     * Packet payload
-     * 0x00 PRBS9 sequence "11111111100000111101" (in transmission order) as described in [Vol 6] Part F, Section 4.1.5
-     * 0x01 Repeated "11110000" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x02 Repeated "10101010" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x03 PRBS15 sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x04 Repeated "11111111" (in transmission order) sequence
-     * 0x05 Repeated "00000000" (in transmission order) sequence
-     * 0x06 Repeated "00001111" (in transmission order) sequence
-     * 0x07 Repeated "01010101" (in transmission order) sequence
-     * 0x08-0xFF Reserved for future use
-     */
-    uint8_t     pkt_payl;
-    /// PHY (@enum le_phy_value)
-    uint8_t     phy;
-    /// CTE length (in 8us unit)
-    uint8_t     cte_len;
-    /// CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t     cte_type;
-    /// Length of switching pattern (number of antenna IDs in the pattern)
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-    /// Transmit power level in dBm (0x7E: minimum | 0x7F: maximum | range: -127 to +20)
-    int8_t     tx_pwr_lvl;
-};
-
-/// HCI command structure for the LE set connectionless CTE transmit parameters command
-/*@TRACE*/
-struct hci_le_set_conless_cte_tx_param_cmd
-{
-    /// Advertising handle
-    uint8_t     adv_hdl;
-    /// CTE length (in 8us unit)
-    uint8_t     cte_len;
-    /// CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t     cte_type;
-    /// CTE count (number of CTEs to transmit in each periodic advertising interval, range 0x01 to 0x10)
-    uint8_t     cte_count;
-    /// Length of switching pattern (number of antenna IDs in the pattern)
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-};
-
-/// HCI command structure for the LE set connectionless CTE transmit enable command
-/*@TRACE*/
-struct hci_le_set_conless_cte_tx_en_cmd
-{
-    /// Advertising handle
-    uint8_t     adv_hdl;
-    /// CTE enable
-    uint8_t     cte_en;
-};
-
-/// HCI command structure for LE set connectionless IQ sampling enable command
-/*@TRACE*/
-struct hci_le_set_conless_iq_sampl_en_cmd
-{
-    /// Sync handle
-    uint16_t    sync_hdl;
-    /// Sampling enable
-    uint8_t     sampl_en;
-    /// Slot durations (1: 1us | 2: 2us)
-    uint8_t     slot_dur;
-    /// Max sampled CTEs
-    uint8_t     max_sampl_cte;
-    /// Length of switching pattern
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-};
-
-/// HCI command structure for the LE set connection CTE receive parameters command
-/*@TRACE*/
-struct hci_le_set_con_cte_rx_param_cmd
-{
-    /// Connection handle
-    uint16_t    conhdl;
-    /// Sampling enable
-    uint8_t     sampl_en;
-    /// Slot durations (1: 1us | 2: 2us)
-    uint8_t     slot_dur;
-    /// Length of switching pattern (number of antenna IDs in the pattern)
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-};
-
-/// HCI command structure for the LE set connection CTE transmit parameters command
-/*@TRACE*/
-struct hci_le_set_con_cte_tx_param_cmd
-{
-    /// Connection handle
-    uint16_t    conhdl;
-    /// CTE types (bit0: AOA | bit1: AOD-1us | bit2: AOD-2us)
-    uint8_t     cte_types;
-    /// Length of switching pattern (number of antenna IDs in the pattern)
-    uint8_t     switching_pattern_len;
-    /// Antenna IDs
-    uint8_t     antenna_id[MAX_SWITCHING_PATTERN_LEN];
-};
-
-/// HCI command structure for the LE connection CTE request enable command
-/*@TRACE*/
-struct hci_le_con_cte_req_en_cmd
-{
-    /// Connection handle
-    uint16_t    conhdl;
-    /// Enable
-    uint8_t     en;
-    /// CTE request interval (in number of connection events)
-    uint16_t    cte_req_intv;
-    /// Requested CTE length (in 8us unit)
-    uint8_t     req_cte_len;
-    /// Requested CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t     req_cte_type;
-};
-
-/// HCI command structure for the LE connection CTE response enable command
-/*@TRACE*/
-struct hci_le_con_cte_rsp_en_cmd
-{
-    /// Connection handle
-    uint16_t    conhdl;
-    /// Enable
-    uint8_t     en;
-};
-
-/// HCI command structure for LE set connectionless IQ sampling enable command complete event
-/*@TRACE*/
-struct hci_le_set_conless_iq_sampl_en_cmd_cmp_evt
-{
-    /// Status
-    uint8_t     status;
-    /// Sync handle
-    uint16_t    sync_hdl;
-};
-
-/// HCI command structure for LE read antenna information command complete event
-/*@TRACE*/
-struct hci_le_rd_antenna_inf_cmd_cmp_evt
-{
-    /// Status
-    uint8_t     status;
-    /// Supported switching sampling rates
-    uint8_t     supp_switching_sampl_rates;
-    /// Number of antennae
-    uint8_t     antennae_num;
-    /// Max length of switching pattern (number of antenna IDs in the pattern)
-    uint8_t     max_switching_pattern_len;
-    /// Max CTE length
-    uint8_t     max_cte_len;
-};
-
-/// HCI command structure for the LE set periodic advertising receive enable command
-/*@TRACE*/
-struct hci_le_set_per_adv_rec_en_cmd
-{
-    /// Sync handle
-    uint16_t sync_hdl;
-    /// Enable
-    uint8_t en;
-};
-
-/// HCI command structure for the LE set periodic advertising receive enable command
-/*@TRACE*/
-struct hci_le_per_adv_sync_transf_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// Service data (value provided by the Host)
-    uint16_t serv_data;
-    /// Sync handle
-    uint16_t sync_hdl;
-};
-
-/// HCI command structure for the LE Periodic Advertising Set Info Transfer command
-/*@TRACE*/
-struct hci_le_per_adv_set_info_transf_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// Service data (value provided by the Host)
-    uint16_t serv_data;
-    /// Advertising handle
-    uint8_t adv_hdl;
-};
-
-/// HCI command structure for the LE Set Periodic Advertising Sync Transfer Parameters command
-/*@TRACE*/
-struct hci_le_set_per_adv_sync_transf_param_cmd
-{
-    /// Connection handle
-    uint16_t  conhdl;
-    /// Mode (@see enum per_adv_sync_info_rec_mode)
-    uint8_t   mode;
-    /// The number of periodic advertising packets that can be skipped after a successful receive
-    uint16_t  skip;
-    /// Sync timeout (Time=N*10ms)
-    uint16_t  sync_to;
-    /// CTE type (@see enum sync_cte_type)
-    uint8_t   cte_type;
-};
-
-/// HCI command structure for the LE Set Default Periodic Advertising Sync Transfer Parameters command
-/*@TRACE*/
-struct hci_le_set_dft_per_adv_sync_transf_param_cmd
-{
-    /// Mode (@see enum per_adv_sync_info_rec_mode)
-    uint8_t   mode;
-    /// The number of periodic advertising packets that can be skipped after a successful receive
-    uint16_t  skip;
-    /// Sync timeout (Time=N*10ms)
-    uint16_t  sync_to;
-    /// CTE type (@see enum sync_cte_type)
-    uint8_t   cte_type;
-};
-
-/// HCI command structure for the LE Periodic Advertising Sync Transfer Received event
-/*@TRACE*/
-struct hci_le_per_adv_sync_transf_rec_evt
-{
-    /// LE Subevent code
-    uint8_t        subcode;
-    /// Status
-    uint8_t        status;
-    /// Connection handle
-    uint16_t       conhdl;
-    /// Service data (value provided by the Host)
-    uint16_t       serv_data;
-    /// Sync handle
-    uint16_t       sync_hdl;
-    /// Advertising SID
-    uint8_t        adv_sid;
-    ///Advertising address type: public/random
-    uint8_t        adv_addr_type;
-    ///Advertising address value
-    struct bd_addr adv_addr;
-    /// Advertiser PHY (@enum le_phy_value)
-    uint8_t        phy;
-    /// Advertising interval (Time=N*1.25ms)
-    uint16_t       interval;
-    /// Advertiser clock accuracy (@see enum SCA)
-    uint8_t        adv_ca;
-};
-
-/// HCI command structure for the LE enhanced read transmit power level command
-/*@TRACE*/
-struct hci_le_enh_rd_tx_pwr_lvl_cmd
-{
-    /// Connection handle
-    uint16_t        conhdl;
-    /// PHY (@see enum le_phy_pwr_value)
-    uint8_t        phy;
-};
-
-/// HCI command structure for the LE enhanced read transmit power level command complete event
-/*@TRACE*/
-struct hci_le_enh_rd_tx_pwr_lvl_cmd_cmp_evt
-{
-    /// Status
-    uint8_t     status;
-    /// Connection handle
-    uint16_t        conhdl;
-    /// PHY (@see enum le_phy_pwr_value)
-    uint8_t         phy;
-    /// Current transmit power level (dBm)
-    int8_t         curr_tx_pwr_lvl;
-    /// Max transmit power level (dBm)
-    int8_t         max_tx_pwr_lvl;
-};
-
-/// HCI command structure for the LE read remote transmit power level command
-/*@TRACE*/
-struct hci_le_rd_remote_tx_pwr_lvl_cmd
-{
-    /// Connection handle
-    uint16_t        conhdl;
-    /// PHY (@see le_phy_pwr_value)
-    uint8_t         phy;
-};
-
-/// HCI command structure for the LE set path loss reporting parameters command
-/*@TRACE*/
-struct hci_le_set_path_loss_rep_param_cmd
-{
-    /// Connection handle
-    uint16_t        conhdl;
-    /// High threshold (dB)
-    uint8_t         hi_thr;
-    /// High hysteresis (dB)
-    uint8_t         hi_hyst;
-    /// Low threshold (dB)
-    uint8_t         lo_thr;
-    /// Low hysteresis (dB)
-    uint8_t         lo_hyst;
-    /// Min time spent (conn events)
-    uint16_t        min_time;
-};
-
-/// HCI command structure for the LE set path loss reporting parameters command complete event
-/*@TRACE*/
-struct hci_le_set_path_loss_rep_param_cmd_cmp_evt
-{
-    /// Status
-    uint8_t     status;
-    /// Connection handle
-    uint16_t        conhdl;
-};
-
-/// HCI command structure for the LE set path loss reporting enable command
-/*@TRACE*/
-struct hci_le_set_path_loss_rep_en_cmd
-{
-    /// Connection handle
-    uint16_t        conhdl;
-    /// Enable (@see enum pwr_report_en)
-    uint8_t         en;
-};
-
-/// HCI command structure for the LE set path loss reporting enable command complete event
-/*@TRACE*/
-struct hci_le_set_path_loss_rep_en_cmd_cmp_evt
-{
-    /// Status
-    uint8_t     status;
-    /// Connection handle
-    uint16_t        conhdl;
-};
-
-/// HCI command structure for the LE set transmit power reporting enable command
-/*@TRACE*/
-struct hci_le_set_tx_power_rep_en_cmd
-{
-    /// Connection handle
-    uint16_t        conhdl;
-    /// Local Enable (@see enum pwr_report_en)
-    uint8_t         local_en;
-    /// Remote Enable (@ see enum pwr_report_en)
-    uint8_t         remote_en;
-};
-
-/// HCI command structure for the LE set transmit power reporting enable command complete event
-/*@TRACE*/
-struct hci_le_set_tx_power_rep_en_cmd_cmp_evt
-{
-    /// Status
-    uint8_t     status;
-    /// Connection handle
-    uint16_t        conhdl;
-};
-
-/// HCI command structure for the LE Path Loss Threshold event
-/*@TRACE*/
-struct hci_le_path_loss_threshold_evt
-{
-    /// LE Subevent code
-    uint8_t         subcode;
-    /// Connection handle
-    uint16_t        conhdl;
-    /// Current path loss (dB)
-    uint8_t         curr_path_loss;
-    /// Zone entered (@see enum le_path_loss_zone)
-    uint8_t         zone_entered;
-};
-
-/// HCI command strucutre for the LE Transmit Power Reporting event
-/*@TRACE*/
-struct hci_le_tx_power_rep_evt
-{
-    /// LE Subevent code
-    uint8_t         subcode;
-    /// Status
-    uint8_t        status;
-    /// Connection handle
-    uint16_t        conhdl;
-    /// Reason (@see enum pwr_report_reason)
-    uint8_t         reason;
-    /// PHY (@see enum le_phy_pwr_value)
-    uint8_t         phy;
-    /// Transmit Power level (dBm)
-    int8_t         tx_pwr;
-    /// Transmit Power level flags (@see enum pwr_ctrl_flags)
-    uint8_t         flags;
-    /// Delta (dB)
-    int8_t         delta;
-};
-
 /*
  * HCI VENDOR SPECIFIC COMMANDS PARAMETERS
  ****************************************************************************************
  */
 
 /// Buffer structure
-/*@TRACE*/
 struct buffer_tag
 {
     /// length of buffer
@@ -5369,11 +4076,6 @@ struct buffer_tag
 };
 
 /// Common structure for Command Complete Event of HCI Debug Read Memory/Flash/Param complete event parameters - vendor specific
-/*@TRACE
- * hci_dbg_rd_mem_cmd_cmp_evt = hci_dbg_basic_rd_data_cmd_cmp_evt
- * hci_dbg_rd_flash_cmd_cmp_evt = hci_dbg_basic_rd_data_cmd_cmp_evt
- * hci_dbg_rd_par_cmd_cmp_evt = hci_dbg_basic_rd_data_cmd_cmp_evt
- * */
 struct hci_dbg_basic_rd_data_cmd_cmp_evt
 {
     ///Status
@@ -5383,7 +4085,6 @@ struct hci_dbg_basic_rd_data_cmd_cmp_evt
 };
 
 ///HCI Debug read memory variable command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_rd_mem_cmd
 {
     ///Start address to read
@@ -5395,7 +4096,6 @@ struct hci_dbg_rd_mem_cmd
 };
 
 ///HCI Debug write memory variable command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_wr_mem_cmd
 {
     ///Start address to read
@@ -5407,8 +4107,6 @@ struct hci_dbg_wr_mem_cmd
 };
 
 ///HCI Debug delete parameter command parameters - vendor specific
-/*@TRACE
- * hci_dbg_del_par_cmd = hci_dbg_del_param_cmd*/
 struct hci_dbg_del_param_cmd
 {
     ///Parameter tag
@@ -5416,7 +4114,6 @@ struct hci_dbg_del_param_cmd
 };
 
 ///HCI Debug erase flash command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_er_flash_cmd
 {
     ///Flash type
@@ -5428,7 +4125,6 @@ struct hci_dbg_er_flash_cmd
 };
 
 ///HCI Debug write flash command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_wr_flash_cmd
 {
     ///Flash type
@@ -5440,7 +4136,6 @@ struct hci_dbg_wr_flash_cmd
 };
 
 ///HCI Debug read flash command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_rd_flash_cmd
 {
     ///Flash type
@@ -5452,7 +4147,6 @@ struct hci_dbg_rd_flash_cmd
 };
 
 ///HCI Debug read parameter command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_rd_par_cmd
 {
     ///Parameter tag
@@ -5460,7 +4154,6 @@ struct hci_dbg_rd_par_cmd
 };
 
 ///HCI Debug read parameters command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_wr_par_cmd
 {
     ///Parameter tag
@@ -5470,8 +4163,6 @@ struct hci_dbg_wr_par_cmd
 };
 
 #if CRYPTO_UT
-///HCI Debug Test cryptographic functions command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_test_crypto_func_cmd
 {
     /// Id of Function to be tested
@@ -5481,121 +4172,7 @@ struct hci_dbg_test_crypto_func_cmd
 };
 #endif //CRYPTO_UT
 
-#if (BT_READ_PICONET_CLOCK)
-struct hci_vs_rd_piconet_clock_cmd
-{
-    ///Connection handle of the link
-    uint16_t conhdl;
-    ///Pulse trigger management
-    uint8_t trig_pulse;
-    ///Clock type (0=native clock, 1=piconet clock of conhndl)
-    uint8_t clk_type;
-};
-
-struct hci_vs_rd_piconet_clock_cmd_cmp_evt
-{
-    /// Status
-    uint8_t status;
-    ///Connection handle of the link
-    uint16_t conhdl;
-    /// Local timestamp(position in half slots)
-    uint32_t loc_clk_hslt;
-    /// Local timestamp fractional part (in half us)
-    uint16_t loc_clk_hus;
-    /// Piconet timestamp(position in half slots)
-    uint32_t pic_clk_off_hslt;
-    /// Piconet bit offset (in half us)
-    uint16_t pic_bit_off_hus;
-};
-#endif //(BT_READ_PICONET_CLOCK)
-
-
-#if RW_DEBUG
-///HCI Debug Test scheduling planner set function command parameters - vendor specific
-/*@TRACE*/
-struct hci_dbg_test_sch_plan_set_cmd
-{
-    /// Activity identifier
-    uint32_t id;
-    /// Interval (in half-slots)
-    uint32_t interval;
-    /// Offset (in half-slots)
-    uint32_t offset;
-    /// Minimum duration (in half-slots)
-    uint32_t duration_min;
-    /// Maximum duration (in half-slots)
-    uint32_t duration_max;
-    /// Indicate activity is movable
-    bool mobility_level;
-};
-
-///HCI Debug Test scheduling planner set function command complete event parameters - vendor specific
-/*@TRACE*/
-struct hci_dbg_test_sch_plan_set_cmd_cmp_evt
-{
-    /// Status
-    uint8_t status;
-    /// Activity identifier
-    uint32_t moved_id;
-};
-
-///HCI Debug Test scheduling planner remove function command parameters - vendor specific
-/*@TRACE*/
-struct hci_dbg_test_sch_plan_rem_cmd
-{
-    /// Activity identifier
-    uint32_t id;
-};
-
-///HCI Debug Test scheduling planner check function command parameters - vendor specific
-/*@TRACE*/
-struct hci_dbg_test_sch_plan_chk_cmd
-{
-    /// Activity identifier
-    uint32_t id;
-    /// Interval (in half-slots)
-    uint32_t interval;
-    /// Offset (in half-slots)
-    uint32_t offset;
-    /// Minimum duration (in half-slots)
-    uint32_t duration_min;
-};
-
-///HCI Debug Test scheduling planner request function command parameters - vendor specific
-/*@TRACE*/
-struct hci_dbg_test_sch_plan_req_cmd
-{
-    /// Activity identifier
-    uint32_t id;
-    /// Minimum interval (in half-slots)
-    uint32_t interval_min;
-    /// Maximum interval (in half-slots)
-    uint32_t interval_max;
-    /// Minimum duration (in half-slots)
-    uint32_t duration_min;
-    /// Maximum duration (in half-slots)
-    uint32_t duration_max;
-    /// Period (in half-slots)
-    uint8_t period;
-};
-
-///HCI Debug Test scheduling planner request function command complete event parameters - vendor specific
-/*@TRACE*/
-struct hci_dbg_test_sch_plan_req_cmd_cmp_evt
-{
-    /// Status
-    uint8_t status;
-    /// Interval (in half-slots)
-    uint32_t interval;
-    /// Minimum offset (in half-slots)
-    uint32_t offset_min;
-    /// Maximum offset (in half-slots)
-    uint32_t offset_max;
-};
-#endif //RW_DEBUG
-
 ///HCI Debug Read Kernel Statistics complete event parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_rd_ke_stats_cmd_cmp_evt
 {
     ///Status
@@ -5614,7 +4191,6 @@ struct hci_dbg_rd_ke_stats_cmd_cmp_evt
 
 
 /// HCI Debug Read information about memory usage. - vendor specific
-/*@TRACE*/
 struct hci_dbg_rd_mem_info_cmd_cmp_evt
 {
     ///Status
@@ -5626,7 +4202,6 @@ struct hci_dbg_rd_mem_info_cmd_cmp_evt
 };
 
 ///HCI Debug identify Flash command complete event parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_id_flash_cmd_cmp_evt
 {
     ///Status
@@ -5636,7 +4211,6 @@ struct hci_dbg_id_flash_cmd_cmp_evt
 };
 
 ///HCI Debug RF Register read command
-/*@TRACE*/
 struct hci_dbg_rf_reg_rd_cmd
 {
     /// register address
@@ -5644,7 +4218,6 @@ struct hci_dbg_rf_reg_rd_cmd
 };
 
 ///HCI Debug RF Register read command complete event
-/*@TRACE*/
 struct hci_dbg_rf_reg_rd_cmd_cmp_evt
 {
     /// status
@@ -5656,7 +4229,6 @@ struct hci_dbg_rf_reg_rd_cmd_cmp_evt
 };
 
 ///HCI Debug RF Register write command
-/*@TRACE*/
 struct hci_dbg_rf_reg_wr_cmd
 {
     /// register address
@@ -5666,7 +4238,6 @@ struct hci_dbg_rf_reg_wr_cmd
 };
 
 ///HCI Debug RF Register write command complete event
-/*@TRACE*/
 struct hci_dbg_rf_reg_wr_cmd_cmp_evt
 {
     /// status
@@ -5676,7 +4247,6 @@ struct hci_dbg_rf_reg_wr_cmd_cmp_evt
 };
 
 ///HCI Debug platform reset command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_plf_reset_cmd
 {
     /// reason
@@ -5685,7 +4255,6 @@ struct hci_dbg_plf_reset_cmd
 
 #if (RW_DEBUG && BT_EMB_PRESENT)
 /// Send LMP Packets
-/*@TRACE*/
 struct hci_dbg_bt_send_lmp_cmd
 {
     /// Connection handle
@@ -5695,7 +4264,6 @@ struct hci_dbg_bt_send_lmp_cmd
 };
 
 /// Discard LMP Packets
-/*@TRACE*/
 struct hci_dbg_bt_discard_lmp_en_cmd
 {
     /// Connection handle
@@ -5703,19 +4271,10 @@ struct hci_dbg_bt_discard_lmp_en_cmd
     /// Enable/Disable LMP discard (0: disable / 1: enable)
     uint8_t enable;
 };
-
-/// Set local clock
-/*@TRACE*/
-struct hci_dbg_set_local_clock_cmd
-{
-    /// Clock (in half-slots)
-    uint32_t clock;
-};
 #endif //(RW_DEBUG && BT_EMB_PRESENT)
 
 #if (RW_WLAN_COEX)
 ///HCI Debug wlan coexistence command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_wlan_coex_cmd
 {
     /// State
@@ -5723,7 +4282,6 @@ struct hci_dbg_wlan_coex_cmd
 };
 #if (RW_WLAN_COEX_TEST)
 ///HCI Debug wlan coexistence test scenario command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_wlan_coextst_scen_cmd
 {
     /// Scenario
@@ -5734,7 +4292,6 @@ struct hci_dbg_wlan_coextst_scen_cmd
 
 #if (RW_MWS_COEX)
 ///HCI Debug mws coexistence command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_mws_coex_cmd
 {
     /// State
@@ -5742,7 +4299,6 @@ struct hci_dbg_mws_coex_cmd
 };
 #if (RW_MWS_COEX_TEST)
 ///HCI Debug mws coexistence test scenario command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_mws_coextst_scen_cmd
 {
     /// Scenario
@@ -5751,134 +4307,7 @@ struct hci_dbg_mws_coextst_scen_cmd
 #endif //RW_MWS_COEX_TEST
 #endif //RW_MWS_COEX
 
-#if BLE_IQ_GEN
-///HCI Debug I&Q samples generator command parameters - vendor specific
-/// Maximum number of supported antenna patterns
-#define DBG_IQGEN_MAX_ANTENNA (8)
-/*@TRACE*/
-struct hci_dbg_iqgen_cfg_cmd
-{
-    /// Number of antenna patterns
-    uint8_t nb_antenna;
-    /// Antenna switch/sample control
-    // bit[0]: 0: up-sweep; 1: up-down sweep (internal switching mode)
-    // bit[1]: 0: 1us intervals; 1: 2us intervals (internal switching mode)
-    // bit[2]: 0: internal switching mode; 1: baseband switching mode
-    uint8_t mode;
-    /// I/Q sample control
-    struct
-    {
-        /// I-sample control
-        /// 0: up-count from 0x01
-        /// 1: down-count from 0xFF
-        /// 2: Fixed value 0x00
-        /// 3: PRBS pattern
-        /// 4..0xFF: Fixed value
-        uint8_t i;
-        /// Q-sample control
-        /// 0: up-count from 0x01
-        /// 1: down-count from 0xFF
-        /// 2: Fixed value 0x00
-        /// 3: PRBS pattern
-        /// 4..0xFF: Fixed value
-        uint8_t q;
-    } iq_ctrl[DBG_IQGEN_MAX_ANTENNA];
-};
-#endif //BLE_IQ_GEN
-
-/// Used to force parameters used for an CIS channel
-/*@TRACE*/
-struct hci_dbg_iso_set_param_cmd
-{
-    /// Preferred sub event margin between two sub events (IFS + margin)
-    uint32_t sub_evt_margin;
-};
-
-#if (BLE_ISO_MODE_0)
-/// HCI VS Mic-Less Set command parameters
-/*@TRACE*/
-struct hci_vs_mic_less_set_cmd
-{
-    /// Handle that identify an ACL link that is requesting MIC-less mode
-    uint16_t    conhdl;
-};
-
-/// HCI VS Setup AM0 Data Path command parameters
-struct hci_vs_setup_am0_data_path_cmd
-{
-    /// Channel_Handle to be used to identify an Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t am0_hdl;
-    /// Data path direction
-    /// 0x00       Input (Host to Controller)
-    /// 0x01       Output (Controller to Host)
-    /// Others     Reserved for future use
-    uint8_t  data_path_direction;
-    /// Data path ID
-    /// 0x00       HCI
-    /// 0x01-0xFE  Logical_Channel_Number. The meaning of the logical channel is vendor specific.
-    /// 0xFF       Test Mode
-    uint8_t  data_path_id;
-    /// Controller delay in ms (Range: 0x000000 to 0x3D0900)
-    uint32_t  ctrl_delay;
-};
-
-/// HCI VS Remove AM0 Data Path command parameters
-struct hci_vs_remove_am0_data_path_cmd
-{
-    /// Channel_Handle to be used to identify an Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t am0_hdl;
-    /// Bit[0]: Input data path, Bit[1]: Output data path
-    uint8_t  direction;
-};
-
-/// HCI VS Setup Audio Mode 0 channel command parameters
-/*@TRACE*/
-struct hci_vs_setup_am0_stream_cmd
-{
-    /// Handle that identify an ACL link between a Master and a Slave device that is requesting
-    /// an Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t    conhdl;
-    /// The number of bits in each unit of data received from the Host over the data transport. (Range 0x01 - 0xFB)
-    uint8_t     tx_size;
-    /// The number of bits in each unit of data sent to the Host over the data transport. (Range 0x01 - 0xFB)
-    uint8_t     rx_size;
-};
-
-/// Used to read the maximum size of the data portion of isochronous packets
-/// no parameter on command, only need to specify returned parameters
-struct hci_vs_setup_am0_stream_cmd_cmp_evt
-{
-    /// 0x00 - Request succeed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Handle that identify an ACL link between a Master and a Slave device that is requesting
-    /// an Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Channel_Handle to be used to identify an Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t am0_hdl;
-};
-
-/// Removes existing Audio Mode 0 channel command parameters
-/*@TRACE*/
-struct hci_vs_remove_am0_stream_cmd
-{
-    /// Channel_Handles used to identify Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t am0_hdl;
-};
-
-/// HCI basic command complete event structure with AM0 Channel handle
-/*@TRACE*/
-struct hci_vs_basic_am0_cmd_cmp_evt
-{
-    /// status
-    uint8_t     status;
-    /// Channel_Handles used to identify Audio Mode 0 Channel (range 0x0000-0x0EFF)
-    uint16_t    am0_hdl;
-};
-#endif // (BLE_ISO_MODE_0)
-
-
 ///HCI Debug HW Register Read command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_ble_reg_rd_cmd
 {
     /// register address
@@ -5886,7 +4315,6 @@ struct hci_dbg_ble_reg_rd_cmd
 };
 
 ///HCI Debug HW Register write command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_ble_reg_wr_cmd
 {
     /// register address
@@ -5898,7 +4326,6 @@ struct hci_dbg_ble_reg_wr_cmd
 };
 
 ///HCI Debug HW Register Read Complete event parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_ble_reg_rd_cmd_cmp_evt
 {
     /// status
@@ -5910,7 +4337,6 @@ struct hci_dbg_ble_reg_rd_cmd_cmp_evt
 };
 
 ///HCI Debug HW Register Write Complete event parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_ble_reg_wr_cmd_cmp_evt
 {
     /// status
@@ -5919,52 +4345,11 @@ struct hci_dbg_ble_reg_wr_cmd_cmp_evt
     uint16_t reg_addr;
 };
 
-///HCI Vendor Specific Set Preferred Slave Latency command parameters
-/*@TRACE*/
-struct hci_vs_set_pref_slave_latency_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// Preferred latency (in number of connection events)
-    uint16_t latency;
-};
 
-///HCI Vendor Specific Set Preferred Slave event duration command parameters
-/*@TRACE*/
-struct hci_vs_set_pref_slave_evt_dur_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// Preferred event duration (N * 0.625 ms)
-    uint16_t duration;
-    /// Slave transmits a single packet per connection event (False/True)
-    uint8_t single_tx;
-};
 
-///HCI Vendor Specific Set Maximum RX size and time command parameters
-/*@TRACE*/
-struct hci_vs_set_max_rx_size_and_time_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// Maximum RX size (in B)
-    uint16_t rx_octets;
-    /// Maximum RX time (in us)
-    uint16_t rx_time;
-};
 
-/// Send LLCP Packets
-/*@TRACE*/
-struct hci_dbg_send_llcp_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    ///buffer structure to return
-    struct buffer_tag buf;
-};
 
 ///HCI Debug LLC discard command parameters - vendor specific
-/*@TRACE*/
 struct hci_dbg_llcp_discard_cmd
 {
     /// Handle pointing to the connection for which LLCP commands have to be discarded
@@ -5974,33 +4359,13 @@ struct hci_dbg_llcp_discard_cmd
 };
 
 
-/// Vendor specific command used to set a periodic trigger
-/*@TRACE*/
-struct hci_vs_set_iso_data_path_trigger_cmd
-{
-    /// Connection handle
-    uint16_t conhdl;
-    /// TX = 0, RX = 1
-    uint8_t  direction;
-    /// 0 Disable, 1 Enable
-    uint8_t  enable;
-    /// trigger offset in microseconds
-    /// for TX direction, trigger offset is applied using SDU at source reference
-    /// for RX direction, trigger offset is applied using SDU at destination reference (sdu at source + transport latency)
-    int32_t  trigger_offset;
-};
 
 #if (RW_DEBUG)
 /// HCI DBG Meta Event indicating a SW assertion
-//TODO[AAL] exception (associated to HCI_DBG_EVT)
-/*@TRACE*/
 struct hci_dbg_assert_evt
 {
     ///DBG Subevent code
     uint8_t             subcode;
-    /// Assert type (warning/error)
-    //@trc_ref assert_type
-    uint8_t             type;
     /// Line number
     uint32_t line;
     /// Param0
@@ -6012,44 +4377,7 @@ struct hci_dbg_assert_evt
 };
 #endif //(RW_DEBUG)
 
-#if(BLE_ISOGEN)
-/// Event is used to provide statistics about ISO Gen
-/*@TRACE*/
-struct hci_vs_isogen_stat_evt
-{
-    /// VS Subevent code
-    uint8_t  subcode;
-
-    /// ISO Handle of the isochronous channel (Range 0x0000-0x0EFF)
-    uint16_t iso_hdl;
-
-    /// Statistics - Number of transmission attempts
-    uint32_t nb_tx;
-    /// Statistics - Number of transmission attempts that succeed
-    uint32_t nb_tx_ok;
-    /// Statistics - Number of Not granted packet packets
-    uint32_t nb_tx_not_granted;
-
-    /// Statistics - Number of reception attempt
-    uint32_t nb_rx;
-    /// Statistics - Number of reception attempts that succeed
-    uint32_t nb_rx_ok;
-    /// Statistics - Number of Not granted packet packets
-    uint32_t nb_rx_not_granted;
-    /// Statistics - Number of wrongly received packet (invalid data)
-    uint32_t nb_rx_data_err;
-    /// Statistics - Number of CRC Errors
-    uint32_t nb_rx_crc_err;
-    /// Statistics - Number of SYNC Errors
-    uint32_t nb_rx_sync_err;
-    /// Statistics - Number of received empty packets
-    uint32_t nb_rx_empty;
-};
-#endif // (BLE_ISOGEN)
-
-
 /// HCI LE Read PHY command
-/*@TRACE*/
 struct hci_le_rd_phy_cmd
 {
     /// Connection Handle
@@ -6057,7 +4385,6 @@ struct hci_le_rd_phy_cmd
 };
 
 /// HCI LE Set Default PHY Command
-/*@TRACE*/
 struct hci_le_set_dft_phy_cmd
 {
     /// Preferred PHYS selection
@@ -6069,7 +4396,6 @@ struct hci_le_set_dft_phy_cmd
 };
 
 /// HCI LE Set PHY Command
-/*@TRACE*/
 struct hci_le_set_phy_cmd
 {
     /// Connection Handle
@@ -6085,7 +4411,6 @@ struct hci_le_set_phy_cmd
 };
 
 /// HCI LE Set Extended Advertising Parameters Command Complete Event
-/*@TRACE*/
 struct hci_le_set_ext_adv_param_cmd_cmp_evt
 {
     /// Status
@@ -6095,7 +4420,6 @@ struct hci_le_set_ext_adv_param_cmd_cmp_evt
 };
 
 /// HCI LE Receiver Test v2 Command
-/*@TRACE*/
 struct hci_le_rx_test_v2_cmd
 {
     /// RX channel, range: 0x00 to 0x27
@@ -6107,7 +4431,6 @@ struct hci_le_rx_test_v2_cmd
 };
 
 /// HCI LE Transmitter Test v2 Command
-/*@TRACE*/
 struct hci_le_tx_test_v2_cmd
 {
     /// TX channel, range: 0x00 to 0x27
@@ -6116,15 +4439,6 @@ struct hci_le_tx_test_v2_cmd
     uint8_t     test_data_len;
     /**
      * Packet payload
-     * 0x00 PRBS9 sequence "11111111100000111101" (in transmission order) as described in [Vol 6] Part F, Section 4.1.5
-     * 0x01 Repeated "11110000" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x02 Repeated "10101010" (in transmission order) sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x03 PRBS15 sequence as described in [Vol 6] Part F, Section 4.1.5
-     * 0x04 Repeated "11111111" (in transmission order) sequence
-     * 0x05 Repeated "00000000" (in transmission order) sequence
-     * 0x06 Repeated "00001111" (in transmission order) sequence
-     * 0x07 Repeated "01010101" (in transmission order) sequence
-     * 0x08-0xFF Reserved for future use
      */
     uint8_t     pkt_payl;
     /// PHY (@enum le_phy_value)
@@ -6132,7 +4446,6 @@ struct hci_le_tx_test_v2_cmd
 };
 
 ///HCI LE Set Advertising Set Random Address Command parameters structure
-/*@TRACE*/
 struct hci_le_set_adv_set_rand_addr_cmd
 {
     /// Advertising handle
@@ -6142,7 +4455,6 @@ struct hci_le_set_adv_set_rand_addr_cmd
 };
 
 ///HCI LE Set Extended Advertising Parameters Command parameters structure
-/*@TRACE*/
 struct hci_le_set_ext_adv_param_cmd
 {
     /// Advertising handle
@@ -6178,7 +4490,6 @@ struct hci_le_set_ext_adv_param_cmd
 };
 
 ///HCI LE Set Extended Advertising Data Command parameters structure
-/*@TRACE*/
 struct hci_le_set_ext_adv_data_cmd
 {
     /// Advertising handle
@@ -6207,7 +4518,6 @@ struct hci_le_set_ext_adv_data_cmd
 };
 
 ///HCI LE Set Extended Scan Response Data Command parameters structure
-/*@TRACE*/
 struct hci_le_set_ext_scan_rsp_data_cmd
 {
     /// Advertising handle
@@ -6235,9 +4545,7 @@ struct hci_le_set_ext_scan_rsp_data_cmd
     uint8_t data[__ARRAY_EMPTY];
 };
 
-#if BLE_EMB_PRESENT || BLE_HOST_PRESENT
 ///HCI LE Set Extended Advertising Enable Command parameters structure
-/*@TRACE*/
 struct hci_le_set_ext_adv_en_cmd
 {
     /// Enable
@@ -6251,10 +4559,8 @@ struct hci_le_set_ext_adv_en_cmd
     /// Maximum number of extended advertising events
     uint8_t max_ext_adv_evt[BLE_ACTIVITY_MAX];
 };
-#endif //BLE_EMB_PRESENT || BLE_HOST_PRESENT
 
 ///HCI LE Read Maximum Advertising Data Length Command complete event
-/*@TRACE*/
 struct hci_le_rd_max_adv_data_len_cmd_cmp_evt
 {
     /// Status
@@ -6264,8 +4570,6 @@ struct hci_le_rd_max_adv_data_len_cmd_cmp_evt
 };
 
 ///HCI LE Remove Advertising Set Command parameters structure
-/*@TRACE
- * hci_le_rmv_adv_set_cmd = hci_le_rem_adv_set_cmd*/
 struct hci_le_rem_adv_set_cmd
 {
     /// Advertising handle
@@ -6273,7 +4577,6 @@ struct hci_le_rem_adv_set_cmd
 };
 
 ///HCI LE Read Number of Supported Advertising Sets Command complete event
-/*@TRACE*/
 struct hci_le_rd_nb_supp_adv_sets_cmd_cmp_evt
 {
     /// Status
@@ -6282,42 +4585,7 @@ struct hci_le_rd_nb_supp_adv_sets_cmd_cmp_evt
     uint8_t nb_supp_adv_sets;
 };
 
-///HCI LE Read Transmit Power Command complete event
-/*@TRACE*/
-struct hci_le_rd_tx_pwr_cmd_cmp_evt
-{
-    /// Status
-    uint8_t status;
-    /// Minimum TX Power
-    int8_t min_tx_pwr;
-    /// Maximum TX Power
-    int8_t max_tx_pwr;
-};
-
-///HCI LE Read RF Path Compensation Command complete event
-/*@TRACE*/
-struct hci_le_rd_rf_path_comp_cmd_cmp_evt
-{
-    /// Status
-    uint8_t status;
-    /// RF TX Path Compensation
-    int16_t tx_path_comp;
-    /// RF RX Path Compensation
-    int16_t rx_path_comp;
-};
-
-///HCI LE Write RF Path Compensation Command complete event
-/*@TRACE*/
-struct hci_le_wr_rf_path_comp_cmd
-{
-    /// RF TX Path Compensation
-    int16_t tx_path_comp;
-    /// RF RX Path Compensation
-    int16_t rx_path_comp;
-};
-
 ///HCI LE Set Periodic Advertising Parameters Command parameters structure
-/*@TRACE*/
 struct hci_le_set_per_adv_param_cmd
 {
     /// Advertising handle
@@ -6331,7 +4599,6 @@ struct hci_le_set_per_adv_param_cmd
 };
 
 ///HCI LE Set Periodic Advertising Data Command parameters structure
-/*@TRACE*/
 struct hci_le_set_per_adv_data_cmd
 {
     /// Advertising handle
@@ -6352,7 +4619,6 @@ struct hci_le_set_per_adv_data_cmd
 };
 
 ///HCI LE Set Periodic Advertising Enable Command parameters structure
-/*@TRACE*/
 struct hci_le_set_per_adv_en_cmd
 {
     /// Enable
@@ -6362,8 +4628,6 @@ struct hci_le_set_per_adv_en_cmd
 };
 
 ///HCI LE Advertising Set Terminated event
-/*@TRACE
- * hci_le_adv_set_terminated_evt = hci_le_adv_set_term_evt*/
 struct hci_le_adv_set_term_evt
 {
     /// LE Subevent code
@@ -6379,7 +4643,6 @@ struct hci_le_adv_set_term_evt
 };
 
 ///HCI LE Scan Request Received event
-/*@TRACE*/
 struct hci_le_scan_req_rcvd_evt
 {
     /// LE Subevent code
@@ -6393,7 +4656,6 @@ struct hci_le_scan_req_rcvd_evt
 };
 
 ///HCI LE Read Periodic Advertiser List Size Command complete event
-/*@TRACE*/
 struct hci_le_rd_per_adv_list_size_cmd_cmp_evt
 {
     ///Status
@@ -6403,7 +4665,6 @@ struct hci_le_rd_per_adv_list_size_cmd_cmp_evt
 };
 
 ///HCI LE Channel Selection Algorithm event
-/*@TRACE*/
 struct hci_le_ch_sel_algo_evt
 {
     /// LE Subevent code
@@ -6415,7 +4676,6 @@ struct hci_le_ch_sel_algo_evt
 };
 
 /// HCI LE read PHY Command complete event
-/*@TRACE*/
 struct hci_le_rd_phy_cmd_cmp_evt
 {
     ///Status of received command
@@ -6423,15 +4683,12 @@ struct hci_le_rd_phy_cmd_cmp_evt
     /// Connection Handle
     uint16_t            conhdl;
     /// Current configured PHY for TX
-    //@trc_ref le_phy_value
     uint8_t             tx_phy;
     /// Current configured PHY for RX
-    //@trc_ref le_phy_value
     uint8_t             rx_phy;
 };
 
 /// HCI LE PHY Update Complete event
-/*@TRACE*/
 struct hci_le_phy_upd_cmp_evt
 {
     ///LE Subevent code
@@ -6441,894 +4698,9 @@ struct hci_le_phy_upd_cmp_evt
     ///Connection handle
     uint16_t            conhdl;
     ///TX phy chosen
-    //@trc_ref le_phy_value
     uint8_t             tx_phy;
     ///RX phy chosen
-    //@trc_ref le_phy_value
     uint8_t             rx_phy;
-};
-
-///HCI LE Connectionless IQ Report event
-/*@TRACE*/
-struct hci_le_conless_iq_report_evt
-{
-    /// LE Subevent code
-    uint8_t  subcode;
-    /// Sync handle
-    uint16_t sync_hdl;
-    /// Data channel index
-    uint8_t  channel_idx;
-    /// RSSI (in 0.1 dBm)
-    int16_t rssi;
-    /// RSSI antenna ID
-    uint8_t rssi_antenna_id;
-    /// CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t cte_type;
-    /// Slot durations (1: 1us | 2: 2us)
-    uint8_t slot_dur;
-    /// Packet status
-    uint8_t pkt_status;
-    /// paEventCounter
-    uint16_t pa_evt_cnt;
-    /// Sample_count
-    uint8_t sample_cnt;
-    /// I/Q sample
-    struct
-    {
-        /// I sample
-        int8_t i;
-        /// Q sample
-        int8_t q;
-    } iq_sample[MAX_SAMPLE_CNT];
-};
-
-///HCI LE Connection IQ Report event
-/*@TRACE*/
-struct hci_le_con_iq_report_evt
-{
-    /// LE Subevent code
-    uint8_t  subcode;
-    /// Connection handle
-    uint16_t conhdl;
-    /// Rx PHY  (@see enum le_phy_value)
-    uint8_t  rx_phy;
-    /// Data channel index
-    uint8_t  data_channel_idx;
-    /// RSSI (in 0.1 dBm)
-    int16_t rssi;
-    /// RSSI antenna ID
-    uint8_t rssi_antenna_id;
-    /// CTE type (0: AOA | 1: AOD-1us | 2: AOD-2us)
-    uint8_t cte_type;
-    /// Slot durations (1: 1us | 2: 2us)
-    uint8_t slot_dur;
-    /// Packet status
-    uint8_t pkt_status;
-    /// connEventCounter
-    uint16_t con_evt_cnt;
-    /// Sample_count
-    uint8_t sample_cnt;
-    /// I/Q sample
-    struct
-    {
-        /// I sample
-        int8_t i;
-        /// Q sample
-        int8_t q;
-    } iq_sample[MAX_SAMPLE_CNT];
-};
-
-///HCI LE CTE Request Failed event
-/*@TRACE*/
-struct hci_le_cte_req_failed_evt
-{
-    /// LE Subevent code
-    uint8_t  subcode;
-    /// Status
-    uint8_t  status;
-    /// Connection handle
-    uint16_t  conhdl;
-};
-
-///Commands Opcodes: OGF(6b) | OCF(10b)
-/* Some Abbreviation used in names:
- *  - LK   = Link Key
- *  - RD   = Read
- *  - WR   = Write
- *  - REM  = Remote
- *  - STG  = Settings
- *  - CON  = Connection
- *  - CHG  = Change
- *  - DFT  = Default
- *  - PER  = Periodic
- *  - CHAN = Channel
- *  - REQ  = Request
- */
-
-/// Used to read the maximum size of the data portion of ACL data packets and isochronous data packets
-/// no parameter on command, only need to specify returned parameters
-/*@TRACE*/
-struct hci_le_rd_buf_size_v2_cmd_cmp_evt
-{
-    /// 0x00 - Request succeed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Maximum length (in octets) of the data portion of each HCI ACL (0x0000: No dedicated LE buffer, 0x0001-0x001A RFU, Range 0x001B-0xFFFF)
-    uint16_t le_acl_data_packet_length;
-    /// The total number of HCI ACL data packets that can be stored in the data buffers of the Controller (0x00: No dedicated LE buffer, Range 0x01-0xFF)
-    uint8_t  total_num_le_acl_data_packets;
-    /// The maximum length (in octets) of the data portion of each HCI ISO data packet (0x0000: No dedicated ISO buffer, Range 0x0001-0xFFFF)
-    uint16_t iso_data_packet_length;
-    /// The total number of HCI ISO data packets that can be stored in the ISO buffers of the Controller (0x00: No dedicated ISO buffer, Range 0x01-0xFF)
-    uint8_t  total_num_iso_data_packets;
-};
-
-/// Command Complete event of HCI_LE_RD_ISO_TX_SYNC_CMD
-/*@TRACE*/
-struct hci_le_rd_iso_tx_sync_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// The packet sequence number of an SDU (Range 0x0000-0xFFFF)
-    uint16_t pkt_seq_nb;
-    /// The time stamp, in microseconds, of the reference anchor point of a transmitted SDU (Range 0x00000000-0xFFFFFFFF)
-    uint32_t time_stamp;
-    /// The time offset, in microseconds, that is associated with a transmitted SDU (Range 0x000000-0xFFFFFF)
-    uint32_t time_offset;
-};
-
-/// Description of CIS parameters
-/*@TRACE*/
-struct hci_le_cis_param
-{
-    /// Used to identify a Connected Isochronous Stream. (Range 0x00-0xEF)
-    uint8_t  cis_id;
-    /// Maximum size of an SDU in octets from the master Host (12 bits meaningful - Range 0x000-0xFFF).
-    uint16_t max_sdu_m2s;
-    /// Maximum size of an SDU in octets from the master Host (12 bits meaningful - Range 0x000-0xFFF).
-    uint16_t max_sdu_s2m;
-    /// Master to slave PHY, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy_m2s;
-    /// Slave to master PHY, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy_s2m;
-    /// Maximum number of times every CIS Data PDU should be retransmitted from the master to slave (range 0x00-0x0F)
-    uint8_t  rtn_m2s;
-    /// Maximum number of times every CIS Data PDU should be retransmitted from the slave to master (range 0x00-0x0F)
-    uint8_t  rtn_s2m;
-#if BLE_AUDIO_ENABLED
-}__attribute ((packed));
-#else
-};
-#endif
-
-/// Used by a master Host to set the parameters of all Connected Isochronous Streams associated with a Connected
-/// Isochronous Group in the Controller
-/*@TRACE*/
-struct hci_le_set_cig_params_cmd
-{
-    /// Used to identify the Connected Isochronous Group (range 0x00 to 0xEF).
-    uint8_t  cig_id;
-    #if BLE_AUDIO_ENABLED
-    /// Interval in microseconds of periodic SDUs master to slave (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint8_t sdu_interval_m2s[3];
-    /// Interval in microseconds of periodic SDUs slave to master (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint8_t sdu_interval_s2m[3];
-    #else
-    /// Interval in microseconds of periodic SDUs master to slave (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint32_t sdu_interval_m2s;
-    /// Interval in microseconds of periodic SDUs slave to master (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint32_t sdu_interval_s2m;
-    #endif
-    /// Slave Clock Accuracy:
-    /// 0x00: 251 ppm to 500 ppm,  0x01: 151 ppm to 250 ppm, 0x02: 101 ppm to 150 ppm, 0x03: 76 ppm to 100 ppm
-    /// 0x04:  51 ppm to  75 ppm,  0x05:  31 ppm to  50 ppm, 0x06:  21 ppm to  30 ppm, 0x07:  0 ppm to  20 ppm
-    uint8_t  sca;
-    /// Scheduling method, 0: Sequential, 1: Interleaved
-    uint8_t  packing;
-    /// ISOAL Framing mode, 0: Unframed, 1: Framed
-    uint8_t  framing;
-    /// The maximum time in milliseconds for an SDU to be transported from the master Controller to slave Controller.
-    /// (range 0x0005 to 0x0FA0)
-    uint16_t max_trans_latency_m2s;
-    /// The maximum time in milliseconds for an SDU to be transported from the slave Controller to master Controller.
-    /// (range 0x0005 to 0x0FA0)
-    uint16_t max_trans_latency_s2m;
-    /// Total number of CISs in the CIG being added or modified. (Range 0x01-0x10)
-    uint8_t  cis_count;
-    /// CIS Parameters
-    struct hci_le_cis_param params[0x10];
-#if BLE_AUDIO_ENABLED
-}__attribute ((packed));
-#else
-};
-#endif
-
-/// Command Complete event of HCI_LE_SET_CIG_PARAMS_CMD
-/*@TRACE*/
-struct hci_le_set_cig_params_cmd_cmp_evt
-{
-    /// 0x00 - The Broadcast Isochronous Group has been completed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Used to identify the Connected Isochronous Group. (Range 0x00-0xEF)
-    uint8_t  cig_id;
-    /// Total number of CISs added or modified by this command (Range 0x01-0x10)
-    uint8_t  cis_count;
-    /// List of connection handles of CISs in the CIG. The connection handle list order is the same as the list order
-    /// of the CISs in the command  (Range 0x0000-0x0EFF)
-    uint16_t conhdl[0x10];
-};
-
-/// Description of CIS parameters
-/*@TRACE*/
-struct hci_le_cis_test_param
-{
-    /// Used to identify a Connected Isochronous Stream. (Range 0x00-0xEF)
-    uint8_t  cis_id;
-    /// Maximum number of subevents in each interval of Connected Isochronous Stream (Range 0x00-0x1F)
-    uint8_t  nse;
-    /// Maximum size of an SDU in octets from the master Host (12 bits meaningful - Range 0x000-0xFFF).
-    uint16_t max_sdu_m2s;
-    /// Maximum size of an SDU in octets from the master Host (12 bits meaningful - Range 0x000-0xFFF).
-    uint16_t max_sdu_s2m;
-    /// Maximum size of payload from master Link Layer to slave Link Layer (Range 0x01-0xFB).
-    uint16_t  max_pdu_m2s;
-    /// Maximum size of payload from slave Link Layer to master Link Layer (Range 0x01-0xFB).
-    uint16_t  max_pdu_s2m;
-    /// Master to slave PHY, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy_m2s;
-    /// Slave to master PHY, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy_s2m;
-    /// The burst number for master to slave transmission (Range 0x00-0x0F).
-    /// 0x00 - No isochronous data from the master to the slave
-    uint8_t  bn_m2s;
-    /// The burst number for slave to master transmission (Range 0x00-0x0F).
-    /// 0x00 - No isochronous data from the slave to the master
-    uint8_t  bn_s2m;
-#if BLE_AUDIO_ENABLED
-} __attribute__((__packed__));
-#else
-};
-#endif
-
-/// Used by a master Host to set the parameters of all Connected Isochronous Streams associated with a Connected
-/// Isochronous Group in the Controller
-/*@TRACE*/
-struct hci_le_set_cig_params_test_cmd
-{
-    /// Used to identify the Connected Isochronous Group. (Range 0x00-0xEF)
-    uint8_t  cig_id;
-    #if BLE_AUDIO_ENABLED
-    /// Interval in microseconds of periodic SDUs master to slave (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint8_t sdu_interval_m2s[3];
-    /// Interval in microseconds of periodic SDUs slave to master (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint8_t sdu_interval_s2m[3];
-    #else
-    /// Interval in microseconds of periodic SDUs master to slave (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint32_t sdu_interval_m2s;
-    /// Interval in microseconds of periodic SDUs slave to master (20 bits meaningful Range 0x000FF - 0xFFFFF).
-    uint32_t sdu_interval_s2m;
-    #endif
-    /// The maximum flush timeout for each payload from the master (Range 0x01-0x1F).
-    uint8_t  ft_m2s;
-    /// The maximum flush timeout for each payload from the slave (Range 0x01-0x1F).
-    uint8_t  ft_s2m;
-    /// The duration of the isochronous interval in multiples of 1.25 ms (Range 0x0004-0xC80).
-    uint16_t iso_interval;
-    /// Slave Clock Accuracy:
-    /// 0x00: 251 ppm to 500 ppm,  0x01: 151 ppm to 250 ppm, 0x02: 101 ppm to 150 ppm, 0x03: 76 ppm to 100 ppm
-    /// 0x04:  51 ppm to  75 ppm,  0x05:  31 ppm to  50 ppm, 0x06:  21 ppm to  30 ppm, 0x07:  0 ppm to  20 ppm
-    uint8_t  sca;
-    /// Scheduling method, 0: Sequential, 1: Interleaved
-    uint8_t  packing;
-    /// ISOAL Framing mode, 0: Unframed, 1: Framed
-    uint8_t  framing;
-    /// Total number of CISs in the CIG being added or modified. (Range 0x00-0x10)
-    uint8_t  cis_count;
-    /// CIS Parameters
-    struct hci_le_cis_test_param params[0x10];
-#if BLE_AUDIO_ENABLED
-} __attribute__((__packed__));
-#else
-};
-#endif
-
-/// Command Complete event of HCI_LE_SET_CIG_PARAMS_TEST_CMD
-/*@TRACE*/
-struct hci_le_set_cig_params_test_cmd_cmp_evt
-{
-    /// 0x00 - The Broadcast Isochronous Group has been completed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Used to identify the Connected Isochronous Group. (Range 0x00-0xEF)
-    uint8_t  cig_id;
-    /// Total number of CISs added or modified by this command (Range 0x00-0x10)
-    uint8_t  cis_count;
-    /// List of connection handles of CISs in the CIG. The connection handle list order is the same as the list order
-    /// of the CISs in the command  (Range 0x0000-0x0EFF)
-    uint16_t conhdl[0x10];
-};
-
-/// Create CIS parameter
-/*@TRACE*/
-struct hci_le_cis_create_param
-{
-    /// Connection handle of Connected Isochronous Stream (Range 0x0000-0x0EFF)
-    uint16_t cis_conhdl;
-    /// Connection handle of ACL Link (Range 0x0000-0x0EFF)
-    uint16_t acl_conhdl;
-#if BLE_AUDIO_ENABLED
-}__attribute ((packed));
-#else
-};
-#endif
-
-/// Used by the master Host to establish one or more Connected Isochronous Streams using the connections identified
-/// by the ACL_Connection_Handle
-/*@TRACE*/
-struct hci_le_create_cis_cmd
-{
-    /// Total number of CISs to be established. (Range 0x01-0x1F)
-    uint8_t  cis_count;
-    /// Create CIS Parameters
-    struct hci_le_cis_create_param params[0x1F];
-#if BLE_AUDIO_ENABLED
-}__attribute ((packed));
-#else
-};
-#endif
-
-/// Removes all the Connected Isochronous Streams which have previously been set up in the Controller by using the
-/// HCI_LE_Set_CIG_Parameters or the HCI_LE_Set_CIG_Parameters_Test command.
-/*@TRACE*/
-struct hci_le_remove_cig_cmd
-{
-    /// Used to identify the Connected Isochronous Group. (Range 0x00-0xEF)
-    uint8_t  cig_id;
-};
-
-/// Command Complete event of HCI_LE_REMOVE_CIG_CMD
-/*@TRACE*/
-struct hci_le_remove_cig_cmd_cmp_evt
-{
-    /// 0x00 - The HCI_LE_Remove_CIG command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Identifier of a CIG. (Range 0x00-0xEF)
-    uint8_t  cig_id;
-};
-
-/// Used by the slave Host to inform the Controller to accept the request for the Connected Isochronous Stream that is
-/// identified by the Connection_Handle
-/*@TRACE*/
-struct hci_le_accept_cis_req_cmd
-{
-    /// Connection handle of the Connected Isochronous Stream (Range: 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// Used by the slave Host to reject the request for the Connected Isochronous Stream that is identified by the
-/// Connection_Handle
-/*@TRACE*/
-struct hci_le_reject_cis_req_cmd
-{
-    /// Connection handle of the Connected Isochronous Stream (Range: 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// The reason for rejecting the Connected Isochronous Stream
-    uint8_t  reason;
-};
-
-/// Used to transmit data PDUs of one or more Broadcast Isochronous Streams of the Broadcast Isochronous Group
-/*@TRACE*/
-struct hci_le_create_big_cmd
-{
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Used to identify the Periodic Advertising set (Range 0x00-0xEF)
-    uint8_t  adv_hdl;
-    /// Total number of Broadcast Isochronous Streams in the Broadcast Isochronous Group. (Range 0x01-0x1F)
-    uint8_t  num_bis;
-    /// Interval of periodic SDUs in microseconds (20 bits meaningful - range 0x000FF-0xFFFFF).
-    uint32_t sdu_interval;
-    /// Maximum size of an SDU (12 bits meaningful Range 0x000 to 0xFFF).
-    uint16_t max_sdu;
-    /// The maximum time in milliseconds for a SDU to be transported (Range 0x0000-0x0FA0)
-    uint16_t trans_latency;
-    /// Number of times every BIS Data PDU should be retransmitted (Range 0x00-0x0F)
-    uint8_t  rtn;
-    /// PHY, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy;
-    /// Scheduling method, 0: Sequential, 1: Interleaved
-    uint8_t  packing;
-    /// ISOAL Framing mode, 0: Unframed, 1: Framed
-    uint8_t  framing;
-    /// 0: Unencrypted, 1: Encrypted
-    uint8_t  encryption;
-    /// Code used for deriving the session key for encrypting and decrypting payloads of BISs.
-    uint8_t  broadcast_code[KEY_LEN];
-};
-
-/// Prepares the CL-Master Controller to set up a new BIG.
-/*@TRACE*/
-struct hci_le_create_big_test_cmd
-{
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Used to identify the Periodic Advertising set (Range 0x00-0xEF)
-    uint8_t  adv_hdl;
-    /// Total number of Broadcast Isochronous Streams in the Broadcast Isochronous Group. (Range 0x01-0x1F)
-    uint8_t  num_bis;
-    /// Interval of periodic SDUs in microseconds (20 bits meaningful - range 0x000FF-0xFFFFF).
-    uint32_t sdu_interval;
-    /// Isochronous Interval in multiples of 1.25 ms (Range 0x0004-0xC80)
-    uint16_t iso_interval;
-    /// Total number of subevents in each interval of each BIS in the BIG (Range 0x01-0x1F)
-    uint8_t  nse;
-    /// Maximum size of an SDU (12 bits meaningful Range 0x000 to 0xFFF).
-    uint16_t max_sdu;
-    /// Maximum size of payload (Range 0x01-0xFB)
-    uint16_t  max_pdu;
-    /// PHY, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy;
-    /// Scheduling method, 0: Sequential, 1: Interleaved
-    uint8_t  packing;
-    /// ISOAL Framing mode, 0: Unframed, 1: Framed
-    uint8_t  framing;
-    /// Number of new payloads in each interval for each Broadcast Isochronous Stream (Burst Number) (Range 0x01-0x07)
-    uint8_t  bn;
-    /// Number of times the scheduled payload(s) should be transmitted (Range 0x01-0x0F)
-    uint8_t  irc;
-    /// Isochronous Interval spacing of payloads transmitted in the Pre_Transmission_Subevents (Range 0x00-0x0F)
-    uint8_t  pto;
-    /// 0: Unencrypted, 1: Encrypted
-    uint8_t  encryption;
-    /// Code used for encrypting or decrypting payloads of an encrypted Broadcast Isochronous Stream
-    uint8_t  broadcast_code[KEY_LEN];
-};
-
-/// Terminate transmission of all Broadcast Isochronous Streams of a Broadcast Isochronous Group or to cancel
-/// the process of creating a Broadcast Isochronous Group
-/*@TRACE*/
-struct hci_le_terminate_big_cmd
-{
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Termination reason
-    uint8_t  reason;
-};
-
-/// Used to synchronize and receive PDUs from one or more Broadcast Isochronous Streams within a Broadcast Isochronous
-/// Group.
-/*@TRACE*/
-struct hci_le_big_create_sync_cmd
-{
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Used to identify the periodic advertising set (Range 0x0000-0x0EFF)
-    uint16_t sync_hdl;
-    /// 0: Unencrypted, 1: Encrypted
-    uint8_t  encryption;
-    /// 128-bit code used for deriving the session key for decrypting payloads of encrypted BISs.
-    uint8_t  broadcast_code[16];
-    /// Maximum number of subevents that should be used to receive data payloads in each isochronous interval (0x00-0xFF)
-    /// 0x00 - The Controller can  schedule reception of any number of subevents up to NSE
-    uint8_t  mse;
-    /// Synchronization timeout for a Broadcast Isochronous Group (step 10ms, range 0x000A-0x4000)
-    uint16_t big_sync_timeout;
-    /// Total number of BISs to synchronize. (Range 0x01-0x1F)
-    uint8_t  num_bis;
-    /// List of indices of BISs (bis_id Range 0x01-0x1F)
-    uint8_t  bis_id[0x1F];
-};
-
-/// Stop synchronization with Broadcast Isochronous Streams or to cancel the process of synchronization to Broadcast Isochronous Streams
-/*@TRACE*/
-struct hci_le_big_terminate_sync_cmd
-{
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-};
-
-/// Command Complete event of HCI_LE_BIG_TERMINATE_SYNC_CMD
-/*@TRACE*/
-struct hci_le_big_terminate_sync_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-};
-
-/// Stop synchronization with Broadcast Isochronous Streams or to cancel the process of synchronization to Broadcast Isochronous Streams
-/*@TRACE*/
-struct hci_le_req_peer_sca_cmd
-{
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// The command is used to identify and create the isochronous data path between the Host and the Controller.
-/// It can also be used to configure a codec for each data path.
-/*@TRACE*/
-struct hci_le_setup_iso_data_path_cmd
-{
-    /// Connection handle of a CIS or BIS. (Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Data path direction
-    /// 0x00       Input (Host to Controller)
-    /// 0x01       Output (Controller to Host)
-    /// Others     Reserved for future use
-    uint8_t  data_path_direction;
-    /// Data path ID
-    /// 0x00       HCI
-    /// 0x01-0xFE  Logical_Channel_Number. The meaning of the logical channel is vendor specific.
-    /// 0xFF       Reserved for future use
-    uint8_t  data_path_id;
-    /// Codec ID (5 octets)
-    uint8_t  codec_id[CODEC_ID_LEN];
-    /// Controller delay in ms (Range: 0x000000 to 0x3D0900)
-    #if BLE_AUDIO_ENABLED
-    uint8_t  ctrl_delay[3];
-    #else
-    uint32_t  ctrl_delay;
-    #endif
-    /// Codec configuration length
-    uint8_t  codec_cfg_len;
-    /// Codec configuration
-    uint8_t  codec_cfg[__ARRAY_EMPTY];
-#if BLE_AUDIO_ENABLED
-}__attribute ((packed));
-#else
-};
-#endif
-
-/// Command Complete event of HCI_LE_SETUP_ISO_DATA_PATH_CMD
-/*@TRACE*/
-struct hci_le_setup_iso_data_path_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// The command remove the data path between the Host and Controller and vice versa.
-/*@TRACE*/
-struct hci_le_remove_iso_data_path_cmd
-{
-    /// Connection handle of a CIS or BIS. (Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Bit[0]: Input data path, Bit[1]: Output data path
-    uint8_t  direction;
-};
-
-/// Command Complete event of HCI_LE_REMOVE_ISO_DATA_PATH_CMD
-/*@TRACE*/
-struct hci_le_remove_iso_data_path_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// Used to configure an established CIS or BIS specified by the Connection_Handle parameter, and transmit test payloads which are generated by the Controller.
-/*@TRACE*/
-struct hci_le_iso_tx_test_cmd
-{
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// 0x00: Zero length payload 0x01: Variable length payload 0x02: Maximum length payload
-    /// All other values: RFU
-    uint8_t  payload_type;
-};
-
-/// Used to configure an established CIS or a synchronized BIG specified by the Connection_Handle parameter to receive payloads.
-/*@TRACE*/
-struct hci_le_iso_rx_test_cmd
-{
-    /// Connection handle of the CIS or BIS. (Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// 0x00: Zero length payload 0x01: Variable length payload 0x02: Maximum length payload
-    /// All other values: RFU
-    uint8_t  payload_type;
-};
-
-/// Used to read the test counters in the Controller which are configured in ISO Receive Test mode for a CIS or BIS specified by the Connection_Handle.
-/*@TRACE*/
-struct hci_le_iso_read_test_counters_cmd
-{
-    /// Connection handle of the CIS or BIS. (Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// Command Complete event of HCI_LE_ISO_READ_TEST_COUNTERS_CMD
-/*@TRACE*/
-struct hci_le_iso_read_test_counters_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Number in the Received_Packet_Count (0xXXXXXXXX)
-    uint32_t received_packet_count;
-    /// Number in the Missed_Packet_Count (0xXXXXXXXX)
-    uint32_t missed_packet_count;
-    /// Number in the Failed_Packet_Count (0xXXXXXXXX)
-    uint32_t failed_packet_count;
-};
-
-/// Used to terminate the ISO Transmit and/or Receive Test mode for a CIS or BIS specified by the Connection_Handle parameter but does not terminate the CIS or BIS.
-/*@TRACE*/
-struct hci_le_iso_test_end_cmd
-{
-    /// Connection handle of the CIS or BIS. (Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// Command Complete event of HCI_LE_ISO_TEST_END_CMD
-/*@TRACE*/
-struct hci_le_iso_test_end_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Number in the Received_Packet_Count (0xXXXXXXXX)
-    uint32_t received_packet_count;
-    /// Number in the Missed_Packet_Count (0xXXXXXXXX)
-    uint32_t missed_packet_count;
-    /// Number in the Failed_Packet_Count (0xXXXXXXXX)
-    uint32_t failed_packet_count;
-};
-
-/// Returns the values of various counters related to link quality that are associated with the isochronous stream specified by the Connection_Handle parameter.
-/*@TRACE*/
-struct hci_le_rd_iso_link_quality_cmd
-{
-    /// Connection handle of the CIS or BIS. (Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-};
-
-/// Used by the Host to set or clear a bit of the feature controlled by the Host in the Link Layer FeatureSet stored in the Controller.
-struct hci_le_set_host_feature_cmd
-{
-    /// Bit position in the FeatureSet. (Range 0x00-0x3F)
-    uint8_t bit_number;
-    /// Bit value. (0x00: feature disabled 0x01: feature enabled All other values: RFU)
-    uint8_t bit_value;
-};
-
-/// Command Complete event of HCI_LE_RD_ISO_LINK_QUALITY_CMD
-/*@TRACE*/
-struct hci_le_rd_iso_link_quality_cmd_cmp_evt
-{
-    /// 0x00 - Command succeeded ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the CIS or BIS (12 bits meaningful - Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Value of the Tx_UnACKed_Packets counter (0xXXXXXXXX)
-    uint32_t tx_unacked_packets;
-    /// Value of the Tx_Flushed_Packets counter (0xXXXXXXXX)
-    uint32_t tx_flushed_packets;
-    /// Value of the Tx_Last_Subevent_Packets counter (0xXXXXXXXX)
-    uint32_t tx_last_subevent_packets;
-    /// Value of the Retransmitted_Packets counter (0xXXXXXXXX)
-    uint32_t retransmitted_packets;
-    /// Value of the CRC_Error_Packets counter (0xXXXXXXXX)
-    uint32_t crc_error_packets;
-    /// Value of the Rx_Unreceived_Packets counter (0xXXXXXXXX)
-    uint32_t rx_unreceived_packets;
-    /// Value of the Duplicate_Packets counter (0xXXXXXXXX)
-    uint32_t duplicate_packets;
-};
-
-/**************************************************************************************
- **************                   HCI EVENT TRUCTURES                  ****************
- **************************************************************************************/
-
-/// Basic LE event sutrcture
-/*@TRACE*/
-struct hci_le_basic_evt
-{
-    /// LE Subevent code
-    uint8_t subcode;
-};
-
-/// Event indicates that the Connected Isochronous Stream with the Connection_Handle has been established.
-/*@TRACE*/
-struct hci_le_cis_established_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// 0x00 - The Broadcast Isochronous Group has been completed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the Connected Isochronous Stream (Range: 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// The CIG synchronization delay time in microseconds
-    uint32_t cig_sync_delay;
-    /// The CIS synchronization delay time in microseconds
-    uint32_t cis_sync_delay;
-    /// The maximum time, in microseconds, for transmission of SDUs of all CISes from master to slave
-    /// (range 0x0000EA to 0x7FFFFF)
-    uint32_t trans_latency_m2s;
-    /// The maximum time, in microseconds, for transmission of SDUs of all CISes from slave to master
-    /// (range 0x0000EA to 0x7FFFFF)
-    uint32_t trans_latency_s2m;
-    /// Master to slave PHY, 0x01: 1Mbps, 0x02: 2Mbps, 0x03: LE-Coded
-    uint8_t  phy_m2s;
-    /// Slave to master PHY, 0x01: 1Mbps, 0x02: 2Mbps, 0x03: LE-Coded
-    uint8_t  phy_s2m;
-    /// Maximum number of subevents in each isochronous event (Range: 0x01-0x1E)
-    uint8_t  nse;
-    /// The burst number for master to slave transmission (0x00: no isochronous data from the master to the slave, range 0x01-0x0F)
-    uint8_t  bn_m2s;
-    /// The burst number for slave to master transmission (0x00: no isochronous data from the slave to the master, range 0x01-0x0F)
-    uint8_t  bn_s2m;
-    /// The flush timeout, in multiples of the ISO_Interval, for each payload sent from the master to the slave (Range: 0x01-0x1F)
-    uint8_t  ft_m2s;
-    /// The flush timeout, in multiples of the ISO_Interval, for each payload sent from the slave to the master (Range: 0x01-0x1F)
-    uint8_t  ft_s2m;
-    /// Maximum size, in octets, of the payload from master to slave (Range: 0x00-0xFB)
-    uint16_t  max_pdu_m2s;
-    /// Maximum size, in octets, of the payload from slave to master (Range: 0x00-0xFB)
-    uint16_t  max_pdu_s2m;
-    /// ISO interval (1.25ms unit, range: 5ms to 4s)
-    uint16_t iso_interval;
-};
-
-/// Event indicates that the Connected Isochronous Stream with the Connection_Handle has been established.
-/*@TRACE*/
-struct hci_le_cis_request_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// Connection handle of the ACL (Range: 0x0000-0x0EFF)
-    uint16_t acl_conhdl;
-    /// Connection handle of the Connected Isochronous Stream (Range: 0x0000-0x0EFF)
-    uint16_t cis_conhdl;
-    /// Used to identify the Connected Isochronous Group. (Range 0x00-0xEF)
-    uint8_t  cig_id;
-    /// Used to identify a Connected Isochronous Stream. (Range 0x00-0xEF)
-    uint8_t  cis_id;
-};
-
-/// Event Generated in the Isochronous Broadcaster when all the Broadcast Isochronous Streams in the Group are being
-/// transmitted
-/*@TRACE*/
-struct hci_le_create_big_cmp_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// 0x00 - The Broadcast Isochronous Group has been completed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Transmission delay time in microseconds of all BISs in the BIG (in us range 0x0000EA-0x7FFFFF)
-    uint32_t big_sync_delay;
-    /// The maximum delay time, in microseconds, for transmission of SDUs of all BISes (in us range 0x0000EA-0x7FFFFF)
-    uint32_t big_trans_latency;
-    /// PHY used, bit 0: 1Mbps, bit 1: 2Mbps, bit 2: LE-Coded
-    uint8_t  phy;
-    /// The number of subevents in each BIS event in the BIG, range 0x01-0x1E
-    uint8_t  nse;
-    /// The number of new payloads in each BIS event, range 0x01-0x07
-    uint8_t  bn;
-    /// Offset used for pre-transmissions, range 0x00-0x0F
-    uint8_t  pto;
-    /// The number of times a payload is transmitted in a BIS event, range 0x01-0x0F
-    uint8_t  irc;
-    /// Maximum size of the payload in octets, range 0x00-0xFB
-    uint16_t  max_pdu;
-    /// ISO interval (1.25ms unit, range: 5ms to 4s)
-    uint16_t iso_interval;
-    /// Total number of BISs in the BIG (Range 0x01-0x1F)
-    uint8_t  num_bis;
-    /// The connection handles of the BISs (Range 0x0000-0x0EFF)
-    uint16_t conhdl[0x1F];
-};
-
-/// Event is generated when transmissions of all the Broadcast Isochronous Streams in the Broadcast Isochronous Group
-/// are terminated
-/*@TRACE*/
-struct hci_le_terminate_big_cmp_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Reason for termination (0xXX)
-    uint8_t  reason;
-};
-
-/// Event is generated in a scanning device when the Controller has synchronized with the requested Broadcast
-/// Isochronous Streams.
-/*@TRACE*/
-struct hci_le_big_sync_est_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// 0x00 - The Broadcast Isochronous Group has been completed ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// The maximum delay time, in microseconds, for transmission of SDUs of all BISes (in us range 0x0000EA-0x7FFFFF)
-    uint32_t big_trans_latency;
-    /// The number of subevents in each BIS event in the BIG, range 0x01-0x1E
-    uint8_t  nse;
-    /// The number of new payloads in each BIS event, range 0x01-0x07
-    uint8_t  bn;
-    /// Offset used for pre-transmissions, range 0x00-0x0F
-    uint8_t  pto;
-    /// The number of times a payload is transmitted in a BIS event, range 0x01-0x0F
-    uint8_t  irc;
-    /// Maximum size of the payload in octets, range 0x00-0xFB
-    uint16_t  max_pdu;
-    /// ISO interval (1.25ms unit, range: 5ms to 4s)
-    uint16_t iso_interval;
-    /// Total number of BISs in the BIG (Range 0x01-0x1F)
-    uint8_t  num_bis;
-    /// The connection handles of the BISs (Range 0x0000-0x0EFF)
-    uint16_t conhdl[0x1F];
-};
-
-/// Event indicates that the Controller has not received any payload from any Broadcast Isochronous Stream within a
-/// Broadcast Isochronous Group to which it was synchronized within the timeout period (BIS_Sync_Timeout).
-/*@TRACE*/
-struct hci_le_big_sync_lost_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// BIG_Handle is used to identify the BIS Group. (Range 0x00-0xEF)
-    uint8_t  big_hdl;
-    /// Reason of synchronization to BIG termination
-    uint8_t  reason;
-};
-
-/// Event indicates that the HCI_LE_Request_Peer_SCA command has been completed.
-/*@TRACE*/
-struct hci_le_req_peer_sca_cmp_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// 0x00 - The Peer_Clock_Accuracy parameter is successfully received ; 0x01-0xFF Failed reason
-    uint8_t  status;
-    /// Connection handle of the ACL (12 bits meaningful Range 0x0000-0x0EFF)
-    uint16_t conhdl;
-    /// Peer clock accuracy (@see enum SCA)
-    uint8_t  peer_clock_accuracy;
-};
-
-/// Event is generated in a scanning device when the Controller has received an advertising PDU that contained a BIGInfo field.
-/*@TRACE*/
-struct hci_le_big_info_adv_report_evt
-{
-    ///LE Subevent code
-    uint8_t  subcode;
-    /// Sync_Handle identifying the periodic advertising train (Range 0x0000-0x0EFF)
-    uint16_t  sync_hdl;
-    /// Value of the Num_BIS subfield of the BIGInfo field (Range 0x01-0x1F)
-    uint8_t  num_bis;
-    /// Value of the NSE subfield of the BIGInfo field (Range 0x01-0x1F)
-    uint8_t  nse;
-    /// Value of the ISO_Interval subfield of the BIGInfo field (0xXXXX)
-    uint16_t  iso_interval;
-    /// Value of the BN subfield of the BIGInfo field (Range 0x01-0x07)
-    uint8_t  bn;
-    /// Value of the PTO subfield of the BIGInfo field (Range 0x00-0x0F)
-    uint8_t  pto;
-    /// Value of the IRC subfield of the BIGInfo field (Range 0x01-0x0F)
-    uint8_t  irc;
-    /// Value of the Max_PDU subfield of the BIGInfo field (Range 0x0000-0x00FB)
-    uint16_t  max_pdu;
-    /// Value of the SDU_Interval subfield of the BIGInfo field (Range 0x0000FF-0x0FFFFF)
-    uint8_t  sdu_interval[3];
-    /// Value of the Max_SDU subfield of the BIGInfo field (Range 0x0000-0x0FFF)
-    uint16_t max_sdu;
-    /// Value of the PHY subfield of the BIGInfo field (0x01: 1M, 0x02: 2M, 0x03: Coded, All other values: RFU)
-    uint8_t  phy;
-    /// Value of the Framing subfield of the BIGInfo field (0x00: Unframed, 0x01: Framed, All other values: RFU)
-    uint8_t  framing;
-    /// Value of the Encryption subfield of the BIGInfo field (0x00: Unencrypted, 0x01: Encrypted, All other values: RFU)
-    uint8_t  encryption;
 };
 
 /// @} CO_BT

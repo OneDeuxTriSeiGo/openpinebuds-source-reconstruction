@@ -59,11 +59,7 @@ typedef void btif_cmgr_handler_t;
 #define BTIF_CMGR_SNIFF_DISABLED                   (0xFF)
 #define BTIF_CMGR_SNIFF_DONT_CARE                  (0)
 #define BTIF_CMGR_SNIFF_TIMER                      (10000)
-#define BTIF_CMGR_BT_MASTER_SNIFF_TIMER            (22000)
-#define BTIF_CMGR_BT_SLAVE_SNIFF_TIMER             (24000)
 #define BTIF_CMGR_MOBILE_SNIFF_TIMER               (20000)
-#define BTIF_CMGR_SNIFF_TIMER_AFTER_CONFLICT       (2000)
-#define BTIF_CMGR_MOBILE_SNIFF_TIMEOUT             (0)
 
 typedef U8 btif_cmgr_sniff_exit_policy_t;
 
@@ -175,8 +171,6 @@ extern "C" {
     bt_status_t btif_cmgr_remove_data_link(btif_cmgr_handler_t *cmgr_handler);
 
     btif_cmgr_handler_t *btif_cmgr_get_acl_handler(btif_remote_device_t *remDev);
-
-    btif_cmgr_handler_t *btif_lock_free_cmgr_get_acl_handler(btif_remote_device_t *remDev);
 
     btif_cmgr_handler_t * btif_cmgr_get_conn_ind_handler(btif_remote_device_t *remDev);
 

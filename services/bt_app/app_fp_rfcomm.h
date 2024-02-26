@@ -81,8 +81,6 @@ void app_fp_msg_send_updated_ble_addr(void);
 
 void app_fp_msg_send_battery_levels(void);
 
-bool app_spp_gfps_accept_channel_request(int8_t server_channel);
-
 #ifdef __cplusplus
 }
 #endif

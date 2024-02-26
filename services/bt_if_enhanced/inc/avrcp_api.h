@@ -29,7 +29,6 @@
 typedef btif_avctp_event_t btif_avrcp_event_t;
 typedef struct { /* empty */ } avrcp_channel_t; /* used to hold the pointer to struct avrcp_control_t */
 
-const char* btif_avrcp_event_str(btif_avrcp_event_t event);
 
 /** The transport layer is connected and commands/responses can now
  *  be exchanged.
@@ -73,26 +72,6 @@ const char* btif_avrcp_event_str(btif_avrcp_event_t event);
  *  AVRCP_EVENT_COMMAND or AVRCP_EVENT_RESPONSE.
  */
 #define BTIF_AVRCP_EVENT_OPERANDS             BTIF_AVCTP_OPERANDS_EVENT
-
-/** Avrcp sdp query result information
- */
-#define BTIF_AVRCP_EVENT_CT_SDP_INFO             BTIF_AVCTP_CT_SDP_INFO_EVENT
-
-/** Avrcp sdp query result information
- */
-#define BTIF_AVRCP_EVENT_TG_SDP_INFO             BTIF_AVCTP_TG_SDP_INFO_EVENT
-
-/** Avrcp connect mock event
- */
-#define BTIF_AVRCP_EVENT_CONNECT_MOCK            BTIF_AVCTP_CONNECT_EVENT_MOCK
-
-/** Avrcp playback status change support
- */
-#define BTIF_AVRCP_EVENT_PLAYBACK_STATUS_CHANGE_EVENT_SUPPORT BTIF_AVCTP_EVENT_PLAYBACK_STATUS_CHANGE_EVENT_SUPPORT
-
-/** Avrcp playback status changed
- */
-#define BTIF_AVRCP_EVENT_PLAYBACK_STATUS_CHANGED BTIF_AVCTP_EVENT_PLAYBACK_STATUS_CHANGED
 
 /** An AV/C command has timed out.
  */
@@ -1483,13 +1462,10 @@ typedef struct {
 
 enum {
     BTIF_AVRCP_STATE_DISCONNECTED,
-    BTIF_AVRCP_STATE_CONNECTING,
     BTIF_AVRCP_STATE_CONNECTED
 };
 
 typedef struct { /* empty */ } avrcp_callback_parms_t; /* used to hold the pointer to btif_avrcp_callback_parms_t */
-
-typedef struct btif_avrcp_channel_t btif_avrcp_channel_t;
 
 typedef void (*btif_avrcp_callback)(uint8_t device_id, btif_avrcp_channel_t *btif_avrcp, const avrcp_callback_parms_t *parms);
 
@@ -1524,47 +1500,15 @@ typedef struct
     } p;
 } btif_avrcp_callback_parms_t;
 
-#ifdef USE_BT_ADAPTER
-typedef enum{
-    AVRCP_USER_EVENT_CONNECTION_STATE = 0x00,
-    AVRCP_USER_EVENT_KEY_PRESS_STATE = 0x01,
-    AVRCP_USER_EVENT_KEY_RELEASE_STATE = 0x02,
-    AVRCP_USER_EVENT_COMPANY_ID = 0x03,
-    AVRCP_USER_EVENT_CAPABILITY = 0x04,
-    AVRCP_USER_EVENT_MEDIA_INFO  = 0x05,
-    AVRCP_USER_EVENT_PLAY_STATUS = 0x06,
-    AVRCP_USER_EVENT_NOTIFICATION = 0x07
-}avrcp_user_event_e;
-
-typedef struct {
-    unsigned char companyNum;
-    unsigned int companyId[12];
-} btif_avrcp_support_company_para;
-
-typedef struct {
-    /* The number of elements returned */
-    uint8_t numIds;
-
-    /* An array of element value text information */
-    avrcp_media_attr_t txt[BTIF_AVRCP_NUM_MEDIA_ATTRIBUTES];
-}btif_avrcp_media_info_element;
-
-typedef void (*btif_avrcp_user_event_callback)(avrcp_user_event_e type, uint8_t* addr, uint32_t para);
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-    extern btif_avrcp_callback g_avrcp_ct_cb;
 
     void btif_avrcp_init(void);
 
     bt_status_t btif_avrcp_register(btif_avrcp_channel_t *channel, btif_avrcp_callback cb, avrcp_features_t feat);
 
     btif_avrcp_channel_t *btif_alloc_avrcp_ct_channel(void);
-
-    btif_avrcp_channel_t *btif_alloc_avrcp_tg_channel(void);
 
     btif_avrcp_channel_t *btif_get_avrcp_channel(avrcp_channel_t* handle);
 
@@ -1574,7 +1518,6 @@ extern "C" {
 
     void btif_avrcp_set_volume_cmd(void *cmd, uint8_t transid, int8_t volume);
 
-    void btif_avrcp_send_unit_info_cmd(btif_avrcp_channel_t *btif_avrcp);
 
     void btif_avrcp_send_custom_cmd_generic(btif_avrcp_channel_t * chnl, uint8_t * ptrData,
                                             uint32_t len);
@@ -1588,9 +1531,6 @@ extern "C" {
     bt_status_t btif_avrcp_ct_get_play_status(btif_avrcp_channel_t * channel);
 
     avrcp_version_t btif_get_avrcp_version(btif_avrcp_channel_t * channel);
-    bt_status_t btif_avrcp_send_play_status_rsp(btif_avrcp_channel_t * chnl,
-                                                        uint32_t len_ms, uint32_t pos_ms,
-                                                        uint8_t play_status, uint8_t trans_id);
 
     bt_status_t btif_avrcp_ct_get_capabilities(btif_avrcp_channel_t * channel,
                                                btif_avrcp_capabilityId capabilityId);
@@ -1603,7 +1543,6 @@ extern "C" {
 
     btif_remote_device_t *btif_avrcp_get_remote_device(btif_avrcp_channel_t* handle);
 
-    bt_bdaddr_t *btif_avrcp_get_remote_device_addr(btif_avrcp_channel_t* handle);
 
     void btif_avrcp_set_register_notify_check_callback(bool (*cb)(uint8_t event), void (*resp_cb)(uint8_t event));
 
@@ -1646,8 +1585,6 @@ extern "C" {
     bt_status_t btif_avrcp_ct_get_media_Info(btif_avrcp_channel_t * channel, avrcp_media_attrId_mask_t mediaMask);
     avctp_cmd_frame_t *btif_get_avrcp_cmd_frame(const avrcp_callback_parms_t * parms);
 
-    bt_status_t btif_avrcp_ct_send_capability_company_id_rsp(btif_avrcp_channel_t * channel, uint8_t trans_id);
-
     bt_status_t btif_avrcp_ct_send_capability_rsp(btif_avrcp_channel_t * channel, avrcp_capabilityId_t capid, uint16_t mask, uint8_t trans_id);
 
     bt_status_t btif_avrcp_ct_send_absolute_volume_rsp(btif_avrcp_channel_t * channel, uint8_t volume, uint8_t trans_id, uint8_t error_n);
@@ -1667,9 +1604,6 @@ extern "C" {
     bt_status_t btif_avrcp_set_panel_key(btif_avrcp_channel_t * channel, avrcp_panel_operation_t op,
                                          bool press);
 
-    uint8_t btif_avrcp_get_volume_change_trans_id(btif_avrcp_channel_t * channel);
-    void btif_a2dp_set_volume_change_trans_id(btif_avrcp_channel_t * channel, uint8_t trans_id);
-
     uint8_t btif_avrcp_get_ctl_trans_id(btif_avrcp_channel_t * channel);
     void btif_avrcp_set_ctl_trans_id(btif_avrcp_channel_t * channel, uint8_t trans_id);
 
@@ -1680,30 +1614,10 @@ extern "C" {
     bt_status_t btif_avrcp_tg_send_general_rsp(btif_avrcp_channel_t * channel, uint8_t op, uint8_t error_code, uint8_t trans_id, uint8_t ctype);
 
     bt_status_t btif_avrcp_ct_send_invalid_volume_rsp(btif_avrcp_channel_t * channel, uint8_t trans_id);
-    uint8_t btif_avrcp_get_avrcp_channel_index(btif_remote_device_t *rem_dev);
-
-    struct avrcp_remote_sdp_info {
-        uint16_t remote_avrcp_version;
-        uint16_t remote_avctp_version;
-        uint16_t remote_support_features;
-    };
-
-    struct avrcp_remote_sdp_info btif_avrcp_get_remote_sdp_info(btif_avrcp_channel_t * channel, bool is_target);
-    bool btif_avrcp_is_profile_initiator(bt_bdaddr_t* remote);
-
-#ifdef USE_BT_ADAPTER
-    btif_avrcp_channel_t *btif_get_avrcp_channel_by_addr(uint8_t* addr);
-    void btif_avrcp_enable_hook(bool hook);
-    bool btif_avrcp_hook_enabled(void);
-    uint8_t btif_avcp_get_connect_status(btif_avrcp_channel_t *channel);
-    void btif_avcp_register_user_event_callback(btif_avrcp_user_event_callback cb);
-    btif_avrcp_user_event_callback btif_avrcp_get_user_event_callback(void);
-#endif
 
 #if defined(IBRT)
     uint32_t btif_avrcp_profile_save_ctxs(btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);
     uint32_t btif_avrcp_profile_restore_ctxs(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint32_t buf_len);
-    bt_status_t btif_avrcp_force_disconnect_avrcp_profile(uint8_t device_id,uint8_t reason);
 #endif
 
 #ifdef __cplusplus

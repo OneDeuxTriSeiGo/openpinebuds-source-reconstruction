@@ -86,10 +86,6 @@ typedef struct {
     void *param;
 } APP_KEY_HANDLE;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int app_key_open(int checkPwrKey);
 
 int app_key_close(void);
@@ -103,8 +99,5 @@ void app_key_handle_clear(void);
 void app_key_simulate_key_event(uint32_t key_code, uint8_t key_event);
 
 int simul_key_event_process(uint32_t key_code, uint8_t key_event);
-
-#ifdef __cplusplus
-}
 #endif
 #endif//__FMDEC_H__

@@ -63,10 +63,6 @@ int DumpCQueue(CQueue *Q);
 
 void ResetCQueue(CQueue *Q);
 
-unsigned int GetCQueueReadOffset(CQueue *Q);
-unsigned int GetCQueueWriteOffset(CQueue *Q);
-int PeekCQueueToBufWithOffset(CQueue *Q, CQItemType *e, unsigned int len_want, unsigned int offset);
-
 #if defined(__cplusplus)
 }
 #endif

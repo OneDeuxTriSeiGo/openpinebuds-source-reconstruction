@@ -190,8 +190,6 @@ typedef union _bt_fn_param {
         uint32_t func_ptr;
         uint32_t param0;
         uint32_t param1;
-        uint32_t param2;
-        uint32_t param3;
     } CustomFunc_param;
 
     struct {
@@ -283,9 +281,6 @@ void app_set_accessmode(btif_accessible_mode_t mode);
 int app_bt_start_custom_function_in_bt_thread(
     uint32_t param0, uint32_t param1, uint32_t funcPtr);
 int app_bt_ME_StartSniff(btif_remote_device_t *remDev, btif_sniff_info_t* sniffInfo);
-
-int app_bt_call_func_in_bt_thread(
-    uint32_t param0, uint32_t param1, uint32_t param2, uint32_t param3, uint32_t funcPtr);
 
 #ifdef FPGA
 int app_bt_ME_SetAccessibleMode_Fortest(btif_accessible_mode_t mode, const btif_access_mode_info_t *info);

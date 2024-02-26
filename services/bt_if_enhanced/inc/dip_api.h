@@ -41,8 +41,6 @@ typedef struct
     uint16_t vend_id_source;
 } btif_dip_pnp_info;
 
-btif_dip_pnp_info* btif_dip_get_device_info(bt_bdaddr_t *remote);
-
 typedef void (*DipApiCallBack)(bt_bdaddr_t *_addr, bool ios_flag);
 
 void btif_dip_init(DipApiCallBack callback);

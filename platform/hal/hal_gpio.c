@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#if (CHIP_GPIO_VER <= 1)
-
 #include "plat_addr_map.h"
 #include "cmsis_nvic.h"
 #include "hal_gpio.h"
@@ -424,7 +422,6 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
             NVIC_SetPriority(GPIOAUX_IRQn, IRQ_PRIORITY_NORMAL);
             NVIC_EnableIRQ(GPIOAUX_IRQn);
 
-            gpio_aux_bank[bank]->GPIO_PORTA_EOI = (0x1 << pin_offset);
             gpio_aux_bank[bank]->GPIO_INTMASK &= ~(0x1<<pin_offset);
             gpio_aux_bank[bank]->GPIO_INTEN |= 0x1<<pin_offset;
         }
@@ -469,7 +466,6 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
             NVIC_SetPriority(GPIO_IRQn, IRQ_PRIORITY_NORMAL);
             NVIC_EnableIRQ(GPIO_IRQn);
 
-            gpio_bank[bank]->GPIO_PORTA_EOI = (0x1 << pin_offset);
             gpio_bank[bank]->GPIO_INTMASK &= ~(0x1<<pin_offset);
             gpio_bank[bank]->GPIO_INTEN |= 0x1<<pin_offset;
         }
@@ -481,5 +477,3 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
     }
     return 0;
 }
-
-#endif

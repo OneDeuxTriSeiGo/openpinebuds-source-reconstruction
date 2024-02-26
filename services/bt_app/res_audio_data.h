@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __RES_AUDIO_DATA_H__
-#define __RES_AUDIO_DATA_H__
 
 #ifdef MEDIA_PLAYER_SUPPORT
 
@@ -156,5 +154,3 @@ const uint8_t EN_BT_MUTE[] = {
 };
 
 #endif
-
-#endif /* __RES_AUDIO_DATA_H__ */

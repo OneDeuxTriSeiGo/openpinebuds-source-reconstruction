@@ -71,17 +71,14 @@
 #endif
 
 #ifndef I2S_MCLK_IOMUX_INDEX
-//04, 13, 15, 20, 22, 27, 34
 #define I2S_MCLK_IOMUX_INDEX                04
 #endif
 
 #ifndef SPDIF0_I_IOMUX_INDEX
-//02, 10, 20, 26, 37, 24
 #define SPDIF0_I_IOMUX_INDEX                02
 #endif
 
 #ifndef SPDIF0_O_IOMUX_INDEX
-//03, 11, 21, 27, 37, 07
 #define SPDIF0_O_IOMUX_INDEX                03
 #endif
 
@@ -102,7 +99,6 @@
 #endif
 
 #ifndef SPI_IOMUX_INDEX
-//04(05,06,07), 24(25,26,27), 30(31,32,33)
 #define SPI_IOMUX_INDEX                    04
 #endif
 
@@ -111,17 +107,14 @@
 #endif
 
 #ifndef I2C0_IOMUX_INDEX
-//00(01), 04(05), 16(17), 20(21), 26(27), 34(35)
 #define I2C0_IOMUX_INDEX                    4
 #endif
 
 #ifndef I2C1_IOMUX_INDEX
-//02(03), 06(07), 14(15), 22(23), 30(31)
 #define I2C1_IOMUX_INDEX                    22
 #endif
 
 #ifndef CLKOUT_IOMUX_INDEX
-//04, 13, 15, 20, 21, 22, 23, 27, 34
 #define CLKOUT_IOMUX_INDEX                  20
 #endif
 

@@ -111,16 +111,6 @@ extern "C" {
 
 #endif
 
-    typedef void (*btif_l2cap_process_echo_req_callback_func)(uint8_t device_id, uint16_t conhdl, uint8_t id, uint16_t len, uint8_t *data);
-    typedef void (*btif_l2cap_process_echo_res_callback_func)(uint8_t device_id, uint16_t conhdl, uint8_t *rxdata, uint16_t rxlen);
-    typedef void (*btif_l2cap_fill_in_echo_req_data_callback_func)(uint8_t device_id, struct l2cap_conn *conn, uint8_t *data, uint16_t data_len);
-
-    void btif_l2cap_process_echo_req_rewrite_rsp_data(uint8_t device_id, uint16_t conhdl, uint8_t id, uint16_t len, uint8_t *data);
-    void btif_l2cap_process_echo_res_analyze_data(uint8_t device_id, uint16_t conhdl, uint8_t *rxdata, uint16_t rxlen);
-    void btif_l2cap_fill_in_echo_req_data(uint8_t device_id, struct l2cap_conn *conn, uint8_t *data, uint16_t data_len);
-
-    void btif_l2cap_echo_init(btif_l2cap_process_echo_req_callback_func req_func,btif_l2cap_process_echo_res_callback_func res_func,btif_l2cap_fill_in_echo_req_data_callback_func data_func);
-
 #ifdef __cplusplus
 }
 #endif
