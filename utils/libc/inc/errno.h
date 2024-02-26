@@ -29,6 +29,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
+
 #ifndef LWIP_HDR_ERRNO_H
 #define LWIP_HDR_ERRNO_H
 
@@ -156,7 +157,6 @@
 #define  EISNAM         120  /* Is a named type file */
 #define  EREMOTEIO      121  /* Remote I/O error */
 #define  EDQUOT         122  /* Quota exceeded */
-
 #define  ENOMEDIUM      123  /* No medium found */
 #define  EMEDIUMTYPE    124  /* Wrong medium type */
 

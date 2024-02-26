@@ -126,6 +126,7 @@ struct CMU_T {
 #define CMU_MODE_OCLK_MASK                      (0xFFFFFFFF << 0)
 #define CMU_MODE_OCLK_SHIFT                     (0)
 
+
 // reg_028
 #define CMU_HRESETN_PULSE(n)                    (((n) & 0xFFFFFFFF) << 0)
 #define CMU_HRESETN_PULSE_MASK                  (0xFFFFFFFF << 0)

@@ -142,15 +142,12 @@ const uint8_t EN_BT_GSOUND_MIC_CLOSE[] = {
 const uint8_t EN_BT_GSOUND_NC[] = {
 #include "res/en/SOUND_GSOUND_NC.txt"
 };
-
 #ifdef __INTERACTION__
 const uint8_t EN_BT_FINDME[] = {
 #include "res/en/SOUND_FINDME.txt"
 };
 #endif
-
 const uint8_t EN_BT_MUTE[] = {
 #include "res/SOUND_MUTE.txt"
 };
-
 #endif

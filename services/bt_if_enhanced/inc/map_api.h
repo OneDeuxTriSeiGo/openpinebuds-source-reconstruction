@@ -102,7 +102,6 @@ bt_status_t btif_map_session_close(btif_map_session_handle_t handle);
 bool btif_map_check_is_connected(btif_map_session_handle_t handle);
 void btif_map_callback_register(btif_map_callback_t callback);
 bool btif_map_check_is_idle(btif_map_session_handle_t handle);
-
 #if defined(IBRT)
 uint32_t btif_map_get_server_chnl(void);
 uint32_t map_save_ctx(uint32_t server_chnl, uint32_t conn_id,uint8_t *buf, uint32_t buf_len);

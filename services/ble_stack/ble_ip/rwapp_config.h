@@ -83,6 +83,7 @@
 
 
 
+
 #ifdef CHIP_FPGA1000
 #ifndef CFG_APP_SEC
 #define CFG_APP_SEC
@@ -121,7 +122,6 @@
 #else // defined(BLE_APP_BATT)
 #define BLE_APP_BATT          0
 #endif // defined(BLE_APP_BATT)
-
 /// DIS Application
 #if defined(CFG_APP_DIS)
 #define BLE_APP_DIS          1
@@ -135,6 +135,7 @@
 #else // defined(CFG_APP_TIME)
 #define BLE_APP_TIME         0
 #endif // defined(CFG_APP_TIME)
+
 
 /// Security Application
 #if (defined(CFG_APP_SEC) || BLE_APP_HID || defined(BLE_APP_AM0))
@@ -188,6 +189,7 @@
 #else // defined(CFG_APP_GFPS)
 #define BLE_APP_GFPS          0
 #endif // defined(CFG_APP_GFPS)
+
 
 /// AMA Voice Application
 #if defined(CFG_APP_AI_VOICE)

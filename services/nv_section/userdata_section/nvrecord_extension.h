@@ -138,6 +138,7 @@ struct nvrecord_env_t {
 #endif
     ibrt_mode_t ibrt_mode;
     factory_tester_status_t factory_tester_status;
+
     uint8_t flag_value[8];
     AI_MANAGER_INFO_T aiManagerInfo;
 };

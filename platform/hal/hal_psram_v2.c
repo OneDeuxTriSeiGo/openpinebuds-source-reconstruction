@@ -303,6 +303,7 @@ static void psram_set_timing(uint32_t clk)
 {
     uint32_t reg;
     uint32_t val;
+
 #ifdef PSRAM_XCCELA_MODE
     reg = 8;
 #ifdef PSRAM_WRAP_ENABLE
@@ -398,9 +399,11 @@ static void hal_psram_phy_init(uint32_t clk)
     hal_sys_timer_delay_us(20);
 
 }
+
 static void hal_psram_mc_set_timing(uint32_t clk, bool init)
 {
     uint32_t val;
+
     if (clk <= 166000000) {
         val = PSRAM_ULP_MC_WRITE_LATENCY(0);
     } else {
@@ -460,6 +463,7 @@ static void hal_psram_init_calib(void)
     uint32_t delay;
 
     hal_psram_phy_wait_lock();
+
     val = hal_psram_phy_read_reg(&psram_phy->REG_058);
     delay = GET_BITFIELD(val, PSRAM_ULP_PHY_DLL_DLY_IN);
     //ASSERT(delay < (PSRAM_ULP_PHY_DLL_DLY_IN_MASK >> PSRAM_ULP_PHY_DLL_DLY_IN_SHIFT),
@@ -508,6 +512,7 @@ static void hal_psram_mc_init(uint32_t clk)
     hal_psram_mc_set_timing(clk, true);
 
     psram_mc->REG_400 = PSRAM_ULP_MC_INIT_COMPLETE;
+
 }
 
 void hal_psram_sleep(void)
@@ -643,13 +648,14 @@ static void hal_psram_calib_range(uint32_t range)
 
     tx_ceb = delay / 2;
     tx_clk = delay / 2 + 2;
-
     volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+
     PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 
     volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
 
     uint8_t all_valid = 1;
+
     memset(cali_valid, 0, sizeof(cali_valid));
     for (tx_dqs = 0; tx_dqs <= volume; tx_dqs++) {
         for (rx_dqs = 0; rx_dqs <= volume; rx_dqs++) {
@@ -752,6 +758,7 @@ static void hal_psram_calib_range(uint32_t range)
     tx_dqs = position / (volume + 1) * inc_delay;
     rx_dqs = (position % (volume + 1)) * inc_delay;
     PSRAM_TRACENOCRLF_NOTS(2, "most optimal position. tx_dqs:%d, rx_dqs:%d\r\n", tx_dqs, rx_dqs);
+
     psram_phy->REG_054 = PSRAM_ULP_PHY_REG_PSRAM_TX_CEB_DLY(tx_ceb) | PSRAM_ULP_PHY_REG_PSRAM_TX_CLK_DLY(tx_clk) |
                          PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY(tx_dqs) | PSRAM_ULP_PHY_REG_PSRAM_RX_DQS_DLY(rx_dqs);
 

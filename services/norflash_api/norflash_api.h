@@ -221,6 +221,7 @@ enum NORFLASH_API_STATE norflash_api_get_state(enum NORFLASH_API_MODULE_ID_T mod
 
 void norflash_flush_all_pending_op(void);
 
+
 void app_flash_page_erase(enum NORFLASH_API_MODULE_ID_T module, uint32_t flashOffset);
 
 void app_flash_page_program(enum NORFLASH_API_MODULE_ID_T module,

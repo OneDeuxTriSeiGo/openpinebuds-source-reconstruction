@@ -247,9 +247,7 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
         if (stats_started) {
             prev_time = hal_sys_timer_get();
         }
-
         hal_cmu_lpu_sleep(mode);
-
         if (stats_started) {
             cur_time = hal_sys_timer_get();
             interval = cur_time - prev_time;
@@ -274,6 +272,7 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
     hal_gpadc_wakeup();
 
     // End of restoring modules
+
 
     return ret;
 }

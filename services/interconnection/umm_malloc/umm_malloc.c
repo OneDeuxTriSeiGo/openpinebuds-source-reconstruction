@@ -29,13 +29,11 @@
 
 #include <stdio.h>
 #include <string.h>
-
 #include "umm_malloc.h"
 
 /* Use the default DBGLOG_LEVEL and DBGLOG_FUNCTION */
 
 #include "dbglog.h"
-
 /* ------------------------------------------------------------------------- */
 
 UMM_H_ATTPACKPRE typedef struct umm_ptr_t {

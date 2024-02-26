@@ -19,6 +19,7 @@
 #if defined(IBRT)
 #include "me_api.h"
 #endif
+
 /*---------------------------------------------------------------------------
  * btif_hci_handle_t type
  *
@@ -276,7 +277,6 @@ typedef void (*btif_ibrt_env_init_cmp_callback_func)(uint8_t sniffer_role);
 typedef void (*btif_ibrt_prase_data_callback_func)(btif_hci_buffer_t* hcibuffer,uint16_t conhdl);
 
 typedef void (*bt_hci_acl_ecc_softbit_handler_func)(uint16_t*,uint16_t*, uint16_t, uint8_t*);
-
 #endif
 
 #ifdef __cplusplus

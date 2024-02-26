@@ -33,7 +33,6 @@
 #ifndef __CTYPE_EXT_H
 #define __CTYPE_EXT_H
 
-
 /*
  * NOTE! This ctype does not handle EOF like the standard C
  * library is required to.

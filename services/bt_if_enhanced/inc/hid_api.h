@@ -56,6 +56,7 @@ void btif_hid_keyboard_input_report(struct hid_control_t *hid_ctl, uint8_t modif
 
 void btif_hid_keyboard_send_ctrl_key(struct hid_control_t *hid_ctl, uint8_t ctrl_key);
 
+
 #ifdef __cplusplus
 }
 #endif

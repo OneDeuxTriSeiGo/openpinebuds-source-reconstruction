@@ -47,7 +47,6 @@ typedef struct
 
 #define CUSTOM_PARAM_SERIAL_NUM_INDEX   0
 #define CUSTOM_PARAM_SERIAL_NUM_LEN     16
-
 typedef struct
 {
     uint8_t sn[CUSTOM_PARAM_SERIAL_NUM_LEN];

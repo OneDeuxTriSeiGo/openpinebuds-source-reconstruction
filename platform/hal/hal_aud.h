@@ -204,7 +204,6 @@ enum AUD_STREAM_ID_T {
     AUD_STREAM_ID_1,
     AUD_STREAM_ID_2,
     AUD_STREAM_ID_3,
-
     AUD_STREAM_ID_NUM,
 };
 

@@ -57,6 +57,11 @@
 #define PRF_ENV_TAG(type)         struct type##_env_tag
 #define PRF_ENV_GET(prf_id, type) ((type##_env_t *)prf_env_get((PRF_ID_##prf_id)))
 
+
+
+
+
+
 #if (BLE_BATT_SERVER)
 /**
  ****************************************************************************************
@@ -76,6 +81,11 @@ void prf_unpack_char_pres_fmt(co_buf_t* p_buf, prf_char_pres_fmt_t* char_pres_fm
 #endif // (BLE_BATT_CLIENT)
 
 #if (BLE_CLIENT_PRF)
+
+
+
+
+
 
 /**
  ****************************************************************************************
@@ -158,6 +168,9 @@ void prf_extract_svc_info(uint16_t first_hdl, uint8_t nb_att, const gatt_svc_att
 #endif //(BLE_CLIENT_PRF)
 
 
+
+
+
 #if (BLE_SERVER_PRF || BLE_CLIENT_PRF)
 /**
  ****************************************************************************************
@@ -168,7 +181,6 @@ void prf_extract_svc_info(uint16_t first_hdl, uint8_t nb_att, const gatt_svc_att
  ****************************************************************************************
  */
 void prf_pack_date_time(co_buf_t*p_buf, const prf_date_time_t* p_date_time);
-
 
 /**
  ****************************************************************************************

@@ -24,6 +24,7 @@
 #define APP_TOTA_CONNECTED             (1 << 0)
 #define APP_TOTA_DISCONNECTED          (~(1 << 0))
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -210,6 +211,15 @@ void app_tota_disconnected(uint8_t disconnType);
 bool app_is_in_tota_mode(void);
 void app_tota_update_datapath(APP_TOTA_TRANSMISSION_PATH_E dataPath);
 APP_TOTA_TRANSMISSION_PATH_E app_tota_get_datapath(void);
+
+
+
+
+
+
+
+
+
 
 #ifdef __cplusplus
 }

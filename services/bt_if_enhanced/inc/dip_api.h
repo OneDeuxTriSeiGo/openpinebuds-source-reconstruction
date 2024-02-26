@@ -30,7 +30,6 @@ extern "C" {
 #endif
 
 typedef void btif_dip_client_t;
-
 typedef struct
 {
     uint16_t spec_id;

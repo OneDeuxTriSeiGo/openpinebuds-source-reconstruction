@@ -12,8 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_INCLUDE_H__
 #define __APP_BLE_INCLUDE_H__
+
 
 /*****************************header include********************************/
 #include "app_ble_core.h"

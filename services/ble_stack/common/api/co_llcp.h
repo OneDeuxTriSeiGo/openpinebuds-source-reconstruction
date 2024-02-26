@@ -38,7 +38,6 @@
  * TYPE DEFINITIONS
  ****************************************************************************************
  */
-
 /// Control packet op_code
 enum co_llcp_op_code
 {
@@ -70,6 +69,7 @@ enum co_llcp_op_code
     LL_MIN_USED_CHANNELS_IND_OPCODE = 0x19,
     /// Opcode length
     LL_OPCODE_MAX_OPCODE,
+
     LL_OPCODE_DEBUG = 0xFF,
 };
 

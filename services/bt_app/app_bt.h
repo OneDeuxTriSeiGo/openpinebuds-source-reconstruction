@@ -88,6 +88,7 @@ int app_bt_state_checker(void);
 
 void *app_bt_profile_active_store_ptr_get(uint8_t *bdAddr);
 
+
 void app_bt_profile_connect_manager_opening_reconnect(void);
 
 BOOL app_bt_profile_connect_openreconnecting(void *ptr);
@@ -97,12 +98,17 @@ int app_bt_global_handle_hook_set(enum APP_BT_GOLBAL_HANDLE_HOOK_USER_T user, AP
 APP_BT_GOLBAL_HANDLE_HOOK_HANDLER app_bt_global_handle_hook_get(enum APP_BT_GOLBAL_HANDLE_HOOK_USER_T user);
 
 bool app_is_hfp_service_connected(uint8_t device_id);
-
 #if defined(IBRT)
 void app_bt_ibrt_reconnect_mobile_profile_flag_set(void);
 void app_bt_ibrt_reconnect_mobile_profile_flag_clear(void);
 bool app_bt_ibrt_reconnect_mobile_profile_flag_get(void);
 #endif
+
+
+
+
+
+
 
 void app_bt_stay_active(uint8_t deviceId);
 
@@ -120,7 +126,9 @@ void app_bt_stay_active_rem_dev(btif_remote_device_t* pRemDev);
 
 void app_check_pending_stop_sniff_op(void);
 
+
 uint8_t app_bt_count_connected_device(void);
+
 
 void app_bt_pause_media_player_again(uint8_t deviceId);
 
@@ -147,13 +155,19 @@ void fast_pair_enter_pairing_mode_handler(void);
 bool app_bt_is_in_reconnecting(void);
 
 
+
+
 bool btapp_hfp_is_dev_sco_connected(uint8_t devId);
+
 
 bool app_bt_is_in_connecting_profiles_state(void);
 
 void app_bt_clear_connecting_profiles_state(uint8_t devId);
 
 void app_bt_set_connecting_profiles_state(uint8_t devId);
+
+
+
 
 #if defined(__INTERCONNECTION__)
 btif_accessible_mode_t app_bt_get_current_access_mode(void);

@@ -337,6 +337,7 @@ static HAL_GPADC_MV_T hal_gpadc_adc2volt(uint16_t gpadcVal)
     else
     {
         voltage = (int32_t)(((g_adcSlope * gpadcVal) / ADC_CALC_FACTOR) + (g_adcIntcpt));
+
         return (voltage < 0) ? 0 : voltage;
     }
 }

@@ -282,7 +282,6 @@ static void BOOT_TEXT_FLASH_LOC hal_cmu_init_periph_clock(void)
 void hal_cmu_rom_setup(void)
 {
     int reset_flash;
-
     hal_cmu_lpu_wait_26m_ready();
     hal_cmu_simu_init();
     hal_cmu_rom_clock_init();
@@ -306,6 +305,7 @@ void hal_cmu_rom_setup(void)
 
 void hal_cmu_programmer_setup(void)
 {
+
 #ifdef JTAG_ENABLE
     hal_iomux_set_jtag();
     hal_cmu_jtag_clock_enable();
@@ -337,6 +337,7 @@ void hal_cmu_programmer_setup(void)
 void BOOT_TEXT_FLASH_LOC hal_cmu_fpga_setup(void)
 {
     hal_sys_timer_open();
+
     hal_sysfreq_req(HAL_SYSFREQ_USER_INIT, HAL_CMU_FREQ_52M);
 
     hal_cmu_apb_init_div();
@@ -344,6 +345,7 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_fpga_setup(void)
 
     // Init peripheral clocks
     hal_cmu_init_periph_clock();
+
     hal_norflash_init();
  #if defined(CHIP_BEST1501SIMU)
     hal_cmu_module_init_state();
@@ -366,6 +368,7 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_setup(void)
     hal_cmu_module_init_state();
     hal_sys_timer_open();
     hal_hw_bootmode_init();
+
     // Init system/flash/memory clocks before initializing clock setting
     // and before switching PLL
     hal_norflash_set_boot_freq(HAL_CMU_FREQ_26M);
@@ -418,8 +421,10 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_setup(void)
     freq = HAL_CMU_FREQ_104M;
 #endif
     hal_sysfreq_req(HAL_SYSFREQ_USER_INIT, freq);
+
     // Init flash
     hal_norflash_init();
+
 }
 
 #endif // !FPGA

@@ -197,6 +197,7 @@ typedef enum
     HFCALL_NEXT_STA_NUM
 } HFCALL_NEXT_STA_ENUM;
 
+
 #define APP_REPORT_SPEAKER_VOL_CMD  0x01
 #define APP_CPKD_CMD                0x02
 #define SPP_MAX_TX_PACKET_NUM   5
@@ -237,9 +238,15 @@ struct BT_DEVICE_T {
     btif_a2dp_stream_t *btif_a2dp_stream;
     a2dp_stream_t *a2dp_connected_stream;
     uint8_t a2dp_lhdc_llc;
+
     uint8_t channel_mode;
     uint8_t sample_rate;
     uint8_t sample_bit;
+
+
+
+
+
     uint8_t a2dp_conn_flag;
     uint8_t a2dp_streamming;
     uint8_t a2dp_play_pause_flag;
@@ -247,6 +254,7 @@ struct BT_DEVICE_T {
     bool avdtp_cp;
     btif_avdtp_content_prot_t a2dp_avdtp_cp;
     uint8_t a2dp_avdtp_cp_security_data[BT_AVDTP_CP_VALUE_SIZE];
+
     btif_avrcp_channel_t *avrcp_channel;
     uint8_t volume_report;
 
@@ -255,6 +263,7 @@ struct BT_DEVICE_T {
     btif_hf_call_active_t hfchan_call;
     btif_audio_state_t hf_audio_state;
     btif_hf_call_held_state hf_callheld;
+
     uint8_t hf_conn_flag;
 
 #ifdef BT_HID_DEVICE
@@ -264,7 +273,6 @@ struct BT_DEVICE_T {
 #if defined (BT_MAP_SUPPORT)
     btif_map_session_handle_t map_session_handle;
 #endif
-
 };
 
 
@@ -326,6 +334,7 @@ uint8_t app_bt_avrcp_get_volume_change_trans_id(uint8_t device_id);
 void app_bt_avrcp_set_volume_change_trans_id(uint8_t device_id, uint8_t trans_id);
 uint8_t app_bt_avrcp_get_ctl_trans_id(uint8_t device_id);
 void app_bt_avrcp_set_ctl_trans_id(uint8_t device_id, uint8_t trans_id);
+
 
 
 #ifdef __cplusplus

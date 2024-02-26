@@ -40,6 +40,7 @@ extern "C" {
 #define BT_STREAM_AI_VOICE      0x200
 #endif
 
+
 #define BT_STREAM_TYPE_MASK   (BT_STREAM_SBC | BT_STREAM_MEDIA | BT_STREAM_VOICE)
 
 

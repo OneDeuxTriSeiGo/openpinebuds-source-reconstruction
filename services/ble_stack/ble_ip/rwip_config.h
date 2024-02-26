@@ -19,7 +19,6 @@
 #include "os_api.h"
 #include "cmsis.h"
 #include "besble_debug.h"
-
 /**
  ****************************************************************************************
  * @addtogroup ROOT
@@ -45,11 +44,11 @@
  ****************************************************************************************
  */
 
+
 #if defined(__IAG_BLE_INCLUDE__)
 #ifndef FPGA
 #define _BLE_NVDS_
 #endif
-
 #define CFG_BLE
 #define CFG_HOST
 #define CFG_APP
@@ -57,7 +56,6 @@
 
 #define CFG_SEC_CON
 #endif
-
 #endif
 
 #define GLOBAL_INT_DISABLE() do { uint32_t lock = int_lock();
@@ -147,21 +145,18 @@
 #else
 #define BLE_BROADCASTER      0
 #endif // (defined(CFG_BROADCASTER) || defined(CFG_PERIPHERAL) || defined(CFG_ALLROLES))
-
 /// Observer
 #if (defined(CFG_OBSERVER) || defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
 #define BLE_OBSERVER      1
 #else
 #define BLE_OBSERVER      0
 #endif // (defined(CFG_OBSERVER) || defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
-
 /// Central
 #if (defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
 #define BLE_CENTRAL      1
 #else
 #define BLE_CENTRAL      0
 #endif // (defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
-
 /// Peripheral
 #if (defined(CFG_PERIPHERAL) || defined(CFG_ALLROLES))
 #define BLE_PERIPHERAL      1
@@ -175,6 +170,7 @@
 
 /// Maximum number of simultaneous BLE activities (scan, connection, advertising, initiating)
 #define BLE_ACTIVITY_MAX          (BES_BLE_ACTIVITY_MAX)
+
 
 /// Max advertising reports before sending the info to the host
 #define BLE_ADV_REPORTS_MAX              (1)
@@ -362,6 +358,7 @@
 /// Manufacturer: RivieraWaves SAS
 #define RW_COMP_ID                           0x0060
 
+
 /******************************************************************************************/
 /* -------------------------   BT / BLE / BLE HL CONFIG    -------------------------------*/
 /******************************************************************************************/
@@ -384,6 +381,8 @@
 
 #define BLE_INVALID_CONNECTION_INDEX    0xFF
 
+
+
 #define SV_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS        80
 #define SV_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS        400
 #define SV_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS    20000
@@ -391,6 +390,7 @@
 #define SV_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS            400
 #define SV_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS            1000
 #define SV_LOW_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS    20000
+
 
 /******************************************************************************************/
 /* -------------------------   KERNEL SETUP          -------------------------------------*/
@@ -425,6 +425,7 @@ enum KE_TASK_TYPE
 
     // allocate a certain number of profiles task
     TASK_PRF_MAX = (TASK_GAPC + BLE_NB_PROFILES),
+
 #endif // (BLE_HOST_PRESENT)
 
     #if (AHI_TL_SUPPORT)
@@ -472,7 +473,6 @@ enum KE_MEM_HEAP
 #endif //BLE_EMB_PRESENT
 
 #if (BLE_HOST_PRESENT)
-
 #define BLEHL_HEAP_MSG_SIZE_   BLEHL_HEAP_MSG_SIZE
 #define BLEHL_HEAP_ENV_SIZE_   BLEHL_HEAP_ENV_SIZE
 #define BLEHL_HEAP_DB_SIZE_    BLEHL_HEAP_DB_SIZE
@@ -492,6 +492,7 @@ enum KE_MEM_HEAP
 #define RWIP_HEAP_MSG_SIZE         (  BT_HEAP_MSG_SIZE_      + \
                                       BLE_HEAP_MSG_SIZE_     + \
                                       BLEHL_HEAP_MSG_SIZE_      )
+
 
 /// Size of Environment heap
 #define RWIP_HEAP_ENV_SIZE         ( BT_HEAP_ENV_SIZE_       + \
@@ -573,6 +574,8 @@ enum PARAM_ID
     PARAM_ID_RSSI_INTERF_THR            = 0x3C,
 
 
+
+
     PARAM_ID_BT_LINK_KEY_FIRST          = 0x60,
     PARAM_ID_BT_LINK_KEY_LAST           = 0x67,
 
@@ -608,6 +611,8 @@ enum PARAM_LEN
      PARAM_LEN_LPCLK_JITTER               = 1,
      /// Active clock drift
      PARAM_LEN_ACTCLK_DRIFT               = 1,
+
+
      /// External wake-up time
      PARAM_LEN_EXT_WAKEUP_TIME            = 2,
      /// Oscillator wake-up time
@@ -635,6 +640,7 @@ enum PARAM_LEN
      PARAM_LEN_DIAG_PLF                   = 4,
      /// RSSI thresholds
      PARAM_LEN_RSSI_THR                   = 1,
+
 
 
      /// Link keys
@@ -683,6 +689,7 @@ enum PARAM_LEN
 #define RWIP_SAM_EN             1
 /// SAM enable position
 #define RWIP_SAMEN_POS          3
+
 
 /// Bit masking
 #define RWIP_COEX_BIT_MASK      1

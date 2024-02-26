@@ -77,8 +77,10 @@
 /// MACRO to build a subversion field from the Minor and Release fields
 #define CO_SUBVERSION_BUILD(minor, release)     (((minor) << 8) | (release))
 
+
 /// Macro to get a structure from one of its structure field
 #define CONTAINER_OF(ptr, type, member) ((type *)( (char *)ptr - OFFSETOF(type,member) ))
+
 
 /*
  * ENUMERATIONS DEFINITIONS
@@ -304,6 +306,7 @@ static __INLINE uint16_t co_read16p(void const *ptr16)
  * @return The 24 bits value.
  ****************************************************************************************
  */
+
 static __INLINE uint32_t co_read24p(void const *ptr24)
 {
     uint16_t addr_l, addr_h;
@@ -319,6 +322,7 @@ static __INLINE uint32_t co_read24p(void const *ptr24)
  * @param[in] value The value to write.
  ****************************************************************************************
  */
+
 static __INLINE void co_write24p(void const *ptr24, uint32_t value)
 {
     uint8_t *ptr=(uint8_t*)ptr24;
@@ -375,7 +379,6 @@ static __INLINE void co_write16p(void const *ptr16, uint16_t value)
 }
 
 #if (RW_DEBUG || DISPLAY_SUPPORT)
-
 /**
  ****************************************************************************************
  * @brief Convert bytes to hexadecimal string

@@ -35,6 +35,7 @@ ifneq ($(BT_CLOSE),1)
 obj-y += bt_profiles_enhanced/
 obj-y += bt_if_enhanced/
 endif
+
 ifeq ($(MBED),1)
 obj-y += fs/
 endif
@@ -90,7 +91,6 @@ obj-y += fpga_ibrt_ota/
 else
 obj-y += ibrt_ota/
 endif
-
 else
 obj-y += ota/
 endif
@@ -128,10 +128,10 @@ endif
 
 obj-y += communication/
 
-
 ifeq ($(RPC_SUPPORT),1)
 obj-y += rpc/
 endif
+
 
 ifeq ($(THROUGH_PUT),1)
 obj-y += through_put/

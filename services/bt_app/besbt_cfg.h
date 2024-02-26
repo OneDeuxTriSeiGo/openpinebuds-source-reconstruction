@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef BESBT_CFG_H
 #define BESBT_CFG_H
 #include <stdbool.h>

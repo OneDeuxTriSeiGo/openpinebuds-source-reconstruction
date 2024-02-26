@@ -41,7 +41,6 @@
  * DEFINES - Mandatory for BLE Host Layers
  ****************************************************************************************
  */
-
 /// Maximum time to remain advertising when in the Limited
 /// Discover able mode: TGAP(lim_adv_timeout)
 /// required value: 180s: (18000 in 10 ms step)
@@ -59,7 +58,6 @@
 
 /// TGAP(private_addr_int)
 /// recommended value: 15 minutes
-
 /// Minimum time interval between private address change
 /// Minimum value 1s
 #define GAP_TMR_PRIV_ADDR_MIN                             (0x0001)
@@ -72,19 +70,22 @@
 /// SMP L2CAP transaction Timer duration in milliseconds  30 s: (30 000 ms)
 #define GAP_SMP_TRANS_TIMEOUT_MS                          (30000)
 
+
 /// Maximal authorized MTU value
 #define GAP_LE_MTU_MAX                                     (2048)
 
 /// Maximum GAP device name size
 #define GAP_MAX_NAME_SIZE                                  (0x20)
 
+
+
+
 /// 30 seconds transaction timer (30000 ms)
 #define GATT_TRANSACTION_TIMEOUT                           (30000)
 
+
 /// Maximum attribute value length
 #define GATT_MAX_VALUE                                     (GAP_LE_MTU_MAX)
-
-
 /******************************************************************************************/
 /* -------------------------   BLE PARTITIONING      -------------------------------------*/
 /******************************************************************************************/
@@ -93,6 +94,7 @@
 /******************************************************************************************/
 /* --------------------------   INTERFACES        ----------------------------------------*/
 /******************************************************************************************/
+
 
 #if BLE_APP_PRESENT
 #define APP_MAIN_TASK       TASK_APP
@@ -104,7 +106,6 @@
 
 // Host Controller Interface (Host side)
 #define BLEHL_HCIH_ITF            HCIH_ITF
-
 
 /******************************************************************************************/
 /* --------------------------   COEX SETUP        ----------------------------------------*/
@@ -122,12 +123,12 @@
 #define BLE_PROFILES      (1)
 /// Number of Profile tasks managed by GAP manager.
 #define BLE_NB_PROFILES   (CFG_NB_PRF)
+
 #include "rwprf_config.h"
 #else
 #define BLE_PROFILES      (0)
 #define BLE_NB_PROFILES   (0)
 #endif // CFG_PRF
-
 
 #define BLE_GAPM                    1
 #if (BLE_CENTRAL || BLE_PERIPHERAL)
@@ -157,6 +158,7 @@
 /* --------------------------   GATT              ----------------------------------------*/
 /******************************************************************************************/
 
+
 /// Size of the heap
 #if (BLE_CENTRAL || BLE_PERIPHERAL)
     /// Can be tuned based on supported profiles
@@ -169,6 +171,8 @@
 #endif /* #if (BLE_CENTRAL || BLE_PERIPHERAL) */
 
 
+
+
 /// Number of BLE HL tasks
 #define BLEHL_TASK_SIZE       BLE_HOST_TASK_SIZE + BLE_PRF_TASK_SIZE
 
@@ -177,6 +181,13 @@
                                                     + BLE_GATT_HEAP_ENV_SIZE       \
                                                     + BLE_L2CAP_HEAP_ENV_SIZE      \
                              )
+
+
+
+
+
+
+
 
 
 /// @} BLE stack configuration

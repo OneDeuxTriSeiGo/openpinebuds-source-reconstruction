@@ -98,6 +98,7 @@
 #define IV_M_OFFSET         0x00
 #define IV_S_OFFSET         0x04
 
+
 // BT 4.2 - Secure Connections
 #define PUBLIC_KEY_P256_LEN 0x20
 #define DHKEY_CHECK_LEN     0x10
@@ -160,6 +161,7 @@ enum ble_feature
     BLE_FEAT_DATA_PKT_LEN_EXT          = (5),
     BLE_FEAT_LL_PRIVACY                = (6),
     BLE_FEAT_EXT_SCAN_FILT_POLICY      = (7),
+
     //byte 1
     BLE_FEAT_2M_PHY                    = (8),
     BLE_FEAT_STABLE_MOD_IDX_TX         = (9),
@@ -169,6 +171,7 @@ enum ble_feature
     BLE_FEAT_PER_ADV                   = (13),
     BLE_FEAT_CHAN_SEL_ALGO_2           = (14),
     BLE_FEAT_PWR_CLASS_1               = (15),
+
     //byte 2
     BLE_FEAT_MIN_NUM_USED_CHAN_PROC    = (16),
 };
@@ -1251,7 +1254,6 @@ enum ble_feature
 /// Recommended value for synchronization scan interval (320 ms) GAP: Appendix A
 #define SYNC_SCAN_INTV_DEFAULT        0x0200
 
-
 /// CSB receive enable HCI:7.1.50
 #define CSB_RX_MODE_DIS        0x00
 #define CSB_RX_MODE_EN         0x01
@@ -1344,6 +1346,7 @@ enum ble_feature
 #define SP_PASSKEY_CLEARED          0x03
 #define SP_PASSKEY_COMPLETED        0x04
 
+
 // Flags for ld_util_get_nb_acl function
 /// Flag for master link
 #define MASTER_FLAG       0x01
@@ -1387,6 +1390,7 @@ enum le_evt_mask
     LE_EVT_MASK_DIR_ADV_REP_EVT_MSK                 = 0x00000400,
     LE_EVT_MASK_PHY_UPD_CMP_EVT_BIT                 = 11,
     LE_EVT_MASK_PHY_UPD_CMP_EVT_MSK                 = 0x00000800,
+
     LE_EVT_MASK_DFT                                 = 0x0000001F,
 };
 
@@ -1502,6 +1506,9 @@ enum le_evt_mask
 #define CSB_RX_OK        0x00
 #define CSB_RX_KO        0x01
 
+
+
+
 /// HCI 7.8.33 LE Set Data Length Command
 /// Preferred minimum number of payload octets
 #define LE_MIN_OCTETS       (27)
@@ -1521,6 +1528,7 @@ enum le_evt_mask
 #define RPA_TO_DFT         0x0384 // 900 seconds or 15 minutes
 #define RPA_TO_MIN         0x0001 // 1 second
 
+
 /// Max scanning PHYs which can be set HCI:7.8.64
 #define MAX_SCAN_PHYS     2
 
@@ -1534,6 +1542,7 @@ enum le_evt_mask
 /// Ext Scanning window (in 625us slot) (chapter 2.E.7.8.64)
 #define EXT_SCAN_WINDOW_MIN     0x0004 //(2.5 ms)
 #define EXT_SCAN_WINDOW_MAX     0xFFFF //(40.96 sec)
+
 
 /// Duration of 1MBPS PDU of specified payload length in microseconds (chapter 6.B.2.1)
 #define PDU_1MBPS_LEN_US(n_bytes) ((8 + (2 + n_bytes))*8) // (1 + 4 + (2 + payload_len) + 3)*8
@@ -1570,7 +1579,6 @@ enum le_evt_mask
  * ENUMERATIONS
  ****************************************************************************************
  */
-
 /// Specify if Host has no preference into all_phys parameter HCI:7.8.48 / HCI:7.8.49
 enum le_phys_preference
 {
@@ -1601,6 +1609,7 @@ enum le_phy_opt
     /// The Host prefers that S=8 coding be used when transmitting on the LE Coded PHY
     PHY_OPT_S8_LE_CODED_TX_PREF,
 };
+
 
 enum le_phy_mode
 {

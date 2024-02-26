@@ -35,7 +35,6 @@ extern "C" {
 #define APP_SYSFREQ_USER_TRIGGER            APP_SYSFREQ_USER_APP_11
 #define APP_SYSFREQ_USER_BIS                APP_SYSFREQ_USER_APP_12
 #define APP_SYSFREQ_USER_TOTA               APP_SYSFREQ_USER_APP_13
-
 /*
  * Pseudo user, if one of user is belong to qos(quality of service) user,
  * when request cpu freq, it will changed to this user
@@ -70,6 +69,7 @@ enum APP_SYSFREQ_FREQ_T {
     APP_SYSFREQ_78M =  HAL_CMU_FREQ_78M,
     APP_SYSFREQ_104M = HAL_CMU_FREQ_104M,
     APP_SYSFREQ_208M = HAL_CMU_FREQ_208M,
+
     APP_SYSFREQ_FREQ_QTY =  HAL_CMU_FREQ_QTY
 };
 

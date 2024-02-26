@@ -268,9 +268,7 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
             break;
     }
 
-
     cr = UARTCR_UARTEN | UARTCR_TXE | UARTCR_RXE;
-
     switch (cfg->flow) {
         case HAL_UART_FLOW_CONTROL_NONE:
             break;
@@ -291,7 +289,6 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
 
 
     dmacr = 0;
-
     if (cfg->dma_rx) {
         dmacr |= UARTDMACR_RXDMAE;
     }
@@ -348,7 +345,6 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     }
 
     cr = uart[id].base->UARTCR & ~(UARTCR_RTSEN | UARTCR_CTSEN);
-
     switch (cfg->flow) {
         case HAL_UART_FLOW_CONTROL_NONE:
             break;
@@ -368,7 +364,6 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     }
 
     dmacr = 0;
-
     if (cfg->dma_rx) {
         dmacr |= UARTDMACR_RXDMAE;
     }
@@ -621,13 +616,10 @@ union HAL_UART_IRQ_T hal_uart_irq_set_mask(enum HAL_UART_ID_T id, union HAL_UART
     union HAL_UART_IRQ_T old_mask;
 
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
-
     old_mask.reg = uart[id].base->UARTIMSC;
-
     if (old_mask.RT == 0 && mask.RT) {
         ASSERT(recv_dma_chan[id] == HAL_DMA_CHAN_NONE, err_recv_dma_api, __FUNCTION__);
     }
-
     uart[id].base->UARTIMSC = mask.reg;
 
     return old_mask;
@@ -649,6 +641,7 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
     uint32_t xfer = 0;
 
     if (status.RT || status.FE || status.OE || status.PE || status.BE) {
+
         if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
             if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
             if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
@@ -661,7 +654,6 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
             }
             }
         }
-
         if (rxdma_handler[id]) {
             rxdma_handler[id](xfer, 0, status);
         }
@@ -701,6 +693,7 @@ static void recv_dma_irq_handler(uint8_t chan, uint32_t remain_tsize, uint32_t e
     if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
         // Get remain xfer size
         xfer = hal_gpdma_get_sg_remain_size(chan);
+
         hal_gpdma_free_chan(chan);
     } else {
         xfer = 0;
@@ -926,6 +919,7 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
 
     periph = uart[id].rx_periph;
             src_bsize = HAL_DMA_BSIZE_8;
+
 
     memset(&dma_cfg, 0, sizeof(dma_cfg));
     dma_cfg.dst = (uint32_t)buf;
@@ -1317,7 +1311,6 @@ static void hal_uart_irq_handler(void)
 #ifndef TRACE_PRINTF_LEN
 #define TRACE_PRINTF_LEN                (120)
 #endif
-
 int hal_uart_printf_init(void)
 {
     static const struct HAL_UART_CFG_T uart_cfg = {
@@ -1338,6 +1331,7 @@ int hal_uart_printf_init(void)
     } else {
         hal_iomux_set_uart1();
     }
+
      return hal_uart_open(UART_PRINTF_ID, &uart_cfg);
 }
 
@@ -1348,7 +1342,6 @@ void hal_uart_printf_output(const uint8_t *buf, uint32_t len)
         hal_uart_blocked_putc(UART_PRINTF_ID, buf[i]);
     }
 }
-
 void hal_uart_printf(const char *fmt, ...)
 {
     char buf[TRACE_PRINTF_LEN];

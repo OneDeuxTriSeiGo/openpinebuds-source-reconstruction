@@ -303,6 +303,7 @@ extern struct rwip_param_api rwip_param;
 #if (BLE_EMB_PRESENT || BT_EMB_PRESENT)
 /// API for dual mode priority
 extern const struct rwip_prio rwip_priority[RWIP_PRIO_IDX_MAX];
+
 #if (RW_WLAN_COEX)
 /// API for COEX configuration
 extern const uint8_t rwip_coex_cfg[RWIP_COEX_CFG_MAX];
@@ -399,6 +400,7 @@ void rwip_wlcoex_set(bool state);
 extern const struct rwip_eif_api* rwip_eif_get(uint8_t idx);
 
 
+
 /* **************************************************************************************
  * Driver functions
  * **************************************************************************************
@@ -442,6 +444,7 @@ void rwip_aes_encrypt(const uint8_t *key, const uint8_t* val);
  ****************************************************************************************
  */
 void rwip_sw_int_req(void);
+
 
 /**
  ****************************************************************************************
@@ -489,7 +492,6 @@ void rwip_prevent_sleep_clear(uint16_t prv_slp_bit);
  ****************************************************************************************
  */
 void rwip_timer_10ms_set(uint32_t target);
-
 /**
  ****************************************************************************************
  * @brief Set the a half slot target timer
@@ -500,7 +502,6 @@ void rwip_timer_10ms_set(uint32_t target);
  ****************************************************************************************
  */
 void rwip_timer_hs_set(uint32_t target);
-
 ///@} ROOT
 
 #endif // _RWIP_H_

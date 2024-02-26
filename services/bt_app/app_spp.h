@@ -32,6 +32,8 @@ extern "C" {
 #define SPP_MAX_DATA_PACKET_SIZE    L2CAP_MTU
 
 
+
+
 /*---------------------------------------------------------------------------
  * rfcomm channel number
  *      should be from 1 to 30
@@ -49,7 +51,6 @@ enum RFCOMM_CHANNEL_NUM {
 };
 
 struct spp_device *app_create_spp_device(void);
-
 bt_status_t app_spp_send_data(struct spp_device *osDev_t, uint8_t* ptrData, uint16_t *length);
 void app_spp_open(struct spp_device *osDev_t, btif_remote_device_t  *btDevice, btif_sdp_record_param_t *param, osMutexId mid, uint8_t service_id, spp_callback_t callback);
 

@@ -298,6 +298,7 @@ void bt_drv_reg_op_write_private_public_key(uint8_t* private_key,uint8_t* public
 
 #define IS_ENABLE_BT_DRIVER_REG_DEBUG_READING   0
 
+
 int btdrv_slave2master_clkcnt_convert(uint32_t local_clk, uint16_t local_cnt,
                                                int32_t clk_offset, uint16_t bit_offset,
                                                uint32_t *master_clk, uint16_t *master_cnt);
@@ -370,6 +371,7 @@ void bt_drv_select_agc_mode(enum BT_WORK_MODE_T mode);
 
 bool bt_drv_error_check_handler(void);
 void bt_drv_rssi_dump_handler(void);
+
 
 #ifdef VCO_TEST_TOOL
 //vco test callback

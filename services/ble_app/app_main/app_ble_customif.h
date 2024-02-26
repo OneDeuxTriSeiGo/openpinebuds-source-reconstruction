@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_CUSTOMIF_H__
 #define __APP_BLE_CUSTOMIF_H__
 
@@ -24,6 +25,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 /*---------------------------------------------------------------------------
  *            app_ble_customif_init

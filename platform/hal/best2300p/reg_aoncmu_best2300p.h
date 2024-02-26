@@ -431,6 +431,7 @@ struct AONCMU_T {
 #define AON_CMU_EFUSE_SHIFT                     (0)
 #define AON_CMU_EFUSE_LOCK                      (1 << 31)
 
+
 // APB and AHB Clocks:
 #define AON_ACLK_CMU                            (1 << 0)
 #define AON_ARST_CMU                            (1 << 0)

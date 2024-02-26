@@ -35,6 +35,8 @@
 
 /// LMP Opcodes
 
+
+
 /// PDU lengths (including opcode)
 enum co_lmp_pdu_length
 {

@@ -111,6 +111,7 @@ struct nvrecord_env_t {
 #endif
     ibrt_mode_t ibrt_mode;
     factory_tester_status_t factory_tester_status;
+
     uint8_t flag_value[8];
     bool voice_key_enable;
     AI_MANAGER_INFO_T aiManagerInfo;
@@ -255,6 +256,7 @@ typedef struct {
     //     Then the nv record will keep all the whole hisotry.
 } NV_EXTENSION_RECORD_T;
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -276,6 +278,7 @@ void nv_record_sector_clear(void);
 void nv_record_flash_flush(void);
 
 int nv_record_flash_flush_in_sleep(void);
+
 
 void nv_record_update_runtime_userdata(void);
 

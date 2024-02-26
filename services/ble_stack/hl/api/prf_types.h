@@ -29,7 +29,6 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
-
 #include "gatt.h"
 #include "compiler.h"
 #include <stdint.h>
@@ -38,6 +37,7 @@
  * DEFINES
  ****************************************************************************************
  */
+
 
 /// Characteristic Presentation Format Descriptor Size
 #define PRF_CHAR_PRES_FMT_SIZE          (7)
@@ -133,6 +133,8 @@ typedef struct prf_date_time
  */
 typedef uint16_t prf_sfloat;
 
+
+
 /// utf8_s string
 typedef struct prf_utf_8
 {
@@ -141,6 +143,9 @@ typedef struct prf_utf_8
     /// Value string in UTF8 format
     uint8_t  str[__ARRAY_EMPTY];
 } prf_utf_8_t;
+
+
+
 
 /// Service information structure
 typedef struct prf_svc
@@ -181,6 +186,7 @@ typedef struct prf_desc
     /// Descriptor handle
     uint16_t desc_hdl;
 } prf_desc_t;
+
 
 /// Characteristic definition
 typedef struct prf_char_def

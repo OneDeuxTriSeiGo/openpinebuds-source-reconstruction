@@ -16,7 +16,6 @@
 #define _ARCH_H_
 
 #include "hal_trace.h"
-
 /**
  ****************************************************************************************
  * @defgroup BLUEGRIP
@@ -86,6 +85,7 @@
 #else // CFG_NVDS
 #define PLF_NVDS             0
 #endif // CFG_NVDS
+
 
 /*
  * UART
@@ -180,6 +180,8 @@ void assert_param(int param0, int param1, const char * file, int line);
  ****************************************************************************************
  */
 void assert_warn(int param0, int param1, const char * file, int line);
+
+
 #endif //PLF_DEBUG
 
 

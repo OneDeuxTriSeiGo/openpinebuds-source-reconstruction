@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_CORE_H__
 #define __APP_BLE_CORE_H__
 
@@ -32,7 +33,6 @@ typedef enum{
 
     BLE_EVENT_NUM_MAX,
 } ble_evnet_type_e;
-
 
 /**
  * @brief The event type of other module

@@ -12,6 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+
 #ifndef _PRF_UTILS_H_
 #define _PRF_UTILS_H_
 
@@ -83,6 +86,7 @@ uint16_t prf_check_svc128_char_validity(uint8_t nb_chars, const prf_char_t* p_ch
 void prf_extract_svc128_info(uint16_t first_hdl, uint8_t nb_att, const gatt_svc_att_t* p_atts,
                              uint8_t nb_chars, const prf_char128_def_t* p_chars_req, prf_char_t* p_chars,
                              uint8_t nb_descs, const prf_desc_def_t* p_descs_req, prf_desc_t* p_descs);
+
 #endif //(BLE_CLIENT_PRF)
 
 

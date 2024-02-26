@@ -18,6 +18,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "stdbool.h"
 #include "hal_analogif.h"
 #include "hal_cmu.h"

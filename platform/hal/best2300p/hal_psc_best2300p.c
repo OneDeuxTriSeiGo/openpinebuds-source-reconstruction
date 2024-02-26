@@ -30,6 +30,8 @@ void BOOT_TEXT_FLASH_LOC hal_psc_init(void)
     psc->REG_084 = 0;
 }
 
+
+
 void BOOT_TEXT_FLASH_LOC hal_psc_codec_enable(void)
 {
     psc->REG_078 = PSC_WRITE_ENABLE |
@@ -87,10 +89,12 @@ void BOOT_TEXT_FLASH_LOC hal_psc_bt_enable(void)
         PSC_AON_BT_RESETN_ASSERT_DR |
         PSC_AON_BT_ISO_EN_DR |
         PSC_AON_BT_CLK_STOP_DR;
+
 }
 
 void BOOT_TEXT_FLASH_LOC hal_psc_bt_disable(void)
 {
+
     psc->REG_038 = PSC_WRITE_ENABLE |
         PSC_AON_BT_PSW_EN_DR | PSC_AON_BT_PSW_EN_REG |
         PSC_AON_BT_RESETN_ASSERT_DR | PSC_AON_BT_RESETN_ASSERT_REG |

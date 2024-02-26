@@ -71,10 +71,13 @@ extern "C" {
 #define APP_A2DP_SOURCE_I2S_AUDIO           (1 << 11)
 #endif
 
+
 // input streams
+
 #ifdef __AI_VOICE__
 #define APP_BT_STREAM_AI_VOICE             (1 << APP_BT_STREAM_BORDER_BIT_OFFSET)
 #endif
+
 
 #define APP_BT_STREAM_INVALID               0
 
@@ -192,6 +195,8 @@ struct APP_RESAMPLE_T *app_playback_resample_any_open(enum AUD_CHANNEL_NUM_T cha
 struct APP_RESAMPLE_T *app_playback_resample_any_open_with_pre_allocated_buffer(enum AUD_CHANNEL_NUM_T chans,
         APP_RESAMPLE_ITER_CALLBACK cb, uint32_t iter_len,
         float ratio_step, uint8_t* ptrBuf, uint32_t bufSize);
+
+
 int app_playback_resample_close(struct APP_RESAMPLE_T *resamp);
 int app_playback_resample_run(struct APP_RESAMPLE_T *resamp, uint8_t *buf, uint32_t len);
 

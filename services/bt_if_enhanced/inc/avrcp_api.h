@@ -1464,7 +1464,6 @@ enum {
     BTIF_AVRCP_STATE_DISCONNECTED,
     BTIF_AVRCP_STATE_CONNECTED
 };
-
 typedef struct { /* empty */ } avrcp_callback_parms_t; /* used to hold the pointer to btif_avrcp_callback_parms_t */
 
 typedef void (*btif_avrcp_callback)(uint8_t device_id, btif_avrcp_channel_t *btif_avrcp, const avrcp_callback_parms_t *parms);
@@ -1476,6 +1475,8 @@ static POSSIBLY_UNUSED inline btif_avctp_event_t btif_convert_avrcp_event(btif_a
 
 #define BTIF_AVRCP_EVENT(stack_avrcp_event)   btif_convert_avrcp_event(stack_avrcp_event)
 #define BTIF_AVRCP_ERROR_CODE(statck_error_code)  statck_error_code
+
+
 
 typedef struct
 {
@@ -1529,7 +1530,6 @@ extern "C" {
     bt_status_t btif_avrcp_disconnect(btif_avrcp_channel_t* channel);
 
     bt_status_t btif_avrcp_ct_get_play_status(btif_avrcp_channel_t * channel);
-
     avrcp_version_t btif_get_avrcp_version(btif_avrcp_channel_t * channel);
 
     bt_status_t btif_avrcp_ct_get_capabilities(btif_avrcp_channel_t * channel,
@@ -1544,13 +1544,13 @@ extern "C" {
     btif_remote_device_t *btif_avrcp_get_remote_device(btif_avrcp_channel_t* handle);
 
 
+
     void btif_avrcp_set_register_notify_check_callback(bool (*cb)(uint8_t event), void (*resp_cb)(uint8_t event));
 
     bt_status_t btif_avrcp_ct_register_volume_change_notification(btif_avrcp_channel_t * channel, uint32_t interval);
     bt_status_t btif_avrcp_ct_register_media_status_notification(btif_avrcp_channel_t * channel, uint32_t interval);
     bt_status_t btif_avrcp_ct_register_play_pos_notification(btif_avrcp_channel_t * channel, uint32_t interval);
     bt_status_t btif_avrcp_ct_register_track_change_notification(btif_avrcp_channel_t * channel, uint32_t interval);
-
     void btif_avrcp_ct_register_notify_response_check(btif_avrcp_channel_t * channel, uint8_t event);
     bt_status_t btif_get_avrcp_cb_channel_state(const avrcp_callback_parms_t * parms);
 
@@ -1581,6 +1581,8 @@ extern "C" {
     avrcp_event_mask_t btif_get_avrcp_adv_rem_event_mask(btif_avrcp_channel_t * channel);
 
     void btif_set_avrcp_adv_rem_event_mask(btif_avrcp_channel_t * channel, uint16_t mask);
+
+
 
     bt_status_t btif_avrcp_ct_get_media_Info(btif_avrcp_channel_t * channel, avrcp_media_attrId_mask_t mediaMask);
     avctp_cmd_frame_t *btif_get_avrcp_cmd_frame(const avrcp_callback_parms_t * parms);

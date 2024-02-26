@@ -91,6 +91,7 @@ extern "C" {
 // If there are music/phone call on-going, the prompt will be mixed.
 void media_PlayAudio(AUD_ID_ENUM id,uint8_t device_id);
 
+
 // Prompt will be played locally no matter whether earbuds are connected or not
 // If there are music/phone call on-going, the prompt will be mixed.
 void media_PlayAudio_locally(AUD_ID_ENUM id, uint8_t device_id);

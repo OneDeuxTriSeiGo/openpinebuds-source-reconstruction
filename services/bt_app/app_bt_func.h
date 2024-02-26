@@ -290,6 +290,8 @@ int app_bt_ME_Set_Advmode_Fortest(uint8_t en);
 int app_bt_ME_Write_Controller_Memory_Fortest(uint32_t addr,uint32_t val,uint8_t type);
 
 int app_bt_ME_Read_Controller_Memory_Fortest(uint32_t addr,uint32_t len,uint8_t type);
+
+
 #endif
 
 #ifdef __cplusplus

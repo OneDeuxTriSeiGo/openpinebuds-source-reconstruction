@@ -33,7 +33,6 @@
 #define    BTIF_APP_SPP_SERVER_OFFSET       (5)
 #define    BTIF_APP_SPP_SERVER_MASK         ((uint64_t)(0x000000003FFFFFFF<<BTIF_APP_SPP_SERVER_OFFSET))
 
-
 #define    BTIF_APP_SPP_CLIENT_START_ID     ((uint64_t)(BTIF_APP_SPP_SERVER_END_ID << 1))
 #define    BTIF_APP_SPP_CLIENT_NUM          (10)
 #define    BTIF_APP_SPP_CLIENT_END_ID       ((uint64_t)(BTIF_APP_SPP_CLIENT_START_ID << (BTIF_APP_SPP_CLIENT_NUM - 1)))
@@ -42,15 +41,14 @@
 #define    BTIF_APP_SPP_MASK                ((uint64_t)(0x000000FFFFFFFFFF<<BTIF_APP_SPP_OFFSET))
 
 
+
 #if defined(IBRT)
 uint64_t btif_app_get_app_id_from_spp_flag(uint8_t spp_flag);
 uint8_t btif_app_get_spp_flag_from_app_id(uint64_t app_id);
 #endif
 
-
 #define    BTIF_TWS_LINK_CONNECTED          (1 << 0)
 #define    BTIF_TWS_L2CAP_CONNECTED         (1 << 1)
-
 #ifdef __cplusplus
 extern "C" {
 #endif                          /*  */
@@ -87,6 +85,7 @@ void bt_set_max_sco_number(uint8_t sco_num);
 void bt_fast_init(uint8_t* bt_addr, uint8_t* ble_addr);
 
 void btif_set_btstack_chip_config(void *config);
+
 void btif_avrcp_ct_register_notification_event(uint8_t device_id, uint8_t event);
 
 

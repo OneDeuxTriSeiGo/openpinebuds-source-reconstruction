@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "res/ring/SOUND_RING_8000.txt"
 };
 #ifdef __BT_WARNING_TONE_MERGE_INTO_STREAM_SBC__

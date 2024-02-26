@@ -21,6 +21,7 @@
 #include "conmgr_api.h"
 #include "codec_sbc.h"
 
+
 typedef struct { /* empty */ } a2dp_stream_t; /* used to hold the pointer to struct a2dp_control_t */
 typedef struct { /* empty */ } a2dp_callback_parms_t; /* used to hold the pointer to btif_a2dp_callback_parms_t */
 
@@ -207,7 +208,6 @@ typedef uint8_t btif_a2dp_event_t;
 #define BTIF_A2DP_EVENT_STREAM_SELECT            84
 /* event that let app level to confirm stream(sep) state */
 #define BTIF_A2DP_EVENT_STREAM_STATE_CFM         85
-
 
 typedef uint8_t btif_a2dp_error_t;
 
@@ -407,6 +407,8 @@ extern "C" {
                                           btif_a2dp_callback_parms_t * Info, uint8_t avdtp_cp);
 
 
+
+
     void a2dp_set_config_codec(btif_avdtp_codec_t * config_codec,
                                const btif_a2dp_callback_parms_t * Info);
 
@@ -420,7 +422,13 @@ extern "C" {
                                    uint8_t sep_priority,
                                    btif_a2dp_callback Callback);
 
+
     bt_status_t btif_a2dp_deregister(btif_a2dp_stream_t *Stream, uint8_t codec_type);
+
+
+
+
+
 
     void btif_a2dp_set_copy_protection_enable(a2dp_stream_t *stream, bool enable);
 
@@ -457,6 +465,7 @@ extern "C" {
 
     bt_status_t btif_a2dp_open_stream(btif_avdtp_codec_t *prev_conn_codec, bt_bdaddr_t * Addr);
 
+
     bt_status_t btif_a2dp_start_stream(a2dp_stream_t * Stream);
 
     bt_status_t btif_a2dp_idle_stream(a2dp_stream_t * Stream);
@@ -492,9 +501,12 @@ extern "C" {
 
     btif_avdtp_stream_state_t btif_a2dp_get_stream_state(a2dp_stream_t * Stream);
 
+
+
     uint16_t btif_a2dp_get_stream_chnl_sigchnl_l2ChannelId(a2dp_stream_t * Stream);
 
     void btif_a2dp_set_stream_state(a2dp_stream_t * Stream, btif_avdtp_stream_state_t state);
+
 
     void btif_a2dp_set_stream_conn_l2ChannelId(a2dp_stream_t * Stream, uint16_t id);
 
@@ -506,13 +518,16 @@ extern "C" {
 
     void btif_a2dp_set_stream_remote_streamId(a2dp_stream_t * Stream, uint8_t id);
 
+
     BOOL btif_a2dp_is_stream_device_has_delay_reporting(a2dp_stream_t * Stream);
 
     btif_avdtp_codec_t *btif_a2dp_get_stream_codec(a2dp_stream_t * Stream);
 
+
     uint16_t btif_a2dp_get_stream_conn_remDev_hciHandle(a2dp_stream_t * Stream);
 
     uint16_t btif_a2dp_get_stream_device_cmgrhandler_remDev_hciHandle(a2dp_stream_t * Stream);
+
 
     bt_status_t btif_a2dp_get_stream_capabilities(a2dp_stream_t * Stream);
 
@@ -530,6 +545,7 @@ extern "C" {
 
     btif_remote_device_t *btif_a2dp_get_stream_conn_remDev(a2dp_stream_t * stream);
 
+
     bt_status_t btif_a2dp_set_master_role(a2dp_stream_t * Stream, BOOL Flag);
 
     uint16_t btif_a2dp_get_stream_conn_l2ChannelId(a2dp_stream_t * Stream);
@@ -539,6 +555,7 @@ extern "C" {
     int tws_if_get_a2dpbuff_available(void);
 
     bool btif_a2dp_is_disconnected(a2dp_stream_t *Stream);
+
 
     uint8_t btif_a2dp_confirm_stream_state(a2dp_stream_t *Stream, uint8_t old_state, uint8_t new_state);
 
@@ -564,6 +581,8 @@ extern "C" {
     /* Callout functions, do not call directly */
     uint8_t a2dp_stream_confirm_stream_state(uint8_t index, uint8_t old_state, uint8_t new_state);
     uint8_t a2dp_stream_locate_the_connected_dev_id(a2dp_stream_t *Stream);
+
+
 #ifdef __cplusplus
 }
 #endif                          /*  */

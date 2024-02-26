@@ -105,6 +105,8 @@ typedef uint8_t cmgr_event_t;
 extern "C" {
 #endif                          /*  */
 
+
+
     bt_status_t btif_cmgr_set_sniff_timer(btif_cmgr_handler_t * cmgr_handler,
                                           btif_sniff_info_t * SniffInfo, TimeT Time);
 
@@ -152,7 +154,9 @@ extern "C" {
                                                             btif_cmgr_handler_t *cmgr_handler,
                                                             uint8_t window);
 
+
     bool btif_cmgr_is_audio_up(btif_cmgr_handler_t *Handler);
+
 
     void btif_evm_start_timer(evm_timer_t *timer, TimeT ms);
 
@@ -176,6 +180,7 @@ extern "C" {
 
     bool btif_cmgr_is_link_up(btif_cmgr_handler_t *cmgr_handler);
     btif_remote_device_t *btif_cmgr_pts_get_remDev(btif_cmgr_handler_t *cmgr_handler);
+
 
 #ifdef __cplusplus
 }

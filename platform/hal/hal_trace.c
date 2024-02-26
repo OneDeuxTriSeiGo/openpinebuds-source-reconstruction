@@ -197,13 +197,10 @@ static const enum HAL_DMA_PERIPH_T uart_periph[] = {
     HAL_GPDMA_UART2_TX,
 #endif
 };
-
 static struct HAL_DMA_CH_CFG_T dma_cfg;
-
 TRACE_BUF_LOC
 static struct HAL_TRACE_BUF_T trace;
 static struct HAL_TRACE_BUF_T *p_trace = &trace;
-
 static const char discards_prefix[] = NEW_LINE_STR "LOST ";
 static const uint32_t max_discards = 99999;
 // 5 digits + "\r\n" = 7 chars
@@ -225,6 +222,8 @@ static const struct HAL_UART_CFG_T uart_cfg = {
 #endif
     .dma_rx_stop_on_err = false,
 };
+
+
 static const struct HAL_UART_CFG_T uart_cfg = {
     .parity = HAL_UART_PARITY_NONE,
     .stop = HAL_UART_STOP_BITS_1,
@@ -234,6 +233,7 @@ static const struct HAL_UART_CFG_T uart_cfg = {
     .rx_level = HAL_UART_FIFO_LEVEL_1_2,
     .baud = TRACE_BAUD_RATE,
     .dma_rx = true,
+
 #if (TRACE_IDLE_OUTPUT == 0)
     .dma_tx = true,
 #else
@@ -248,8 +248,11 @@ TRACE_BUF_LOC static struct HAL_DMA_DESC_T dma_desc[2];
 static enum HAL_TRACE_TRANSPORT_T trace_transport = HAL_TRACE_TRANSPORT_QTY;
 static enum HAL_UART_ID_T trace_uart;
 
+
 POSSIBLY_UNUSED
 static const char newline[] = NEW_LINE_STR;
+
+
 
 #ifdef CRASH_DUMP_ENABLE
 static HAL_TRACE_CRASH_DUMP_CB_T crash_dump_cb_list[HAL_TRACE_CRASH_DUMP_MODULE_END];
@@ -269,7 +272,6 @@ static bool app_output_enabled =
 static void hal_trace_app_output_callback(const unsigned char *buf, unsigned int buf_len);
 #endif // TRACE_TO_APP
 #endif // CRASH_DUMP_ENABLE
-
 #ifdef CP_TRACE_ENABLE
 static HAL_TRACE_BUF_CTRL_T cp_buffer_cb = NULL;
 static HAL_TRACE_APP_NOTIFY_T cp_notify_cb = NULL;
@@ -433,7 +435,9 @@ static void hal_trace_uart_xfer_done(uint8_t chan, uint32_t remain_tsize, uint32
     int_unlock(lock);
 }
 
+
 #endif // TRACE_IDLE_OUTPUT
+
 
 void hal_trace_send(void)
 {
@@ -445,6 +449,8 @@ void hal_trace_send(void)
 
 int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 {
+
+
 #if (CHIP_HAS_UART >= 2)
 #ifdef FORCE_TRACE_UART1
     transport = HAL_TRACE_TRANSPORT_UART1;
@@ -465,9 +471,11 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
         return 1;
     }
 #endif
+
     if (trace_transport != HAL_TRACE_TRANSPORT_QTY) {
         return hal_trace_switch(transport);
     }
+
 
     memcpy(discards_buf, discards_prefix, discards_digit_start);
 
@@ -489,6 +497,7 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 #if (TRACE_IDLE_OUTPUT == 0)
             p_trace->sends[0] = 0;
             p_trace->sends[1] = 0;
+
             memset(&dma_cfg, 0, sizeof(dma_cfg));
             dma_cfg.dst = 0; // useless
             dma_cfg.dst_bsize = HAL_DMA_BSIZE_8;
@@ -513,6 +522,7 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
     NVIC_SetDefaultFaultHandler(hal_trace_fault_handler);
 #endif
 #endif
+
 
 #ifdef CRASH_DUMP_ENABLE
     in_crash_dump = false;
@@ -569,6 +579,7 @@ int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
         return 0;
     }
 
+
 #if (CHIP_HAS_UART >= 2)
     uint32_t lock;
 
@@ -607,6 +618,7 @@ int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
 
 _exit: POSSIBLY_UNUSED;
     int_unlock(lock);
+
 #endif // (CHIP_HAS_UART >= 2)
 
     return ret;
@@ -740,7 +752,6 @@ static uint32_t hal_trace_print_unsigned(char *buf, uint32_t len, uint32_t val)
         *buf++ = *--d;
     } while (d > &digit[0]);
 }
-
 static void hal_trace_print_discards(uint32_t discards)
 {
     char *out;
@@ -816,7 +827,6 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
         uint32_t avail;
         uint32_t out_len;
         uint16_t size;
-
         p_trace->in_trace = true;
 
         if (p_trace->wptr >= p_trace->rptr) {
@@ -898,8 +908,11 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
     }
 #endif
     if (app_output) {
+
         app_output_enabled = false;
+
         hal_trace_app_output_callback(buf, buf_len);
+
         app_output_enabled = true;
     }
 #endif
@@ -911,7 +924,6 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
         ASSERT(false, "TRACE-%u: Wait memsc timeout", cpu_id);
     }
 #endif
-
     int_unlock(lock);
 
     return ret ? 0 : buf_len;
@@ -949,7 +961,6 @@ struct PACKED LOG_BODY_T {
 
 extern uint32_t __trc_str_start__[];
 extern uint32_t __trc_str_end__[];
-
 uint8_t crc8(uint8_t *data, uint32_t length)
 {
     uint8_t i;
@@ -998,6 +1009,7 @@ static int hal_trace_format_id(uint32_t attr, struct LOG_BODY_T *log, const char
     for (int i = 0; i < num; i++) {
         log->arg[i] = va_arg(ap, unsigned long);
     }
+
 
     log->hdr.trace_info.count = num;
     log->hdr.trace_info.addr = (uint32_t)fmt-(uint32_t)0xFFFC0000; //(uint32_t)fmt-(uint32_t)__trc_str_start__;
@@ -1070,7 +1082,6 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #endif
         } else if (in_isr()) {
             uint32_t ctx_len;
-
             ctx_len = snprintf(ctx, sizeof(ctx), "%2d", (int8_t)NVIC_GetCurrentActiveIRQ());
             if (ctx_len + 1 < ARRAY_SIZE(ctx)) {
                 ctx[ctx_len] = 'E';
@@ -1087,7 +1098,6 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #else
             snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
 #endif
-
 #else
             ctx[0] = ' ';
             ctx[1] = ' ';
@@ -1307,6 +1317,7 @@ int hal_trace_flush_buffer(void)
     }
 #endif
 
+
     lock = int_lock();
 
         time = hal_sys_timer_get();
@@ -1322,6 +1333,7 @@ int hal_trace_flush_buffer(void)
             hal_trace_send();
 #endif
         }
+
         ret = (p_trace->wptr == p_trace->rptr) ? 0 : 1;
 
     int_unlock(lock);
@@ -1594,7 +1606,6 @@ int hal_trace_open_cp(HAL_TRACE_BUF_CTRL_T buf_cb, HAL_TRACE_APP_NOTIFY_T notify
 #endif
     return 0;
 }
-
 #else // !(DEBUG || REL_TRACE_ENABLE)
 
 int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
@@ -1611,6 +1622,7 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 }
 
 #endif // !(DEBUG || REL_TRACE_ENABLE)
+
 
 int hal_trace_address_writable(uint32_t addr)
 {
@@ -1652,14 +1664,13 @@ int hal_trace_address_writable(uint32_t addr)
 
 int hal_trace_address_executable(uint32_t addr)
 {
+
     // Check thumb code
     if ((addr & 1) == 0) {
         return 0;
     }
-
 // Avoid reading out of valid memory region when parsing instruction content
 #define X_ADDR_OFFSET                   0x10
-
     // Check location
     if ((RAMX_BASE + X_ADDR_OFFSET) < addr && addr < (RAMX_BASE + RAM_SIZE)) {
         return 1;
@@ -1695,6 +1706,7 @@ int hal_trace_address_executable(uint32_t addr)
         return 1;
     }
 #endif
+
 //#define CHECK_ROM_CODE
 #ifdef CHECK_ROM_CODE
 #ifdef ROM_EXT_SIZE
@@ -1763,6 +1775,7 @@ static void NORETURN hal_trace_crash_end(void)
     // Tag failure for simulation environment
     hal_cmu_simu_fail();
 #ifdef CRASH_REBOOT
+
     hal_sw_bootmode_set(HAL_SW_BOOTMODE_REBOOT|HAL_SW_BOOTMODE_REBOOT_FROM_CRASH);
     pmu_reboot();
 #else
@@ -1799,6 +1812,7 @@ static void NORETURN USED hal_trace_assert_dump_internal(ASSERT_DUMP_ARGS)
     for (i = 0; i < ARRAY_SIZE(info.R); i++) {
         info.R[i] = p_regs[i];
     }
+
 
     info.ID = HAL_TRACE_ASSERT_ID;
     info.CPU_ID = get_cpu_id_tag();
@@ -2142,6 +2156,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
 
     hal_trace_print_common_registers(regs);
     hal_trace_print_special_stack_registers(info->MSP, info->PSP);
+
     hal_trace_output_linefeed();
 
     len = snprintf(crash_buf, sizeof(crash_buf), "PRIMASK   =%02X, FAULTMASK   =%02X, BASEPRI   =%02X, CONTROL   =%02X" NEW_LINE_STR,
@@ -2549,7 +2564,6 @@ static void NAKED hal_trace_fault_handler(void)
 #endif
 
 #if (defined(DEBUG) || defined(REL_TRACE_ENABLE))
-
 enum HAL_TRACE_RX_STATE_T {
     HAL_TRACE_RX_STATE_CLOSED = 0,
     HAL_TRACE_RX_STATE_OPENED,
@@ -2593,6 +2607,10 @@ static void hal_trace_rx_irq_handler(uint32_t xfer_size, int dma_error, union HA
         }
     }
 }
+
+
+
+
 
 int hal_trace_rx_open(unsigned char *buf, unsigned int len, HAL_TRACE_RX_CALLBACK_T rx_callback)
 {

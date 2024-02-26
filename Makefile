@@ -473,7 +473,6 @@ LDFLAGS_IMAGE   := -X --no-wchar-size-warning
 endif
 
 include $(srctree)/scripts/include.mk
-
 # Include target definitions
 include $(srctree)/$(TARGET_CFG_FILE)
 include $(srctree)/$(TARGET_COMMON_FILE)
@@ -549,6 +548,7 @@ else
 REVISION_INFO := $(GIT_REVISION):$(CUST_TGT_INFO)
 endif
 endif
+
 
 REVISION_INFO := $(subst $(space),-,$(strip $(REVISION_INFO)))
 SOFTWARE_VERSION := $(subst $(space),-,$(strip $(SOFTWARE_VERSION)))
@@ -692,9 +692,9 @@ endif
 endif
 quiet_cmd_gen-IMAGE_LST = GENLST  $@
 
-
 $(IMAGE_LST): $(IMAGE_FILE)
 	+$(call if_changed,gen-IMAGE_LST)
+
 
 # Flags
 
@@ -873,7 +873,6 @@ endif
               --diag_style=gnu --diag_suppress=L6314 --diag_suppress=L6329)) \
               $(IMAGE_ENTRY) $(IMAGE_INIT) $(IMAGE_MAIN) $(IMAGE_VER) \
               $(LIB_LDFLAGS) $(LIB_LDFLAGS)
-
 else
       cmd_link-IMAGE_FILE = $(LD) -o $@ \
               $(LD_USE_PATCH_SYMBOL) \
@@ -889,6 +888,7 @@ else
 
 endif
 quiet_cmd_link-IMAGE_FILE = LINK    $@
+
 
 # Include targets which we want to
 # execute if the rest of the kernel build went well.

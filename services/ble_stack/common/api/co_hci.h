@@ -30,7 +30,9 @@
 #include <stdbool.h>       // standard boolean definitions
 #include <stddef.h>        // standard definitions
 #include <stdint.h>        // standard integer definitions
+
 #include "rwip_config.h"   // IP configuration
+
 #include "compiler.h"      // compiler definitions
 
 /*
@@ -83,6 +85,7 @@
 /// HCI ACL header: handle and flags decoding
 enum  hci_acl_hdr_fields
 {
+
     /// bits[00:11]: Connection handle
     HCI_ACL_HDR_HDL_LSB        = (0),
     HCI_ACL_HDR_HDL_MASK       = (0x0FFF),
@@ -92,6 +95,7 @@ enum  hci_acl_hdr_fields
     /// bits[14:15]: Broadcast flag
     HCI_ACL_HDR_BC_FLAG_LSB    = (14),
     HCI_ACL_HDR_BC_FLAG_MASK   = (0xC000),
+
     /// Packet boundary and Broadcast flags
     HCI_ACL_HDR_DATA_FLAGS_LSB  = (12),
     HCI_ACL_HDR_DATA_FLAGS_MASK = (0xF000),
@@ -107,6 +111,7 @@ enum  hci_acl_hdr_fields
 #define HCI_ACL_HDR_LEN            (HCI_ACL_HDR_HDL_FLAGS_LEN + HCI_ACL_HDR_DATA_LEN_LEN)
 
 /// HCI Synchronous header: handle and flags decoding
+
 enum hci_syn_hdr_fields
 {
     /// bits[00:11]: Connection handle
@@ -122,8 +127,6 @@ enum hci_syn_hdr_fields
 
 #define HCI_SYNC_HDR_HDL_FLAGS_POS  (0)
 #define HCI_SYNC_HDR_HDL_FLAGS_LEN  (2)
-
-
 /// HCI Synchronous header: data length field length
 #define HCI_SYNC_HDR_DATA_LEN_POS   (HCI_SYNC_HDR_HDL_FLAGS_LEN)
 #define HCI_SYNC_HDR_DATA_LEN_LEN   (1)
@@ -194,6 +197,7 @@ enum
     VS_OGF = 0x3F,
     MAX_OGF
 };
+
 
 ///Commands Opcodes: OGF(6b) | OCF(10b)
 /* Some Abbreviation used in names:
@@ -608,6 +612,7 @@ enum hci_evt_code
     HCI_LE_ADV_SET_TERMINATED_EVT_SUBCODE      = 0x12,
     HCI_LE_SCAN_REQ_RCVD_EVT_SUBCODE           = 0x13,
     HCI_LE_CH_SEL_ALGO_EVT_SUBCODE             = 0x14,
+
     #if (RW_DEBUG)
     HCI_DBG_ASSERT_EVT_SUBCODE              = 0x02,
     #endif //(RW_DEBUG)
@@ -654,6 +659,8 @@ struct hci_sync_data
     /// EM buffer pointer
     uint16_t  buf_ptr;
 };
+
+
 
 
 /*
@@ -2460,6 +2467,9 @@ struct hci_wr_sp_dbg_mode_cmd
 };
 
 
+
+
+
 /*
  * HCI LE CONTROLLER COMMANDS PARAMETERS
  ****************************************************************************************
@@ -2649,7 +2659,6 @@ struct init_phy_param
     ///Maximum CE length (N * 0.625 ms)
     uint16_t       ce_len_max;
 };
-
 ///HCI LE Extended Create Connection Command parameters structure
 struct hci_le_ext_create_con_cmd
 {
@@ -3585,6 +3594,7 @@ struct hci_le_rd_supp_states_cmd_cmp_evt
     struct le_states    states;
 };
 
+
 ///HCI command complete event structure for Test End
 struct hci_test_end_cmd_cmp_evt
 {
@@ -3922,6 +3932,7 @@ struct hci_le_enh_con_cmp_evt
     uint8_t             clk_accuracy;
 };
 
+
 struct hci_generate_dhkey_cmp_evt
 {
     ///LE Subevent code
@@ -3931,6 +3942,7 @@ struct hci_generate_dhkey_cmp_evt
     /// The 32 byte Diffie Helman Key
     uint8_t             dh_key[32];
 };
+
 
 struct hci_rd_local_p256_public_key_cmp_evt
 {
@@ -4044,6 +4056,7 @@ struct hci_con_slv_bcst_ch_map_chg_evt
     /// Channel_Map
     struct chnl_map    ch_map;
 };
+
 
 struct hci_le_gen_dhkey_cmp_evt
 {
@@ -4357,6 +4370,17 @@ struct hci_dbg_llcp_discard_cmd
     /// Flag indicating if the discarding has to be enabled or disabled
     uint8_t enable;
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 

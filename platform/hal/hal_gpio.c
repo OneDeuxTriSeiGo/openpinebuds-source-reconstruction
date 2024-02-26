@@ -401,6 +401,7 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
         if (cfg->irq_enable) {
             gpio_aux_bank[bank]->GPIO_INTMASK |= (0x1<<pin_offset);
 
+
             if (cfg->irq_type == HAL_GPIO_IRQ_TYPE_EDGE_SENSITIVE)
                 gpio_aux_bank[bank]->GPIO_INTTYPE_LEVEL |= 0x1<<pin_offset;
             else
@@ -415,7 +416,6 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
                 gpio_aux_bank[bank]->GPIO_DEBOUNCE |= 0x1<<pin_offset;
             else
                 gpio_aux_bank[bank]->GPIO_DEBOUNCE &= ~(0x1<<pin_offset);
-
             gpio_irq_handler[pin] = cfg->irq_handler;
 
             NVIC_SetVector(GPIOAUX_IRQn, (uint32_t)_gpio_aux_irq_handler[bank]);
@@ -445,6 +445,7 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
         if (cfg->irq_enable) {
             gpio_bank[bank]->GPIO_INTMASK |= (0x1<<pin_offset);
 
+
             if (cfg->irq_type == HAL_GPIO_IRQ_TYPE_EDGE_SENSITIVE)
                 gpio_bank[bank]->GPIO_INTTYPE_LEVEL |= 0x1<<pin_offset;
             else
@@ -459,7 +460,6 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
                 gpio_bank[bank]->GPIO_DEBOUNCE |= 0x1<<pin_offset;
             else
                 gpio_bank[bank]->GPIO_DEBOUNCE &= ~(0x1<<pin_offset);
-
             gpio_irq_handler[pin] = cfg->irq_handler;
 
             NVIC_SetVector(GPIO_IRQn, (uint32_t)_gpio_irq_handler[bank]);

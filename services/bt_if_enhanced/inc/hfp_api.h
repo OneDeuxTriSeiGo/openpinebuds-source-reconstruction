@@ -22,7 +22,6 @@
 #define HF_CHANNEL_NUM (BT_DEVICE_NUM+BT_SOURCE_DEVICE_NUM)
 
 typedef struct { /* empty */ } btif_hf_channel_t; /* used to hold the pointer to struct _hshf_channel */
-
 /* start of btif_audio_state_t*/
 typedef enum {
     BTIF_HF_AUDIO_DISCON = 0,
@@ -204,6 +203,7 @@ extern "C" {
      */
     void btif_hf_init_vendor_info(struct hfp_vendor_info *info_ptr);
 
+
     int btif_hfp_initialize(void);
 
     int btif_hf_register_callback(hf_event_cb_t callback);
@@ -297,7 +297,9 @@ extern "C" {
 
 #if defined(IBRT)
     uint32_t btif_hfp_profile_save_ctx(btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);
+
     uint32_t btif_hfp_profile_restore_ctx(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint32_t buf_len);
+
     bt_status_t btif_hf_sync_conn_audio_connected(hfp_sco_codec_t codec,uint16_t conhdl);
     bt_status_t btif_hf_sync_conn_audio_disconnected(uint16_t conhdl);
 #endif

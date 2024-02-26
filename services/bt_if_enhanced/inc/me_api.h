@@ -319,6 +319,7 @@ typedef uint8_t btif_error_code_t;
 #define BTIF_BEC_SDP_DISCONNECT       0xd2
 #define BTIF_BEC_SDP_NO_RESOURCES     0xd3
 #define BTIF_BEC_SDP_INTERNAL_ERR     0xd4
+
 #define BTIF_BEC_STORE_LINK_KEY_ERR   0xe0
 
 typedef uint32_t btif_iac_t;
@@ -443,6 +444,9 @@ typedef enum {
 /* End of BtStackState */
 typedef struct { /* empty */ } btif_remote_device_t; /* used to hold the pointer to btm_conn_item_t */
 
+
+
+
 /* Forward declaration of the callback parameters */
 typedef struct { /* empty */ } btif_event_t; /* used to hold the pointer to event */
 
@@ -485,7 +489,6 @@ typedef uint8_t btif_eir_data_type_t;
 #define BTIF_EIR_TX_POWER             0x0A
 #define BTIF_EIR_MAN_SPECIFIC         0xFF
 
-
 #define BTIF_BR_USE_FEC              (0<<0)
 #define BTIF_BR_NOT_USE_FEC          (1<<0)
 #define BTIF_BR_NO_PKT_PRFER_AVALB   (0<<1)
@@ -499,7 +502,6 @@ typedef uint8_t btif_eir_data_type_t;
 #define BTIF_EDR_USE_1_SLOT_PTK      (1<<5)
 #define BTIF_EDR_USE_3_SLOT_PTK      (2<<5)
 #define BTIF_EDR_USE_5_SLOT_PTK      (3<<5)
-
 
 #define CONN_AUTO_ACCEPT_DISABLE                      0x01
 
@@ -739,6 +741,7 @@ typedef struct {
     bool trusted;
     uint8_t linkKey[16];
     btif_link_key_type_t keyType;
+
     uint8_t pinLen;
 } btif_device_record_t;
 
@@ -1177,6 +1180,7 @@ void btif_me_set_activeCons(uint8_t activeCons );
 
 btif_remote_device_t *btif_me_get_callback_event_rem_dev(const btif_event_t * event);
 
+
 uint16_t btif_me_get_scohdl_by_connhdl(uint16_t conn_handle);
 btif_remote_device_t *btif_me_get_callback_event_sco_connect_rem_dev(const btif_event_t *
         event);
@@ -1259,6 +1263,7 @@ btif_handler *btif_me_get_me_handler(void);
 bt_status_t btif_me_force_disconnect_link_with_reason(btif_handler * handler,
         btif_remote_device_t * rdev,
         uint8_t reason, BOOL forceDisconnect);
+
 void btif_me_write_bt_sleep_enable(uint8_t sleep_en);
 void btif_me_write_bt_page_scan_type(uint8_t scan_type);
 void btif_me_write_bt_inquiry_scan_type(uint8_t scan_type);
@@ -1319,6 +1324,7 @@ bt_status_t btif_me_stop_ibrt(uint16_t mobile_conhdl,uint8_t reason);
 bt_status_t btif_me_suspend_ibrt(void);
 bt_status_t btif_me_ibrt_mode_init(bool enable);
 bt_status_t btif_me_ibrt_role_switch(uint16_t mobile_conhdl);
+
 
 void btif_me_set_devctx_state(uint8_t acl_array_idx, uint16_t state);
 void btif_me_set_devctx_link(uint8_t acl_array_idx, btif_remote_device_t * rm_dev);

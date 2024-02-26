@@ -21,6 +21,7 @@
 #include "hal_timer.h"
 #include "reg_timer.h"
 
+
 #if defined(CHIP_BEST3001) || defined(CHIP_BEST3003) || defined(CHIP_BEST3005) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402)
 #define CLOCK_SYNC_WORKAROUND
 #endif
@@ -492,7 +493,6 @@ uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_ms_to_ticks(uint32_t ms)
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_us_to_ticks(uint32_t us)
 {
     uint32_t ticks;
-
 #ifdef TIMER_USE_FPU
     ticks = (uint32_t)((float)us / (1000 * 1000) * sys_tick_hz + 0.99);
 #else

@@ -85,6 +85,7 @@
 #define BTIF_SECURITY
 #define BTIF_BLE_APP_DATAPATH_SERVER
 
+
 //#define HF_CUSTOM_FEATURE_RESERVED          (0x01 << 0)
 #define BTIF_HF_CUSTOM_FEATURE_BATTERY_REPORT    (0x03 << 0)
 #define BTIF_HF_CUSTOM_FEATURE_DOCK              (0x01 << 2)
@@ -111,6 +112,7 @@
 */
 
 #define  __BTIF_EARPHONE__
+
 
 #if !defined(BLE_ONLY_ENABLED)
 #define  __BTIF_BT_RECONNECT__

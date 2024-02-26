@@ -111,6 +111,8 @@ enum AF_CODEC_SYNC_TYPE_T {
     AF_CODEC_SYNC_TYPE_WIFI,
 };
 
+
+
 void af_codec_sync_config(enum AUD_STREAM_T stream, enum AF_CODEC_SYNC_TYPE_T type, bool enable);
 void af_codec_sync_resample_rate_config(enum AUD_STREAM_T stream, enum AF_CODEC_SYNC_TYPE_T type, bool enable);
 void af_codec_sync_gain_config(enum AUD_STREAM_T stream, enum AF_CODEC_SYNC_TYPE_T type, bool enable);

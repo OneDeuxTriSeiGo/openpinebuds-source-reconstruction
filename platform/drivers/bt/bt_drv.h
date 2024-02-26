@@ -180,6 +180,7 @@ extern "C" {
  // A slot is 625 us
 #define SLOT_SIZE           625
 
+
 //#define __PASS_CI_TEST_SETTING__
 #define  BT_LOW_POWER_MODE  1
 #define  BT_HIGH_PERFORMANCE_MODE   2
@@ -467,6 +468,7 @@ extern "C" {
 
 extern void btdrv_poweron(uint8_t en);
 extern void btdrv_hciopen(void);
+
 #ifdef __cplusplus
 }
 #endif

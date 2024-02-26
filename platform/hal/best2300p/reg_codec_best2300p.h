@@ -459,13 +459,14 @@ struct CODEC_T {
 #define CODEC_TRIG_TIME_ENABLE                              (1 << 23)
 #define CODEC_GET_CNT_TRIG                                  (1 << 24)
 
+
 // reg_78
+
 #define CODEC_RESERVED_REG1(n)                              (((n) & 0xFFFFFFFF) << 0)
 #define CODEC_RESERVED_REG1_MASK                            (0xFFFFFFFF << 0)
 #define CODEC_RESERVED_REG1_SHIFT                           (0)
 
 // reg_7c
-
 // reg_80
 #define CODEC_CODEC_ADC_EN                                  (1 << 0)
 #define CODEC_CODEC_ADC_EN_CH0                              (1 << 1)
@@ -689,6 +690,7 @@ struct CODEC_T {
 // reg_b0
 
 // reg_b4
+
 #define CODEC_CODEC_DSD_ENABLE_L                            (1 << 0)
 #define CODEC_CODEC_DSD_ENABLE_R                            (1 << 1)
 #define CODEC_CODEC_DSD_DATA_INV                            (1 << 2)
@@ -982,6 +984,7 @@ struct CODEC_T {
 #define CODEC_PSD_SYC_MASK                                  (0x7FFFFFF << 0)
 #define CODEC_PSD_SYC_SHIFT                                 (0)
 
+
 // reg_16c
 #define CODEC_CODEC_ADC_DC_DOUT_CH0_SYNC(n)                 (((n) & 0x1FFFFF) << 0)
 #define CODEC_CODEC_ADC_DC_DOUT_CH0_SYNC_MASK               (0x1FFFFF << 0)
@@ -1008,9 +1011,7 @@ struct CODEC_T {
 #define CODEC_CODEC_ADC_DC_DOUT_CH4_SYNC_SHIFT              (0)
 
 // reg_180
-
 // reg_184
-
 // reg_188
 #define CODEC_CODEC_ADC_DC_DIN_CH0(n)                       (((n) & 0x7FFF) << 0)
 #define CODEC_CODEC_ADC_DC_DIN_CH0_MASK                     (0x7FFF << 0)
@@ -1213,6 +1214,8 @@ struct CODEC_T {
 #define CODEC_CODEC_ADC_DRE_WINDOW_CH2_MASK                 (0xFFFFF << 11)
 #define CODEC_CODEC_ADC_DRE_WINDOW_CH2_SHIFT                (11)
 
+
+
 // reg_1e0
 #define CODEC_CODEC_ADC_DRE_GAIN_STEP0_CH0(n)               (((n) & 0x3FFF) << 0)
 #define CODEC_CODEC_ADC_DRE_GAIN_STEP0_CH0_MASK             (0x3FFF << 0)
@@ -1246,6 +1249,10 @@ struct CODEC_T {
 #define CODEC_CODEC_ADC_DRE_DC_STEP3_CH0_SHIFT              (14)
 
 // reg_1f0
+
+
+
+
 #define CODEC_CODEC_ADC_DRE_GAIN_STEP0_CH1(n)               (((n) & 0x3FFF) << 0)
 #define CODEC_CODEC_ADC_DRE_GAIN_STEP0_CH1_MASK             (0x3FFF << 0)
 #define CODEC_CODEC_ADC_DRE_GAIN_STEP0_CH1_SHIFT            (0)
@@ -1262,13 +1269,9 @@ struct CODEC_T {
 #define CODEC_CODEC_ADC_DRE_GAIN_STEP3_CH1_SHIFT            (14)
 
 // reg_1f8
-
 // reg_1fc
-
 // reg_200
-
 // reg_204
-
 // reg_208
 #define CODEC_CODEC_DAC_DRE_GAIN_STEP4_CH1(n)               (((n) & 0x3FFF) << 0)
 #define CODEC_CODEC_DAC_DRE_GAIN_STEP4_CH1_MASK             (0x3FFF << 0)

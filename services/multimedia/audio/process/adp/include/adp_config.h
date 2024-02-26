@@ -1,5 +1,9 @@
 // Microsoft version of 'inline'
+
 #define inline __inline
+
+
+
 
 // In Visual Studio, _M_IX86_FP=1 means /arch:SSE was used, likewise
 // _M_IX86_FP=2 means /arch:SSE2 was used.
@@ -20,3 +24,5 @@
 
 /* We don't support visibility on Win32 */
 #define EXPORT
+
+

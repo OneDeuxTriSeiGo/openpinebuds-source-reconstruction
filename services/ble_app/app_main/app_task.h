@@ -72,6 +72,7 @@ enum appm_state
     APPM_CONNECTING,
     /// Connected state
     APPM_CONNECTED,
+
     /// Number of defined states.
     APPM_STATE_MAX
 };
@@ -81,6 +82,7 @@ enum appm_state
 enum app_msg_id
 {
     APPM_DUMMY_MSG = TASK_FIRST_MSG(TASK_ID_APP),
+
 
     #if (BLE_APP_HT)
     /// Timer used to refresh the temperature measurement value

@@ -31,6 +31,9 @@
 /// define size of an empty array (used to declare structure with an array size not defined)
 #define __ARRAY_EMPTY
 
+
+
+
 /// __MODULE__ comes from the RVDS compiler that supports it
 #define __MODULE__ __BASENAME_FILE__
 

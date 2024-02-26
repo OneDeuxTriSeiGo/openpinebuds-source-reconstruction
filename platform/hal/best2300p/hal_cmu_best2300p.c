@@ -31,6 +31,7 @@
 #include "system_cp.h"
 
 
+
 #define HAL_CMU_USB_PLL_CLOCK           (192 * 1000 * 1000)
 #define HAL_CMU_AUD_PLL_CLOCK           (CODEC_FREQ_48K_SERIES * CODEC_CMU_DIV)
 
@@ -38,10 +39,10 @@
 #define HAL_CMU_USB_CLOCK_48M           (48 * 1000 * 1000)
 
 #define HAL_CMU_PWM_SLOW_CLOCK          (32 * 1000)
-
 #define HAL_CMU_PLL_LOCKED_TIMEOUT      US_TO_TICKS(200)
 #define HAL_CMU_26M_READY_TIMEOUT       MS_TO_TICKS(3)
 #define HAL_CMU_LPU_EXTRA_TIMEOUT       MS_TO_TICKS(1)
+
 
 enum CMU_USB_CLK_SRC_T {
     CMU_USB_CLK_SRC_PLL_48M         = 0,

@@ -44,7 +44,6 @@
 #include "gapc_msg.h"       // GAPC Definitions
 #include "gapm_msg.h"
 #include "gap.h"
-
 #if (NVDS_SUPPORT)
 #include "nvds.h"
 #endif // (NVDS_SUPPORT)
@@ -58,6 +57,7 @@
 #else
 #define BLE_AUTHENTICATION_LEVEL        GAP_AUTH_REQ_NO_MITM_NO_BOND
 #endif
+
 /*
  * DEFINES
  ****************************************************************************************
@@ -110,6 +110,7 @@ typedef struct
     uint16_t    conn_param_interval;    // in the unit of 1.25ms
 } BLE_CONN_PARAM_CONFIG_T;
 
+
 /// Application environment structure
 typedef struct {
     /// Connection handle
@@ -129,6 +130,7 @@ typedef struct {
     APP_BLE_CONN_PARAM_T connPendindParam;
     /// ble connection param update times
     uint8_t conn_param_update_times;
+
 } APP_BLE_CONN_CONTEXT_T;
 
 /// Application environment structure
@@ -147,8 +149,9 @@ struct app_env_tag
     uint8_t loc_irk[KEY_LEN];
 
     APP_BLE_CONN_CONTEXT_T context[BLE_CONNECTION_MAX];
-
 };
+
+
 
 // max adv data length is 31, and 3 byte is used for adv type flag(0x01)
 #define ADV_DATA_MAX_LEN                            (28)
@@ -263,7 +266,6 @@ void app_ble_disconnected_evt_handler(uint8_t conidx, uint8_t errCode);
 
 void app_connecting_stopped(gap_bdaddr_t *peer_addr);
 void app_connecting_stopped(gap_bdaddr_t *peer_addr);
-
 void l2cap_update_param(uint8_t  conidx,
                         uint32_t min_interval_in_ms,
                         uint32_t max_interval_in_ms,
@@ -286,12 +288,12 @@ void app_advertising_stopped(uint8_t actv_idx);
 
 void app_advertising_starting_failed(uint8_t actv_idx, uint8_t err_code);
 
+
 void app_scanning_stopped(void);
 
 void app_scanning_starting_failed(uint8_t actv_idx, uint8_t err_code);
 
 void app_connecting_failed(uint8_t actv_idx, uint8_t err_code);
-
 void app_ble_update_param_failed(uint8_t conidx, uint8_t errCode);
 
 void app_ble_update_param_successful(uint8_t conidx, APP_BLE_CONN_PARAM_T* pConnParam);
@@ -300,6 +302,7 @@ void appm_exchange_mtu(uint8_t conidx);
 
 void app_ble_system_ready(void);
 
+
 void appm_set_private_bd_addr(uint8_t* bdAddr);
 
 void appm_add_dev_into_whitelist(struct gap_bdaddr* ptBdAddr);
@@ -307,6 +310,7 @@ void appm_add_dev_into_whitelist(struct gap_bdaddr* ptBdAddr);
 void app_scanning_started(void);
 
 void app_advertising_started(uint8_t actv_idx);
+
 
 void app_connecting_started(void);
 
@@ -352,6 +356,7 @@ void appm_refresh_ble_irk(void);
 
 bool app_ble_get_conn_param(uint8_t conidx,  APP_BLE_CONN_PARAM_T* pConnParam);
 
+
 void appm_update_adv_data(void *param);
 
 bool gattc_check_if_notification_processing_is_busy(uint8_t conidx);
@@ -366,6 +371,7 @@ void fp_update_ble_connect_param_stop(uint8_t ble_conidx);
 #ifdef __cplusplus
 }
 #endif
+
 /// @} APP
 
 #endif //(BLE_APP_PRESENT)

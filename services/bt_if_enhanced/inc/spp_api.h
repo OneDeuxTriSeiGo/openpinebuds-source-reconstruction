@@ -14,6 +14,7 @@
  */
 #ifndef __SPP_API_H__
 #define __SPP_API_H__
+
 #include "sdp_api.h"
 #include "cmsis_os.h"
 #include "cqueue.h"

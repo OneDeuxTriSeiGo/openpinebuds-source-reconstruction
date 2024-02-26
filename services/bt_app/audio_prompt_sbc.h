@@ -64,6 +64,7 @@ typedef struct
 #define AUDIO_PROMPT_SBC_CHANNEL_COUNT          (1)
 #define AUDIO_PROMPT_SBC_CHANNEL_MODE           (BTIF_SBC_CHNL_MODE_MONO)
 
+
 #define AUDIO_PROMPT_SBC_BLOCK_SIZE             40
 #define AUDIO_PROMPT_SBC_SIZE_PER_SAMPLE        (2)// 16 bits, 1 channel
 

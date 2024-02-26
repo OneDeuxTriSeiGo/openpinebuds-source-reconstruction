@@ -17,11 +17,9 @@
 #include "hal_location.h"
 #include "hal_trace.h"
 #include "cmsis.h"
-
 #if !(defined(ROM_BUILD)
 #define PMU_CTRL_ENABLE
 #endif
-
 #ifdef PMU_CTRL_ENABLE
 #include "pmu.h"
 #endif

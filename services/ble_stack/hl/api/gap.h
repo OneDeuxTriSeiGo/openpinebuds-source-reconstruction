@@ -299,6 +299,8 @@ enum gap_ad_type
     GAP_AD_TYPE_MANU_SPECIFIC_DATA         = 0xFF,
 };
 
+
+
 /// Boolean value set
 enum
 {
@@ -308,22 +310,36 @@ enum
     GAP_ENABLE
 };
 
+
+
+
+
 /****************** GAP Role **********************/
 enum gap_role
 {
     /// No role set yet
     GAP_ROLE_NONE        = 0x00,
+
     /// Observer role
     GAP_ROLE_OBSERVER    = 0x01,
+
     /// Broadcaster role
     GAP_ROLE_BROADCASTER = 0x02,
+
     /// Master/Central role
     GAP_ROLE_CENTRAL     = (0x04 | GAP_ROLE_OBSERVER),
+
     /// Peripheral/Slave role
     GAP_ROLE_PERIPHERAL  = (0x08 | GAP_ROLE_BROADCASTER),
+
     /// Device has all role, both peripheral and central
     GAP_ROLE_ALL         = (GAP_ROLE_CENTRAL | GAP_ROLE_PERIPHERAL),
+
 };
+
+
+
+
 
 /// IO Capability Values
 enum gap_io_cap
@@ -498,6 +514,7 @@ typedef struct gap_slv_pref
     uint16_t conn_timeout;
 } gap_slv_pref_t;
 
+
 ///Channel map structure
 typedef struct
 {
@@ -512,6 +529,8 @@ typedef struct
     ///8-byte array for random number
     uint8_t     nb[GAP_RAND_NB_LEN];
 } rand_nb_t;
+
+
 
 /// P256 Public key data format
 typedef struct
@@ -528,6 +547,7 @@ typedef struct gap_addr
     /// BD Address of device
     uint8_t addr[GAP_BD_ADDR_LEN];
 } gap_addr_t;
+
 
 /// Address information about a device address
 typedef struct gap_bdaddr
@@ -549,7 +569,6 @@ typedef struct gap_con_param
     uint16_t            sup_to;
 } gap_con_param_t;
 
-
 /// Periodic advertising address information
 typedef struct gap_per_adv_bdaddr
 {
@@ -558,7 +577,6 @@ typedef struct gap_per_adv_bdaddr
     /// Address type of the device 0=public/1=private random
     uint8_t addr_type;
 } gap_per_adv_bdaddr_t;
-
 /// Resolving list device information
 struct gap_ral_dev_info
 {

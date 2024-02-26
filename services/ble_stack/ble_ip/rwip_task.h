@@ -71,6 +71,7 @@ enum TASK_API_ID
     TASK_ID_GATT         = 11,   // Generic Attribute Profile Task
     TASK_ID_GAPM         = 13,   // Generic Access Profile Manager
     TASK_ID_GAPC         = 14,   // Generic Access Profile Controller
+
     TASK_ID_APP          = 15,   // Application API
     TASK_ID_AHI          = 16,   // Application Host Interface
 
