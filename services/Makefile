@@ -55,11 +55,11 @@ endif
 
 ifeq ($(BLE),1)
 obj-y += \
-    ble_app/ \
-    bridge/ \
-    ble_stack/ \
-    ../utils/retention_ram/ \
-    ble_profiles/
+		 ble_app/ \
+         bridge/ \
+         ble_stack/ \
+         ../utils/retention_ram/ \
+         ble_profiles/
 endif
 
 ifeq ($(AUTO_TEST),1)

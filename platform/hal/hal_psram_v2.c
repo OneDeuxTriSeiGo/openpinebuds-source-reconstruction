@@ -28,18 +28,18 @@
 
 #define PSRAM_RESET
 //#define PSRAM_DUAL_8BIT
-        #define PSRAM_WRAP_ENABLE
+#define PSRAM_WRAP_ENABLE
 
 #ifdef PSRAM_DEBUG
-    #define PSRAM_TRACE TRACE_IMM
+#define PSRAM_TRACE TRACE_IMM
 #else
-    #define PSRAM_TRACE(...)
+#define PSRAM_TRACE(...)
 #endif
 
 #ifdef PSRAM_DEBUG
-    #define PSRAM_TRACENOCRLF_NOTS REL_TRACE_NOCRLF_NOTS
+#define PSRAM_TRACENOCRLF_NOTS REL_TRACE_NOCRLF_NOTS
 #else
-    #define PSRAM_TRACENOCRLF_NOTS(...)
+#define PSRAM_TRACENOCRLF_NOTS(...)
 #endif
 
 #define TX_FIFO_DEPTH                       8
@@ -141,14 +141,14 @@ enum MEMIF_CMD_T {
     MEMIF_NEW_CMD       = 0x7F,
 };
 
-static struct PSRAM_MC_T *const psram_mc = (struct PSRAM_MC_T *)PSRAM_CTRL_BASE;
-static struct PSRAM_PHY_T *const psram_phy = (struct PSRAM_PHY_T *)(PSRAM_CTRL_BASE + 0x8000);
+static struct PSRAM_MC_T * const psram_mc = (struct PSRAM_MC_T *)PSRAM_CTRL_BASE;
+static struct PSRAM_PHY_T * const psram_phy = (struct PSRAM_PHY_T *)(PSRAM_CTRL_BASE + 0x8000);
 
-    #if (PSRAM_SPEED != 0)
-        static const uint32_t psram_run_clk = PSRAM_SPEED * 1000 * 1000;
-    #else
-        #error "invalid PSRAM_SPEED"
-    #endif
+#if (PSRAM_SPEED != 0)
+static const uint32_t psram_run_clk = PSRAM_SPEED*1000*1000;
+#else
+#error "invalid PSRAM_SPEED"
+#endif
 
 static void psram_chip_timing_config(uint32_t clk, bool psram_first);
 

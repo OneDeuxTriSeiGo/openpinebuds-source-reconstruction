@@ -79,7 +79,7 @@
 
 
 /// Macro to get a structure from one of its structure field
-#define CONTAINER_OF(ptr, type, member) ((type *)( (char *)ptr - OFFSETOF(type,member) ))
+#define CONTAINER_OF(ptr, type, member)    ((type *)( (char *)ptr - OFFSETOF(type,member) ))
 
 
 /*

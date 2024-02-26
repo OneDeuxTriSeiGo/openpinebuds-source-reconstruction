@@ -85,13 +85,13 @@ int hal_sysfreq_req(enum HAL_SYSFREQ_USER_T user, enum HAL_CMU_FREQ_T freq)
         real_cur_freq = hal_sysfreq_revise_freq(cur_freq);
         if (real_freq != real_cur_freq) {
 #ifdef PMU_CTRL_ENABLE
-            pmu_sys_freq_config(real_freq);
+        pmu_sys_freq_config(real_freq);
 #endif
 #ifdef ULTRA_LOW_POWER
-            // Enable PLL if required
-            hal_cmu_low_freq_mode_disable(real_cur_freq, real_freq);
+        // Enable PLL if required
+        hal_cmu_low_freq_mode_disable(real_cur_freq, real_freq);
 #endif
-            hal_cmu_sys_set_freq(real_freq);
+        hal_cmu_sys_set_freq(real_freq);
     } else /* if (freq < cur_freq) */ {
         if (top_user == user || top_user == HAL_SYSFREQ_USER_QTY) {
             if (top_user == user) {
@@ -109,11 +109,11 @@ int hal_sysfreq_req(enum HAL_SYSFREQ_USER_T user, enum HAL_CMU_FREQ_T freq)
                 real_freq = hal_sysfreq_revise_freq(freq);
                 real_cur_freq = hal_sysfreq_revise_freq(cur_freq);
 #ifdef ULTRA_LOW_POWER
-                    // Disable PLL if capable
-                    hal_cmu_low_freq_mode_enable(real_cur_freq, real_freq);
+                // Disable PLL if capable
+                hal_cmu_low_freq_mode_enable(real_cur_freq, real_freq);
 #endif
 #ifdef PMU_CTRL_ENABLE
-                    pmu_sys_freq_config(real_freq);
+                pmu_sys_freq_config(real_freq);
 #endif
             }
         }

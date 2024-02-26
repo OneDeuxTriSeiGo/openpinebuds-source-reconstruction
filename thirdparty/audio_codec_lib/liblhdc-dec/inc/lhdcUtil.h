@@ -45,7 +45,7 @@ typedef struct savi_bt_local_info_t{
     uint8_t ble_addr[BTIF_BD_ADDR_SIZE];
     const char *ble_name;
     uint8_t ble_len;
-}savi_bt_local_info;
+} savi_bt_local_info;
 typedef int (*LHDC_GET_BT_INFO)(savi_bt_local_info * bt_info);
 
 #define A2DP_LHDC_HDR_LATENCY_LOW   0x00

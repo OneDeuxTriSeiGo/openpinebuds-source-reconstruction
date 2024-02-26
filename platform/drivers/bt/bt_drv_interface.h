@@ -244,7 +244,7 @@ void btdrv_seq_bak_mode(uint8_t mode,uint8_t linkid);
 
 void btdrv_enable_one_packet_more_head(bool enable);
 
-#if defined(CHIP_BEST2300) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402) ||   \
+#if defined(CHIP_BEST2300) || defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
     defined(CHIP_BEST2300P) || defined(CHIP_BEST2001) || defined(CHIP_BEST2300A)
 void btdrv_pcm_enable(void);
 void btdrv_pcm_disable(void);

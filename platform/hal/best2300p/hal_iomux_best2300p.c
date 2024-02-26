@@ -107,7 +107,7 @@
 #endif
 
 #ifndef SPILCD_IOMUX_INDEX
-#define SPILCD_IOMUX_INDEX                    0
+#define SPILCD_IOMUX_INDEX                  0
 #endif
 
 #ifndef I2C0_IOMUX_INDEX

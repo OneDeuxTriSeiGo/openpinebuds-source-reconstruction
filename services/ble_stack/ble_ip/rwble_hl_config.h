@@ -117,7 +117,7 @@
 #define BLEHL_WLAN_COEX_TEST     RW_WLAN_COEX_TEST
 
 /******************************************************************************************/
-/* --------------------------   HOST MODULES          ----------------------------------------*/
+/* --------------------------   HOST MODULES      ----------------------------------------*/
 /******************************************************************************************/
 #ifdef CFG_PRF
 #define BLE_PROFILES      (1)
@@ -164,7 +164,7 @@
     /// Can be tuned based on supported profiles
     #define BLEHL_HEAP_DB_SIZE                     (3072)
 
-    #define BLEHL_HEAP_MSG_SIZE                    (2048 + 256 * BLE_CONNECTION_MAX)
+#define BLEHL_HEAP_MSG_SIZE                    (2048 + 256 * BLE_CONNECTION_MAX)
 #else
     #define BLEHL_HEAP_MSG_SIZE                    (256)
     #define BLEHL_HEAP_DB_SIZE                     (0)
@@ -177,9 +177,9 @@
 #define BLEHL_TASK_SIZE       BLE_HOST_TASK_SIZE + BLE_PRF_TASK_SIZE
 
 /// Size of environment variable needed on BLE Host Stack for one link
-#define BLEHL_HEAP_ENV_SIZE  ( BLE_GAPC_HEAP_ENV_SIZE       \
-                                                    + BLE_GATT_HEAP_ENV_SIZE       \
-                                                    + BLE_L2CAP_HEAP_ENV_SIZE      \
+#define BLEHL_HEAP_ENV_SIZE ( BLE_GAPC_HEAP_ENV_SIZE          \
+                               + BLE_GATT_HEAP_ENV_SIZE       \
+                               + BLE_L2CAP_HEAP_ENV_SIZE \
                              )
 
 

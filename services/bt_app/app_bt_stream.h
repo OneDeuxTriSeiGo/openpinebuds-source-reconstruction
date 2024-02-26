@@ -129,9 +129,9 @@ bool app_bt_stream_isrun(uint16_t player);
 
 void app_bt_set_volume(uint16_t type,uint8_t level);
 
-void  app_bt_stream_bt_volumeup(void);
+void app_bt_stream_bt_volumeup(void);
 
-void  app_bt_stream_bt_volumedown(void);
+void app_bt_stream_bt_volumedown(void);
 
 void app_bt_stream_volume_ptr_update(uint8_t *bdAddr);
 

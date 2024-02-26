@@ -375,16 +375,16 @@
 #endif // defined(CFG_PRF_UDSC)
 
 #if defined(CFG_VOICEPATH)
-#define BLE_VOICEPATH            1
+#define BLE_VOICEPATH           1
 #else
-#define BLE_VOICEPATH            0
-#endif    // defined(CFG_VOICEPATH)
+#define BLE_VOICEPATH           0
+#endif  // defined(CFG_VOICEPATH)
 
 #if defined(CFG_TILE)
 #define BLE_TILE            1
 #else
 #define BLE_TILE            0
-#endif    //
+#endif  //
 
 #if defined(CFG_AI_VOICE)
 #define BLE_AI_VOICE            1
@@ -400,16 +400,16 @@
 #endif // defined(CFG_PRF_DATAPATH_SERVER)
 
 #if defined(CFG_OTA)
-#define BLE_OTA            1
+#define BLE_OTA         1
 #else
-#define BLE_OTA            0
-#endif    // defined(CFG_OTA)
+#define BLE_OTA         0
+#endif  // defined(CFG_OTA)
 
 #if defined(CFG_TOTA)
 #define BLE_TOTA            1
 #else
 #define BLE_TOTA            0
-#endif    // defined(CFG_TOTA)
+#endif  // defined(CFG_TOTA)
 
 #if defined(BMS_ENABLED)
 #define BLE_BMS     1
@@ -419,16 +419,16 @@
 
 /// ANCS Profile Client Role
 #if defined(ANCC_ENABLED)
-#define BLE_ANC_CLIENT          1
+#define BLE_ANC_CLIENT           1
 #else
-#define BLE_ANC_CLIENT          0
+#define BLE_ANC_CLIENT           0
 #endif // defined(ANCC_ENABLED)
 
 /// AMS Profile Client Role
 #if defined(AMSC_ENABLED)
-#define BLE_AMS_CLIENT          1
+#define BLE_AMS_CLIENT           1
 #else
-#define BLE_AMS_CLIENT          0
+#define BLE_AMS_CLIENT           0
 #endif // defined(AMSC_ENABLED)
 #if defined(CFG_PRF_GFPS_PROVIDER)
 #define BLE_GFPS_PROVIDER       1
@@ -559,9 +559,9 @@
 /// Weight Scale Profile Client Role
 #define BLE_WSC_CLIENT              0
 /// Body Composition Profile Client Role
-#define BLE_BCS_CLIENT              0
+#define BLE_BCS_CLIENT          0
 /// Body Composition Profile Server Role
-#define BLE_BCS_SERVER              0
+#define BLE_BCS_SERVER          0
 /// User Data Service Server Role
 #define BLE_UDS_SERVER              0
 /// User Data Service Client Role

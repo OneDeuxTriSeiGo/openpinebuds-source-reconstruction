@@ -36,7 +36,7 @@ typedef enum
 #define PROMOT_ID_BIT_MASK_CHNLSEl_RCHNL        (1 << 13)
 #define PROMOT_ID_BIT_MASK_CHNLSEl_ALL          (PROMOT_ID_BIT_MASK_CHNLSEl_LCHNL|PROMOT_ID_BIT_MASK_CHNLSEl_RCHNL)
 
-#define IS_PROMPT_NEED_MERGING(promptId)          ((promptId)&PROMOT_ID_BIT_MASK_MERGING ? true : false)
+#define IS_PROMPT_NEED_MERGING(promptId)           ((promptId)&PROMOT_ID_BIT_MASK_MERGING ? true : false)
 #define PROMPT_ID_FROM_ID_VALUE(promptIdVal)      ((promptIdVal)&(~PROMOT_ID_BIT_MASK))
 #define PROMPT_CHNLSEl_FROM_ID_VALUE(promptIdVal) ((promptIdVal)&PROMOT_ID_BIT_MASK_CHNLSEl_ALL)
 #define PROMPT_PRAM_FROM_ID_VALUE(promptIdVal)    ((promptIdVal)&PROMOT_ID_BIT_MASK)

@@ -224,11 +224,11 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
         return ret;
     }
 
-    if (chip_wake_lock_map) {
-        mode = HAL_CMU_LPU_SLEEP_MODE_SYS;
-    } else {
-        mode = HAL_CMU_LPU_SLEEP_MODE_CHIP;
-    }
+        if (chip_wake_lock_map) {
+            mode = HAL_CMU_LPU_SLEEP_MODE_SYS;
+        } else {
+            mode = HAL_CMU_LPU_SLEEP_MODE_CHIP;
+        }
 
     // Stop modules (except for psram and flash, spi)
     hal_gpadc_sleep();
@@ -244,19 +244,19 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
 
 
     if (!hal_sleep_irq_pending()) {
-        if (stats_started) {
-            prev_time = hal_sys_timer_get();
-        }
+    if (stats_started) {
+        prev_time = hal_sys_timer_get();
+    }
         hal_cmu_lpu_sleep(mode);
-        if (stats_started) {
-            cur_time = hal_sys_timer_get();
-            interval = cur_time - prev_time;
-            if (chip_wake_lock_map) {
-                sys_deep_sleep_time += interval;
-            } else {
-                chip_deep_sleep_time += interval;
-            }
+    if (stats_started) {
+        cur_time = hal_sys_timer_get();
+        interval = cur_time - prev_time;
+        if (chip_wake_lock_map) {
+            sys_deep_sleep_time += interval;
+        } else {
+            chip_deep_sleep_time += interval;
         }
+    }
         ret = HAL_SLEEP_STATUS_DEEP;
     }
 

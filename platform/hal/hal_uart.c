@@ -399,18 +399,18 @@ int hal_uart_close(enum HAL_UART_ID_T id)
         NVIC_DisableIRQ(uart[id].irq);
     }
 
-        lock = int_lock();
-        if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
-            hal_gpdma_cancel(recv_dma_chan[id]);
-            hal_gpdma_free_chan(recv_dma_chan[id]);
-            recv_dma_chan[id] = HAL_DMA_CHAN_NONE;
-        }
-        if (send_dma_chan[id] != HAL_DMA_CHAN_NONE) {
-            hal_gpdma_cancel(send_dma_chan[id]);
-            hal_gpdma_free_chan(send_dma_chan[id]);
-            send_dma_chan[id] = HAL_DMA_CHAN_NONE;
-        }
-        int_unlock(lock);
+    lock = int_lock();
+    if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
+        hal_gpdma_cancel(recv_dma_chan[id]);
+        hal_gpdma_free_chan(recv_dma_chan[id]);
+        recv_dma_chan[id] = HAL_DMA_CHAN_NONE;
+    }
+    if (send_dma_chan[id] != HAL_DMA_CHAN_NONE) {
+        hal_gpdma_cancel(send_dma_chan[id]);
+        hal_gpdma_free_chan(send_dma_chan[id]);
+        send_dma_chan[id] = HAL_DMA_CHAN_NONE;
+    }
+    int_unlock(lock);
 
     // Disable UART
     uart[id].base->UARTCR &= ~UARTCR_UARTEN;
@@ -642,18 +642,18 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
 
     if (status.RT || status.FE || status.OE || status.PE || status.BE) {
 
-        if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
-            if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
-            if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
-                xfer = hal_uart_stop_dma_recv(id);
-                if (recv_dma_size[id] > xfer) {
-                    xfer = recv_dma_size[id] - xfer;
-                } else {
-                    xfer = 0;
+            if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
+                if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
+        if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
+                    xfer = hal_uart_stop_dma_recv(id);
+                    if (recv_dma_size[id] > xfer) {
+                        xfer = recv_dma_size[id] - xfer;
+                    } else {
+                        xfer = 0;
+                    }
                 }
-            }
-            }
         }
+            }
         if (rxdma_handler[id]) {
             rxdma_handler[id](xfer, 0, status);
         }
@@ -918,7 +918,7 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     }
 
     periph = uart[id].rx_periph;
-            src_bsize = HAL_DMA_BSIZE_8;
+    src_bsize = HAL_DMA_BSIZE_8;
 
 
     memset(&dma_cfg, 0, sizeof(dma_cfg));
@@ -1332,7 +1332,7 @@ int hal_uart_printf_init(void)
         hal_iomux_set_uart1();
     }
 
-     return hal_uart_open(UART_PRINTF_ID, &uart_cfg);
+    return hal_uart_open(UART_PRINTF_ID, &uart_cfg);
 }
 
 void hal_uart_printf_output(const uint8_t *buf, uint32_t len)

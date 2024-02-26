@@ -23,15 +23,15 @@ extern "C" {
 
 typedef struct
 {
-    uint8_t     isHasCrcCheck   :   1;
-    uint8_t     reserved        :   7;
+    uint8_t     isHasCrcCheck     :  1;
+    uint8_t     reserved          :  7;
     uint8_t     reservedBytes[7];
 } APP_TOTA_START_DATA_XFER_T;
 
 typedef struct
 {
     uint8_t     isHasWholeCrcCheck  :   1;
-    uint8_t     reserved        :   7;
+    uint8_t     reserved            :   7;
     uint8_t     reservedBytes1[3];
     uint32_t    wholeDataLenToCheck;
     uint32_t    crc32OfWholeData;

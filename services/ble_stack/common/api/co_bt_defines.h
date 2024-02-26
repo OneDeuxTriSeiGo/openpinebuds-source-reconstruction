@@ -56,8 +56,8 @@
 #define ADV_DATA_LEN        0x1F
 #define EXT_ADV_DATA_MAX_LEN    229 // HCI:7.7.65.13
 #define PER_ADV_DATA_MAX_LEN    247 // 248 // HCI:7.7.65.16
-#define SCAN_RSP_DATA_LEN   0x1F
-#define SCAN_RSP_DATA_LEN   0x1F
+#define SCAN_RSP_DATA_LEN               0x1F
+#define SCAN_RSP_DATA_LEN               0x1F
 #define BLE_ADV_FLAG_PART_LEN           0x03
 #define BLE_ADV_DATA_WITHOUT_FLAG_LEN   (ADV_DATA_LEN)
 #define BLE_ADV_DATA_WITH_FLAG_LEN      (ADV_DATA_LEN - BLE_ADV_FLAG_PART_LEN)
@@ -1511,13 +1511,13 @@ enum le_evt_mask
 
 /// HCI 7.8.33 LE Set Data Length Command
 /// Preferred minimum number of payload octets
-#define LE_MIN_OCTETS       (27)
-/// Preferred minimum number of microseconds
-#define LE_MIN_TIME         (328)
+#define LE_MIN_OCTETS    (27)
+/// Preferred minimum  number of microseconds
+#define LE_MIN_TIME     (328)
 /// Preferred maximum number of payload octets
-#define LE_MAX_OCTETS       (251)
+#define LE_MAX_OCTETS   (251)
 /// Preferred maximum number of microseconds
-#define LE_MAX_TIME         (2120)
+#define LE_MAX_TIME    (2120)
 
 /// LE LL 2.1.2 Access Address
 #define LE_ADV_CH_ACC_ADDR_H        0x8E89
@@ -2052,7 +2052,7 @@ enum
 /// Size of Aux Pointer info in extended header
 #define BLE_EXT_AUX_PTR_LEN                  (3)
 /// Size of Sync PTR info in extended header
-#define BLE_EXT_SYNC_LEN                     (18)
+#define BLE_EXT_SYNC_LEN                    (18)
 /// Size of TX Power info in extended header
 #define BLE_EXT_TX_PWR_LEN                   (1)
 

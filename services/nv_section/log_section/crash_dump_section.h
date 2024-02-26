@@ -74,7 +74,7 @@ void crashdump_init_section_info(void);
 #include "hal_trace.h"
 
 #define CRASH_DUMP_PREFIX     "__CRASH_DUMP:"
-#define CRASH_DUMP_TRACE(fmt, ...)   TRACE(fmt, ##__VA_ARGS__)
+#define CRASH_DUMP_TRACE(fmt, ...)       TRACE(fmt, ##__VA_ARGS__)
 #define CRASH_LOG_ALIGN(x,a)  (uint32_t)(((x + a - 1)/a) * a)
 
 

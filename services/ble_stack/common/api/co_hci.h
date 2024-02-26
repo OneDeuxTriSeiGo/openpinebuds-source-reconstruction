@@ -375,150 +375,150 @@ enum hci_opcode
     HCI_WR_EXT_INQ_LEN_CMD_OPCODE             = 0x0C81,
 
     //Info Params
-    HCI_RD_LOCAL_VER_INFO_CMD_OPCODE               = 0x1001,
-    HCI_RD_LOCAL_SUPP_CMDS_CMD_OPCODE              = 0x1002,
-    HCI_RD_LOCAL_SUPP_FEATS_CMD_OPCODE             = 0x1003,
-    HCI_RD_LOCAL_EXT_FEATS_CMD_OPCODE              = 0x1004,
-    HCI_RD_BUF_SIZE_CMD_OPCODE                     = 0x1005,
-    HCI_RD_BD_ADDR_CMD_OPCODE                      = 0x1009,
-    HCI_RD_LOCAL_SUPP_CODECS_CMD_OPCODE            = 0x100B,
+    HCI_RD_LOCAL_VER_INFO_CMD_OPCODE          = 0x1001,
+    HCI_RD_LOCAL_SUPP_CMDS_CMD_OPCODE         = 0x1002,
+    HCI_RD_LOCAL_SUPP_FEATS_CMD_OPCODE        = 0x1003,
+    HCI_RD_LOCAL_EXT_FEATS_CMD_OPCODE         = 0x1004,
+    HCI_RD_BUF_SIZE_CMD_OPCODE                = 0x1005,
+    HCI_RD_BD_ADDR_CMD_OPCODE                 = 0x1009,
+    HCI_RD_LOCAL_SUPP_CODECS_CMD_OPCODE       = 0x100B,
 
     //Status Params
-    HCI_RD_FAIL_CONTACT_CNT_CMD_OPCODE             = 0x1401,
-    HCI_RST_FAIL_CONTACT_CNT_CMD_OPCODE            = 0x1402,
-    HCI_RD_LINK_QUAL_CMD_OPCODE                    = 0x1403,
-    HCI_RD_RSSI_CMD_OPCODE                         = 0x1405,
-    HCI_RD_AFH_CH_MAP_CMD_OPCODE                   = 0x1406,
-    HCI_RD_CLK_CMD_OPCODE                          = 0x1407,
-    HCI_RD_ENC_KEY_SIZE_CMD_OPCODE                 = 0x1408,
-    HCI_GET_MWS_TRANSPORT_LAYER_CONFIG_CMD_OPCODE  = 0x140C,
+    HCI_RD_FAIL_CONTACT_CNT_CMD_OPCODE        = 0x1401,
+    HCI_RST_FAIL_CONTACT_CNT_CMD_OPCODE       = 0x1402,
+    HCI_RD_LINK_QUAL_CMD_OPCODE               = 0x1403,
+    HCI_RD_RSSI_CMD_OPCODE                    = 0x1405,
+    HCI_RD_AFH_CH_MAP_CMD_OPCODE              = 0x1406,
+    HCI_RD_CLK_CMD_OPCODE                     = 0x1407,
+    HCI_RD_ENC_KEY_SIZE_CMD_OPCODE            = 0x1408,
+    HCI_GET_MWS_TRANSPORT_LAYER_CONFIG_CMD_OPCODE = 0x140C,
 
     //Testing Commands
-    HCI_RD_LOOPBACK_MODE_CMD_OPCODE                = 0x1801,
-    HCI_WR_LOOPBACK_MODE_CMD_OPCODE                = 0x1802,
-    HCI_EN_DUT_MODE_CMD_OPCODE                     = 0x1803,
-    HCI_WR_SP_DBG_MODE_CMD_OPCODE                  = 0x1804,
+    HCI_RD_LOOPBACK_MODE_CMD_OPCODE           = 0x1801,
+    HCI_WR_LOOPBACK_MODE_CMD_OPCODE           = 0x1802,
+    HCI_EN_DUT_MODE_CMD_OPCODE                = 0x1803,
+    HCI_WR_SP_DBG_MODE_CMD_OPCODE             = 0x1804,
 
     /// LE Commands Opcodes
-    HCI_LE_SET_EVT_MASK_CMD_OPCODE                      = 0x2001,
-    HCI_LE_RD_BUF_SIZE_CMD_OPCODE                       = 0x2002,
-    HCI_LE_RD_LOCAL_SUPP_FEATS_CMD_OPCODE               = 0x2003,
-    HCI_LE_SET_RAND_ADDR_CMD_OPCODE                     = 0x2005,
-    HCI_LE_SET_ADV_PARAM_CMD_OPCODE                     = 0x2006,
-    HCI_LE_RD_ADV_CHNL_TX_PW_CMD_OPCODE                 = 0x2007,
-    HCI_LE_SET_ADV_DATA_CMD_OPCODE                      = 0x2008,
-    HCI_LE_SET_SCAN_RSP_DATA_CMD_OPCODE                 = 0x2009,
-    HCI_LE_SET_ADV_EN_CMD_OPCODE                        = 0x200A,
-    HCI_LE_SET_SCAN_PARAM_CMD_OPCODE                    = 0x200B,
-    HCI_LE_SET_SCAN_EN_CMD_OPCODE                       = 0x200C,
-    HCI_LE_CREATE_CON_CMD_OPCODE                        = 0x200D,
-    HCI_LE_CREATE_CON_CANCEL_CMD_OPCODE                 = 0x200E,
-    HCI_LE_RD_WLST_SIZE_CMD_OPCODE                      = 0x200F,
-    HCI_LE_CLEAR_WLST_CMD_OPCODE                        = 0x2010,
-    HCI_LE_ADD_DEV_TO_WLST_CMD_OPCODE                   = 0x2011,
-    HCI_LE_RMV_DEV_FROM_WLST_CMD_OPCODE                 = 0x2012,
-    HCI_LE_CON_UPDATE_CMD_OPCODE                        = 0x2013,
-    HCI_LE_SET_HOST_CH_CLASS_CMD_OPCODE                 = 0x2014,
-    HCI_LE_RD_CHNL_MAP_CMD_OPCODE                       = 0x2015,
-    HCI_LE_RD_REM_FEATS_CMD_OPCODE                      = 0x2016,
-    HCI_LE_ENC_CMD_OPCODE                               = 0x2017,
-    HCI_LE_RAND_CMD_OPCODE                              = 0x2018,
-    HCI_LE_EN_ENC_CMD_OPCODE                            = 0x2019,
-    HCI_LE_LTK_REQ_REPLY_CMD_OPCODE                     = 0x201A,
-    HCI_LE_LTK_REQ_NEG_REPLY_CMD_OPCODE                 = 0x201B,
-    HCI_LE_RD_SUPP_STATES_CMD_OPCODE                    = 0x201C,
-    HCI_LE_RX_TEST_V1_CMD_OPCODE                        = 0x201D,
-    HCI_LE_TX_TEST_V1_CMD_OPCODE                        = 0x201E,
-    HCI_LE_TEST_END_CMD_OPCODE                          = 0x201F,
-    HCI_LE_REM_CON_PARAM_REQ_REPLY_CMD_OPCODE           = 0x2020,
-    HCI_LE_REM_CON_PARAM_REQ_NEG_REPLY_CMD_OPCODE       = 0x2021,
-    HCI_LE_SET_DATA_LEN_CMD_OPCODE                      = 0x2022,
-    HCI_LE_RD_SUGGTED_DFT_DATA_LEN_CMD_OPCODE           = 0x2023,
-    HCI_LE_WR_SUGGTED_DFT_DATA_LEN_CMD_OPCODE           = 0x2024,
-    HCI_LE_RD_LOC_P256_PUB_KEY_CMD_OPCODE               = 0x2025,
-    HCI_LE_GEN_DHKEY_V1_CMD_OPCODE                      = 0x2026,
-    HCI_LE_ADD_DEV_TO_RSLV_LIST_CMD_OPCODE              = 0x2027,
-    HCI_LE_RMV_DEV_FROM_RSLV_LIST_CMD_OPCODE            = 0x2028,
-    HCI_LE_CLEAR_RSLV_LIST_CMD_OPCODE                   = 0x2029,
-    HCI_LE_RD_RSLV_LIST_SIZE_CMD_OPCODE                 = 0x202A,
-    HCI_LE_RD_PEER_RSLV_ADDR_CMD_OPCODE                 = 0x202B,
-    HCI_LE_RD_LOC_RSLV_ADDR_CMD_OPCODE                  = 0x202C,
-    HCI_LE_SET_ADDR_RESOL_EN_CMD_OPCODE                 = 0x202D,
-    HCI_LE_SET_RSLV_PRIV_ADDR_TO_CMD_OPCODE             = 0x202E,
-    HCI_LE_RD_MAX_DATA_LEN_CMD_OPCODE                   = 0x202F,
-    HCI_LE_RD_PHY_CMD_OPCODE                            = 0x2030,
-    HCI_LE_SET_DFT_PHY_CMD_OPCODE                       = 0x2031,
-    HCI_LE_SET_PHY_CMD_OPCODE                           = 0x2032,
-    HCI_LE_RX_TEST_V2_CMD_OPCODE                        = 0x2033,
-    HCI_LE_TX_TEST_V2_CMD_OPCODE                        = 0x2034,
-    HCI_LE_SET_ADV_SET_RAND_ADDR_CMD_OPCODE             = 0x2035,
-    HCI_LE_SET_EXT_ADV_PARAM_CMD_OPCODE                 = 0x2036,
-    HCI_LE_SET_EXT_ADV_DATA_CMD_OPCODE                  = 0x2037,
-    HCI_LE_SET_EXT_SCAN_RSP_DATA_CMD_OPCODE             = 0x2038,
-    HCI_LE_SET_EXT_ADV_EN_CMD_OPCODE                    = 0x2039,
-    HCI_LE_RD_MAX_ADV_DATA_LEN_CMD_OPCODE               = 0x203A,
-    HCI_LE_RD_NB_SUPP_ADV_SETS_CMD_OPCODE               = 0x203B,
-    HCI_LE_RMV_ADV_SET_CMD_OPCODE                       = 0x203C,
-    HCI_LE_CLEAR_ADV_SETS_CMD_OPCODE                    = 0x203D,
-    HCI_LE_SET_PER_ADV_PARAM_CMD_OPCODE                 = 0x203E,
-    HCI_LE_SET_PER_ADV_DATA_CMD_OPCODE                  = 0x203F,
-    HCI_LE_SET_PER_ADV_EN_CMD_OPCODE                    = 0x2040,
-    HCI_LE_SET_EXT_SCAN_PARAM_CMD_OPCODE                = 0x2041,
-    HCI_LE_SET_EXT_SCAN_EN_CMD_OPCODE                   = 0x2042,
-    HCI_LE_EXT_CREATE_CON_CMD_OPCODE                    = 0x2043,
-    HCI_LE_PER_ADV_CREATE_SYNC_CMD_OPCODE               = 0x2044,
-    HCI_LE_PER_ADV_CREATE_SYNC_CANCEL_CMD_OPCODE        = 0x2045,
-    HCI_LE_PER_ADV_TERM_SYNC_CMD_OPCODE                 = 0x2046,
-    HCI_LE_ADD_DEV_TO_PER_ADV_LIST_CMD_OPCODE           = 0x2047,
-    HCI_LE_RMV_DEV_FROM_PER_ADV_LIST_CMD_OPCODE         = 0x2048,
-    HCI_LE_CLEAR_PER_ADV_LIST_CMD_OPCODE                = 0x2049,
-    HCI_LE_RD_PER_ADV_LIST_SIZE_CMD_OPCODE              = 0x204A,
-    HCI_LE_RD_TX_PWR_CMD_OPCODE                         = 0x204B,
-    HCI_LE_RD_RF_PATH_COMP_CMD_OPCODE                   = 0x204C,
-    HCI_LE_WR_RF_PATH_COMP_CMD_OPCODE                   = 0x204D,
-    HCI_LE_SET_PRIV_MODE_CMD_OPCODE                     = 0x204E,
-    HCI_LE_RX_TEST_V3_CMD_OPCODE                        = 0x204F,
+    HCI_LE_SET_EVT_MASK_CMD_OPCODE                 = 0x2001,
+    HCI_LE_RD_BUF_SIZE_CMD_OPCODE                  = 0x2002,
+    HCI_LE_RD_LOCAL_SUPP_FEATS_CMD_OPCODE          = 0x2003,
+    HCI_LE_SET_RAND_ADDR_CMD_OPCODE                = 0x2005,
+    HCI_LE_SET_ADV_PARAM_CMD_OPCODE                = 0x2006,
+    HCI_LE_RD_ADV_CHNL_TX_PW_CMD_OPCODE            = 0x2007,
+    HCI_LE_SET_ADV_DATA_CMD_OPCODE                 = 0x2008,
+    HCI_LE_SET_SCAN_RSP_DATA_CMD_OPCODE            = 0x2009,
+    HCI_LE_SET_ADV_EN_CMD_OPCODE                   = 0x200A,
+    HCI_LE_SET_SCAN_PARAM_CMD_OPCODE               = 0x200B,
+    HCI_LE_SET_SCAN_EN_CMD_OPCODE                  = 0x200C,
+    HCI_LE_CREATE_CON_CMD_OPCODE                   = 0x200D,
+    HCI_LE_CREATE_CON_CANCEL_CMD_OPCODE            = 0x200E,
+    HCI_LE_RD_WLST_SIZE_CMD_OPCODE                 = 0x200F,
+    HCI_LE_CLEAR_WLST_CMD_OPCODE                   = 0x2010,
+    HCI_LE_ADD_DEV_TO_WLST_CMD_OPCODE              = 0x2011,
+    HCI_LE_RMV_DEV_FROM_WLST_CMD_OPCODE            = 0x2012,
+    HCI_LE_CON_UPDATE_CMD_OPCODE                   = 0x2013,
+    HCI_LE_SET_HOST_CH_CLASS_CMD_OPCODE            = 0x2014,
+    HCI_LE_RD_CHNL_MAP_CMD_OPCODE                  = 0x2015,
+    HCI_LE_RD_REM_FEATS_CMD_OPCODE                 = 0x2016,
+    HCI_LE_ENC_CMD_OPCODE                          = 0x2017,
+    HCI_LE_RAND_CMD_OPCODE                         = 0x2018,
+    HCI_LE_EN_ENC_CMD_OPCODE                       = 0x2019,
+    HCI_LE_LTK_REQ_REPLY_CMD_OPCODE                = 0x201A,
+    HCI_LE_LTK_REQ_NEG_REPLY_CMD_OPCODE            = 0x201B,
+    HCI_LE_RD_SUPP_STATES_CMD_OPCODE               = 0x201C,
+    HCI_LE_RX_TEST_V1_CMD_OPCODE                   = 0x201D,
+    HCI_LE_TX_TEST_V1_CMD_OPCODE                   = 0x201E,
+    HCI_LE_TEST_END_CMD_OPCODE                     = 0x201F,
+    HCI_LE_REM_CON_PARAM_REQ_REPLY_CMD_OPCODE      = 0x2020,
+    HCI_LE_REM_CON_PARAM_REQ_NEG_REPLY_CMD_OPCODE  = 0x2021,
+    HCI_LE_SET_DATA_LEN_CMD_OPCODE                 = 0x2022,
+    HCI_LE_RD_SUGGTED_DFT_DATA_LEN_CMD_OPCODE      = 0x2023,
+    HCI_LE_WR_SUGGTED_DFT_DATA_LEN_CMD_OPCODE      = 0x2024,
+    HCI_LE_RD_LOC_P256_PUB_KEY_CMD_OPCODE          = 0x2025,
+    HCI_LE_GEN_DHKEY_V1_CMD_OPCODE                 = 0x2026,
+    HCI_LE_ADD_DEV_TO_RSLV_LIST_CMD_OPCODE         = 0x2027,
+    HCI_LE_RMV_DEV_FROM_RSLV_LIST_CMD_OPCODE       = 0x2028,
+    HCI_LE_CLEAR_RSLV_LIST_CMD_OPCODE              = 0x2029,
+    HCI_LE_RD_RSLV_LIST_SIZE_CMD_OPCODE            = 0x202A,
+    HCI_LE_RD_PEER_RSLV_ADDR_CMD_OPCODE            = 0x202B,
+    HCI_LE_RD_LOC_RSLV_ADDR_CMD_OPCODE             = 0x202C,
+    HCI_LE_SET_ADDR_RESOL_EN_CMD_OPCODE            = 0x202D,
+    HCI_LE_SET_RSLV_PRIV_ADDR_TO_CMD_OPCODE        = 0x202E,
+    HCI_LE_RD_MAX_DATA_LEN_CMD_OPCODE              = 0x202F,
+    HCI_LE_RD_PHY_CMD_OPCODE                       = 0x2030,
+    HCI_LE_SET_DFT_PHY_CMD_OPCODE                  = 0x2031,
+    HCI_LE_SET_PHY_CMD_OPCODE                      = 0x2032,
+    HCI_LE_RX_TEST_V2_CMD_OPCODE                   = 0x2033,
+    HCI_LE_TX_TEST_V2_CMD_OPCODE                   = 0x2034,
+    HCI_LE_SET_ADV_SET_RAND_ADDR_CMD_OPCODE        = 0x2035,
+    HCI_LE_SET_EXT_ADV_PARAM_CMD_OPCODE            = 0x2036,
+    HCI_LE_SET_EXT_ADV_DATA_CMD_OPCODE             = 0x2037,
+    HCI_LE_SET_EXT_SCAN_RSP_DATA_CMD_OPCODE        = 0x2038,
+    HCI_LE_SET_EXT_ADV_EN_CMD_OPCODE               = 0x2039,
+    HCI_LE_RD_MAX_ADV_DATA_LEN_CMD_OPCODE          = 0x203A,
+    HCI_LE_RD_NB_SUPP_ADV_SETS_CMD_OPCODE          = 0x203B,
+    HCI_LE_RMV_ADV_SET_CMD_OPCODE                  = 0x203C,
+    HCI_LE_CLEAR_ADV_SETS_CMD_OPCODE               = 0x203D,
+    HCI_LE_SET_PER_ADV_PARAM_CMD_OPCODE            = 0x203E,
+    HCI_LE_SET_PER_ADV_DATA_CMD_OPCODE             = 0x203F,
+    HCI_LE_SET_PER_ADV_EN_CMD_OPCODE               = 0x2040,
+    HCI_LE_SET_EXT_SCAN_PARAM_CMD_OPCODE           = 0x2041,
+    HCI_LE_SET_EXT_SCAN_EN_CMD_OPCODE              = 0x2042,
+    HCI_LE_EXT_CREATE_CON_CMD_OPCODE               = 0x2043,
+    HCI_LE_PER_ADV_CREATE_SYNC_CMD_OPCODE          = 0x2044,
+    HCI_LE_PER_ADV_CREATE_SYNC_CANCEL_CMD_OPCODE   = 0x2045,
+    HCI_LE_PER_ADV_TERM_SYNC_CMD_OPCODE            = 0x2046,
+    HCI_LE_ADD_DEV_TO_PER_ADV_LIST_CMD_OPCODE      = 0x2047,
+    HCI_LE_RMV_DEV_FROM_PER_ADV_LIST_CMD_OPCODE    = 0x2048,
+    HCI_LE_CLEAR_PER_ADV_LIST_CMD_OPCODE           = 0x2049,
+    HCI_LE_RD_PER_ADV_LIST_SIZE_CMD_OPCODE         = 0x204A,
+    HCI_LE_RD_TX_PWR_CMD_OPCODE                    = 0x204B,
+    HCI_LE_RD_RF_PATH_COMP_CMD_OPCODE              = 0x204C,
+    HCI_LE_WR_RF_PATH_COMP_CMD_OPCODE              = 0x204D,
+    HCI_LE_SET_PRIV_MODE_CMD_OPCODE                = 0x204E,
+    HCI_LE_RX_TEST_V3_CMD_OPCODE                   = 0x204F,
 
     ///Debug commands - OGF = 0x3F (spec)
-    HCI_DBG_RD_MEM_CMD_OPCODE                      = 0xFC01,
-    HCI_DBG_WR_MEM_CMD_OPCODE                      = 0xFC02,
-    HCI_DBG_DEL_PAR_CMD_OPCODE                     = 0xFC03,
-    HCI_DBG_ID_FLASH_CMD_OPCODE                    = 0xFC05,
-    HCI_DBG_ER_FLASH_CMD_OPCODE                    = 0xFC06,
-    HCI_DBG_WR_FLASH_CMD_OPCODE                    = 0xFC07,
-    HCI_DBG_RD_FLASH_CMD_OPCODE                    = 0xFC08,
-    HCI_DBG_RD_PAR_CMD_OPCODE                      = 0xFC09,
-    HCI_DBG_WR_PAR_CMD_OPCODE                      = 0xFC0A,
-    HCI_DBG_WLAN_COEX_CMD_OPCODE                   = 0xFC0B,
-    HCI_DBG_WLAN_COEXTST_SCEN_CMD_OPCODE           = 0xFC0D,
-    HCI_DBG_BT_SEND_LMP_CMD_OPCODE                 = 0xFC0E,
-    HCI_DBG_RD_KE_STATS_CMD_OPCODE                 = 0xFC10,
-    HCI_DBG_PLF_RESET_CMD_OPCODE                   = 0xFC11,
-    HCI_DBG_RD_MEM_INFO_CMD_OPCODE                 = 0xFC12,
-    HCI_VS_SET_PREF_SLAVE_LATENCY_CMD_OPCODE       = 0xFC13,
-    HCI_VS_SET_PREF_SLAVE_EVT_DUR_CMD_OPCODE       = 0xFC14,
-    HCI_VS_SET_MAX_RX_SIZE_AND_TIME_CMD_OPCODE     = 0xFC15,
-    HCI_DBG_BLE_REG_RD_CMD_OPCODE                  = 0xFC30,
-    HCI_DBG_BLE_REG_WR_CMD_OPCODE                  = 0xFC31,
-    HCI_DBG_SEND_LLCP_CMD_OPCODE                   = 0xFC35,
-    HCI_DBG_LLCP_DISCARD_CMD_OPCODE                = 0xFC36,
-    HCI_DBG_RF_REG_RD_CMD_OPCODE                   = 0xFC39,
-    HCI_DBG_RF_REG_WR_CMD_OPCODE                   = 0xFC3A,
-    HCI_DBG_RF_SWITCH_CLK_CMD_OPCODE               = 0xFC3C,
-    HCI_DBG_RF_WR_DATA_TX_CMD_OPCODE               = 0xFC3D,
-    HCI_DBG_RF_RD_DATA_RX_CMD_OPCODE               = 0xFC3E,
-    HCI_DBG_RF_CNTL_TX_CMD_OPCODE                  = 0xFC3F,
-    HCI_DBG_RF_SYNC_P_CNTL_CMD_OPCODE              = 0xFC40,
+    HCI_DBG_RD_MEM_CMD_OPCODE                   = 0xFC01,
+    HCI_DBG_WR_MEM_CMD_OPCODE                   = 0xFC02,
+    HCI_DBG_DEL_PAR_CMD_OPCODE                  = 0xFC03,
+    HCI_DBG_ID_FLASH_CMD_OPCODE                 = 0xFC05,
+    HCI_DBG_ER_FLASH_CMD_OPCODE                 = 0xFC06,
+    HCI_DBG_WR_FLASH_CMD_OPCODE                 = 0xFC07,
+    HCI_DBG_RD_FLASH_CMD_OPCODE                 = 0xFC08,
+    HCI_DBG_RD_PAR_CMD_OPCODE                   = 0xFC09,
+    HCI_DBG_WR_PAR_CMD_OPCODE                   = 0xFC0A,
+    HCI_DBG_WLAN_COEX_CMD_OPCODE                = 0xFC0B,
+    HCI_DBG_WLAN_COEXTST_SCEN_CMD_OPCODE        = 0xFC0D,
+    HCI_DBG_BT_SEND_LMP_CMD_OPCODE              = 0xFC0E,
+    HCI_DBG_RD_KE_STATS_CMD_OPCODE              = 0xFC10,
+    HCI_DBG_PLF_RESET_CMD_OPCODE                = 0xFC11,
+    HCI_DBG_RD_MEM_INFO_CMD_OPCODE              = 0xFC12,
+    HCI_VS_SET_PREF_SLAVE_LATENCY_CMD_OPCODE    = 0xFC13,
+    HCI_VS_SET_PREF_SLAVE_EVT_DUR_CMD_OPCODE    = 0xFC14,
+    HCI_VS_SET_MAX_RX_SIZE_AND_TIME_CMD_OPCODE  = 0xFC15,
+    HCI_DBG_BLE_REG_RD_CMD_OPCODE               = 0xFC30,
+    HCI_DBG_BLE_REG_WR_CMD_OPCODE               = 0xFC31,
+    HCI_DBG_SEND_LLCP_CMD_OPCODE                = 0xFC35,
+    HCI_DBG_LLCP_DISCARD_CMD_OPCODE             = 0xFC36,
+    HCI_DBG_RF_REG_RD_CMD_OPCODE                = 0xFC39,
+    HCI_DBG_RF_REG_WR_CMD_OPCODE                = 0xFC3A,
+    HCI_DBG_RF_SWITCH_CLK_CMD_OPCODE            = 0xFC3C,
+    HCI_DBG_RF_WR_DATA_TX_CMD_OPCODE            = 0xFC3D,
+    HCI_DBG_RF_RD_DATA_RX_CMD_OPCODE            = 0xFC3E,
+    HCI_DBG_RF_CNTL_TX_CMD_OPCODE               = 0xFC3F,
+    HCI_DBG_RF_SYNC_P_CNTL_CMD_OPCODE           = 0xFC40,
 
     #if (RW_DEBUG && BT_EMB_PRESENT)
-    HCI_DBG_BT_DISCARD_LMP_EN_CMD_OPCODE           = 0xFC44,
+    HCI_DBG_BT_DISCARD_LMP_EN_CMD_OPCODE        = 0xFC44,
     #endif //RW_DEBUG && BT_EMB_PRESENT
 
-    HCI_DBG_MWS_COEX_CMD_OPCODE                    = 0xFC45,
-    HCI_DBG_MWS_COEXTST_SCEN_CMD_OPCODE            = 0xFC46,
+    HCI_DBG_MWS_COEX_CMD_OPCODE                 = 0xFC45,
+    HCI_DBG_MWS_COEXTST_SCEN_CMD_OPCODE         = 0xFC46,
 
     #if CRYPTO_UT
-    HCI_DBG_TEST_CRYPTO_FUNC_CMD_OPCODE            = 0xFC60,
+    HCI_DBG_TEST_CRYPTO_FUNC_CMD_OPCODE         = 0xFC60,
     #endif //CRYPTO_UT
 };
 
@@ -1369,8 +1369,8 @@ struct hci_rd_dft_link_pol_stg_cmd_cmp_evt
 
 struct hci_wr_dft_link_pol_stg_cmd
 {
-    ///Link policy
-    uint16_t    link_pol_stg;
+        ///Link policy
+        uint16_t    link_pol_stg;
 };
 
 /*
@@ -1514,11 +1514,11 @@ struct hci_rd_stored_lk_cmd_cmp_evt
 #if BT_EMB_PRESENT
 struct hci_wr_stored_lk_cmd
 {
-    /// Number of key to write
-    uint8_t num_key_wr;
+        /// Number of key to write
+        uint8_t num_key_wr;
 
-    /// BD Address + Key table
-    struct bd_addr_plus_key link_keys[HCI_MAX_CMD_PARAM_SIZE / sizeof(struct bd_addr_plus_key)];
+        /// BD Address + Key table
+        struct bd_addr_plus_key link_keys[HCI_MAX_CMD_PARAM_SIZE / sizeof(struct bd_addr_plus_key)];
 };
 #endif //BT_EMB_PRESENT
 
@@ -1533,10 +1533,10 @@ struct hci_wr_stored_lk_cmd_cmp_evt
 
 struct hci_del_stored_lk_cmd
 {
-    ///BdAddr
-    struct bd_addr  bd_addr;
-    ///Delete all flag
-    uint8_t del_all_flag;
+        ///BdAddr
+        struct bd_addr  bd_addr;
+        ///Delete all flag
+        uint8_t del_all_flag;
 };
 
 /// HCI command complete event structure for delete stored link key command
@@ -1550,8 +1550,8 @@ struct hci_del_stored_lk_cmd_cmp_evt
 
 struct hci_wr_local_name_cmd
 {
-    ///Name
-    struct device_name  name;
+        ///Name
+        struct device_name  name;
 };
 
 /// HCI command complete event structure for the read local name command
@@ -1604,8 +1604,8 @@ struct hci_rd_scan_en_cmd_cmp_evt
 
 struct hci_wr_scan_en_cmd
 {
-    ///Status of the scan enable
-    uint8_t scan_en;
+        ///Status of the scan enable
+        uint8_t scan_en;
 };
 
 /// HCI command complete event structure for the Read scan activity command
@@ -1657,8 +1657,8 @@ struct hci_rd_auth_en_cmd_cmp_evt
 
 struct hci_wr_auth_en_cmd
 {
-    ///Value of the authentication
-    uint8_t auth_en;
+        ///Value of the authentication
+        uint8_t auth_en;
 };
 
 /// HCI command complete event structure for the read class of device command
@@ -1672,8 +1672,8 @@ struct hci_rd_class_of_dev_cmd_cmp_evt
 
 struct hci_wr_class_of_dev_cmd
 {
-    ///Class of device
-    struct devclass class_of_dev;
+        ///Class of device
+        struct devclass class_of_dev;
 };
 
 /// HCI read voice settings complete event
@@ -1702,8 +1702,8 @@ struct hci_rd_nb_bdcst_retx_cmd_cmp_evt
 
 struct hci_wr_nb_bdcst_retx_cmd
 {
-    ///Read number of broadcast retransmission
-    uint8_t num_bcst_ret;
+        ///Read number of broadcast retransmission
+        uint8_t num_bcst_ret;
 };
 
 /// HCI command complete event structure for the Read Synchronous Flow Control command
@@ -1745,12 +1745,12 @@ struct hci_host_buf_size_cmd
 ///HCI host number of completed packets command
 struct hci_host_nb_cmp_pkts_cmd
 {
-    ///Number of handles for which the completed packets number is given
-    uint8_t     nb_of_hdl;
-    ///Array of connection handles
-    uint16_t    con_hdl[MAX_NB_ACTIVE_ACL];
-    ///Array of number of completed packets values for connection handles.
-    uint16_t    nb_comp_pkt[MAX_NB_ACTIVE_ACL];
+        ///Number of handles for which the completed packets number is given
+        uint8_t     nb_of_hdl;
+        ///Array of connection handles
+        uint16_t    con_hdl[MAX_NB_ACTIVE_ACL];
+        ///Array of number of completed packets values for connection handles.
+        uint16_t    nb_comp_pkt[MAX_NB_ACTIVE_ACL];
 };
 #elif BLE_EMB_PRESENT || BLE_HOST_PRESENT
 ///HCI host number of completed packets command
@@ -2745,20 +2745,20 @@ struct hci_le_set_host_ch_class_cmd
 struct hci_le_rx_test_v1_cmd
 {
     /// RX channel, range: 0x00 to 0x27
-    uint8_t     rx_channel;
+    uint8_t        rx_channel;
 };
 
 ///HCI LE Transmitter Test v1 Command parameters structure
 struct hci_le_tx_test_v1_cmd
 {
     /// TX channel, range: 0x00 to 0x27
-    uint8_t     tx_channel;
+    uint8_t        tx_channel;
     /// Length of test data in bytes, range: 0x00 to 0xFF
-    uint8_t     test_data_len;
+    uint8_t        test_data_len;
     /**
      * Packet payload
      */
-    uint8_t     pkt_payl;
+    uint8_t        pkt_payl;
 };
 
 ///HCI LE Encrypt Command parameters structure
@@ -4447,26 +4447,26 @@ struct hci_le_set_ext_adv_param_cmd_cmp_evt
 struct hci_le_rx_test_v2_cmd
 {
     /// RX channel, range: 0x00 to 0x27
-    uint8_t     rx_channel;
+    uint8_t            rx_channel;
     /// PHY (@enum le_phy_value)
-    uint8_t     phy;
+    uint8_t            phy;
     /// Modulation index (0: standard | 1: stable)
-    uint8_t     mod_idx;
+    uint8_t            mod_idx;
 };
 
 /// HCI LE Transmitter Test v2 Command
 struct hci_le_tx_test_v2_cmd
 {
     /// TX channel, range: 0x00 to 0x27
-    uint8_t     tx_channel;
+    uint8_t            tx_channel;
     /// Length of test data in bytes, range: 0x00 to 0xFF
-    uint8_t     test_data_len;
+    uint8_t            test_data_len;
     /**
      * Packet payload
      */
-    uint8_t     pkt_payl;
+    uint8_t            pkt_payl;
     /// PHY (@enum le_phy_value)
-    uint8_t     phy;
+    uint8_t            phy;
 };
 
 ///HCI LE Set Advertising Set Random Address Command parameters structure

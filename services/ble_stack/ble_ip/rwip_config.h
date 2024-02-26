@@ -173,7 +173,7 @@
 
 
 /// Max advertising reports before sending the info to the host
-#define BLE_ADV_REPORTS_MAX              (1)
+#define BLE_ADV_REPORTS_MAX             (1)
 
 #endif //defined(CFG_BLE)
 
@@ -383,12 +383,12 @@
 
 
 
-#define SV_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS        80
-#define SV_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS        400
-#define SV_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS    20000
+#define SV_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS     80
+#define SV_HIGH_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS     400
+#define SV_HIGH_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS   20000
 
-#define SV_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS            400
-#define SV_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS            1000
+#define SV_LOW_SPEED_BLE_CONNECTION_INTERVAL_MIN_IN_MS          400
+#define SV_LOW_SPEED_BLE_CONNECTION_INTERVAL_MAX_IN_MS          1000
 #define SV_LOW_SPEED_BLE_CONNECTION_SUPERVISOR_TIMEOUT_IN_MS    20000
 
 
@@ -399,15 +399,15 @@
 /// Event types definition
 enum KE_EVENT_TYPE
 {
-    KE_EVENT_KE_TIMER,
+    KE_EVENT_KE_TIMER        ,
     #if (TRACER_PRESENT)
-    KE_EVENT_TRC,
+    KE_EVENT_TRC             ,
     #endif /*(TRACER_PRESENT)*/
 
-    KE_EVENT_KE_MESSAGE,
+    KE_EVENT_KE_MESSAGE      ,
 
 
-    KE_EVENT_MAX,
+    KE_EVENT_MAX             ,
 };
 
 /// Tasks types definition
@@ -428,9 +428,9 @@ enum KE_TASK_TYPE
 
 #endif // (BLE_HOST_PRESENT)
 
-    #if (AHI_TL_SUPPORT)
+#if (AHI_TL_SUPPORT)
     TASK_AHI,
-    #endif // (AHI_TL_SUPPORT)
+#endif // (AHI_TL_SUPPORT)
 
     /// Maximum number of tasks
     TASK_MAX,
@@ -490,18 +490,18 @@ enum KE_MEM_HEAP
 
 /// Kernel Message Heap
 #define RWIP_HEAP_MSG_SIZE         (  BT_HEAP_MSG_SIZE_      + \
-                                      BLE_HEAP_MSG_SIZE_     + \
-                                      BLEHL_HEAP_MSG_SIZE_      )
+                                    BLE_HEAP_MSG_SIZE_     + \
+                                    BLEHL_HEAP_MSG_SIZE_      )
 
 
 /// Size of Environment heap
-#define RWIP_HEAP_ENV_SIZE         ( BT_HEAP_ENV_SIZE_       + \
+#define RWIP_HEAP_ENV_SIZE         ( BT_HEAP_ENV_SIZE_         + \
                                      BLE_HEAP_ENV_SIZE_      + \
-                                     BLEHL_HEAP_ENV_SIZE_       )
+                                     BLEHL_HEAP_ENV_SIZE_ )
 
 
 /// Size of Attribute database heap
-#define RWIP_HEAP_DB_SIZE          (  BLEHL_HEAP_DB_SIZE_  )
+#define RWIP_HEAP_DB_SIZE         (  BLEHL_HEAP_DB_SIZE_  )
 
 /**
  * Size of non-retention heap
@@ -698,8 +698,8 @@ enum PARAM_LEN
 enum rwip_coex_config_idx
 {
     #if (BT_EMB_PRESENT)
-    RWIP_COEX_MSSWITCH_IDX,
-    RWIP_COEX_SNIFFATT_IDX,
+    RWIP_COEX_MSSWITCH_IDX ,
+    RWIP_COEX_SNIFFATT_IDX ,
     RWIP_COEX_PAGE_IDX,
     RWIP_COEX_PSCAN_IDX,
     RWIP_COEX_INQ_IDX,

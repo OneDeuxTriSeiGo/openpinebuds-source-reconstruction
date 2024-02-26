@@ -54,7 +54,7 @@ archive-bin-y   := $(filter-out $(archive-src-y), $(archive-y))
 endif
 
 # If the source files of the archive (including archive-custom-valid) exist, build the source files directly
-obj-y                   := $(filter-out $(archive-src-y) $(archive-custom-valid), $(obj-y)) $(foreach m, $(archive-src-y) $(archive-custom-valid), $($(m:.a=-y)))
+obj-y           := $(filter-out $(archive-src-y) $(archive-custom-valid), $(obj-y)) $(foreach m, $(archive-src-y) $(archive-custom-valid), $($(m:.a=-y)))
 endif # archive-y
 
 # Handle composite objects
@@ -220,7 +220,7 @@ endef
 
 quiet_cmd_ld = LD      $@
 cmd_ld = $(LD) $(LDFLAGS) $(ldflags-y) $(LDFLAGS_$(@F)) \
-               $(filter-out FORCE,$^) -o $@
+                $(filter-out FORCE,$^) -o $@
 
 # Objcopy
 # ---------------------------------------------------------------------------

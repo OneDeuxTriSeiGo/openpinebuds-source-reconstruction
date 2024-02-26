@@ -585,9 +585,9 @@ struct gap_ral_dev_info
     /// Privacy Mode
     uint8_t      priv_mode;
     /// Peer IRK
-    uint8_t      peer_irk[GAP_KEY_LEN];
+    uint8_t peer_irk[GAP_KEY_LEN];
     /// Local IRK
-    uint8_t      local_irk[GAP_KEY_LEN];
+    uint8_t local_irk[GAP_KEY_LEN];
 };
 
 /// Generic Security key structure

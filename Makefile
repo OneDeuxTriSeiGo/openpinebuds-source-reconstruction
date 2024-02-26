@@ -374,9 +374,9 @@ C++             = $(CC)
 LD              = $(CC)
 AR              = armar
 NM              = fromelf
-STRIP   = fromelf
-OBJCOPY = fromelf
-OBJDUMP = fromelf
+STRIP           = fromelf
+OBJCOPY         = fromelf
+OBJDUMP         = fromelf
 else
 AS              = $(CROSS_COMPILE)as
 CC              = $(CROSS_COMPILE)gcc
@@ -386,14 +386,14 @@ LD              = $(CC)
 #LD             = $(CROSS_COMPILE)ld
 AR              = $(CROSS_COMPILE)ar
 NM              = $(CROSS_COMPILE)nm
-STRIP   = $(CROSS_COMPILE)strip
-OBJCOPY = $(CROSS_COMPILE)objcopy
-OBJDUMP = $(CROSS_COMPILE)objdump
+STRIP           = $(CROSS_COMPILE)strip
+OBJCOPY         = $(CROSS_COMPILE)objcopy
+OBJDUMP         = $(CROSS_COMPILE)objdump
 endif
 
 AWK             = awk
-PERL    = perl
-PYTHON  = python
+PERL            = perl
+PYTHON          = python
 
 KBUILD_CPPFLAGS :=
 
@@ -464,7 +464,7 @@ LINK_CFLAGS     :=
 export LINK_CFLAGS
 
 # Link flags for image only
-LIB_LDFLAGS             :=
+LIB_LDFLAGS     :=
 CFLAGS_IMAGE    := -static
 ifeq ($(TOOLCHAIN),armclang)
 LDFLAGS_IMAGE   := --no_locals
@@ -948,8 +948,8 @@ ifeq ($(KBUILD_OUTPUT),)
 allclean: clean ;
 else
 ifeq ($(SUBMODS),)
-quiet_cmd_clean  = RMDIR   $(KBUILD_OUTPUT)
-      cmd_clean  = $(call CMDRMDIR,$(KBUILD_OUTPUT))
+quiet_cmd_clean = RMDIR   $(KBUILD_OUTPUT)
+      cmd_clean = $(call CMDRMDIR,$(KBUILD_OUTPUT))
 
 allclean:
 	+$(call cmd,clean)

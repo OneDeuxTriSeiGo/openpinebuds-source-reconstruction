@@ -430,7 +430,7 @@ static void hal_trace_uart_xfer_done(uint8_t chan, uint32_t remain_tsize, uint32
     p_trace->sends[1] = 0;
     p_trace->sending = false;
 
-        hal_trace_uart_send();
+    hal_trace_uart_send();
 
     int_unlock(lock);
 }
@@ -487,7 +487,7 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
     p_trace->wrapped = false;
 
     if (hal_trace_is_uart_transport(transport)) {
-        int ret;
+    int ret;
         trace_uart = HAL_UART_ID_0 + (transport - HAL_TRACE_TRANSPORT_UART0);
         ret = hal_uart_open(trace_uart, &uart_cfg);
         if (ret) {
@@ -495,23 +495,23 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
         }
 
 #if (TRACE_IDLE_OUTPUT == 0)
-            p_trace->sends[0] = 0;
-            p_trace->sends[1] = 0;
+        p_trace->sends[0] = 0;
+        p_trace->sends[1] = 0;
 
-            memset(&dma_cfg, 0, sizeof(dma_cfg));
-            dma_cfg.dst = 0; // useless
-            dma_cfg.dst_bsize = HAL_DMA_BSIZE_8;
-            dma_cfg.dst_periph = uart_periph[trace_uart - HAL_UART_ID_0];
-            dma_cfg.dst_width = HAL_DMA_WIDTH_BYTE;
-            dma_cfg.handler = hal_trace_uart_xfer_done;
-            dma_cfg.src_bsize = HAL_DMA_BSIZE_32;
-            dma_cfg.src_periph = 0; // useless
-            dma_cfg.src_width = HAL_DMA_WIDTH_BYTE;
-            dma_cfg.type = HAL_DMA_FLOW_M2P_DMA;
-            dma_cfg.try_burst = 0;
-            dma_cfg.ch = hal_dma_get_chan(dma_cfg.dst_periph, HAL_DMA_HIGH_PRIO);
+        memset(&dma_cfg, 0, sizeof(dma_cfg));
+        dma_cfg.dst = 0; // useless
+        dma_cfg.dst_bsize = HAL_DMA_BSIZE_8;
+        dma_cfg.dst_periph = uart_periph[trace_uart - HAL_UART_ID_0];
+        dma_cfg.dst_width = HAL_DMA_WIDTH_BYTE;
+        dma_cfg.handler = hal_trace_uart_xfer_done;
+        dma_cfg.src_bsize = HAL_DMA_BSIZE_32;
+        dma_cfg.src_periph = 0; // useless
+        dma_cfg.src_width = HAL_DMA_WIDTH_BYTE;
+        dma_cfg.type = HAL_DMA_FLOW_M2P_DMA;
+        dma_cfg.try_burst = 0;
+        dma_cfg.ch = hal_dma_get_chan(dma_cfg.dst_periph, HAL_DMA_HIGH_PRIO);
 
-            ASSERT(dma_cfg.ch != HAL_DMA_CHAN_NONE, "Failed to get DMA channel");
+        ASSERT(dma_cfg.ch != HAL_DMA_CHAN_NONE, "Failed to get DMA channel");
 #endif
     }
 
@@ -597,7 +597,7 @@ int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
     if (hal_trace_is_uart_transport(transport)) {
         trace_uart = HAL_UART_ID_0 + (transport - HAL_TRACE_TRANSPORT_UART0);
 #if (TRACE_IDLE_OUTPUT == 0)
-            dma_cfg.dst_periph = uart_periph[trace_uart - HAL_UART_ID_0];
+        dma_cfg.dst_periph = uart_periph[trace_uart - HAL_UART_ID_0];
         p_trace->sends[0] = 0;
         p_trace->sends[1] = 0;
 #endif
@@ -824,9 +824,9 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
 
     // Avoid troubles when NMI occurs during trace
     if (!p_trace->in_trace) {
-        uint32_t avail;
-        uint32_t out_len;
-        uint16_t size;
+    uint32_t avail;
+    uint32_t out_len;
+    uint16_t size;
         p_trace->in_trace = true;
 
         if (p_trace->wptr >= p_trace->rptr) {
@@ -895,26 +895,26 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
     }
 
 #ifdef CP_TRACE_ENABLE
-    hal_trace_cp_unlock(cpu_id);
+        hal_trace_cp_unlock(cpu_id);
 #endif
 
 #ifdef CRASH_DUMP_ENABLE
 #ifdef TRACE_TO_APP
-    bool app_output;
-    app_output = app_output_cb_valid && app_output_enabled;
+        bool app_output;
+        app_output = app_output_cb_valid && app_output_enabled;
 #ifdef CP_TRACE_ENABLE
-    if (cpu_id) {
-        app_output = false;
-    }
+        if (cpu_id) {
+            app_output = false;
+        }
 #endif
-    if (app_output) {
+        if (app_output) {
 
-        app_output_enabled = false;
+            app_output_enabled = false;
 
-        hal_trace_app_output_callback(buf, buf_len);
+            hal_trace_app_output_callback(buf, buf_len);
 
-        app_output_enabled = true;
-    }
+            app_output_enabled = true;
+        }
 #endif
 #endif
 
@@ -1061,56 +1061,56 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
     }
     if (size > len + 7) {
         mod_name = hal_trace_get_log_module_desc(module);
-            for (i = 0; i < 6; i++) {
-                if (mod_name[i] == '\0') {
-                    break;
-                }
-                buf[len++] = mod_name[i];
+        for (i = 0; i < 6; i++) {
+            if (mod_name[i] == '\0') {
+                break;
             }
+            buf[len++] = mod_name[i];
+        }
         for (; i < 6; i++) {
             buf[len++] = ' ';
         }
         buf[len++] = '/';
     }
-        if (0) {
+    if (0) {
 #if defined(CP_TRACE_ENABLE) && !defined(CONFIG_SMP)
-        } else if (get_cpu_id()) {
-            ctx[0] = ' ';
-            ctx[1] = 'C';
-            ctx[2] = 'P';
-            ctx[3] = '\0';
+    } else if (get_cpu_id()) {
+        ctx[0] = ' ';
+        ctx[1] = 'C';
+        ctx[2] = 'P';
+        ctx[3] = '\0';
 #endif
-        } else if (in_isr()) {
-            uint32_t ctx_len;
-            ctx_len = snprintf(ctx, sizeof(ctx), "%2d", (int8_t)NVIC_GetCurrentActiveIRQ());
-            if (ctx_len + 1 < ARRAY_SIZE(ctx)) {
-                ctx[ctx_len] = 'E';
-                ctx[ctx_len + 1] = '\0';
-            } else {
-                ctx[ARRAY_SIZE(ctx) - 2] = '.';
-                ctx[ARRAY_SIZE(ctx) - 1] = '\0';
-            }
+    } else if (in_isr()) {
+        uint32_t ctx_len;
+        ctx_len = snprintf(ctx, sizeof(ctx), "%2d", (int8_t)NVIC_GetCurrentActiveIRQ());
+        if (ctx_len + 1 < ARRAY_SIZE(ctx)) {
+            ctx[ctx_len] = 'E';
+            ctx[ctx_len + 1] = '\0';
         } else {
+            ctx[ARRAY_SIZE(ctx) - 2] = '.';
+            ctx[ARRAY_SIZE(ctx) - 1] = '\0';
+        }
+    } else {
 #ifdef RTOS
 #if defined(KERNEL_RHINO) || defined(KERNEL_RTX5)
-            const char *thread_name = osGetThreadName();
-            snprintf(ctx, sizeof(ctx), "%.9s", thread_name ? (char *)thread_name : "NULL");
+        const char *thread_name = osGetThreadName();
+        snprintf(ctx, sizeof(ctx), "%.9s", thread_name ? (char *)thread_name : "NULL");
 #else
-            snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
+        snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
 #endif
 #else
-            ctx[0] = ' ';
-            ctx[1] = ' ';
-            ctx[2] = '0';
-            ctx[3] = '\0';
-            ctx[0] = ' ';
-            ctx[1] = ' ';
-            ctx[2] = '0';
-            ctx[3] = '\0';
+        ctx[0] = ' ';
+        ctx[1] = ' ';
+        ctx[2] = '0';
+        ctx[3] = '\0';
+        ctx[0] = ' ';
+        ctx[1] = ' ';
+        ctx[2] = '0';
+        ctx[3] = '\0';
 #endif
-        }
-        ctx[ARRAY_SIZE(ctx) - 1] = '\0';
-        len += snprintf(&buf[len], size - len, "%s | ", ctx);
+    }
+    ctx[ARRAY_SIZE(ctx) - 1] = '\0';
+    len += snprintf(&buf[len], size - len, "%s | ", ctx);
     return len;
 #else // !TRACE_TIME_STAMP
     return 0;
@@ -1320,21 +1320,21 @@ int hal_trace_flush_buffer(void)
 
     lock = int_lock();
 
-        time = hal_sys_timer_get();
-        while (p_trace->wptr != p_trace->rptr &&
-                (hal_sys_timer_get() - time) < TRACE_FLUSH_TIMEOUT) {
+    time = hal_sys_timer_get();
+    while (p_trace->wptr != p_trace->rptr &&
+            (hal_sys_timer_get() - time) < TRACE_FLUSH_TIMEOUT) {
 #if (TRACE_IDLE_OUTPUT == 0)
-                while (hal_dma_chan_busy(dma_cfg.ch));
-                dma_ret = hal_dma_irq_run_chan(dma_cfg.ch);
-                if (dma_ret != HAL_DMA_OK) {
-                    hal_trace_send();
-                }
-#else
+        while (hal_dma_chan_busy(dma_cfg.ch));
+        dma_ret = hal_dma_irq_run_chan(dma_cfg.ch);
+        if (dma_ret != HAL_DMA_OK) {
             hal_trace_send();
-#endif
         }
+#else
+        hal_trace_send();
+#endif
+    }
 
-        ret = (p_trace->wptr == p_trace->rptr) ? 0 : 1;
+    ret = (p_trace->wptr == p_trace->rptr) ? 0 : 1;
 
     int_unlock(lock);
 
@@ -1389,7 +1389,7 @@ void hal_trace_print_special_stack_registers(uint32_t msp, uint32_t psp)
 
     hal_trace_output_linefeed();
 
-    len = snprintf(crash_buf, sizeof(crash_buf), "MSP   =%08X, PSP   =%08X" NEW_LINE_STR, (unsigned)msp, (unsigned)psp);
+    len = snprintf(crash_buf, sizeof(crash_buf), "MSP=%08X, PSP=%08X" NEW_LINE_STR, (unsigned)msp, (unsigned)psp);
     hal_trace_output((unsigned char *)crash_buf, len);
 
 #ifdef __ARM_ARCH_8M_MAIN__
@@ -2159,7 +2159,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
 
     hal_trace_output_linefeed();
 
-    len = snprintf(crash_buf, sizeof(crash_buf), "PRIMASK   =%02X, FAULTMASK   =%02X, BASEPRI   =%02X, CONTROL   =%02X" NEW_LINE_STR,
+    len = snprintf(crash_buf, sizeof(crash_buf), "PRIMASK=%02X, FAULTMASK=%02X, BASEPRI=%02X, CONTROL=%02X" NEW_LINE_STR,
         (unsigned)info->PRIMASK, (unsigned)info->FAULTMASK, (unsigned)info->BASEPRI, (unsigned)info->CONTROL);
     hal_trace_output((unsigned char *)crash_buf, len);
     len = snprintf(crash_buf, sizeof(crash_buf), "XPSR=%08X", (unsigned)regs[16]);
@@ -2199,7 +2199,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
         hal_trace_output((unsigned char *)crash_buf, len);
     }
 
-    len = snprintf(crash_buf, sizeof(crash_buf), "FaultInfo    :");
+    len = snprintf(crash_buf, sizeof(crash_buf), "FaultInfo :");
     if ((info->SHCSR & 0x13F) == 0) {
         len += snprintf(&crash_buf[len], sizeof(crash_buf) - len, " (None)");
     } else {
@@ -2229,7 +2229,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
     hal_trace_output((unsigned char *)crash_buf, len);
     hal_trace_output_linefeed();
 
-    len = snprintf(crash_buf, sizeof(crash_buf), "FaultCause   :");
+    len = snprintf(crash_buf, sizeof(crash_buf), "FaultCause:");
     if (info->CFSR == 0) {
         len += snprintf(&crash_buf[len], sizeof(crash_buf) - len, " (None)");
     } else {

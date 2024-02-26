@@ -56,10 +56,10 @@ typedef void btif_cmgr_handler_t;
 #define BTIF_CMGR_SNIFF_TIMEOUT 1
 #endif /*  */
 
-#define BTIF_CMGR_SNIFF_DISABLED                   (0xFF)
-#define BTIF_CMGR_SNIFF_DONT_CARE                  (0)
-#define BTIF_CMGR_SNIFF_TIMER                      (10000)
-#define BTIF_CMGR_MOBILE_SNIFF_TIMER               (20000)
+#define BTIF_CMGR_SNIFF_DISABLED    (0xFF)
+#define BTIF_CMGR_SNIFF_DONT_CARE   (0)
+#define BTIF_CMGR_SNIFF_TIMER       (10000)
+#define BTIF_CMGR_MOBILE_SNIFF_TIMER     (20000)
 
 typedef U8 btif_cmgr_sniff_exit_policy_t;
 

@@ -49,7 +49,7 @@ extern "C" {
 #define btdrv_delay(ms)                         hal_sys_timer_delay(MS_TO_TICKS(ms))
 
 #define BTDIGITAL_REG(a)                        (*(volatile uint32_t *)(a))
-#define BTDIGITAL_REG_WR(addr, value)         (*(volatile uint32_t *)(addr)) = (value)
+#define BTDIGITAL_REG_WR(addr, value)           (*(volatile uint32_t *)(addr)) = (value)
 
 #define BTDIGITAL_BT_EM(a)                      (*(volatile uint16_t *)(a))
 /// Macro to write a BT control structure field (16-bit wide)

@@ -480,7 +480,7 @@ uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_systick_hz(void)
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_ms_to_ticks(uint32_t ms)
 {
 #ifdef TIMER_USE_FPU
-    return (uint32_t)((float)ms / 1000 * sys_tick_hz + 0.99);
+        return (uint32_t)((float)ms / 1000 * sys_tick_hz + 0.99);
 #else
     if (ms <= (~0UL / MAX_CALIB_SYSTICK_HZ)) {
         return ((ms * sys_tick_hz + 1000 - 1) / 1000);
@@ -494,7 +494,7 @@ uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_us_to_ticks(uint32_t us)
 {
     uint32_t ticks;
 #ifdef TIMER_USE_FPU
-    ticks = (uint32_t)((float)us / (1000 * 1000) * sys_tick_hz + 0.99);
+        ticks = (uint32_t)((float)us / (1000 * 1000) * sys_tick_hz + 0.99);
 #else
     if (us <= (~0UL / MAX_CALIB_SYSTICK_HZ)) {
         ticks = ((us * sys_tick_hz / 1000 + 1000 - 1) / 1000);
@@ -512,7 +512,7 @@ uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_us_to_ticks(uint32_t us)
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_ticks_to_ms(uint32_t tick)
 {
 #ifdef TIMER_USE_FPU
-    return (uint32_t)((float)tick / sys_tick_hz * 1000 + 0.5);
+        return (uint32_t)((float)tick / sys_tick_hz * 1000 + 0.5);
 #else
     uint32_t hz = sys_tick_hz;
     if (tick <= (~0UL / 1000)) {
@@ -526,7 +526,7 @@ uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_ticks_to_ms(uint32_t tick)
 uint32_t BOOT_TEXT_SRAM_LOC hal_sys_timer_ticks_to_us(uint32_t tick)
 {
 #ifdef TIMER_USE_FPU
-    return (uint32_t)((float)tick / sys_tick_hz * (1000 * 1000) + 0.5);
+        return (uint32_t)((float)tick / sys_tick_hz * (1000 * 1000) + 0.5);
 #else
     uint32_t hz = sys_tick_hz;
     if (tick <= (~0UL / (1000 * 1000))) {

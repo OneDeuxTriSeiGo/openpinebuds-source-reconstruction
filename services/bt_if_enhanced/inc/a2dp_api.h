@@ -377,7 +377,7 @@ typedef struct {
 
         a2dp_stream_t    *dstStream;  /* Stream to switch */
     } p;
-    btif_remote_device_t   *remDev;
+     btif_remote_device_t   *remDev;
 } btif_a2dp_callback_parms_t;
 
 typedef struct {

@@ -40,7 +40,7 @@
 
 
 /// Characteristic Presentation Format Descriptor Size
-#define PRF_CHAR_PRES_FMT_SIZE          (7)
+#define PRF_CHAR_PRES_FMT_SIZE  (7)
 
 
 /// Possible values for setting client configuration characteristics
@@ -58,7 +58,7 @@ enum prf_cli_conf
 enum prf_srv_conf
 {
     /// Stop Broadcast
-    PRF_SRV_STOP_BCST  = 0x0000,
+    PRF_SRV_STOP_BCST = 0x0000,
     /// Start Broadcast
     PRF_SRV_START_BCST = 0x0001,
 };
@@ -66,7 +66,7 @@ enum prf_srv_conf
 /// Connection type
 enum prf_con_type
 {
-    /// Discovery type connection
+    ///Discovery type connection
     PRF_CON_DISCOVERY = 0x00,
     /// Normal type connection
     PRF_CON_NORMAL    = 0x01,
@@ -74,7 +74,7 @@ enum prf_con_type
 
 enum prf_svc_type
 {
-    PRF_PRIMARY_SERVICE   = 0x00,
+    PRF_PRIMARY_SERVICE = 0x00,
     PRF_SECONDARY_SERVICE = 0x01
 };
 
@@ -94,11 +94,11 @@ typedef struct prf_char_pres_fmt
     /// Description
     uint16_t description;
     /// Format
-    uint8_t  format;
+    uint8_t format;
     /// Exponent
-    uint8_t  exponent;
+    uint8_t exponent;
     /// Name space
-    uint8_t  name_space;
+    uint8_t name_space;
 } prf_char_pres_fmt_t;
 
 /**
@@ -111,15 +111,15 @@ typedef struct prf_date_time
     /// year time element
     uint16_t year;
     /// month time element
-    uint8_t  month;
+    uint8_t month;
     /// day time element
-    uint8_t  day;
+    uint8_t day;
     /// hour time element
-    uint8_t  hour;
+    uint8_t hour;
     /// minute time element
-    uint8_t  min;
+    uint8_t min;
     /// second time element
-    uint8_t  sec;
+    uint8_t sec;
 } prf_date_time_t;
 
 /**

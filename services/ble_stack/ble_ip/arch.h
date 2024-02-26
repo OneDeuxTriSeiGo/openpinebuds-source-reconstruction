@@ -190,29 +190,29 @@ void assert_warn(int param0, int param1, const char * file, int line);
  ****************************************************************************************
  */
 #if 1
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_ERR(cond)                             { if (!(cond)) { TRACE(2,"line is %d file is %s", __LINE__, __FILE__); } }
 
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_INFO(cond, param0, param1)            { if (!(cond)) { TRACE(4,"line is %d file is %s, %d, %d", __LINE__, __FILE__, param0, param1); } }
 
-    /// Assertions showing a non-critical problem that has to be fixed by the SW
+/// Assertions showing a non-critical problem that has to be fixed by the SW
 #define ASSERT_WARN(cond, param0, param1)            { if (!(cond)) { TRACE(4,"line is %d file is %s, %d, %d", __LINE__, __FILE__, param0, param1); } }
 
 #define DUMP_DATA(data, length) \
-       // dump_data((uint8_t*)data, length)
+   // dump_data((uint8_t*)data, length)
 
 #else
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_ERR(cond)
 
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_INFO(cond, param0, param1)
 
-    /// Assertions showing a non-critical problem that has to be fixed by the SW
+/// Assertions showing a non-critical problem that has to be fixed by the SW
 #define ASSERT_WARN(cond, param0, param1)
 
-    /// DUMP data array present in the SW.
+/// DUMP data array present in the SW.
 #define DUMP_DATA(data, length)
 #endif
 

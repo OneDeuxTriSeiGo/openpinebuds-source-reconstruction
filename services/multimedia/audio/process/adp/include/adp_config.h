@@ -19,8 +19,8 @@
 // Visual Studio support alloca(), but it always align variables to 16-bit
 // boundary, while SSE need 128-bit alignment. So we disable alloca() when
 // SSE is enabled.
-#  define FLOATING_POINT
-#  define USE_SMALLFT
+#define FLOATING_POINT
+#define USE_SMALLFT
 
 /* We don't support visibility on Win32 */
 #define EXPORT
