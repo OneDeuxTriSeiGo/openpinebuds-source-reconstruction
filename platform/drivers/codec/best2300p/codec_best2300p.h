@@ -12,8 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __CODEC_BEST2003_H__
-#define __CODEC_BEST2003_H__
+#ifndef __CODEC_BEST2300P_H__
+#define __CODEC_BEST2300P_H__
 
 #ifdef __cplusplus
 extern "C" {

@@ -15,8 +15,8 @@
 
 
 
-#ifndef _PRF_UTILS_H_
-#define _PRF_UTILS_H_
+#ifndef _PRF_UTILS_128_H_
+#define _PRF_UTILS_128_H_
 
 /**
  ****************************************************************************************
@@ -92,4 +92,4 @@ void prf_extract_svc128_info(uint16_t first_hdl, uint8_t nb_att, const gatt_svc_
 
 /// @} prf_utils
 
-#endif /* _PRF_UTILS_H_ */
+#endif /* _PRF_UTILS_128_H_ */
