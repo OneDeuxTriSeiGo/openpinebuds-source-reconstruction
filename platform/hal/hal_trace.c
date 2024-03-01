@@ -1093,8 +1093,8 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
     } else {
 #ifdef RTOS
 #if defined(KERNEL_RHINO) || defined(KERNEL_RTX5)
-        const char *thread_name = osGetThreadName();
-        snprintf(ctx, sizeof(ctx), "%.9s", thread_name ? (char *)thread_name : "NULL");
+        /* const char *thread_name = osGetThreadName(); */
+        /* snprintf(ctx, sizeof(ctx), "%.9s", thread_name ? (char *)thread_name : "NULL"); */
 #else
         snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
 #endif

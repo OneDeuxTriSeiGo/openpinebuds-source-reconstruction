@@ -239,7 +239,7 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
     // End of stopping modules
 
 
-    hal_psram_sleep();
+    //hal_psram_sleep();
     hal_norflash_sleep(HAL_FLASH_ID_0);
 
 
@@ -261,7 +261,7 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
     }
 
     hal_norflash_wakeup(HAL_FLASH_ID_0);
-    hal_psram_wakeup();
+    //hal_psram_wakeup();
 
 
     if (chip_wake_lock_map == 0) {

@@ -66,12 +66,12 @@ typedef struct
 
 typedef void(* receive_data_callback)(uint8_t* ptrData, uint32_t dataLength);
 
-void app_tota_data_reset_env(void);
+//void app_tota_data_reset_env(void);
 
 void app_tota_data_xfer_started(APP_TOTA_CMD_RET_STATUS_E retStatus);
 void app_tota_data_xfer_stopped(APP_TOTA_CMD_RET_STATUS_E retStatus);
 void app_tota_data_segment_verified(APP_TOTA_CMD_RET_STATUS_E retStatus);
-void app_tota_data_received_callback(uint8_t* ptrData, uint32_t dataLength);
+//void app_tota_data_received_callback(uint8_t* ptrData, uint32_t dataLength);
 void app_tota_send_data(APP_TOTA_TRANSMISSION_PATH_E path, uint8_t* ptrData, uint32_t dataLength);
 void app_tota_start_data_xfer(APP_TOTA_TRANSMISSION_PATH_E path, APP_TOTA_START_DATA_XFER_T* req);
 void app_tota_stop_data_xfer(APP_TOTA_TRANSMISSION_PATH_E path, APP_TOTA_STOP_DATA_XFER_T* req);

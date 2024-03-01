@@ -40,9 +40,9 @@ ifeq ($(MBED),1)
 obj-y += fs/
 endif
 
-#ifneq ($(filter 1, $(MBED) $(AI_VOICE) $(TOTA_v2)),)
+ifneq ($(filter 1, $(MBED) $(AI_VOICE) $(TOTA_v2)),)
 obj-y +=../utils/kfifo/
-#endif
+endif
 
 ifeq ($(VOICE_DATAPATH_ENABLED),1)
 obj-y += voicepath/

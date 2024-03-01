@@ -376,7 +376,7 @@
 #endif //BLE_HOST_PRESENT
 
 #if defined(CFG_APP)
-#include "rwapp_config.h"     // Application configuration
+//#include "rwapp_config.h"     // Application configuration
 #endif // defined(CFG_APP)
 
 #define BLE_INVALID_CONNECTION_INDEX    0xFF

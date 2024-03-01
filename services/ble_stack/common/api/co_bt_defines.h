@@ -408,7 +408,7 @@ enum ble_feature
 #define PBF_CONT_HL_FRAG            0x01
 #define PBF_1ST_HL_FRAG             0x02
 #define PBF_CMP_PDU                 0x03
-#define PBF_MASK                    0x03
+//#define PBF_MASK                    0x03
 
 /// Broadcast Flag   HCI:5.4.2
 #define BCF_P2P                     0x00
@@ -1001,8 +1001,8 @@ enum ble_feature
 
 /// Key Type HCI:5.2.24
 #define COMB_KEY                0
-#define LOCAL_UNIT_KEY          1
-#define REMOTE_UNIT_KEY         2
+//#define LOCAL_UNIT_KEY          1
+//#define REMOTE_UNIT_KEY         2
 #define DEBUG_COMB_KEY          3
 #define UNAUTH_COMB_KEY_192     4
 #define AUTH_COMB_KEY_192       5

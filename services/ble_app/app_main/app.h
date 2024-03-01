@@ -39,7 +39,7 @@
 #ifdef  BLE_APP_PRESENT
 
 #include <stdint.h>          // Standard Integer Definition
-//#include <co_bt.h>           // Common BT Definitions
+#include <co_bt.h>           // Common BT Definitions
 #include "arch.h"            // Platform Definitions
 #include "gapc_msg.h"       // GAPC Definitions
 #include "gapm_msg.h"

@@ -28,7 +28,7 @@
 
 #define PSRAM_RESET
 //#define PSRAM_DUAL_8BIT
-#define PSRAM_WRAP_ENABLE
+//#define PSRAM_WRAP_ENABLE
 
 //
 #ifdef PSRAM_DEBUG
@@ -385,7 +385,7 @@ static void hal_psram_phy_init(uint32_t clk)
 
     val = hal_psram_phy_read_reg(&psram_phy->REG_04C);
     val |= PSRAM_ULP_PHY_REG_PSRAM_PU;
-    //val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_PSRAM_SWRC, 0x3);
+    val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_PSRAM_SWRC, 0x3);
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_PSRAM_TXDRV, 0x3);
     psram_phy->REG_04C = val;
 
@@ -485,7 +485,7 @@ static void hal_psram_mc_init(uint32_t clk)
     psram_mc->REG_020 = 0;
     psram_mc->REG_024 =
 #if CHIP_PSRAM_CTRL_VER >= 3
-        //PSRAM_ULP_MC_ENTRY_SLEEP_IDLE |
+        PSRAM_ULP_MC_ENTRY_SLEEP_IDLE |
 #endif
         PSRAM_ULP_MC_AUTOWAKEUP_EN |
         PSRAM_ULP_MC_PD_MR(6) | PSRAM_ULP_MC_PD_CMD(0xF0);
@@ -521,7 +521,7 @@ void hal_psram_sleep(void)
     hal_psramip_mc_busy_wait();
     if (!hal_psramip_mc_in_sleep()) {
 #if CHIP_PSRAM_CTRL_VER >= 3
-        //psram_mc->REG_024 &= ~PSRAM_ULP_MC_ENTRY_SLEEP_IDLE;
+        psram_mc->REG_024 &= ~PSRAM_ULP_MC_ENTRY_SLEEP_IDLE;
 #endif
         hal_psramip_mc_busy_wait();
         hal_psramip_set_cmd(MEMIF_PD);
@@ -533,7 +533,7 @@ void hal_psram_wakeup(void)
 {
     hal_psramip_mc_busy_wait();
 #if CHIP_PSRAM_CTRL_VER >= 3
-    //psram_mc->REG_024 |= PSRAM_ULP_MC_ENTRY_SLEEP_IDLE;
+    psram_mc->REG_024 |= PSRAM_ULP_MC_ENTRY_SLEEP_IDLE;
 #endif
 }
 
@@ -649,7 +649,7 @@ static void hal_psram_calib_range(uint32_t range)
 
     tx_ceb = delay / 2;
     tx_clk = delay / 2 + 2;
-    volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+    //volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
 
     PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 

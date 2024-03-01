@@ -372,7 +372,7 @@ bool rwip_pca_clock_dragging_only(void);
  *
  ****************************************************************************************
  */
-void rwip_mwscoex_set(bool state);
+//void rwip_mwscoex_set(bool state);
 #endif //RW_MWS_COEX
 
 #if (RW_WLAN_COEX)
@@ -384,7 +384,7 @@ void rwip_mwscoex_set(bool state);
  *
  ****************************************************************************************
  */
-void rwip_wlcoex_set(bool state);
+//void rwip_wlcoex_set(bool state);
 #endif //RW_WLAN_COEX
 #endif //(BT_EMB_PRESENT || BLE_EMB_PRESENT)
 
@@ -440,14 +440,14 @@ rwip_time_t rwip_time_get(void);
  * @param[in] val           16 bytes value array to encrypt using AES
  ****************************************************************************************
  */
-void rwip_aes_encrypt(const uint8_t *key, const uint8_t* val);
+//void rwip_aes_encrypt(const uint8_t *key, const uint8_t* val);
 
 /**
  ****************************************************************************************
  * @brief Request a Software interrupt to be triggered
  ****************************************************************************************
  */
-void rwip_sw_int_req(void);
+//void rwip_sw_int_req(void);
 
 /**
  ****************************************************************************************
@@ -461,14 +461,14 @@ void rwip_sw_int_req(void);
  * @return  sleep status (@see enum rwip_sleep_state)
  ****************************************************************************************
  */
-uint8_t rwip_sleep(void);
+//uint8_t rwip_sleep(void);
 
 /**
  ****************************************************************************************
  * @brief Handle the common core interrupts.
  ****************************************************************************************
  */
-void rwip_isr(void);
+//void rwip_isr(void);
 
 /**
  ****************************************************************************************
@@ -478,7 +478,7 @@ void rwip_isr(void);
  * @param[in] prv_slp_bit   Bit to be set in the prevent sleep bit field
  ****************************************************************************************
  */
-void rwip_prevent_sleep_set(uint16_t prv_slp_bit);
+//void rwip_prevent_sleep_set(uint16_t prv_slp_bit);
 
 /**
  ****************************************************************************************
@@ -488,7 +488,7 @@ void rwip_prevent_sleep_set(uint16_t prv_slp_bit);
  * @param[in] prv_slp_bit   Bit to be cleared in the prevent sleep bit field
  ****************************************************************************************
  */
-void rwip_prevent_sleep_clear(uint16_t prv_slp_bit);
+//void rwip_prevent_sleep_clear(uint16_t prv_slp_bit);
 
 /**
  ****************************************************************************************
