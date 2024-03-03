@@ -49,7 +49,7 @@
  * @return The 32 bit swapped value.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_bswap32(uint32_t val32)
+__STATIC __INLINE uint32_t co_bswap32(uint32_t val32)
 {
     return (val32<<24) | ((val32<<8)&0xFF0000) | ((val32>>8)&0xFF00) | ((val32>>24)&0xFF);
 }
@@ -62,7 +62,7 @@ static __INLINE uint32_t co_bswap32(uint32_t val32)
  * @return The 16 bit swapped value.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_bswap16(uint16_t val16)
+__STATIC __INLINE uint16_t co_bswap16(uint16_t val16)
 {
     return ((val16<<8)&0xFF00) | ((val16>>8)&0xFF);
 }
@@ -103,7 +103,7 @@ static __INLINE uint16_t co_bswap16(uint16_t val16)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_htonl(uint32_t hostlong)
+__STATIC __INLINE uint32_t co_htonl(uint32_t hostlong)
 {
     #if (!CPU_LE)
         return hostlong;
@@ -121,7 +121,7 @@ static __INLINE uint32_t co_htonl(uint32_t hostlong)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_htons(uint16_t hostshort)
+__STATIC __INLINE uint16_t co_htons(uint16_t hostshort)
 {
     #if (!CPU_LE)
         return hostshort;
@@ -139,7 +139,7 @@ static __INLINE uint16_t co_htons(uint16_t hostshort)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_ntohl(uint32_t netlong)
+__STATIC __INLINE uint32_t co_ntohl(uint32_t netlong)
 {
     return co_htonl(netlong);
 }
@@ -153,7 +153,7 @@ static __INLINE uint32_t co_ntohl(uint32_t netlong)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_ntohs(uint16_t netshort)
+__STATIC __INLINE uint16_t co_ntohs(uint16_t netshort)
 {
     return co_htons(netshort);
 }
@@ -188,7 +188,7 @@ static __INLINE uint16_t co_ntohs(uint16_t netshort)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_htobl(uint32_t hostlong)
+__STATIC __INLINE uint32_t co_htobl(uint32_t hostlong)
 {
     #if (CPU_LE)
         return hostlong;
@@ -206,7 +206,7 @@ static __INLINE uint32_t co_htobl(uint32_t hostlong)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_htobs(uint16_t hostshort)
+__STATIC __INLINE uint16_t co_htobs(uint16_t hostshort)
 {
     #if (CPU_LE)
         return hostshort;
@@ -225,7 +225,7 @@ static __INLINE uint16_t co_htobs(uint16_t hostshort)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_btohl(uint32_t btlong)
+__STATIC __INLINE uint32_t co_btohl(uint32_t btlong)
 {
     return co_htobl(btlong);
 }
@@ -240,7 +240,7 @@ static __INLINE uint32_t co_btohl(uint32_t btlong)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_btohs(uint16_t btshort)
+__STATIC __INLINE uint16_t co_btohs(uint16_t btshort)
 {
     return co_htobs(btshort);
 }

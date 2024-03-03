@@ -266,7 +266,7 @@ __INLINE bool co_list_is_empty(const struct co_list *const list)
  * @return First element address. Returns NULL pointer if the list is empty.
  ****************************************************************************************
  */
-__INLINE struct co_list_hdr *co_list_pick(const struct co_list *const list)
+__STATIC __INLINE struct co_list_hdr *co_list_pick(const struct co_list *const list)
 {
     return(list->first);
 }
