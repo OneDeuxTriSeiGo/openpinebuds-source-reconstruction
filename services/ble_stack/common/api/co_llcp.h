@@ -41,31 +41,57 @@
 /// Control packet op_code
 enum co_llcp_op_code
 {
+    ///
     LL_CONNECTION_UPDATE_IND_OPCODE = 0x00,
+    ///
     LL_CHANNEL_MAP_IND_OPCODE       = 0x01,
+    ///
     LL_TERMINATE_IND_OPCODE         = 0x02,
+    ///
     LL_ENC_REQ_OPCODE               = 0x03,
+    ///
     LL_ENC_RSP_OPCODE               = 0x04,
+    ///
     LL_START_ENC_REQ_OPCODE         = 0x05,
+    ///
     LL_START_ENC_RSP_OPCODE         = 0x06,
+    ///
     LL_UNKNOWN_RSP_OPCODE           = 0x07,
+    ///
     LL_FEATURE_REQ_OPCODE           = 0x08,
+    ///
     LL_FEATURE_RSP_OPCODE           = 0x09,
+    ///
     LL_PAUSE_ENC_REQ_OPCODE         = 0x0A,
+    ///
     LL_PAUSE_ENC_RSP_OPCODE         = 0x0B,
+    ///
     LL_VERSION_IND_OPCODE           = 0x0C,
+    ///
     LL_REJECT_IND_OPCODE            = 0x0D,
+    ///
     LL_SLAVE_FEATURE_REQ_OPCODE     = 0x0E,
+    ///
     LL_CONNECTION_PARAM_REQ_OPCODE  = 0x0F,
+    ///
     LL_CONNECTION_PARAM_RSP_OPCODE  = 0x10,
+    ///
     LL_REJECT_EXT_IND_OPCODE        = 0x11,
+    ///
     LL_PING_REQ_OPCODE              = 0x12,
+    ///
     LL_PING_RSP_OPCODE              = 0x13,
+    ///
     LL_LENGTH_REQ_OPCODE            = 0x14,
+    ///
     LL_LENGTH_RSP_OPCODE            = 0x15,
+    ///
     LL_PHY_REQ_OPCODE               = 0x16,
+    ///
     LL_PHY_RSP_OPCODE               = 0x17,
+    ///
     LL_PHY_UPDATE_IND_OPCODE        = 0x18,
+    ///
     LL_MIN_USED_CHANNELS_IND_OPCODE = 0x19,
     /// Opcode length
     LL_OPCODE_MAX_OPCODE,
