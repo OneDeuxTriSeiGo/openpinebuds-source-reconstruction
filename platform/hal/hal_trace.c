@@ -736,22 +736,11 @@ void hal_trace_get_history_buffer(const uint8_t **buf1, uint32_t *len1, const ui
     }
 }
 
-static uint32_t hal_trace_print_unsigned(char *buf, uint32_t len, uint32_t val)
+static void hal_trace_print_discards(uint32_t discards)
 {
     const uint8_t base = 10;
     char digit[10];
     char *d;
-    d = &digit[0];
-    do {
-        *d++ = (val % base) + '0';
-    } while (val /= base);
-
-    do {
-        *buf++ = *--d;
-    } while (d > &digit[0]);
-}
-static void hal_trace_print_discards(uint32_t discards)
-{
     char *out;
     uint16_t len;
     uint16_t size;
@@ -760,8 +749,15 @@ static void hal_trace_print_discards(uint32_t discards)
         discards = max_discards;
     }
 
-    len = hal_trace_print_unsigned(&discards_buf[discards_digit_start], 5, discards);
-    out = &discards_buf[discards_digit_start + len];
+    d = &digit[0];
+    do {
+        *d++ = (discards % base) + '0';
+    } while (discards /= base);
+
+    out = &discards_buf[discards_digit_start];
+    do {
+        *out++ = *--d;
+    } while (d > &digit[0]);
 #ifdef TRACE_CRLF
     *out++ = '\r';
 #endif
