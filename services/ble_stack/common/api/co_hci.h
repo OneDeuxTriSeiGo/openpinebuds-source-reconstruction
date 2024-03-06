@@ -2640,25 +2640,6 @@ struct hci_le_set_ext_scan_en_cmd
     uint16_t            period;
 };
 
-struct init_phy_param
-{
-    ///Scan interval (N * 0.625 ms)
-    uint16_t        scan_interval;
-    ///Scan window size (N * 0.625 ms)
-    uint16_t        scan_window;
-    ///Minimum of connection interval (N * 1.25 ms)
-    uint16_t       con_intv_min;
-    ///Maximum of connection interval (N * 1.25 ms)
-    uint16_t       con_intv_max;
-    ///Connection latency
-    uint16_t       con_latency;
-    ///Link supervision timeout
-    uint16_t       superv_to;
-    ///Minimum CE length (N * 0.625 ms)
-    uint16_t       ce_len_min;
-    ///Maximum CE length (N * 0.625 ms)
-    uint16_t       ce_len_max;
-};
 ///HCI LE Extended Create Connection Command parameters strucuture
 struct hci_le_ext_create_con_cmd
 {
@@ -2673,7 +2654,25 @@ struct hci_le_ext_create_con_cmd
     ///Indicates the PHY(s) on which the advertising packets should be received
     uint8_t         init_phys;
     ///Paramaters for PHY(s)
-    struct init_phy_param phy[MAX_INIT_PHYS];
+    struct init_phy_param
+    {
+        ///Scan interval (N * 0.625 ms)
+        uint16_t        scan_interval;
+        ///Scan window size (N * 0.625 ms)
+        uint16_t        scan_window;
+        ///Minimum of connection interval (N * 1.25 ms)
+        uint16_t       con_intv_min;
+        ///Maximum of connection interval (N * 1.25 ms)
+        uint16_t       con_intv_max;
+        ///Connection latency
+        uint16_t       con_latency;
+        ///Link supervision timeout
+        uint16_t       superv_to;
+        ///Minimum CE length (N * 0.625 ms)
+        uint16_t       ce_len_min;
+        ///Maximum CE length (N * 0.625 ms)
+        uint16_t       ce_len_max;
+    } phy[MAX_INIT_PHYS];
 };
 
 ///HCI LE Periodic Advertising Create Sync Command parameters strucutre
