@@ -87,7 +87,7 @@ enum prf_svc_type
  * Characteristic Presentation Format Descriptor structure
  * Packed size is PRF_CHAR_PRES_FMT_SIZE
  */
-typedef struct prf_char_pres_fmt
+struct prf_char_pres_fmt
 {
     /// Unit (The Unit is a UUID)
     uint16_t unit;
@@ -99,14 +99,14 @@ typedef struct prf_char_pres_fmt
     uint8_t exponent;
     /// Name space
     uint8_t name_space;
-} prf_char_pres_fmt_t;
+};
 
 /**
  * date and time structure
  * size = 7 bytes
  */
 /// Time profile information
-typedef struct prf_date_time
+struct prf_date_time
 {
     /// year time element
     uint16_t year;
@@ -120,7 +120,7 @@ typedef struct prf_date_time
     uint8_t min;
     /// second time element
     uint8_t sec;
-} prf_date_time_t;
+};
 
 /**
  *  SFLOAT: Short Floating Point Type
@@ -136,28 +136,28 @@ typedef uint16_t prf_sfloat;
 
 
 /// utf8_s string
-typedef struct prf_utf_8
+struct prf_utf_8
 {
     /// value length
     uint16_t length;
     /// Value string in UTF8 format
     uint8_t  str[__ARRAY_EMPTY];
-} prf_utf_8_t;
+};
 
 
 
 
 /// Service information structure
-typedef struct prf_svc
+struct prf_svc
 {
     /// start handle
     uint16_t shdl;
     /// end handle
     uint16_t ehdl;
-} prf_svc_t;
+};
 
 /// Included Service information structure
-typedef struct prf_incl_svc
+struct prf_incl_svc
 {
     /// attribute handle
     uint16_t handle;
@@ -169,27 +169,27 @@ typedef struct prf_incl_svc
     uint8_t uuid_len;
     /// UUID
     uint8_t uuid[GATT_UUID_128_LEN];
-} prf_incl_svc_t;
+};
 
 /// Characteristic information structure
-typedef struct prf_char
+struct prf_char
 {
     /// Value handle
     uint16_t val_hdl;
     /// Characteristic properties
     uint8_t prop;
-} prf_char_t;
+};
 
 /// Descriptor information structure
-typedef struct prf_desc
+struct prf_desc
 {
     /// Descriptor handle
     uint16_t desc_hdl;
-} prf_desc_t;
+};
 
 
 /// Characteristic definition
-typedef struct prf_char_def
+struct prf_char_def
 {
     /// Characteristic UUID
     uint16_t uuid;
@@ -197,10 +197,10 @@ typedef struct prf_char_def
     uint8_t req_bf;
     /// Mandatory Properties
     uint8_t prop_mand;
-} prf_char_def_t;
+};
 
 /// Characteristic Descriptor definition
-typedef struct prf_desc_def
+struct prf_desc_def
 {
     /// Characteristic Descriptor uuid
     uint16_t uuid;
@@ -208,7 +208,7 @@ typedef struct prf_desc_def
     uint8_t req_bf;
     /// Corresponding characteristic code
     uint8_t char_code;
-} prf_desc_def_t;
+};
 
 
 
