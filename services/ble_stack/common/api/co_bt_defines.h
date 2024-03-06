@@ -57,10 +57,10 @@
 #define EXT_ADV_DATA_MAX_LEN    229 // HCI:7.7.65.13
 #define PER_ADV_DATA_MAX_LEN    247 // 248 // HCI:7.7.65.16
 #define SCAN_RSP_DATA_LEN               0x1F
-#define SCAN_RSP_DATA_LEN               0x1F
 #define BLE_ADV_FLAG_PART_LEN           0x03
 #define BLE_ADV_DATA_WITHOUT_FLAG_LEN   (ADV_DATA_LEN)
 #define BLE_ADV_DATA_WITH_FLAG_LEN      (ADV_DATA_LEN - BLE_ADV_FLAG_PART_LEN)
+#define SCAN_RSP_DATA_LEN               0x1F
 #define CONNECT_REQ_DATA_LEN    0x16
 #define LE_CHNL_MAP_LEN     0x05
 #define CHNL_MAP_LEN        0x0A

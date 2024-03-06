@@ -445,14 +445,14 @@ struct AONCMU_T {
 #define AON_ARST_PWM                    (1 << 4)
 #define AON_ACLK_TIMER                  (1 << 5)
 #define AON_ARST_TIMER                  (1 << 5)
+#define AON_ACLK_PSC                    (1 << 10)
+#define AON_ARST_PSC                    (1 << 10)
 #define AON_ACLK_IOMUX                  (1 << 6)
 #define AON_ARST_IOMUX                  (1 << 6)
 #define AON_ACLK_APBC                   (1 << 8)
 #define AON_ARST_APBC                   (1 << 8)
 #define AON_ACLK_H2H_MCU                (1 << 9)
 #define AON_ARST_H2H_MCU                (1 << 9)
-#define AON_ACLK_PSC                    (1 << 10)
-#define AON_ARST_PSC                    (1 << 10)
 
 // AON other Clocks:
 #define AON_OCLK_WDT                    (1 << 0)

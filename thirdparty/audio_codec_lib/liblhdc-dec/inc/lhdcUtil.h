@@ -58,7 +58,7 @@ typedef int (*LHDC_GET_BT_INFO)(savi_bt_local_info * bt_info);
 
 void lhdcInit(uint32_t bitPerSample, uint32_t sampleRate, uint32_t scaleTo16Bits, lhdc_ver_t version);
 uint32_t lhdcDecodeProcess(uint8_t * pOutBuf, uint8_t * pInput, uint32_t len);
+void lhdcDestroy();
 bool lhdcSetLicenseKeyTable(uint8_t * licTable, LHDC_GET_BT_INFO pFunc);
 char * getVersionCode();
-void lhdcDestroy();
 #endif /* End of LHDC_UTIL_H */

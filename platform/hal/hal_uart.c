@@ -637,10 +637,11 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
     uint32_t xfer = 0;
 
     if (status.RT || status.FE || status.OE || status.PE || status.BE) {
+        if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
+        }
 
             if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
                 if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
-        if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
                     xfer = hal_uart_stop_dma_recv(id);
                     if (recv_dma_size[id] > xfer) {
                         xfer = recv_dma_size[id] - xfer;
@@ -648,7 +649,6 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
                         xfer = 0;
                     }
                 }
-        }
             }
         if (rxdma_handler[id]) {
             rxdma_handler[id](xfer, 0, status);
@@ -832,6 +832,7 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     uint32_t i;
     enum HAL_DMA_PERIPH_T periph;
     enum HAL_DMA_BSIZE_T src_bsize;
+    src_bsize = HAL_DMA_BSIZE_8;
 
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     ASSERT(uart[id].irq != INVALID_IRQn, "DMA not supported on UART %d", id);
@@ -914,7 +915,6 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     }
 
     periph = uart[id].rx_periph;
-    src_bsize = HAL_DMA_BSIZE_8;
 
 
     memset(&dma_cfg, 0, sizeof(dma_cfg));

@@ -15,10 +15,6 @@
 #ifndef RWIP_CONFIG_H_
 #define RWIP_CONFIG_H_
 
-#include "rwapp_config.h"     // Audio Mode 0 configuration
-#include "os_api.h"
-#include "cmsis.h"
-#include "besble_debug.h"
 /**
  ****************************************************************************************
  * @addtogroup ROOT
@@ -43,6 +39,10 @@
  * DEFINES
  ****************************************************************************************
  */
+#include "rwapp_config.h"     // Audio Mode 0 configuration
+#include "os_api.h"
+#include "cmsis.h"
+#include "besble_debug.h"
 
 
 #if defined(__IAG_BLE_INCLUDE__)
@@ -151,18 +151,18 @@
 #else
 #define BLE_OBSERVER      0
 #endif // (defined(CFG_OBSERVER) || defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
-/// Central
-#if (defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
-#define BLE_CENTRAL      1
-#else
-#define BLE_CENTRAL      0
-#endif // (defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
 /// Peripheral
 #if (defined(CFG_PERIPHERAL) || defined(CFG_ALLROLES))
 #define BLE_PERIPHERAL      1
 #else
 #define BLE_PERIPHERAL      0
 #endif // (defined(CFG_PERIPHERAL) || defined(CFG_ALLROLES))
+/// Central
+#if (defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
+#define BLE_CENTRAL      1
+#else
+#define BLE_CENTRAL      0
+#endif // (defined(CFG_CENTRAL) || defined(CFG_ALLROLES))
 
 #if ((BLE_BROADCASTER+BLE_OBSERVER+BLE_PERIPHERAL+BLE_CENTRAL) == 0)
     #error "No application role defined"
@@ -536,9 +536,9 @@ enum PARAM_ID
     /// Low Power Clock Drift
     PARAM_ID_LPCLK_DRIFT                = 0x07,
     /// Low Power Clock Jitter
-    PARAM_ID_LPCLK_JITTER               = 0x08,
     /// Active Clock Drift
     PARAM_ID_ACTCLK_DRIFT               = 0x09,
+    PARAM_ID_LPCLK_JITTER               = 0x08,
     /// External wake-up time
     PARAM_ID_EXT_WAKEUP_TIME            = 0x0D,
     /// Oscillator wake-up time

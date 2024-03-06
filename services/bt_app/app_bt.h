@@ -152,10 +152,10 @@ bool app_bt_get_device_bdaddr(uint8_t deviceId, uint8_t* btAddr);
 
 void fast_pair_enter_pairing_mode_handler(void);
 
+
+
+
 bool app_bt_is_in_reconnecting(void);
-
-
-
 
 bool btapp_hfp_is_dev_sco_connected(uint8_t devId);
 
@@ -171,8 +171,8 @@ void app_bt_set_connecting_profiles_state(uint8_t devId);
 
 #if defined(__INTERCONNECTION__)
 btif_accessible_mode_t app_bt_get_current_access_mode(void);
-#endif
 
+#endif
 bool app_bt_is_hfp_audio_on(void);
 
 btif_remote_device_t* app_bt_get_connected_mobile_device_ptr(void);

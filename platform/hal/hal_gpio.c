@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 #include "plat_addr_map.h"
-#include "cmsis_nvic.h"
 #include "hal_gpio.h"
+#include "reg_gpio_v1.h"
 #include "hal_trace.h"
+#include "cmsis_nvic.h"
 #ifdef PMU_HAS_LED_PIN
 #include "pmu.h"
 #endif
-#include "reg_gpio_v1.h"
 
 #define HAL_GPIO_BANK_NUM 1
 
@@ -401,6 +401,10 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
         if (cfg->irq_enable) {
             gpio_aux_bank[bank]->GPIO_INTMASK |= (0x1<<pin_offset);
 
+            if (cfg->irq_debounce)
+                gpio_aux_bank[bank]->GPIO_DEBOUNCE |= 0x1<<pin_offset;
+            else
+                gpio_aux_bank[bank]->GPIO_DEBOUNCE &= ~(0x1<<pin_offset);
 
             if (cfg->irq_type == HAL_GPIO_IRQ_TYPE_EDGE_SENSITIVE)
                 gpio_aux_bank[bank]->GPIO_INTTYPE_LEVEL |= 0x1<<pin_offset;
@@ -412,10 +416,6 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
             else
                 gpio_aux_bank[bank]->GPIO_INT_POLARITY &= ~(0x1<<pin_offset);
 
-            if (cfg->irq_debounce)
-                gpio_aux_bank[bank]->GPIO_DEBOUNCE |= 0x1<<pin_offset;
-            else
-                gpio_aux_bank[bank]->GPIO_DEBOUNCE &= ~(0x1<<pin_offset);
             gpio_irq_handler[pin] = cfg->irq_handler;
 
             NVIC_SetVector(GPIOAUX_IRQn, (uint32_t)_gpio_aux_irq_handler[bank]);
@@ -445,6 +445,10 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
         if (cfg->irq_enable) {
             gpio_bank[bank]->GPIO_INTMASK |= (0x1<<pin_offset);
 
+            if (cfg->irq_debounce)
+                gpio_bank[bank]->GPIO_DEBOUNCE |= 0x1<<pin_offset;
+            else
+                gpio_bank[bank]->GPIO_DEBOUNCE &= ~(0x1<<pin_offset);
 
             if (cfg->irq_type == HAL_GPIO_IRQ_TYPE_EDGE_SENSITIVE)
                 gpio_bank[bank]->GPIO_INTTYPE_LEVEL |= 0x1<<pin_offset;
@@ -456,10 +460,6 @@ uint8_t hal_gpio_setup_irq(enum HAL_GPIO_PIN_T pin, const struct HAL_GPIO_IRQ_CF
             else
                 gpio_bank[bank]->GPIO_INT_POLARITY &= ~(0x1<<pin_offset);
 
-            if (cfg->irq_debounce)
-                gpio_bank[bank]->GPIO_DEBOUNCE |= 0x1<<pin_offset;
-            else
-                gpio_bank[bank]->GPIO_DEBOUNCE &= ~(0x1<<pin_offset);
             gpio_irq_handler[pin] = cfg->irq_handler;
 
             NVIC_SetVector(GPIO_IRQn, (uint32_t)_gpio_irq_handler[bank]);

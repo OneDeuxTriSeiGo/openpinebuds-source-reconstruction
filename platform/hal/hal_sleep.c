@@ -12,18 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "analog.h"
-#include "cmsis.h"
-#include "hal_cmu.h"
-#include "hal_dma.h"
-#include "hal_gpadc.h"
-#include "hal_location.h"
-#include "hal_norflash.h"
 #include "hal_sleep.h"
-#include "hal_sysfreq.h"
+#include "hal_cmu.h"
+#include "hal_location.h"
 #include "hal_trace.h"
 #include "hal_timer.h"
+#include "hal_sysfreq.h"
+#include "hal_dma.h"
+#include "hal_norflash.h"
+#include "hal_gpadc.h"
+#include "analog.h"
 #include "pmu.h"
+#include "cmsis.h"
 
 //static uint8_t SRAM_STACK_LOC sleep_stack[128];
 
@@ -229,6 +229,9 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
         } else {
             mode = HAL_CMU_LPU_SLEEP_MODE_CHIP;
         }
+    if (stats_started) {
+        prev_time = hal_sys_timer_get();
+    }
 
     // Stop modules (except for psram and flash, spi)
     hal_gpadc_sleep();
@@ -244,9 +247,6 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
 
 
     if (!hal_sleep_irq_pending()) {
-    if (stats_started) {
-        prev_time = hal_sys_timer_get();
-    }
         hal_cmu_lpu_sleep(mode);
     if (stats_started) {
         cur_time = hal_sys_timer_get();

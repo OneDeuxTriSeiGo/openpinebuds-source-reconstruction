@@ -1329,8 +1329,8 @@ struct hci_rem_oob_ext_data_req_reply_cmd
     struct randomizer oob_r_256;
 };
 
-struct hci_le_gen_dhkey_v1_cmd
 
+struct hci_le_gen_dhkey_v1_cmd
 {
     uint8_t public_key[64];
 };

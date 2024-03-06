@@ -234,9 +234,7 @@ enum BT_DEVICE_ID_T {
 #define BT_AVDTP_CP_VALUE_SIZE 10
 
 struct BT_DEVICE_T {
-    bt_bdaddr_t remote;
     btif_a2dp_stream_t *btif_a2dp_stream;
-    a2dp_stream_t *a2dp_connected_stream;
     uint8_t a2dp_lhdc_llc;
 
     uint8_t channel_mode;
@@ -245,18 +243,20 @@ struct BT_DEVICE_T {
 
 
 
+    a2dp_stream_t *a2dp_connected_stream;
+    bt_bdaddr_t remote;
 
 
     uint8_t a2dp_conn_flag;
     uint8_t a2dp_streamming;
     uint8_t a2dp_play_pause_flag;
+    uint8_t volume_report;
     btif_avdtp_codec_type_t codec_type;
     bool avdtp_cp;
     btif_avdtp_content_prot_t a2dp_avdtp_cp;
     uint8_t a2dp_avdtp_cp_security_data[BT_AVDTP_CP_VALUE_SIZE];
 
     btif_avrcp_channel_t *avrcp_channel;
-    uint8_t volume_report;
 
     btif_hf_channel_t* hf_channel;
     btif_hf_call_setup_t hfchan_callSetup;

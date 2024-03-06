@@ -35,12 +35,12 @@
  ****************************************************************************************
  */
 
+#include "ke_task.h"
+#include "prf.h"
 #include "prf_types.h"
 #include "gatt.h"
 #include "gapc.h"
 #include "gapc_msg.h"
-#include "prf.h"
-#include "ke_task.h"
 
 /*
  * MACROS

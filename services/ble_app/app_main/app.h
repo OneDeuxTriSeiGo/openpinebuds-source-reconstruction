@@ -293,10 +293,10 @@ void app_scanning_stopped(void);
 
 void app_scanning_starting_failed(uint8_t actv_idx, uint8_t err_code);
 
-void app_connecting_failed(uint8_t actv_idx, uint8_t err_code);
 void app_ble_update_param_failed(uint8_t conidx, uint8_t errCode);
 
 void app_ble_update_param_successful(uint8_t conidx, APP_BLE_CONN_PARAM_T* pConnParam);
+void app_connecting_failed(uint8_t actv_idx, uint8_t err_code);
 
 void appm_exchange_mtu(uint8_t conidx);
 

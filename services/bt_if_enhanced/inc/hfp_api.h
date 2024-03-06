@@ -295,11 +295,11 @@ extern "C" {
 
     bt_status_t btif_hf_is_inbandring_enabled(btif_hf_channel_t* chan_h);
 
-#if defined(IBRT)
     uint32_t btif_hfp_profile_save_ctx(btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);
 
     uint32_t btif_hfp_profile_restore_ctx(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint32_t buf_len);
 
+#if defined(IBRT)
     bt_status_t btif_hf_sync_conn_audio_connected(hfp_sco_codec_t codec,uint16_t conhdl);
     bt_status_t btif_hf_sync_conn_audio_disconnected(uint16_t conhdl);
 #endif

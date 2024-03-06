@@ -399,8 +399,8 @@ extern "C" {
 
     void btif_a2dp_init(void);
 
-    btif_a2dp_stream_t *btif_a2dp_alloc_sink_stream(void);
 
+    btif_a2dp_stream_t *btif_a2dp_alloc_sink_stream(void);
     btif_a2dp_stream_t *btif_a2dp_alloc_source_stream(void);
 
     uint16_t btif_avdtp_parse_mediaHeader(btif_media_header_t * header,
@@ -561,11 +561,11 @@ extern "C" {
 
 
 
+
+
     btif_remote_device_t *btif_a2dp_get_remote_device_from_cbparms(a2dp_stream_t *Stream, const a2dp_callback_parms_t *info);
 
     btif_avdtp_codec_type_t btif_a2dp_get_codec_type(const a2dp_callback_parms_t *info);
-
-
     void btif_a2dp_set_codec_info_func(void (*func)(uint8_t dev_num, const uint8_t *codec));
     void btif_a2dp_get_codec_info_func(void (*func)(uint8_t dev_num, uint8_t *codec));
 

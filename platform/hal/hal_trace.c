@@ -21,7 +21,6 @@
 #ifdef RTOS
 #include "cmsis_os.h"
 #endif
-#include "hal_bootmode.h"
 #include "hal_cmu.h"
 #include "hal_chipid.h"
 #include "hal_codec.h"
@@ -35,6 +34,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "string.h"
+#include "hal_bootmode.h"
 
 #ifdef CORE_DUMP
 #include "CrashCatcherApi.h"
@@ -176,13 +176,13 @@ struct HAL_TRACE_BUF_T {
     unsigned char buf[TRACE_BUF_SIZE];
     unsigned short wptr;
     unsigned short rptr;
+#if (TRACE_IDLE_OUTPUT == 0)
+    unsigned short sends[2];
+#endif
     unsigned short discards;
     bool sending;
     bool in_trace;
     bool wrapped;
-#if (TRACE_IDLE_OUTPUT == 0)
-    unsigned short sends[2];
-#endif
 };
 
 STATIC_ASSERT(TRACE_BUF_SIZE < (1 << (8 * sizeof(((struct HAL_TRACE_BUF_T *)0)->wptr))), "TRACE_BUF_SIZE is too large to fit in wptr/rptr variable");
@@ -273,8 +273,8 @@ static void hal_trace_app_output_callback(const unsigned char *buf, unsigned int
 #endif // TRACE_TO_APP
 #endif // CRASH_DUMP_ENABLE
 #ifdef CP_TRACE_ENABLE
-static HAL_TRACE_BUF_CTRL_T cp_buffer_cb = NULL;
 static HAL_TRACE_APP_NOTIFY_T cp_notify_cb = NULL;
+static HAL_TRACE_BUF_CTRL_T cp_buffer_cb = NULL;
 #endif
 
 #ifdef AUDIO_DEBUG
@@ -447,6 +447,7 @@ void hal_trace_send(void)
 
 int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 {
+    int ret;
 
 
 #if (CHIP_HAS_UART >= 2)
@@ -485,7 +486,6 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
     p_trace->wrapped = false;
 
     if (hal_trace_is_uart_transport(transport)) {
-    int ret;
         trace_uart = HAL_UART_ID_0 + (transport - HAL_TRACE_TRANSPORT_UART0);
         ret = hal_uart_open(trace_uart, &uart_cfg);
         if (ret) {
@@ -521,6 +521,7 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 #endif
 #endif
 
+    trace_transport = transport;
 
 #ifdef CRASH_DUMP_ENABLE
     in_crash_dump = false;
@@ -530,7 +531,6 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
     for (int i = 0; i < ARRAY_SIZE(trace_mod_map); i++) {
         trace_mod_map[i] = ~0;
     }
-    trace_transport = transport;
     // Show build info
     hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
     hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
@@ -549,6 +549,7 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
 {
     int ret = 0;
+    uint32_t lock;
 
 #if (CHIP_HAS_UART >= 2)
 #ifdef FORCE_TRACE_UART1
@@ -579,7 +580,6 @@ int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
 
 
 #if (CHIP_HAS_UART >= 2)
-    uint32_t lock;
 
     lock = int_lock();
 
@@ -697,13 +697,13 @@ int hal_trace_set_log_level(enum TR_LEVEL_T level)
 
 void hal_trace_get_history_buffer(const uint8_t **buf1, uint32_t *len1, const uint8_t **buf2, uint32_t *len2)
 {
+    uint32_t lock;
     uint8_t *b1, *b2;
     uint32_t l1, l2;
 
     b1 = b2 = NULL;
     l1 = l2 = 0;
 
-    uint32_t lock;
     lock = int_lock();
 
     if (TRACE_BUF_SIZE > p_trace->wptr) {
@@ -805,6 +805,9 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
 {
     int ret;
     uint32_t lock;
+    uint32_t avail;
+    uint32_t out_len;
+    uint16_t size;
 #ifdef CP_TRACE_ENABLE
     uint8_t cpu_id = get_cpu_id() ? 1 : 0;
 #endif
@@ -818,9 +821,6 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
 
     // Avoid troubles when NMI occurs during trace
     if (!p_trace->in_trace) {
-    uint32_t avail;
-    uint32_t out_len;
-    uint16_t size;
         p_trace->in_trace = true;
 
         if (p_trace->wptr >= p_trace->rptr) {
@@ -886,7 +886,6 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
             }
         }
 #endif
-    }
 
 #ifdef CP_TRACE_ENABLE
         hal_trace_cp_unlock(cpu_id);
@@ -911,6 +910,7 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
         }
 #endif
 #endif
+    }
 
 #if defined(CP_TRACE_ENABLE) && defined(CP_MEMSC_TIMEOUT_CHECK)
     if (memsc_timeout[cpu_id] == 1) {
@@ -1088,14 +1088,14 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #if defined(KERNEL_RHINO) || defined(KERNEL_RTX5)
         /* const char *thread_name = osGetThreadName(); */
         /* snprintf(ctx, sizeof(ctx), "%.9s", thread_name ? (char *)thread_name : "NULL"); */
-#else
-        snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
-#endif
-#else
         ctx[0] = ' ';
         ctx[1] = ' ';
         ctx[2] = '0';
         ctx[3] = '\0';
+#else
+        snprintf(ctx, sizeof(ctx), "%3d", osGetThreadIntId());
+#endif
+#else
         ctx[0] = ' ';
         ctx[1] = ' ';
         ctx[2] = '0';
@@ -1277,9 +1277,9 @@ int hal_trace_continue(void)
 
 int hal_trace_flush_buffer(void)
 {
-    int ret = 0;
     uint32_t lock;
     uint32_t time;
+    int ret = 0;
     enum HAL_DMA_RET_T dma_ret;
 
     if (trace_transport >= HAL_TRACE_TRANSPORT_QTY)  {
@@ -1489,9 +1489,9 @@ int hal_trace_crash_dump_register(enum HAL_TRACE_CRASH_DUMP_MODULE_T module, HAL
     return 0;
 }
 
+#ifdef CRASH_DUMP_ENABLE
 void hal_trace_crash_dump_callback(void)
 {
-#ifdef CRASH_DUMP_ENABLE
     int i;
 
     in_crash_dump = true;
@@ -1501,8 +1501,8 @@ void hal_trace_crash_dump_callback(void)
             crash_dump_cb_list[i]();
         }
     }
-#endif
 }
+#endif
 
 #ifdef CRASH_DUMP_ENABLE
 #ifdef TRACE_TO_APP
@@ -1642,13 +1642,13 @@ int hal_trace_address_writable(uint32_t addr)
 
 int hal_trace_address_executable(uint32_t addr)
 {
+// Avoid reading out of valid memory region when parsing instruction content
+#define X_ADDR_OFFSET                   0x10
 
     // Check thumb code
     if ((addr & 1) == 0) {
         return 0;
     }
-// Avoid reading out of valid memory region when parsing instruction content
-#define X_ADDR_OFFSET                   0x10
     // Check location
     if ((RAMX_BASE + X_ADDR_OFFSET) < addr && addr < (RAMX_BASE + RAM_SIZE)) {
         return 1;
@@ -2446,10 +2446,10 @@ static void NAKED hal_trace_fault_handler(void)
         "and r3, lr, #0x0C;"
         "teq r3, #0x0C;"
         "ite eq;"
-        // Using PSP
-        "mrseq r3, psp;"
         // Using MSP
         "mrsne r3, msp;"
+        // Using PSP
+        "mrseq r3, psp;"
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
         // -- Check EXC_RETURN.DCRS (bit[5])
         "tst lr, #0x20;"

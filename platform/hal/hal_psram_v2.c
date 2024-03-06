@@ -370,7 +370,6 @@ static void hal_psram_phy_dll_config(uint32_t clk)
 
 static void hal_psram_phy_init(uint32_t clk)
 {
-    hal_psram_phy_dll_config(clk);
     uint32_t val;
     val = psram_phy->REG_048;
     val |= PSRAM_ULP_PHY_REG_LDO_PU | PSRAM_ULP_PHY_REG_LDO_PRECHARGE;
@@ -399,6 +398,7 @@ static void hal_psram_phy_init(uint32_t clk)
     psram_phy->REG_050 = val;
     hal_sys_timer_delay_us(20);
 
+    hal_psram_phy_dll_config(clk);
 }
 
 static void hal_psram_mc_set_timing(uint32_t clk, bool init)
@@ -423,6 +423,9 @@ static void hal_psram_mc_set_timing(uint32_t clk, bool init)
         val = PSRAM_ULP_MC_READ_LATENCY(6);
     }
     psram_mc->REG_02C = val;
+    // tRC >= 55 ns
+    val = (clk / 1000000 * 55 + (1000 - 1)) / 1000;
+    psram_mc->REG_050 = PSRAM_ULP_MC_T_RC(val);
     val = 2;
     psram_mc->REG_058 = PSRAM_ULP_MC_T_CPHR(val);
     psram_mc->REG_068 = PSRAM_ULP_MC_T_MRR(val);
@@ -432,9 +435,6 @@ static void hal_psram_mc_set_timing(uint32_t clk, bool init)
     val += 1;
 #endif
     psram_mc->REG_06C = PSRAM_ULP_MC_T_MRS(val);
-    // tRC >= 55 ns
-    val = (clk / 1000000 * 55 + (1000 - 1)) / 1000;
-    psram_mc->REG_050 = PSRAM_ULP_MC_T_RC(val);
     // tCEM <= 2.5 us
     val = clk / 1000000 * 25 / 10;
     psram_mc->REG_070 = PSRAM_ULP_MC_T_CEM(val);
@@ -605,11 +605,11 @@ static bool psramphy_check_write_valid()
 
 static void hal_psram_calib_range(uint32_t range)
 {
-    #define BUFFER_SIZE  0x20
     uint32_t val;
     uint32_t delay;
     POSSIBLY_UNUSED uint8_t tx_dqs, rx_dqs, tx_ceb, tx_clk;
     uint8_t inc_delay, volume;
+    #define BUFFER_SIZE  0x20
     bool cali_valid[BUFFER_SIZE][BUFFER_SIZE];
     uint8_t cali_value[BUFFER_SIZE][BUFFER_SIZE];
 
@@ -647,10 +647,10 @@ static void hal_psram_calib_range(uint32_t range)
     tx_ceb = delay / 2;
     tx_clk = delay / 2 + 2;
     //volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
+    volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
 
     PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 
-    volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
 
     uint8_t all_valid = 1;
 

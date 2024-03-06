@@ -56,9 +56,9 @@
 /// recommended value: 10.24s: (1024 in 10 ms step)
 #define GAP_TMR_LIM_DISC_SCAN_1M                            0x0400 //(1024)
 
+/// Minimum time interval between private address change
 /// TGAP(private_addr_int)
 /// recommended value: 15 minutes
-/// Minimum time interval between private address change
 /// Minimum value 1s
 #define GAP_TMR_PRIV_ADDR_MIN                             (0x0001)
 
