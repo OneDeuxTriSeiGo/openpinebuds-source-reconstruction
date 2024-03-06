@@ -187,16 +187,6 @@ struct HAL_TRACE_BUF_T {
 
 STATIC_ASSERT(TRACE_BUF_SIZE < (1 << (8 * sizeof(((struct HAL_TRACE_BUF_T *)0)->wptr))), "TRACE_BUF_SIZE is too large to fit in wptr/rptr variable");
 
-#if (TRACE_IDLE_OUTPUT == 0)
-static const enum HAL_DMA_PERIPH_T uart_periph[] = {
-    HAL_GPDMA_UART0_TX,
-#if (CHIP_HAS_UART >= 2)
-    HAL_GPDMA_UART1_TX,
-#endif
-#if (CHIP_HAS_UART >= 3)
-    HAL_GPDMA_UART2_TX,
-#endif
-};
 static struct HAL_DMA_CH_CFG_T dma_cfg;
 TRACE_BUF_LOC
 static struct HAL_TRACE_BUF_T trace;
@@ -223,6 +213,16 @@ static const struct HAL_UART_CFG_T uart_cfg = {
     .dma_rx_stop_on_err = false,
 };
 
+#if (TRACE_IDLE_OUTPUT == 0)
+static const enum HAL_DMA_PERIPH_T uart_periph[] = {
+    HAL_GPDMA_UART0_TX,
+#if (CHIP_HAS_UART >= 2)
+    HAL_GPDMA_UART1_TX,
+#endif
+#if (CHIP_HAS_UART >= 3)
+    HAL_GPDMA_UART2_TX,
+#endif
+};
 
 static const struct HAL_UART_CFG_T uart_cfg = {
     .parity = HAL_UART_PARITY_NONE,
@@ -2450,17 +2450,6 @@ static void NAKED hal_trace_fault_handler(void)
         "mrsne r3, msp;"
         // Using PSP
         "mrseq r3, psp;"
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-        // -- Check EXC_RETURN.DCRS (bit[5])
-        "tst lr, #0x20;"
-        "beq _get_callee_saved_regs;"
-        // -- Check EXC_RETURN.ES (bit[0])
-        "tst lr, #0x01;"
-        "bne _check_fp_cntx;"
-        "_get_callee_saved_regs:;"
-        "add r3, #4*2;"
-        "ldm r3!, {r4-r11};"
-#endif
         // Check EXC_RETURN.FType (bit[4])
         "tst lr, #0x10;"
         "ite eq;"
@@ -2499,6 +2488,17 @@ static void NAKED hal_trace_fault_handler(void)
         "addeq r0, r3, #4*8;"
         "beq _done_stack_frame;"
         "add r0, r3, #4*(8+18);"
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+        // -- Check EXC_RETURN.DCRS (bit[5])
+        "tst lr, #0x20;"
+        "beq _get_callee_saved_regs;"
+        // -- Check EXC_RETURN.ES (bit[0])
+        "tst lr, #0x01;"
+        "bne _check_fp_cntx;"
+        "_get_callee_saved_regs:;"
+        "add r3, #4*2;"
+        "ldm r3!, {r4-r11};"
+#endif
         "_done_stack_frame:;"
         // -- Check RETPSR.SPREALIGN (bit[9])
         "ldr r4, [r3, #4*7];"

@@ -120,16 +120,6 @@
 /******************************************************************************************/
 /* --------------------------   HOST MODULES      ----------------------------------------*/
 /******************************************************************************************/
-#ifdef CFG_PRF
-#define BLE_PROFILES      (1)
-/// Number of Profile tasks managed by GAP manager.
-#define BLE_NB_PROFILES   (CFG_NB_PRF)
-
-#include "rwprf_config.h"
-#else
-#define BLE_PROFILES      (0)
-#define BLE_NB_PROFILES   (0)
-#endif // CFG_PRF
 
 #define BLE_GAPM                    1
 #if (BLE_CENTRAL || BLE_PERIPHERAL)
@@ -159,6 +149,16 @@
 /* --------------------------   GATT              ----------------------------------------*/
 /******************************************************************************************/
 
+#ifdef CFG_PRF
+#define BLE_PROFILES      (1)
+/// Number of Profile tasks managed by GAP manager.
+#define BLE_NB_PROFILES   (CFG_NB_PRF)
+
+#include "rwprf_config.h"
+#else
+#define BLE_PROFILES      (0)
+#define BLE_NB_PROFILES   (0)
+#endif // CFG_PRF
 
 /// Size of the heap
 #if (BLE_CENTRAL || BLE_PERIPHERAL)

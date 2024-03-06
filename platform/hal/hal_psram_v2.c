@@ -644,13 +644,13 @@ static void hal_psram_calib_range(uint32_t range)
     if (inc_delay == 0)
         inc_delay = 1;
 
-    tx_ceb = delay / 2;
-    tx_clk = delay / 2 + 2;
     //volume = (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT) / inc_delay;
     volume = MIN(delay, (PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_MASK >> PSRAM_ULP_PHY_REG_PSRAM_TX_DQS_DLY_SHIFT)) / inc_delay;
 
     PSRAM_TRACE(2, "volume:%d, inc_delay:%d", volume, inc_delay);
 
+    tx_ceb = delay / 2;
+    tx_clk = delay / 2 + 2;
 
     uint8_t all_valid = 1;
 

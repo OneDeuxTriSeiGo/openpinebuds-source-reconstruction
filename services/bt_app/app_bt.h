@@ -129,6 +129,7 @@ void app_check_pending_stop_sniff_op(void);
 
 uint8_t app_bt_count_connected_device(void);
 
+bool app_bt_is_hfp_connected(uint8_t device_id);
 
 void app_bt_pause_media_player_again(uint8_t deviceId);
 
@@ -138,7 +139,6 @@ bool app_bt_pause_music_player(uint8_t deviceId);
 
 void app_bt_resume_music_player(uint8_t deviceId);
 
-bool app_bt_is_hfp_connected(uint8_t device_id);
 bool app_bt_is_a2dp_connected(uint8_t device_id);
 
 

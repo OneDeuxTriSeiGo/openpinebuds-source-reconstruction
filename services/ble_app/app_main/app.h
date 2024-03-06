@@ -264,8 +264,6 @@ void app_ble_connected_evt_handler(uint8_t conidx, gap_bdaddr_t *pPeerBdAddress)
  */
 void app_ble_disconnected_evt_handler(uint8_t conidx, uint8_t errCode);
 
-void app_connecting_stopped(gap_bdaddr_t *peer_addr);
-void app_connecting_stopped(gap_bdaddr_t *peer_addr);
 void l2cap_update_param(uint8_t  conidx,
                         uint32_t min_interval_in_ms,
                         uint32_t max_interval_in_ms,
@@ -294,6 +292,7 @@ void app_scanning_stopped(void);
 void app_scanning_starting_failed(uint8_t actv_idx, uint8_t err_code);
 
 void app_ble_update_param_failed(uint8_t conidx, uint8_t errCode);
+void app_connecting_stopped(gap_bdaddr_t *peer_addr);
 
 void app_ble_update_param_successful(uint8_t conidx, APP_BLE_CONN_PARAM_T* pConnParam);
 void app_connecting_failed(uint8_t actv_idx, uint8_t err_code);
@@ -311,6 +310,7 @@ void app_scanning_started(void);
 
 void app_advertising_started(uint8_t actv_idx);
 
+void app_connecting_stopped(gap_bdaddr_t *peer_addr);
 
 void app_connecting_started(void);
 

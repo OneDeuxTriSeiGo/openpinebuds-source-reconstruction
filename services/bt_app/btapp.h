@@ -238,8 +238,6 @@ struct BT_DEVICE_T {
     uint8_t a2dp_lhdc_llc;
 
     uint8_t channel_mode;
-    uint8_t sample_rate;
-    uint8_t sample_bit;
 
 
 
@@ -256,6 +254,8 @@ struct BT_DEVICE_T {
     btif_avdtp_content_prot_t a2dp_avdtp_cp;
     uint8_t a2dp_avdtp_cp_security_data[BT_AVDTP_CP_VALUE_SIZE];
 
+    uint8_t sample_rate;
+    uint8_t sample_bit;
     btif_avrcp_channel_t *avrcp_channel;
 
     btif_hf_channel_t* hf_channel;
