@@ -548,8 +548,8 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 
 int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
 {
-    int ret = 0;
     uint32_t lock;
+    int ret;
 
 #if (CHIP_HAS_UART >= 2)
 #ifdef FORCE_TRACE_UART1
@@ -578,6 +578,7 @@ int hal_trace_switch(enum HAL_TRACE_TRANSPORT_T transport)
         return 0;
     }
 
+    ret = 0;
 
 #if (CHIP_HAS_UART >= 2)
 
