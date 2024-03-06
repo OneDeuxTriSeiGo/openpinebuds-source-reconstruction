@@ -299,41 +299,7 @@ static bool hal_trace_is_uart_transport(enum HAL_TRACE_TRANSPORT_T transport)
     return false;
 }
 
-#if (TRACE_IDLE_OUTPUT)
-
-static void hal_trace_uart_idle_send(void)
-{
-    int i;
-    uint32_t lock;
-    unsigned short wptr, rptr;
-
-    lock = int_lock();
-    wptr = p_trace->wptr;
-    rptr = p_trace->rptr;
-    int_unlock(lock);
-
-    if (wptr == rptr) {
-        return;
-    }
-
-    if (wptr < rptr) {
-        for (i = rptr; i < TRACE_BUF_SIZE; i++) {
-            hal_uart_blocked_putc(trace_uart, p_trace->buf[i]);
-        }
-        rptr = 0;
-    }
-
-    for (i = rptr; i < wptr; i++) {
-        hal_uart_blocked_putc(trace_uart, p_trace->buf[i]);
-    }
-
-    p_trace->rptr = wptr;
-    if (p_trace->rptr >= TRACE_BUF_SIZE) {
-        p_trace->rptr -= TRACE_BUF_SIZE;
-    }
-}
-
-#else // TRACE_IDLE_OUTPUT
+#if (TRACE_IDLE_OUTPUT == 0)
 
 static void hal_trace_uart_send(void)
 {
@@ -436,8 +402,39 @@ static void hal_trace_uart_xfer_done(uint8_t chan, uint32_t remain_tsize, uint32
 }
 
 
-#endif // TRACE_IDLE_OUTPUT
+#else // TRACE_IDLE_OUTPUT
 
+static void hal_trace_uart_idle_send(void)
+{
+    int i;
+    uint32_t lock;
+    unsigned short wptr, rptr;
+
+    lock = int_lock();
+    wptr = p_trace->wptr;
+    rptr = p_trace->rptr;
+    int_unlock(lock);
+
+    if (wptr == rptr) {
+        return;
+    }
+
+    if (wptr < rptr) {
+        for (i = rptr; i < TRACE_BUF_SIZE; i++) {
+            hal_uart_blocked_putc(trace_uart, p_trace->buf[i]);
+        }
+        rptr = 0;
+    }
+
+    for (i = rptr; i < wptr; i++) {
+        hal_uart_blocked_putc(trace_uart, p_trace->buf[i]);
+    }
+
+    p_trace->rptr = wptr;
+    if (p_trace->rptr >= TRACE_BUF_SIZE) {
+        p_trace->rptr -= TRACE_BUF_SIZE;
+    }
+}
 
 void hal_trace_send(void)
 {
@@ -446,6 +443,7 @@ void hal_trace_send(void)
     }
 }
 
+#endif // TRACE_IDLE_OUTPUT
 
 int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 {
