@@ -534,8 +534,8 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
     }
     trace_transport = transport;
     // Show build info
-    hal_trace_output_linefeed();
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
+    hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
     hal_trace_output((unsigned char *)sys_build_info, strlen(sys_build_info));
 
     char buf[50];
@@ -1387,7 +1387,7 @@ void hal_trace_print_special_stack_registers(uint32_t msp, uint32_t psp)
 {
     int len;
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
 
     len = snprintf(crash_buf, sizeof(crash_buf), "MSP=%08X, PSP=%08X" NEW_LINE_STR, (unsigned)msp, (unsigned)psp);
     hal_trace_output((unsigned char *)crash_buf, len);
@@ -1405,7 +1405,7 @@ void hal_trace_print_common_registers(const uint32_t *regs)
     int i;
     int index;
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
 
     for (i = 0; i < 3; i++) {
         index = i * 4;
@@ -1432,7 +1432,7 @@ void hal_trace_print_stack(uint32_t addr)
         return;
     }
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
     hal_trace_output((const unsigned char *)stack_title, sizeof(stack_title) - 1);
 
     stack = (uint32_t *)addr - STACK_DUMP_CNT_PREV;
@@ -1475,7 +1475,7 @@ void hal_trace_print_backtrace(uint32_t addr, uint32_t search_cnt, uint32_t prin
         return;
     }
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
     hal_trace_output((const unsigned char *)bt_title, sizeof(bt_title) - 1);
 
     stack = (uint32_t *)addr;
@@ -1767,7 +1767,7 @@ int hal_trace_address_readable(uint32_t addr)
 static void NORETURN hal_trace_crash_end(void)
 {
 #if (defined(DEBUG) || defined(REL_TRACE_ENABLE))
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
     hal_trace_flush_buffer();
     hal_sys_timer_delay(MS_TO_TICKS(5));
 #endif
@@ -1892,7 +1892,7 @@ static void NORETURN USED hal_trace_assert_dump_internal(ASSERT_DUMP_ARGS)
 
     len = hal_trace_print_time(TR_LEVEL_CRITICAL, TR_MODULE_NONE, &crash_buf[0], sizeof(crash_buf));
     if (len > 0) {
-        hal_trace_output_linefeed();
+        hal_trace_output((const unsigned char *)newline, sizeof(newline));
         hal_trace_output((unsigned char *)crash_buf, len);
     }
     len = snprintf(&crash_buf[0], sizeof(crash_buf), NEW_LINE_STR "### ASSERT @ 0x%08X ###" NEW_LINE_STR, (unsigned)info.R[14]);
@@ -1909,19 +1909,19 @@ static void NORETURN USED hal_trace_assert_dump_internal(ASSERT_DUMP_ARGS)
 #if defined(ASSERT_SHOW_FILE_FUNC) || defined(ASSERT_SHOW_FILE)
     hal_trace_output((const unsigned char *)desc_file, sizeof(desc_file) - 1);
     hal_trace_output((const unsigned char *)file, strlen(file));
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 #endif
 
 #if defined(ASSERT_SHOW_FILE_FUNC) || defined(ASSERT_SHOW_FUNC)
     hal_trace_output((const unsigned char *)desc_func, sizeof(desc_func) - 1);
     hal_trace_output((const unsigned char *)func, strlen(func));
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 #endif
 
     hal_trace_output((const unsigned char *)desc_line, sizeof(desc_func) - 1);
     len = snprintf(crash_buf, sizeof(crash_buf), "%u", line);
     hal_trace_output((const unsigned char *)crash_buf, len);
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     hal_trace_output((unsigned char *)separate_line, sizeof(separate_line) - 1);
 
@@ -1943,7 +1943,7 @@ static void NORETURN USED hal_trace_assert_dump_internal(ASSERT_DUMP_ARGS)
 
     hal_trace_print_backtrace(info.R[13], TRACE_BACKTRACE_SEARCH_WORD, TRACE_BACKTRACE_NUM);
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     hal_trace_flush_buffer();
 
@@ -2123,8 +2123,8 @@ static void hal_trace_print_fault_info_ca(const struct EXCEPTION_INFO_T *info)
     }
     len += snprintf(&crash_buf[len], sizeof(crash_buf) - len, ", MODE=%02X (%s)", (unsigned)val, desc);
     hal_trace_output((unsigned char *)crash_buf, len);
-    hal_trace_output_linefeed();
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     hal_trace_flush_buffer();
 
@@ -2157,7 +2157,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
     hal_trace_print_common_registers(regs);
     hal_trace_print_special_stack_registers(info->MSP, info->PSP);
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     len = snprintf(crash_buf, sizeof(crash_buf), "PRIMASK=%02X, FAULTMASK=%02X, BASEPRI=%02X, CONTROL=%02X" NEW_LINE_STR,
         (unsigned)info->PRIMASK, (unsigned)info->FAULTMASK, (unsigned)info->BASEPRI, (unsigned)info->CONTROL);
@@ -2176,8 +2176,8 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
         len += snprintf(&crash_buf[len], sizeof(crash_buf) - len, " (NoException)");
     }
     hal_trace_output((unsigned char *)crash_buf, len);
-    hal_trace_output_linefeed();
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     hal_trace_flush_buffer();
 
@@ -2192,7 +2192,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
     len = snprintf(crash_buf, sizeof(crash_buf), "MMFAR=%08X, BFAR =%08X",
         (unsigned)info->MMFAR, (unsigned)info->BFAR);
     hal_trace_output((unsigned char *)crash_buf, len);
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     if (info->HFSR & (1 << 30)) {
         len = snprintf(crash_buf, sizeof(crash_buf), "(Escalation HardFault)" NEW_LINE_STR);
@@ -2227,7 +2227,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
 #endif
     }
     hal_trace_output((unsigned char *)crash_buf, len);
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     len = snprintf(crash_buf, sizeof(crash_buf), "FaultCause:");
     if (info->CFSR == 0) {
@@ -2309,7 +2309,7 @@ static void hal_trace_print_fault_info_cm(const struct EXCEPTION_INFO_T *info)
         }
     }
     hal_trace_output((unsigned char *)crash_buf, len);
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 }
 #endif
 
@@ -2363,7 +2363,7 @@ void hal_trace_fault_dump(const uint32_t *regs, const uint32_t *extra, uint32_t 
 
     len = hal_trace_print_time(TR_LEVEL_CRITICAL, TR_MODULE_NONE, &crash_buf[0], sizeof(crash_buf));
     if (len > 0) {
-        hal_trace_output_linefeed();
+        hal_trace_output((const unsigned char *)newline, sizeof(newline));
         hal_trace_output((unsigned char *)crash_buf, len);
     }
     hal_trace_output((unsigned char *)title, sizeof(title));
@@ -2376,7 +2376,7 @@ void hal_trace_fault_dump(const uint32_t *regs, const uint32_t *extra, uint32_t 
 
     hal_trace_print_backtrace(regs[13], TRACE_BACKTRACE_SEARCH_WORD, TRACE_BACKTRACE_NUM);
 
-    hal_trace_output_linefeed();
+    hal_trace_output((const unsigned char *)newline, sizeof(newline));
 
     hal_trace_flush_buffer();
 
