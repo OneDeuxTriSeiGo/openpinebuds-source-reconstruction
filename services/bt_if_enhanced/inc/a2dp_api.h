@@ -22,8 +22,8 @@
 #include "codec_sbc.h"
 
 
-typedef struct { /* empty */ } a2dp_stream_t; /* used to hold the pointer to struct a2dp_control_t */
-typedef struct { /* empty */ } a2dp_callback_parms_t; /* used to hold the pointer to btif_a2dp_callback_parms_t */
+typedef void a2dp_stream_t;
+typedef void a2dp_callback_parms_t;
 
 typedef uint8_t btif_a2dp_event_t;
 
