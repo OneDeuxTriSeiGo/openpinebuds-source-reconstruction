@@ -1081,11 +1081,10 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
         ctx[3] = '\0';
 #endif
     } else if (in_isr()) {
-        uint32_t ctx_len;
-        ctx_len = snprintf(ctx, sizeof(ctx), "%2d", (int8_t)NVIC_GetCurrentActiveIRQ());
-        if (ctx_len + 1 < ARRAY_SIZE(ctx)) {
-            ctx[ctx_len] = 'E';
-            ctx[ctx_len + 1] = '\0';
+        len = snprintf(ctx, sizeof(ctx), "%2d", (int8_t)NVIC_GetCurrentActiveIRQ());
+        if (len + 1 < ARRAY_SIZE(ctx)) {
+            ctx[len] = 'E';
+            ctx[len + 1] = '\0';
         } else {
             ctx[ARRAY_SIZE(ctx) - 2] = '.';
             ctx[ARRAY_SIZE(ctx) - 1] = '\0';
