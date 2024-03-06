@@ -303,7 +303,9 @@ extern struct rwip_param_api rwip_param;
 #if (BLE_EMB_PRESENT || BT_EMB_PRESENT)
 /// API for dual mode priority
 extern const struct rwip_prio rwip_priority[RWIP_PRIO_IDX_MAX];
+#endif //(BT_EMB_PRESENT || BLE_EMB_PRESENT)
 
+#if (BT_EMB_PRESENT || BLE_EMB_PRESENT)
 #if (RW_WLAN_COEX)
 /// API for COEX configuration
 extern const uint8_t rwip_coex_cfg[RWIP_COEX_CFG_MAX];

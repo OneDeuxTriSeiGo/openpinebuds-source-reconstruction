@@ -2573,7 +2573,9 @@ static enum HAL_TRACE_RX_STATE_T trace_rx_state;
 static uint8_t *trace_rx_buf;
 static uint32_t trace_rx_len;
 static HAL_TRACE_RX_CALLBACK_T trace_rx_cb;
+#endif
 
+#if (defined(DEBUG) || defined(REL_TRACE_ENABLE))
 static void hal_trace_rx_start(void)
 {
     uint32_t desc_cnt = 1;

@@ -572,6 +572,8 @@ extern "C" {
 #if defined(IBRT)
     void btif_a2dp_set_codec_info(uint8_t dev_num, const uint8_t *codec);
     void btif_a2dp_get_codec_info(uint8_t dev_num, uint8_t *codec);
+#endif
+#if defined(IBRT)
     uint32_t btif_a2dp_profile_save_ctx(btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);
     uint32_t btif_a2dp_profile_restore_ctx(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint32_t buf_len);
     uint8_t btif_a2dp_is_critical_avdtp_cmd_handling(void);
