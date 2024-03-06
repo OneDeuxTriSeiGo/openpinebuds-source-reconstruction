@@ -225,6 +225,22 @@ static const struct HAL_UART_CFG_T uart_cfg = {
 #endif
     .dma_rx_stop_on_err = false,
 };
+static const struct HAL_UART_CFG_T uart_cfg = {
+    .parity = HAL_UART_PARITY_NONE,
+    .stop = HAL_UART_STOP_BITS_1,
+    .data = HAL_UART_DATA_BITS_8,
+    .flow = HAL_UART_FLOW_CONTROL_NONE,//HAL_UART_FLOW_CONTROL_RTSCTS,
+    .tx_level = HAL_UART_FIFO_LEVEL_1_2,
+    .rx_level = HAL_UART_FIFO_LEVEL_1_2,
+    .baud = TRACE_BAUD_RATE,
+    .dma_rx = true,
+#if (TRACE_IDLE_OUTPUT == 0)
+    .dma_tx = true,
+#else
+    .dma_tx = false,
+#endif
+    .dma_rx_stop_on_err = false,
+};
 
 TRACE_BUF_LOC static struct HAL_DMA_DESC_T dma_desc[2];
 #endif
@@ -1073,6 +1089,10 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #endif
 
 #else
+            ctx[0] = ' ';
+            ctx[1] = ' ';
+            ctx[2] = '0';
+            ctx[3] = '\0';
             ctx[0] = ' ';
             ctx[1] = ' ';
             ctx[2] = '0';

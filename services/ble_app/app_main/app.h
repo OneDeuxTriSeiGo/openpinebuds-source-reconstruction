@@ -262,6 +262,7 @@ void app_ble_connected_evt_handler(uint8_t conidx, gap_bdaddr_t *pPeerBdAddress)
 void app_ble_disconnected_evt_handler(uint8_t conidx, uint8_t errCode);
 
 void app_connecting_stopped(gap_bdaddr_t *peer_addr);
+void app_connecting_stopped(gap_bdaddr_t *peer_addr);
 
 void l2cap_update_param(uint8_t  conidx,
                         uint32_t min_interval_in_ms,
