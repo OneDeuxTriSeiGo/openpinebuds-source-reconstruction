@@ -349,7 +349,7 @@ static void hal_psram_phy_dll_config(uint32_t clk)
     uint32_t range;
     uint32_t val;
 
-    val = hal_psram_phy_read_reg(&psram_phy->REG_050);
+    val = psram_phy->REG_050;
     val &= ~PSRAM_ULP_PHY_REG_DLL_RESETB | PSRAM_ULP_PHY_REG_DLL_CK_RDY;
     psram_phy->REG_050 = val;
     phy_clk = clk;
@@ -372,7 +372,7 @@ static void hal_psram_phy_init(uint32_t clk)
 {
     hal_psram_phy_dll_config(clk);
     uint32_t val;
-    val = hal_psram_phy_read_reg(&psram_phy->REG_048);
+    val = psram_phy->REG_048;
     val |= PSRAM_ULP_PHY_REG_LDO_PU | PSRAM_ULP_PHY_REG_LDO_PRECHARGE;
     psram_phy->REG_048 = val;
     hal_sys_timer_delay_us(10);
@@ -383,13 +383,13 @@ static void hal_psram_phy_init(uint32_t clk)
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_LDO_VTUNE, 0x2);
     psram_phy->REG_048 = val;
 
-    val = hal_psram_phy_read_reg(&psram_phy->REG_04C);
+    val = psram_phy->REG_04C;
     val |= PSRAM_ULP_PHY_REG_PSRAM_PU;
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_PSRAM_SWRC, 0x3);
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_PSRAM_TXDRV, 0x3);
     psram_phy->REG_04C = val;
 
-    val = hal_psram_phy_read_reg(&psram_phy->REG_050);
+    val = psram_phy->REG_050;
     val |= PSRAM_ULP_PHY_REG_DLL_PU;
     //val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_DLL_SWRC, 0x3);
     psram_phy->REG_050 = val;
@@ -465,7 +465,7 @@ static void hal_psram_init_calib(void)
 
     hal_psram_phy_wait_lock();
 
-    val = hal_psram_phy_read_reg(&psram_phy->REG_058);
+    val = psram_phy->REG_058;
     delay = GET_BITFIELD(val, PSRAM_ULP_PHY_DLL_DLY_IN);
     //ASSERT(delay < (PSRAM_ULP_PHY_DLL_DLY_IN_MASK >> PSRAM_ULP_PHY_DLL_DLY_IN_SHIFT),
     //    "%s: Bad DLL_DLY_IN=0x%X reg=0x%08X", __func__, delay, psram_phy->REG_058);
@@ -618,7 +618,7 @@ static void hal_psram_calib_range(uint32_t range)
 
     ASSERT(range <= (PSRAM_ULP_PHY_REG_DLL_RANGE_MASK >> PSRAM_ULP_PHY_REG_DLL_RANGE_SHIFT), "ERROR, bad ana phy range:%d", range);
 
-    val = hal_psram_phy_read_reg(&psram_phy->REG_050);
+    val = psram_phy->REG_050;
     val &= ~(PSRAM_ULP_PHY_REG_DLL_RESETB | PSRAM_ULP_PHY_REG_DLL_CK_RDY);
     psram_phy->REG_050 = val;
     val = SET_BITFIELD(val, PSRAM_ULP_PHY_REG_DLL_RANGE, range);
@@ -630,7 +630,7 @@ static void hal_psram_calib_range(uint32_t range)
     hal_sys_timer_delay_us(100);
     hal_psram_phy_wait_lock();
 
-    val = hal_psram_phy_read_reg(&psram_phy->REG_058);
+    val = psram_phy->REG_058;
     if ((val & PSRAM_ULP_PHY_DLL_ALL_ONE)) {
         PSRAM_TRACE(2, "%s: all one, increase range=%d", __func__, range + 1);
         return hal_psram_calib_range(range + 1);
