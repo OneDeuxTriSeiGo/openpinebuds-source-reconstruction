@@ -1292,7 +1292,7 @@ static void hal_uart_irq_handler(void)
 #include "stdarg.h"
 #include "stdio.h"
 
-#elif (CHIP_HAS_UART >= 2) && (DEBUG_PORT == 2)
+#if (CHIP_HAS_UART >= 2) && (DEBUG_PORT == 2)
 #define UART_PRINTF_ID                  HAL_UART_ID_1
 #elif (DEBUG_PORT == 1)
 #define UART_PRINTF_ID                  HAL_UART_ID_0

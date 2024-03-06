@@ -2450,7 +2450,7 @@ static void NAKED hal_trace_fault_handler(void)
         "mrseq r3, psp;"
         // Using MSP
         "mrsne r3, msp;"
-#elif defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
         // -- Check EXC_RETURN.DCRS (bit[5])
         "tst lr, #0x20;"
         "beq _get_callee_saved_regs;"
