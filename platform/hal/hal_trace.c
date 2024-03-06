@@ -1168,8 +1168,7 @@ int hal_trace_printf_internal(uint32_t attr, const char *fmt, va_list ap)
     }
 
 #ifdef USE_TRACE_ID
-    if ((attr & TR_ATTR_NO_ID) == 0 && (len = hal_trace_format_id(attr, &log_buf.container.body, fmt, ap)) > 0) {
-    else
+    if ((attr & TR_ATTR_NO_ID) || !(len = hal_trace_format_id(attr, &log_buf.container.body, fmt, ap)) > 0) {
 #endif
     {
         len = 0;
