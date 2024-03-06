@@ -929,7 +929,7 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
     return ret ? 0 : buf_len;
 }
 #ifdef USE_TRACE_ID
-//#define USE_CRC_CHECK
+//define USE_CRC_CHECK
 //#define LITE_VERSION
 
 #define TRACE_ID_MAX_ARG_NUM                15
@@ -2444,7 +2444,7 @@ void hal_trace_fault_dump(const uint32_t *regs, const uint32_t *extra, uint32_t 
 #ifndef __ARM_ARCH_ISA_ARM
 static void NAKED hal_trace_fault_handler(void)
 {
-    // TODO: Save FP registers (and check lazy floating-point context preservation)
+    // TODO: Save FP registers (and check lazy Floating-point context preservation)
     asm volatile (
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
         // Check EXC_RETURN.S (bit[6])

@@ -64,7 +64,8 @@
 
 
 /// L2CAP Signaling transaction Timer duration in milliseconds
-/// TGAP(conn_param_timeout) recommended value: 30 s: (30 000 ms)
+/// TGAP(conn_param_timeout)
+/// recommended value: 30 s: (30 000 ms)
 #define GAP_SIG_TRANS_TIMEOUT_MS                          (30000)
 
 /// SMP L2CAP transaction Timer duration in milliseconds  30 s: (30 000 ms)

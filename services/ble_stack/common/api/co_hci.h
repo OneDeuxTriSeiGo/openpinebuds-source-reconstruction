@@ -2659,7 +2659,7 @@ struct init_phy_param
     ///Maximum CE length (N * 0.625 ms)
     uint16_t       ce_len_max;
 };
-///HCI LE Extended Create Connection Command parameters structure
+///HCI LE Extended Create Connection Command parameters strucuture
 struct hci_le_ext_create_con_cmd
 {
     ///Initiator filter policy
@@ -2676,7 +2676,7 @@ struct hci_le_ext_create_con_cmd
     struct init_phy_param phy[MAX_INIT_PHYS];
 };
 
-///HCI LE Periodic Advertising Create Sync Command parameters structure
+///HCI LE Periodic Advertising Create Sync Command parameters strucutre
 struct hci_le_per_adv_create_sync_cmd
 {
     /// Options (@see enum per_sync_opt)
@@ -2972,7 +2972,7 @@ struct hci_inq_res_with_rssi_evt
     struct devclass class_of_dev;
     ///Clock Offset
     uint16_t     clk_off;
-    ///RSSI
+    ///Rssi
     int8_t       rssi;
 
 };
@@ -2992,7 +2992,7 @@ struct hci_ext_inq_res_evt
     struct devclass class_of_dev;
     ///Clock Offset
     uint16_t        clk_off;
-    ///RSSI
+    ///RSSi
     int8_t          rssi;
     ///Extended inquiry response data
     struct eir      eir;

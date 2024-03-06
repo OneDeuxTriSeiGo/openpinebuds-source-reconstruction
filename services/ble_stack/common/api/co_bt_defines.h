@@ -1532,7 +1532,7 @@ enum le_evt_mask
 /// Max scanning PHYs which can be set HCI:7.8.64
 #define MAX_SCAN_PHYS     2
 
-/// Max initiating PHYs which can be set HCI:7.8.66
+/// Max initiatng PHYs which can be set HCI:7.8.66
 #define MAX_INIT_PHYS     3
 
 /// Ext Scanning interval (in 625us slot) (chapter 2.E.7.8.64)
@@ -2536,7 +2536,7 @@ typedef struct t_public_key
 /// structure connection request LLData
 struct pdu_con_req_lldata
 {
-    /// Access address
+    /// access address
     struct access_addr  aa;
 
     /// CRC init
