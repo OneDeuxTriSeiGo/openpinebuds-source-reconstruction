@@ -1262,32 +1262,18 @@ int hal_trace_busy(void)
 
 int hal_trace_pause(void)
 {
-    int ret = 0;
-        if (hal_trace_is_uart_transport(trace_transport)) {
-            hal_uart_pause(trace_uart, HAL_UART_XFER_TYPE_TX);
-        }
-    p_trace->pause_cnt++;
-    if (p_trace->pause_cnt == 0) {
-        p_trace->pause_cnt--;
-        ret = 1;
+    if (hal_trace_is_uart_transport(trace_transport)) {
+        return hal_uart_pause(trace_uart, HAL_UART_XFER_TYPE_TX);
     }
-    return ret;
+    return 1;
 }
 
 int hal_trace_continue(void)
 {
-    int ret = 0;
-    if (p_trace->pause_cnt == 0) {
-        ret = 1;
-    } else {
-        p_trace->pause_cnt--;
-        if (p_trace->pause_cnt == 0) {
-            if (hal_trace_is_uart_transport(trace_transport)) {
-                hal_uart_continue(trace_uart, HAL_UART_XFER_TYPE_TX);
-            }
-        }
+    if (hal_trace_is_uart_transport(trace_transport)) {
+        return hal_uart_continue(trace_uart, HAL_UART_XFER_TYPE_TX);
     }
-    return ret;
+    return 1;
 }
 
 int hal_trace_flush_buffer(void)
