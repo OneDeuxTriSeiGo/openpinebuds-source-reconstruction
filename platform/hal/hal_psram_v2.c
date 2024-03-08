@@ -460,13 +460,11 @@ static void hal_psram_mc_set_timing(uint32_t clk, bool init)
 
 static void hal_psram_init_calib(void)
 {
-    uint32_t val;
     uint32_t delay;
 
     hal_psram_phy_wait_lock();
 
-    val = psram_phy->REG_058;
-    delay = GET_BITFIELD(val, PSRAM_ULP_PHY_DLL_DLY_IN);
+    delay = GET_BITFIELD(psram_phy->REG_058, PSRAM_ULP_PHY_DLL_DLY_IN);
     //ASSERT(delay < (PSRAM_ULP_PHY_DLL_DLY_IN_MASK >> PSRAM_ULP_PHY_DLL_DLY_IN_SHIFT),
     //    "%s: Bad DLL_DLY_IN=0x%X reg=0x%08X", __func__, delay, psram_phy->REG_058);
 
@@ -477,11 +475,11 @@ static void hal_psram_init_calib(void)
 
 static void hal_psram_mc_init(uint32_t clk)
 {
-    uint32_t val = 0;
 #if defined(PSRAM_DUAL_8BIT)
-    val |= PSRAM_ULP_MC_CHIP_BIT;
+    psram_mc->REG_000 |= PSRAM_ULP_MC_CHIP_BIT;
+#else
+    psram_mc->REG_000 = 0;
 #endif
-    psram_mc->REG_000 = val;
     psram_mc->REG_020 = 0;
     psram_mc->REG_024 =
 #if CHIP_PSRAM_CTRL_VER >= 3
@@ -491,11 +489,10 @@ static void hal_psram_mc_init(uint32_t clk)
         PSRAM_ULP_MC_PD_MR(6) | PSRAM_ULP_MC_PD_CMD(0xF0);
 #ifdef PSRAM_WRAP_ENABLE
     // Burst len: 32 bytes, page: 1K
-    val = PSRAM_ULP_MC_BURST_LENGTH(1);
+    psram_mc->REG_034 = PSRAM_ULP_MC_BURST_LENGTH(1) | PSRAM_ULP_MC_PAGE_BOUNDARY(0);
 #else
+    psram_mc->REG_034 = PSRAM_ULP_MC_BURST_LENGTH(4) | PSRAM_ULP_MC_PAGE_BOUNDARY(0);
 #endif
-        val |= PSRAM_ULP_MC_PAGE_BOUNDARY(0);
-    psram_mc->REG_034 = val;
     // AHB bus width: 32 bits
     psram_mc->REG_038 = 0;
     // Write buffer level with high priority: 0~7
