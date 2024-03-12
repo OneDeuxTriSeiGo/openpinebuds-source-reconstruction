@@ -563,14 +563,6 @@ static void psram_chip_timing_config(uint32_t clk, bool update_psram_first)
         psram_set_timing(clk);
     }
 }
-void hal_psram_snoop_enable()
-{
-    psram_mc->REG_044 &= ~PSRAM_ULP_MC_SNP_DISABLE;
-}
-void hal_psram_snoop_disable()
-{
-    psram_mc->REG_044 |= PSRAM_ULP_MC_SNP_DISABLE;
-}
 
 static bool psramphy_check_write_valid()
 {
@@ -777,6 +769,14 @@ void hal_psram_calib(uint32_t clk)
         range = 1;
     }
     hal_psram_calib_range(range);
+}
+void hal_psram_snoop_enable()
+{
+    psram_mc->REG_044 &= ~PSRAM_ULP_MC_SNP_DISABLE;
+}
+void hal_psram_snoop_disable()
+{
+    psram_mc->REG_044 |= PSRAM_ULP_MC_SNP_DISABLE;
 }
 
 void hal_psram_init(void)

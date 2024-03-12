@@ -108,6 +108,7 @@ bool app_bt_ibrt_reconnect_mobile_profile_flag_get(void);
 
 
 
+bool app_bt_is_a2dp_connected(uint8_t device_id);
 
 
 void app_bt_stay_active(uint8_t deviceId);
@@ -139,7 +140,6 @@ bool app_bt_pause_music_player(uint8_t deviceId);
 
 void app_bt_resume_music_player(uint8_t deviceId);
 
-bool app_bt_is_a2dp_connected(uint8_t device_id);
 
 
 

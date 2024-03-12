@@ -640,6 +640,7 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
         if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
         }
 
+        if (rxdma_handler[id]) {
             if (recv_dma_chan[id] != HAL_DMA_CHAN_NONE) {
                 if (recv_dma_mode[id] == UART_RX_DMA_MODE_NORMAL) {
                     xfer = hal_uart_stop_dma_recv(id);
@@ -650,7 +651,6 @@ static void dma_mode_uart_irq_handler(enum HAL_UART_ID_T id, union HAL_UART_IRQ_
                     }
                 }
             }
-        if (rxdma_handler[id]) {
             rxdma_handler[id](xfer, 0, status);
         }
     }

@@ -116,12 +116,6 @@
 #define BLE_APP_HID          0
 #endif // defined(CFG_APP_HID)
 
-/// Battery Service Application
-#if defined(CFG_APP_BAS)
-#define BLE_APP_BATT          1
-#else // defined(BLE_APP_BATT)
-#define BLE_APP_BATT          0
-#endif // defined(BLE_APP_BATT)
 /// DIS Application
 #if defined(CFG_APP_DIS)
 #define BLE_APP_DIS          1
@@ -136,6 +130,12 @@
 #define BLE_APP_TIME         0
 #endif // defined(CFG_APP_TIME)
 
+/// Battery Service Application
+#if defined(CFG_APP_BAS)
+#define BLE_APP_BATT          1
+#else // defined(BLE_APP_BATT)
+#define BLE_APP_BATT          0
+#endif // defined(BLE_APP_BATT)
 
 /// Security Application
 #if (defined(CFG_APP_SEC) || BLE_APP_HID || defined(BLE_APP_AM0))

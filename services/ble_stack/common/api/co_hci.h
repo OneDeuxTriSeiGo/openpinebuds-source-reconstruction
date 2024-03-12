@@ -111,6 +111,8 @@ enum  hci_acl_hdr_fields
 #define HCI_ACL_HDR_LEN            (HCI_ACL_HDR_HDL_FLAGS_LEN + HCI_ACL_HDR_DATA_LEN_LEN)
 
 /// HCI Synchronous header: handle and flags decoding
+#define HCI_SYNC_HDR_HDL_FLAGS_POS  (0)
+#define HCI_SYNC_HDR_HDL_FLAGS_LEN  (2)
 
 enum hci_syn_hdr_fields
 {
@@ -125,8 +127,6 @@ enum hci_syn_hdr_fields
     HCI_SYNC_HDR_RFU_MASK  = (0xC000),
 };
 
-#define HCI_SYNC_HDR_HDL_FLAGS_POS  (0)
-#define HCI_SYNC_HDR_HDL_FLAGS_LEN  (2)
 /// HCI Synchronous header: data length field length
 #define HCI_SYNC_HDR_DATA_LEN_POS   (HCI_SYNC_HDR_HDL_FLAGS_LEN)
 #define HCI_SYNC_HDR_DATA_LEN_LEN   (1)

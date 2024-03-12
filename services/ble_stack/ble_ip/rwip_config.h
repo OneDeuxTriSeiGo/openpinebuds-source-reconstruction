@@ -482,11 +482,6 @@ enum KE_MEM_HEAP
 #define BLEHL_HEAP_DB_SIZE_    0
 #endif //BLE_HOST_PRESENT
 
-#if (BT_EMB_PRESENT || BLE_EMB_PRESENT)
-#define ECC_HEAP_NON_RET_SIZE_   (328*2) // Could only have 2 ECC computations simultaneously
-#else // (BT_EMB_PRESENT || BLE_EMB_PRESENT)
-#define ECC_HEAP_NON_RET_SIZE_   (0)
-#endif // (BT_EMB_PRESENT || BLE_EMB_PRESENT)
 
 /// Kernel Message Heap
 #define RWIP_HEAP_MSG_SIZE         (  BT_HEAP_MSG_SIZE_      + \
@@ -516,6 +511,11 @@ enum KE_MEM_HEAP
  *
  * The current size show what is already known as not needing to be retained during deep sleep.
  */
+#if (BT_EMB_PRESENT || BLE_EMB_PRESENT)
+#define ECC_HEAP_NON_RET_SIZE_   (328*2) // Could only have 2 ECC computations simultaneously
+#else // (BT_EMB_PRESENT || BLE_EMB_PRESENT)
+#define ECC_HEAP_NON_RET_SIZE_   (0)
+#endif // (BT_EMB_PRESENT || BLE_EMB_PRESENT)
 #define RWIP_HEAP_NON_RET_SIZE    ( ECC_HEAP_NON_RET_SIZE_ )
 
 /// Minimum sleep time to enter in deep sleep (in half slot).

@@ -715,6 +715,10 @@ struct CODEC_T {
 #define CODEC_CODEC_DRE_AMP_HIGH_CH0(n)                     (((n) & 0xFFFF) << 16)
 #define CODEC_CODEC_DRE_AMP_HIGH_CH0_MASK                   (0xFFFF << 16)
 #define CODEC_CODEC_DRE_AMP_HIGH_CH0_SHIFT                  (16)
+#define CODEC_CODEC_DRE_THD_DB_OFFSET_SIGN_CH0              (1 << 25)
+#define CODEC_CODEC_DRE_GAIN_OFFSET_CH0(n)                  (((n) & 0x1F) << 26)
+#define CODEC_CODEC_DRE_GAIN_OFFSET_CH0_MASK                (0x1F << 26)
+#define CODEC_CODEC_DRE_GAIN_OFFSET_CH0_SHIFT               (26)
 
 // reg_c4
 #define CODEC_CODEC_DRE_WINDOW_CH0(n)                       (((n) & 0x1FFFFF) << 0)
@@ -723,10 +727,6 @@ struct CODEC_T {
 #define CODEC_CODEC_DRE_THD_DB_OFFSET_CH0(n)                (((n) & 0xF) << 21)
 #define CODEC_CODEC_DRE_THD_DB_OFFSET_CH0_MASK              (0xF << 21)
 #define CODEC_CODEC_DRE_THD_DB_OFFSET_CH0_SHIFT             (21)
-#define CODEC_CODEC_DRE_THD_DB_OFFSET_SIGN_CH0              (1 << 25)
-#define CODEC_CODEC_DRE_GAIN_OFFSET_CH0(n)                  (((n) & 0x1F) << 26)
-#define CODEC_CODEC_DRE_GAIN_OFFSET_CH0_MASK                (0x1F << 26)
-#define CODEC_CODEC_DRE_GAIN_OFFSET_CH0_SHIFT               (26)
 
 // reg_c8
 #define CODEC_CODEC_DRE_ENABLE_CH1                          (1 << 0)
@@ -742,6 +742,10 @@ struct CODEC_T {
 #define CODEC_CODEC_DRE_AMP_HIGH_CH1(n)                     (((n) & 0xFFFF) << 16)
 #define CODEC_CODEC_DRE_AMP_HIGH_CH1_MASK                   (0xFFFF << 16)
 #define CODEC_CODEC_DRE_AMP_HIGH_CH1_SHIFT                  (16)
+#define CODEC_CODEC_DRE_THD_DB_OFFSET_SIGN_CH1              (1 << 25)
+#define CODEC_CODEC_DRE_GAIN_OFFSET_CH1(n)                  (((n) & 0x1F) << 26)
+#define CODEC_CODEC_DRE_GAIN_OFFSET_CH1_MASK                (0x1F << 26)
+#define CODEC_CODEC_DRE_GAIN_OFFSET_CH1_SHIFT               (26)
 
 // reg_cc
 #define CODEC_CODEC_DRE_WINDOW_CH1(n)                       (((n) & 0x1FFFFF) << 0)
@@ -750,10 +754,6 @@ struct CODEC_T {
 #define CODEC_CODEC_DRE_THD_DB_OFFSET_CH1(n)                (((n) & 0xF) << 21)
 #define CODEC_CODEC_DRE_THD_DB_OFFSET_CH1_MASK              (0xF << 21)
 #define CODEC_CODEC_DRE_THD_DB_OFFSET_CH1_SHIFT             (21)
-#define CODEC_CODEC_DRE_THD_DB_OFFSET_SIGN_CH1              (1 << 25)
-#define CODEC_CODEC_DRE_GAIN_OFFSET_CH1(n)                  (((n) & 0x1F) << 26)
-#define CODEC_CODEC_DRE_GAIN_OFFSET_CH1_MASK                (0x1F << 26)
-#define CODEC_CODEC_DRE_GAIN_OFFSET_CH1_SHIFT               (26)
 
 // reg_d0
 #define CODEC_CODEC_DRE_ANA_GAIN_CH0_SYNC(n)                (((n) & 0x1F) << 0)

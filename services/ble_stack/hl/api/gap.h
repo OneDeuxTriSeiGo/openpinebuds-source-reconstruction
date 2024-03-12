@@ -514,6 +514,12 @@ typedef struct gap_slv_pref
     uint16_t conn_timeout;
 } gap_slv_pref_t;
 
+/// Bluetooth address
+typedef struct gap_addr
+{
+    /// BD Address of device
+    uint8_t addr[GAP_BD_ADDR_LEN];
+} gap_addr_t;
 
 ///Channel map structure
 typedef struct
@@ -541,12 +547,6 @@ typedef struct
     uint8_t y[GAP_P256_KEY_LEN];
 } public_key_t;
 
-/// Bluetooth address
-typedef struct gap_addr
-{
-    /// BD Address of device
-    uint8_t addr[GAP_BD_ADDR_LEN];
-} gap_addr_t;
 
 
 /// Address information about a device address
@@ -558,25 +558,6 @@ typedef struct gap_bdaddr
     uint8_t addr_type;
 } gap_bdaddr_t;
 
-/// Connection parameters information
-typedef struct gap_con_param
-{
-    /// Connection interval in 1.25ms unit
-    uint16_t            con_interval;
-    /// Connection latency value (in number of connection events)
-    uint16_t            con_latency;
-    /// Supervision timeout in 10ms unit
-    uint16_t            sup_to;
-} gap_con_param_t;
-
-/// Periodic advertising address information
-typedef struct gap_per_adv_bdaddr
-{
-    /// BD Address of device
-    uint8_t addr[GAP_BD_ADDR_LEN];
-    /// Address type of the device 0=public/1=private random
-    uint8_t addr_type;
-} gap_per_adv_bdaddr_t;
 /// Resolving list device information
 struct gap_ral_dev_info
 {
@@ -597,6 +578,25 @@ typedef struct gap_sec_key
     uint8_t key[GAP_KEY_LEN];
 } gap_sec_key_t;
 
+/// Connection parameters information
+typedef struct gap_con_param
+{
+    /// Connection interval in 1.25ms unit
+    uint16_t            con_interval;
+    /// Connection latency value (in number of connection events)
+    uint16_t            con_latency;
+    /// Supervision timeout in 10ms unit
+    uint16_t            sup_to;
+} gap_con_param_t;
+
+/// Periodic advertising address information
+typedef struct gap_per_adv_bdaddr
+{
+    /// BD Address of device
+    uint8_t addr[GAP_BD_ADDR_LEN];
+    /// Address type of the device 0=public/1=private random
+    uint8_t addr_type;
+} gap_per_adv_bdaddr_t;
 
 /// @} GAP
 #endif // GAP_H_

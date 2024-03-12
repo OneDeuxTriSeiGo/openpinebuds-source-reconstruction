@@ -37,56 +37,6 @@
 
 #include "rwble_hl_error.h"
 
-/*
- * DEFINES - Mandatory for BLE Host Layers
- ****************************************************************************************
- */
-/// Maximum time to remain advertising when in the Limited
-/// Discover able mode: TGAP(lim_adv_timeout)
-/// required value: 180s: (18000 in 10 ms step)
-#define GAP_TMR_LIM_ADV_TIMEOUT                             0x4650 //(18000)
-
-/// Minimum time to perform scanning when performing
-/// the General Discovery procedure on 1M PHY: TGAP(gen_disc_scan_min)
-/// recommended value: 10.24s: (1024 in 10 ms step)
-#define GAP_TMR_GEN_DISC_SCAN_1M                            0x0400 //(1024)
-
-/// Minimum time to perform scanning when performing the
-/// Limited Discovery procedure on 1M PHY: TGAP(lim_disc_scan_min)
-/// recommended value: 10.24s: (1024 in 10 ms step)
-#define GAP_TMR_LIM_DISC_SCAN_1M                            0x0400 //(1024)
-
-/// Minimum time interval between private address change
-/// TGAP(private_addr_int)
-/// recommended value: 15 minutes
-/// Minimum value 1s
-#define GAP_TMR_PRIV_ADDR_MIN                             (0x0001)
-
-
-/// L2CAP Signaling transaction Timer duration in milliseconds
-/// TGAP(conn_param_timeout)
-/// recommended value: 30 s: (30 000 ms)
-#define GAP_SIG_TRANS_TIMEOUT_MS                          0x0BB8 //(30000)
-
-/// SMP L2CAP transaction Timer duration in milliseconds  30 s: (30 000 ms)
-#define GAP_SMP_TRANS_TIMEOUT_MS                          0x0BB8 //(30000)
-
-
-/// Maximal authorized MTU value
-#define GAP_LE_MTU_MAX                                     (2048)
-
-/// Maximum GAP device name size
-#define GAP_MAX_NAME_SIZE                                  (0x20)
-
-
-
-
-/// 30 seconds transaction timer (30000 ms)
-#define GATT_TRANSACTION_TIMEOUT                           (0x0BB8) //(30000)
-
-
-/// Maximum attribute value length
-#define GATT_MAX_VALUE                                     (GAP_LE_MTU_MAX)
 /******************************************************************************************/
 /* -------------------------   BLE PARTITIONING      -------------------------------------*/
 /******************************************************************************************/
@@ -189,6 +139,56 @@
 
 
 
+/*
+ * DEFINES - Mandatory for BLE Host Layers
+ ****************************************************************************************
+ */
+/// Maximum time to remain advertising when in the Limited
+/// Discover able mode: TGAP(lim_adv_timeout)
+/// required value: 180s: (18000 in 10 ms step)
+#define GAP_TMR_LIM_ADV_TIMEOUT                             0x4650 //(18000)
+
+/// Minimum time to perform scanning when performing
+/// the General Discovery procedure on 1M PHY: TGAP(gen_disc_scan_min)
+/// recommended value: 10.24s: (1024 in 10 ms step)
+#define GAP_TMR_GEN_DISC_SCAN_1M                            0x0400 //(1024)
+
+/// Minimum time to perform scanning when performing the
+/// Limited Discovery procedure on 1M PHY: TGAP(lim_disc_scan_min)
+/// recommended value: 10.24s: (1024 in 10 ms step)
+#define GAP_TMR_LIM_DISC_SCAN_1M                            0x0400 //(1024)
+
+/// Minimum time interval between private address change
+/// TGAP(private_addr_int)
+/// recommended value: 15 minutes
+/// Minimum value 1s
+#define GAP_TMR_PRIV_ADDR_MIN                             (0x0001)
+
+
+/// L2CAP Signaling transaction Timer duration in milliseconds
+/// TGAP(conn_param_timeout)
+/// recommended value: 30 s: (30 000 ms)
+#define GAP_SIG_TRANS_TIMEOUT_MS                          0x0BB8 //(30000)
+
+/// SMP L2CAP transaction Timer duration in milliseconds  30 s: (30 000 ms)
+#define GAP_SMP_TRANS_TIMEOUT_MS                          0x0BB8 //(30000)
+
+
+/// Maximal authorized MTU value
+#define GAP_LE_MTU_MAX                                     (2048)
+
+/// Maximum GAP device name size
+#define GAP_MAX_NAME_SIZE                                  (0x20)
+
+
+
+
+/// 30 seconds transaction timer (30000 ms)
+#define GATT_TRANSACTION_TIMEOUT                           (0x0BB8) //(30000)
+
+
+/// Maximum attribute value length
+#define GATT_MAX_VALUE                                     (GAP_LE_MTU_MAX)
 
 
 /// @} BLE stack configuration

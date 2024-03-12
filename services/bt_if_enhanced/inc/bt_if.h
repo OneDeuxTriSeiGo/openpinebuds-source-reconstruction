@@ -40,6 +40,8 @@
 #define    BTIF_APP_SPP_NUM                 (BTIF_APP_SPP_SERVER_NUM+BTIF_APP_SPP_CLIENT_NUM)
 #define    BTIF_APP_SPP_MASK                ((uint64_t)(0x000000FFFFFFFFFF<<BTIF_APP_SPP_OFFSET))
 
+#define    BTIF_TWS_LINK_CONNECTED          (1 << 0)
+#define    BTIF_TWS_L2CAP_CONNECTED         (1 << 1)
 
 
 #if defined(IBRT)
@@ -47,8 +49,6 @@ uint64_t btif_app_get_app_id_from_spp_flag(uint8_t spp_flag);
 uint8_t btif_app_get_spp_flag_from_app_id(uint64_t app_id);
 #endif
 
-#define    BTIF_TWS_LINK_CONNECTED          (1 << 0)
-#define    BTIF_TWS_L2CAP_CONNECTED         (1 << 1)
 #ifdef __cplusplus
 extern "C" {
 #endif                          /*  */

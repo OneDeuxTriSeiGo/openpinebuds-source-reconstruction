@@ -554,13 +554,13 @@ extern "C" {
 
     int tws_if_get_a2dpbuff_available(void);
 
-    bool btif_a2dp_is_disconnected(a2dp_stream_t *Stream);
 
 
     uint8_t btif_a2dp_confirm_stream_state(a2dp_stream_t *Stream, uint8_t old_state, uint8_t new_state);
 
 
 
+    bool btif_a2dp_is_disconnected(a2dp_stream_t *Stream);
 
 
     btif_remote_device_t *btif_a2dp_get_remote_device_from_cbparms(a2dp_stream_t *Stream, const a2dp_callback_parms_t *info);

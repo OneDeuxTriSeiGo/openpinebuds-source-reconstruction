@@ -424,7 +424,27 @@ extern const struct rwip_eif_api* rwip_eif_get(uint8_t idx);
 rwip_time_t rwip_time_get(void);
 
 
+/**
+ ****************************************************************************************
+ * @brief Set the a 10 ms target timer
+ *
+ * @note if target is RWIP_INVALID_TARGET_TIME, not timer are programmed
+ *
+ * @param[in] target       10ms Timer target value
+ ****************************************************************************************
+ */
+void rwip_timer_10ms_set(uint32_t target);
 
+/**
+ ****************************************************************************************
+ * @brief Set the a half slot target timer
+ *
+ * @note if target is RWIP_INVALID_TARGET_TIME, not timer are programmed
+ *
+ * @param[in] target      Half Slot Timer target value
+ ****************************************************************************************
+ */
+void rwip_timer_hs_set(uint32_t target);
 
 /**
  ****************************************************************************************
@@ -492,26 +512,6 @@ rwip_time_t rwip_time_get(void);
  */
 //void rwip_prevent_sleep_clear(uint16_t prv_slp_bit);
 
-/**
- ****************************************************************************************
- * @brief Set the a 10 ms target timer
- *
- * @note if target is RWIP_INVALID_TARGET_TIME, not timer are programmed
- *
- * @param[in] target       10ms Timer target value
- ****************************************************************************************
- */
-void rwip_timer_10ms_set(uint32_t target);
-/**
- ****************************************************************************************
- * @brief Set the a half slot target timer
- *
- * @note if target is RWIP_INVALID_TARGET_TIME, not timer are programmed
- *
- * @param[in] target      Half Slot Timer target value
- ****************************************************************************************
- */
-void rwip_timer_hs_set(uint32_t target);
 ///@} ROOT
 
 #endif // _RWIP_H_

@@ -235,6 +235,9 @@ enum BT_DEVICE_ID_T {
 
 struct BT_DEVICE_T {
     btif_a2dp_stream_t *btif_a2dp_stream;
+    bool avdtp_cp;
+    btif_avdtp_content_prot_t a2dp_avdtp_cp;
+    uint8_t a2dp_avdtp_cp_security_data[BT_AVDTP_CP_VALUE_SIZE];
     uint8_t a2dp_lhdc_llc;
 
     uint8_t channel_mode;
@@ -250,15 +253,15 @@ struct BT_DEVICE_T {
     uint8_t a2dp_play_pause_flag;
     uint8_t volume_report;
     btif_avdtp_codec_type_t codec_type;
-    bool avdtp_cp;
-    btif_avdtp_content_prot_t a2dp_avdtp_cp;
-    uint8_t a2dp_avdtp_cp_security_data[BT_AVDTP_CP_VALUE_SIZE];
 
     uint8_t sample_rate;
     uint8_t sample_bit;
     btif_avrcp_channel_t *avrcp_channel;
 
     btif_hf_channel_t* hf_channel;
+#if defined (BT_MAP_SUPPORT)
+    btif_map_session_handle_t map_session_handle;
+#endif
     btif_hf_call_setup_t hfchan_callSetup;
     btif_hf_call_active_t hfchan_call;
     btif_audio_state_t hf_audio_state;
@@ -270,9 +273,6 @@ struct BT_DEVICE_T {
     hid_channel_t hid_channel;
 #endif
 
-#if defined (BT_MAP_SUPPORT)
-    btif_map_session_handle_t map_session_handle;
-#endif
 };
 
 

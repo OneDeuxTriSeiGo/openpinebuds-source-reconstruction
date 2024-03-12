@@ -187,15 +187,6 @@ struct HAL_TRACE_BUF_T {
 
 STATIC_ASSERT(TRACE_BUF_SIZE < (1 << (8 * sizeof(((struct HAL_TRACE_BUF_T *)0)->wptr))), "TRACE_BUF_SIZE is too large to fit in wptr/rptr variable");
 
-static struct HAL_DMA_CH_CFG_T dma_cfg;
-TRACE_BUF_LOC
-static struct HAL_TRACE_BUF_T trace;
-static struct HAL_TRACE_BUF_T *p_trace = &trace;
-static const char discards_prefix[] = NEW_LINE_STR "LOST ";
-static const uint32_t max_discards = 99999;
-// 5 digits + "\r\n" = 7 chars
-static char discards_buf[sizeof(discards_prefix) - 1 + 7];
-static const unsigned char discards_digit_start = sizeof(discards_prefix) - 1;
 static const struct HAL_UART_CFG_T uart_cfg = {
     .parity = HAL_UART_PARITY_NONE,
     .stop = HAL_UART_STOP_BITS_1,
@@ -242,16 +233,25 @@ static const struct HAL_UART_CFG_T uart_cfg = {
     .dma_rx_stop_on_err = false,
 };
 
+static struct HAL_DMA_CH_CFG_T dma_cfg;
 TRACE_BUF_LOC static struct HAL_DMA_DESC_T dma_desc[2];
 #endif
 
 static enum HAL_TRACE_TRANSPORT_T trace_transport = HAL_TRACE_TRANSPORT_QTY;
 static enum HAL_UART_ID_T trace_uart;
 
+TRACE_BUF_LOC
+static struct HAL_TRACE_BUF_T trace;
+static struct HAL_TRACE_BUF_T *p_trace = &trace;
 
 POSSIBLY_UNUSED
 static const char newline[] = NEW_LINE_STR;
 
+static const char discards_prefix[] = NEW_LINE_STR "LOST ";
+static const uint32_t max_discards = 99999;
+// 5 digits + "\r\n" = 7 chars
+static char discards_buf[sizeof(discards_prefix) - 1 + 7];
+static const unsigned char discards_digit_start = sizeof(discards_prefix) - 1;
 
 
 #ifdef CRASH_DUMP_ENABLE
@@ -475,6 +475,10 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
         return hal_trace_switch(transport);
     }
 
+    trace_max_level = TR_LEVEL_INFO;
+    for (int i = 0; i < ARRAY_SIZE(trace_mod_map); i++) {
+        trace_mod_map[i] = ~0;
+    }
 
     memcpy(discards_buf, discards_prefix, discards_digit_start);
 
@@ -527,10 +531,6 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
     in_crash_dump = false;
 #endif
 
-    trace_max_level = TR_LEVEL_INFO;
-    for (int i = 0; i < ARRAY_SIZE(trace_mod_map); i++) {
-        trace_mod_map[i] = ~0;
-    }
     // Show build info
     hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
     hal_trace_output((const unsigned char *)newline, sizeof(newline) - 1);
@@ -1047,25 +1047,6 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
     }
 #endif
 
-    len = 0;
-    len += snprintf(&buf[len], size - len, "%9u/", (unsigned)__SLIM_TICKS_TO_MS(hal_sys_timer_get()));
-    if (size > len + 2) {
-        buf[len++] = level_ch[level];
-        buf[len++] = '/';
-    }
-    if (size > len + 7) {
-        mod_name = hal_trace_get_log_module_desc(module);
-        for (i = 0; i < 6; i++) {
-            if (mod_name[i] == '\0') {
-                break;
-            }
-            buf[len++] = mod_name[i];
-        }
-        for (; i < 6; i++) {
-            buf[len++] = ' ';
-        }
-        buf[len++] = '/';
-    }
     if (0) {
 #if defined(CP_TRACE_ENABLE) && !defined(CONFIG_SMP)
     } else if (get_cpu_id()) {
@@ -1103,6 +1084,25 @@ static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, 
 #endif
     }
     ctx[ARRAY_SIZE(ctx) - 1] = '\0';
+    len = 0;
+    len += snprintf(&buf[len], size - len, "%9u/", (unsigned)__SLIM_TICKS_TO_MS(hal_sys_timer_get()));
+    if (size > len + 2) {
+        buf[len++] = level_ch[level];
+        buf[len++] = '/';
+    }
+    if (size > len + 7) {
+        mod_name = hal_trace_get_log_module_desc(module);
+        for (i = 0; i < 6; i++) {
+            if (mod_name[i] == '\0') {
+                break;
+            }
+            buf[len++] = mod_name[i];
+        }
+        for (; i < 6; i++) {
+            buf[len++] = ' ';
+        }
+        buf[len++] = '/';
+    }
     len += snprintf(&buf[len], size - len, "%s | ", ctx);
     return len;
 #else // !TRACE_TIME_STAMP
@@ -1575,15 +1575,6 @@ void hal_trace_global_tag_register(HAL_TRACE_GLOBAL_TAG_CB_T tag_cb)
 #endif
 }
 
-int hal_trace_open_cp(HAL_TRACE_BUF_CTRL_T buf_cb, HAL_TRACE_APP_NOTIFY_T notify_cb)
-{
-#ifdef CP_TRACE_ENABLE
-#ifdef FAULT_DUMP
-    NVIC_SetDefaultFaultHandler_cp(hal_trace_fault_handler);
-#endif
-#endif
-    return 0;
-}
 #else // !(DEBUG || REL_TRACE_ENABLE)
 
 int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
@@ -1601,6 +1592,15 @@ int hal_trace_open(enum HAL_TRACE_TRANSPORT_T transport)
 
 #endif // !(DEBUG || REL_TRACE_ENABLE)
 
+int hal_trace_open_cp(HAL_TRACE_BUF_CTRL_T buf_cb, HAL_TRACE_APP_NOTIFY_T notify_cb)
+{
+#ifdef CP_TRACE_ENABLE
+#ifdef FAULT_DUMP
+    NVIC_SetDefaultFaultHandler_cp(hal_trace_fault_handler);
+#endif
+#endif
+    return 0;
+}
 
 int hal_trace_address_writable(uint32_t addr)
 {
@@ -1653,21 +1653,6 @@ int hal_trace_address_executable(uint32_t addr)
     if ((RAMX_BASE + X_ADDR_OFFSET) < addr && addr < (RAMX_BASE + RAM_SIZE)) {
         return 1;
     }
-#if defined(PSRAMX_BASE) && (PSRAM_SIZE > 0)
-    if ((PSRAMX_BASE + X_ADDR_OFFSET) < addr && addr < (PSRAMX_BASE + PSRAM_SIZE)) {
-        return 1;
-    }
-#endif
-#if defined(PSRAMUHSX_BASE) && (PSRAMUHS_SIZE > 0)
-    if ((PSRAMUHSX_BASE + X_ADDR_OFFSET) < addr && addr < (PSRAMUHSX_BASE + PSRAMUHS_SIZE)) {
-        return 1;
-    }
-#endif
-#if defined(RAMXRET_BASE) && (RAMRET_SIZE > 0)
-    if ((RAMXRET_BASE + X_ADDR_OFFSET) < addr && addr < (RAMXRET_BASE + RAMRET_SIZE)) {
-        return 1;
-    }
-#endif
 #ifndef NO_FLASH_BASE_ACCESS
 #ifdef OTA_CODE_OFFSET
 #define FLASH_EXEC_START                    (FLASHX_BASE + OTA_CODE_OFFSET)
@@ -1681,6 +1666,21 @@ int hal_trace_address_executable(uint32_t addr)
 #define FLASH_EXEC_SIZE                     (FLASH_REGION_SIZE)
 #endif
     if ((FLASH_EXEC_START + X_ADDR_OFFSET) < addr && addr < (FLASH_EXEC_START + FLASH_EXEC_SIZE)) {
+        return 1;
+    }
+#endif
+#if defined(PSRAMX_BASE) && (PSRAM_SIZE > 0)
+    if ((PSRAMX_BASE + X_ADDR_OFFSET) < addr && addr < (PSRAMX_BASE + PSRAM_SIZE)) {
+        return 1;
+    }
+#endif
+#if defined(PSRAMUHSX_BASE) && (PSRAMUHS_SIZE > 0)
+    if ((PSRAMUHSX_BASE + X_ADDR_OFFSET) < addr && addr < (PSRAMUHSX_BASE + PSRAMUHS_SIZE)) {
+        return 1;
+    }
+#endif
+#if defined(RAMXRET_BASE) && (RAMRET_SIZE > 0)
+    if ((RAMXRET_BASE + X_ADDR_OFFSET) < addr && addr < (RAMXRET_BASE + RAMRET_SIZE)) {
         return 1;
     }
 #endif
@@ -2424,6 +2424,21 @@ static void NAKED hal_trace_fault_handler(void)
 {
     // TODO: Save FP registers (and check lazy Floating-point context preservation)
     asm volatile (
+        // Check EXC_RETURN.MODE (bit[3]) and EXC_RETURN.SPSEL (bit[2])
+        "and r3, lr, #0x0C;"
+        "teq r3, #0x0C;"
+        "ite eq;"
+        // Using MSP
+        "mrsne r3, msp;"
+        // Using PSP
+        "mrseq r3, psp;"
+        // Check EXC_RETURN.FType (bit[4])
+        "tst lr, #0x10;"
+        "ite eq;"
+        // FPU context saved
+        "moveq r1, #1;"
+        // No FPU context
+        "movne r1, #0;"
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
         // Check EXC_RETURN.S (bit[6])
         "tst lr, #0x40;"
@@ -2442,21 +2457,6 @@ static void NAKED hal_trace_fault_handler(void)
         "b _save_msp_lr;"
         "_get_sec_sp:;"
 #endif
-        // Check EXC_RETURN.MODE (bit[3]) and EXC_RETURN.SPSEL (bit[2])
-        "and r3, lr, #0x0C;"
-        "teq r3, #0x0C;"
-        "ite eq;"
-        // Using MSP
-        "mrsne r3, msp;"
-        // Using PSP
-        "mrseq r3, psp;"
-        // Check EXC_RETURN.FType (bit[4])
-        "tst lr, #0x10;"
-        "ite eq;"
-        // FPU context saved
-        "moveq r1, #1;"
-        // No FPU context
-        "movne r1, #0;"
         // Make room for r0-r15,psr,special_regs(primask/faultmask/basepri/control)
         "sub sp, #4*18;"
         ".cfi_adjust_cfa_offset 4*18;"

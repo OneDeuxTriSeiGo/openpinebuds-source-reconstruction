@@ -291,10 +291,8 @@ void app_scanning_stopped(void);
 
 void app_scanning_starting_failed(uint8_t actv_idx, uint8_t err_code);
 
-void app_ble_update_param_failed(uint8_t conidx, uint8_t errCode);
 void app_connecting_stopped(gap_bdaddr_t *peer_addr);
 
-void app_ble_update_param_successful(uint8_t conidx, APP_BLE_CONN_PARAM_T* pConnParam);
 void app_connecting_failed(uint8_t actv_idx, uint8_t err_code);
 
 void appm_exchange_mtu(uint8_t conidx);
@@ -356,6 +354,8 @@ void appm_refresh_ble_irk(void);
 
 bool app_ble_get_conn_param(uint8_t conidx,  APP_BLE_CONN_PARAM_T* pConnParam);
 
+void app_ble_update_param_successful(uint8_t conidx, APP_BLE_CONN_PARAM_T* pConnParam);
+void app_ble_update_param_failed(uint8_t conidx, uint8_t errCode);
 
 void appm_update_adv_data(void *param);
 

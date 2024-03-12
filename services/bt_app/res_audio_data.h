@@ -139,6 +139,9 @@ const uint8_t EN_BT_GSOUND_MIC_CLOSE[] = {
 #include "res/en/SOUND_GSOUND_MIC_CLOSE.txt"
 };
 
+const uint8_t EN_BT_MUTE[] = {
+#include "res/SOUND_MUTE.txt"
+};
 const uint8_t EN_BT_GSOUND_NC[] = {
 #include "res/en/SOUND_GSOUND_NC.txt"
 };
@@ -147,7 +150,4 @@ const uint8_t EN_BT_FINDME[] = {
 #include "res/en/SOUND_FINDME.txt"
 };
 #endif
-const uint8_t EN_BT_MUTE[] = {
-#include "res/SOUND_MUTE.txt"
-};
 #endif
