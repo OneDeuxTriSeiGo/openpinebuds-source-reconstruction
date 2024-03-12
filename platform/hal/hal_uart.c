@@ -1308,9 +1308,6 @@ static void hal_uart_irq_handler(void)
 #define TRACE_BAUD_RATE                 (921600)
 #endif
 
-#ifndef TRACE_PRINTF_LEN
-#define TRACE_PRINTF_LEN                (120)
-#endif
 int hal_uart_printf_init(void)
 {
     static const struct HAL_UART_CFG_T uart_cfg = {
@@ -1335,17 +1332,11 @@ int hal_uart_printf_init(void)
     return hal_uart_open(UART_PRINTF_ID, &uart_cfg);
 }
 
-void hal_uart_printf_output(const uint8_t *buf, uint32_t len)
-{
-    uint32_t i;
-    for (i = 0; i < len; i++) {
-        hal_uart_blocked_putc(UART_PRINTF_ID, buf[i]);
-    }
-}
 void hal_uart_printf(const char *fmt, ...)
 {
-    char buf[TRACE_PRINTF_LEN];
+    char buf[120];
     int ret;
+    int i;
     va_list ap;
 
     va_start(ap, fmt);
@@ -1362,7 +1353,9 @@ void hal_uart_printf(const char *fmt, ...)
     va_end(ap);
 
     if (ret > 0) {
-        hal_uart_printf_output((const uint8_t *)buf, ret);
+        for (i = 0; i < ret; i++) {
+            hal_uart_blocked_putc(UART_PRINTF_ID, buf[i]);
+        }
     }
 }
 
