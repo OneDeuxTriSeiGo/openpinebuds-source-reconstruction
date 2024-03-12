@@ -831,8 +831,7 @@ static int start_recv_dma_with_mask(enum HAL_UART_ID_T id, const struct HAL_UART
     uint32_t cnt;
     uint32_t i;
     enum HAL_DMA_PERIPH_T periph;
-    enum HAL_DMA_BSIZE_T src_bsize;
-    src_bsize = HAL_DMA_BSIZE_8;
+    enum HAL_DMA_BSIZE_T src_bsize = HAL_DMA_BSIZE_8;
 
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     ASSERT(uart[id].irq != INVALID_IRQn, "DMA not supported on UART %d", id);
