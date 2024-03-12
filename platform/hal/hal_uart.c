@@ -218,7 +218,8 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
     hal_cmu_reset_clear(uart[id].mod);
     hal_cmu_reset_clear(uart[id].apb);
 
-    lcr = UARTLCR_H_FEN | UARTLCR_H_DMA_RT_CNT(9);
+    cr = 0;
+    lcr = 0;
 
     switch (cfg->parity) {
         case HAL_UART_PARITY_NONE:
@@ -268,7 +269,6 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
             break;
     }
 
-    cr = UARTCR_UARTEN | UARTCR_TXE | UARTCR_RXE;
     switch (cfg->flow) {
         case HAL_UART_FLOW_CONTROL_NONE:
             break;
@@ -287,6 +287,8 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
             break;
     }
 
+    lcr |= UARTLCR_H_FEN | UARTLCR_H_DMA_RT_CNT(9);
+    cr |= UARTCR_UARTEN | UARTCR_TXE | UARTCR_RXE;
 
     dmacr = 0;
     if (cfg->dma_rx) {
@@ -344,7 +346,7 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
         }
     }
 
-    cr = uart[id].base->UARTCR & ~(UARTCR_RTSEN | UARTCR_CTSEN);
+    cr = 0;
     switch (cfg->flow) {
         case HAL_UART_FLOW_CONTROL_NONE:
             break;
@@ -376,7 +378,7 @@ int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
 
     // Configure UART
     uart[id].base->UARTDMACR = dmacr;
-    uart[id].base->UARTCR = cr;
+    uart[id].base->UARTCR = (uart[id].base->UARTCR & ~(UARTCR_RTSEN | UARTCR_CTSEN)) | cr;
 
     if (uart[id].irq != INVALID_IRQn) {
         NVIC_SetVector(uart[id].irq, (uint32_t)hal_uart_irq_handler);
@@ -467,10 +469,7 @@ int hal_uart_pause(enum HAL_UART_ID_T id, enum HAL_UART_XFER_TYPE_T type)
 {
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     if (hal_uart_opened(id)) {
-        uint32_t val = 0;
-            val |= UARTCR_TXE;
-            val |= UARTCR_RXE;
-        uart[id].base->UARTCR &= ~val;
+        uart[id].base->UARTCR &= ~(UARTCR_TXE | UARTCR_RXE);
         return 0;
     }
     return 1;
@@ -480,10 +479,7 @@ int hal_uart_continue(enum HAL_UART_ID_T id, enum HAL_UART_XFER_TYPE_T type)
 {
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
     if (hal_uart_opened(id)) {
-        uint32_t val = 0;
-            val |= UARTCR_TXE;
-            val |= UARTCR_RXE;
-        uart[id].base->UARTCR |= val;
+        uart[id].base->UARTCR |= (UARTCR_TXE | UARTCR_RXE);
         return 0;
     }
     return 1;
