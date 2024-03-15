@@ -55,7 +55,7 @@ enum MPU_ATTR_T {
     MPU_ATTR_QTY,
 };
 
-#if defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_7EM__ENHANCE__)
+#if defined(__ARM_ARCH_8M_MAIN__)
 
 enum MAIR_ATTR_TYPE_T {
     MAIR_ATTR_FLASH,
@@ -76,7 +76,7 @@ typedef struct
     uint32_t addr;
     uint32_t len;
     enum MPU_ATTR_T ap_attr;
-#if defined(__ARM_ARCH_8M_MAIN__) || defined(__ARM_ARCH_7EM__ENHANCE__)
+#if defined(__ARM_ARCH_8M_MAIN__)
     enum MAIR_ATTR_TYPE_T mem_attr;
 #endif
 } mpu_regions_t;

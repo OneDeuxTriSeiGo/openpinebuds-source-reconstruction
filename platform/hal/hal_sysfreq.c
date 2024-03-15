@@ -18,7 +18,7 @@
 #include "hal_trace.h"
 #include "cmsis.h"
 
-#if !(defined(ROM_BUILD) || defined(CHIP_SUBSYS_SENS) || \
+#if !(defined(ROM_BUILD)
 #define PMU_CTRL_ENABLE
 #endif
 

@@ -39,15 +39,15 @@
 #endif
 
 #if 0
-#elif defined(CHIP_BEST1305) || \
+#elif \
         defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
-        defined(CHIP_BEST2000) || defined(CHIP_BEST2001) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003) || \
+        defined(CHIP_BEST2000) || defined(CHIP_BEST2001) || \
         defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || defined(CHIP_BEST2300P) || \
         defined(CHIP_BEST3001) || defined(CHIP_BEST3005)
 
-#if defined(CHIP_BEST1305) || \
+#if \
         defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
-        defined(CHIP_BEST2001) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
+        defined(CHIP_BEST2001)
 
 enum GPADC_REG_T {
     GPADC_REG_VBAT_EN = 0x02,
@@ -73,7 +73,7 @@ enum GPADC_REG_T {
     GPADC_REG_CH_EN = 0x24,
     GPADC_REG_INT_MASK = 0x26,
     GPADC_REG_INT_EN = 0x27,
-#if defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || defined(CHIP_BEST1501SIMU) || \
+#if \
         defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
     GPADC_REG_INT_RAW_STS = 0x52,
     GPADC_REG_INT_MSKED_STS = 0x53,
@@ -565,7 +565,7 @@ int hal_gpadc_open(enum HAL_GPADC_CHAN_T channel, enum HAL_GPADC_ATP_T atp, HAL_
         case HAL_GPADC_CHAN_ADCKEY:
             lock = int_lock();
 
-#if defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || \
+#if \
         defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
             if (channel == HAL_GPADC_CHAN_3){
                 pmu_led_set_hiz(HAL_GPIO_PIN_LED2);
@@ -709,7 +709,7 @@ void hal_gpadc_sleep(void)
 {
     unsigned short val;
 
-#if defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || \
+#if \
         defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
     return;
 #endif

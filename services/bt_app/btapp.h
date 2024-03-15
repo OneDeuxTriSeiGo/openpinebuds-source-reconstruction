@@ -215,7 +215,7 @@ typedef enum
 enum BT_DEVICE_ID_T {
     BT_DEVICE_ID_1 = 0,
     BT_DEVICE_ID_2 = 1,
-    BT_DEVICE_ID_3 = 2,
+    BT_DEVICE_ID_3 = 2
 };
 
 #ifdef BT_SOURCE

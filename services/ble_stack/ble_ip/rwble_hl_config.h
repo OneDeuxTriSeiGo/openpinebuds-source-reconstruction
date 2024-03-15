@@ -21,10 +21,10 @@
 #define CFG_PRF
 #define CFG_NB_PRF (BLE_APP_OTA + BLE_APP_GFPS  + BLE_VOICEPATH + BLE_BMS + \
     BLE_ANC_CLIENT + BLE_AMS_CLIENT + BLE_ANCS_PROXY + BLE_AMS_PROXY + \
-    BLE_APP_DATAPATH_SERVER + BLE_BUDS + BLE_AMA_VOICE + BLE_DMA_VOICE + \
-    BLE_GMA_VOICE + BLE_SMART_VOICE + BLE_TENCENT_VOICE + BLE_CUSTOMIZE_VOICE + \
-    BLE_DUAL_MIC_REC_VOICE + BLE_APP_TOTA + BLE_APP_TILE + BLE_OT_SERVER + \
-    BLE_APP_WATCH_SERVER + BLE_APP_WATCH_CLIENT + BLE_ADAPTER_PROFILES_NUM + BLE_ADAPTER_CLIENT_NUM + BLE_DIS_SERVER)
+    BLE_APP_DATAPATH_SERVER + \
+    BLE_SMART_VOICE + \
+    BLE_APP_TOTA + BLE_APP_TILE \
+    )
 
 /**
  ****************************************************************************************
@@ -72,7 +72,7 @@
 /// SMP L2CAP transaction Timer duration in milliseconds  30 s: (30 000 ms)
 #define GAP_SMP_TRANS_TIMEOUT_MS                          (30000)
 
-/// Maximal authorized MTU / MPS value - Depends on memory size available
+/// Maximal authorized MTU value
 #define GAP_LE_MTU_MAX                                     (2048)
 
 /// Maximum GAP device name size
@@ -173,10 +173,10 @@
 #define BLEHL_TASK_SIZE       BLE_HOST_TASK_SIZE + BLE_PRF_TASK_SIZE
 
 /// Size of environment variable needed on BLE Host Stack for one link
-#define BLEHL_HEAP_ENV_SIZE  ( BLE_CONNECTION_MAX * ( BLE_GAPC_HEAP_ENV_SIZE       \
+#define BLEHL_HEAP_ENV_SIZE  ( BLE_GAPC_HEAP_ENV_SIZE       \
                                                     + BLE_GATT_HEAP_ENV_SIZE       \
-                                                    + BLE_L2CAP_HEAP_ENV_SIZE )    \
-                             + L2CAP_CHAN_IN_ENV_NB * (BLE_GATT_BEARER_ENV_SIZE + BLE_L2CAP_CHANNEL_ENV_SIZE))
+                                                    + BLE_L2CAP_HEAP_ENV_SIZE      \
+                             )
 
 
 /// @} BLE stack configuration

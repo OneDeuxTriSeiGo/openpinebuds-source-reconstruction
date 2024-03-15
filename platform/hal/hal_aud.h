@@ -42,10 +42,10 @@ extern "C" {
 #define CODEC_PLAYBACK_BIT_DEPTH            24
 #endif
 
-#elif defined(CHIP_BEST1305) || \
+#elif \
     defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
     defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || \
-    defined(CHIP_BEST2300P) || defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU)
+    defined(CHIP_BEST2300P)
 
 #define CODEC_FREQ_EXTRA_DIV                2
 
@@ -65,7 +65,7 @@ extern "C" {
 #define CODEC_CMU_DIV                       CODEC_PLL_DIV
 #define CODEC_PLAYBACK_BIT_DEPTH            18
 
-#elif defined(CHIP_BEST2000) || defined(CHIP_BEST2001) || defined(CHIP_BEST2002)
+#elif defined(CHIP_BEST2000)
 
 #define CODEC_PLL_DIV                       32
 #define CODEC_CMU_DIV                       8

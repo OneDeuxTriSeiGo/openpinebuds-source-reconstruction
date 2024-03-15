@@ -30,7 +30,7 @@ typedef enum {
 
 typedef enum {
   VERSION_2 = 200,
-  VERSION_3 = 300,
+  VERSION_3 = 300
 }lhdc_ver_t;
 
 typedef enum {

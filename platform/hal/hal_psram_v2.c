@@ -488,7 +488,7 @@ static void hal_psram_mc_init(uint32_t clk)
     // Burst len: 32 bytes, page: 1K
     val = PSRAM_ULP_MC_BURST_LENGTH(1);
 #else
-#endif /* PSRAM_WRAP_ENABLE */
+#endif
         val |= PSRAM_ULP_MC_PAGE_BOUNDARY(0);
     psram_mc->REG_034 = val;
     // AHB bus width: 32 bits

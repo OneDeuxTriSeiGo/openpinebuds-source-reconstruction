@@ -112,7 +112,7 @@
 
 #define  __BTIF_EARPHONE__
 
-#if !defined(BLE_ONLY_ENABLED) && !defined(__NO_POWERON_RECONNECT__)
+#if !defined(BLE_ONLY_ENABLED)
 #define  __BTIF_BT_RECONNECT__
 #endif
 

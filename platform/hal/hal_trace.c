@@ -857,7 +857,7 @@ int hal_trace_output(const unsigned char *buf, unsigned int buf_len)
 
 #ifdef CP_TRACE_ENABLE
         if (cpu_id) {
-            if (cp_buffer_cb && !cp_buffer_cb_running) {
+            if (cp_buffer_cb) {
                 if (avail < out_len) {
                     cp_buffer_cb(HAL_TRACE_BUF_STATE_FULL);
                 } else if (avail - out_len < TRACE_NEAR_FULL_THRESH) {
@@ -1001,7 +1001,7 @@ static int hal_trace_format_id(uint32_t attr, struct LOG_BODY_T *log, const char
 
     return sizeof(log->hdr) + sizeof(log->arg[0]) * num;
 }
-#endif // USE_TRACE_ID
+#endif
 
 static int hal_trace_print_time(enum TR_LEVEL_T level, enum TR_MODULE_T module, char *buf, unsigned int size)
 {
@@ -2331,7 +2331,7 @@ void hal_trace_fault_dump(const uint32_t *regs, const uint32_t *extra, uint32_t 
         hal_trace_output_linefeed();
         hal_trace_output((unsigned char *)crash_buf, len);
     }
-    hal_trace_output((unsigned char *)title, sizeof(title) - 1);
+    hal_trace_output((unsigned char *)title, sizeof(title));
 
     hal_trace_print_fault_info(&info);
 

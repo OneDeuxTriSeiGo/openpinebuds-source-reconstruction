@@ -55,7 +55,7 @@
 #endif
 #endif
 
-#if defined(BISTO_ENABLED)||defined(VOICE_DATAPATH)|| \
+#if defined(BISTO_ENABLED)
 #ifndef CFG_APP_SEC
 #define CFG_APP_SEC
 #endif

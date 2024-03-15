@@ -125,8 +125,8 @@ static void set_baud_rate(enum HAL_UART_ID_T id, uint32_t rate)
     uint32_t mod_clk;
     uint32_t ibrd, fbrd;
     uint32_t div;
-    uint32_t over_sample_ratio;
-    over_sample_ratio = 16;
+    uint32_t over_sample_ratio
+    = 16;
 
     mod_clk = 0;
 #ifdef PERIPH_PLL_FREQ
@@ -334,7 +334,7 @@ int hal_uart_open(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
 
 int hal_uart_reopen(enum HAL_UART_ID_T id, const struct HAL_UART_CFG_T *cfg)
 {
-    uint32_t cr, lcr, dmacr;
+    uint32_t cr, dmacr;
     int i;
 
     ASSERT(id < HAL_UART_ID_QTY, err_invalid_id, id);
@@ -1331,9 +1331,9 @@ int hal_uart_printf_init(void)
         .dma_rx_stop_on_err = false,
     };
 
-    } else if (UART_PRINTF_ID == HAL_UART_ID_0) {
+    if (UART_PRINTF_ID == HAL_UART_ID_0) {
         hal_iomux_set_uart0();
-    } else if (UART_PRINTF_ID == HAL_UART_ID_1) {
+    } else {
         hal_iomux_set_uart1();
     }
      return hal_uart_open(UART_PRINTF_ID, &uart_cfg);

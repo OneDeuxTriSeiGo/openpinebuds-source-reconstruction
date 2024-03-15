@@ -34,7 +34,7 @@
 
 /* Use the default DBGLOG_LEVEL and DBGLOG_FUNCTION */
 
-#include "dbglog/dbglog.h"
+#include "dbglog.h"
 
 /* ------------------------------------------------------------------------- */
 

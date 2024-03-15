@@ -75,7 +75,7 @@
 
 // TODO: should be increased if NV_EXTENSION_MIRROR_RAM_SIZE exceeds this value
 
-#if defined(__AI_VOICE__ ) || (defined(BISTO_ENABLED)|| defined(GFPS_ENABLED))||(defined (TILE_DATAPATH))||defined(LINK_KEY_ENCRYPT_BY_CUSTOMER)
+#if defined(__AI_VOICE__ ) || (defined(BISTO_ENABLED)|| defined(GFPS_ENABLED))
 #define NV_EXTENSION_MIRROR_RAM_SIZE 0xA00
 #else
 #define NV_EXTENSION_MIRROR_RAM_SIZE 0x600

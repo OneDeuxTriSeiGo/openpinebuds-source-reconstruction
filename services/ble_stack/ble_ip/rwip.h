@@ -303,10 +303,10 @@ extern struct rwip_param_api rwip_param;
 #if (BLE_EMB_PRESENT || BT_EMB_PRESENT)
 /// API for dual mode priority
 extern const struct rwip_prio rwip_priority[RWIP_PRIO_IDX_MAX];
-#if (RW_WLAN_COEX || RW_MWS_COEX)
+#if (RW_WLAN_COEX)
 /// API for COEX configuration
 extern const uint8_t rwip_coex_cfg[RWIP_COEX_CFG_MAX];
-#endif //(RW_WLAN_COEX || RW_MWS_COEX)
+#endif //(RW_WLAN_COEX)
 #endif //(BT_EMB_PRESENT || BLE_EMB_PRESENT)
 
 /*
@@ -316,12 +316,12 @@ extern const uint8_t rwip_coex_cfg[RWIP_COEX_CFG_MAX];
 
 /// Get Event status flag
 #if (BT_EMB_PRESENT || BLE_EMB_PRESENT)
-#if (RW_WLAN_COEX || RW_MWS_COEX)
+#if (RW_WLAN_COEX)
 #define RWIP_COEX_GET(coex_cfg_idx, bit_field) \
                 (uint8_t)(((rwip_coex_cfg[RWIP_COEX_ ## coex_cfg_idx ##_IDX]) >> RWIP_ ## bit_field ## _POS ) & RWIP_COEX_BIT_MASK)
-#else //!(RW_WLAN_COEX || RW_MWS_COEX)
+#else //!(RW_WLAN_COEX)
 #define RWIP_COEX_GET(coex_cfg_idx, bit_field) 0
-#endif //(RW_WLAN_COEX || RW_MWS_COEX)
+#endif //(RW_WLAN_COEX)
 #endif //(BT_EMB_PRESENT || BLE_EMB_PRESENT)
 
 /*

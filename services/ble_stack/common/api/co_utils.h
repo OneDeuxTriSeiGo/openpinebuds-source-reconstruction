@@ -157,9 +157,9 @@ extern const struct bd_addr co_default_bdaddr;
  ****************************************************************************************
  * @brief Clocks subtraction
  *
- * @param[in]   clock_a   1st operand value (in BT half-slots)
- * @param[in]   clock_b   2nd operand value (in BT half-slots)
- * @return      result    operation result (in BT half-slots)
+ * @param[in]   clock_a   1st operand value (in BT slots)
+ * @param[in]   clock_b   2nd operand value (in BT slots)
+ * @return      result    operation result (in BT slots)
  ****************************************************************************************
  */
 #define CLK_SUB(clock_a, clock_b)     ((uint32_t)(((clock_a) - (clock_b)) & RWIP_MAX_CLOCK_TIME))
@@ -438,7 +438,7 @@ uint8_t co_nb_good_channels(const struct chnl_map* map);
  *     - L  : long - 32-bits value
  *     - XXB: table of several bytes, where XX is the byte number, in decimal
  *
- * Example:   "BBLH12BLnB" => 1 byte | 1 byte | 1 long | 1 short | 12-bytes table | 1 long | table size over 1 byte | n-bytes table
+ * Example:   "BBLH12BL" => 1 byte | 1 byte | 1 long | 1 short | 12-bytes table | 1 long
  *
  * Note: the function works in the same buffer
  *
@@ -467,7 +467,7 @@ uint8_t co_util_pack(uint8_t* out, uint8_t* in, uint16_t* out_len, uint16_t in_l
  *     - L  : long - 32-bits value
  *     - XXB: table of several bytes, where XX is the byte number, in decimal
  *
- * Example:   "BBLH12BLnB" => 1 byte | 1 byte | 1 long | 1 short | 12-bytes table | 1 long | table size over 1 byte | n-bytes table
+ * Example:   "BBLH12BL" => 1 byte | 1 byte | 1 long | 1 short | 12-bytes table | 1 long
  *
  * Note: the output buffer provided must be large enough to contain the unpacked data.
  * Note2: if a NULL output buffer is provided, the function does not copy the unpacked parameters. It still parses the
