@@ -2754,9 +2754,7 @@ struct hci_le_tx_test_v1_cmd
     uint8_t        tx_channel;
     /// Length of test data in bytes, range: 0x00 to 0xFF
     uint8_t        test_data_len;
-    /**
-     * Packet payload
-     */
+    /// Packet payload
     uint8_t        pkt_payl;
 };
 
@@ -4460,9 +4458,7 @@ struct hci_le_tx_test_v2_cmd
     uint8_t            tx_channel;
     /// Length of test data in bytes, range: 0x00 to 0xFF
     uint8_t            test_data_len;
-    /**
-     * Packet payload
-     */
+    /// Packet payload
     uint8_t            pkt_payl;
     /// PHY (@enum le_phy_value)
     uint8_t            phy;

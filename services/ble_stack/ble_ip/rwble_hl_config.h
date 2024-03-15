@@ -21,10 +21,7 @@
 #define CFG_PRF
 #define CFG_NB_PRF (BLE_APP_OTA + BLE_APP_GFPS  + BLE_VOICEPATH + BLE_BMS + \
     BLE_ANC_CLIENT + BLE_AMS_CLIENT + BLE_ANCS_PROXY + BLE_AMS_PROXY + \
-    BLE_APP_DATAPATH_SERVER + \
-    BLE_SMART_VOICE + \
-    BLE_APP_TOTA + BLE_APP_TILE \
-    )
+    BLE_APP_DATAPATH_SERVER + BLE_SMART_VOICE + BLE_APP_TOTA + BLE_APP_TILE)
 
 /**
  ****************************************************************************************
@@ -128,10 +125,9 @@
 #define BLEHL_TASK_SIZE       BLE_HOST_TASK_SIZE + BLE_PRF_TASK_SIZE
 
 /// Size of environment variable needed on BLE Host Stack for one link
-#define BLEHL_HEAP_ENV_SIZE ( BLE_GAPC_HEAP_ENV_SIZE          \
-                               + BLE_GATT_HEAP_ENV_SIZE       \
-                               + BLE_L2CAP_HEAP_ENV_SIZE \
-                             )
+#define BLEHL_HEAP_ENV_SIZE ( BLE_GAPC_HEAP_ENV_SIZE       +  \
+                              BLE_GATT_HEAP_ENV_SIZE       +  \
+                              BLE_L2CAP_HEAP_ENV_SIZE)
 
 
 

@@ -515,8 +515,7 @@ typedef struct gap_slv_pref
 } gap_slv_pref_t;
 
 /// Bluetooth address
-typedef struct gap_addr
-{
+typedef struct gap_addr {
     /// BD Address of device
     uint8_t addr[GAP_BD_ADDR_LEN];
 } gap_addr_t;

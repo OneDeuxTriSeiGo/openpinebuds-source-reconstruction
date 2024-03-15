@@ -21,7 +21,7 @@ obj-y += audio_dump/ \
          ../utils/crc16/ \
          ../utils/heap/ \
          osif/ \
-         norflash_api/
+         norflash_api/ \
 
 ifeq ($(SPEECH_BONE_SENSOR),1)
 obj-y += bone_sensor/
@@ -54,8 +54,7 @@ obj-y += app_ai/
 endif
 
 ifeq ($(BLE),1)
-obj-y += \
-		 ble_app/ \
+obj-y += ble_app/ \
          bridge/ \
          ble_stack/ \
          ../utils/retention_ram/ \

@@ -125,8 +125,7 @@ static void set_baud_rate(enum HAL_UART_ID_T id, uint32_t rate)
     uint32_t mod_clk;
     uint32_t ibrd, fbrd;
     uint32_t div;
-    uint32_t over_sample_ratio
-    = 16;
+    uint32_t over_sample_ratio = 16;
 
     mod_clk = 0;
 #ifdef PERIPH_PLL_FREQ

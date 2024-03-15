@@ -48,9 +48,7 @@
 
 #define MAX_CALIB_TICKS             (30 * CONFIG_SYSTICK_HZ_NOMINAL)
 
-static
-    uint32_t
-    BOOT_DATA_LOC sys_tick_hz = CONFIG_SYSTICK_HZ_NOMINAL;
+static uint32_t BOOT_DATA_LOC sys_tick_hz = CONFIG_SYSTICK_HZ_NOMINAL;
 static uint32_t BOOT_BSS_LOC slow_val;
 static uint32_t BOOT_BSS_LOC fast_val;
 #endif

@@ -42,8 +42,7 @@ extern "C" {
 #define CODEC_PLAYBACK_BIT_DEPTH            24
 #endif
 
-#elif \
-    defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
+#elif defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
     defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || \
     defined(CHIP_BEST2300P)
 

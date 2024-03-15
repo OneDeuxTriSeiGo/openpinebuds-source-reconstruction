@@ -1008,8 +1008,7 @@ static int hal_trace_format_id(uint32_t attr, struct LOG_BODY_T *log, const char
 
     log->hdr.trace_info.count = num;
     log->hdr.trace_info.addr = (uint32_t)fmt-(uint32_t)0xFFFC0000; //(uint32_t)fmt-(uint32_t)__trc_str_start__;
-    log->hdr.trace_info.tskid =
-        osGetThreadIntId();
+    log->hdr.trace_info.tskid = osGetThreadIntId();
     log->hdr.trace_info.crc = 0x2A;
 #ifndef LITE_VERSION
     log->hdr.trace_head.timestamp = TICKS_TO_MS(hal_sys_timer_get());
@@ -2578,7 +2577,8 @@ static void hal_trace_rx_irq_handler(uint32_t xfer_size, int dma_error, union HA
 {
     POSSIBLY_UNUSED int res = 0;
 
-    if (xfer_size) {
+    if (xfer_size)
+    {
         res = trace_rx_cb(trace_rx_buf, xfer_size);
         //TRACE(0, "%s: trace_rx_cb (%p) prase data error: %d", __func__, trace_rx_cb, res);
     }

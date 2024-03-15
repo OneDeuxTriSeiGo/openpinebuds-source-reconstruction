@@ -163,9 +163,9 @@ uint16_t prf_gatt_write(uint8_t conidx, uint8_t user_lid, uint16_t dummy, uint8_
  * @return Execution status (@see enum hl_err)
  ****************************************************************************************
  */
-uint16_t prf_check_svc_char_validity(uint8_t nb_chars, const prf_char_t* p_chars,
-                                     const prf_char_def_t* p_chars_req);
-
+uint16_t prf_check_svc_char_validity(uint8_t nb_chars,
+                                    const prf_char_t* p_chars,
+                                    const prf_char_def_t* p_chars_req);
 
 /**
  ****************************************************************************************
@@ -183,8 +183,10 @@ uint16_t prf_check_svc_char_validity(uint8_t nb_chars, const prf_char_t* p_chars
  * @return Execution status (@see enum hl_err)
  ****************************************************************************************
  */
-uint16_t prf_check_svc_desc_validity(uint8_t nb_descs, const prf_desc_t* p_descs,
-                                     const prf_desc_def_t* p_descs_req, const prf_char_t* p_chars);
+uint16_t prf_check_svc_desc_validity(uint8_t nb_descs,
+                                        const prf_desc_t* p_descs,
+                                        const prf_desc_def_t* p_descs_req,
+                                        const prf_char_t* p_chars);
 
 /**
  ****************************************************************************************

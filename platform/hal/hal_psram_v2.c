@@ -453,8 +453,7 @@ static void hal_psram_mc_set_timing(uint32_t clk, bool init)
     psram_mc->REG_09C = PSRAM_ULP_MC_WR_DMY_CYC(1);
     // NOP dummy cycles, same as tXPHS in [60 ns, 2 us]
     val = (clk / 1000000 * 60 + (1000 - 1)) / 1000;
-    psram_mc->REG_0A0 = PSRAM_ULP_MC_STOP_CLK_IN_NOP |
-                        PSRAM_ULP_MC_NOP_DMY_CYC(val);
+    psram_mc->REG_0A0 = PSRAM_ULP_MC_STOP_CLK_IN_NOP | PSRAM_ULP_MC_NOP_DMY_CYC(val);
     psram_mc->REG_0A4 = PSRAM_ULP_MC_QUEUE_IDLE_CYCLE(5000);
 }
 
