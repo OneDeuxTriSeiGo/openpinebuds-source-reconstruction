@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __SDP_API_H__
 #define __SDP_API_H__
 
@@ -488,8 +489,6 @@ extern "C" {
     btif_sdp_query_token_t *btif_sdp_create_query_token(void);
 
     void btif_sdp_free_token(btif_sdp_query_token_t * query_token);
-
-    bool btif_sdp_server_is_record_registered(btif_sdp_record_t* record);
 
     int btif_sdp_set_query_token(btif_sdp_query_token_t * query_token, btif_sdp_query_info_t *info);
 

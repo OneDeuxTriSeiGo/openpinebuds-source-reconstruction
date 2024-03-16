@@ -46,7 +46,6 @@ typedef struct{
     unsigned int  rev2_dongle_addr[2];
     unsigned int  rev2_xtal_fcap;
     unsigned int  rev2_ble_name[8];
-
 }factory_section_data_t;
 
 typedef struct{

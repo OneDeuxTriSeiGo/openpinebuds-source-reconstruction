@@ -15,8 +15,6 @@
 #ifndef __MAP_INTERNAL_H__
 #define __MAP_INTERNAL_H__
 
-#ifdef BT_MAP_SUPPORT
-
 #include "bluetooth.h"
 
 #ifdef __cplusplus
@@ -48,7 +46,5 @@ typedef struct {
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* BT_MAP_SUPPORT */
 
 #endif /* __MAP_INTERNAL_H__ */

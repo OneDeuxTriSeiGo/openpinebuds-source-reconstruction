@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_MODE_SWITCH_H__
 #define __APP_BLE_MODE_SWITCH_H__
 

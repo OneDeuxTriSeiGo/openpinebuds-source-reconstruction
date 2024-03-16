@@ -61,23 +61,11 @@ typedef struct hid_control_t* hid_channel_t;
 
 void app_bt_hid_init(void);
 
-void app_bt_hid_create_channel(bt_bdaddr_t *bdaddr);
-
-void app_bt_hid_capture_process(uint8_t device_id);
-
-void app_bt_hid_profile_connect(uint8_t device_id, bool capture);
-
-void app_bt_hid_profile_disconnect(hid_channel_t chnl);
-
-bool app_bt_hid_is_in_shutter_mode(void);
-
 void app_bt_hid_enter_shutter_mode(void);
 
 void app_bt_hid_exit_shutter_mode(void);
 
 void app_bt_hid_send_capture(void);
-
-void app_bt_hid_disconnect_all_channels(void);
 
 #ifdef __cplusplus
 }

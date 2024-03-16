@@ -43,51 +43,15 @@
 
 /**
  ****************************************************************************************
- * @brief Swap bytes of an array of bytes
- * .
- * The swap is done in every case. Should not be called directly.
- *
- * @param[in] p_val_out The output value.
- * @param[in] p_val_in  The input value.
- *
- * @param[in] len       number of bytes to swap
- ****************************************************************************************
- */
-static __INLINE void co_bswap(uint8_t* p_val_out, const uint8_t* p_val_in, uint16_t len)
-{
-    while (len > 0)
-    {
-        len--;
-        *p_val_out = p_val_in[len];
-        p_val_out++;
-    }
-}
-/// @} CO_ENDIAN
-
-/**
- ****************************************************************************************
  * @brief Swap bytes of a 32 bits value.
  * The swap is done in every case. Should not be called directly.
  * @param[in] val32 The 32 bits value to swap.
  * @return The 32 bit swapped value.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_bswap32(uint32_t val32)
+__STATIC __INLINE uint32_t co_bswap32(uint32_t val32)
 {
     return (val32<<24) | ((val32<<8)&0xFF0000) | ((val32>>8)&0xFF00) | ((val32>>24)&0xFF);
-}
-
-/**
- ****************************************************************************************
- * @brief Swap bytes of a 24 bits value.
- * The swap is done in every case. Should not be called directly.
- * @param[in] val24 The 24 bits value to swap.
- * @return The 24 bit swapped value.
- ****************************************************************************************
- */
-static __INLINE uint32_t co_bswap24(uint32_t val24)
-{
-    return ((val24<<16)&0xFF0000) | ((val24)&0xFF00) | ((val24>>16)&0xFF);
 }
 
 /**
@@ -98,7 +62,7 @@ static __INLINE uint32_t co_bswap24(uint32_t val24)
  * @return The 16 bit swapped value.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_bswap16(uint16_t val16)
+__STATIC __INLINE uint16_t co_bswap16(uint16_t val16)
 {
     return ((val16<<8)&0xFF00) | ((val16>>8)&0xFF);
 }
@@ -139,30 +103,12 @@ static __INLINE uint16_t co_bswap16(uint16_t val16)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_htonl(uint32_t hostlong)
+__STATIC __INLINE uint32_t co_htonl(uint32_t hostlong)
 {
     #if (!CPU_LE)
         return hostlong;
     #else
         return co_bswap32(hostlong);
-    #endif // CPU_LE
-}
-
-/**
- ****************************************************************************************
- * @brief Convert host to network long 24-bit value.
- *
- * @param[in] val24    24-bit value to convert.
- *
- * @return The converted 24-but value.
- ****************************************************************************************
- */
-static __INLINE uint32_t co_hton24(uint32_t host24)
-{
-    #if (!CPU_LE)
-        return host24;
-    #else
-        return co_bswap24(host24);
     #endif // CPU_LE
 }
 
@@ -175,7 +121,7 @@ static __INLINE uint32_t co_hton24(uint32_t host24)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_htons(uint16_t hostshort)
+__STATIC __INLINE uint16_t co_htons(uint16_t hostshort)
 {
     #if (!CPU_LE)
         return hostshort;
@@ -193,23 +139,9 @@ static __INLINE uint16_t co_htons(uint16_t hostshort)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_ntohl(uint32_t netlong)
+__STATIC __INLINE uint32_t co_ntohl(uint32_t netlong)
 {
     return co_htonl(netlong);
-}
-
-/**
- ****************************************************************************************
- * @brief Convert network to host 24-bit value.
- *
- * @param[in] val24 24-bit to convert.
- *
- * @return The converted 24-bit value.
- ****************************************************************************************
- */
-static __INLINE uint32_t co_ntoh24(uint32_t val24)
-{
-    return co_hton24(val24);
 }
 
 /**
@@ -221,7 +153,7 @@ static __INLINE uint32_t co_ntoh24(uint32_t val24)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_ntohs(uint16_t netshort)
+__STATIC __INLINE uint16_t co_ntohs(uint16_t netshort)
 {
     return co_htons(netshort);
 }
@@ -247,25 +179,6 @@ static __INLINE uint16_t co_ntohs(uint16_t netshort)
  *  ****************************************************************************************
  *  */
 
-
-/**
- ****************************************************************************************
- * @brief Convert Bluetooth to host 24-bit value.
- *
- * @param[in] val24 24-bit to convert.
- *
- * @return The converted 24-bit value.
- ****************************************************************************************
- */
-static __INLINE uint32_t co_htob24(uint32_t val24)
-{
-    #if (CPU_LE)
-        return val24;
-    #else
-        return co_hton24(val24);
-    #endif // CPU_LE
-}
-
 /**
  ****************************************************************************************
  * @brief Convert host to Bluetooth long word.
@@ -275,7 +188,7 @@ static __INLINE uint32_t co_htob24(uint32_t val24)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_htobl(uint32_t hostlong)
+__STATIC __INLINE uint32_t co_htobl(uint32_t hostlong)
 {
     #if (CPU_LE)
         return hostlong;
@@ -293,7 +206,7 @@ static __INLINE uint32_t co_htobl(uint32_t hostlong)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_htobs(uint16_t hostshort)
+__STATIC __INLINE uint16_t co_htobs(uint16_t hostshort)
 {
     #if (CPU_LE)
         return hostshort;
@@ -305,20 +218,6 @@ static __INLINE uint16_t co_htobs(uint16_t hostshort)
 
 /**
  ****************************************************************************************
- * @brief Convert Bluetooth to host 24-bit value.
- *
- * @param[in] val24 24-bit to convert.
- *
- * @return The converted 24-bit value.
- ****************************************************************************************
- */
-static __INLINE uint32_t co_btoh24(uint32_t val24)
-{
-    return co_htob24(val24);
-}
-
-/**
- ****************************************************************************************
  * @brief Convert Bluetooth to host long word.
  *
  * @param[in] btlong Long word value to convert.
@@ -326,7 +225,7 @@ static __INLINE uint32_t co_btoh24(uint32_t val24)
  * @return The converted long word.
  ****************************************************************************************
  */
-static __INLINE uint32_t co_btohl(uint32_t btlong)
+__STATIC __INLINE uint32_t co_btohl(uint32_t btlong)
 {
     return co_htobl(btlong);
 }
@@ -341,7 +240,7 @@ static __INLINE uint32_t co_btohl(uint32_t btlong)
  * @return The converted short word.
  ****************************************************************************************
  */
-static __INLINE uint16_t co_btohs(uint16_t btshort)
+__STATIC __INLINE uint16_t co_btohs(uint16_t btshort)
 {
     return co_htobs(btshort);
 }

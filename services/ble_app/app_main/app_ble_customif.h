@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_CUSTOMIF_H__
 #define __APP_BLE_CUSTOMIF_H__
 
@@ -25,11 +26,7 @@
 extern "C" {
 #endif
 
-#ifdef USE_BT_ADAPTER
-typedef void (*ble_adv_data_report_cb_t)(ble_bdaddr_t *bleAddr,          int8_t rssi,uint8_t *adv_buf,uint8_t len);
-void app_ble_adv_report_callback_register(ble_adv_data_report_cb_t cb);
-void app_ble_adv_report_callback_deregister(void);
-#endif
+
 /*---------------------------------------------------------------------------
  *            app_ble_customif_init
  *---------------------------------------------------------------------------

@@ -44,7 +44,6 @@ typedef struct
 extern "C" {
 #endif
 uint8_t btif_btgatt_is_connected(void);
-void btif_btgatt_disconnect(void);
 void btif_btgatt_client_create(btif_remote_device_t *dev);
 void btif_btgatt_server_create(btif_btgatt_status_change_callback callback);
 void btif_btgatt_data_received_register(btif_btgatt_data_received_callback callback);
@@ -59,12 +58,6 @@ void btif_btgatt_callback(uint8_t device_id, BtgattChannel *Chan, BtgattCallback
 uint32_t btif_btgatt_get_l2cap_handle(void);
 uint16_t btif_btgatt_get_conn_handle(void);
 void btif_btgatt_addsdp(uint16_t pServiceUUID, uint16_t startHandle, uint16_t endHandle);
-
-#if defined(IBRT)
-uint32_t btif_btgatt_profile_save_ctx(btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);
-uint32_t btif_btgatt_profile_restore_ctx(uint8_t *buf, uint32_t buf_len);
-void btif_btgatt_force_disconnect_btgatt_profile(uint8_t device_id,uint8_t reason);
-#endif
 
 
 #ifdef __cplusplus

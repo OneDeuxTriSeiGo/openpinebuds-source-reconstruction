@@ -22,21 +22,17 @@
 /// define the static keyword for this compiler
 #define __STATIC static
 
-
-/// define the interrupt handler attribute for this compiler
-#define __IRQ
-
 /// define the BT IRQ handler attribute for this compiler
 #define __BTIRQ
 
 /// define the BLE IRQ handler attribute for this compiler
 #define __BLEIRQ
 
-/// define the interrupt handler attribute for this compiler
-#define __FIQ
-
 /// define size of an empty array (used to declare structure with an array size not defined)
 #define __ARRAY_EMPTY
+
+
+
 
 /// __MODULE__ comes from the RVDS compiler that supports it
 #define __MODULE__ __BASENAME_FILE__

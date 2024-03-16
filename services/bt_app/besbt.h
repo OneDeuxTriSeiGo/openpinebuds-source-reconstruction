@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef BESBT_H
 #define BESBT_H
 
@@ -40,7 +41,6 @@ void bt_set_local_name(const char* name);
 const char *bt_get_ble_local_name(void);
 void gen_bt_addr_for_debug(void);
 void bt_set_ble_local_address(uint8_t* bleAddr);
-bool app_bt_current_is_besbt_thread(void);
 
 #ifdef __cplusplus
 }

@@ -39,5 +39,4 @@ bt_status_t ddbif_enum_device_records(I16 index, btif_device_record_t *record);
 #if defined(__cplusplus)
 }
 #endif
-
 #endif /*__DDBIF_H__*/

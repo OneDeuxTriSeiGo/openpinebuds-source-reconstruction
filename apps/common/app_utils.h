@@ -35,7 +35,6 @@ extern "C" {
 #define APP_SYSFREQ_USER_TRIGGER            APP_SYSFREQ_USER_APP_11
 #define APP_SYSFREQ_USER_BIS                APP_SYSFREQ_USER_APP_12
 #define APP_SYSFREQ_USER_TOTA               APP_SYSFREQ_USER_APP_13
-
 /*
  * Pseudo user, if one of user is belong to qos(quality of service) user,
  * when request cpu freq, it will changed to this user
@@ -44,7 +43,6 @@ extern "C" {
 
 enum APP_SYSFREQ_USER_T {
     APP_SYSFREQ_USER_APP_INIT = HAL_SYSFREQ_USER_INIT,
-    APP_SYSFREQ_USER_WIFI     = HAL_SYSFREQ_USER_WIFI,
     APP_SYSFREQ_USER_APP_0    = HAL_SYSFREQ_USER_APP_0,
     APP_SYSFREQ_USER_APP_1    = HAL_SYSFREQ_USER_APP_1,
     APP_SYSFREQ_USER_APP_2    = HAL_SYSFREQ_USER_APP_2,
@@ -71,9 +69,7 @@ enum APP_SYSFREQ_FREQ_T {
     APP_SYSFREQ_78M =  HAL_CMU_FREQ_78M,
     APP_SYSFREQ_104M = HAL_CMU_FREQ_104M,
     APP_SYSFREQ_208M = HAL_CMU_FREQ_208M,
-#if defined(CHIP_BEST2001) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
-    APP_SYSFREQ_390M = HAL_CMU_FREQ_390M,
-#endif
+
     APP_SYSFREQ_FREQ_QTY =  HAL_CMU_FREQ_QTY
 };
 

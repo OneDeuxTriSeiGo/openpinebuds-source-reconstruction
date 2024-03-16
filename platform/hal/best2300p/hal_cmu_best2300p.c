@@ -16,7 +16,6 @@
 #include CHIP_SPECIFIC_HDR(reg_cmu)
 #include CHIP_SPECIFIC_HDR(reg_aoncmu)
 #include CHIP_SPECIFIC_HDR(reg_btcmu)
-#include CHIP_SPECIFIC_HDR(reg_wfcmu)
 #include "hal_cmu.h"
 #include "hal_aud.h"
 #include "hal_bootmode.h"
@@ -24,25 +23,14 @@
 #include "hal_codec.h"
 #include "hal_location.h"
 #include "hal_psc.h"
-#include "hal_sec.h"
 #include "hal_sysfreq.h"
 #include "hal_timer.h"
 #include "hal_trace.h"
 #include "cmsis_nvic.h"
 #include "pmu.h"
-#include "analog.h"
 #include "system_cp.h"
-#include "hal_psram.h"
-#include "hal_psramuhs.h"
-#include "hal_norflash.h"
-#include "hal_wdt.h"
-#include "tgt_hardware.h"
-#include "hal_dma.h"
-#include CHIP_SPECIFIC_HDR(hal_dmacfg)
 
-#ifdef FLASH_SUSPEND
-#include "norflash_api.h"
-#endif
+
 
 #define HAL_CMU_USB_PLL_CLOCK           (192 * 1000 * 1000)
 #define HAL_CMU_AUD_PLL_CLOCK           (CODEC_FREQ_48K_SERIES * CODEC_CMU_DIV)
@@ -51,10 +39,10 @@
 #define HAL_CMU_USB_CLOCK_48M           (48 * 1000 * 1000)
 
 #define HAL_CMU_PWM_SLOW_CLOCK          (32 * 1000)
-
 #define HAL_CMU_PLL_LOCKED_TIMEOUT      US_TO_TICKS(200)
 #define HAL_CMU_26M_READY_TIMEOUT       MS_TO_TICKS(3)
 #define HAL_CMU_LPU_EXTRA_TIMEOUT       MS_TO_TICKS(1)
+
 
 enum CMU_USB_CLK_SRC_T {
     CMU_USB_CLK_SRC_PLL_48M         = 0,
@@ -77,49 +65,6 @@ enum CMU_DEBUG_REG_SEL_T {
     CMU_DEBUG_REG_SEL_CP_LR         = 4,
     CMU_DEBUG_REG_SEL_CP_SP         = 5,
     CMU_DEBUG_REG_SEL_DEBUG         = 7,
-};
-
-enum CMU_DMA_REQ_T {
-    CMU_DMA_REQ_CODEC_RX            = 0,
-    CMU_DMA_REQ_CODEC_TX            = 1,
-    CMU_DMA_REQ_DSD_RX              = 2,
-    CMU_DMA_REQ_DSD_TX              = 3,
-    CMU_DMA_REQ_IR_RX               = 6,
-    CMU_DMA_REQ_IR_TX               = 7,
-    CMU_DMA_REQ_FLS1                = 8,
-    CMU_DMA_REQ_FLS0                = 10,
-    CMU_DMA_REQ_BTDUMP              = 12,
-    CMU_DMA_REQ_SDEMMC              = 13,
-    CMU_DMA_REQ_I2C0_RX             = 14,
-    CMU_DMA_REQ_I2C0_TX             = 15,
-    CMU_DMA_REQ_I2C1_RX             = 16,
-    CMU_DMA_REQ_I2C1_TX             = 17,
-    CMU_DMA_REQ_SPILCD0_RX          = 18,
-    CMU_DMA_REQ_SPILCD0_TX          = 19,
-    CMU_DMA_REQ_SPILCD1_RX          = 20,
-    CMU_DMA_REQ_SPILCD1_TX          = 21,
-    CMU_DMA_REQ_SPI_ITN_RX          = 22,
-    CMU_DMA_REQ_SPI_ITN_TX          = 23,
-    CMU_DMA_REQ_UART0_RX            = 24,
-    CMU_DMA_REQ_UART0_TX            = 25,
-    CMU_DMA_REQ_UART1_RX            = 26,
-    CMU_DMA_REQ_UART1_TX            = 27,
-    CMU_DMA_REQ_UART2_RX            = 28,
-    CMU_DMA_REQ_UART2_TX            = 29,
-    CMU_DMA_REQ_PCM_RX              = 30,
-    CMU_DMA_REQ_PCM_TX              = 31,
-    CMU_DMA_REQ_I2S0_RX             = 32,
-    CMU_DMA_REQ_I2S0_TX             = 33,
-    CMU_DMA_REQ_SPDIF0_RX           = 34,
-    CMU_DMA_REQ_SPDIF0_TX           = 35,
-    CMU_DMA_REQ_I2C2_RX             = 36,
-    CMU_DMA_REQ_I2C2_TX             = 37,
-    CMU_DMA_REQ_UART3_RX            = 38,
-    CMU_DMA_REQ_UART3_TX            = 39,
-    CMU_DMA_REQ_I2S1_RX             = 40,
-    CMU_DMA_REQ_I2S1_TX             = 41,
-
-    CMU_DMA_REQ_NULL                = 5,
 };
 
 struct CP_STARTUP_CFG_T {
@@ -146,10 +91,6 @@ static bool aud_resample_en = true;
 static uint8_t aud_26m_x4_map;
 STATIC_ASSERT(CMU_AUD_26M_X4_USER_QTY <= sizeof(aud_26m_x4_map) * 8, "Too many aud_26m_x4 users");
 #endif
-#endif
-
-#ifdef ANA_26M_X4_ENABLE
-#error "CHIP_BEST2003 don't support X4"
 #endif
 
 #ifdef LOW_SYS_FREQ

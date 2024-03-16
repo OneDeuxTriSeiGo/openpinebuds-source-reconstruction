@@ -12,34 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "analog.h"
-#include "cmsis.h"
-#include "hal_cache.h"
-#include "hal_cmu.h"
-#include "hal_dma.h"
-#include "hal_gpadc.h"
-#include "hal_location.h"
-#include "hal_norflash.h"
-#include "hal_psram.h"
-#include "hal_psramuhs.h"
 #include "hal_sleep.h"
-#include "hal_spi.h"
-#include "hal_sysfreq.h"
+#include "hal_cmu.h"
+#include "hal_location.h"
 #include "hal_trace.h"
 #include "hal_timer.h"
-#include "hal_uart.h"
+#include "hal_sysfreq.h"
+#include "hal_dma.h"
+#include "hal_norflash.h"
+#include "hal_gpadc.h"
+#include "analog.h"
 #include "pmu.h"
-
-#if !(defined(CHIP_SUBSYS_SENS) || \
-        (defined(CHIP_SUBSYS_BTH) && !defined(BTH_AS_MAIN_MCU)))
-#define CHIP_SLEEP_CTRL_ENABLE
-#endif
-
-#ifdef CORE_SLEEP_POWER_DOWN
-#define PM_NOTIF_HDLR_CNT                   10
-#else
-#define PM_NOTIF_HDLR_CNT                   3
-#endif
+#include "cmsis.h"
 
 //static uint8_t SRAM_STACK_LOC sleep_stack[128];
 
@@ -49,24 +33,10 @@ static HAL_DEEP_SLEEP_HOOK_HANDLER deep_sleep_hook_handler[HAL_DEEP_SLEEP_HOOK_U
 static uint32_t cpu_wake_lock_map;
 static uint32_t sys_wake_lock_map;
 static uint32_t chip_wake_lock_map;
-#ifdef CORE_SLEEP_POWER_DOWN
-static bool skip_power_down;
-#endif
-
-static uint8_t pm_user_cnt;
-STATIC_ASSERT((1 << (sizeof(pm_user_cnt) * 8)) > PM_NOTIF_HDLR_CNT, "pm_user_cnt to small to hold PM_NOTIF_HDLR_CNT");
-static enum HAL_PM_USER_TYPE_T pm_user[PM_NOTIF_HDLR_CNT];
-static HAL_PM_NOTIF_HANDLER pm_notif[PM_NOTIF_HDLR_CNT];
 
 #ifdef SLEEP_STATS_TRACE
 static uint32_t stats_trace_interval;
 static uint32_t stats_trace_time;
-#ifdef WAKEUP_SRC_STATS
-static uint32_t wakeup_start_time;
-static uint32_t wakeup_src_map[(USER_IRQn_QTY + 31) / 32];
-static uint32_t wakeup_multi_src_map[(USER_IRQn_QTY + 31) / 32];
-static uint32_t wakeup_total_interval[USER_IRQn_QTY];
-#endif
 #endif
 static uint32_t stats_interval;
 static uint32_t stats_start_time;
@@ -100,25 +70,9 @@ void hal_sleep_start_stats(uint32_t stats_interval_ms, uint32_t trace_interval_m
 #ifdef SLEEP_STATS_TRACE
     if (stats_interval_ms && trace_interval_ms) {
         stats_trace_interval = MS_TO_TICKS(trace_interval_ms);
-        stats_trace_time = stats_start_time;
     } else {
         stats_trace_interval = 0;
     }
-#ifdef WAKEUP_SRC_STATS
-    int i;
-
-    for (i = 0; i < ARRAY_SIZE(wakeup_src_map); i++) {
-        wakeup_src_map[i] = 0;
-        wakeup_multi_src_map[i] = 0;
-    }
-    for (i = 0; i < ARRAY_SIZE(wakeup_total_interval); i++) {
-        wakeup_total_interval[i] = 0;
-    }
-#endif
-#ifdef CACHE_STATS
-    hal_cache_monitor_enable(HAL_CACHE_ID_I_CACHE);
-    hal_cache_monitor_enable(HAL_CACHE_ID_D_CACHE);
-#endif
 #endif
 }
 
@@ -126,10 +80,6 @@ int hal_sleep_get_stats(struct CPU_USAGE_T *usage)
 {
     int ret;
     uint32_t lock;
-
-    if (!usage) {
-        return -1;
-    }
 
     lock = int_lock();
     if (stats_valid) {
@@ -146,73 +96,7 @@ int hal_sleep_get_stats(struct CPU_USAGE_T *usage)
     return ret;
 }
 
-#if defined(SLEEP_STATS_TRACE) && defined(WAKEUP_SRC_STATS)
-static void SRAM_TEXT_LOC hal_sleep_calc_wakeup_interval(uint32_t cur_time)
-{
-    uint32_t interval;
-    int i;
-    int j;
-    int index;
-    uint32_t src_cnt = 0;
 
-    interval = cur_time - wakeup_start_time;
-
-    for (i = 0; i < ARRAY_SIZE(wakeup_src_map); i++) {
-        for (j = 0; j < 32; j++) {
-            if (wakeup_src_map[i] & (1 << j)) {
-                index = i * 32 + j;
-                if (index < ARRAY_SIZE(wakeup_total_interval)) {
-                    wakeup_total_interval[index] += interval;
-                    src_cnt++;
-                }
-            }
-        }
-    }
-
-    if (src_cnt >= 2) {
-        for (i = 0; i < ARRAY_SIZE(wakeup_src_map); i++) {
-            wakeup_multi_src_map[i] |= wakeup_src_map[i];
-        }
-    }
-}
-
-static void SRAM_TEXT_LOC hal_sleep_save_wakeup_src(void)
-{
-    int i;
-
-    wakeup_start_time = hal_sys_timer_get();
-
-    for (i = 0; i < ARRAY_SIZE(wakeup_src_map); i++) {
-        wakeup_src_map[i] = (NVIC->ICPR[i] & NVIC->ISER[i]);
-    }
-}
-
-static void hal_sleep_print_wakeup_src(void)
-{
-    int i;
-    uint32_t cur_time;
-
-    cur_time = hal_sys_timer_get();
-
-    hal_sleep_calc_wakeup_interval(cur_time);
-
-    // Set wakeup start time to current time
-    wakeup_start_time = cur_time;
-
-    TRACE(0, "DEEP SLEEP WAKEUP SRC STATS:");
-    for (i = 0; i < ARRAY_SIZE(wakeup_total_interval); i++) {
-        if (wakeup_total_interval[i]) {
-            TRACE(TR_ATTR_NO_TS, "\t[%2u]: %5u ms", i, TICKS_TO_MS(wakeup_total_interval[i]));
-            // Reset the total interval
-            wakeup_total_interval[i] = 0;
-        }
-    }
-    // Reset the multi src map but keep current wakeup src map
-    for (i = 0; i < ARRAY_SIZE(wakeup_src_map); i++) {
-        wakeup_multi_src_map[i] = 0;
-    }
-}
-#endif
 
 int hal_sleep_set_sleep_hook(enum HAL_SLEEP_HOOK_USER_T user, HAL_SLEEP_HOOK_HANDLER handler)
 {
@@ -287,7 +171,6 @@ int SRAM_TEXT_LOC hal_sleep_irq_pending(void)
     }
 #else
     // If there is any pending and enabled exception (including sysTick)
-    // SCB_ICSR_VECTPENDING is not banked between security states
     if (SCB->ICSR & SCB_ICSR_VECTPENDING_Msk) {
         return 1;
     }
@@ -318,70 +201,13 @@ int SRAM_TEXT_LOC hal_sleep_specific_irq_pending(const uint32_t *irq, uint32_t c
         if (NVIC->ICPR[i] & NVIC->ISER[i] & irq[i]) {
             return 1;
         }
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-        if (NVIC_NS->ICPR[i] & NVIC_NS->ISER[i] & irq[i]) {
-            return 1;
-        }
-#endif
     }
 #endif
 
     return 0;
 }
 
-static int pm_notif_sleep(enum HAL_CMU_LPU_SLEEP_MODE_T mode)
-{
-    enum HAL_PM_STATE_T state;
-    int i;
 
-    if (pm_user_cnt == 0) {
-        return 0;
-    }
-
-    if (0) {
-#ifdef CORE_SLEEP_POWER_DOWN
-    } else if (mode == HAL_CMU_LPU_SLEEP_MODE_POWER_DOWN) {
-        state = HAL_PM_STATE_POWER_DOWN_SLEEP;
-#endif
-    } else {
-        state = HAL_PM_STATE_NORMAL_SLEEP;
-    }
-
-    for (i = pm_user_cnt - 1; i >= 0; i--) {
-        if (pm_notif[i]) {
-            pm_notif[i](state);
-        }
-    }
-
-    return 0;
-}
-
-static int pm_notif_wakeup(enum HAL_CMU_LPU_SLEEP_MODE_T mode)
-{
-    enum HAL_PM_STATE_T state;
-    int i;
-
-    if (pm_user_cnt == 0) {
-        return 0;
-    }
-
-    if (0) {
-#ifdef CORE_SLEEP_POWER_DOWN
-    } else if (mode == HAL_CMU_LPU_SLEEP_MODE_POWER_DOWN) {
-        state = HAL_PM_STATE_POWER_DOWN_WAKEUP;
-#endif
-    } else {
-        state = HAL_PM_STATE_NORMAL_WAKEUP;
-    }
-
-    for (i = 0; i < pm_user_cnt; i++) {
-        if (pm_notif[i]) {
-            pm_notif[i](state);
-        }
-    }
-
-    return 0;
-}
 
 static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
 {
@@ -398,138 +224,55 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC hal_sleep_lowpower_mode(void)
         return ret;
     }
 
-    if (chip_wake_lock_map) {
-        mode = HAL_CMU_LPU_SLEEP_MODE_SYS;
-#ifdef CORE_SLEEP_POWER_DOWN
-    } else if (!skip_power_down) {
-        mode = HAL_CMU_LPU_SLEEP_MODE_POWER_DOWN;
-#endif
-    } else {
-        mode = HAL_CMU_LPU_SLEEP_MODE_CHIP;
+    if (stats_started) {
+        prev_time = hal_sys_timer_get();
     }
 
     // Stop modules (except for psram and flash, spi)
-    pm_notif_sleep(mode);
-
-#ifdef FAST_TIMER_COMPENSATE
-    hal_fast_timer_sleep();
-#endif
-
-#ifdef CHIP_SLEEP_CTRL_ENABLE
     hal_gpadc_sleep();
     if (chip_wake_lock_map == 0) {
         analog_sleep();
         pmu_sleep();
     }
-#endif
     // End of stopping modules
 
-#ifdef CORE_SLEEP_POWER_DOWN
-    // Save uart trace related cfg
-    hal_dma_sleep();
-    hal_uart_sleep();
-#endif
 
-#ifdef CHIP_SLEEP_CTRL_ENABLE
-    // Stop psram and then flash
-#ifdef CORE_SLEEP_POWER_DOWN
-    hal_cache_sleep();
-#endif
-#ifdef PSRAM_ENABLE
-    hal_psram_sleep();
-#endif
-#ifdef PSRAMUHS_ENABLE
-    hal_psramuhs_sleep();
-#endif
-#ifndef __MCU_FW_2002__
+    //hal_psram_sleep();
     hal_norflash_sleep(HAL_FLASH_ID_0);
-#endif
-#endif
 
-#ifdef CORE_SLEEP_POWER_DOWN
-    // Save ispi cfg
-    hal_spi_sleep();
-#endif
 
     if (!hal_sleep_irq_pending()) {
-        if (stats_started) {
-            prev_time = hal_sys_timer_get();
-#ifdef SLEEP_STATS_TRACE
-#ifdef WAKEUP_SRC_STATS
-            hal_sleep_calc_wakeup_interval(prev_time);
-#endif
-#ifdef SYSFREQ_STATS
-            hal_sysfreq_add_freq_time(false, prev_time);
-#endif
-#endif
+        if (chip_wake_lock_map) {
+            mode = HAL_CMU_LPU_SLEEP_MODE_SYS;
+        } else {
+            mode = HAL_CMU_LPU_SLEEP_MODE_CHIP;
         }
-
         hal_cmu_lpu_sleep(mode);
-
-        if (stats_started) {
-            cur_time = hal_sys_timer_get();
-            interval = cur_time - prev_time;
-            if (chip_wake_lock_map) {
-                sys_deep_sleep_time += interval;
-            } else {
-                chip_deep_sleep_time += interval;
-            }
-#ifdef SLEEP_STATS_TRACE
-#ifdef WAKEUP_SRC_STATS
-            hal_sleep_save_wakeup_src();
-#endif
-#ifdef SYSFREQ_STATS
-            hal_sysfreq_add_freq_time(true, cur_time);
-#endif
-#endif
-        }
-
         ret = HAL_SLEEP_STATUS_DEEP;
     }
 
-#ifdef CORE_SLEEP_POWER_DOWN
-    // Restore ispi cfg
-    hal_spi_wakeup();
-#endif
-
-#ifdef CHIP_SLEEP_CTRL_ENABLE
-#ifndef __MCU_FW_2002__
-    // Restore flash and then psram
     hal_norflash_wakeup(HAL_FLASH_ID_0);
-#endif
-#ifdef PSRAMUHS_ENABLE
-    hal_psramuhs_wakeup();
-#endif
-#ifdef PSRAM_ENABLE
-    hal_psram_wakeup();
-#endif
-#ifdef CORE_SLEEP_POWER_DOWN
-    hal_cache_wakeup();
-#endif
-#endif
+    //hal_psram_wakeup();
 
-#ifdef CORE_SLEEP_POWER_DOWN
-    // Restore uart trace related cfg
-    hal_uart_wakeup();
-    hal_dma_wakeup();
-#endif
 
-    // Restore modules (except for psram and flash)
-#ifdef CHIP_SLEEP_CTRL_ENABLE
     if (chip_wake_lock_map == 0) {
         pmu_wakeup();
         analog_wakeup();
     }
 
     hal_gpadc_wakeup();
-#endif
 
-#ifdef FAST_TIMER_COMPENSATE
-    hal_fast_timer_wakeup();
-#endif
-
-    pm_notif_wakeup(mode);
     // End of restoring modules
+
+    if (stats_started) {
+        cur_time = hal_sys_timer_get();
+        interval = cur_time - prev_time;
+        if (chip_wake_lock_map) {
+            sys_deep_sleep_time += interval;
+        } else {
+            chip_deep_sleep_time += interval;
+        }
+    }
 
     return ret;
 }
@@ -563,9 +306,6 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC NOINLINE USED hal_sleep_proc(int li
 
             if (stats_started) {
                 prev_time = hal_sys_timer_get();
-#ifdef SYSFREQ_STATS
-                hal_sysfreq_add_freq_time(false, prev_time);
-#endif
             }
 
 #ifdef NO_LIGHT_SLEEP
@@ -582,9 +322,6 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC NOINLINE USED hal_sleep_proc(int li
             if (stats_started) {
                 cur_time = hal_sys_timer_get();
                 light_sleep_time += cur_time - prev_time;
-#ifdef SYSFREQ_STATS
-                hal_sysfreq_add_freq_time(true, cur_time);
-#endif
             }
 #ifdef DEBUG
         } else if ((trace_busy = hal_trace_busy())) {
@@ -592,9 +329,6 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC NOINLINE USED hal_sleep_proc(int li
 
             if (stats_started) {
                 prev_time = hal_sys_timer_get();
-#ifdef SYSFREQ_STATS
-                hal_sysfreq_add_freq_time(false, prev_time);
-#endif
             }
 
             // No irq will be generated when trace becomes idle, so the trace status should
@@ -604,9 +338,6 @@ static enum HAL_SLEEP_STATUS_T SRAM_TEXT_LOC NOINLINE USED hal_sleep_proc(int li
             if (stats_started) {
                 cur_time = hal_sys_timer_get();
                 light_sleep_time += cur_time - prev_time;
-#ifdef SYSFREQ_STATS
-                hal_sysfreq_add_freq_time(true, cur_time);
-#endif
             }
 
             if (!hal_sleep_irq_pending()) {
@@ -655,9 +386,6 @@ _exit_sleep:
 #ifdef SLEEP_STATS_TRACE
         if (stats_valid && stats_trace_interval) {
             if (cur_time - stats_trace_time >= stats_trace_interval) {
-#ifdef DEBUG_SLEEP_USER
-                hal_dma_record_busy_chan();
-#endif
                 TRACE(0, "CPU USAGE: busy=%d light=%d sys_deep=%d chip_deep=%d",
                     100 - (light_sleep_ratio + sys_deep_sleep_ratio + chip_deep_sleep_ratio),
                     light_sleep_ratio, sys_deep_sleep_ratio, chip_deep_sleep_ratio);
@@ -669,15 +397,6 @@ _exit_sleep:
                 TRACE(0, "BUSY: LPU=%d DMA=%d TRACE=%d", lpu_busy, dma_busy, trace_busy);
                 hal_sysfreq_print_user_freq();
                 hal_dma_print_busy_chan();
-#endif
-#ifdef WAKEUP_SRC_STATS
-                hal_sleep_print_wakeup_src();
-#endif
-#ifdef CACHE_STATS
-                hal_cache_print_stats();
-#endif
-#ifdef SYSFREQ_STATS
-                hal_sysfreq_print_freq_stats();
 #endif
             }
         }
@@ -847,107 +566,4 @@ int hal_chip_wake_unlock(enum HAL_CHIP_WAKE_LOCK_USER_T user)
     int_unlock(lock);
 
     return 0;
-}
-
-void hal_sleep_power_down_enable(void)
-{
-#ifdef CORE_SLEEP_POWER_DOWN
-    skip_power_down = false;
-#endif
-}
-
-void hal_sleep_power_down_disable(void)
-{
-#ifdef CORE_SLEEP_POWER_DOWN
-    skip_power_down = true;
-#endif
-}
-
-int hal_pm_notif_register(enum HAL_PM_USER_TYPE_T user, HAL_PM_NOTIF_HANDLER handler)
-{
-    int i;
-    uint32_t lock;
-    int ret;
-
-    if (handler == NULL) {
-        ASSERT(false, "%s: handler cannot be NULL: user=%d", __func__, user);
-        return 1;
-    }
-
-    ret = 0;
-
-    lock = int_lock();
-
-    if (pm_user_cnt >= PM_NOTIF_HDLR_CNT) {
-        ASSERT(false, "%s: handler list full: user=%d handler=%p curCnt=%u", __func__, user, handler, pm_user_cnt);
-        ret = 2;
-        goto _exit;
-    }
-
-    for (i = 0; i < pm_user_cnt; i++) {
-        if (pm_notif[i] == handler) {
-            ASSERT(false, "%s: handler already registered: user=%d handler=%p existedUser=%d", __func__, user, handler, pm_user[i]);
-            ret = 3;
-            goto _exit;
-        }
-    }
-
-    if (pm_user_cnt == 0) {
-        pm_user[i] = user;
-        pm_notif[i] = handler;
-    } else {
-        for (i = pm_user_cnt; i >= 0; i--) {
-            if (i == 0 || pm_user[i - 1] > user) {
-                pm_user[i] = user;
-                pm_notif[i] = handler;
-                break;
-            } else {
-                pm_user[i] = pm_user[i - 1];
-                pm_notif[i] = pm_notif[i - 1];
-            }
-        }
-    }
-    pm_user_cnt++;
-
-_exit:
-    int_unlock(lock);
-
-    return ret;
-}
-
-int hal_pm_notif_deregister(enum HAL_PM_USER_TYPE_T user, HAL_PM_NOTIF_HANDLER handler)
-{
-    int i;
-    uint32_t lock;
-    int ret;
-
-    if (handler == NULL) {
-        return 1;
-    }
-
-    ret = 0;
-
-    lock = int_lock();
-
-    for (i = 0; i < pm_user_cnt; i++) {
-        if (pm_notif[i] == handler) {
-            break;
-        }
-    }
-
-    if (i >= pm_user_cnt) {
-        ret = 2;
-        goto _exit;
-    }
-
-    for (; (i + 1) < pm_user_cnt; i++) {
-        pm_user[i] = pm_user[i + 1];
-        pm_notif[i] = pm_notif[i + 1];
-    }
-    pm_user_cnt--;
-
-_exit:
-    int_unlock(lock);
-
-    return ret;
 }

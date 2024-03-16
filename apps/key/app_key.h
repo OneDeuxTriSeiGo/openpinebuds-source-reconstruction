@@ -25,7 +25,6 @@
 #define APP_KEY_CODE_VOICEPATH              APP_KEY_CODE_FN15
 #define APP_KEY_CODE_TILE                   APP_KEY_CODE_FN15
 
-
 enum APP_KEY_CODE_T {
     APP_KEY_CODE_NONE = HAL_KEY_CODE_NONE,
     APP_KEY_CODE_PWR =  HAL_KEY_CODE_PWR,
@@ -86,10 +85,6 @@ typedef struct {
     void *param;
 } APP_KEY_HANDLE;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int app_key_open(int checkPwrKey);
 
 int app_key_close(void);
@@ -103,8 +98,5 @@ void app_key_handle_clear(void);
 void app_key_simulate_key_event(uint32_t key_code, uint8_t key_event);
 
 int simul_key_event_process(uint32_t key_code, uint8_t key_event);
-
-#ifdef __cplusplus
-}
 #endif
 #endif//__FMDEC_H__

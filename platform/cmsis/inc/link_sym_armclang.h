@@ -116,8 +116,6 @@ extern "C" {
 
 #else
 
-#define __got_info_start                    Image$$got_info$$Base
-
 #define Boot_Loader                         __main
 #define __flash_start                       Image$$boot_struct$$Base
 #define __userdata_pool_end__               Image$$userdata_pool$$Base

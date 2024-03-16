@@ -44,15 +44,11 @@
  */
 
 /// structure of a list element header
-/*@TRACE*/
 struct co_list_hdr
 {
     /// Pointer to next co_list_hdr
     struct co_list_hdr *next;
 };
-
-/// simplify type name of list element header
-typedef struct co_list_hdr co_list_hdr_t;
 
 /// structure of a list
 struct co_list
@@ -72,15 +68,6 @@ struct co_list
     #endif //KE_PROFILING
 };
 
-/// simplify type name of list
-typedef struct co_list co_list_t;
-
-/*
- * MACROS
- ****************************************************************************************
- */
-/// pop a specific element from the list
-#define CO_LIST_POP_ELT(list, elt) co_list_extract(&(list), &(elt->hdr));
 
 /*
  * FUNCTION DECLARATIONS
@@ -279,23 +266,9 @@ __INLINE bool co_list_is_empty(const struct co_list *const list)
  * @return First element address. Returns NULL pointer if the list is empty.
  ****************************************************************************************
  */
-__INLINE struct co_list_hdr *co_list_pick(const struct co_list *const list)
+__STATIC __INLINE struct co_list_hdr *co_list_pick(const struct co_list *const list)
 {
     return(list->first);
-}
-
-/**
- ****************************************************************************************
- * @brief Pick last element from the list without removing it.
- *
- * @param list           Pointer to the list structure.
- *
- * @return Last element address. Returns NULL pointer if the list is empty.
- ****************************************************************************************
- */
-__INLINE struct co_list_hdr *co_list_tail(const struct co_list *const list)
-{
-    return(list->last);
 }
 
 

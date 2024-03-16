@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef NO_ISPI
-
 #include "plat_types.h"
 #include "cmsis.h"
 #include "hal_analogif.h"
@@ -44,8 +42,8 @@
 #define ANA_WRITE_CMD(r, v)             (((((r) & 0x3FF) << 16) | ((v) & 0xFFFF)) << PADDING_CYCLES)
 #define ANA_READ_VAL(v)                 (((v) >> PADDING_CYCLES) & 0xFFFF)
 
-#define ANA_PAGE_0                      0xA000
 #define ANA_PAGE_1                      0xA010
+#define ANA_PAGE_0                      0xA000
 #define ANA_PAGE_QTY                    2
 
 #define ISPI_REG_CS(r)                  ((r) >> 12)
@@ -109,8 +107,8 @@ static int BOOT_TEXT_SRAM_LOC hal_analogif_rawwrite(unsigned short reg, unsigned
 int BOOT_TEXT_SRAM_LOC hal_analogif_reg_read(unsigned short reg, unsigned short *val)
 {
     uint32_t lock;
-    int ret;
     uint8_t cs;
+    int ret;
 
     cs = ISPI_REG_CS(reg);
     reg = ISPI_REG_OFFSET(reg);
@@ -129,8 +127,8 @@ int BOOT_TEXT_SRAM_LOC hal_analogif_reg_read(unsigned short reg, unsigned short 
 int BOOT_TEXT_SRAM_LOC hal_analogif_reg_write(unsigned short reg, unsigned short val)
 {
     uint32_t lock;
-    int ret;
     uint8_t cs;
+    int ret;
 
     cs = ISPI_REG_CS(reg);
     reg = ISPI_REG_OFFSET(reg);
@@ -169,17 +167,10 @@ int BOOT_TEXT_FLASH_LOC hal_analogif_open(void)
         return ret;
     }
 
-    ana_cs = 0;
-    hal_ispi_activate_cs(ana_cs);
-
     ret = hal_analogif_rawread(ANA_REG_CHIP_ID, &chip_id);
     if (ret) {
         return ret;
     }
-
-#if defined(FPGA) || defined(SIMU)
-    chip_id = ANA_CHIP_ID(ANA_VAL_CHIP_ID);
-#endif
 
     if (GET_BITFIELD(chip_id, ANA_CHIP_ID) != ANA_VAL_CHIP_ID) {
         return -1;
@@ -187,5 +178,3 @@ int BOOT_TEXT_FLASH_LOC hal_analogif_open(void)
 
     return 0;
 }
-
-#endif

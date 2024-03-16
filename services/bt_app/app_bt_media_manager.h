@@ -34,23 +34,12 @@ extern "C" {
 #ifdef RB_CODEC
 #define  BT_STREAM_RBCODEC      0x10    //from rockbox decoder
 #endif
-#ifdef AUDIO_PCM_PLAYER
-#define  BT_STREAM_PCM_PLAYER   0x20
-#endif
 
-#if BLE_AUDIO_ENABLED
-#define  BT_STREAM_BIS_LINEIN   0x80
-#define  BT_STREAM_BIS_BT       0x100
-#define  BT_STREAM_BIS_SINK     0x400
-#endif
 
-#define BT_STREAM_BESAUD 0x20
-#define BT_STREAM_MP3 0x40
-
-// direction is in
 #ifdef __AI_VOICE__
 #define BT_STREAM_AI_VOICE      0x200
 #endif
+
 
 #define BT_STREAM_TYPE_MASK   (BT_STREAM_SBC | BT_STREAM_MEDIA | BT_STREAM_VOICE)
 
@@ -132,17 +121,12 @@ void app_rbcodec_toggle_play_stop(void);
 void app_stop_a2dp_media_stream(uint8_t devId);
 void app_stop_sco_media_stream(uint8_t devId);
 int app_audio_manager_ctrl_volume(enum APP_AUDIO_MANAGER_VOLUME_CTRL_T volume_ctrl, uint16_t volume_level);
-int app_audio_manager_ctrl_volume_with_callback(enum APP_AUDIO_MANAGER_VOLUME_CTRL_T volume_ctrl, uint16_t volume_level, void (*cb)(uint8_t device_id));
 int app_audio_manager_tune_samplerate_ratio(enum AUD_STREAM_T stream, float ratio);
 bool bt_media_cur_is_bt_stream_media(void);
 bool bt_media_is_sbc_media_active(void);
 void bt_media_current_sbc_set(uint8_t id);
 void app_ibrt_sync_mix_prompt_req_handler(uint8_t* ptrParam, uint16_t paramLen);
 void app_audio_decode_err_force_trigger(void);
-int app_audio_manager_set_a2dp_codec_type(uint8_t device_id, uint8_t codec_type);
-uint8_t app_audio_manager_get_a2dp_codec_type(uint8_t device_id);
-void bt_media_clear_current_media(uint16_t media_type);
-bool bt_media_cur_is_besaud_stream_media(void);
 
 #ifdef __cplusplus
     }

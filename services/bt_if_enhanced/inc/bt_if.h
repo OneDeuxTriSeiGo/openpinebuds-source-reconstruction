@@ -28,11 +28,10 @@
 #define    BTIF_APP_BTGATT_PROFILE_ID       ((uint64_t)(0x0000000000000010))
 
 #define    BTIF_APP_SPP_SERVER_START_ID     ((uint64_t)(0x0000000000000020))
-#define    BTIF_APP_SPP_SERVER_NUM          (30)
 #define    BTIF_APP_SPP_SERVER_END_ID       ((uint64_t)(BTIF_APP_SPP_SERVER_START_ID << (BTIF_APP_SPP_SERVER_NUM - 1)))
 #define    BTIF_APP_SPP_SERVER_OFFSET       (5)
+#define    BTIF_APP_SPP_SERVER_NUM          (30)
 #define    BTIF_APP_SPP_SERVER_MASK         ((uint64_t)(0x000000003FFFFFFF<<BTIF_APP_SPP_SERVER_OFFSET))
-
 
 #define    BTIF_APP_SPP_CLIENT_START_ID     ((uint64_t)(BTIF_APP_SPP_SERVER_END_ID << 1))
 #define    BTIF_APP_SPP_CLIENT_NUM          (10)
@@ -41,43 +40,18 @@
 #define    BTIF_APP_SPP_NUM                 (BTIF_APP_SPP_SERVER_NUM+BTIF_APP_SPP_CLIENT_NUM)
 #define    BTIF_APP_SPP_MASK                ((uint64_t)(0x000000FFFFFFFFFF<<BTIF_APP_SPP_OFFSET))
 
+#define    BTIF_TWS_LINK_CONNECTED          (1 << 0)
+#define    BTIF_TWS_L2CAP_CONNECTED         (1 << 1)
+
 
 #if defined(IBRT)
 uint64_t btif_app_get_app_id_from_spp_flag(uint8_t spp_flag);
 uint8_t btif_app_get_spp_flag_from_app_id(uint64_t app_id);
 #endif
 
-
-#define    BTIF_TWS_LINK_CONNECTED          (1 << 0)
-#define    BTIF_TWS_L2CAP_CONNECTED         (1 << 1)
-
 #ifdef __cplusplus
 extern "C" {
 #endif                          /*  */
-
-void btif_ibrt_stack_clean_slave_status(void* remote);
-
-#define RFCOMM_MAX_SYNC_DATA_SIZE (16)
-
-struct a2dp_command_t {
-    bool is_valid;
-    uint8_t transaction;
-    uint8_t signal_id;
-} __attribute__ ((packed));
-
-struct btif_sync_data_to_new_master_t {
-    bt_bdaddr_t remote_bdaddr;
-    struct a2dp_command_t stream_cmd;
-    uint8_t rfcomm_sync_data[RFCOMM_MAX_SYNC_DATA_SIZE];
-} __attribute__ ((packed));
-
-bool btif_ibrt_master_wait_remote_new_master_ready(void *remote);
-
-void btif_ibrt_master_tws_switch_set_start(void* remote);
-
-void btif_ibrt_old_master_receive_ready_req(struct btif_sync_data_to_new_master_t *sync_data, void *remote);
-
-void btif_ibrt_new_master_receive_ready_rsp(struct btif_sync_data_to_new_master_t *sync_data);
 
 enum pair_event
 {
@@ -104,7 +78,6 @@ static inline int bt_authing_init(authing_callback_t auth_cb)
 int bt_stack_config(const unsigned char *dev_name, uint8_t len);
 void btif_update_bt_name(const unsigned char *dev_name, uint8_t len);
 int bt_set_local_dev_name(const unsigned char *dev_name, uint8_t len);
-int bt_set_local_clock(uint32_t clock);
 void bt_process_stack_events(void);
 void bt_generate_ecdh_key_pair(void);
 uint8_t bt_get_max_sco_number(void);
@@ -112,19 +85,9 @@ void bt_set_max_sco_number(uint8_t sco_num);
 void bt_fast_init(uint8_t* bt_addr, uint8_t* ble_addr);
 
 void btif_set_btstack_chip_config(void *config);
-void btif_set_extended_inquiry_response(uint8_t* eir, uint32_t len);
+
 void btif_avrcp_ct_register_notification_event(uint8_t device_id, uint8_t event);
-int btif_me_send_hci_cmd(uint16_t opcode, uint8_t *param_data_ptr, uint8_t param_len);
 
-struct spp_dlc_info_t
-{
-    bt_bdaddr_t remote;
-    uint8_t dlci;
-} __attribute__ ((packed));
-
-void btif_spp_register_report_close_to_ibrt_slave_callback(void (*cb)(void *remote, uint8_t dlci));
-
-void btif_spp_ibrt_slave_release_dlc_connection(uint32_t device_id, uint32_t dlci);
 
 #if defined(IBRT)
 uint32_t btif_save_app_bt_device_ctx(uint8_t *ctx_buffer,uint8_t psm_context_mask);
@@ -133,9 +96,6 @@ uint32_t btif_set_app_bt_device_ctx(uint8_t *ctx_buffer,uint8_t psm_context_mask
 
 bool btif_hf_service_link_is_up(void);
 bool btif_hf_audio_link_is_up(void);
-
-void btif_config_gatt_over_br_edr(bool isEnable);
-bool btif_is_gatt_over_br_edr_enabled(void);
 
 void btif_pts_av_create_channel(bt_bdaddr_t *btaddr);
 void btif_pts_av_disc_channel(void);
@@ -187,22 +147,6 @@ void btif_pts_av_send_start(void);
 void btif_pts_av_create_media_channel(void);
 void btif_pts_l2c_disc_channel(void);
 void btif_pts_l2c_send_data(void);
-#if defined(BT_SOURCE)
-void btif_pts_source_cretae_media_channel(void);
-void btif_pts_source_send_close_cmd(void);
-void btif_pts_source_send_discover_cmd(void);
-void btif_pts_source_send_get_capability_cmd(void);
-void btif_pts_source_send_set_configuration_cmd(void);
-void btif_pts_source_send_get_configuration_cmd(void);
-void btif_pts_source_send_reconfigure_cmd(void);
-void btif_pts_source_send_open_cmd(void);
-void btif_pts_source_send_abort_cmd(void);
-void btif_pts_source_send_get_all_capability_cmd(void);
-void btif_pts_source_send_suspend_cmd(void);
-void btif_pts_source_send_start_cmd(void);
-void btif_update_custom_eir_info(uint8_t eir_type, uint8_t *eir_buf, uint16_t eir_len);
-
-#endif
 
 #ifdef __cplusplus
 }

@@ -143,16 +143,9 @@ const uint8_t CN_BT_GSOUND_MIC_CLOSE[] = {
 const uint8_t CN_BT_GSOUND_NC[] = {
 
 };
-
 #ifdef __INTERACTION__
 const uint8_t CN_BT_FINDME[] = {
 #include "res/cn/SOUND_FINDME.txt"
 };
 #endif
-
-/*doesn't have chinese version sound mute */
-const uint8_t CN_BT_MUTE[] = {
-#include "res/SOUND_MUTE.txt"
-};
-
 #endif

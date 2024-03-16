@@ -246,6 +246,7 @@ extern "C" {
 #define WDT_BASE                                AON_WDT_BASE
 
 /* For linker scripts */
+
 #define VECTOR_SECTION_SIZE                     360
 #define REBOOT_PARAM_SECTION_SIZE               64
 #define ROM_BUILD_INFO_SECTION_SIZE             40

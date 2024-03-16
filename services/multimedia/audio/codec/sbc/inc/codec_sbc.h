@@ -23,10 +23,6 @@ extern "C" {
 
 #define BTIF_SBC_USE_FIXED_POINT_ENABLED
 
-#if defined(ROM_UTILS_ON) && defined(SBC_CHANNEL_SELECT_IN_DECODER_INSTANCE)
-#define BTIF_CHANNEL_SELECT_IN_DECODER_INST
-#endif
-
 #ifdef BTIF_SBC_USE_FIXED_POINT_ENABLED
 typedef S32 REAL;
 #else
@@ -110,22 +106,11 @@ typedef struct {
     REAL Y[16];
 } btif_sbc_encoder_t;
 
-typedef enum {
-    BTIF_SBC_DECODER_CHANNEL_SELECT_SELECT_STEREO = 0,
-    BTIF_SBC_DECODER_CHANNEL_SELECT_SELECT_LRMERGE,
-    BTIF_SBC_DECODER_CHANNEL_SELECT_LCHNL,
-    BTIF_SBC_DECODER_CHANNEL_SELECT_RCHNL,
-} BTIF_SBC_DECODER_CHANNEL_SELECT_E;
-
 typedef struct {
     btif_sbc_stream_info_t streamInfo;
     U16 maxPcmLen;
     REAL V0[160];
     REAL V1[160];
-
-#if defined(BTIF_CHANNEL_SELECT_IN_DECODER_INST)
-    BTIF_SBC_DECODER_CHANNEL_SELECT_E resv_channel_select;
-#endif
     struct {
         U8 stageBuff[BTIF_SBC_MAX_PCM_DATA];
         U16 stageLen;
@@ -138,8 +123,6 @@ typedef struct {
 
 typedef struct {
     list_entry_t node;
-    uint16_t reserved_data_size;
-    uint16_t reserved_header_size;
     uint8_t *data;
     uint16_t dataLen;
     uint16_t frameSize;
@@ -157,7 +140,6 @@ typedef struct  {
 
 uint16_t btif_sbc_frame_len(btif_sbc_stream_info_t *StreamInfo);
 void btif_sbc_init_decoder(btif_sbc_decoder_t *Decoder);
-//void btif_sbc_cfg_ch_mode(btif_sbc_decoder_t *Decoder, uint32_t btif_ch_select);
 bt_status_t btif_sbc_decode_frames(btif_sbc_decoder_t *Decoder,
                           uint8_t         *Buff,
                           uint16_t         Len,
@@ -165,13 +147,6 @@ bt_status_t btif_sbc_decode_frames(btif_sbc_decoder_t *Decoder,
                           btif_sbc_pcm_data_t *PcmData,
                           uint16_t         MaxPcmData,
                           float*       gains);
-bt_status_t btif_sbc_decode_frames_select_channel(btif_sbc_decoder_t *Decoder,
-                          uint8_t         *Buff,
-                          uint16_t         Len,
-                          uint16_t        *BytesParsed,
-                          btif_sbc_pcm_data_t *PcmData,
-                          uint16_t         MaxPcmData,
-                          float*       gains, BTIF_SBC_DECODER_CHANNEL_SELECT_E channel);
 
 bt_status_t btif_sbc_decode_frames_parser(btif_sbc_decoder_t *Decoder,
                                                          uint8_t         *Buff,

@@ -31,9 +31,9 @@ else
 CFLAGS_hal_cache.o += -DCHIP_CACHE_VER=$(CHIP_CACHE_VER)
 endif
 
+
 ifeq ($(PC_CMD_UART), 1)
 CFLAGS_hal_cmd.o += -D__PC_CMD_UART__
-
 endif
 
 ifeq ($(USB_AUDIO_APP), 1)
@@ -199,6 +199,7 @@ endif
 ifeq ($(FLASH_PROTECTION),1)
 CFLAGS_hal_norflash.o += -DFLASH_PROTECTION
 endif
+
 CFLAGS_hal_norflash.o += -DCHIP_FLASH_CTRL_VER=$(CHIP_FLASH_CTRL_VER)
 CFLAGS_hal_norflaship_v1.o += -Itests/programmer/inc -DCHIP_FLASH_CTRL_VER=$(CHIP_FLASH_CTRL_VER)
 CFLAGS_hal_norflaship_v2.o += -Itests/programmer/inc -DCHIP_FLASH_CTRL_VER=$(CHIP_FLASH_CTRL_VER)
@@ -259,6 +260,7 @@ endif
 ifeq ($(CHIP_HAS_SDMMC),1)
 CFLAGS_hal_sdmmc.o += -DCHIP_HAS_SDMMC
 endif
+
 
 ifeq ($(NO_SLEEP),1)
 CFLAGS_hal_sleep.o += -DNO_SLEEP
@@ -345,6 +347,7 @@ endif
 
 ifeq ($(UART_CLK_DIV_4),1)
 CFLAGS_hal_uart.o += -DUART_CLK_DIV_4
+
 endif
 ifneq ($(DEBUG_PORT),)
 CFLAGS_hal_uart.o += -DDEBUG_PORT=$(DEBUG_PORT)
@@ -362,7 +365,6 @@ USB_SUSPEND ?= 1
 PMU_USB_PIN_CHECK ?= 1
 endif
 endif
-
 ifeq ($(USB_SUSPEND),1)
 CFLAGS_hal_usb.o += -DUSB_SUSPEND
 endif

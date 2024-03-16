@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __RESOURCES_H__
 #define __RESOURCES_H__
-#include "plat_types.h"
 
 typedef enum {
     AUD_ID_INVALID  = -1,

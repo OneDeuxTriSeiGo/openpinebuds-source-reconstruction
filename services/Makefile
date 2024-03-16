@@ -10,8 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ifneq ($(GEN_SDK_LIB_SERVICE),1)
-
 obj-y += audio_dump/ \
          audioflinger/ \
          audio_process/ \
@@ -23,7 +21,7 @@ obj-y += audio_dump/ \
          ../utils/crc16/ \
          ../utils/heap/ \
          osif/ \
-         norflash_api/
+         norflash_api/ \
 
 ifeq ($(SPEECH_BONE_SENSOR),1)
 obj-y += bone_sensor/
@@ -37,13 +35,14 @@ ifneq ($(BT_CLOSE),1)
 obj-y += bt_profiles_enhanced/
 obj-y += bt_if_enhanced/
 endif
+
 ifeq ($(MBED),1)
 obj-y += fs/
 endif
 
-#ifneq ($(filter 1, $(MBED) $(AI_VOICE) $(TOTA_v2)),)
+ifneq ($(filter 1, $(MBED) $(AI_VOICE) $(TOTA_v2)),)
 obj-y +=../utils/kfifo/
-#endif
+endif
 
 ifeq ($(VOICE_DATAPATH_ENABLED),1)
 obj-y += voicepath/
@@ -55,12 +54,11 @@ obj-y += app_ai/
 endif
 
 ifeq ($(BLE),1)
-obj-y += \
-    ble_app/ \
-    bridge/ \
-    ble_stack/ \
-    ../utils/retention_ram/ \
-    ble_profiles/
+obj-y += ble_app/ \
+         bridge/ \
+         ble_stack/ \
+         ../utils/retention_ram/ \
+         ble_profiles/
 endif
 
 ifeq ($(AUTO_TEST),1)
@@ -85,14 +83,6 @@ ifeq ($(TEST_OVER_THE_AIR),1)
 obj-y += tota/
 endif
 
-ifneq ($(filter 1, $(BES_OTA) $(AI_OTA) $(GMA_VOICE)),)
-ifeq ($(FPGA_IBRT_OTA),1)
-obj-y += fpga_ibrt_ota/
-else
-obj-y += ota/
-endif
-endif
-
 ifneq ($(filter 1, $(BES_OTA) $(AI_OTA) $(BES_OTA_BASIC)),)
 ifeq ($(IBRT_OTA),1)
 ifeq ($(FPGA_IBRT_OTA),1)
@@ -100,7 +90,6 @@ obj-y += fpga_ibrt_ota/
 else
 obj-y += ibrt_ota/
 endif
-
 else
 obj-y += ota/
 endif
@@ -138,10 +127,10 @@ endif
 
 obj-y += communication/
 
-
 ifeq ($(RPC_SUPPORT),1)
 obj-y += rpc/
 endif
+
 
 ifeq ($(THROUGH_PUT),1)
 obj-y += through_put/

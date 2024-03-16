@@ -54,8 +54,8 @@ else
 CMDRMFILE       = rm -f $1
 CMDRMFILER      = find $1 $(RCS_FIND_IGNORE) \
                    \( $(addprefix -name ,'$(firstword $2)') \
-                      $(addprefix -o -name ',$(addsuffix ',$(filter-out $(firstword $2),$2))) \) \
-                    -type f -print | xargs rm -f
+                          $(addprefix -o -name ',$(addsuffix ',$(filter-out $(firstword $2),$2))) \) \
+                        -type f -print | xargs rm -f
 CMDRMDIR        = rm -fr $1
 CMDCPFILE       = cp -f $1 $2
 endif
@@ -114,25 +114,6 @@ echo-help = @echo '  $(call escchar,$(1))'
 endif
 
 ###
-# Archive command
-ifeq ($(TOOLCHAIN),armclang)
-archive-cmd = $(AR) --create --debug_symbols $@ $(1)
-else
-ifeq ($(WIN_PLAT),y)
-archive-cmd = ( ( echo create $@ && \
-  echo addmod $(subst $(space),$(comma),$(strip $(filter-out %.a,$(1)))) && \
-  $(foreach o,$(filter %.a,$(1)),echo addlib $o && ) \
-  echo save && \
-  echo end ) | $(AR) -M )
-else
-# Command "/bin/echo -e" cannot work on Apple Mac machines, so we use "/usr/bin/printf" instead
-archive-cmd = ( /usr/bin/printf 'create $@\n\
-  addmod $(subst $(space),$(comma),$(strip $(filter-out %.a,$(1))))\n\
-  $(foreach o,$(filter %.a,$(1)),addlib $o\n)save\nend' | $(AR) -M )
-endif
-endif
-
-###
 # try-run
 ifeq ($(WIN_PLAT),y)
 try-run = $(shell ($(1) >$(devnull) 2>&1) && echo. $(2) || echo. $(3))
@@ -148,8 +129,8 @@ endif
 ###
 # cc-option
 cc-option = $(call try-run, \
-	$(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(1) -c -x c \
-		-o $(devnull) $(devnull),$(1),$(2))
+        $(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(1) -c -x c \
+                -o $(devnull) $(devnull),$(1),$(2))
 
 ###
 # Shorthand for $(Q)$(MAKE) -f scripts/build.mk obj=
@@ -176,14 +157,14 @@ flags = $(foreach o,$($(1)),$(if $(filter -I%,$(o)),$(call addtree,$(o)),$(o)))
 # Short version is used, if $(quiet) equals `quiet_', otherwise full one.
 ifeq ($(WIN_PLAT),y)
 echo-cmd = $(if $($(quiet)cmd_$(1)),\
-	echo.  $(call escchar,$($(quiet)cmd_$(1)))$(echo-why) &&)
+        echo.  $(call escchar,$($(quiet)cmd_$(1)))$(echo-why) &&)
 echo-cmd-nowhy = $(if $($(quiet)cmd_$(1)),\
-	echo.  $(call escchar,$($(quiet)cmd_$(1))) &&)
+        echo.  $(call escchar,$($(quiet)cmd_$(1))) &&)
 else
 echo-cmd = $(if $($(quiet)cmd_$(1)),\
-	echo '  $(call escchar,$($(quiet)cmd_$(1)))$(echo-why)' ;)
+        echo '  $(call escchar,$($(quiet)cmd_$(1)))$(echo-why)' ;)
 echo-cmd-nowhy = $(if $($(quiet)cmd_$(1)),\
-	echo '  $(call escchar,$($(quiet)cmd_$(1)))' ;)
+        echo '  $(call escchar,$($(quiet)cmd_$(1)))' ;)
 endif
 
 # printing commands
@@ -240,8 +221,8 @@ if_changed = $(if $(strip $(any-prereq) $(arg-check)),                       \
           ( $(depfile-new) ))
 
 if_changed2 = $(if $(strip $(any-prereq) $(call arg-check,$(2))),             \
-        @ ( $(call echo-cmd,$(1)) $(cmd_$(1)) && \
-            $(call echo-cmd,$(2)) $(cmd_$(2)) ) &&                           \
+        @ ( $(call echo-cmd,$(1)) $(cmd_$(1)) &&                              \
+            $(call echo-cmd,$(2)) $(cmd_$(2)) ) &&                            \
           ( $(call depfile-new,$(2)) ))
 
 # Execute the command and also postprocess generated .d dependencies file.

@@ -523,6 +523,7 @@ struct PSRAMUHS_MC_T {
 #define PSRAM_UHS_MC_CA_MAP_BIT32_MASK           (0x1F << 10)
 #define PSRAM_UHS_MC_CA_MAP_BIT32_SHIFT          (10)
 
+
 // reg_400
 #define PSRAM_UHS_MC_INIT_COMPLETE               (1 << 0)
 

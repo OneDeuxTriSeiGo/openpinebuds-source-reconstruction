@@ -10,9 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-cur_dir := $(dir $(lastword $(MAKEFILE_LIST)))
-
-
 obj-y := cmsis/ drivers/ hal/
 
 ifneq ($(DUAL_BOOT),1)

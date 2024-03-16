@@ -27,7 +27,7 @@ extern "C" {
 
 
 /**< maximum payload size of one smart voice command */
-#define TOTA_MAXIMUM_DATA_PACKET_LEN     672
+#define TOTA_MAXIMUM_DATA_PACKET_LEN        672
 #define APP_TOTA_CMD_MAXIMUM_PAYLOAD_SIZE   TOTA_MAXIMUM_DATA_PACKET_LEN
 
 /**
@@ -36,8 +36,8 @@ extern "C" {
  */
 typedef struct
 {
-    uint16_t    cmdCode;        /**< command code, from APP_TOTA_CMD_CODE_E */
-    uint16_t    paramLen;       /**< length of the following parameter */
+    uint16_t    cmdCode;    /**< command code, from APP_TOTA_CMD_CODE_E */
+    uint16_t    paramLen;   /**< length of the following parameter */
     uint8_t     param[APP_TOTA_CMD_MAXIMUM_PAYLOAD_SIZE - 2*sizeof(uint16_t)];
 } APP_TOTA_CMD_PAYLOAD_T;
 
@@ -62,7 +62,7 @@ APP_TOTA_CMD_RET_STATUS_E   app_tota_send_response_to_command(APP_TOTA_CMD_CODE_
                                 uint8_t* rspData, uint32_t rspDataLen, APP_TOTA_TRANSMISSION_PATH_E path);
 APP_TOTA_CMD_RET_STATUS_E   app_tota_send_command(APP_TOTA_CMD_CODE_E cmdCode, uint8_t* ptrParam, uint32_t paramLen, APP_TOTA_TRANSMISSION_PATH_E path);
 void                        app_tota_cmd_handler_init(void);
-APP_TOTA_CMD_INSTANCE_T*        app_tota_cmd_handler_get_entry_pointer_from_cmd_code(APP_TOTA_CMD_CODE_E cmdCode);
+APP_TOTA_CMD_INSTANCE_T*    app_tota_cmd_handler_get_entry_pointer_from_cmd_code(APP_TOTA_CMD_CODE_E cmdCode);
 uint16_t                    app_tota_cmd_handler_get_entry_index_from_cmd_code(APP_TOTA_CMD_CODE_E cmdCode);
 APP_TOTA_CMD_RET_STATUS_E   app_tota_cmd_received(uint8_t* ptrData, uint32_t dataLength);
 #if defined(APP_ANC_TEST)

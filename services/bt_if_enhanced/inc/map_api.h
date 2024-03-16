@@ -15,8 +15,6 @@
 #ifndef __MAP_API_H__
 #define __MAP_API_H__
 
-#ifdef BT_MAP_SUPPORT
-
 #include "bluetooth.h"
 
 #ifdef __cplusplus
@@ -68,11 +66,6 @@ typedef enum {
     BTIF_MAP_SESSION_TYPE_MNS, // 1
 } btif_map_session_type_t;
 
-typedef enum {
-    BTIF_OBEX_SESSION_ROLE_CLIENT = 0,
-    BTIF_OBEX_SESSION_ROLE_SERVER, // 1
-} btif_obex_session_role_t;
-
 typedef struct {
     btif_map_session_type_t type;
     btif_obex_session_role_t obex_role;
@@ -109,7 +102,6 @@ bt_status_t btif_map_session_close(btif_map_session_handle_t handle);
 bool btif_map_check_is_connected(btif_map_session_handle_t handle);
 void btif_map_callback_register(btif_map_callback_t callback);
 bool btif_map_check_is_idle(btif_map_session_handle_t handle);
-
 #if defined(IBRT)
 uint32_t btif_map_get_server_chnl(void);
 uint32_t map_save_ctx(uint32_t server_chnl, uint32_t conn_id,uint8_t *buf, uint32_t buf_len);
@@ -122,7 +114,5 @@ uint32_t btif_map_profile_restore_ctx(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint3
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* BT_MAP_SUPPORT */
 
 #endif /* __MAP_API_H__ */

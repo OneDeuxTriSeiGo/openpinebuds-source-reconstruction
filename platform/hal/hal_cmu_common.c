@@ -14,11 +14,7 @@
  */
 #include "plat_addr_map.h"
 #include "hal_cmu.h"
-#ifdef CHIP_SUBSYS_SENS
-#include CHIP_SPECIFIC_HDR(reg_senscmu)
-#else
 #include CHIP_SPECIFIC_HDR(reg_cmu)
-#endif
 #ifdef AON_CMU_BASE
 #include CHIP_SPECIFIC_HDR(reg_aoncmu)
 #endif
@@ -50,11 +46,7 @@
 
 typedef void (*HAL_POWER_DOWN_WAKEUP_HANDLER)(void);
 
-#ifdef CHIP_SUBSYS_SENS
-static struct SENSCMU_T * const cmu = (struct SENSCMU_T *)SENS_CMU_BASE;
-#else
 static struct CMU_T * const cmu = (struct CMU_T *)CMU_BASE;
-#endif
 #ifdef AON_CMU_BASE
 static struct AONCMU_T * const POSSIBLY_UNUSED aoncmu = (struct AONCMU_T *)AON_CMU_BASE;
 #endif
@@ -88,13 +80,6 @@ uint32_t BOOT_TEXT_FLASH_LOC hal_cmu_get_default_crystal_freq(void)
     return HAL_CMU_DEFAULT_CRYSTAL_FREQ;
 }
 
-#ifndef CMU_FAST_TIMER_FREQ
-uint32_t BOOT_TEXT_SRAM_LOC hal_cmu_get_fast_timer_freq(void)
-{
-    return crystal_freq / 4;
-}
-#endif
-
 void hal_cmu_write_lock(void)
 {
     cmu->WRITE_UNLOCK = 0xCAFE0000;
@@ -105,92 +90,41 @@ void hal_cmu_write_unlock(void)
     cmu->WRITE_UNLOCK = 0xCAFE0001;
 }
 
-#ifndef HAL_CMU_SYS_REBOOT
 void hal_cmu_sys_reboot(void)
 {
     hal_cmu_reset_set(HAL_CMU_MOD_GLOBAL);
 }
-#endif
 
 void hal_cmu_simu_init(void)
 {
-#if defined(CHIP_BEST1501SIMU)
-    cmu->MISC_0F8 = 0;
-#else
     cmu->SIMU_RES = 0;
-#endif
 }
 
 void hal_cmu_simu_pass(void)
 {
-#if defined(CHIP_BEST1501SIMU)
-    cmu->MISC_0F8 = CMU_SIMU_RES_PASSED;
-#else
     cmu->SIMU_RES = CMU_SIMU_RES_PASSED;
-#endif
 }
 
 void hal_cmu_simu_fail(void)
 {
-#if defined(CHIP_BEST1501SIMU)
-    cmu->MISC_0F8 = CMU_SIMU_RES_FAILED;
-#else
     cmu->SIMU_RES = CMU_SIMU_RES_FAILED;
-#endif
 }
 
 void hal_cmu_simu_tag(uint8_t shift)
 {
-#if defined(CHIP_BEST1501SIMU)
-    cmu->MISC_0F8 |= (1 << shift);
-#else
     cmu->SIMU_RES |= (1 << shift);
-#endif
 }
 
 void hal_cmu_simu_set_val(uint32_t val)
 {
-#if defined(CHIP_BEST1501SIMU)
-    cmu->MISC_0F8 = val;
-#else
     cmu->SIMU_RES = val;
-#endif
 }
 
 uint32_t hal_cmu_simu_get_val(void)
 {
-#if defined(CHIP_BEST1501SIMU)
-    return cmu->MISC_0F8;
-#else
     return cmu->SIMU_RES;
-#endif
 }
 
-#if defined(CP_BOOT) || defined(CP_BUILD)
-void hal_cmu_dbg_set_val(uint8_t id, uint32_t val)
-{
-    aoncmu->DEBUG_RES[id] = val;
-}
-
-uint32_t hal_cmu_dbg_get_val(uint8_t id)
-{
-    return aoncmu->DEBUG_RES[id];
-}
-#endif
-
-int BOOT_TEXT_FLASH_LOC hal_cmu_flash_all_select_pll(enum HAL_CMU_PLL_T pll)
-{
-    hal_cmu_flash_select_pll(pll);
-#ifdef FLASH1_CTRL_BASE
-    hal_cmu_flash1_select_pll(pll);
-#endif
-    return 0;
-}
-
-#if !(defined(CHIP_SUBSYS_SENS) || (defined(CHIP_SUBSYS_BTH) && !defined(BTH_AS_MAIN_MCU)))
-
-#if defined(CHIP_BEST1501) || defined(CHIP_BEST2000) || \
-        defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || defined(CHIP_BEST2300P)
 void hal_cmu_set_wakeup_pc(uint32_t pc)
 {
     uint32_t *wake_pc =
@@ -225,61 +159,6 @@ void hal_cmu_rom_wakeup_check(void)
     }
 
     *wake_fn = NULL;
-}
-#endif
-
-#ifndef HAL_CMU_USB_ROM_SELECT_CLOCK_SOURCE
-enum HAL_CMU_USB_CLOCK_SEL_T hal_cmu_usb_rom_select_clock_source(int pll_en, unsigned int crystal)
-{
-    enum HAL_CMU_USB_CLOCK_SEL_T sel;
-
-    if (pll_en) {
-        sel = HAL_CMU_USB_CLOCK_SEL_PLL;
-    } else {
-        if (crystal == 24000000) {
-            sel = HAL_CMU_USB_CLOCK_SEL_24M_X2;
-        } else if (crystal == 48000000) {
-            sel = HAL_CMU_USB_CLOCK_SEL_48M;
-        } else {
-            sel = HAL_CMU_USB_CLOCK_SEL_26M_X2;
-        }
-    }
-
-    hal_cmu_usb_rom_set_clock_source(sel);
-
-    return sel;
-}
-#endif
-
-__STATIC_FORCEINLINE int hal_cmu_flash_all_set_freq(enum HAL_CMU_FREQ_T freq)
-{
-    hal_cmu_flash_set_freq(freq);
-#ifdef FLASH1_CTRL_BASE
-    hal_cmu_flash1_set_freq(freq);
-#endif
-    return 0;
-}
-
-#ifdef ROM_IN_FLASH
-SRAM_TEXT_LOC
-#endif
-void hal_cmu_flash_all_reset_clear(int reset)
-{
-    if (reset) {
-        // Reset flash controller (for JTAG reset and run)
-        hal_cmu_reset_set(HAL_CMU_MOD_O_FLASH);
-        hal_cmu_reset_set(HAL_CMU_MOD_H_FLASH);
-    }
-    // Enable flash controller (reset by default in BEST1400)
-    hal_cmu_reset_clear(HAL_CMU_MOD_H_FLASH);
-    hal_cmu_reset_clear(HAL_CMU_MOD_O_FLASH);
-#ifdef FLASH1_CTRL_BASE
-    if (reset) {
-        hal_cmu_reset_set(HAL_CMU_MOD_O_FLASH1);
-        hal_cmu_reset_set(HAL_CMU_MOD_H_FLASH1);
-    }
-    hal_cmu_reset_clear(HAL_CMU_MOD_H_FLASH1);
-    hal_cmu_reset_clear(HAL_CMU_MOD_O_FLASH1);
 #endif
 }
 
@@ -400,13 +279,9 @@ static void BOOT_TEXT_FLASH_LOC hal_cmu_init_periph_clock(void)
 #endif
 }
 
-#ifdef ROM_IN_FLASH
-SRAM_TEXT_LOC
-#endif
 void hal_cmu_rom_setup(void)
 {
     int reset_flash;
-
     hal_cmu_lpu_wait_26m_ready();
     hal_cmu_simu_init();
     hal_cmu_rom_clock_init();
@@ -415,22 +290,11 @@ void hal_cmu_rom_setup(void)
     // Init sys clock
     hal_cmu_sys_set_freq(HAL_CMU_FREQ_26M);
 
-#ifdef ROM_IN_FLASH
-    // Wait until norflash becomes idle
-    hal_sys_timer_delay(MS_TO_TICKS(3));
-#endif
     // Init flash clock (this should be done before load_boot_settings, for security register read)
-#ifndef CHIP_BEST1501SIMU
     hal_cmu_flash_all_set_freq(HAL_CMU_FREQ_26M);
-#endif
-#ifdef ROM_IN_FLASH
-    reset_flash = false;
-#else
     reset_flash = true;
-#endif
     hal_cmu_flash_all_reset_clear(reset_flash);
 
-    // TODO: Check why system crashes when ROM_IN_FLASH=1 and INSRAM_RUN=0
     // Disable cache (for JTAG reset and run)
     hal_cache_disable(HAL_CACHE_ID_I_CACHE);
     hal_cache_disable(HAL_CACHE_ID_D_CACHE);
@@ -441,6 +305,7 @@ void hal_cmu_rom_setup(void)
 
 void hal_cmu_programmer_setup(void)
 {
+
 #ifdef JTAG_ENABLE
     hal_iomux_set_jtag();
     hal_cmu_jtag_clock_enable();
@@ -448,13 +313,6 @@ void hal_cmu_programmer_setup(void)
 
     hal_cmu_ema_init();
     hal_sys_timer_open();
-
-    // Init system/flash/memory clocks before initializing clock setting
-    // and before switching PLL
-    hal_cmu_flash_all_set_freq(HAL_CMU_FREQ_26M);
-    hal_cmu_mem_set_freq(HAL_CMU_FREQ_26M);
-    hal_cmu_sys_set_freq(HAL_CMU_FREQ_26M);
-
 #ifndef FPGA
     int ret;
     // Open analogif (ISPI)
@@ -471,9 +329,6 @@ void hal_cmu_programmer_setup(void)
     // Enable OSC X2/X4 in cmu after enabling their source in hal_chipid_init()
     hal_cmu_osc_x2_enable();
     hal_cmu_osc_x4_enable();
-
-    // Enable PLL for flash (and system)
-    hal_cmu_programmer_enable_pll();
 #endif
 }
 
@@ -482,6 +337,7 @@ void hal_cmu_programmer_setup(void)
 void BOOT_TEXT_FLASH_LOC hal_cmu_fpga_setup(void)
 {
     hal_sys_timer_open();
+
     hal_sysfreq_req(HAL_SYSFREQ_USER_INIT, HAL_CMU_FREQ_52M);
 
     hal_cmu_apb_init_div();
@@ -489,9 +345,8 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_fpga_setup(void)
 
     // Init peripheral clocks
     hal_cmu_init_periph_clock();
-#if !defined(CHIP_BEST1501SIMU)
+
     hal_norflash_init();
- #endif
  #if defined(CHIP_BEST1501SIMU)
     hal_cmu_module_init_state();
 #endif
@@ -504,30 +359,19 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_setup(void)
     POSSIBLY_UNUSED int ret;
     enum HAL_CMU_FREQ_T freq;
 
-#ifndef ARM_CMNS
     hal_iomux_set_default_config();
-#endif
-
 #ifdef JTAG_ENABLE
     hal_iomux_set_jtag();
     hal_cmu_jtag_clock_enable();
 #endif
-#ifdef CLOCK_OUT_ID
-    hal_iomux_set_clock_out();
-    hal_cmu_clock_out_enable(CLOCK_OUT_ID);
-#endif
-
     hal_cmu_ema_init();
     hal_cmu_module_init_state();
     hal_sys_timer_open();
     hal_hw_bootmode_init();
-#ifndef __MCU_FW_2002__
-#if !defined(ARM_CMNS)
+
     // Init system/flash/memory clocks before initializing clock setting
     // and before switching PLL
     hal_norflash_set_boot_freq(HAL_CMU_FREQ_26M);
-#endif
-#endif
     hal_cmu_mem_set_freq(HAL_CMU_FREQ_26M);
     hal_cmu_sys_set_freq(HAL_CMU_FREQ_26M);
 
@@ -577,14 +421,10 @@ void BOOT_TEXT_FLASH_LOC hal_cmu_setup(void)
     freq = HAL_CMU_FREQ_104M;
 #endif
     hal_sysfreq_req(HAL_SYSFREQ_USER_INIT, freq);
-#ifndef __MCU_FW_2002__
+
     // Init flash
-#if !defined(ARM_CMNS)
     hal_norflash_init();
-#endif
-#endif
+
 }
 
 #endif // !FPGA
-
-#endif // !CHIP_SUBSYS_SENS

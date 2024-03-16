@@ -17,7 +17,6 @@
 
 #include "plat_types.h"
 #include "hal_norflash.h"
-#include "hal_cmu.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,8 +36,6 @@ enum DRV_NORFLASH_W_STATUS_T {
     DRV_NORFLASH_W_STATUS_QE,
     DRV_NORFLASH_W_STATUS_LB,
     DRV_NORFLASH_W_STATUS_BP,
-
-    DRV_NORFLASH_W_STATUS_QTY,
 };
 
 enum SPEED_RATIO_T {
@@ -82,20 +79,11 @@ union DRV_NORFLASH_SEC_REG_CFG_T {
     uint16_t v;
 };
 
-union DRV_NORFLASH_DTR_CFG_T {
-    struct {
-        uint8_t speed_ratio :3;
-        uint8_t dummy_cycles:5;
-    } s;
-    uint8_t v;
-};
-
 typedef int (*NORFLASH_WRITE_STATUS_CB)(enum HAL_FLASH_ID_T id, enum DRV_NORFLASH_W_STATUS_T type, uint32_t param);
 
 struct NORFLASH_CFG_T {
     uint8_t id[NORFLASH_ID_LEN];
     union DRV_NORFLASH_SPEED_RATIO_T speed_ratio;
-    union DRV_NORFLASH_DTR_CFG_T dtr_quad_cfg;
     uint8_t crm_en_bits;
     uint8_t crm_dis_bits;
     uint16_t block_protect_mask;
@@ -155,15 +143,9 @@ int norflash_init_div(enum HAL_FLASH_ID_T id, const struct HAL_NORFLASH_CONFIG_T
 
 int norflash_match_chip(enum HAL_FLASH_ID_T id, const uint8_t *dev_id, uint32_t len);
 
-void norflash_get_flash_list(const struct NORFLASH_CFG_T **list, uint32_t *len);
-
 int norflash_get_id(enum HAL_FLASH_ID_T id, uint8_t *value, uint32_t len);
 
 int norflash_get_unique_id(enum HAL_FLASH_ID_T id, uint8_t *value, uint32_t len);
-
-void norflash_enter_4byteaddr_mode(enum HAL_FLASH_ID_T id);
-
-void norflash_exit_4byteaddr_mode(enum HAL_FLASH_ID_T id);
 
 enum HAL_NORFLASH_RET_T norflash_erase(enum HAL_FLASH_ID_T id, uint32_t start_address, enum DRV_NORFLASH_ERASE_T type, int suspend);
 
@@ -181,13 +163,9 @@ void norflash_sleep(enum HAL_FLASH_ID_T id);
 
 void norflash_wakeup(enum HAL_FLASH_ID_T id);
 
-int norflash_read_status(enum HAL_FLASH_ID_T id, uint32_t *p_status);
-
 int norflash_init_status(enum HAL_FLASH_ID_T id, uint32_t status);
 
 int norflash_set_block_protection(enum HAL_FLASH_ID_T id, uint32_t bp);
-
-int norflash_security_register_get_lock_status(enum HAL_FLASH_ID_T id, uint32_t id_map, uint32_t *p_locked);
 
 int norflash_security_register_lock(enum HAL_FLASH_ID_T id, uint32_t id_map);
 

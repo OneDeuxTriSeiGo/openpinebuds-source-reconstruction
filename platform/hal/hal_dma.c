@@ -154,6 +154,7 @@ static bool dma_opened = false;
 
 static HAL_DMA_DELAY_FUNC dma_delay = NULL;
 
+
 /*****************************************************************************
  * Public types/enumerations/variables
  ****************************************************************************/
@@ -624,7 +625,6 @@ uint32_t hal_dma_stop(uint8_t ch)
 #else
     while (dma[inst]->CH[hwch].CONFIG & DMA_CONFIG_ACTIVE);
 #endif
-
     return hal_dma_cancel(ch);
 }
 

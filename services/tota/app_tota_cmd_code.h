@@ -30,11 +30,11 @@ extern "C" {
 #define TOTA_LOG_MSG(num,str,...)   TRACE(num,LOG_TAG"" str, ##__VA_ARGS__)             // MESSAGE OUTPUT
 #define TOTA_LOG_ERR(num,str,...)   TRACE(num,LOG_TAG"err:""" str, ##__VA_ARGS__)       // ERROR OUTPUT
 
-#define TOTA_LOG_FUNC_LINE()    TRACE(2,LOG_TAG"%s:%d\n", __FUNCTION__, __LINE__)
-#define TOTA_LOG_FUNC_IN()      TRACE(1,LOG_TAG"%s ++++\n", __FUNCTION__)
-#define TOTA_LOG_FUNC_OUT()     TRACE(1,LOG_TAG"%s ----\n", __FUNCTION__)
+#define TOTA_LOG_FUNC_LINE()        TRACE(2,LOG_TAG"%s:%d\n", __FUNCTION__, __LINE__)
+#define TOTA_LOG_FUNC_IN()          TRACE(1,LOG_TAG"%s ++++\n", __FUNCTION__)
+#define TOTA_LOG_FUNC_OUT()         TRACE(1,LOG_TAG"%s ----\n", __FUNCTION__)
 
-#define TOTA_LOG_DUMP          DUMP8
+#define TOTA_LOG_DUMP               DUMP8
 #else
 #define TOTA_LOG_DBG(str,...)
 #define TOTA_LOG_MSG(num,str,...)   TRACE(num,LOG_TAG"" str, ##__VA_ARGS__)
@@ -73,48 +73,48 @@ typedef enum
  */
 typedef enum
 {
-    /* 0 */ OP_TOTA_RESPONSE_TO_CMD = 0x8000, /**< the payload is: OP_TOTA_RESPONSE_TO_CMD + paramLen + BLE_TOTA_CMD_RSP_T */
-    /* 1 */ OP_TOTA_START_DATA_XFER = 0x8001,
-    /* 2 */ OP_TOTA_VERIFY_DATA_SEGMENT = 0x8002,
-    /* 3 */ OP_TOTA_STOP_TOTA_DATA_XFER = 0x8003,
-    /* 4 */ OP_TOTA_SPP_DATA_ACK = 0x8004,
+    /* 0 */ OP_TOTA_RESPONSE_TO_CMD      = 0x8000, /**< the payload is: OP_TOTA_RESPONSE_TO_CMD + paramLen + BLE_TOTA_CMD_RSP_T */
+    /* 1 */ OP_TOTA_START_DATA_XFER      = 0x8001,
+    /* 2 */ OP_TOTA_VERIFY_DATA_SEGMENT  = 0x8002,
+    /* 3 */ OP_TOTA_STOP_TOTA_DATA_XFER  = 0x8003,
+    /* 4 */ OP_TOTA_SPP_DATA_ACK         = 0x8004,
 
-    /* 5 */ OP_TOTA_DEMO_CMD = 0x8005,
-    /* 6 */ OP_TOTA_GENERAL_CMD = 0x8006,
+    /* 5 */ OP_TOTA_DEMO_CMD             = 0x8005,
+    /* 6 */ OP_TOTA_GENERAL_CMD          = 0x8006,
 
 #if defined(TOTA_CRASH_DUMP_TOOL_ENABLE)
-    OP_TOTA_CRASH_DUMP_REQ = 0x8050,
-    OP_TOTA_CRASH_DUMP_PARAM_REQ = 0x8051,
-    OP_TOTA_CRASH_DUMP_START_REQ = 0x8052,
-    OP_TOTA_CRASH_DUMP_RECEIVED_ACK = 0x8053,
-    OP_TOTA_CRASH_DUMP_END = 0x8054,
-    OP_TOTA_CRASH_DUMP_ERASE_FLASH = 0x8055,
-    OP_TOTA_CRASH_DUMP_HEART_BEAT = 0x8056,
+    OP_TOTA_CRASH_DUMP_REQ               = 0x8050,
+    OP_TOTA_CRASH_DUMP_PARAM_REQ         = 0x8051,
+    OP_TOTA_CRASH_DUMP_START_REQ         = 0x8052,
+    OP_TOTA_CRASH_DUMP_RECEIVED_ACK      = 0x8053,
+    OP_TOTA_CRASH_DUMP_END               = 0x8054,
+    OP_TOTA_CRASH_DUMP_ERASE_FLASH       = 0x8055,
+    OP_TOTA_CRASH_DUMP_HEART_BEAT        = 0x8056,
 #endif
 
     // TODO: add new command code here
-    OP_TOTA_BATTERY_STATUS_CMD = 0x9001,
-    OP_TOTA_MERIDIAN_EFFECT_CMD = 0x9002,
-    OP_TOTA_EQ_SELECT_CMD = 0x9003,
-    OP_TOTA_VOLUME_PLUS_CMD = 0x9004,
-    OP_TOTA_VOLUME_DEC_CMD = 0x9005,
+    OP_TOTA_BATTERY_STATUS_CMD           = 0x9001,
+    OP_TOTA_MERIDIAN_EFFECT_CMD          = 0x9002,
+    OP_TOTA_EQ_SELECT_CMD                = 0x9003,
+    OP_TOTA_VOLUME_PLUS_CMD              = 0x9004,
+    OP_TOTA_VOLUME_DEC_CMD               = 0x9005,
     OP_TOTA_VOLUME_SET_CMD,
     OP_TOTA_VOLUME_GET_CMD,
     OP_TOTA_EQ_SET_CMD,
     OP_TOTA_EQ_GET_CMD,
     OP_TOTA_FWVERSION_GET_CMD,
     OP_TOTA_RSSI_GET_CMD,
-    OP_TOTA_ANC_STATUS_SYNC_CMD=0x900C,
-    OP_TOTA_ANC_ONOFF_WRITE_CMD=0x900D,
-    OP_TOTA_ANC_LEVEL_WRITE_CMD=0x900E,
-    OP_TOTA_ANC_STATUS_REPORT_CMD=0x900F,
-    OP_TOTA_ANC_TOTAL_GAIN_WRITE_CMD=0x9020,
+    OP_TOTA_ANC_STATUS_SYNC_CMD          = 0x900C,
+    OP_TOTA_ANC_ONOFF_WRITE_CMD          = 0x900D,
+    OP_TOTA_ANC_LEVEL_WRITE_CMD          = 0x900E,
+    OP_TOTA_ANC_STATUS_REPORT_CMD        = 0x900F,
+    OP_TOTA_ANC_TOTAL_GAIN_WRITE_CMD     = 0x9020,
 
-    OP_TOTA_AUDIO_DUMP_CMD=0x9030,
-    OP_TOTA_RAW_DATA_SET_CMD = 0x9100,
+    OP_TOTA_AUDIO_DUMP_CMD               = 0x9030,
+    OP_TOTA_RAW_DATA_SET_CMD             = 0x9100,
     OP_TOTA_COMMAND_COUNT,
 
-    OP_TOTA_DATA_XFER = 0xFFFF, // to mark that it's a data packet
+    OP_TOTA_DATA_XFER                    = 0xFFFF, // to mark that it's a data packet
 } APP_TOTA_CMD_CODE_E;
 
 /**
@@ -136,7 +136,6 @@ typedef enum
     TOTA_DATA_SEGMENT_CRC_CHECK_FAILED = 10,
     TOTA_WHOLE_DATA_CRC_CHECK_FAILED = 11,
     TOTA_DATA_XFER_LEN_NOT_MATCHED = 12,
-
     // TO ADD: new return status
 } APP_TOTA_CMD_RET_STATUS_E;
 

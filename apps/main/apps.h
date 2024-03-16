@@ -40,9 +40,6 @@ int app_voice_report( APP_STATUS_INDICATION_T status,uint8_t device_id);
 int app_voice_report_generic(APP_STATUS_INDICATION_T status, uint8_t device_id, uint8_t isMerging);
 int app_voice_stop(APP_STATUS_INDICATION_T status, uint8_t device_id);
 
-void app_enter_signalingtest_mode(void);
-void app_enter_non_signalingtest_mode(void);
-
 
 /*FixME*/
 void app_status_set_num(const char* p);
@@ -68,11 +65,6 @@ bool app_is_power_off_in_progress(void);
 
 void app_disconnect_all_bt_connections(void);
 bool app_is_stack_ready(void);
-
-void app_start_power_consumption_thread(void);
-
-int app_init_btc(void);
-int app_deinit_btc(int deinit_case);
 
 ////////////////////
 

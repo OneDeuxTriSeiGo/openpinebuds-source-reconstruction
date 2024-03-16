@@ -209,6 +209,7 @@ uint32_t hal_gpio_i2c_recv(uint32_t device_addr, uint8_t *buf, uint32_t reg_len,
 uint32_t hal_gpio_i2c_simple_send(uint32_t device_addr, const uint8_t *tx_buf, uint16_t tx_len);
 uint32_t hal_gpio_i2c_simple_recv(uint32_t device_addr, const uint8_t *tx_buf, uint16_t tx_len, uint8_t *rx_buf, uint16_t rx_len);
 
+
 #ifdef __cplusplus
 }
 #endif

@@ -30,7 +30,7 @@ extern "C" {
 #define A2DP_SCALABLE_ADD_INFO1                   0x00
 #define A2DP_SCALABLE_ADD_INFO2                   0x00
 #define A2DP_SCALABLE_ADD_INFO3                   0x00
-#define A2DP_SCALABLE_INFO(X)                     (X & (A2DP_SCALABLE_HQ | A2DP_SCALABLE_ADD_INFO1| A2DP_SCALABLE_ADD_INFO2 | A2DP_SCALABLE_ADD_INFO3))
+#define A2DP_SCALABLE_INFO(X)                     (X & (A2DP_SCALABLE_HQ | A2DP_SCALABLE_ADD_INFO1 | A2DP_SCALABLE_ADD_INFO2 | A2DP_SCALABLE_ADD_INFO3))
 
 //To indicate Sampling Rate.
 #define A2DP_SCALABLE_SR_96000                    0x80
@@ -44,12 +44,9 @@ extern "C" {
 #define A2DP_SCALABLE_FMT_16                      0x00
 #define A2DP_SCALABLE_FMT_DATA(X)                 (X & (A2DP_SCALABLE_FMT_24 | A2DP_SCALABLE_FMT_16))
 
-#if defined(A2DP_SCALABLE_ON)
 extern btif_avdtp_codec_t a2dp_scalable_avdtpcodec;
 extern const unsigned char a2dp_codec_scalable_elements[];
 bt_status_t a2dp_codec_scalable_init(int index);
-void a2dp_codec_scalable_common_init(void);
-#endif
 
 #if defined(__cplusplus)
 }

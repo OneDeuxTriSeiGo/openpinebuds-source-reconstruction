@@ -18,7 +18,6 @@
 #include "plat_types.h"
 
 /* bytes */
-
 #define GD25Q32C_PAGE_SIZE (256)
 #define GD25Q32C_SECTOR_SIZE (4096)
 #define GD25Q32C_BLOCK_SIZE (32*1024)

@@ -24,6 +24,7 @@
 #define APP_TOTA_CONNECTED             (1 << 0)
 #define APP_TOTA_DISCONNECTED          (~(1 << 0))
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -60,17 +61,17 @@ typedef enum{
 
 
 typedef enum{
-    TOTA_SERVICE_INIT_SYNC = 0,                 /*valid payload: |2 bytes sync word |                                               */
+    TOTA_SERVICE_INIT_SYNC = 0,             /*valid payload: |2 bytes sync word |                                               */
     TOTA_SERVICE_CMD_WRITE_FLASH,           /*valid payload: |4 bytes address|4 bytes write data length|                        */
-    TOTA_SERVICE_CMD_READ_FLASH,            /*valid payload: |1 byte start_or_stop|4 bytes address|4 bytes read data length|  */
+    TOTA_SERVICE_CMD_READ_FLASH,            /*valid payload: |1 byte start_or_stop|4 bytes address|4 bytes read data length|    */
     TOTA_SERVICE_CMD_WRITE_AI_ENV_DATA,     /*valid payload: |4 bytes write data length|                                        */
     TOTA_SERVICE_CMD_VERIFY_AI_ENV_DATA,    /*valid payload: |4 bytes magic code |4 bytes CRC|                                  */
-    TOTA_SERVICE_CMD_READ_AI_ENV_DATA,      /*valid payload: |1 byte start_or_stop|4 bytes read data length |                  */
+    TOTA_SERVICE_CMD_READ_AI_ENV_DATA,      /*valid payload: |1 byte start_or_stop|4 bytes read data length |                   */
     TOTA_SERVICE_CMD_READ_ACK,              /*valid rsp payload: |1 bytes|                                                      */
     TOTA_SERVICE_CMD_GET_BAT,               /*valid rsp payload: |4 bytes|                                                      */
     TOTA_SERVICE_CMD_GET_FW_VERSION,        /*valid rsp payload: |4 bytes|                                                      */
-    TOTA_SERVICE_CMD_GET_BT_LOCAL_NAME,        /*valid rsp payload: |x bytes|                                                      */
-    TOTA_SERVICE_CMD_GET_BT_ADDR,        /*valid rsp payload: |6 bytes|                                                      */
+    TOTA_SERVICE_CMD_GET_BT_LOCAL_NAME,     /*valid rsp payload: |x bytes|                                                      */
+    TOTA_SERVICE_CMD_GET_BT_ADDR,           /*valid rsp payload: |6 bytes|                                                      */
     TOTA_SERVICE_CMD_CLEAR_PAIRING_INFO,
     TOTA_SERVICE_CMD_GENERAL_TEST,
     TOTA_SERVICE_CMD_SHUTDOWM,
@@ -210,6 +211,15 @@ void app_tota_disconnected(uint8_t disconnType);
 bool app_is_in_tota_mode(void);
 void app_tota_update_datapath(APP_TOTA_TRANSMISSION_PATH_E dataPath);
 APP_TOTA_TRANSMISSION_PATH_E app_tota_get_datapath(void);
+
+
+
+
+
+
+
+
+
 
 #ifdef __cplusplus
 }

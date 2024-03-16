@@ -12,19 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_INCLUDE_H__
 #define __APP_BLE_INCLUDE_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*****************************header include********************************/
 #include "app_ble_core.h"
 #include "app_ble_mode_switch.h"
 #include "app_ble_customif.h"
-#include "app_ble_custom_api.h"
-#include "app_ble_evt_mediator.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 #ifdef __cplusplus

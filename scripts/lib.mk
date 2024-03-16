@@ -14,22 +14,6 @@ cur_makefile := $(lastword $(MAKEFILE_LIST))
 
 $(cur_makefile): ;
 
-# add by jianyang@bestechnic.com for different target build $(LIB_NAME)-$(T).a
-ifeq ($(FORCE_TO_USE_TARGET_LIB),1)
-
-ifneq ($(SDK),1)
-define LIB_REPLACE
-$(1)-$(T)-y := $($(1)-y)
-endef
-$(foreach lib,$(filter %.a,$(obj-y)),$(eval $(call LIB_REPLACE,$(subst .a,,$(lib)))))
-endif
-
-obj-dir-new-y := $(filter-out %.a,$(obj-y))
-obj-lib-new-y := $(foreach lib, $(filter %.a,$(obj-y)), $(subst .a,-$(T).a,$(lib)))
-obj-y :=  $(obj-lib-new-y) $(obj-dir-new-y)
-endif
-
-
 # Backward compatibility
 asflags-y  += $(EXTRA_AFLAGS)
 ccflags-y  += $(EXTRA_CFLAGS)
@@ -70,7 +54,7 @@ archive-bin-y   := $(filter-out $(archive-src-y), $(archive-y))
 endif
 
 # If the source files of the archive (including archive-custom-valid) exist, build the source files directly
-obj-y                   := $(filter-out $(archive-src-y) $(archive-custom-valid), $(obj-y)) $(foreach m, $(archive-src-y) $(archive-custom-valid), $($(m:.a=-y)))
+obj-y           := $(filter-out $(archive-src-y) $(archive-custom-valid), $(obj-y)) $(foreach m, $(archive-src-y) $(archive-custom-valid), $($(m:.a=-y)))
 endif # archive-y
 
 # Handle composite objects
@@ -163,26 +147,6 @@ archive-src-y   := $(addprefix $(obj)/,$(archive-src-y))
 archive-bin-y   := $(addprefix $(obj)/,$(archive-bin-y))
 archive-custom-valid    := $(addprefix $(obj)/,$(archive-custom-valid))
 
-
-# filter-out modules
-ifeq ($(FORCE_TO_FILTER_MODULE),1)
-extra-y         := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(extra-y)),$(extra-y))
-always          := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(always)),$(always))
-targets         := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(targets)),$(targets))
-obj-y           := $(if $(filter-module-pattern) $(filter-obj),$(filter-out $(filter-module-pattern) $(filter-obj),$(obj-y)),$(obj-y))
-lib-y           := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(lib-y)),$(lib-y))
-subdir-obj-y    := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(subdir-obj-y)),$(subdir-obj-y))
-real-objs-y     := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(real-objs-y)),$(real-objs-y))
-multi-used-y    := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(multi-used-y)),$(multi-used-y))
-multi-objs-y    := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(multi-objs-y)),$(multi-objs-y))
-subdir-y        := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(subdir-y)),$(subdir-y))
-obj-dirs        := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(obj-dirs)),$(obj-dirs))
-archive-y       := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(archive-y)),$(archive-y))
-archive-src-y   := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(archive-src-y)),$(archive-src-y))
-archive-bin-y   := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(archive-bin-y)),$(archive-bin-y))
-archive-custom-valid    := $(if $(filter-module-pattern),$(filter-out $(filter-module-pattern),$(archive-custom-y)),$(archive-custom-y))
-endif
-
 orig_c_flags   = $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS) $(KBUILD_SUBDIR_CCFLAGS) \
                  $(ccflags-y) $(CFLAGS_$(basetarget).o)
 _c_flags       = $(filter-out $(CFLAGS_REMOVE_$(basetarget).o), $(orig_c_flags) $(C_ONLY_FLAGS))
@@ -214,9 +178,9 @@ endif
 ifeq ($(WIN_PLAT),y)
 # Not to include system header files in dependency files,
 # for there are space characters in system path by default.
-depfile_flags  = -MMD -MP -MF $(depfile) -MT $@
+depfile_flags  = -MMD -MP -MF $(depfile)
 else
-depfile_flags  = -MD -MP -MF $(depfile) -MT $@
+depfile_flags  = -MD -MP -MF $(depfile)
 endif
 
 c_flags        = $(depfile_flags) $(NOSTDINC_FLAGS) $(__c_flags)
@@ -256,7 +220,7 @@ endef
 
 quiet_cmd_ld = LD      $@
 cmd_ld = $(LD) $(LDFLAGS) $(ldflags-y) $(LDFLAGS_$(@F)) \
-               $(filter-out FORCE,$^) -o $@
+                $(filter-out FORCE,$^) -o $@
 
 # Objcopy
 # ---------------------------------------------------------------------------

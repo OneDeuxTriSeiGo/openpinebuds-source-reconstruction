@@ -241,6 +241,7 @@
 #define I2SIP_CLK_EN_SEL_MASK ((0x3)<<I2SIP_CLK_EN_SEL_SHIFT)
 #define I2SIP_CLK_EN_SEL(n) BITFIELD_VAL(I2SIP_CLK_EN_SEL, n)
 
+
 /* i2sip register end */
 
 #endif /* __REG_I2SIP_H_ */

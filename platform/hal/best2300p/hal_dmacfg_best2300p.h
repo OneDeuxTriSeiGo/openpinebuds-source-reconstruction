@@ -24,14 +24,9 @@
 #define AUDMA_CHAN_START                        (0)
 #define GPDMA_CHAN_START                        (0)
 
-static const uint32_t bes2003_gpdma_fifo_addr[AUDMA_PERIPH_NUM] = {
-#ifdef NUTTX_BUILD
-    I2S0_BASE + 0x200,      // I2S0 RX
-    I2S0_BASE + 0x240,      // I2S0 TX
-#else
+static const uint32_t gpdma_fifo_addr[AUDMA_PERIPH_NUM] = {
     CODEC_BASE + 0x01C,     // CODEC RX
     CODEC_BASE + 0x01C,     // CODEC TX
-#endif
     CODEC_BASE + 0x034,     // DSD RX
     CODEC_BASE + 0x034,     // DSD TX
     CODEC_BASE + 0x058,     // CODEC TX2
@@ -55,14 +50,9 @@ static const uint32_t bes2003_gpdma_fifo_addr[AUDMA_PERIPH_NUM] = {
     UART1_BASE + 0x000,     // UART1 TX
 };
 
-static const enum HAL_DMA_PERIPH_T bes2003_gpdma_fifo_periph[AUDMA_PERIPH_NUM] = {
-#ifdef NUTTX_BUILD
-    HAL_AUDMA_I2S0_RX,
-    HAL_AUDMA_I2S0_TX,
-#else
+static const enum HAL_DMA_PERIPH_T gpdma_fifo_periph[AUDMA_PERIPH_NUM] = {
     HAL_AUDMA_CODEC_RX,
     HAL_AUDMA_CODEC_TX,
-#endif
     HAL_AUDMA_DSD_RX,
     HAL_AUDMA_DSD_TX,
     HAL_DMA_PERIPH_NULL,
@@ -86,7 +76,7 @@ static const enum HAL_DMA_PERIPH_T bes2003_gpdma_fifo_periph[AUDMA_PERIPH_NUM] =
     HAL_GPDMA_UART1_TX,
 };
 
-static const uint32_t bes2003_audma_fifo_addr[GPDMA_PERIPH_NUM] = {
+static const uint32_t audma_fifo_addr[GPDMA_PERIPH_NUM] = {
     CODEC_BASE + 0x01C,     // CODEC RX
     CODEC_BASE + 0x01C,     // CODEC TX
     IRDA_BASE + 0x000,      // IR RX
@@ -117,7 +107,7 @@ static const uint32_t bes2003_audma_fifo_addr[GPDMA_PERIPH_NUM] = {
     FLASH1_CTRL_BASE + 0x008,// FLASH0
 };
 
-static const enum HAL_DMA_PERIPH_T bes2003_audma_fifo_periph[GPDMA_PERIPH_NUM] = {
+static const enum HAL_DMA_PERIPH_T audma_fifo_periph[GPDMA_PERIPH_NUM] = {
     HAL_AUDMA_CODEC_RX,
     HAL_AUDMA_CODEC_TX,
     HAL_GPDMA_IR_RX,
@@ -147,22 +137,5 @@ static const enum HAL_DMA_PERIPH_T bes2003_audma_fifo_periph[GPDMA_PERIPH_NUM] =
     HAL_GPDMA_FLASH0,
     HAL_GPDMA_FLASH1,
 };
-
-#ifndef DSP_USE_GPDMA
-#define audma_fifo_addr bes2003_audma_fifo_addr
-#define audma_fifo_periph bes2003_audma_fifo_periph
-#define gpdma_fifo_addr bes2003_gpdma_fifo_addr
-#define gpdma_fifo_periph bes2003_gpdma_fifo_periph
-#else
-#ifdef CHIP_BEST2003_DSP
-//A7 use GPDMA
-#define audma_fifo_addr bes2003_gpdma_fifo_addr
-#define audma_fifo_periph bes2003_gpdma_fifo_periph
-#else
-//MCU use AUDMA
-#define audma_fifo_addr bes2003_audma_fifo_addr
-#define audma_fifo_periph bes2003_audma_fifo_periph
-#endif
-#endif
 
 #endif

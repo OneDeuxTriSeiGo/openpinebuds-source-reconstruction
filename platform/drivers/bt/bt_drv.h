@@ -49,7 +49,7 @@ extern "C" {
 #define btdrv_delay(ms)                         hal_sys_timer_delay(MS_TO_TICKS(ms))
 
 #define BTDIGITAL_REG(a)                        (*(volatile uint32_t *)(a))
-#define BTDIGITAL_REG_WR(addr, value)         (*(volatile uint32_t *)(addr)) = (value)
+#define BTDIGITAL_REG_WR(addr, value)           (*(volatile uint32_t *)(addr)) = (value)
 
 #define BTDIGITAL_BT_EM(a)                      (*(volatile uint16_t *)(a))
 /// Macro to write a BT control structure field (16-bit wide)
@@ -179,6 +179,7 @@ extern "C" {
 #define MAX_SLOT_CLOCK      ((1L<<27) - 1)
  // A slot is 625 us
 #define SLOT_SIZE           625
+
 
 //#define __PASS_CI_TEST_SETTING__
 #define  BT_LOW_POWER_MODE  1
@@ -467,6 +468,7 @@ extern "C" {
 
 extern void btdrv_poweron(uint8_t en);
 extern void btdrv_hciopen(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -41,10 +41,8 @@ extern "C" {
 #define A2DP_AAC_OCTET_NUMBER                     (6)
 
 #if defined(A2DP_AAC_ON)
-extern btif_avdtp_codec_t a2dp_aac_avdtpcodec;
 extern const unsigned char a2dp_codec_aac_elements[A2DP_AAC_OCTET_NUMBER];
 bt_status_t a2dp_codec_aac_init(int index);
-void a2dp_codec_aac_common_init(void);
 #endif /* A2DP_AAC_ON */
 
 #if defined(__cplusplus)

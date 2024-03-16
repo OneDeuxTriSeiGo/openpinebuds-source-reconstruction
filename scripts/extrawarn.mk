@@ -45,9 +45,7 @@ warning-2 := -Waggregate-return
 warning-2 += -Wcast-align
 warning-2 += -Wdisabled-optimization
 warning-2 += -Wshadow
-ifneq ($(TOOLCHAIN),armclang)
 warning-2 += $(call cc-options,-Wlogical-op)
-endif
 warning-2 += -Wmissing-field-initializers
 c_warning-2 := -Wnested-externs
 

@@ -234,6 +234,7 @@ int hal_uart_dma_send(enum HAL_UART_ID_T id, const uint8_t *buf, uint32_t len,
 
 uint32_t hal_uart_stop_dma_send(enum HAL_UART_ID_T id);
 
+
 // ========================================================================
 // Test function
 

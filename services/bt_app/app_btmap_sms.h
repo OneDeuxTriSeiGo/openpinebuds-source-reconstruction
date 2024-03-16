@@ -15,8 +15,6 @@
 #ifndef __APP_BTMAP_SMS_H__
 #define __APP_BTMAP_SMS_H__
 
-#ifdef BT_MAP_SUPPORT
-
 #include "bluetooth.h"
 #include "btapp.h"
 
@@ -44,7 +42,5 @@ struct SMS_MSG_T{
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* BT_MAP_SUPPORT */
 
 #endif /*__APP_BTMAP_SMS_H__*/

@@ -30,13 +30,13 @@
  */
 #include "co_bt.h"           // BT standard definitions
 
-
 /// RWBT SW Major Version
 #define RWBT_SW_VERSION_MAJOR                   (BT52_VERSION)
 /// RWBT SW Minor Version
 #define RWBT_SW_VERSION_MINOR                   0
 /// RWBT SW Build Version
 #define RWBT_SW_VERSION_BUILD                   4
+
 /// RWBT SW Major Version
 #define RWBT_SW_VERSION_SUB_BUILD               0
 

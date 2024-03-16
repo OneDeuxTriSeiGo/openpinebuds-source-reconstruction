@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef __APP_BLE_CORE_H__
 #define __APP_BLE_CORE_H__
 
 /*****************************header include********************************/
-#include "app_ble_mode_switch.h"
 
 /******************************macro defination*****************************/
 
@@ -27,27 +27,12 @@
  */
 typedef enum{
     BLE_CONNECT_EVENT                   = 0,
-    BLE_CONNECT_BOND_EVENT              = 1,    //pairing success
-    BLE_CONNECT_NC_EXCH_EVENT           = 2,    //Numeric Comparison - Exchange of Numeric Value
-    BLE_CONNECT_ENCRYPT_EVENT           = 3,    //encrypt complete
-    BLE_CONNECTING_STOPPED_EVENT        = 4,
-    BLE_CONNECTING_FAILED_EVENT         = 5,
     BLE_DISCONNECT_EVENT                = 6,
     BLE_CONN_PARAM_UPDATE_REQ_EVENT     = 7,
-    BLE_CONN_PARAM_UPDATE_FAILED_EVENT  = 8,
-    BLE_CONN_PARAM_UPDATE_SUCCESSFUL_EVENT = 9,
     BLE_SET_RANDOM_BD_ADDR_EVENT        = 10,
-    BLE_ADV_STARTED_EVENT               = 11,
-    BLE_ADV_STARTING_FAILED_EVENT       = 12,
-    BLE_ADV_STOPPED_EVENT               = 13,
-    BLE_SCAN_STARTED_EVENT              = 14,
-    BLE_SCAN_DATA_REPORT_EVENT          = 15,
-    BLE_SCAN_STARTING_FAILED_EVENT      = 16,
-    BLE_SCAN_STOPPED_EVENT              = 17,
 
     BLE_EVENT_NUM_MAX,
 } ble_evnet_type_e;
-
 
 /**
  * @brief The event type of other module
@@ -69,28 +54,6 @@ typedef struct {
 
 typedef struct {
     uint8_t conidx;
-} connect_bond_handled_t;
-
-typedef struct {
-    uint8_t conidx;
-} connect_nc_exch_handled_t;
-
-typedef struct {
-    uint8_t conidx;
-    uint8_t pairing_lvl;
-} connect_encrypt_handled_t;
-
-typedef struct {
-    uint8_t peer_bdaddr[BTIF_BD_ADDR_SIZE];
-} stopped_connecting_handled_t;
-
-typedef struct {
-    uint8_t actv_idx;
-    uint8_t err_code;
-} connecting_failed_handled_t;
-
-typedef struct {
-    uint8_t conidx;
     uint8_t errCode;
 } disconnect_handled_t;
 
@@ -106,70 +69,14 @@ typedef struct {
 } conn_param_update_req_handled_t;
 
 typedef struct {
-    uint8_t conidx;
-    uint8_t err_code;
-} conn_param_update_failed_handled_t;
-
-typedef struct {
-    uint8_t conidx;
-    ///Connection interval value
-    uint16_t con_interval;
-    ///Connection latency value
-    uint16_t con_latency;
-    ///Supervision timeout
-    uint16_t sup_to;
-} conn_param_update_successful_handled_t;
-
-typedef struct {
     uint8_t *new_bdaddr;
 } set_random_bd_addr_handled_t;
 
-typedef struct {
-    uint8_t actv_idx;
-} adv_started_handled_t;
-
-typedef struct {
-    uint8_t actv_idx;
-    uint8_t err_code;
-} adv_starting_failed_handled_t;
-
-typedef struct {
-    uint8_t actv_idx;
-} adv_stopped_handled_t;
-
-typedef struct {
-    /// Transmitter device address
-    ble_bdaddr_t trans_addr;
-    /// RSSI (between -127 and +20 dBm)
-    int8_t rssi;
-    /// Report data length
-    uint16_t length;
-    /// Report data
-    uint8_t data[ADV_DATA_LEN];
-} scan_data_report_handled_t;
-
-typedef struct {
-    uint8_t actv_idx;
-    uint8_t err_code;
-} scan_starting_failed_handled_t;
-
 typedef union {
     connect_handled_t connect_handled;
-    connect_bond_handled_t connect_bond_handled;
-    connect_nc_exch_handled_t connect_nc_exch_handled;
-    connect_encrypt_handled_t connect_encrypt_handled;
-    stopped_connecting_handled_t stopped_connecting_handled;
-    connecting_failed_handled_t connecting_failed_handled;
     disconnect_handled_t disconnect_handled;
     conn_param_update_req_handled_t conn_param_update_req_handled;
-    conn_param_update_failed_handled_t conn_param_update_failed_handled;
-    conn_param_update_successful_handled_t conn_param_update_successful_handled;
     set_random_bd_addr_handled_t set_random_bd_addr_handled;
-    adv_started_handled_t adv_started_handled;
-    adv_starting_failed_handled_t adv_starting_failed_handled;
-    adv_stopped_handled_t adv_stopped_handled;
-    scan_data_report_handled_t scan_data_report_handled;
-    scan_starting_failed_handled_t scan_starting_failed_handled;
 } ble_event_handled_t;
 
 typedef struct {
@@ -211,20 +118,10 @@ typedef struct {
     APP_BLE_CORE_GLOBAL_CALLBACK_HANDLER_FUNC func;
 } ble_callback_event_handler_t;
 
-typedef struct
-{
-    uint8_t head[3];
-    uint8_t length;
-    bool ble_is_busy;
-    uint8_t actv_state[BES_BLE_ACTIVITY_MAX];
-    uint8_t conn_cnt;
-} __attribute__((__packed__)) AUTO_TEST_BLE_STATE_T;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/****************************function declearation**************************/
 /*---------------------------------------------------------------------------
  *            app_ble_core_register_global_handler_ind
  *---------------------------------------------------------------------------
@@ -286,36 +183,6 @@ void app_ble_core_global_handle(ble_event_t *event, void *output);
 void app_ble_core_global_callback_event(ble_callback_event_t *event, void *output);
 
 /*---------------------------------------------------------------------------
- *            ble_core_enable_stub_adv
- *---------------------------------------------------------------------------
- *
- *Synopsis:
- *    enable stub adv
- *
- * Parameters:
- *    void
- *
- * Return:
- *    void
- */
-void ble_core_enable_stub_adv(void);
-
-/*---------------------------------------------------------------------------
- *            ble_core_disable_stub_adv
- *---------------------------------------------------------------------------
- *
- *Synopsis:
- *    disable stub adv
- *
- * Parameters:
- *    void
- *
- * Return:
- *    void
- */
-void ble_core_disable_stub_adv(void);
-
-/*---------------------------------------------------------------------------
  *            app_ble_stub_user_init
  *---------------------------------------------------------------------------
  *
@@ -361,6 +228,7 @@ void app_ble_sync_ble_info(void);
  */
 void app_ble_mode_tws_sync_init(void);
 
+/****************************function declearation**************************/
 /*---------------------------------------------------------------------------
  *            app_ble_core_print_ble_state
  *---------------------------------------------------------------------------

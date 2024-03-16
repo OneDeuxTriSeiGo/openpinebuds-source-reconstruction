@@ -66,22 +66,14 @@ extern "C" {
 #endif
 
 void app_fp_rfcomm_send(uint8_t *ptrData, uint32_t length);
-
 bt_status_t app_fp_rfcomm_init(void);
-
 void app_fp_disconnect_rfcomm(void);
-
 bool app_is_fp_rfcomm_connected(void);
 
 void app_fp_msg_enable_bt_silence_mode(bool isEnable);
-
 void app_fp_msg_send_model_id(void);
-
 void app_fp_msg_send_updated_ble_addr(void);
-
 void app_fp_msg_send_battery_levels(void);
-
-bool app_spp_gfps_accept_channel_request(int8_t server_channel);
 
 #ifdef __cplusplus
 }

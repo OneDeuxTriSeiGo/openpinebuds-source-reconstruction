@@ -23,10 +23,8 @@ extern "C" {
 #include "codec_lhdc.h"
 
 #if defined(A2DP_LHDC_ON)
-extern btif_avdtp_codec_t a2dp_lhdc_avdtpcodec;
 extern const unsigned char a2dp_codec_lhdc_elements[A2DP_LHDC_OCTET_NUMBER];
 bt_status_t a2dp_codec_lhdc_init(int index);
-void a2dp_codec_lhdc_common_init(void);
 #endif
 
 #if defined(__cplusplus)

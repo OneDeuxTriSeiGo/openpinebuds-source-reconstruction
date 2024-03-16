@@ -18,6 +18,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "stdbool.h"
 #include "hal_analogif.h"
 #include "hal_cmu.h"
@@ -30,12 +31,12 @@ extern "C" {
 #define ANALOG_INFO_TRACE(n, s, ...)        TR_INFO(n, s, ##__VA_ARGS__)
 
 #ifndef ISPI_ANA_REG
-#define ISPI_ANA_REG(reg)                   (reg)
+#define ISPI_ANA_REG(reg)               (reg)
 #endif
-#define analog_read(reg, val)               hal_analogif_reg_read(ISPI_ANA_REG(reg), val)
-#define analog_write(reg, val)              hal_analogif_reg_write(ISPI_ANA_REG(reg), val)
+#define analog_read(reg, val)           hal_analogif_reg_read(ISPI_ANA_REG(reg), val)
+#define analog_write(reg, val)          hal_analogif_reg_write(ISPI_ANA_REG(reg), val)
 
-#define FLOAT_TO_PPB_INT(f)                 ((int)(f * 1000 * 1000 * 1000))
+#define FLOAT_TO_PPB_INT(f)             ((int)(f * 1000 * 1000 * 1000))
 
 enum ANA_AUD_PLL_USER_T {
     ANA_AUD_PLL_USER_CODEC      = (1 << 0),

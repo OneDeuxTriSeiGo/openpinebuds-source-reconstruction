@@ -32,6 +32,8 @@ extern "C" {
 #define SPP_MAX_DATA_PACKET_SIZE    L2CAP_MTU
 
 
+
+
 /*---------------------------------------------------------------------------
  * rfcomm channel number
  *      should be from 1 to 30
@@ -46,82 +48,9 @@ enum RFCOMM_CHANNEL_NUM {
     RFCOMM_CHANNEL_RED          = RFCOMM_CHANNEL_7,
     RFCOMM_CHANNEL_FP           = RFCOMM_CHANNEL_8,
     RFCOMM_CHANNEL_AMA          = RFCOMM_CHANNEL_9,
-    RFCOMM_CHANNEL_BES          = RFCOMM_CHANNEL_10,
-    RFCOMM_CHANNEL_BAIDU        = RFCOMM_CHANNEL_11,
-    RFCOMM_CHANNEL_TENCENT      = RFCOMM_CHANNEL_12,
-    RFCOMM_CHANNEL_ALI          = RFCOMM_CHANNEL_13,
-    RFCOMM_CHANNEL_COMMON        = RFCOMM_CHANNEL_14,
-    RFCOMM_CHANNEL_COMMON_RECORD = RFCOMM_CHANNEL_15,
-
-    RFCOMM_CHANNEL_CUSTOM_0     = RFCOMM_CHANNEL_16,
-    RFCOMM_CHANNEL_CUSTOM_1     = RFCOMM_CHANNEL_17,
-    RFCOMM_CHANNEL_CUSTOM_2     = RFCOMM_CHANNEL_18,
-    RFCOMM_CHANNEL_CUSTOM_3     = RFCOMM_CHANNEL_19,
-    RFCOMM_CHANNEL_CUSTOM_4     = RFCOMM_CHANNEL_20,
-    RFCOMM_CHANNEL_CUSTOM_5     = RFCOMM_CHANNEL_21,
 };
 
-/*---------------------------------------------------------------------------
- *            app_spp_alloc_server_id
- *---------------------------------------------------------------------------
- *
- *Synopsis:
- *    To alloc a spp server ID
- *
- * Parameters:
- *    void
- *
- * Return:
- *    uint64_t: the app_id that spp server get
- */
-uint64_t app_spp_alloc_server_id(void);
-/*---------------------------------------------------------------------------
- *            app_spp_free_server_id
- *---------------------------------------------------------------------------
- *
- *Synopsis:
- *    To free a spp server ID
- *
- * Parameters:
- *    app_id: the app_id that spp server want to free
- *
- * Return:
- *    true: free success
- *    false: free fail
- */
-bool app_spp_free_server_id(uint64_t app_id);
-/*---------------------------------------------------------------------------
- *            app_spp_alloc_client_id
- *---------------------------------------------------------------------------
- *
- *Synopsis:
- *    To alloc a spp client ID
- *
- * Parameters:
- *    void
- *
- * Return:
- *    uint64_t: the app_id that spp client get
- */
-uint64_t app_spp_alloc_client_id(void);
-/*---------------------------------------------------------------------------
- *            app_spp_free_client_id
- *---------------------------------------------------------------------------
- *
- *Synopsis:
- *    To free a spp server ID
- *
- * Parameters:
- *    app_id: the app_id that spp client want to free
- *
- * Return:
- *    true: free success
- *    false: free fail
- */
-bool app_spp_free_client_id(uint64_t app_id);
-
 struct spp_device *app_create_spp_device(void);
-
 bt_status_t app_spp_send_data(struct spp_device *osDev_t, uint8_t* ptrData, uint16_t *length);
 void app_spp_open(struct spp_device *osDev_t, btif_remote_device_t  *btDevice, btif_sdp_record_param_t *param, osMutexId mid, uint8_t service_id, spp_callback_t callback);
 

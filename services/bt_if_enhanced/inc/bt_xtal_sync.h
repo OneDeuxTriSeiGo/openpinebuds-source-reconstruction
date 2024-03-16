@@ -33,6 +33,7 @@ typedef struct {
     float Kd;
 }pid_para_t;
 void bt_xtal_sync_new(int32_t rxbit, bool fix_rxbit_en, enum BT_XTAL_SYNC_MODE_T mode);
+
 #endif
 void bt_init_xtal_sync(enum BT_XTAL_SYNC_MODE_T mode, int range_min, int range_max, int fcap_range);
 void bt_term_xtal_sync(bool xtal_term_default);

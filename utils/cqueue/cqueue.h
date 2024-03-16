@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef C_QUEUE_H
 #define C_QUEUE_H 1
 
@@ -62,10 +63,6 @@ int PullCQueue(CQueue *Q, CQItemType *e, unsigned int len);
 int DumpCQueue(CQueue *Q);
 
 void ResetCQueue(CQueue *Q);
-
-unsigned int GetCQueueReadOffset(CQueue *Q);
-unsigned int GetCQueueWriteOffset(CQueue *Q);
-int PeekCQueueToBufWithOffset(CQueue *Q, CQItemType *e, unsigned int len_want, unsigned int offset);
 
 #if defined(__cplusplus)
 }

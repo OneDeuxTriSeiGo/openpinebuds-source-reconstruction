@@ -15,9 +15,6 @@
 #ifndef _ARCH_H_
 #define _ARCH_H_
 
-#include "cmsis_os.h"
-#include "hal_trace.h"
-
 /**
  ****************************************************************************************
  * @defgroup BLUEGRIP
@@ -50,7 +47,7 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
-// required to define GLOBAL_INT_** macros as inline assembly
+#include "hal_trace.h"
 
 /*
  * CPU WORD SIZE
@@ -76,90 +73,6 @@
 #define PLF_DEBUG          0
 #endif //CFG_DBG
 
-#ifdef CFG_ROM
-#define DBG_SWDIAG(bank , field , value)
-#endif //CFG_ROM
-
-#define DBG_DATA_TRACE(data, size)
-
-#define DBG_DATA_ALLOC(data)
-
-#define DBG_DATA_FREE(data)
-
-#define DBG_FUNC_ENTER(func)
-
-#define DBG_FUNC_EXIT(func)
-
-#define DBG_MEM_GRANT_CTRL(mem_ptr, enable)
-
-#define DBG_MEM_PERM_SET(mem_ptr, size, write_en, read_en, init_clr)
-
-#define DBG_MEM_INIT(mem_ptr, size)
-
-
-/*
- * GAIA
- ****************************************************************************************
- */
-
-/// GAIA board
-#if defined(CFG_GAIA)
-#define PLF_GAIA          1
-#else // CFG_GAIA
-#define PLF_GAIA          0
-#endif // CFG_GAIA
-
-/*
- * Bubble
- ****************************************************************************************
- */
-
-/// Bubble board
-#if defined(CFG_BUBBLE)
-#define PLF_BUBBLE          1
-#else // CFG_GAIA
-#define PLF_BUBBLE          0
-#endif // CFG_GAIA
-
-/*
- * Display
- ****************************************************************************************
- */
-
-/// Display controller enable/disable
-#if defined(CFG_DISPLAY)
-#define PLF_DISPLAY          1
-#else // CFG_DISPLAY
-#define PLF_DISPLAY          0
-#endif // CFG_DISPLAY
-
-/*
-* LCD
-****************************************************************************************
-*/
-
-#define PLF_LCD            1//((PLF_DISPLAY) || (PLF_BUBBLE))
-
-/*
-* MAILBOX
-****************************************************************************************
-*/
-
-#define PLF_MBOX            (PLF_GAIA)
-
-
-/*
-* Bi-Directional RAM for Mailbox I/F
-****************************************************************************************
-*/
-#if (PLF_GAIA)
-/// BRAM location in address map
-#define BRAM_BASE_ADDRESS    (0x50000000)
-/// GAIA LEDS location in address map
-#define GAIA_LEDS_BASE_ADDRESS (0x48000000)
-/// GAIA PB location in address map
-#define GAIA_PB_BASE_ADDRESS (GAIA_LEDS_BASE_ADDRESS + 0x20)
-#endif //(PLF_GAIA)
 
 /*
  * NVDS
@@ -173,6 +86,7 @@
 #define PLF_NVDS             0
 #endif // CFG_NVDS
 
+
 /*
  * UART
  ****************************************************************************************
@@ -180,79 +94,6 @@
 
 /// UART
 #define PLF_UART             1
-
-/*
- * SPI
- ****************************************************************************************
- */
-
-/// SPI
-#define PLF_SPI              1
-
-/*
- * PS2
- ****************************************************************************************
- */
-
-/// PS2
-#ifdef CFG_PS2
-#define PLF_PS2             1
-#else // CFG_PS2
-#define PLF_PS2             0
-#endif // CFG_PS2
-
-/*
- * Accelerometer
- ****************************************************************************************
- */
-
-/// Accelerometer
-#define PLF_ACC              0
-
-/*
- * RTC
- ****************************************************************************************
- */
-
-/// RTC
-#ifdef CFG_RTC
-#define PLF_RTC             1
-#else // CFG_RTC
-#define PLF_RTC             0
-#endif // CFG_RTC
-
-/*
- * LE AUDIO PATH
- ****************************************************************************************
- */
-/// AUDIO path enabled
-#ifdef CFG_PCM
-#define PLF_PCM   1
-#else // CFG_PCM
-#define PLF_PCM   0
-#endif // CFG_PCM
-
-/*
- * Joystick
- ****************************************************************************************
- */
-
-/// Display controller enable/disable
-#define PLF_JOYSTICK         (PLF_BUBBLE)
-
-/*
- * NVDS mapping in flash
- ****************************************************************************************
- */
-
-/// NVDS location in FLASH buffer 1 : 0x00F00000 (15 MB)
-#define NVDS_FLASH_ADDRESS_1       (0x00F00000)
-
-/// NVDS location in FLASH buffer 2 : 0x00FC0000 (15.75 MB)
-#define NVDS_FLASH_ADDRESS_2       (0x00FC0000)
-
-/// NVDS size in FLASH : 0x00000800 (2K)
-#define NVDS_FLASH_SIZE            (0x00000800)
 
 /*
  * DEFINES
@@ -269,26 +110,11 @@
 #define    RESET_AND_LOAD_FW      0xC3C3C3C3
 
 /// Exchange memory size limit
-#if defined(BT_DUAL_MODE) && BT_DUAL_MODE
-#define    EM_SIZE_LIMIT          0x10000
-#else
 #define    EM_SIZE_LIMIT          0x8000
-#endif
-
 /*
  * EXPORTED FUNCTION DECLARATION
  ****************************************************************************************
  */
-
-#if 1//(RW_DEBUG_STACK_PROF)
-/**
-****************************************************************************************
-* @brief Initialise stack memory area.
-*
-* This function initialises the stack memory with pattern for use in stack profiling.
-****************************************************************************************
-*/
-void stack_init(void);
 
 /**
  ****************************************************************************************
@@ -300,7 +126,6 @@ void stack_init(void);
  ****************************************************************************************
  */
 uint16_t get_stack_usage(void);
-#endif //(RW_DEBUG_STACK_PROF)
 
 /**
  ****************************************************************************************
@@ -355,6 +180,8 @@ void assert_param(int param0, int param1, const char * file, int line);
  ****************************************************************************************
  */
 void assert_warn(int param0, int param1, const char * file, int line);
+
+
 #endif //PLF_DEBUG
 
 
@@ -363,34 +190,31 @@ void assert_warn(int param0, int param1, const char * file, int line);
  ****************************************************************************************
  */
 #if 1
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_ERR(cond)                             { if (!(cond)) { TRACE(2,"line is %d file is %s", __LINE__, __FILE__); } }
 
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_INFO(cond, param0, param1)            { if (!(cond)) { TRACE(4,"line is %d file is %s, %d, %d", __LINE__, __FILE__, param0, param1); } }
 
-    /// Assertions showing a non-critical problem that has to be fixed by the SW
+/// Assertions showing a non-critical problem that has to be fixed by the SW
 #define ASSERT_WARN(cond, param0, param1)            { if (!(cond)) { TRACE(4,"line is %d file is %s, %d, %d", __LINE__, __FILE__, param0, param1); } }
 
 #define DUMP_DATA(data, length) \
-       // dump_data((uint8_t*)data, length)
+   // dump_data((uint8_t*)data, length)
 
 #else
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_ERR(cond)
 
-    /// Assertions showing a critical error that could require a full system reset
+/// Assertions showing a critical error that could require a full system reset
 #define ASSERT_INFO(cond, param0, param1)
 
-    /// Assertions showing a non-critical problem that has to be fixed by the SW
+/// Assertions showing a non-critical problem that has to be fixed by the SW
 #define ASSERT_WARN(cond, param0, param1)
 
-    /// DUMP data array present in the SW.
+/// DUMP data array present in the SW.
 #define DUMP_DATA(data, length)
 #endif
-
-/// Object allocated in shared memory - check linker script
-#define __SHARED __attribute__ ((section("shram")))
 
 /// @} DRIVERS
 #endif // _ARCH_H_

@@ -20,13 +20,8 @@
 #include "me_api.h"
 #include "btif_sys_config.h"
 
-#ifdef LINK_KEY_ENCRYPT_BY_CUSTOMER
 // increase by 1 if the nvrecord's whole data structure is changed and the content needs to be rebuilt
 #define NV_EXTENSION_MAJOR_VERSION 10
-#else
-// increase by 1 if the nvrecord's whole data structure is changed and the content needs to be rebuilt
-#define NV_EXTENSION_MAJOR_VERSION 9
-#endif
 // increase by 1 if the new items are appended to the tail of the former nvrecord's data structure
 #define NV_EXTENSION_MINOR_VERSION 3
 
@@ -78,17 +73,9 @@
 #endif // #ifdef GSOUND_HOTWORD_ENABLED
 #endif // #ifdef BISTO_ENABLED
 
-#ifdef PROMPT_IN_FLASH
-#define LOCAL_PACKAGE_MAX 3
-#endif
-
-#ifdef COMBO_CUSBIN_IN_FLASH
-#define COMBO_INFO_NUM_MAX   2 // current :soc firmware + mcu firmware
-#endif
-
 // TODO: should be increased if NV_EXTENSION_MIRROR_RAM_SIZE exceeds this value
 
-#if defined(__AI_VOICE__ ) || (defined(BISTO_ENABLED)|| defined(GFPS_ENABLED))||(defined (TILE_DATAPATH))||defined(LINK_KEY_ENCRYPT_BY_CUSTOMER)
+#if defined(__AI_VOICE__ ) || (defined(BISTO_ENABLED)|| defined(GFPS_ENABLED))
 #define NV_EXTENSION_MIRROR_RAM_SIZE 0xA00
 #else
 #define NV_EXTENSION_MIRROR_RAM_SIZE 0x600
@@ -104,20 +91,6 @@ typedef struct
     uint16_t gain_cal_val[BT_FREQENCY_RANGE_NUM];
     uint16_t phase_cal_val[BT_FREQENCY_RANGE_NUM];
 } BT_IQ_CALIBRATION_CONFIG_T;
-
-typedef struct
-{
-    uint32_t validityMagicNum;
-    int dc_i_val;
-    int dc_q_val;
-} BT_DC_CALIBRATION_CONFIG_T;
-
-typedef struct
-{
-    uint32_t validityMagicNum;
-    uint16_t rx_gain_cal_val[BT_FREQENCY_RANGE_NUM];
-    uint16_t rx_phase_cal_val[BT_FREQENCY_RANGE_NUM];
-} BT_IQ_RX_CALIBRATION_CONFIG_T;
 
 /* nv record header data structure */
 typedef struct
@@ -144,63 +117,7 @@ typedef struct {
     uint32_t mode;
     btif_device_record_t record;
     bool tws_connect_success;
-    uint8_t tws_name_len;
-    uint8_t tws_name[251];
 } ibrt_mode_t;
-
-enum NV_FACOTRY_T{
-   NV_BT_NONSIGNALING_MODE          = 0x0,
-   NV_LE_NONSIGNALING_TX_MODE       = 0x1,
-   NV_LE_NONSIGNALING_RX_MODE       = 0x2,
-   NV_LE_NONSIGNALING_CONT_TX_MODE  = 0x3,
-   NV_LE_NONSIGNALING_CONT_RX_MODE  = 0x4,
-   NV_READ_LE_TEST_RESULT           = 0x5,
-   NV_BT_DUT_MODE                   = 0x6,
-   NV_BT_NONSIGNALING_TX_MODE       = 0x7,
-   NV_BT_NONSIGNALING_RX_MODE       = 0x8,
-   NV_READ_BT_RX_TEST_RESULT        = 0x9,
-
-   NV_BT_ERROR_TEST_MODE            = 0xff,
-};
-
-typedef struct {
-    uint8_t rx_channel;
-    uint8_t phy;
-    uint8_t mod_idx;
-    bool test_done;
-    uint16_t test_result;
-}le_rx_nonsignaling_test_t;
-
-typedef struct {
-    uint8_t tx_channel;
-    uint8_t data_len;
-    uint8_t pkt_payload;
-    uint8_t phy;
-}le_tx_nonsignaling_test_t;
-
-typedef struct {
-    uint8_t hopping_mode;
-    uint8_t whitening_mode;
-    uint8_t tx_freq;
-    uint8_t rx_freq;
-    uint8_t power_level;
-    uint8_t lt_addr;
-    uint8_t edr_enabled;
-    uint8_t packet_type;
-    uint8_t payload_pattern;
-    bool test_done;
-    uint16_t payload_length;
-    uint16_t test_result;
-    uint16_t hec_nb;
-    uint16_t crc_nb;
-    uint32_t tx_packet_num;
-}bt_nonsignaling_test_t;
-
-typedef struct {
-    uint8_t test_type;
-    uint32_t test_end_timeout;
-    uint16_t tx_packet_nb;
-}test_scenarios_t;
 
 typedef struct {
     uint32_t status;
@@ -221,14 +138,9 @@ struct nvrecord_env_t {
 #endif
     ibrt_mode_t ibrt_mode;
     factory_tester_status_t factory_tester_status;
-#if defined(__TENCENT_VOICE__)
+
     uint8_t flag_value[8];
-#endif
     AI_MANAGER_INFO_T aiManagerInfo;
-    test_scenarios_t factory_test_env;
-    le_rx_nonsignaling_test_t le_rx_env;
-    le_tx_nonsignaling_test_t le_tx_env;
-    bt_nonsignaling_test_t bt_nonsignaling_env;
 };
 
 typedef struct btdevice_volume {
@@ -373,69 +285,6 @@ typedef struct {
 } NV_GSOUND_INFO_T;
 #endif
 
-#ifdef PROMPT_IN_FLASH
-typedef struct
-{
-    /// ID of package(corresponding language)
-    uint8_t id;
-
-    // start addr of the package
-    uint32_t startAddr;
-
-    // length of package
-    uint32_t len;
-} PACKAGE_NODE_T;
-
-/**
- * @brief Prompt language information
- *
- * NOTE: prompt rely on language saved in @see nvrecord_env_t
- *
- */
-typedef struct
-{
-    uint8_t num;
-    PACKAGE_NODE_T packageInfo[LOCAL_PACKAGE_MAX];
-} NV_PROMPT_INFO_T;
-#endif
-
-#ifdef COMBO_CUSBIN_IN_FLASH
-typedef struct
-{
-    uint32_t id;
-    uint32_t offset;
-    uint32_t length;
-} COMBO_CONTENT_INFO_T;
-
-typedef struct
-{
-    uint32_t mainInfo;
-    uint32_t version;
-    uint32_t contentNum;
-    COMBO_CONTENT_INFO_T info[COMBO_INFO_NUM_MAX];
-    uint32_t crc32;
-} NV_COMBO_IMAGE_INFO_T;
-#endif
-
-#ifdef CODEC_DAC_DC_NV_DATA
-#define DAC_DC_CALIB_DATA_NV_NUM 2
-struct HAL_CODEC_DAC_DRE_CALIB_CFG_NV_T {
-    uint32_t valid;
-    uint32_t dc_l;
-    uint32_t dc_r;
-    float    gain_l;
-    float    gain_r;
-    uint16_t ana_dc_l;
-    uint16_t ana_dc_r;
-    uint8_t ana_gain;
-    uint8_t ini_ana_gain;
-    uint8_t gain_offset;
-    uint8_t step_mode;
-    uint8_t top_gain;
-    uint8_t rsv[3];
-};
-#endif
-
 typedef struct {
     NVRECORD_HEADER_T header;
     struct nvrecord_env_t system_info;
@@ -469,34 +318,11 @@ typedef struct {
 #if 1//def TX_IQ_CAL
     BT_IQ_CALIBRATION_CONFIG_T btIqCalConfig;
 #endif
-
-#ifdef PROMPT_IN_FLASH
-    NV_PROMPT_INFO_T prompt_info;
-#endif
-
-#ifdef COMBO_CUSBIN_IN_FLASH
-    NV_COMBO_IMAGE_INFO_T combo_bin_info;
-#endif
     // TODO: If wanna OTA to update the nv record, two choices:
     // 1. Change above data structures and increase NV_EXTENSION_MAJOR_VERSION.
     //     Then the nv record will be rebuilt and the whole history information will be cleared
     // 2. Don't touch above data structures but just add new items here and increase NV_EXTENSION_MINOR_VERSION.
     //     Then the nv record will keep all the whole hisotry.
-
-#ifdef CODEC_DAC_DC_NV_DATA
-    struct HAL_CODEC_DAC_DRE_CALIB_CFG_NV_T dac_dre_calib_cfg_nv[DAC_DC_CALIB_DATA_NV_NUM];
-#endif
-
-#if 1//def RX_IQ_CAL
-    BT_IQ_RX_CALIBRATION_CONFIG_T btIqRxCalConfig;
-#endif
-
-#if 1//def BT_DC_CAL
-    BT_DC_CALIBRATION_CONFIG_T btDcCalibConfig;
-#endif
-
-    NV_RECORD_PAIRED_BT_DEV_INFO_T fake_master_bt_pair_info;
-
 } NV_EXTENSION_RECORD_T;
 
 typedef union {
@@ -543,10 +369,6 @@ void nv_record_post_write_operation(uint32_t lock);
 bt_status_t nv_record_open(SECTIONS_ADP_ENUM section_id);
 
 void nv_record_init(void);
-
-uint32_t nv_record_get_ibrt_mode(void);
-
-uint8_t* nv_record_get_ibrt_peer_addr(void);
 
 #ifdef __cplusplus
 }

@@ -97,14 +97,12 @@ typedef struct {
     uint32_t status;
 } factory_tester_status_t;
 
-#ifdef IS_MULTI_AI_ENABLED
 typedef struct {
     uint8_t setedCurrentAi;
     uint8_t currentAiSpec;
     uint8_t aiStatusDisableFlag;
     uint8_t amaAssistantEnableStatus;
 } AI_MANAGER_INFO_T;
-#endif
 
 struct nvrecord_env_t {
     media_language_t media_language;
@@ -113,14 +111,10 @@ struct nvrecord_env_t {
 #endif
     ibrt_mode_t ibrt_mode;
     factory_tester_status_t factory_tester_status;
-#if defined(__TENCENT_VOICE__)
-    uint8_t flag_value[8];
-#endif
 
-#ifdef IS_MULTI_AI_ENABLED
+    uint8_t flag_value[8];
     bool voice_key_enable;
     AI_MANAGER_INFO_T aiManagerInfo;
-#endif
 };
 
 typedef struct btdevice_volume {
@@ -262,6 +256,7 @@ typedef struct {
     //     Then the nv record will keep all the whole hisotry.
 } NV_EXTENSION_RECORD_T;
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -283,6 +278,7 @@ void nv_record_sector_clear(void);
 void nv_record_flash_flush(void);
 
 int nv_record_flash_flush_in_sleep(void);
+
 
 void nv_record_update_runtime_userdata(void);
 

@@ -99,8 +99,6 @@ enum co_error
     CO_ERROR_UNKNOWN_ADVERTISING_ID          = 0x42,
     CO_ERROR_LIMIT_REACHED                   = 0x43,
     CO_ERROR_OPERATION_CANCELED_BY_HOST      = 0x44,
-    CO_ERROR_PKT_TOO_LONG                    = 0x45,
-
     CO_ERROR_UNDEFINED                       = 0xFF,
 
 

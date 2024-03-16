@@ -22,47 +22,7 @@
 
 #define BTIF_AV_WORKER  BTIF_ENABLED
 
-#define BTIF_CONFIG_A2DP_SBC_ON 1
-
-#if defined(A2DP_AAC_ON) || defined(A2DP_SOURCE_AAC_ON)
-#define BTIF_CONFIG_A2DP_AAC_ON 1
-#else
-#define BTIF_CONFIG_A2DP_AAC_ON 0
-#endif
-
-#if defined(A2DP_LHDC_ON)
-#define BTIF_CONFIG_A2DP_LHDC_ON 1
-#else
-#define BTIF_CONFIG_A2DP_LHDC_ON 0
-#endif
-
-#if defined(A2DP_LDAC_ON)
-#define BTIF_CONFIG_A2DP_LDAC_ON 1
-#else
-#define BTIF_CONFIG_A2DP_LDAC_ON 0
-#endif
-
-#if defined(A2DP_SCALABLE_ON)
-#define BTIF_CONFIG_A2DP_SCALABLE_ON 1
-#else
-#define BTIF_CONFIG_A2DP_SCALABLE_ON 0
-#endif
-
-#if defined(MASTER_USE_OPUS) || defined(ALL_USE_OPUS)
-#define BTIF_CONFIG_A2DP_OPUS_ON 1
-#else
-#define BTIF_CONFIG_A2DP_OPUS_ON 0
-#endif
-
 #define SYS_MAX_A2DP_STREAMS (BT_DEVICE_NUM+BT_SOURCE_DEVICE_NUM)
-
-#define SYS_MAX_A2DP_LOCAL_SEPS \
-    (BTIF_CONFIG_A2DP_SBC_ON + \
-        BTIF_CONFIG_A2DP_AAC_ON + \
-        BTIF_CONFIG_A2DP_LHDC_ON + \
-        BTIF_CONFIG_A2DP_LDAC_ON + \
-        BTIF_CONFIG_A2DP_SCALABLE_ON + \
-        BTIF_CONFIG_A2DP_OPUS_ON + 1)
 
 #define BTIF_SBC_ENCODER   BTIF_ENABLED
 #define BTIF_SBC_DECODER   BTIF_ENABLED
@@ -125,6 +85,7 @@
 #define BTIF_SECURITY
 #define BTIF_BLE_APP_DATAPATH_SERVER
 
+
 //#define HF_CUSTOM_FEATURE_RESERVED          (0x01 << 0)
 #define BTIF_HF_CUSTOM_FEATURE_BATTERY_REPORT    (0x03 << 0)
 #define BTIF_HF_CUSTOM_FEATURE_DOCK              (0x01 << 2)
@@ -152,7 +113,8 @@
 
 #define  __BTIF_EARPHONE__
 
-#if !defined(BLE_ONLY_ENABLED) && !defined(__NO_POWERON_RECONNECT__)
+
+#if !defined(BLE_ONLY_ENABLED)
 #define  __BTIF_BT_RECONNECT__
 #endif
 

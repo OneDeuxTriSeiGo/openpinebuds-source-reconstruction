@@ -47,23 +47,15 @@
 /// Retrieves task index number from task id.
 #define TASK_IDX_GET(ke_task_id) ((((uint16_t)ke_task_id) >> 8) & 0xFF)
 
-/// Message identifier index
-#define MSG_ID(task, idx) (TASK_FIRST_MSG((TASK_ID_ ## task)) + idx)
 
 /// Tasks types definition, this value shall be in [0-254] range
-/*@TRACE*/
 enum TASK_API_ID
 {
-    // -----------------------------------------------------------------------------------
-    // ---------------------- Controller Task identifer ----------------------------------
-    // -----------------------------------------------------------------------------------
     // Link Layer Tasks
     TASK_ID_LLM          = 0,   // BLE Link manager
     TASK_ID_LLC          = 1,   // BLE Link controller
     TASK_ID_LLD          = 2,   // BLE Link driver
     TASK_ID_LLI          = 3,   // BLE Link ISO
-
-    TASK_ID_DBG          = 4,   // Debug task
 
     // BT Controller Tasks
     TASK_ID_LM           = 5,   // BT Link manager
@@ -73,25 +65,18 @@ enum TASK_API_ID
 
     // -----------------------------------------------------------------------------------
     // --------------------- BLE HL TASK API Identifiers ---------------------------------
-    // ---------------------     SHALL NOT BE CHANGED    ---------------------------------
     // -----------------------------------------------------------------------------------
 
     TASK_ID_L2CAP        = 10,   // L2CAP Task
     TASK_ID_GATT         = 11,   // Generic Attribute Profile Task
     TASK_ID_GAPM         = 13,   // Generic Access Profile Manager
     TASK_ID_GAPC         = 14,   // Generic Access Profile Controller
-    TASK_ID_APP          = 15,   // Application API
 
-    // -----------------------------------------------------------------------------------
-    // --------------------- TRANSPORT AND PLATFORM TASKS --------------------------------
-    // -----------------------------------------------------------------------------------
+    TASK_ID_APP          = 15,   // Application API
     TASK_ID_AHI          = 16,   // Application Host Interface
-    TASK_ID_HCI          = 17,   // Host to Control Interface
-    TASK_ID_DISPLAY      = 19,   // LCD/Display task
 
     // -----------------------------------------------------------------------------------
     // --------------------- BLE Profile TASK API Identifiers ----------------------------
-    // ---------------------     SHALL NOT BE CHANGED    ---------------------------------
     // -----------------------------------------------------------------------------------
     TASK_ID_DISS         = 20,   // Device Information Service Server Task
     TASK_ID_DISC         = 21,   // Device Information Service Client Task
@@ -184,35 +169,6 @@ enum TASK_API_ID
     TASK_ID_TOTA         = 76,   // TOTA Task
 
     TASK_ID_TILE         = 77,   // skull tile task
-
-    TASK_ID_CSISM        = 78,   // Coordinated Set Identification Profile Set Member Task
-    TASK_ID_CSISC        = 79,   // Coordinated Set Identification Profile Set Coordinator Task
-
-    TASK_ID_OTS          = 80,   // Object Transfer Profile Server Task
-    TASK_ID_OTC          = 81,   // Object Transfer Profile Client Task
-
-    TASK_ID_AMA          = 82,   // AMA Task
-
-    TASK_ID_SMART        = 83,   // SMART Task
-
-    TASK_ID_DMA          = 84,   // DMA Task
-
-    TASK_ID_TENCENT      = 85,   // TENCENT Task
-
-    TASK_ID_GMA          = 86,   // GMA Task
-
-    TASK_ID_CUSTOMIZE    = 87,   // CUSTOMIZE Task
-
-#ifdef USE_BT_ADAPTER
-    TASK_ID_BLE_ADAPTER_SERVER,
-    TASK_ID_BLE_ADAPTER_SERVER_END = TASK_ID_BLE_ADAPTER_SERVER + (BLE_ADAPTER_PROFILES_NUM - 1),
-    TASK_ID_BLE_ADAPTER_CLIENT,
-#endif
-    TASK_ID_MESH         = 200,  // Mesh Task
-
-    TASK_ID_GAF          = 210,  // Generic Audio Framework
-
-    TASK_ID_BUDS         = 211,
 
     TASK_ID_AM0          = 240,  // BLE Audio Mode 0
 

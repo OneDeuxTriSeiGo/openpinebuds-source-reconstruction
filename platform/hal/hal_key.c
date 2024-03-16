@@ -140,6 +140,7 @@ static struct HAL_KEY_STATUS_T key_status;
 
 static void hal_key_disable_allint(void);
 static void hal_key_enable_allint(void);
+
 static int send_key_event(enum HAL_KEY_CODE_T code, enum HAL_KEY_EVENT_T event)
 {
     if (key_detected_callback) {
@@ -211,6 +212,7 @@ static enum HAL_KEY_CODE_T hal_adckey_findkey(uint16_t volt)
         return HAL_KEY_CODE_NONE;
     }
 #endif
+
     if (CFG_HW_ADCKEY_ADC_KEYVOLT_BASE <= volt && volt < CFG_HW_ADCKEY_ADC_MAXVOLT) {
         for (index = 0; index < CFG_HW_ADCKEY_NUMBER; index++) {
             if (volt <= adckey_volt_table[index]) {
@@ -284,6 +286,7 @@ static void hal_adckey_open(void)
         adckey_volt_table[i] = adckey_volt_table[i - 1] + basevolt;
     }
     adckey_volt_table[CFG_HW_ADCKEY_NUMBER - 1] = CFG_HW_ADCKEY_ADC_MAXVOLT;
+
     hal_adckey_set_irq_handler(hal_adckey_irqhandler);
 }
 

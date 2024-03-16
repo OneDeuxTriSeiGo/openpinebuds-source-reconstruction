@@ -73,9 +73,6 @@ struct HAL_TDM_CONFIG_T {
     enum HAL_TDM_CYCLES_T cycles;
     enum HAL_TDM_FS_CYCLES fs_cycles;
     enum HAL_TDM_SLOT_CYCLES_T slot_cycles;
-    enum AUD_BITS_T bits;
-    enum AUD_CHANNEL_NUM_T channel_num;
-    bool chan_sep_buf;
     bool sync_start;
     uint8_t data_offset;
 };

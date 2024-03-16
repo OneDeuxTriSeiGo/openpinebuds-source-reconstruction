@@ -14,7 +14,6 @@
  */
 #ifndef __BLUETOOTH_H__
 #define __BLUETOOTH_H__
-#include <stdbool.h>
 #include "stdint.h"
 #include "string.h"
 #include "btif_sys_config.h"
@@ -226,14 +225,6 @@ struct _evm_timer {
     TimeT time;                 /* Amount of time to wait */
     TimeT startTime;            /* System time when the timer started */
 };
-
-#ifdef BLE_V2
-typedef struct
-{
-    ///6-byte array address value
-    uint8_t  addr[6];
-} bd_addr_t;
-#endif
 
 /*---------------------------------------------------------------------------
  * btif_packet_flags type

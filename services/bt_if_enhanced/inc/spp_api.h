@@ -14,17 +14,14 @@
  */
 #ifndef __SPP_API_H__
 #define __SPP_API_H__
-#include "btapp.h"
+
 #include "sdp_api.h"
 #include "cmsis_os.h"
 #include "cqueue.h"
 #include "rfcomm_api.h"
 
 #define SPP_DEVICE_NUM      (SPP_SERVICE_NUM*BT_DEVICE_NUM)
-
-#ifndef SPP_SERVICE_NUM
 #define SPP_SERVICE_NUM 5
-#endif
 
 typedef uint16_t spp_event_t;
 #define BTIF_SPP_EVENT_REMDEV_CONNECTED         0
@@ -39,8 +36,6 @@ typedef uint8_t spp_port_t;
 #define BTIF_SPP_CLIENT_PORT             0x02
 
 #define SPP_RX_SIGNAL_ID                 0x04
-
-#define BTIF_SPP_MAXIMUM_CREDIT_LIMIT    4
 
 struct spp_device;
 
@@ -87,15 +82,9 @@ struct _spp_dev {
     } type;
 };
 
-typedef struct {
-    uint8_t len;
-    const uint8_t *pdata;
-} rfcomm_uuid_t;
-
 struct spp_device {
     spp_port_t      portType;
     uint64_t        app_id;
-    rfcomm_uuid_t   rfcomm_uuid;
     osThreadId      reader_thread_id;
     osMutexId       mutex_id;
     CQueue          rx_queue;
@@ -111,26 +100,19 @@ struct spp_device {
     uint8_t         close_pending;
     struct _spp_dev sppDev;
     void            *_channel;
-    uint8_t         device_id;
     uint8_t         initial_credit;
     uint8_t         credit_give_limit;
     osMutexId       creditMutex;
     bt_bdaddr_t     btaddr;
 };
 
-#ifndef container_of
 #define container_of(ptr, type, member) ({                  \
     const typeof( ((type *)0)->member ) *__mptr = (ptr);    \
     (type *)( (char *)__mptr - offsetof(type,member) );})
-#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-void btif_spp_server_register_accept_channel_callback(bool (*cb)(uint8_t device_id, uint32_t rfcomm_handle, const void* remote, uint8_t server_channel));
-struct spp_device *btif_spp_get_device_from_addr(const void* remote, uint64_t app_id);
-struct spp_service *btif_spp_find_registered_service(uint8_t service_id);
 
 bt_status_t btif_spp_init_device(struct spp_device *dev, uint16_t numPackets, osMutexId mid);
 bt_status_t btif_spp_init_rx_buf(struct spp_device *dev, uint8_t *rx_buf, uint32_t size);
@@ -167,15 +149,9 @@ const char *btif_spp_event2str(spp_event_t event);
 
 typedef void (*btif_bt_spp_app_callback_func)(uint8_t device_id, void* spp_devi, void* spp_para);
 void btif_register_bt_spp_callback_func(btif_bt_spp_app_callback_func func);
-
-#if defined(IBRT)
 uint32_t btif_spp_profile_save_ctx(uint64_t app_id,btif_remote_device_t *rem_dev, uint8_t *buf, uint32_t buf_len);
 uint32_t btif_spp_profile_restore_ctx(bt_bdaddr_t *bdaddr_p, uint8_t *buf, uint32_t buf_len);
-void btif_spp_force_disconnect_spp_profile(bt_bdaddr_t *addr,uint64_t app_id,uint8_t reason);
-bool btif_is_this_spp_connected(uint64_t app_id,btif_remote_device_t *rem_dev);
-#endif
 
-uint16_t btif_spp_get_rfcomm_framesize(struct spp_device *dev);
 /*---------------------------------------------------------------------------
  * rfcomm channel number
  *      should be from 1 to 30
@@ -191,17 +167,6 @@ enum RFCOMM_CHANNEL_NUM_ {
     RFCOMM_CHANNEL_8,
     RFCOMM_CHANNEL_9,
     RFCOMM_CHANNEL_10,
-    RFCOMM_CHANNEL_11,
-    RFCOMM_CHANNEL_12,
-    RFCOMM_CHANNEL_13,
-    RFCOMM_CHANNEL_14,
-    RFCOMM_CHANNEL_15,
-    RFCOMM_CHANNEL_16,
-    RFCOMM_CHANNEL_17,
-    RFCOMM_CHANNEL_18,
-    RFCOMM_CHANNEL_19,
-    RFCOMM_CHANNEL_20,
-    RFCOMM_CHANNEL_21,
 };
 
 #ifdef __cplusplus

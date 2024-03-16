@@ -28,6 +28,7 @@
 #define I2S0_VOLTAGE_SEL                    HAL_IOMUX_PIN_VOLTAGE_VIO
 #endif
 
+
 #ifdef SPDIF0_VOLTAGE_VMEM
 #define SPDIF0_VOLTAGE_SEL                  HAL_IOMUX_PIN_VOLTAGE_MEM
 #else
@@ -70,18 +71,18 @@
 #define CLKOUT_VOLTAGE_SEL                  HAL_IOMUX_PIN_VOLTAGE_VIO
 #endif
 
+
+
 #ifndef I2S_MCLK_IOMUX_INDEX
-//04, 13, 15, 20, 22, 27, 34
 #define I2S_MCLK_IOMUX_INDEX                04
 #endif
 
+
 #ifndef SPDIF0_I_IOMUX_INDEX
-//02, 10, 20, 26, 37, 24
 #define SPDIF0_I_IOMUX_INDEX                02
 #endif
 
 #ifndef SPDIF0_O_IOMUX_INDEX
-//03, 11, 21, 27, 37, 07
 #define SPDIF0_O_IOMUX_INDEX                03
 #endif
 
@@ -102,26 +103,22 @@
 #endif
 
 #ifndef SPI_IOMUX_INDEX
-//04(05,06,07), 24(25,26,27), 30(31,32,33)
 #define SPI_IOMUX_INDEX                    04
 #endif
 
 #ifndef SPILCD_IOMUX_INDEX
-#define SPILCD_IOMUX_INDEX                    0
+#define SPILCD_IOMUX_INDEX                  0
 #endif
 
 #ifndef I2C0_IOMUX_INDEX
-//00(01), 04(05), 16(17), 20(21), 26(27), 34(35)
 #define I2C0_IOMUX_INDEX                    4
 #endif
 
 #ifndef I2C1_IOMUX_INDEX
-//02(03), 06(07), 14(15), 22(23), 30(31)
 #define I2C1_IOMUX_INDEX                    22
 #endif
 
 #ifndef CLKOUT_IOMUX_INDEX
-//04, 13, 15, 20, 21, 22, 23, 27, 34
 #define CLKOUT_IOMUX_INDEX                  20
 #endif
 
@@ -1023,6 +1020,7 @@ void hal_iomux_set_i2c1(void)
         {HAL_IOMUX_PIN_P0_3, HAL_IOMUX_FUNC_I2C_M1_SDA, I2C1_VOLTAGE_SEL, HAL_IOMUX_PIN_PULLUP_ENABLE},
 #endif
     };
+
     hal_iomux_init(pinmux_i2c, ARRAY_SIZE(pinmux_i2c));
     iomux->REG_050 |= IOMUX_I2C1_M_SEL_GPIO;
 }
@@ -1101,7 +1099,6 @@ int WEAK hal_pwrkey_set_irq(enum HAL_PWRKEY_IRQ_T type)
 {
     return 0;
 }
-
 
 bool WEAK hal_pwrkey_pressed(void)
 {

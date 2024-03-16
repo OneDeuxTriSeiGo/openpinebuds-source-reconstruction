@@ -39,17 +39,12 @@
 #endif
 
 #if 0
-#elif defined(CHIP_BEST1305) || \
-        defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
-        defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || \
-        defined(CHIP_BEST1501SIMU) || defined(CHIP_BEST1600SIMU) || \
-        defined(CHIP_BEST2000) || defined(CHIP_BEST2001) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003) || \
+#elif defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
+        defined(CHIP_BEST2000) || defined(CHIP_BEST2001) || \
         defined(CHIP_BEST2300) || defined(CHIP_BEST2300A) || defined(CHIP_BEST2300P) || \
         defined(CHIP_BEST3001) || defined(CHIP_BEST3005)
 
-#if defined(CHIP_BEST1305) || \
-        defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || \
-        defined(CHIP_BEST2001) || defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
+#if defined(CHIP_BEST1400) || defined(CHIP_BEST1402) || defined(CHIP_BEST2001)
 
 enum GPADC_REG_T {
     GPADC_REG_VBAT_EN = 0x02,
@@ -75,8 +70,7 @@ enum GPADC_REG_T {
     GPADC_REG_CH_EN = 0x24,
     GPADC_REG_INT_MASK = 0x26,
     GPADC_REG_INT_EN = 0x27,
-#if defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || defined(CHIP_BEST1501SIMU) || \
-        defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
+#if defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
     GPADC_REG_INT_RAW_STS = 0x52,
     GPADC_REG_INT_MSKED_STS = 0x53,
     GPADC_REG_INT_CLR = 0x51,
@@ -250,91 +244,14 @@ enum GPADC_REG_T {
 #error "Please update GPADC register definitions"
 #endif
 
-// Battery voltage = gpadc voltage * 4
-// Range 0~2V
-#define HAL_GPADC_MVOLT_A                   800
-#define HAL_GPADC_MVOLT_B                   1050
-#if (GPADC_VALUE_BITS == 16)
-#if defined(CHIP_BEST2002) || defined(CHIP_BEST2003)
-#define HAL_GPADC_CALIB_DEFAULT_A           0x3789
-#define HAL_GPADC_CALIB_DEFAULT_B           0x4950
-#else
-#define HAL_GPADC_CALIB_DEFAULT_A           0x3E60
-#define HAL_GPADC_CALIB_DEFAULT_B           0x5150
-#endif
-#else
-#if !defined(GPADC_DYNAMIC_DATA_BITS) && (GPADC_VALUE_BITS < 10 || GPADC_VALUE_BITS > 16)
-#error "GPADC value bits not in range"
-#endif
-#define HAL_GPADC_CALIB_DEFAULT_A           (428 << (GPADC_VALUE_BITS - 10))
-#define HAL_GPADC_CALIB_DEFAULT_B           (565 << (GPADC_VALUE_BITS - 10))
-#endif
-
-#if defined(__FPU_USED) && (__FPU_USED == 1)
-typedef float ADC_COEF_T;
-#define ADC_CALC_FACTOR                     1
-#else
-typedef int32_t ADC_COEF_T;
-#define ADC_CALC_FACTOR                     1000
-#endif
-
-#ifdef GPADC_DYNAMIC_DATA_BITS
-static uint8_t gpadc_data_bits;
-#endif
-
 static ADC_COEF_T g_adcSlope = 0;
 static ADC_COEF_T g_adcIntcpt = 0;
-#ifdef PMU_EFUSE_PAGE_GPADC_CALI
-static ADC_COEF_T g_adcSlope_1v = 0;
-#define HAL_GPADC_CALIB_DEFAULT_1V 0x488F
-#endif
 static bool gpadc_irq_enabled = false;
 static bool adckey_irq_enabled = false;
 static bool irq_enabled = false;
 static bool g_adcCalibrated = false;
 static HAL_GPADC_EVENT_CB_T gpadc_event_cb[HAL_GPADC_CHAN_QTY];
 static enum HAL_GPADC_ATP_T gpadc_atp[HAL_GPADC_CHAN_QTY];
-static uint16_t gpadc_chan_en;
-static uint16_t gpadc_irq_mask;
-
-static uint16_t hal_gpadc_get_all_masked_irq(void)
-{
-    uint16_t all;
-
-    all = KEY_ERR1_INTR_MSKED | KEY_ERR0_INTR_MSKED | KEY_PRESS_INTR_MSKED | KEY_RELEASE_INTR_MSKED |
-        SAMPLE_DONE_INTR_MSKED | CHAN_DATA_INTR_MSKED_MASK;
-    return all;
-}
-
-static uint16_t hal_gpadc_get_cur_masked_irq(void)
-{
-#if (KEY_ERR1_INTR_MSKED != KEY_ERR1_INTR_MSK) || \
-        (KEY_ERR0_INTR_MSKED != KEY_ERR0_INTR_MSK) || \
-        (KEY_PRESS_INTR_MSKED != KEY_PRESS_INTR_MSK) || \
-        (KEY_RELEASE_INTR_MSKED != KEY_RELEASE_INTR_MSK) || \
-        (SAMPLE_DONE_INTR_MSKED != SAMPLE_DONE_INTR_MSK) || \
-        (CHAN_DATA_INTR_MSKED_MASK != CHAN_DATA_INTR_MSK_MASK)
-#error "GPADC IRQ MASKED STS != IRQ MASK"
-#endif
-
-    uint16_t all = hal_gpadc_get_all_masked_irq();
-    return (all & gpadc_irq_mask);
-}
-
-int hal_gpadc_masked_irq_valid(uint16_t irq)
-{
-    uint16_t masked = hal_gpadc_get_cur_masked_irq();
-    irq &= masked;
-    return (irq ? true: false);
-}
-
-uint16_t hal_gpadc_filter_out_unmasked_irq(uint16_t irq)
-{
-    uint16_t all = hal_gpadc_get_all_masked_irq();
-    uint16_t masked = hal_gpadc_get_cur_masked_irq();
-    irq &= ((~all) | masked);
-    return irq;
-}
 
 static enum HAL_GPADC_ATP_T hal_gpadc_get_min_atp(void)
 {
@@ -397,16 +314,6 @@ static int hal_gpadc_adc2volt_calib(void)
 
         TRACE(7,"%s efuse:%d/%d LV=%d, HV=%d, Slope:%d Intcpt:%d", __func__,
             efuse_a, efuse_b, (int32_t)x1, (int32_t)x2, (int32_t)g_adcSlope, (int32_t)g_adcIntcpt);
-
-#ifdef PMU_EFUSE_PAGE_GPADC_CALI
-        ADC_COEF_T voltage;
-        pmu_get_efuse(PMU_EFUSE_PAGE_GPADC_CALI, &efuse_a);
-        x1 = (ADC_COEF_T)((HAL_GPADC_CALIB_DEFAULT_1V - 0x200 < efuse_a && efuse_a < HAL_GPADC_CALIB_DEFAULT_1V + 0x200) ? efuse_a : HAL_GPADC_CALIB_DEFAULT_1V);
-
-        voltage = (g_adcSlope * x1) + (g_adcIntcpt * ADC_CALC_FACTOR);
-        g_adcSlope_1v = voltage / 1000;
-        TRACE(7,"%s efuse cali 1v:%d, Slope:%d", __func__, efuse_a, (int32_t)g_adcSlope_1v);
-#endif
     }
 
     return 0;
@@ -425,12 +332,8 @@ static HAL_GPADC_MV_T hal_gpadc_adc2volt(uint16_t gpadcVal)
     }
     else
     {
-#ifdef PMU_EFUSE_PAGE_GPADC_CALI
-        voltage = (int32_t)((g_adcSlope * gpadcVal) + (g_adcIntcpt * ADC_CALC_FACTOR));
-        voltage = (int32_t)((ADC_COEF_T)voltage / g_adcSlope_1v);
-#else
         voltage = (int32_t)(((g_adcSlope * gpadcVal) / ADC_CALC_FACTOR) + (g_adcIntcpt));
-#endif
+
         return (voltage < 0) ? 0 : voltage;
     }
 }
@@ -519,9 +422,6 @@ static void hal_gpadc_irq_handler(GPADC_IRQ_HDLR_PARAM)
         gpadc_reg_read(GPADC_REG_START, &read_val);
         read_val &= ~GPADC_START;
         gpadc_reg_write(GPADC_REG_START, read_val);
-#ifdef DCDC_CLOCK_CONTROL
-        hal_cmu_dcdc_clock_disable(HAL_CMU_DCDC_CLOCK_USER_GPADC);
-#endif
     }
     int_unlock(lock);
 
@@ -629,13 +529,6 @@ int hal_gpadc_open(enum HAL_GPADC_CHAN_T channel, enum HAL_GPADC_ATP_T atp, HAL_
     unsigned short val;
     unsigned short reg_start_mask;
 
-#ifdef GPADC_DYNAMIC_DATA_BITS
-    if (gpadc_data_bits == 0) {
-        gpadc_data_bits = pmu_get_gpadc_data_bits();
-        ASSERT(10 <= gpadc_data_bits && gpadc_data_bits <= 16, "GPADC value bits not in range: %u", gpadc_data_bits);
-    }
-#endif
-
     if (channel >= HAL_GPADC_CHAN_QTY) {
         return -1;
     }
@@ -669,14 +562,7 @@ int hal_gpadc_open(enum HAL_GPADC_CHAN_T channel, enum HAL_GPADC_ATP_T atp, HAL_
         case HAL_GPADC_CHAN_ADCKEY:
             lock = int_lock();
 
-#ifdef DCDC_CLOCK_CONTROL
-            if (channel != HAL_GPADC_CHAN_ADCKEY) {
-                hal_cmu_dcdc_clock_enable(HAL_CMU_DCDC_CLOCK_USER_GPADC);
-            }
-#endif
-
-#if defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || \
-        defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
+#if defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
             if (channel == HAL_GPADC_CHAN_3){
                 pmu_led_set_hiz(HAL_GPIO_PIN_LED2);
             }
@@ -801,12 +687,6 @@ int hal_gpadc_close(enum HAL_GPADC_CHAN_T channel)
             }
             gpadc_reg_write(GPADC_REG_START, reg_start);
 
-#ifdef DCDC_CLOCK_CONTROL
-             if ((reg_start & GPADC_START) == 0) {
-                hal_cmu_dcdc_clock_disable(HAL_CMU_DCDC_CLOCK_USER_GPADC);
-            }
-#endif
-
             if ((gpadc_irq_mask & CHAN_DATA_INTR_MSK((1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<5)|(1<<6)|(1<<7))) == 0) {
                 gpadc_irq_enabled = false;
                 hal_gpadc_irq_control();
@@ -825,8 +705,7 @@ void hal_gpadc_sleep(void)
 {
     unsigned short val;
 
-#if defined(CHIP_BEST1305) || defined(CHIP_BEST1501) || defined(CHIP_BEST1600) || \
-        defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
+#if defined(CHIP_BEST2300) || defined(CHIP_BEST2300P) || defined(CHIP_BEST2300A)
     return;
 #endif
 
@@ -894,13 +773,6 @@ int hal_adckey_set_irq(enum HAL_ADCKEY_IRQ_T type)
     } else {
         return 1;
     }
-
-#ifdef DCDC_CLOCK_CONTROL
-    if (adckey_irq_enabled) {
-        hal_cmu_dcdc_clock_enable(HAL_CMU_DCDC_CLOCK_USER_ADCKEY);
-    }
-    // Never disable adckey clock
-#endif
 
     lock = int_lock();
 

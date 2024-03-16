@@ -17,13 +17,13 @@
 
 #include "bluetooth.h"
 
+
 enum PSM_CONTEXT_TYPE
 {
      PSM_CONTEXT_SDP     = 0x01,  //SDP
      PSM_CONTEXT_RFC     = 0x02,  //RFCOMM MUX,HFP and SPP share
      PSM_CONTEXT_AVDTP   = 0x04,  //A2DP
      PSM_CONTEXT_AVCTP   = 0x08,  //AVRCP
-     PSM_CONTEXT_BTGATT  = 0x10,  //GATT OVER BREDR
 
      PSM_CONTEXT_INVALID = 0x80,
 };
@@ -37,6 +37,7 @@ enum PROFILE_CONTEXT_FLAG
     BT_AVRCP_FLAG = 0x04,
     BT_MAP_FLAG =0x08,
     BT_GATT_FLAG = 0x10,
+
     //add new profile flag here
 
     BT_SPP_FLAG = 0x80, //SPP has multiple app id(total BTIF_APP_SPP_NUM),BT_SPP_FLAG flag should be at high bit
